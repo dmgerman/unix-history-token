@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftree.c	1.2 (Berkeley) %G%"
+literal|"@(#)ftree.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -632,7 +632,7 @@ end_endif
 
 begin_block
 block|{
-comment|/* 	 * set reference bit for this pattern. This linked list is only used 	 * when files trees are supplied pax as args. The list is not used when 	 * the trees are read from stdin. stdin processing uses a global 	 * reference count for the last path input. 	 */
+comment|/* 	 * set reference bit for this pattern. This linked list is only used 	 * when file trees are supplied pax as args. The list is not used when 	 * the trees are read from stdin. 	 */
 if|if
 condition|(
 name|ftcur
@@ -928,13 +928,6 @@ if|if
 condition|(
 operator|(
 name|ftcur
-operator|!=
-name|NULL
-operator|)
-operator|&&
-operator|(
-operator|(
-name|ftcur
 operator|=
 name|ftcur
 operator|->
@@ -942,7 +935,6 @@ name|fow
 operator|)
 operator|==
 name|NULL
-operator|)
 condition|)
 return|return
 operator|(
@@ -1038,7 +1030,7 @@ decl_stmt|;
 name|time_t
 name|mtime
 decl_stmt|;
-comment|/* 	 * ftree_sel() might have set the ftree_skip flag if the user has the 	 * -n option and a file was selected from this file arg tree. (-n says 	 * only one member is matched for each pattern) ftree_skip being 1  	 ( forces us to go to the next arg now. 	 */
+comment|/* 	 * ftree_sel() might have set the ftree_skip flag if the user has the 	 * -n option and a file was selected from this file arg tree. (-n says 	 * only one member is matched for each pattern) ftree_skip being 1  	 * forces us to go to the next arg now. 	 */
 if|if
 condition|(
 name|ftree_skip
@@ -1320,7 +1312,9 @@ argument|arcn->type = PAX_SCK; 			break; 		case S_IFIFO: 			arcn->type = PAX_FIF
 comment|/* 	 * copy file name, set file name length 	 */
 argument|arcn->nlen = l_strncpy(arcn->name, ftent->fts_path, PAXPATHLEN+
 literal|1
-argument|); 	arcn->org_name = ftent->fts_path; 	return(
+argument|); 	arcn->name[arcn->nlen] =
+literal|'\0'
+argument|; 	arcn->org_name = ftent->fts_path; 	return(
 literal|0
 argument|); }
 end_block
