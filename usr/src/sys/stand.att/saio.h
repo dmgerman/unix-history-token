@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.12	%G%	*/
+comment|/*	saio.h	4.13	%G%	*/
 end_comment
 
 begin_comment
@@ -155,7 +155,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* limit the number of bad bits accepted in ecc's */
+comment|/* limit # of bits in ecc correction */
 end_comment
 
 begin_define
@@ -166,7 +166,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* set skip sector inhibit, 				 * enable access to all sectors */
+comment|/* set skip sector inhibit */
 end_comment
 
 begin_comment
@@ -287,6 +287,10 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Drive description table.  * Returned from SAIODEVDATA call.  */
+end_comment
+
 begin_struct
 struct|struct
 name|st
@@ -294,23 +298,24 @@ block|{
 name|short
 name|nsect
 decl_stmt|;
-comment|/* number of sectors per track */
+comment|/* # sectors/track */
 name|short
 name|ntrak
 decl_stmt|;
-comment|/* number of tracks/surfaces/heads... */
+comment|/* # tracks/surfaces/heads... */
 name|short
 name|nspc
 decl_stmt|;
-comment|/* number of sectors per cylinder */
+comment|/* # sectors/cylinder */
 name|short
 name|ncyl
 decl_stmt|;
-comment|/* number of cylinders */
+comment|/* # cylinders */
 name|short
 modifier|*
 name|off
 decl_stmt|;
+comment|/* partition offset table (cylinders) */
 block|}
 struct|;
 end_struct
@@ -550,7 +555,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* severe ecc error, sector recorded as bad*/
+comment|/* uncorrectable ecc error */
 end_comment
 
 begin_comment
@@ -609,7 +614,7 @@ value|(('d'<<8)|5)
 end_define
 
 begin_comment
-comment|/* do bad sector forwarding */
+comment|/* enable bad sector forwarding */
 end_comment
 
 begin_define
@@ -620,7 +625,7 @@ value|(('d'<<8)|6)
 end_define
 
 begin_comment
-comment|/* report sectors as bad if more than 					 * 5 bits are bad in ecc */
+comment|/* limit ecc correction to 5 bits */
 end_comment
 
 begin_define
@@ -664,7 +669,7 @@ value|(('d'<<8)|10)
 end_define
 
 begin_comment
-comment|/* normal skip sector handling */
+comment|/* inhibit skip sector handling */
 end_comment
 
 begin_define
