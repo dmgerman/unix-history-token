@@ -2701,9 +2701,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
