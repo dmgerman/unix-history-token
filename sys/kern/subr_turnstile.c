@@ -2422,7 +2422,7 @@ endif|#
 directive|endif
 continue|continue;
 block|}
-comment|/* 		 * The mutex was marked contested on release. This means that 		 * there are threads blocked on it. 		 */
+comment|/* 		 * The mutex was marked contested on release. This means that 		 * there are other threads blocked on it.  Grab ownership of 		 * it and propagate its priority to the current thread if 		 * necessary. 		 */
 if|if
 condition|(
 name|v
@@ -2457,6 +2457,18 @@ operator|)
 name|td
 operator||
 name|MTX_CONTESTED
+expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_contested
+argument_list|,
+name|m
+argument_list|,
+name|mtx_contested
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2681,7 +2693,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 		 * Put us on the list of threads blocked on this mutex. 		 */
+comment|/* 		 * Put us on the list of threads blocked on this mutex 		 * and add this mutex to the owning thread's list of 		 * contested mutexes if needed. 		 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -3366,6 +3378,13 @@ argument_list|,
 name|td_lockq
 argument_list|)
 expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|m
+argument_list|,
+name|mtx_contested
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -3377,13 +3396,6 @@ name|mtx_blocked
 argument_list|)
 condition|)
 block|{
-name|LIST_REMOVE
-argument_list|(
-name|m
-argument_list|,
-name|mtx_contested
-argument_list|)
-expr_stmt|;
 name|_release_lock_quick
 argument_list|(
 name|m
@@ -3412,19 +3424,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|atomic_store_rel_ptr
-argument_list|(
-operator|&
 name|m
 operator|->
 name|mtx_lock
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
+operator|=
 name|MTX_CONTESTED
-argument_list|)
 expr_stmt|;
 name|pri
 operator|=
