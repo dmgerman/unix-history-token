@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  * from: Utah $Hdr: hil_subr.c 1.1 91/11/19$  *  *	@(#)hil_subr.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  * from: Utah $Hdr: hil_subr.c 1.1 91/11/19$  *  *	@(#)hil_subr.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"sys/param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/systm.h"
 end_include
 
 begin_include
@@ -171,7 +177,7 @@ operator|)
 expr_stmt|;
 name|nc
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|nc
 argument_list|,
@@ -180,7 +186,7 @@ argument_list|)
 expr_stmt|;
 name|nc
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|nc
 argument_list|,

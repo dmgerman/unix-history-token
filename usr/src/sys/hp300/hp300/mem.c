@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -286,7 +286,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|c
 argument_list|,
@@ -302,7 +302,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|c
 argument_list|,
@@ -361,7 +361,7 @@ literal|1
 case|:
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|iov
 operator|->
@@ -495,7 +495,7 @@ expr_stmt|;
 block|}
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|iov
 operator|->

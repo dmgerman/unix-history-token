@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ppi.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ppi.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"sys/param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/systm.h"
 end_include
 
 begin_include
@@ -925,7 +931,7 @@ endif|#
 directive|endif
 name|buflen
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|sc
 operator|->
@@ -995,7 +1001,7 @@ condition|)
 block|{
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|buflen
 argument_list|,
