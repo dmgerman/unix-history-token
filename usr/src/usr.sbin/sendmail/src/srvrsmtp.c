@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.25 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.26 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.25 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.26 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1127,6 +1127,9 @@ name|RealHostName
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|PICKY_HELO_CHECK
 if|if
 condition|(
 name|strcasecmp
@@ -1171,6 +1174,8 @@ name|sendinghost
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|protocol
