@@ -2638,6 +2638,7 @@ block|}
 endif|#
 directive|endif
 default|default:
+break|break;
 block|}
 return|return
 name|ENOTTY
@@ -3680,6 +3681,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+break|break;
 block|}
 name|ch
 operator|->

@@ -408,6 +408,7 @@ case|:
 case|case
 literal|0x00081103
 case|:
+break|break;
 block|}
 if|if
 condition|(
@@ -697,6 +698,7 @@ case|:
 case|case
 literal|0x00081103
 case|:
+break|break;
 block|}
 if|if
 condition|(
