@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.33 1995/12/21 21:12:22 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.34 1996/01/05 20:46:53 wollman Exp $  */
 end_comment
 
 begin_include
@@ -837,11 +837,13 @@ comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|ipintr
+name|ip_input
 parameter_list|(
-name|void
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 block|{
 specifier|register
@@ -849,12 +851,6 @@ name|struct
 name|ip
 modifier|*
 name|ip
-decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 specifier|register
 name|struct
@@ -873,34 +869,6 @@ name|hlen
 decl_stmt|,
 name|s
 decl_stmt|;
-name|next
-label|:
-comment|/* 	 * Get next datagram off input queue and get IP header 	 * in first mbuf. 	 */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-name|IF_DEQUEUE
-argument_list|(
-operator|&
-name|ipintrq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-literal|0
-condition|)
-return|return;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -973,9 +941,7 @@ operator|.
 name|ips_toosmall
 operator|++
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+return|return;
 block|}
 name|ip
 operator|=
@@ -1065,9 +1031,7 @@ operator|.
 name|ips_badhlen
 operator|++
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+return|return;
 block|}
 name|ip
 operator|=
@@ -1262,9 +1226,7 @@ name|ip_fw_chain
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|next
-goto|;
+return|return;
 block|}
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */
 name|ip_nhops
@@ -1287,9 +1249,7 @@ argument_list|(
 name|m
 argument_list|)
 condition|)
-goto|goto
-name|next
-goto|;
+return|return;
 comment|/* greedy RSVP, snatches any PATH packet of the RSVP protocol and no          * matter if it is destined to another node, or whether it is           * a multicast one, RSVP wants it! and prevents it from being forwarded          * anywhere else. Also checks if the rsvp daemon is running before 	 * grabbing the packet.          */
 if|if
 condition|(
@@ -1482,9 +1442,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+return|return;
 block|}
 name|ip
 operator|->
@@ -1548,9 +1506,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+return|return;
 block|}
 goto|goto
 name|ours
@@ -1612,9 +1568,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+return|return;
 name|ours
 label|:
 comment|/* 		 * If packet came to us we count it... 		 * This way we count all incoming packets which has  		 * not been forwarded... 		 * Do not convert ip_len to host byte order when  		 * counting,ppl already made it for us before.. 		 */
@@ -1688,9 +1642,7 @@ operator|.
 name|ips_toosmall
 operator|++
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+return|return;
 block|}
 name|ip
 operator|=
@@ -1869,9 +1821,7 @@ name|ip
 operator|==
 literal|0
 condition|)
-goto|goto
-name|next
-goto|;
+return|return;
 name|ipstat
 operator|.
 name|ips_reassembled
@@ -1929,9 +1879,7 @@ operator|,
 name|hlen
 operator|)
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+return|return;
 name|bad
 label|:
 name|m_freem
@@ -1939,9 +1887,65 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * IP software interrupt routine - to go away sometime soon  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ipintr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|s
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+name|IF_DEQUEUE
+argument_list|(
+operator|&
+name|ipintrq
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+return|return;
+name|ip_input
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
