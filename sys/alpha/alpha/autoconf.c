@@ -314,26 +314,7 @@ expr_stmt|;
 name|root_bus_configure
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|hwrpb
-operator|->
-name|rpb_type
-operator|!=
-name|ST_DEC_3000_300
-operator|)
-operator|&&
-operator|(
-name|hwrpb
-operator|->
-name|rpb_type
-operator|!=
-name|ST_DEC_3000_500
-operator|)
-condition|)
-block|{
-comment|/* 		 * Probe ISA devices after everything. 		 */
+comment|/* 	 * Probe ISA devices after everything. 	 */
 ifdef|#
 directive|ifdef
 name|DEV_ISA
@@ -348,7 +329,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|configure_finish
 argument_list|()
 expr_stmt|;
