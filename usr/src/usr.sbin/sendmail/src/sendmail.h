@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/un.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"conf.h"
 end_include
 
@@ -180,6 +174,23 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETUNIX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_endif
@@ -3614,11 +3625,16 @@ name|sockaddr
 name|sa
 decl_stmt|;
 comment|/* general version */
+ifdef|#
+directive|ifdef
+name|NETUNIX
 name|struct
 name|sockaddr_un
 name|sunix
 decl_stmt|;
 comment|/* UNIX family */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NETINET
@@ -4284,7 +4300,7 @@ comment|/* if we are the best MX, try host directly */
 end_comment
 
 begin_decl_stmt
-name|EXTERN
+specifier|extern
 name|bool
 name|CheckLoopBack
 decl_stmt|;
@@ -4522,7 +4538,7 @@ comment|/* don't prune source routes */
 end_comment
 
 begin_decl_stmt
-name|EXTERN
+specifier|extern
 name|bool
 name|BrokenSmtpPeers
 decl_stmt|;
@@ -4601,6 +4617,13 @@ end_decl_stmt
 begin_comment
 comment|/* file in which to log all traffic */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Timeouts ** **	Indicated values are the MINIMUM per RFC 1123 section 5.3.2. */
