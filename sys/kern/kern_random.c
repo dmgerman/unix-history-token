@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * random.c -- A strong random number generator  *  * $Id: random_machdep.c,v 1.2 1995/12/27 11:22:01 markm Exp $  *  * Version 0.95, last modified 18-Oct-95  *   * Copyright Theodore Ts'o, 1994, 1995.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * random_machdep.c -- A strong random number generator  *  * $Id$  *  * Version 0.95, last modified 18-Oct-95  *   * Copyright Theodore Ts'o, 1994, 1995.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -19,7 +19,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -31,31 +31,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/timerreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -68,6 +44,24 @@ begin_include
 include|#
 directive|include
 file|<machine/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/timerreg.h>
 end_include
 
 begin_comment
@@ -629,7 +623,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function adds entropy to the entropy "pool" by using timing  * delays.  It uses the timer_rand_state structure to make an estimate  * of how  any bits of entropy this call has added to the pool.  *  * The number "num" is also added to the pool - it should somehow describe  * the type of event which just happened.  This is currently 0-255 for  * keyboard scan codes, and 256 upwards for interrupts.  * On the i386, this is assumed to be at most 16 bits, and the high bits  * are used for a high-resolution timer.  *  * TODO: Read the time stamp register on the Pentium.  */
+comment|/*  * This function adds entropy to the entropy "pool" by using timing  * delays.  It uses the timer_rand_state structure to make an estimate  * of how  any bits of entropy this call has added to the pool.  *  * The number "num" is also added to the pool - it should somehow describe  * the type of event which just happened.  This is currently 0-255 for  * keyboard scan codes, and 256 upwards for interrupts.  * On the i386, this is assumed to be at most 16 bits, and the high bits  * are used for a high-resolution timer.  */
 end_comment
 
 begin_function
@@ -668,11 +662,16 @@ name|defined
 argument_list|(
 name|I586_CPU
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
 if|if
 condition|(
-name|cpu_class
-operator|==
-name|CPUCLASS_586
+name|i586_ctr_rate
+operator|!=
+literal|0
 condition|)
 block|{
 name|u_long
@@ -680,21 +679,13 @@ name|low
 decl_stmt|,
 name|high
 decl_stmt|;
-asm|__asm__(".byte 0x0f,0x31" :"=a" (low), "=d" (high));
-comment|/* RDTSC */
-name|time
-operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|low
-expr_stmt|;
+comment|/* RDTSC. */
+asm|__asm __volatile(".byte 0x0f,0x31" :"=a" (low), "=d" (high));
 name|num
 operator|^=
-operator|(
-name|u_int32_t
-operator|)
-name|high
+name|low
+operator|<<
+literal|16
 expr_stmt|;
 name|r
 operator|->
@@ -707,16 +698,18 @@ else|else
 block|{
 endif|#
 directive|endif
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|outb
 argument_list|(
 name|TIMER_MODE
 argument_list|,
-name|TIMER_LATCH
-operator||
 name|TIMER_SEL0
+operator||
+name|TIMER_LATCH
 argument_list|)
 expr_stmt|;
-comment|/* latch ASAP */
 name|num
 operator|^=
 name|inb
@@ -735,6 +728,9 @@ argument_list|)
 operator|<<
 literal|24
 expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
 name|r
 operator|->
 name|entropy_count
@@ -747,8 +743,12 @@ name|defined
 argument_list|(
 name|I586_CPU
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
 block|}
-comment|/* cpu_class == CPUCLASS_586 */
 endif|#
 directive|endif
 name|time
@@ -933,6 +933,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_function
 name|void
 name|add_blkdev_randomness
@@ -966,6 +972,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
 
 begin_comment
 comment|/*  * MD5 transform algorithm, taken from code written by Colin Plumb,  * and put into the public domain  *  * QUESTION: Replace this with SHA, which as generally received better  * reviews from the cryptographic community?  */
@@ -2869,6 +2884,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
+begin_comment
+comment|/* XXX NOT the exported kernel interface */
+end_comment
+
 begin_comment
 comment|/*  * This function is the exported kernel interface.  It returns some  * number of good random numbers, suitable for seeding TCP sequence  * numbers, etc.  */
 end_comment
@@ -2901,6 +2926,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
 
 begin_function
 name|u_int
@@ -2973,6 +3007,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
 
 begin_function
 name|u_int
@@ -3069,6 +3109,15 @@ name|nbytes
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
 
 end_unit
 

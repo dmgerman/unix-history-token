@@ -35,6 +35,12 @@ directive|include
 file|<i386/isa/icu.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -146,6 +152,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_function_decl
 name|void
 name|add_blkdev_randomness
@@ -155,6 +167,17 @@ name|major
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
 
 begin_function_decl
 name|void
@@ -169,6 +192,11 @@ name|nbytes
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|u_int
@@ -198,6 +226,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_function_decl
 name|u_int
 name|write_random
@@ -212,6 +246,11 @@ name|nbytes
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
