@@ -33,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.145
+literal|3.146
 operator|%
 name|G
 operator|%
@@ -191,10 +191,10 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
-name|pass
+name|bool
+name|readconfig
 init|=
-literal|0
+name|FALSE
 decl_stmt|;
 name|bool
 name|safecf
@@ -263,6 +263,10 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/* 	**  Check to see if we reentered. 	**	This would normally happen if e_putheader or e_putbody 	**	were NULL when invoked. 	*/
+end_comment
+
 begin_if
 if|if
 condition|(
@@ -302,6 +306,10 @@ name|canrename
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* 	**  Do a quick prescan of the argument list. 	**	We do this to find out if we can potentially thaw the 	**	configuration file.  If not, we do the thaw now so that 	**	the argument processing applies to this run rather than 	**	to the run that froze the configuration. 	*/
+end_comment
+
 begin_expr_stmt
 name|argv
 index|[
@@ -311,6 +319,81 @@ operator|=
 name|NULL
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|ac
+operator|=
+name|argc
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|av
+operator|=
+name|argv
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
+operator|--
+name|ac
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+operator|*
+operator|++
+name|av
+argument_list|,
+literal|"-C"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"-bz"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+end_while
+
+begin_if
+if|if
+condition|(
+name|ac
+operator|<=
+literal|0
+condition|)
+name|readconfig
+operator|=
+operator|!
+name|thaw
+argument_list|(
+name|FreezeFile
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_comment
+comment|/* 	**  Now do basic initialization 	*/
+end_comment
 
 begin_expr_stmt
 name|InChannel
@@ -529,11 +612,6 @@ begin_comment
 comment|/* 	** Crack argv. 	*/
 end_comment
 
-begin_label
-name|crackargs
-label|:
-end_label
-
 begin_expr_stmt
 name|ac
 operator|=
@@ -545,12 +623,6 @@ begin_expr_stmt
 name|av
 operator|=
 name|argv
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|pass
-operator|++
 expr_stmt|;
 end_expr_stmt
 
@@ -867,10 +939,6 @@ condition|(
 name|from
 operator|!=
 name|NULL
-operator|&&
-name|pass
-operator|<=
-literal|1
 condition|)
 block|{
 name|syserr
@@ -1170,13 +1238,6 @@ end_comment
 begin_if
 if|if
 condition|(
-name|pass
-operator|<=
-literal|1
-condition|)
-block|{
-if|if
-condition|(
 operator|!
 name|safecf
 operator|||
@@ -1184,11 +1245,7 @@ name|OpMode
 operator|==
 name|MD_FREEZE
 operator|||
-operator|!
-name|thaw
-argument_list|(
-name|FreezeFile
-argument_list|)
+name|readconfig
 condition|)
 name|readcf
 argument_list|(
@@ -1197,11 +1254,6 @@ argument_list|,
 name|safecf
 argument_list|)
 expr_stmt|;
-else|else
-goto|goto
-name|crackargs
-goto|;
-block|}
 end_if
 
 begin_switch
