@@ -483,8 +483,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NOMACCHECK
+value|0x800000
+end_define
+
+begin_comment
+comment|/* do not perform MAC checks */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARAMASK
-value|0x3ffe00
+value|0xfffe00
 end_define
 
 begin_comment
