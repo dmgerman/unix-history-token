@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.12	%G%"
+literal|"@(#)recipient.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,12 +746,12 @@ specifier|extern
 name|struct
 name|passwd
 modifier|*
-name|getpwnam
+name|finduser
 parameter_list|()
 function_decl|;
 name|pw
 operator|=
-name|getpwnam
+name|finduser
 argument_list|(
 name|buf
 argument_list|)
@@ -823,6 +823,44 @@ block|}
 block|}
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  FINDUSER -- find the password entry for a user. ** **	This looks a lot like getpwnam, except that it may want to **	do some fancier pattern matching in /etc/passwd. ** **	Parameters: **		name -- the name to match against. ** **	Returns: **		A pointer to a pw struct. **		NULL if name is unknown or ambiguous. ** **	Side Effects: **		none. */
+end_comment
+
+begin_function
+name|struct
+name|passwd
+modifier|*
+name|finduser
+parameter_list|(
+name|name
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwnam
+parameter_list|()
+function_decl|;
+return|return
+operator|(
+name|getpwnam
+argument_list|(
+name|name
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_escape
 end_escape
