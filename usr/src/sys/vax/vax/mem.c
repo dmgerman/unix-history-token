@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	3.1	%H%	*/
+comment|/*	mem.c	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -194,6 +194,27 @@ argument_list|,
 name|u
 operator|.
 name|u_count
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|min
+argument_list|(
+name|c
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+operator|(
+name|int
+operator|)
+name|u
+operator|.
+name|u_base
+operator|&
+name|PGOFSET
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -621,6 +642,27 @@ argument_list|,
 name|u
 operator|.
 name|u_count
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|min
+argument_list|(
+name|c
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+operator|(
+name|int
+operator|)
+name|u
+operator|.
+name|u_base
+operator|&
+name|PGOFSET
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
