@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ip_state.c,v 2.0.1.2 1997/01/09 15:22:45 darrenr Exp $"
+literal|"$Id: ip_state.c,v 2.0.1.3 1997/02/16 06:18:36 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2091,10 +2091,18 @@ modifier|*
 modifier|*
 name|isp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
 name|ipf_state
+argument_list|)
+expr_stmt|;
+name|SPLNET
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 for|for
@@ -2142,6 +2150,11 @@ name|is
 argument_list|)
 expr_stmt|;
 block|}
+name|SPLX
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|MUTEX_EXIT
 argument_list|(
 operator|&
@@ -2173,10 +2186,18 @@ modifier|*
 modifier|*
 name|isp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
 name|ipf_state
+argument_list|)
+expr_stmt|;
+name|SPLNET
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 for|for
@@ -2265,6 +2286,11 @@ operator|&
 name|is
 operator|->
 name|is_next
+expr_stmt|;
+name|SPLX
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|MUTEX_EXIT
 argument_list|(

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ip_frag.c,v 2.0.1.1 1997/01/09 15:14:43 darrenr Exp $"
+literal|"$Id: ip_frag.c,v 2.0.1.2 1997/02/16 06:17:35 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -771,11 +771,6 @@ name|fin_dlen
 operator|>>
 literal|3
 operator|)
-expr_stmt|;
-operator|*
-name|fp
-operator|=
-name|fr
 expr_stmt|;
 name|ipfr_stats
 operator|.
