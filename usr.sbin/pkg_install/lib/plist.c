@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: plist.c,v 1.17.2.4 1997/08/20 10:29:52 jkh Exp $"
+literal|"$Id: plist.c,v 1.17.2.5 1997/10/09 07:10:14 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,11 +1941,17 @@ name|isdir
 argument_list|(
 name|tmp
 argument_list|)
+operator|&&
+name|fexists
+argument_list|(
+name|tmp
+argument_list|)
 condition|)
+block|)
 block|{
 name|warnx
 argument_list|(
-literal|"attempting to delete file `%s' as a directory\n"
+literal|"cannot delete specified directory `%s' - it is a file!\n"
 literal|"this packing list is incorrect - ignoring delete request"
 argument_list|,
 name|tmp
@@ -2002,13 +2008,16 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+end_function
+
+begin_return
 return|return
 name|fail
 return|;
-block|}
-end_function
+end_return
 
 begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2069,20 +2078,19 @@ begin_comment
 comment|/* Selectively delete a hierarchy */
 end_comment
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|delete_hierarchy
-parameter_list|(
-name|char
-modifier|*
-name|dir
-parameter_list|,
-name|Boolean
-name|ign_err
-parameter_list|,
-name|Boolean
-name|nukedirs
-parameter_list|)
+argument_list|(
+argument|char *dir
+argument_list|,
+argument|Boolean ign_err
+argument_list|,
+argument|Boolean nukedirs
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -2288,7 +2296,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
