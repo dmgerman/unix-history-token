@@ -192,13 +192,6 @@ name|DEFAULT_PCC_STRUCT_RETURN
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|SUPPORTS_WEAK
-value|TARGET_ELF
-end_define
-
 begin_comment
 comment|/* Prefix for internally generated assembler labels.  If we aren't using     underscores, we are using prefix `.'s to identify labels that should      be ignored, as in `i386/gas.h' --karl@cs.umb.edu  */
 end_comment
