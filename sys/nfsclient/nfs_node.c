@@ -1595,11 +1595,6 @@ operator|->
 name|n_rslock
 argument_list|)
 expr_stmt|;
-name|cache_purge
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|nfsnode_zone
