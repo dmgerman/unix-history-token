@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.3	%G%	*/
+comment|/*	ts.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"../h/uba.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/vm.h"
 end_include
 
 begin_struct
@@ -169,6 +175,12 @@ name|sts
 block|{
 name|u_short
 name|s_sts
+decl_stmt|;
+name|u_short
+name|len
+decl_stmt|;
+name|u_short
+name|rbpcr
 decl_stmt|;
 name|u_short
 name|xs0
@@ -2110,6 +2122,13 @@ name|dtsinfo
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|tsmesg
+name|dts
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|twall
 argument_list|(
@@ -2363,6 +2382,9 @@ name|ts_cmd
 operator|.
 name|c_loba
 operator|=
+operator|(
+name|int
+operator|)
 operator|&
 name|tsm
 operator|->
@@ -2395,6 +2417,9 @@ name|ts_char
 operator|.
 name|char_loba
 operator|=
+operator|(
+name|int
+operator|)
 operator|&
 name|tsm
 operator|->
