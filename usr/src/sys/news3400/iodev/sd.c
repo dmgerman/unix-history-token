@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sd.c,v 4.300 91/06/27 20:42:56 root Rel41 $ SONY  *  *	@(#)sd.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sd.c,v 4.300 91/06/27 20:42:56 root Rel41 $ SONY  *  *	@(#)sd.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1171,6 +1171,38 @@ name|sdexec
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+specifier|static
+name|sd_check
+argument_list|()
+operator|,
+name|sd_tstdrv
+argument_list|()
+operator|,
+name|sd_other_pages
+argument_list|()
+operator|,
+name|sd_err_rcv
+argument_list|()
+operator|,
+name|sd_synctr_on
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|disklabel2sdst
+argument_list|()
+operator|,
+name|sdst2disklabel
+argument_list|()
+operator|,
+name|sd_scu_exec
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
