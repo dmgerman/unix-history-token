@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.23 1997/04/02 16:52:45 phk Exp $"
+literal|"$Id: route.c,v 1.24 1997/04/02 17:05:30 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,7 +546,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: route [ -nqv ] cmd [[ -<qualifers> ] args ]\n"
+literal|"usage: route [ -nqv ] command [[ modifiers ] args ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
