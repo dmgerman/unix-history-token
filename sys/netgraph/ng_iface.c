@@ -1948,14 +1948,6 @@ operator|=
 literal|64000
 expr_stmt|;
 comment|/* XXX */
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_addrhead
-argument_list|)
-expr_stmt|;
 comment|/* Give this node the same name as the interface (if possible) */
 if|if
 condition|(
