@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<timeconv.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -3652,6 +3646,21 @@ index|[
 literal|30
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|_FreeBSD_version
+operator|<
+literal|500000
+comment|/* XXX check */
+define|#
+directive|define
+name|_long_to_time
+parameter_list|(
+name|x
+parameter_list|)
+value|(time_t)(x)
+endif|#
+directive|endif
 name|time_t
 name|t
 init|=
@@ -7716,25 +7725,6 @@ literal|31
 operator|)
 operator|/
 literal|32
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-- set size %d cmdlen %d\n"
-argument_list|,
-name|cmd
-operator|->
-name|o
-operator|.
-name|arg1
-argument_list|,
-name|cmd
-operator|->
-name|o
-operator|.
-name|len
-argument_list|)
 expr_stmt|;
 for|for
 control|(
