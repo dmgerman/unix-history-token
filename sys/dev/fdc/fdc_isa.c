@@ -209,6 +209,12 @@ literal|0
 expr_stmt|;
 name|fdc
 operator|->
+name|fdc_dev
+operator|=
+name|dev
+expr_stmt|;
+name|fdc
+operator|->
 name|rid_ioport
 operator|=
 literal|0
