@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -144,23 +150,28 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|#
-directive|if
+name|struct
+name|sn_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|sc
+operator|->
+name|pccard_enaddr
+operator|=
 literal|0
-comment|/* currently not tested */
-block|struct sn_softc *sc = device_get_softc(dev);
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* currently not tested */
-block|sc->pccard_enaddr = 0;
-endif|#
-directive|endif
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|sn_attach
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 return|;
 block|}
@@ -186,6 +197,13 @@ argument_list|(
 name|device_attach
 argument_list|,
 name|sn_isa_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|sn_detach
 argument_list|)
 block|,
 block|{

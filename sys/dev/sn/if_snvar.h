@@ -98,6 +98,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|sn_detach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sn_intr
 parameter_list|(
