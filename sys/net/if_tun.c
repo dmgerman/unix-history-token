@@ -817,12 +817,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|tun_cdevsw
-argument_list|)
-expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -868,12 +862,6 @@ name|rman_fini
 argument_list|(
 operator|&
 name|tununits
-argument_list|)
-expr_stmt|;
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|tun_cdevsw
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
