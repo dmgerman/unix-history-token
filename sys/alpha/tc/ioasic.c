@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ioasic.c,v 1.2 1999/05/08 21:58:48 dfr Exp $ */
+comment|/* $Id: ioasic.c,v 1.3 1999/05/10 15:51:23 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1400,6 +1400,9 @@ name|ifound
 decl_stmt|;
 name|int
 name|gifound
+decl_stmt|;
+name|u_int32_t
+name|sir
 decl_stmt|;
 specifier|volatile
 name|u_int32_t
