@@ -96,6 +96,15 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|ftp_skip_resolve
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* timeout handler */
 end_comment
@@ -1548,6 +1557,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|ftp_skip_resolve
+operator|&&
 name|variable_get
 argument_list|(
 name|VAR_NAMESERVER
@@ -1880,6 +1892,9 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|Boolean
+name|tmp
+decl_stmt|;
 name|int
 name|result
 decl_stmt|;
@@ -1897,9 +1912,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|hostname
-decl_stmt|,
-modifier|*
-name|var_hostname
 decl_stmt|;
 name|int
 name|HttpPort
@@ -1909,17 +1921,13 @@ name|what
 init|=
 name|DITEM_RESTORE
 decl_stmt|;
-name|var_hostname
+name|tmp
 operator|=
-name|variable_get
-argument_list|(
-name|VAR_NAMESERVER
-argument_list|)
+name|ftp_skip_resolve
 expr_stmt|;
-name|variable_unset
-argument_list|(
-name|VAR_NAMESERVER
-argument_list|)
+name|ftp_skip_resolve
+operator|=
+name|TRUE
 expr_stmt|;
 name|result
 operator|=
@@ -1928,18 +1936,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|var_hostname
-condition|)
-name|variable_set2
-argument_list|(
-name|VAR_NAMESERVER
-argument_list|,
-name|var_hostname
-argument_list|,
-literal|0
-argument_list|)
+name|ftp_skip_resolve
+operator|=
+name|tmp
 expr_stmt|;
 if|if
 condition|(
@@ -1957,7 +1956,7 @@ name|cp
 operator|=
 name|variable_get_value
 argument_list|(
-name|VAR_HTTP_PATH
+name|VAR_HTTP_PROXY
 argument_list|,
 literal|"Please enter the address of the HTTP proxy in this format:\n"
 literal|" hostname:port (the ':port' is optional, default is 3128)"
