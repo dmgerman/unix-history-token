@@ -7291,9 +7291,7 @@ name|td
 operator|->
 name|td_ksegrp
 operator|->
-name|kg_pri
-operator|.
-name|pri_user
+name|kg_user_pri
 argument_list|,
 literal|"nap"
 argument_list|,
@@ -7455,9 +7453,7 @@ name|td
 operator|->
 name|td_ksegrp
 operator|->
-name|kg_pri
-operator|.
-name|pri_user
+name|kg_user_pri
 argument_list|,
 literal|"nap"
 argument_list|,

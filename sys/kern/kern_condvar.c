@@ -523,19 +523,11 @@ expr_stmt|;
 comment|/* XXXKSE */
 name|td
 operator|->
-name|td_ksegrp
-operator|->
-name|kg_pri
-operator|.
-name|pri_native
+name|td_base_pri
 operator|=
 name|td
 operator|->
-name|td_ksegrp
-operator|->
-name|kg_pri
-operator|.
-name|pri_level
+name|td_priority
 expr_stmt|;
 name|CTR3
 argument_list|(
@@ -1929,8 +1921,6 @@ expr_stmt|;
 name|maybe_resched
 argument_list|(
 name|td
-operator|->
-name|td_ksegrp
 argument_list|)
 expr_stmt|;
 block|}

@@ -525,6 +525,14 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* (k) Syscall aux returns. */
+name|u_char
+name|td_base_pri
+decl_stmt|;
+comment|/* (j) Thread base kernel priority */
+name|u_char
+name|td_priority
+decl_stmt|;
+comment|/* (j) Thread active priority */
 define|#
 directive|define
 name|td_endcopy
@@ -785,26 +793,29 @@ directive|define
 name|kg_startzero
 value|kg_estcpu
 name|u_int
-name|kg_slptime
-decl_stmt|;
-comment|/* (j) How long completely blocked. */
-name|u_int
 name|kg_estcpu
 decl_stmt|;
 comment|/* Sum of the same field in KSEs. */
+name|u_int
+name|kg_slptime
+decl_stmt|;
+comment|/* (j) How long completely blocked. */
 define|#
 directive|define
 name|kg_endzero
-value|kg_pri
+value|kg_pri_class
 define|#
 directive|define
 name|kg_startcopy
 value|kg_endzero
-name|struct
-name|priority
-name|kg_pri
+name|char
+name|kg_pri_class
 decl_stmt|;
-comment|/* (j) Process priority. */
+comment|/* (j) */
+name|char
+name|kg_user_pri
+decl_stmt|;
+comment|/* (j) priority when in userland */
 name|char
 name|kg_nice
 decl_stmt|;
@@ -3198,7 +3209,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ksegrp
+name|thread
 operator|*
 operator|)
 argument_list|)

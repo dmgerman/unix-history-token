@@ -466,11 +466,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|kg
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|p
+argument_list|)
 operator|->
-name|kg_pri
-operator|.
-name|pri_level
+name|td_priority
 operator|<=
 name|PZERO
 condition|)

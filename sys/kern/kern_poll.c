@@ -1713,11 +1713,7 @@ name|pri
 operator|=
 name|td
 operator|->
-name|td_ksegrp
-operator|->
-name|kg_pri
-operator|.
-name|pri_level
+name|td_priority
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(

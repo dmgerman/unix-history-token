@@ -533,12 +533,9 @@ argument_list|(
 operator|&
 name|rtp
 argument_list|,
-operator|&
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_pri
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

@@ -185,6 +185,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|ksegrp
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|rtp_to_pri
@@ -194,7 +200,7 @@ name|rtprio
 modifier|*
 parameter_list|,
 name|struct
-name|priority
+name|ksegrp
 modifier|*
 parameter_list|)
 function_decl|;
@@ -205,7 +211,7 @@ name|void
 name|pri_to_rtp
 parameter_list|(
 name|struct
-name|priority
+name|ksegrp
 modifier|*
 parameter_list|,
 name|struct

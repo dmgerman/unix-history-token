@@ -1723,20 +1723,15 @@ argument_list|()
 expr_stmt|;
 name|td
 operator|->
-name|td_ksegrp
-operator|->
-name|kg_pri
-operator|.
-name|pri_level
+name|td_priority
 operator|=
 name|td
 operator|->
 name|td_ksegrp
 operator|->
-name|kg_pri
-operator|.
-name|pri_user
+name|kg_user_pri
 expr_stmt|;
+comment|/* XXXKSE */
 name|setrunqueue
 argument_list|(
 name|td
