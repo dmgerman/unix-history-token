@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	3.1	%H%	*/
+comment|/*	param.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -467,7 +467,44 @@ value|15
 end_define
 
 begin_comment
-comment|/* Catchable termination */
+comment|/* catchable termination */
+end_comment
+
+begin_comment
+comment|/*  * Return values from tsleep().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_OK
+value|0
+end_define
+
+begin_comment
+comment|/* normal wakeup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_TIME
+value|1
+end_define
+
+begin_comment
+comment|/* timed-out wakeup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_SIG
+value|2
+end_define
+
+begin_comment
+comment|/* asynchronous signal wakeup */
 end_comment
 
 begin_comment
