@@ -1106,6 +1106,12 @@ operator|=
 name|ttyalloc
 argument_list|()
 expr_stmt|;
+name|tp
+operator|->
+name|t_sc
+operator|=
+name|sc
+expr_stmt|;
 name|sc
 operator|->
 name|sc_si
@@ -2387,9 +2393,7 @@ name|sc
 operator|=
 name|tp
 operator|->
-name|t_dev
-operator|->
-name|si_drv1
+name|t_sc
 expr_stmt|;
 if|if
 condition|(
@@ -2706,9 +2710,7 @@ name|sc
 operator|=
 name|tp
 operator|->
-name|t_dev
-operator|->
-name|si_drv1
+name|t_sc
 expr_stmt|;
 if|if
 condition|(
@@ -2797,9 +2799,7 @@ name|sc
 operator|=
 name|tp
 operator|->
-name|t_dev
-operator|->
-name|si_drv1
+name|t_sc
 expr_stmt|;
 return|return
 operator|(
@@ -2839,9 +2839,7 @@ name|sc
 operator|=
 name|tp
 operator|->
-name|t_dev
-operator|->
-name|si_drv1
+name|t_sc
 expr_stmt|;
 if|if
 condition|(
