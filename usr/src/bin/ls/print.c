@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.3 (Berkeley) %G%"
+literal|"@(#)print.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1342,6 +1342,22 @@ operator|)
 name|putchar
 argument_list|(
 literal|'/'
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|S_IFIFO
+case|:
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'|'
 argument_list|)
 expr_stmt|;
 return|return
