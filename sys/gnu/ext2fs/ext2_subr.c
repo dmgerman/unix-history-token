@@ -86,7 +86,6 @@ name|DDB
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|void
 name|ext2_checkoverlap
 name|__P
@@ -279,7 +278,6 @@ name|DDB
 end_ifdef
 
 begin_function
-specifier|static
 name|void
 name|ext2_checkoverlap
 parameter_list|(
