@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* util.c -- readline utility functions */
 end_comment
 
@@ -960,21 +956,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|string2
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-operator|)
-return|;
 for|for
 control|(
 init|;

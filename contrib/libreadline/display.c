@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* display.c -- readline redisplay facility. */
 end_comment
 
@@ -326,6 +322,7 @@ name|_rl_col_width
 name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -5361,7 +5358,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|_rl_last_c_pos += _rl_col_width (nfd+lendiff, 0, temp-lendiff) - col_lendiff;
+block|_rl_last_c_pos += _rl_col_width (nfd+lendiff, 0, temp-col_lendiff);
 else|#
 directive|else
 name|_rl_last_c_pos
@@ -5376,7 +5373,7 @@ literal|0
 argument_list|,
 name|temp
 operator|-
-name|col_lendiff
+name|lendiff
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5927,20 +5924,37 @@ name|defined
 argument_list|(
 name|HANDLE_MULTIBYTE
 argument_list|)
-comment|/* If we have multibyte characters, NEW is indexed by the buffer point in      a multibyte string, but _rl_last_c_pos is the display position.  In      this case, NEW's display position is not obvious. */
+comment|/* If we have multibyte characters, NEW is indexed by the buffer point in      a multibyte string, but _rl_last_c_pos is the display position.  In      this case, NEW's display position is not obvious and must be      calculated. */
 if|if
 condition|(
-operator|(
 name|MB_CUR_MAX
 operator|==
 literal|1
 operator|||
 name|rl_byte_oriented
-operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|_rl_last_c_pos
 operator|==
 name|new
+condition|)
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|_rl_last_c_pos
+operator|==
+name|_rl_col_width
+argument_list|(
+name|data
+argument_list|,
+literal|0
+argument_list|,
+name|new
+argument_list|)
 condition|)
 return|return;
 else|#
@@ -6295,40 +6309,20 @@ name|rl_byte_oriented
 operator|==
 literal|0
 condition|)
-block|{
-name|tputs
+name|_rl_backspace
 argument_list|(
-name|_rl_term_cr
-argument_list|,
-literal|1
-argument_list|,
-name|_rl_output_character_function
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|new
-condition|;
-name|i
-operator|++
-control|)
-name|putc
+name|_rl_last_c_pos
+operator|-
+name|_rl_col_width
 argument_list|(
 name|data
-index|[
-name|i
-index|]
 argument_list|,
-name|rl_outstream
+literal|0
+argument_list|,
+name|new
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|_rl_backspace
 argument_list|(
@@ -8330,6 +8324,7 @@ name|start
 parameter_list|,
 name|end
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|str
