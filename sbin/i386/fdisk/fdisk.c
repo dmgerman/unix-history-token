@@ -139,9 +139,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|SECSIZE
+name|MAX_SEC_SIZE
+value|2048
+end_define
+
+begin_comment
+comment|/* maximum section size that is supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_SEC_SIZE
 value|512
 end_define
+
+begin_comment
+comment|/* the sector size to start sensing at */
+end_comment
+
+begin_decl_stmt
+name|int
+name|secsize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the sensed sector size */
+end_comment
 
 begin_decl_stmt
 specifier|const
@@ -232,6 +259,16 @@ name|unsigned
 name|short
 name|int
 name|signature
+decl_stmt|;
+comment|/* room to read in MBRs that are bigger then DEV_BSIZE */
+name|unsigned
+name|char
+name|large_sector_overflow
+index|[
+name|MAX_SEC_SIZE
+operator|-
+name|MIN_SEC_SIZE
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1563,6 +1600,12 @@ literal|"FreeBSD/NetBSD/386BSD"
 block|}
 block|,
 block|{
+literal|0xA6
+block|,
+literal|"OpenBSD"
+block|}
+block|,
+block|{
 literal|0xA7
 block|,
 literal|"NEXTSTEP"
@@ -2366,6 +2409,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"Media sector size is %d\n"
+argument_list|,
+name|secsize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"Warning: BIOS sector numbering starts with sector 1\n"
 argument_list|)
 expr_stmt|;
@@ -2635,7 +2685,7 @@ name|dp_size
 expr_stmt|;
 name|part_mb
 operator|*=
-literal|512
+name|secsize
 expr_stmt|;
 name|part_mb
 operator|/=
@@ -3327,7 +3377,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" Figures below won't work with BIOS for partitions not in cyl 1\n"
+literal|"Figures below won't work with BIOS for partitions not in cyl 1\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3867,6 +3917,52 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|secsize
+operator|==
+literal|0
+condition|)
+for|for
+control|(
+name|secsize
+operator|=
+name|MIN_SEC_SIZE
+init|;
+name|secsize
+operator|<=
+name|MAX_SEC_SIZE
+condition|;
+name|secsize
+operator|*=
+literal|2
+control|)
+block|{
+comment|/* try the read */
+name|int
+name|size
+init|=
+name|read
+argument_list|(
+name|fd
+argument_list|,
+name|buf
+argument_list|,
+name|secsize
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+name|secsize
+condition|)
+comment|/* it worked so return */
+return|return
+name|secsize
+return|;
+block|}
+else|else
 return|return
 name|read
 argument_list|(
@@ -3874,8 +3970,13 @@ name|fd
 argument_list|,
 name|buf
 argument_list|,
-literal|512
+name|secsize
 argument_list|)
+return|;
+comment|/* we failed to read at any of the sizes */
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function
@@ -3906,6 +4007,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* write out in the size that the read_disk found worked */
 return|return
 name|write
 argument_list|(
@@ -3913,7 +4015,7 @@ name|fd
 argument_list|,
 name|buf
 argument_list|,
-literal|512
+name|secsize
 argument_list|)
 return|;
 block|}
