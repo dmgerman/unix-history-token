@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uncompact.c	4.7 (Berkeley) %G%"
+literal|"@(#)uncompact.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,7 +708,7 @@ name|int
 name|m
 decl_stmt|;
 specifier|register
-name|struct
+name|union
 name|cio
 modifier|*
 name|dp
