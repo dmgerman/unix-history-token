@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symt.c 4.1 %G%"
+literal|"@(#)symt.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1494,6 +1494,10 @@ argument_list|(
 literal|""
 argument_list|,
 name|fline
+condition|?
+name|fline
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1657,6 +1661,23 @@ name|filet
 modifier|*
 name|f
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+literal|0
+operator|||
+operator|*
+name|s
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|files
+operator|)
+return|;
+comment|/* start at beginning if no cur file */
 for|for
 control|(
 name|f
@@ -1964,6 +1985,10 @@ break|break;
 case|case
 name|N_ECOMM
 case|:
+name|i
+operator|=
+literal|0
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -2006,6 +2031,9 @@ name|q
 operator|=
 literal|'\0'
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -2040,6 +2068,9 @@ operator|*
 name|q
 operator|=
 literal|0
+operator|,
+name|i
+operator|++
 expr_stmt|;
 endif|#
 directive|endif
@@ -2059,6 +2090,15 @@ condition|)
 name|comfound
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+operator|*
+name|q
+operator|=
+literal|'_'
 expr_stmt|;
 name|incomm
 operator|=
@@ -4758,6 +4798,9 @@ name|struct
 name|nlist
 name|stentry
 decl_stmt|;
+name|ADDR
+name|addr
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -4806,8 +4849,8 @@ operator|==
 name|N_ECOMM
 condition|)
 block|{
-name|sl_addr
-operator|+=
+name|addr
+operator|=
 name|extaddr
 argument_list|(
 name|stentry
@@ -4816,6 +4859,22 @@ name|n_un
 operator|.
 name|n_name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"Lost common block"
+argument_list|)
+expr_stmt|;
+name|sl_addr
+operator|+=
+name|addr
 expr_stmt|;
 name|blseek
 argument_list|(

@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xeq.c 4.1 %G%"
+literal|"@(#)xeq.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1968,6 +1968,16 @@ return|return;
 block|}
 name|docommand
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|endflg
+condition|)
+operator|*
+name|p
+operator|=
+literal|';'
 expr_stmt|;
 name|p
 operator|=
