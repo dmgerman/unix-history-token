@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.75 1996/11/06 19:15:22 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.76 1996/11/07 15:35:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -673,7 +673,7 @@ block|{
 block|{
 literal|"XF8632"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -686,7 +686,7 @@ block|,
 block|{
 literal|"XF8632"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -725,7 +725,7 @@ block|,
 block|{
 literal|"X32bin"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -738,7 +738,7 @@ block|,
 block|{
 literal|"X32cfg"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -751,7 +751,7 @@ block|,
 block|{
 literal|"X32doc"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -764,7 +764,7 @@ block|,
 block|{
 literal|"X32html"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -777,7 +777,7 @@ block|,
 block|{
 literal|"X32lib"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -790,7 +790,7 @@ block|,
 block|{
 literal|"X32lk98"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -803,7 +803,7 @@ block|,
 block|{
 literal|"X32lkit"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -816,7 +816,7 @@ block|,
 block|{
 literal|"X32man"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -829,7 +829,7 @@ block|,
 block|{
 literal|"X32prog"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -842,7 +842,7 @@ block|,
 block|{
 literal|"X32ps"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -855,7 +855,7 @@ block|,
 block|{
 literal|"X32set"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86Dists
@@ -886,7 +886,7 @@ block|{
 block|{
 literal|"X328514"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -899,7 +899,7 @@ block|,
 block|{
 literal|"X329480"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -912,7 +912,7 @@ block|,
 block|{
 literal|"X329EGC"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -925,7 +925,7 @@ block|,
 block|{
 literal|"X329GA9"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -938,7 +938,7 @@ block|,
 block|{
 literal|"X329GAN"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -951,7 +951,7 @@ block|,
 block|{
 literal|"X329LPW"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -964,7 +964,7 @@ block|,
 block|{
 literal|"X329NKV"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -977,7 +977,7 @@ block|,
 block|{
 literal|"X329NS3"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -990,7 +990,7 @@ block|,
 block|{
 literal|"X329SPW"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1003,7 +1003,7 @@ block|,
 block|{
 literal|"X329TGU"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1016,7 +1016,7 @@ block|,
 block|{
 literal|"X329WEP"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1029,7 +1029,7 @@ block|,
 block|{
 literal|"X329WS"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1042,7 +1042,7 @@ block|,
 block|{
 literal|"X329WSN"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1055,7 +1055,7 @@ block|,
 block|{
 literal|"X32AGX"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1068,7 +1068,7 @@ block|,
 block|{
 literal|"X32I128"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1081,7 +1081,7 @@ block|,
 block|{
 literal|"X32Ma8"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1094,7 +1094,7 @@ block|,
 block|{
 literal|"X32Ma32"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1107,7 +1107,7 @@ block|,
 block|{
 literal|"X32Ma64"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1120,7 +1120,7 @@ block|,
 block|{
 literal|"X32Mono"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1133,7 +1133,7 @@ block|,
 block|{
 literal|"X32P9K"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1146,7 +1146,7 @@ block|,
 block|{
 literal|"X32S3"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1159,7 +1159,7 @@ block|,
 block|{
 literal|"X32S3V"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1172,7 +1172,7 @@ block|,
 block|{
 literal|"X32SVGA"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1185,7 +1185,7 @@ block|,
 block|{
 literal|"X32VG16"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1198,7 +1198,7 @@ block|,
 block|{
 literal|"X32W32"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1211,7 +1211,7 @@ block|,
 block|{
 literal|"X32nest"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1224,7 +1224,7 @@ block|,
 block|{
 literal|"X32vfb"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86ServerDists
@@ -1255,7 +1255,7 @@ block|{
 block|{
 literal|"X32fnts"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86FontDists
@@ -1268,7 +1268,7 @@ block|,
 block|{
 literal|"X32f100"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86FontDists
@@ -1281,7 +1281,7 @@ block|,
 block|{
 literal|"X32fcyr"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86FontDists
@@ -1294,7 +1294,7 @@ block|,
 block|{
 literal|"X32fscl"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86FontDists
@@ -1307,7 +1307,7 @@ block|,
 block|{
 literal|"X32fnon"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86FontDists
@@ -1320,7 +1320,7 @@ block|,
 block|{
 literal|"X32fsrv"
 block|,
-literal|"/usr"
+literal|"/usr/X11R6"
 block|,
 operator|&
 name|XF86FontDists
@@ -1446,6 +1446,8 @@ expr_stmt|;
 name|XF86Dists
 operator|=
 name|DIST_XF86_BIN
+operator||
+name|DIST_XF86_SET
 operator||
 name|DIST_XF86_LIB
 operator||
