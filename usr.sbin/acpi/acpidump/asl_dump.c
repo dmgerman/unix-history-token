@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpi/acpireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acpidump.h"
 end_include
 

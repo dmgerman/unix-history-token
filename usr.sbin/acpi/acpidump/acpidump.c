@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpi/acpireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acpidump.h"
 end_include
 
@@ -196,7 +190,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"or\t%s [-f dsdt_file_for_input]\n"
+literal|"\t%s [-f dsdt_file_for_input]\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%s [-h]\n"
 argument_list|,
 name|progname
 argument_list|)
