@@ -1116,6 +1116,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRC_IFUP
+value|2
+end_define
+
+begin_comment
+comment|/* interface has come back up */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRC_QUENCH2
 value|3
 end_define
@@ -1339,7 +1350,7 @@ literal|"IFDOWN"
 block|,
 literal|"ROUTEDEAD"
 block|,
-literal|"#2"
+literal|"IFUP"
 block|,
 literal|"DEC-BIT-QUENCH2"
 block|,
