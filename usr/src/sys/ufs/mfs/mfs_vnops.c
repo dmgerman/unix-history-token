@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"user.h"
 end_include
 
 begin_include
@@ -207,7 +219,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Vnode Operations.  *  * Open called to allow memory filesystem to initialize and  * validate before actual IO. Nothing to do here as the  * filesystem is ready to go in the process address space.  */
+comment|/*  * Vnode Operations.  *  * Open called to allow memory filesystem to initialize and  * validate before actual IO. Record our process identifier  * so we can tell when we are doing I/O to ourself.  */
 end_comment
 
 begin_comment
@@ -247,6 +259,17 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|ip
+init|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|vp
@@ -263,6 +286,25 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|ip
+operator|->
+name|i_uid
+operator|=
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+expr_stmt|;
+name|ip
+operator|->
+name|i_spare
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -374,20 +416,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ILOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|bp
+name|ip
 operator|->
-name|b_vp
-operator|->
-name|v_mount
+name|i_uid
 operator|==
-name|NULL
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
 condition|)
 block|{
 name|mfs_doio
@@ -405,6 +444,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|bp
+operator|->
+name|av_forw
+operator|=
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+name|ip
+operator|->
+name|i_spare
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|ip
 operator|->
 name|i_spare
@@ -428,21 +483,9 @@ name|b_vp
 argument_list|)
 expr_stmt|;
 block|}
-name|error
-operator|=
-name|biowait
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|IUNLOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -944,9 +987,19 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Send a request to the filesystem server to exit. 	 */
-name|ILOCK
-argument_list|(
+while|while
+condition|(
 name|ip
+operator|->
+name|i_spare
+index|[
+literal|0
+index|]
+condition|)
+name|sleep
+argument_list|(
+operator|&
+name|lbolt
 argument_list|)
 expr_stmt|;
 name|ip
@@ -956,7 +1009,8 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -964,11 +1018,6 @@ operator|(
 name|caddr_t
 operator|)
 name|vp
-argument_list|)
-expr_stmt|;
-name|IUNLOCK
-argument_list|(
-name|ip
 argument_list|)
 expr_stmt|;
 return|return
