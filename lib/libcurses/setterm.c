@@ -1045,7 +1045,7 @@ literal|'\0'
 expr_stmt|;
 name|namp
 operator|=
-literal|"ambsdaeohcinmimsncnsosulxbxnxtxsxx"
+literal|"ambsdadbeohcinmimsncnsosulxbxnxtxsxx"
 expr_stmt|;
 name|fp
 operator|=
