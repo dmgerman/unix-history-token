@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forop.c 1.10 %G%"
+literal|"@(#)forop.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1195,6 +1195,14 @@ endif|#
 directive|endif
 endif|OBJ
 comment|/* 	     *	shadowing the real for variable 	     *	with the initail expression temporary: 	     *	save the real for variable's offset, flags 	     *	(including nl_block). 	     *	replace them with the initial expression's offset, 	     *	and mark it as being a for variable. 	     */
+name|shadow_nl
+operator|.
+name|nl_flags
+operator|=
+name|forvar
+operator|->
+name|nl_flags
+expr_stmt|;
 operator|*
 name|forvar
 operator|=
@@ -1216,6 +1224,14 @@ operator|=
 name|shadow_nl
 operator|.
 name|nl_next
+expr_stmt|;
+name|forvar
+operator|->
+name|type
+operator|=
+name|shadow_nl
+operator|.
+name|type
 expr_stmt|;
 name|forvar
 operator|->
@@ -1713,6 +1729,20 @@ operator|!=
 name|NIL
 condition|)
 block|{
+name|shadow_nl
+operator|.
+name|nl_flags
+operator||=
+name|forvar
+operator|->
+name|nl_flags
+operator|&
+operator|(
+name|NUSED
+operator||
+name|NMOD
+operator|)
+expr_stmt|;
 operator|*
 name|forvar
 operator|=
