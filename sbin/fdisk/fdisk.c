@@ -2737,12 +2737,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    start %ld, size %ld (%qd Meg), flag %x%s\n"
+literal|"    start %lu, size %lu (%qd Meg), flag %x%s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_start
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_size
@@ -5608,12 +5614,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: WARNING: adjusting start offset of partition '%d' from %d\n\     to %d, to round to an head boundary.\n"
+literal|"%s: WARNING: adjusting start offset of partition '%d' from %lu\n\     to %lu, to round to an head boundary.\n"
 argument_list|,
 name|name
 argument_list|,
 name|partition
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_start
@@ -5668,12 +5677,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: WARNING: adjusting size of partition '%d' from %d to %d,\n\     to round to a cylinder boundary.\n"
+literal|"%s: WARNING: adjusting size of partition '%d' from %lu to %lu,\n\     to round to a cylinder boundary.\n"
 argument_list|,
 name|name
 argument_list|,
 name|partition
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_size
