@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: iso_proto.c,v 4.4 88/09/08 08:38:42 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_proto.c,v $   *	@(#)iso_proto.c	7.4 (Berkeley) %G% *  *  * iso_proto.c : protocol switch tables in the ISO domain  *  * ISO protocol family includes TP, CLTP, CLNP, 8208  * TP and CLNP are implemented here.  */
+comment|/* $Header: iso_proto.c,v 4.4 88/09/08 08:38:42 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_proto.c,v $   *	@(#)iso_proto.c	7.5 (Berkeley) %G% *  *  * iso_proto.c : protocol switch tables in the ISO domain  *  * ISO protocol family includes TP, CLTP, CLNP, 8208  * TP and CLNP are implemented here.  */
 end_comment
 
 begin_ifndef
@@ -285,7 +285,7 @@ literal|0
 block|,
 name|rclnp_ctloutput
 block|,
-name|raw_usrreq
+name|clnp_usrreq
 block|,
 literal|0
 block|,

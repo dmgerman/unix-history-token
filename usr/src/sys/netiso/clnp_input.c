@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_input.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_input.c	7.10 (Berkeley) %G% */
+comment|/*	@(#)clnp_input.c	7.11 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -2069,10 +2069,10 @@ argument_list|(
 name|m
 argument_list|,
 operator|&
-name|src
+name|source
 argument_list|,
 operator|&
-name|dst
+name|target
 argument_list|,
 name|clnp
 operator|->
