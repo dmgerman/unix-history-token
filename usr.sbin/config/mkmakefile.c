@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"y.tab.h"
 end_include
 
@@ -1392,7 +1398,7 @@ decl_stmt|;
 name|char
 name|fname
 index|[
-literal|80
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|int
@@ -1459,7 +1465,9 @@ argument_list|(
 name|fname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fname
+argument_list|)
 argument_list|,
 literal|"../../conf/files"
 argument_list|)
@@ -1537,7 +1545,9 @@ argument_list|(
 name|fname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fname
+argument_list|)
 argument_list|,
 literal|"../../conf/files.%s"
 argument_list|,
@@ -1570,7 +1580,9 @@ argument_list|(
 name|fname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fname
+argument_list|)
 argument_list|,
 literal|"files.%s"
 argument_list|,
@@ -1599,7 +1611,9 @@ argument_list|(
 name|fname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fname
+argument_list|)
 argument_list|,
 literal|"files.%s"
 argument_list|,
