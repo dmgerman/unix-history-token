@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)parser.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)parser.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -178,6 +178,17 @@ name|NEOF
 value|((union node *)&tokpushback)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|whichprompt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 == PS1, 2 == PS2 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -205,6 +216,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|getprompt
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -222,6 +244,14 @@ end_function_decl
 begin_function_decl
 name|int
 name|goodname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|getprompt
 parameter_list|()
 function_decl|;
 end_function_decl
