@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"adv.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"wdc.h"
 end_include
 
@@ -335,14 +329,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|vtdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|advdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1171,25 +1157,6 @@ block|,
 endif|#
 directive|endif
 comment|/* CAM */
-ifndef|#
-directive|ifndef
-name|PC98
-if|#
-directive|if
-name|NADV
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_CAM
-block|,
-operator|&
-name|advdriver
-block|}
-block|,
-endif|#
-directive|endif
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|PC98

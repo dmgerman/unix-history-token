@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"adv.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/advansys/advlib.h>
 end_include
 
@@ -33,8 +27,8 @@ name|adv_softc
 modifier|*
 name|adv_alloc
 parameter_list|(
-name|int
-name|unit
+name|device_t
+name|dev
 parameter_list|,
 name|bus_space_tag_t
 name|tag
@@ -158,29 +152,6 @@ end_function_decl
 begin_decl_stmt
 name|timeout_t
 name|adv_timeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|adv_softc
-modifier|*
-name|advsoftcs
-index|[
-name|NADV
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX Config should handle this */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|adv_unit
 decl_stmt|;
 end_decl_stmt
 

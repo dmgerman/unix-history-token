@@ -58,6 +58,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/cam_ccb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/cam_sim.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/cam_xpt_sim.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
