@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	3.26	%G%	*/
+comment|/*	up.c	3.27	%G%	*/
 end_comment
 
 begin_include
@@ -228,11 +228,11 @@ begin_define
 define|#
 directive|define
 name|_upSDIST
-value|6
+value|3
 end_define
 
 begin_comment
-comment|/* 3.0 msec */
+comment|/* 1.5 msec */
 end_comment
 
 begin_define
