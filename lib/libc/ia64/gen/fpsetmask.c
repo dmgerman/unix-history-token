@@ -46,13 +46,10 @@ decl_stmt|;
 asm|__asm __volatile("mov %0=ar.fpsr" : "=r" (fpsr));
 name|oldmask
 operator|=
-operator|(
+operator|~
 name|fpsr
 operator|&
-literal|0x1f
-operator|)
-operator|^
-literal|0x1f
+literal|0x3f
 expr_stmt|;
 name|fpsr
 operator|=
@@ -60,18 +57,21 @@ operator|(
 name|fpsr
 operator|&
 operator|~
-literal|0x1f
+literal|0x3f
 operator|)
 operator||
 operator|(
+operator|~
 name|mask
-operator|^
-literal|0x1f
+operator|&
+literal|0x3f
 operator|)
 expr_stmt|;
 asm|__asm __volatile("mov ar.fpsr=%0" :: "r" (fpsr));
 return|return
+operator|(
 name|oldmask
+operator|)
 return|;
 block|}
 end_function

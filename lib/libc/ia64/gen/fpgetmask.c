@@ -42,12 +42,11 @@ decl_stmt|;
 asm|__asm __volatile("mov %0=ar.fpsr" : "=r" (fpsr));
 return|return
 operator|(
+operator|~
 name|fpsr
 operator|&
-literal|0x1f
+literal|0x3f
 operator|)
-operator|^
-literal|0x1f
 return|;
 block|}
 end_function
