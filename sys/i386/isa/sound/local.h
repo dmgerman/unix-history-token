@@ -46,28 +46,28 @@ begin_define
 define|#
 directive|define
 name|SOUND_VERSION_STRING
-value|"2.4"
+value|"2.5"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_DATE
-value|"Mon Mar 7 23:54:09 PST 1994"
+value|"Sat Apr 23 07:45:17 MSD 1994"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_BY
-value|"swallace"
+value|"ache"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_HOST
-value|"freefall.cdrom.com"
+value|"dream.demos.su"
 end_define
 
 begin_define
