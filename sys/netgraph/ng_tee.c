@@ -4,7 +4,7 @@ comment|/*  * ng_tee.c  *  * Copyright (c) 1996-1999 Whistle Communications, Inc
 end_comment
 
 begin_comment
-comment|/*  * This node is like the tee(1) command and is useful for ``snooping.''  * It has 4 hooks: left, right, left2right, and right2left. Data  * entering from the right is passed to the left and duplicated on  * right2left, and data entering from the left is passed to the right  * and duplicated on left2right. Data entering from left2right is  * sent to right, and data from right2left to left.  */
+comment|/*  * This node is like the tee(1) command and is useful for ``snooping.''  * It has 4 hooks: left, right, left2right, and right2left. Data  * entering from the right is passed to the left and duplicated on  * right2left, and data entering from the left is passed to the right  * and duplicated on left2right. Data entering from left2right is  * sent to left, and data from right2left to right.  */
 end_comment
 
 begin_include
