@@ -216,6 +216,22 @@ directive|include
 file|<pci/if_stereg.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ste
+argument_list|,
+name|miibus
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|#
 directive|if
