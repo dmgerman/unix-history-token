@@ -536,6 +536,36 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* XXX: should use `#if __STDC_VERSION__>= 199901'. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STRICT_ANSI__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LONG_LONG_SUPPORTED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Compiler-dependent macros to declare that functions take printf-like  * or scanf-like arguments.  They are null except for versions of gcc  * that are known to support the features properly (old versions of gcc-2  * didn't permit keeping the keywords out of the application namespace).  */
 end_comment
 
