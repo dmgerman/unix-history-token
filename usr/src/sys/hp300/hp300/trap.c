@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -83,6 +83,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"../include/psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../include/trap.h"
 end_include
 
@@ -90,12 +96,6 @@ begin_include
 include|#
 directive|include
 file|"../include/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../include/psl.h"
 end_include
 
 begin_include
@@ -403,8 +403,10 @@ comment|/* kernel bus error */
 if|if
 condition|(
 operator|!
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_onfault
@@ -422,8 +424,10 @@ operator|=
 operator|(
 name|int
 operator|)
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_onfault
@@ -823,8 +827,9 @@ operator|+
 name|USER
 case|:
 comment|/* user async trap */
-name|astoff
-argument_list|()
+name|astpending
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 		 * We check for software interrupts first.  This is because 		 * they are at a higher level than ASTs, and on a VAX would 		 * interrupt the AST.  We assume that if we are processing 		 * an AST that we must be at IPL0 so we don't bother to 		 * check.  Note that we ensure that we are at least at SIR 		 * IPL while processing the SIR. 		 */
 name|spl1
@@ -1019,8 +1024,10 @@ name|T_MMUFLT
 operator|&&
 operator|(
 operator|!
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_onfault
@@ -1236,8 +1243,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_onfault
