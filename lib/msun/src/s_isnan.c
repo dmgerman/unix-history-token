@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
+begin_comment
+comment|/* For binary compat; to be removed in FreeBSD 6.0. */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -43,6 +47,12 @@ include|#
 directive|include
 file|"math_private.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|isnan
+end_undef
 
 begin_function
 name|int

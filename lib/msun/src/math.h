@@ -139,35 +139,35 @@ begin_define
 define|#
 directive|define
 name|FP_INFINITE
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_NAN
-value|2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_NORMAL
-value|3
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_SUBNORMAL
-value|4
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_ZERO
-value|5
+value|0x10
 end_define
 
 begin_define
@@ -179,6 +179,128 @@ name|x
 parameter_list|)
 define|\
 value|((sizeof (x) == sizeof (float)) ? __fpclassifyf(x) \     : (sizeof (x) == sizeof (double)) ? __fpclassifyd(x) \     : __fpclassifyl(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isfinite
+parameter_list|(
+name|x
+parameter_list|)
+value|(fpclassify(x)& (FP_INFINITE|FP_NAN) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isinf
+parameter_list|(
+name|x
+parameter_list|)
+value|(fpclassify(x) == FP_INFINITE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isnan
+parameter_list|(
+name|x
+parameter_list|)
+value|(fpclassify(x) == FP_NAN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isnanf
+parameter_list|(
+name|x
+parameter_list|)
+value|isnan(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isnormal
+parameter_list|(
+name|x
+parameter_list|)
+value|(fpclassify(x) == FP_NORMAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isgreater
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(!isunordered((x), (y))&& (x)> (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isgreaterequal
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(!isunordered((x), (y))&& (x)>= (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isless
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(!isunordered((x), (y))&& (x)< (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|islessequal
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(!isunordered((x), (y))&& (x)<= (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|islessgreater
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(!isunordered((x), (y))&& \ 					((x)> (y) || (y)> (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isunordered
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(isnan(x) || isnan(y))
 end_define
 
 begin_define
@@ -617,44 +739,48 @@ begin_comment
 comment|/*  * Most of these functions have the side effect of setting errno, so they  * are not declared as __pure2.  (XXX: this point needs to be revisited,  * since C99 doesn't require the mistake of setting errno, and we mostly  * don't set it anyway.  In C99, pragmas and functions for changing the  * rounding mode affect the purity of these functions.)  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|__BEGIN_DECLS
 comment|/*  * ANSI/POSIX  */
 name|int
 name|__fpclassifyd
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|__fpclassifyf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|__fpclassifyl
-parameter_list|(
+argument_list|(
 name|long
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|__signbit
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|double
@@ -944,26 +1070,6 @@ name|double
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|int
-name|isinf
-argument_list|(
-name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|isnan
-argument_list|(
-name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|double
@@ -1558,16 +1664,6 @@ name|hypotf
 argument_list|(
 name|float
 argument_list|,
-name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|isnanf
-argument_list|(
 name|float
 argument_list|)
 name|__pure2
