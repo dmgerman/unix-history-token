@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4657,6 +4657,9 @@ argument_list|()
 decl_stmt|,
 name|raw_ctlinput
 argument_list|()
+decl_stmt|,
+name|route_init
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -4733,7 +4736,7 @@ name|PF_ROUTE
 block|,
 literal|"route"
 block|,
-literal|0
+name|route_init
 block|,
 literal|0
 block|,

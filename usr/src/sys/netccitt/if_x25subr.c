@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1036,7 +1036,7 @@ operator|->
 name|m_next
 decl_stmt|;
 comment|/* m0 has calling sockaddr_x25 */
-name|int
+name|void
 name|x25_rtrequest
 parameter_list|()
 function_decl|;
@@ -3444,17 +3444,6 @@ modifier|*
 name|rn_addmask
 parameter_list|()
 function_decl|;
-name|rn_inithead
-argument_list|(
-operator|&
-name|rt_tables
-index|[
-name|AF_CCITT
-index|]
-argument_list|,
-literal|32
-argument_list|)
-expr_stmt|;
 name|x25_dgram_sockmask
 operator|=
 name|SA

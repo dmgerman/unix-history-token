@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_proto.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_proto.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"net/radix.h"
 end_include
 
 begin_include
@@ -358,6 +364,18 @@ literal|0
 index|]
 argument_list|)
 index|]
+block|,
+literal|0
+block|,
+name|rn_inithead
+block|,
+literal|16
+block|,
+expr|sizeof
+operator|(
+expr|struct
+name|sockaddr_ns
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt

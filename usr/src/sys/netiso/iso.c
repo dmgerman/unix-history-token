@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -153,49 +153,19 @@ begin_comment
 comment|/* loopback interface */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ether_output
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|llc_rtrequest
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * FUNCTION:		iso_init  *  * PURPOSE:			initialize the iso address family  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	1) initializes the routing table.  *  *  * NOTES:			  */
-end_comment
-
-begin_macro
-name|iso_init
-argument_list|()
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|rt_tables
-index|[
-name|AF_ISO
-index|]
-operator|==
-literal|0
-condition|)
-block|{
-name|rn_inithead
-argument_list|(
-name|rt_tables
-operator|+
-name|AF_ISO
-argument_list|,
-literal|48
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_block
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * FUNCTION:		iso_addrmatch1  *  * PURPOSE:			decide if the two iso_addrs passed are equal  *  * RETURNS:			true if the addrs match, false if they do not  *  * SIDE EFFECTS:	  *  * NOTES:			  */
@@ -2529,6 +2499,9 @@ name|ifp
 argument_list|,
 name|SIOCSIFADDR
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ia
 argument_list|)
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_proto.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_proto.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"net/radix.h"
 end_include
 
 begin_include
@@ -436,13 +442,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|iso_init
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|domain
@@ -455,7 +454,7 @@ comment|/* family */
 literal|"iso-domain"
 block|,
 comment|/* name */
-name|iso_init
+literal|0
 block|,
 comment|/* initialize routine */
 literal|0
@@ -483,7 +482,23 @@ literal|0
 index|]
 argument_list|)
 index|]
+block|,
 comment|/* NPROTOSW */
+literal|0
+block|,
+comment|/* next */
+name|rn_inithead
+block|,
+comment|/* rtattach */
+literal|48
+block|,
+comment|/* rtoffset */
+expr|sizeof
+operator|(
+expr|struct
+name|sockaddr_iso
+operator|)
+comment|/* maxkeylen */
 block|}
 decl_stmt|;
 end_decl_stmt
