@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.48	%G%"
+literal|"@(#)main.c	3.49	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1174,14 +1174,16 @@ condition|)
 name|getrequests
 argument_list|()
 expr_stmt|;
-comment|/* 	if (Smtp) 		smtp();  	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
+comment|/* 	if (Smtp) 	{ 		if (queuemode) 			runqueue(TRUE); 		smtp(); 	}  	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
 if|if
 condition|(
 name|queuemode
 condition|)
 block|{
 name|runqueue
-argument_list|()
+argument_list|(
+name|FALSE
+argument_list|)
 expr_stmt|;
 name|finis
 argument_list|()

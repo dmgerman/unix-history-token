@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	3.2	%G%"
+literal|"@(#)queue.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,10 +452,32 @@ name|ReorderQueue
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* if set, reorder the send queue */
+end_comment
+
+begin_decl_stmt
+name|int
+name|QueuePid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pid of child running queue */
+end_comment
+
 begin_macro
 name|runqueue
-argument_list|()
+argument_list|(
+argument|forkflag
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|bool
+name|forkflag
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -466,6 +488,59 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_if
+if|if
+condition|(
+name|QueueIntvl
+operator|!=
+literal|0
+condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|reordersig
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+name|QueueIntvl
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|forkflag
+condition|)
+block|{
+name|QueuePid
+operator|=
+name|dofork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|QueuePid
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* parent */
+return|return;
+block|}
+else|else
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_if
 
 begin_for
 for|for
@@ -493,10 +568,8 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|sleep
-argument_list|(
-name|QueueIntvl
-argument_list|)
+name|pause
+argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
@@ -504,26 +577,6 @@ name|ReorderQueue
 operator|=
 name|FALSE
 expr_stmt|;
-if|if
-condition|(
-name|QueueIntvl
-operator|!=
-literal|0
-condition|)
-block|{
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|reordersig
-argument_list|)
-expr_stmt|;
-name|alarm
-argument_list|(
-name|QueueIntvl
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		**  Process them once at a time. 		**	The queue could be reordered while we do this to take 		**	new requests into account.  If so, the existing job 		**	will be finished but the next thing taken off WorkQ 		**	may be something else. 		*/
 while|while
 condition|(
@@ -594,18 +647,107 @@ unit|reordersig
 operator|(
 operator|)
 block|{
+if|if
+condition|(
+name|QueuePid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* we are in a child doing queueing */
 name|ReorderQueue
 operator|=
 name|TRUE
-block|; }
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
+comment|/* we are in a parent -- poke child or start new one */
+if|if
+condition|(
+name|kill
+argument_list|(
+name|QueuePid
+argument_list|,
+name|SIGALRM
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* no child -- get zombie& start new one */
+specifier|static
+name|int
+name|st
+decl_stmt|;
+name|wait
+argument_list|(
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+name|QueuePid
+operator|=
+name|dofork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|QueuePid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* new child; run queue */
+name|runqueue
+argument_list|()
+expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+block|}
+end_else
+
+begin_comment
+comment|/* 	**  Arrange to get this signal again. 	*/
+end_comment
+
+begin_expr_stmt
+name|alarm
+argument_list|(
+name|QueueIntvl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_escape
+unit|}
+end_escape
+
+begin_comment
 comment|/* **  ORDERQ -- order the work queue. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Sets WorkQ to the queue of available work, in order. */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|WLSIZE
 value|120
+end_define
+
+begin_comment
 comment|/* max size of worklist per sort */
-name|orderq
-argument_list|()
+end_comment
+
+begin_expr_stmt
+unit|orderq
+operator|(
+operator|)
 block|{ 	struct
 name|direct
 name|d

@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.50	%G%"
+literal|"@(#)deliver.c	3.51	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1347,26 +1347,58 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		editfcn -- function to pipe it through. **		ctladdr -- an address pointer controlling the **			user/groupid etc. of the mailer. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
+comment|/* **  DOFORK -- simple fork interface to DOFORK. ** **	Parameters: **		none. ** **	Returns: **		pid of child in parent. **		zero in child. **		-1 on error. ** **	Side Effects: **		returns twice, once in parent and once in child. */
 end_comment
 
 begin_expr_stmt
-unit|sendoff
+unit|dofork
 operator|(
-name|m
-operator|,
-name|pvp
-operator|,
-name|editfcn
-operator|,
-name|ctladdr
 operator|)
-expr|struct
-name|mailer
-operator|*
-name|m
-expr_stmt|;
+block|{
+specifier|register
+name|int
+name|pid
+block|;
+name|DOFORK
+argument_list|(
+name|fork
+argument_list|)
+block|;
+return|return
+operator|(
+name|pid
+operator|)
+return|;
+block|}
 end_expr_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		editfcn -- function to pipe it through. **		ctladdr -- an address pointer controlling the **			user/groupid etc. of the mailer. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
+end_comment
+
+begin_macro
+name|sendoff
+argument_list|(
+argument|m
+argument_list|,
+argument|pvp
+argument_list|,
+argument|editfcn
+argument_list|,
+argument|ctladdr
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|mailer
+modifier|*
+name|m
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
