@@ -3606,8 +3606,46 @@ name|LINUX_MAX_UTSNAME
 argument_list|)
 expr_stmt|;
 block|}
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+comment|/* XXX: Linux can change 'personality'. */
+ifdef|#
+directive|ifdef
+name|COMPAT_LINUX32
+name|strlcpy
+argument_list|(
+name|utsname
+operator|.
+name|machine
+argument_list|,
+literal|"i686"
+argument_list|,
+name|LINUX_MAX_UTSNAME
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
+name|strlcpy
+argument_list|(
+name|utsname
+operator|.
+name|machine
+argument_list|,
+literal|"x86_64"
+argument_list|,
+name|LINUX_MAX_UTSNAME
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX32 */
+else|#
+directive|else
+comment|/* something other than i386 or amd64 - assume we and Linux agree */
 name|strlcpy
 argument_list|(
 name|utsname
@@ -3621,6 +3659,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __i386__ */
 name|strlcpy
 argument_list|(
 name|utsname
