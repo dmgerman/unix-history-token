@@ -3124,7 +3124,7 @@ name|pf
 operator|->
 name|dev
 operator|,
-literal|"MFC: I/O base 0x%jx IOSIZE %jd\n"
+literal|"MFC: I/O base %#jx IOSIZE %#jx\n"
 operator|,
 operator|(
 name|uintmax_t
@@ -3133,10 +3133,14 @@ name|pf
 operator|->
 name|pf_mfc_iobase
 operator|,
-operator|(
+call|(
 name|uintmax_t
-operator|)
+call|)
+argument_list|(
 name|iosize
+operator|+
+literal|1
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
