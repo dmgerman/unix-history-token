@@ -874,7 +874,7 @@ begin_define
 define|#
 directive|define
 name|APIC_ID_MASK
-value|0x0f000000
+value|0xff000000
 end_define
 
 begin_comment
