@@ -1506,12 +1506,6 @@ name|dp
 operator|->
 name|d_drv1
 expr_stmt|;
-name|unit
-operator|=
-name|periph
-operator|->
-name|unit_number
-expr_stmt|;
 if|if
 condition|(
 name|periph
@@ -1530,6 +1524,12 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|unit
+operator|=
+name|periph
+operator|->
+name|unit_number
+expr_stmt|;
 name|softc
 operator|=
 operator|(
