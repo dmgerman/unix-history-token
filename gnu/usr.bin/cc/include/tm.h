@@ -57,23 +57,12 @@ name|CPP_PREDEFINES
 value|"-Dunix -Di386 -D__FreeBSD__=2 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
 name|INCLUDE_DEFAULTS
 value|{ \ 	{ "/usr/include", 0 }, \ 	{ "/usr/include/g++", 1 }, \ 	{ 0, 0} \ 	}
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Like the default, except no -lg.  */
