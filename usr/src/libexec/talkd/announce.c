@@ -750,6 +750,7 @@ name|bptr
 operator|-
 name|big_buf
 expr_stmt|;
+comment|/* 	 * we choose a timeout of RING_WAIT-5 seconds so that we don't 	 * stack up processes trying to write messages to a tty 	 * that is permanently blocked. 	 */
 if|if
 condition|(
 name|ttymsg
@@ -761,7 +762,9 @@ literal|1
 argument_list|,
 name|tty
 argument_list|,
-literal|30
+name|RING_WAIT
+operator|-
+literal|5
 argument_list|)
 operator|!=
 name|NULL
