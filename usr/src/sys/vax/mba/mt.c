@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.11	82/10/17	*/
+comment|/*	mt.c	4.12	82/10/17	*/
 end_comment
 
 begin_include
@@ -3142,7 +3142,7 @@ expr|struct
 name|mtop
 operator|*
 operator|)
-name|mtop
+name|data
 expr_stmt|;
 switch|switch
 condition|(
@@ -3442,12 +3442,6 @@ name|mba_regs
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
-name|struct
-name|mtdevice
-modifier|*
-name|mtaddr
-decl_stmt|;
 name|int
 name|blk
 decl_stmt|,
@@ -3527,13 +3521,17 @@ directive|if
 name|lint
 name|blk
 operator|=
-name|blk
+literal|0
 expr_stmt|;
 name|num
 operator|=
-name|num
+name|blk
 expr_stmt|;
 name|start
+operator|=
+name|num
+expr_stmt|;
+name|blk
 operator|=
 name|start
 expr_stmt|;
