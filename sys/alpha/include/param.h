@@ -254,12 +254,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DFLTPHYS
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -271,17 +265,6 @@ begin_comment
 comment|/* default max raw I/O transfer size */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPHYS
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -292,11 +275,6 @@ end_define
 begin_comment
 comment|/* max raw I/O transfer size */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
