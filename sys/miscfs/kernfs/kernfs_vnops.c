@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernfs_vnops.c	8.6 (Berkeley) 2/10/94  * $Id: kernfs_vnops.c,v 1.7 1994/11/15 20:30:56 jkh Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernfs_vnops.c	8.6 (Berkeley) 2/10/94  * $Id: kernfs_vnops.c,v 1.10 1995/07/31 09:52:21 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -191,13 +191,19 @@ decl_stmt|;
 name|int
 name|kt_vtype
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|kt_vp
+decl_stmt|;
 block|}
 name|kern_targets
 index|[]
 init|=
 block|{
 comment|/* NOTE: The name must be less than UIO_MX-16 chars in length */
-comment|/* name		data		tag		ro/rw */
+comment|/* name		data		tag		ro/rw 	type	vnodep*/
 block|{
 literal|"."
 block|,
@@ -208,6 +214,8 @@ block|,
 name|VREAD
 block|,
 name|VDIR
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -220,6 +228,8 @@ block|,
 name|VREAD
 block|,
 name|VDIR
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -235,6 +245,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -247,6 +259,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -261,6 +275,8 @@ operator||
 name|VWRITE
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -273,6 +289,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -286,6 +304,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -298,6 +318,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -313,6 +335,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -326,12 +350,14 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{ "root",	0,		KTT_NULL,	VREAD,		VDIR },
+block|{ "root",	0,		KTT_NULL,	VREAD,	VDIR,&rootdir},
 endif|#
 directive|endif
 block|{
@@ -344,6 +370,9 @@ block|,
 name|VREAD
 block|,
 name|VBLK
+block|,
+operator|&
+name|rootvp
 block|}
 block|,
 block|{
@@ -356,6 +385,9 @@ block|,
 name|VREAD
 block|,
 name|VCHR
+block|,
+operator|&
+name|rrootvp
 block|}
 block|,
 block|{
@@ -368,6 +400,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -380,6 +414,8 @@ block|,
 name|VREAD
 block|,
 name|VREG
+block|,
+name|NULL
 block|}
 block|, }
 struct|;
@@ -855,6 +891,13 @@ modifier|*
 name|fvp
 decl_stmt|;
 name|int
+name|nameiop
+init|=
+name|cnp
+operator|->
+name|cn_nameiop
+decl_stmt|;
+name|int
 name|error
 decl_stmt|,
 name|i
@@ -943,103 +986,6 @@ literal|0
 block|if (cnp->cn_namelen == 4&& bcmp(pname, "root", 4) == 0) { 		*vpp = rootdir; 		VREF(rootdir); 		VOP_LOCK(rootdir); 		return (0); 	}
 endif|#
 directive|endif
-comment|/* 	 * /kern/rootdev is the root device 	 */
-if|if
-condition|(
-name|cnp
-operator|->
-name|cn_namelen
-operator|==
-literal|7
-operator|&&
-name|bcmp
-argument_list|(
-name|pname
-argument_list|,
-literal|"rootdev"
-argument_list|,
-literal|7
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-operator|*
-name|vpp
-operator|=
-name|rootvp
-expr_stmt|;
-name|VREF
-argument_list|(
-name|rootvp
-argument_list|)
-expr_stmt|;
-name|VOP_LOCK
-argument_list|(
-name|rootvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 	 * /kern/rrootdev is the raw root device 	 */
-if|if
-condition|(
-name|cnp
-operator|->
-name|cn_namelen
-operator|==
-literal|8
-operator|&&
-name|bcmp
-argument_list|(
-name|pname
-argument_list|,
-literal|"rrootdev"
-argument_list|,
-literal|8
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|rrootvp
-condition|)
-block|{
-operator|*
-name|vpp
-operator|=
-name|rrootvp
-expr_stmt|;
-name|VREF
-argument_list|(
-name|rrootvp
-argument_list|)
-expr_stmt|;
-name|VOP_LOCK
-argument_list|(
-name|rrootvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|error
 operator|=
 name|ENOENT
@@ -1119,13 +1065,130 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * If the name wasn't found, and this is not a LOOKUP 	 * request, we return EOPNOTSUPP so that the initial namei() 	 * fails and the higher level routines will not try to call  	 * our VOP_* functions. 	 */
 if|if
 condition|(
 name|error
 condition|)
+block|{
+if|if
+condition|(
+name|nameiop
+operator|!=
+name|LOOKUP
+condition|)
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
+comment|/* 	 * DELETE requests are not supported. 	 */
+if|if
+condition|(
+name|nameiop
+operator|==
+name|DELETE
+condition|)
+block|{
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* 	 * Allow CREATE requests if the name in question can 	 * be written to.  This allows open(name, O_RDWR | O_CREAT) 	 * to work.  Otherwise CREATE requests are not supported. 	 */
+if|if
+condition|(
+name|nameiop
+operator|==
+name|CREATE
+operator|&&
+operator|(
+name|kern_targets
+index|[
+name|i
+index|]
+operator|.
+name|kt_rw
+operator|&
+name|VWRITE
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* 	 * Check if this name has already has a vnode associated with it. 	 */
+if|if
+condition|(
+name|kern_targets
+index|[
+name|i
+index|]
+operator|.
+name|kt_vp
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|kern_targets
+index|[
+name|i
+index|]
+operator|.
+name|kt_vp
+condition|)
+block|{
+operator|*
+name|vpp
+operator|=
+operator|*
+name|kern_targets
+index|[
+name|i
+index|]
+operator|.
+name|kt_vp
+expr_stmt|;
+name|VREF
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|KERNFS_DIAGNOSTIC
@@ -2616,7 +2679,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print out the contents of a /dev/fd vnode.  */
+comment|/*  * Print out the contents of a kernfs vnode.  */
 end_comment
 
 begin_comment
@@ -2675,7 +2738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * /dev/fd vnode unsupported operation  */
+comment|/*  * Kernfs vnode unsupported operation  */
 end_comment
 
 begin_function
@@ -2692,7 +2755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * /dev/fd "should never get here" operation  */
+comment|/*  * Kernfs "should never get here" operation  */
 end_comment
 
 begin_function
