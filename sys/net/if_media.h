@@ -793,6 +793,17 @@ begin_comment
 comment|/* Operate in Adhoc mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_HOSTAP
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Operate in Host AP mode */
+end_comment
+
 begin_comment
 comment|/*  * Shared media sub-types  */
 end_comment
@@ -1188,7 +1199,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_OPTION_DESCRIPTIONS
-value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
