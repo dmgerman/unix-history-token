@@ -301,6 +301,10 @@ name|int
 name|sc_id_vendor
 decl_stmt|;
 comment|/* vendor ID for root hub */
+name|u_int32_t
+name|sc_cmd
+decl_stmt|;
+comment|/* shadow of cmd reg during suspend */
 if|#
 directive|if
 name|defined
