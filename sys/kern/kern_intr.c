@@ -636,6 +636,18 @@ operator|&=
 operator|~
 name|IT_ENTROPY
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_INTR
+argument_list|,
+name|__func__
+literal|": updated %s\n"
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -876,6 +888,18 @@ name|ithread
 operator|=
 name|ithd
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_INTR
+argument_list|,
+name|__func__
+literal|": created %s"
+argument_list|,
+name|ithd
+operator|->
+name|it_name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -957,6 +981,18 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_INTR
+argument_list|,
+name|__func__
+literal|": killing %s"
+argument_list|,
+name|ithread
+operator|->
+name|it_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1267,6 +1303,22 @@ name|cookiep
 operator|=
 name|ih
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_INTR
+argument_list|,
+name|__func__
+literal|": added %s to %s"
+argument_list|,
+name|ih
+operator|->
+name|ih_name
+argument_list|,
+name|ithread
+operator|->
+name|it_name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1361,6 +1413,22 @@ name|handler
 operator|->
 name|ih_name
 operator|)
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_INTR
+argument_list|,
+name|__func__
+literal|": removing %s from %s"
+argument_list|,
+name|handler
+operator|->
+name|ih_name
+argument_list|,
+name|ithread
+operator|->
+name|it_name
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
