@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	2.8 %G%"
+literal|"@(#)cmdtab.c	2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|local
+argument_list|()
+decl_stmt|,
 name|folders
 argument_list|()
 decl_stmt|,
@@ -749,6 +752,18 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|"local"
+block|,
+name|local
+block|,
+name|M
+operator||
+name|RAWLIST
+block|,
+literal|0
+block|,
+literal|1000
 block|,
 literal|"xit"
 block|,
