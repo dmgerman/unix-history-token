@@ -911,12 +911,9 @@ name|SADB_X_SATYPE_IPCOMP
 value|9
 end_define
 
-begin_define
-define|#
-directive|define
-name|SADB_X_SATYPE_POLICY
-value|10
-end_define
+begin_comment
+comment|/*#define SADB_X_SATYPE_POLICY	10	obsolete, do not reuse */
+end_comment
 
 begin_define
 define|#
@@ -982,29 +979,21 @@ begin_define
 define|#
 directive|define
 name|SADB_AALG_MD5HMAC
-value|1
+value|2
 end_define
-
-begin_comment
-comment|/*2*/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SADB_AALG_SHA1HMAC
-value|2
+value|3
 end_define
-
-begin_comment
-comment|/*3*/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SADB_AALG_MAX
-value|8
+value|251
 end_define
 
 begin_comment
@@ -1015,34 +1004,22 @@ begin_define
 define|#
 directive|define
 name|SADB_X_AALG_SHA2_256
-value|6
+value|5
 end_define
-
-begin_comment
-comment|/*5*/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SADB_X_AALG_SHA2_384
-value|7
+value|6
 end_define
-
-begin_comment
-comment|/*6*/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SADB_X_AALG_SHA2_512
-value|8
+value|7
 end_define
-
-begin_comment
-comment|/*7*/
-end_comment
 
 begin_comment
 comment|/* private allocations should use 249-255 (RFC2407) */
@@ -1052,12 +1029,8 @@ begin_define
 define|#
 directive|define
 name|SADB_X_AALG_MD5
-value|3
+value|249
 end_define
-
-begin_comment
-comment|/*249*/
-end_comment
 
 begin_comment
 comment|/* Keyed MD5 */
@@ -1067,12 +1040,8 @@ begin_define
 define|#
 directive|define
 name|SADB_X_AALG_SHA
-value|4
+value|250
 end_define
-
-begin_comment
-comment|/*250*/
-end_comment
 
 begin_comment
 comment|/* Keyed SHA */
@@ -1082,12 +1051,8 @@ begin_define
 define|#
 directive|define
 name|SADB_X_AALG_NULL
-value|5
+value|251
 end_define
-
-begin_comment
-comment|/*251*/
-end_comment
 
 begin_comment
 comment|/* null authentication */
@@ -1108,34 +1073,22 @@ begin_define
 define|#
 directive|define
 name|SADB_EALG_DESCBC
-value|1
+value|2
 end_define
-
-begin_comment
-comment|/*2*/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SADB_EALG_3DESCBC
-value|2
+value|3
 end_define
-
-begin_comment
-comment|/*3*/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SADB_EALG_NULL
-value|3
+value|11
 end_define
-
-begin_comment
-comment|/*11*/
-end_comment
 
 begin_define
 define|#
@@ -1152,23 +1105,15 @@ begin_define
 define|#
 directive|define
 name|SADB_X_EALG_CAST128CBC
-value|5
+value|6
 end_define
-
-begin_comment
-comment|/*6*/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SADB_X_EALG_BLOWFISHCBC
-value|4
+value|7
 end_define
-
-begin_comment
-comment|/*7*/
-end_comment
 
 begin_define
 define|#
