@@ -84,10 +84,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|deprecated
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -121,7 +117,7 @@ literal|'\007'
 case|:
 if|if
 condition|(
-name|deprecated
+name|odmode
 condition|)
 comment|/* od didn't know about \a */
 break|break;
@@ -187,7 +183,7 @@ literal|'\v'
 case|:
 if|if
 condition|(
-name|deprecated
+name|odmode
 condition|)
 break|break;
 name|str
@@ -294,10 +290,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|deprecated
-decl_stmt|;
 specifier|static
 name|char
 specifier|const
@@ -389,7 +381,7 @@ literal|'s'
 expr_stmt|;
 if|if
 condition|(
-name|deprecated
+name|odmode
 operator|&&
 operator|*
 name|p
@@ -458,7 +450,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|deprecated
+name|odmode
 operator|&&
 operator|*
 name|p

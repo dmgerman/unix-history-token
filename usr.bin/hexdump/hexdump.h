@@ -195,6 +195,17 @@ begin_comment
 comment|/* data block size */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|odmode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* are we acting as od(1)? */
+end_comment
+
 begin_enum
 enum|enum
 name|_vflag

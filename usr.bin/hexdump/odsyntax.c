@@ -85,7 +85,7 @@ end_include
 
 begin_decl_stmt
 name|int
-name|deprecated
+name|odmode
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +150,7 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-name|deprecated
+name|odmode
 operator|=
 literal|1
 expr_stmt|;
@@ -381,11 +381,6 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|warnx
-argument_list|(
-literal|"od(1) has been deprecated for hexdump(1)"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ch
