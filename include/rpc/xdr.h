@@ -248,7 +248,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  */
+comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  *  * Sometimes there is a third argument, sometimes not. So for correct  * prototyping, ... is required.  */
 end_comment
 
 begin_ifdef
@@ -283,10 +283,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/*  * XXX can't actually prototype it, because some take two args!!!  */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|bool_t
@@ -296,7 +292,10 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-comment|/* XDR *, void *, u_int */
+name|XDR
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 expr_stmt|;
