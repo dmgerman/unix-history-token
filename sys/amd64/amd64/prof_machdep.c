@@ -423,6 +423,7 @@ operator|==
 name|CPUTIME_CLOCK_TSC
 condition|)
 block|{
+comment|/* 		 * Scale the TSC a little to make cputime()'s frequency 		 * fit in an int, assuming that the TSC frequency fits 		 * in a u_int.  Use a fixed scale since dynamic scaling 		 * would be slower and we can't really use the low bit 		 * of precision. 		 */
 name|count
 operator|=
 operator|(
@@ -430,6 +431,9 @@ name|u_int
 operator|)
 name|rdtsc
 argument_list|()
+operator|&
+operator|~
+literal|1u
 expr_stmt|;
 name|delta
 operator|=
@@ -441,6 +445,8 @@ name|count
 operator|-
 name|prev_count
 argument_list|)
+operator|>>
+literal|1
 expr_stmt|;
 name|prev_count
 operator|=
@@ -896,6 +902,8 @@ operator|->
 name|profrate
 operator|=
 name|tsc_freq
+operator|>>
+literal|1
 expr_stmt|;
 if|#
 directive|if
