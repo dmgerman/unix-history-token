@@ -8,7 +8,7 @@ comment|/*  * Serial Line interface  *  * Rick Adams  * Center for Seismic Studi
 end_comment
 
 begin_comment
-comment|/* $Header: /a/cvs/386BSD/src/sys/net/if_sl.c,v 1.1.1.1 1993/06/12 14:57:51 rgrimes Exp $ */
+comment|/* $Header: /a/cvs/386BSD/src/sys/net/if_sl.c,v 1.2 1993/08/31 15:44:45 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -1224,20 +1230,32 @@ block|}
 if|if
 condition|(
 operator|(
+operator|(
 name|sc
 operator|->
 name|sc_ttyp
 operator|->
 name|t_state
 operator|&
-operator|(
 name|TS_CARR_ON
-operator||
-name|CLOCAL
-operator|)
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sc
+operator|->
+name|sc_ttyp
+operator|->
+name|t_cflag
+operator|&
+name|CLOCAL
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|m_freem
@@ -1247,7 +1265,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EHOSTUNREACH
+name|ENETDOWN
 operator|)
 return|;
 block|}
@@ -1584,7 +1602,16 @@ return|return;
 comment|/* 		 * Do not remove the packet from the IP queue if it 		 * doesn't look like the packet will fit into the 		 * current COM output queue, with a packet full of 		 * escapes this could be as bad as SLMTU*2.  The value 		 * of RBSZ in tty.h also has to be upped to be at least 		 * SLMTU*2. 		 */
 if|if
 condition|(
+name|min
+argument_list|(
 name|RBSZ
+argument_list|,
+literal|4
+operator|*
+name|SLMTU
+operator|+
+literal|4
+argument_list|)
 operator|-
 name|RB_LEN
 argument_list|(
@@ -2406,23 +2433,37 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
 name|c
 operator|&
 name|TTY_ERRORMASK
+operator|)
 operator|||
+operator|(
+operator|(
 operator|(
 name|tp
 operator|->
 name|t_state
 operator|&
-operator|(
 name|TS_CARR_ON
-operator||
-name|CLOCAL
-operator|)
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|tp
+operator|->
+name|t_cflag
+operator|&
+name|CLOCAL
+operator|)
+operator|==
+literal|0
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* XXX */
