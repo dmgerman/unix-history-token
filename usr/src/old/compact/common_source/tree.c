@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	4.2 (Berkeley) %G%"
+literal|"@(#)tree.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,18 +341,9 @@ name|FBIT
 expr_stmt|;
 do|do
 block|{
-operator|(
-name|r
-operator|->
-name|count
-index|[
-name|rs
-index|]
-operator|)
-operator|++
-expr_stmt|;
 name|rc
 operator|=
+operator|++
 name|r
 operator|->
 name|count
@@ -393,11 +384,9 @@ name|rs
 expr_stmt|;
 name|sc
 operator|=
-operator|(
 name|s
 operator|.
 name|p
-operator|)
 operator|->
 name|count
 index|[
@@ -406,11 +395,9 @@ index|]
 expr_stmt|;
 name|st
 operator|=
-operator|(
 name|s
 operator|.
 name|p
-operator|)
 operator|->
 name|top
 index|[
@@ -421,6 +408,7 @@ if|if
 condition|(
 name|rs
 condition|)
+block|{
 if|if
 condition|(
 name|r
@@ -439,9 +427,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
 else|else
-empty_stmt|;
-elseif|else
+block|{
 if|if
 condition|(
 name|r
@@ -461,6 +449,7 @@ name|head
 expr_stmt|;
 break|break;
 block|}
+block|}
 name|q
 operator|.
 name|p
@@ -471,11 +460,9 @@ name|qs
 expr_stmt|;
 name|qc
 operator|=
-operator|(
 name|q
 operator|.
 name|p
-operator|)
 operator|->
 name|count
 index|[
@@ -484,11 +471,9 @@ index|]
 expr_stmt|;
 name|qt
 operator|=
-operator|(
 name|q
 operator|.
 name|p
-operator|)
 operator|->
 name|top
 index|[
@@ -519,10 +504,6 @@ name|count
 index|[
 literal|0
 index|]
-condition|?
-literal|1
-else|:
-literal|0
 operator|)
 expr_stmt|;
 comment|/* exchange pointers of (t, ts) and (r, rs) */
@@ -539,7 +520,6 @@ index|]
 operator|.
 name|ch
 expr_stmt|;
-comment|/*  {					*/
 name|s
 operator|.
 name|ch
@@ -553,7 +533,6 @@ index|]
 operator|.
 name|ch
 expr_stmt|;
-comment|/*  {					*/
 name|t
 operator|->
 name|sp
@@ -567,7 +546,6 @@ name|s
 operator|.
 name|ch
 expr_stmt|;
-comment|/*  {					*/
 name|r
 operator|->
 name|sp
@@ -581,8 +559,6 @@ name|q
 operator|.
 name|ch
 expr_stmt|;
-comment|/*  { change code when Cory gets v. 7	*/
-comment|/*  {					*/
 name|exch
 argument_list|(
 name|t
@@ -598,7 +574,6 @@ argument_list|,
 name|rs
 argument_list|)
 expr_stmt|;
-comment|/*  {					*/
 name|exch
 argument_list|(
 name|r
@@ -614,7 +589,6 @@ argument_list|,
 name|ts
 argument_list|)
 expr_stmt|;
-comment|/*  {					*/
 name|qs
 operator|=
 operator|(
@@ -683,31 +657,25 @@ operator|^=
 name|ss
 expr_stmt|;
 block|}
-operator|(
 name|t
 operator|->
 name|count
 index|[
 name|ts
 index|]
-operator|)
 operator|++
 expr_stmt|;
-operator|(
 name|r
 operator|->
 name|count
 index|[
 name|rs
 index|]
-operator|)
 operator|--
 expr_stmt|;
-operator|(
 name|qt
 operator|->
 name|pt
-operator|)
 operator|+=
 name|ts
 expr_stmt|;
@@ -968,11 +936,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
 name|x
 operator|.
 name|p
-operator|)
 operator|->
 name|fath
 operator|.
@@ -980,11 +946,9 @@ name|fp
 operator|=
 name|w
 expr_stmt|;
-operator|(
 name|x
 operator|.
 name|p
-operator|)
 operator|->
 name|fath
 operator|.
@@ -997,11 +961,9 @@ if|if
 condition|(
 name|ws
 condition|)
-operator|(
 name|x
 operator|.
 name|p
-operator|)
 operator|->
 name|fath
 operator|.
