@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -159,18 +159,20 @@ modifier|*
 name|lcd_pkp
 decl_stmt|;
 comment|/* Network this lcd is attached to */
-block|struct
+name|struct
 name|sockaddr_x25
 name|lcd_faddr
+decl_stmt|;
 comment|/* Remote Address (Calling) */
-expr|struct
+name|struct
 name|sockaddr_x25
 name|lcd_laddr
+decl_stmt|;
 comment|/* Local Address (Called) */
-expr|struct
+name|struct
 name|sockbuf
 name|lcd_sb
-expr_stmt|;
+decl_stmt|;
 comment|/* alternate for datagram service */
 block|}
 struct|;
@@ -304,8 +306,12 @@ name|ia_chan
 value|ia_pkcb.pk_chan
 define|#
 directive|define
-name|ia_addr
-value|ia_pkcb.pk_xc.xc_addr
+name|ia_xc
+value|ia_pkcb.pk_xc
+define|#
+directive|define
+name|ia_xcp
+value|ia_pkcb.pk_xcp
 name|struct
 name|sockaddr_x25
 name|ia_sockmask
@@ -321,35 +327,35 @@ end_comment
 
 begin_struct
 struct|struct
-name|rtextension_x25
+name|llinfo_x25
 block|{
 name|struct
 name|pklcd
 modifier|*
-name|rtx_lcd
+name|lx_lcd
 decl_stmt|;
 comment|/* local connection block */
 name|struct
 name|rtentry
 modifier|*
-name|rtx_rt
+name|lx_rt
 decl_stmt|;
 comment|/* back pointer to route */
 name|struct
 name|x25_ifaddr
 modifier|*
-name|rtx_ia
+name|lx_ia
 decl_stmt|;
 comment|/* may not be same as rt_ifa */
 name|int
-name|rtx_state
+name|lx_state
 decl_stmt|;
 comment|/* can't trust lcd->lcd_state */
 name|int
-name|rtx_flags
+name|lx_flags
 decl_stmt|;
 name|int
-name|rtx_timer
+name|lx_timer
 decl_stmt|;
 comment|/* for idle timeout */
 block|}
@@ -357,48 +363,48 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* States for rtx_state */
+comment|/* States for lx_state */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XRS_NEWBORN
+name|LXS_NEWBORN
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XRS_RESOLVING
+name|LXS_RESOLVING
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|XRS_FREE
+name|LXS_FREE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|XRS_CONNECTED
+name|LXS_CONNECTED
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|XRS_CONNECTING
+name|LXS_CONNECTING
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|XRS_DISCONNECTING
+name|LXS_DISCONNECTING
 value|5
 end_define
 
@@ -409,7 +415,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XRF_VALID
+name|LXF_VALID
 value|0x1
 end_define
 
@@ -420,7 +426,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XRF_RTHELD
+name|LXF_RTHELD
 value|0x2
 end_define
 

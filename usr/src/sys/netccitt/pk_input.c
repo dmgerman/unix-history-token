@@ -1,48 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socketvar.h"
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
@@ -54,19 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25.h"
+file|"x25.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk.h"
+file|"pk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk_var.h"
+file|"pk_var.h"
 end_include
 
 begin_comment
@@ -1834,9 +1834,11 @@ name|x25_net
 operator|!=
 name|pkp
 operator|->
-name|pk_xcp
-operator|->
-name|xc_net
+name|pk_xc
+operator|.
+name|xc_addr
+operator|.
+name|x25_net
 condition|)
 continue|continue;
 comment|/* 		 * don't accept incoming collect calls unless 		 * the server sets the reverse charging option. 		 */
@@ -1890,7 +1892,7 @@ name|l
 operator|->
 name|lcd_so
 argument_list|,
-name|SO_ISCONNETED
+name|SS_ISCONNECTED
 argument_list|)
 condition|)
 name|lcp

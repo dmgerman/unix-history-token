@@ -1,36 +1,42 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)ccitt_proto.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)ccitt_proto.c	7.5 (Berkeley) %G%  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HDLC
+end_define
+
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/domain.h"
+file|"domain.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25.h"
+file|"x25.h"
 end_include
 
 begin_comment
@@ -139,6 +145,9 @@ argument_list|()
 decl_stmt|,
 name|pk_init
 argument_list|()
+decl_stmt|,
+name|pk_ctloutput
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +243,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|pk_ctloutput
 block|,
 name|pk_usrreq
 block|,

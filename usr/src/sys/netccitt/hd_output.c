@@ -1,60 +1,60 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_output.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_output.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/domain.h"
+file|"domain.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
@@ -66,19 +66,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netccitt/hdlc.h"
+file|"hdlc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/hd_var.h"
+file|"hd_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25.h"
+file|"x25.h"
 end_include
 
 begin_comment
@@ -337,13 +337,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|int
-name|s
 name|KILL_TIMER
-parameter_list|(
+argument_list|(
 name|hdp
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buf
@@ -608,7 +606,7 @@ name|ifp
 init|=
 name|hdp
 operator|->
-name|hdp_ifp
+name|hd_ifp
 decl_stmt|;
 name|int
 name|s

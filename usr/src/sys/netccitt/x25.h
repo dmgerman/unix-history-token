@@ -107,6 +107,21 @@ value|4
 end_define
 
 begin_comment
+comment|/* socket options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PK_ACCTFILE
+value|1
+end_define
+
+begin_comment
+comment|/* use level = CCITTPROTO_X25 */
+end_comment
+
+begin_comment
 comment|/*  *  X.25 Socket address structure.  It contains the  X.121 or variation of  *  X.121, facilities information, higher level protocol value (first four  *  bytes of the User Data field), and the last  12 characters of the User  *  Data field.  */
 end_comment
 
@@ -344,7 +359,28 @@ comment|/* max logical channels */
 name|u_short
 name|xc_dg_idletimo
 decl_stmt|;
-comment|/* timeout for idle datagram circuits. };  #ifdef IFNAMSIZ struct ifreq_x25 { 	char	ifr_name[IFNAMSIZ];		/* if name, e.g. "en0" */
+comment|/* timeout for idle datagram circuits. */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IFNAMSIZ
+end_ifdef
+
+begin_struct
+struct|struct
+name|ifreq_x25
+block|{
+name|char
+name|ifr_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
 name|struct
 name|x25config
 name|ifr_xc
