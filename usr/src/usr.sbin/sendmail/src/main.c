@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.77 (Berkeley) %G%"
+literal|"@(#)main.c	8.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3124,9 +3124,38 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_comment
-comment|/* 	if (warn_f_flag != '\0') 		auth_warning(CurEnv, "%s set sender to %s using -%c", 			RealUserName, from, warn_f_flag); */
-end_comment
+begin_if
+if|if
+condition|(
+name|warn_f_flag
+operator|!=
+literal|'\0'
+operator|&&
+name|stab
+argument_list|(
+name|RealUserName
+argument_list|,
+name|ST_TRUSTED
+argument_list|,
+name|ST_FIND
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|auth_warning
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|"%s set sender to %s using -%c"
+argument_list|,
+name|RealUserName
+argument_list|,
+name|from
+argument_list|,
+name|warn_f_flag
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_if
 if|if
