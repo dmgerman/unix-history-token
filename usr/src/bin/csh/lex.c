@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.6 (Berkeley) %G%"
+literal|"@(#)lex.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4692,6 +4692,16 @@ name|argno
 init|=
 literal|0
 decl_stmt|;
+comment|/* 		 * The entries added by alias substitution don't 		 * have a newline but do have a negative event number. 		 * Savehist() trims off these entries, but it happens 		 * before alias expansion, too early to delete those 		 * from the previous command. 		 */
+if|if
+condition|(
+name|hp
+operator|->
+name|Hnum
+operator|<
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 name|lp
