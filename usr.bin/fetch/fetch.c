@@ -1027,7 +1027,7 @@ if|if
 condition|(
 name|v_level
 operator|>
-literal|2
+literal|1
 condition|)
 name|strcat
 argument_list|(
@@ -3127,16 +3127,6 @@ condition|(
 name|a_flag
 condition|)
 continue|continue;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Skipping %s\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|argc
