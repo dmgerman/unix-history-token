@@ -21,7 +21,7 @@ operator|)
 name|sysexits
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -78,6 +78,9 @@ literal|"250 Deferred"
 block|,
 comment|/* 76 PROTOCOL */
 literal|"554 Remote protocol error"
+block|,
+comment|/* 77 NOPERM */
+literal|"550 Insufficient permission"
 block|, }
 decl_stmt|;
 end_decl_stmt
