@@ -3896,6 +3896,9 @@ name|volume
 modifier|*
 name|vol
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/* first see if we have one which has been deallocated */
 for|for
 control|(
@@ -3985,6 +3988,30 @@ operator|=
 name|ROUND_ROBIN_READPOL
 expr_stmt|;
 comment|/* round robin */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXPLEX
+condition|;
+name|i
+operator|++
+control|)
+comment|/* mark the plexes missing */
+name|vol
+operator|->
+name|plex
+index|[
+name|i
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 name|volno
 return|;
@@ -7187,10 +7214,6 @@ argument_list|,
 name|message
 operator|.
 name|force
-argument_list|,
-name|message
-operator|.
-name|recurse
 argument_list|)
 expr_stmt|;
 name|updateconfig
@@ -7304,9 +7327,6 @@ name|driveno
 parameter_list|,
 name|int
 name|force
-parameter_list|,
-name|int
-name|recurse
 parameter_list|)
 block|{
 name|struct
@@ -7319,6 +7339,9 @@ name|DRIVE
 index|[
 name|driveno
 index|]
+decl_stmt|;
+name|int
+name|sdno
 decl_stmt|;
 if|if
 condition|(
@@ -7374,13 +7397,6 @@ name|force
 condition|)
 block|{
 comment|/* do it at any cost */
-name|int
-name|sdno
-decl_stmt|;
-name|struct
-name|vinum_ioctl_msg
-name|sdmsg
-decl_stmt|;
 for|for
 control|(
 name|sdno
@@ -7422,40 +7438,16 @@ operator|==
 name|driveno
 operator|)
 condition|)
-block|{
 comment|/* and it belongs to this drive */
-name|sdmsg
-operator|.
-name|index
-operator|=
-name|sdno
-expr_stmt|;
-name|sdmsg
-operator|.
-name|type
-operator|=
-name|sd_object
-expr_stmt|;
-name|sdmsg
-operator|.
-name|recurse
-operator|=
-literal|1
-expr_stmt|;
-name|sdmsg
-operator|.
-name|force
-operator|=
-name|force
-expr_stmt|;
-name|remove
+name|remove_sd_entry
 argument_list|(
-operator|&
-name|sdmsg
+name|sdno
+argument_list|,
+name|force
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* remove the subdisk by force */
-block|}
 block|}
 name|remove_drive
 argument_list|(
@@ -7656,21 +7648,27 @@ operator|->
 name|subdisks
 condition|)
 comment|/* didn't find it */
-name|throw_rude_remark
+name|log
 argument_list|(
-name|ENOENT
+name|LOG_ERR
 argument_list|,
-literal|"plex %s does not contain subdisk %s"
+literal|"Error removing subdisk %s: not found in plex %s\n"
+argument_list|,
+name|SD
+index|[
+name|mysdno
+index|]
+operator|.
+name|name
 argument_list|,
 name|plex
 operator|->
 name|name
-argument_list|,
-name|sd
-operator|->
-name|name
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* remove the subdisk from plex */
 if|if
 condition|(
 name|mysdno
@@ -7733,6 +7731,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* disown the subdisk */
+block|}
 comment|/* 	     * removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out of 	     * the structure, and it needs to be 	     * reinitialized. 	     */
 if|if
 condition|(
@@ -7923,6 +7922,13 @@ name|recurse
 condition|)
 block|{
 comment|/* remove all below */
+name|int
+name|sds
+init|=
+name|plex
+operator|->
+name|subdisks
+decl_stmt|;
 for|for
 control|(
 name|sdno
@@ -7931,9 +7937,7 @@ literal|0
 init|;
 name|sdno
 operator|<
-name|plex
-operator|->
-name|subdisks
+name|sds
 condition|;
 name|sdno
 operator|++
@@ -7961,6 +7965,13 @@ block|}
 else|else
 block|{
 comment|/* just tear them out */
+name|int
+name|sds
+init|=
+name|plex
+operator|->
+name|subdisks
+decl_stmt|;
 for|for
 control|(
 name|sdno
@@ -7969,9 +7980,7 @@ literal|0
 init|;
 name|sdno
 operator|<
-name|plex
-operator|->
-name|subdisks
+name|sds
 condition|;
 name|sdno
 operator|++
@@ -8017,7 +8026,6 @@ literal|0
 condition|)
 block|{
 comment|/* we are part of a volume */
-comment|/* 	 * XXX This should be more intelligent.  We should 	 * be able to remove a plex as long as the volume 	 * does not lose any data, which is normally the 	 * case when it has more than one plex.  To do it 	 * right we must compare the completeness of the 	 * mapping of all the plexes in the volume 	 */
 if|if
 condition|(
 name|force
@@ -8076,44 +8084,22 @@ name|vol
 operator|->
 name|plexes
 condition|)
-block|{
 comment|/* didn't find it.  Huh? */
-if|if
-condition|(
-name|force
-condition|)
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"volume %s does not contain plex %s"
-argument_list|,
-name|vol
-operator|->
-name|name
+literal|"Error removing plex %s: not found in volume %s\n"
 argument_list|,
 name|plex
 operator|->
 name|name
-argument_list|)
-expr_stmt|;
-else|else
-name|throw_rude_remark
-argument_list|(
-name|ENOENT
-argument_list|,
-literal|"volume %s does not contain plex %s"
 argument_list|,
 name|vol
 operator|->
 name|name
-argument_list|,
-name|plex
-operator|->
-name|name
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|myplexno
@@ -8301,63 +8287,41 @@ name|force
 condition|)
 block|{
 comment|/* remove all below */
-name|struct
-name|vinum_ioctl_msg
-name|plexmsg
+name|int
+name|plexes
+init|=
+name|vol
+operator|->
+name|plexes
 decl_stmt|;
-name|plexmsg
-operator|.
-name|type
-operator|=
-name|plex_object
-expr_stmt|;
-name|plexmsg
-operator|.
-name|recurse
-operator|=
-literal|1
-expr_stmt|;
-name|plexmsg
-operator|.
-name|force
-operator|=
-name|force
-expr_stmt|;
+comment|/*       for (plexno = plexes - 1; plexno>= 0; plexno--) */
 for|for
 control|(
 name|plexno
 operator|=
-name|vol
-operator|->
-name|plexes
+literal|0
 init|;
 name|plexno
-operator|>
-literal|0
+operator|<
+name|plexes
 condition|;
 name|plexno
-operator|--
+operator|++
 control|)
-block|{
-name|plexmsg
-operator|.
-name|index
-operator|=
+name|remove_plex_entry
+argument_list|(
 name|vol
 operator|->
 name|plex
 index|[
-literal|0
+name|plexno
 index|]
-expr_stmt|;
-comment|/* plex number */
-name|remove
-argument_list|(
-operator|&
-name|plexmsg
+argument_list|,
+name|force
+argument_list|,
+name|recurse
 argument_list|)
 expr_stmt|;
-block|}
 name|log
 argument_list|(
 name|LOG_INFO
@@ -9037,29 +9001,12 @@ name|plex_down
 expr_stmt|;
 comment|/* take it down */
 block|}
-if|if
-condition|(
-name|diskconfig
-condition|)
-name|sdstatemap
-argument_list|(
-name|plex
-argument_list|)
-expr_stmt|;
-comment|/* set the sddowncount */
-else|else
-name|set_plex_state
+name|update_plex_state
 argument_list|(
 name|plexno
-argument_list|,
-name|state
-argument_list|,
-name|setstate_none
-operator||
-name|setstate_configuring
 argument_list|)
 expr_stmt|;
-comment|/* set all the state */
+comment|/* set the state */
 name|plex
 operator|->
 name|flags
