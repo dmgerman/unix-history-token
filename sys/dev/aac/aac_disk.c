@@ -595,7 +595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map the S/G elements for doing a dump.  */
+comment|/*  * Map the S/G elements for doing a dump.  *  * XXX This does not handle>4GB of RAM.  Fixing it is possible except on  *     adapters that cannot do 64bit s/g lists.  */
 end_comment
 
 begin_function
@@ -694,6 +694,18 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|segs
+index|[
+name|i
+index|]
+operator|.
+name|ds_addr
+operator|>=
+name|BUS_SPACE_MAXADDR_32BIT
+condition|)
+return|return;
 name|sg
 operator|->
 name|SgEntry
@@ -959,6 +971,9 @@ name|Stable
 operator|=
 name|CUNSTABLE
 expr_stmt|;
+comment|/* 		 * There really isn't any way to recover from errors or 		 * resource shortages here.  Oh well.  Because of that, don't 		 * bother trying to send the command from the callback; there 		 * is too much required context. 		 */
+if|if
+condition|(
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -977,7 +992,14 @@ name|fib
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -1038,6 +1060,13 @@ operator|-=
 name|len
 expr_stmt|;
 name|offset
+operator|+=
+name|len
+expr_stmt|;
+operator|(
+name|vm_offset_t
+operator|)
+name|virtual
 operator|+=
 name|len
 expr_stmt|;
