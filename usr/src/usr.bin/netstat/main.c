@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.30 (Berkeley) %G%"
+literal|"@(#)main.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1032,7 +1032,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaBdf:hI:iM:mN:np:rstuw"
+literal|"AaBdf:hI:iM:mN:np:rstuw:"
 argument_list|)
 operator|)
 operator|!=
@@ -1040,9 +1040,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
