@@ -124,7 +124,7 @@ comment|/* mounted filesystem name */
 name|long
 name|auxdata
 decl_stmt|;
-comment|/* auxillary data for application */
+comment|/* auxiliary data for application */
 block|}
 modifier|*
 name|badlist
