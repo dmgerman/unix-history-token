@@ -325,27 +325,6 @@ name|PDRMASK
 value|(NBPDR-1)
 end_define
 
-begin_comment
-comment|/* PREEMPTION exposes scheduler bugs that need to be fixed. */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|PREEMPTION
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
