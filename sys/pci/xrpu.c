@@ -1225,7 +1225,7 @@ name|NORMAL
 expr_stmt|;
 name|rid
 operator|=
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 expr_stmt|;
 name|res
 operator|=
