@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mac.h>
 end_include
 
@@ -394,7 +388,9 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
+decl_stmt|;
+name|error
+operator|=
 name|sysctl_handle_int
 argument_list|(
 name|oidp
@@ -409,11 +405,12 @@ name|oid_arg2
 argument_list|,
 name|req
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
 block|{
 name|RANGECHK
@@ -444,7 +441,7 @@ name|ipport_firstauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
-name|USHRT_MAX
+name|IPPORT_MAX
 argument_list|)
 expr_stmt|;
 name|RANGECHK
@@ -453,7 +450,7 @@ name|ipport_lastauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
-name|USHRT_MAX
+name|IPPORT_MAX
 argument_list|)
 expr_stmt|;
 name|RANGECHK
@@ -462,7 +459,7 @@ name|ipport_hifirstauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
-name|USHRT_MAX
+name|IPPORT_MAX
 argument_list|)
 expr_stmt|;
 name|RANGECHK
@@ -471,12 +468,14 @@ name|ipport_hilastauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
-name|USHRT_MAX
+name|IPPORT_MAX
 argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
