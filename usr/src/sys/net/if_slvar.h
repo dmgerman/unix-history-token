@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_slvar.h	7.6 (Berkeley) %G% */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	7.7 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Definitions for SLIP interface data structures  *   * (this exists so programs like slstats can get at the definition  *  of sl_softc.)  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
+comment|/*  * Definitions for SLIP interface data structures  *   * (This exists so programs like slstats can get at the definition  *  of sl_softc.)  */
 end_comment
 
 begin_struct
