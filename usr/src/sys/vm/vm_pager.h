@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,6 +48,10 @@ name|int
 name|pg_type
 decl_stmt|;
 comment|/* type of pager */
+name|int
+name|pg_flags
+decl_stmt|;
+comment|/* flags */
 name|struct
 name|pagerops
 modifier|*
@@ -92,6 +96,24 @@ begin_define
 define|#
 directive|define
 name|PG_DEVICE
+value|2
+end_define
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CLUSTERGET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_CLUSTERPUT
 value|2
 end_define
 
@@ -143,7 +165,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*pgo_getpage
+argument|*pgo_getpages
 argument_list|)
 comment|/* Get (read) page. */
 name|__P
@@ -152,6 +174,9 @@ operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
+operator|*
+operator|,
+name|int
 operator|,
 name|boolean_t
 operator|)
@@ -159,7 +184,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*pgo_putpage
+argument|*pgo_putpages
 argument_list|)
 comment|/* Put (write) page. */
 name|__P
@@ -168,6 +193,9 @@ operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
+operator|*
+operator|,
+name|int
 operator|,
 name|boolean_t
 operator|)
@@ -187,12 +215,32 @@ name|vm_offset_t
 operator|)
 argument_list|)
 expr_stmt|;
+name|void
+argument_list|(
+argument|*pgo_cluster
+argument_list|)
+comment|/* Return range of cluster. */
+name|__P
+argument_list|(
+operator|(
+name|vm_pager_t
+operator|,
+name|vm_offset_t
+operator|,
+name|vm_offset_t
+operator|*
+operator|,
+name|vm_offset_t
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * get/put return values  * OK	 operation was successful  * BAD	 specified data was out of the accepted range  * FAIL	 specified data was in range, but doesn't exist  * PEND	 operations was initiated but not completed  * ERROR error while accessing data that is in range and exists  */
+comment|/*  * get/put return values  * OK	 operation was successful  * BAD	 specified data was out of the accepted range  * FAIL	 specified data was in range, but doesn't exist  * PEND	 operations was initiated but not completed  * ERROR error while accessing data that is in range and exists  * AGAIN temporary resource shortage prevented operation from happening  */
 end_comment
 
 begin_define
@@ -233,67 +281,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_PAGER_ALLOC
-parameter_list|(
-name|h
-parameter_list|,
-name|s
-parameter_list|,
-name|p
-parameter_list|,
-name|o
-parameter_list|)
-value|(*(pg)->pg_ops->pgo_alloc)(h, s, p, o)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PAGER_DEALLOC
-parameter_list|(
-name|pg
-parameter_list|)
-value|(*(pg)->pg_ops->pgo_dealloc)(pg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PAGER_GET
-parameter_list|(
-name|pg
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-value|(*(pg)->pg_ops->pgo_getpage)(pg, m, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PAGER_PUT
-parameter_list|(
-name|pg
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-value|(*(pg)->pg_ops->pgo_putpage)(pg, m, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PAGER_HASPAGE
-parameter_list|(
-name|pg
-parameter_list|,
-name|o
-parameter_list|)
-value|(*(pg)->pg_ops->pgo_haspage)(pg, o)
+name|VM_PAGER_AGAIN
+value|5
 end_define
 
 begin_ifdef
@@ -332,6 +321,58 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_page_t
+name|vm_pager_atop
+name|__P
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_pager_cluster
+name|__P
+argument_list|(
+operator|(
+name|vm_pager_t
+operator|,
+name|vm_offset_t
+operator|,
+name|vm_offset_t
+operator|*
+operator|,
+name|vm_offset_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_pager_clusternull
+name|__P
+argument_list|(
+operator|(
+name|vm_pager_t
+operator|,
+name|vm_offset_t
+operator|,
+name|vm_offset_t
+operator|*
+operator|,
+name|vm_offset_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|vm_pager_deallocate
 name|__P
@@ -345,13 +386,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|vm_pager_get
+name|vm_pager_get_pages
 name|__P
 argument_list|(
 operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
+operator|*
+operator|,
+name|int
 operator|,
 name|boolean_t
 operator|)
@@ -403,11 +447,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_offset_t
-name|vm_pager_map_page
+name|vm_pager_map_pages
 name|__P
 argument_list|(
 operator|(
 name|vm_page_t
+operator|*
+operator|,
+name|int
+operator|,
+name|boolean_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -415,13 +464,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|vm_pager_put
+name|vm_pager_put_pages
 name|__P
 argument_list|(
 operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
+operator|*
+operator|,
+name|int
 operator|,
 name|boolean_t
 operator|)
@@ -443,15 +495,63 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|vm_pager_unmap_page
+name|vm_pager_unmap_pages
 name|__P
 argument_list|(
 operator|(
 name|vm_offset_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|vm_pager_cancluster
+parameter_list|(
+name|p
+parameter_list|,
+name|b
+parameter_list|)
+value|((p)->pg_flags& (b))
+end_define
+
+begin_comment
+comment|/*  * XXX compat with old interface  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vm_pager_get
+parameter_list|(
+name|p
+parameter_list|,
+name|m
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|({ \ 	vm_page_t ml[1]; \ 	ml[0] = (m); \ 	vm_pager_get_pages(p, ml, 1, s); \ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_pager_put
+parameter_list|(
+name|p
+parameter_list|,
+name|m
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|({ \ 	vm_page_t ml[1]; \ 	ml[0] = (m); \ 	vm_pager_put_pages(p, ml, 1, s); \ })
+end_define
 
 begin_endif
 endif|#
