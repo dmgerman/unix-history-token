@@ -265,14 +265,25 @@ begin_define
 define|#
 directive|define
 name|d_calls
-value|0
+value|(debug_level> 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|d_args
-value|0
+value|(debug_level> 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|from_addr
+parameter_list|(
+name|sockaddr
+parameter_list|)
+define|\
+value|(inet_ntoa((sockaddr)->sin_addr))
 end_define
 
 begin_function
@@ -2550,7 +2561,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"lock answer: pid %lu: %s"
+literal|"lock answer: pid %lu: %s %d"
 argument_list|,
 name|ans
 operator|.
@@ -2562,15 +2573,11 @@ name|version
 operator|==
 name|NLM_VERS4
 condition|?
-name|show_4state
-argument_list|(
-name|result
-argument_list|)
+literal|"nlmv4"
 else|:
-name|show_state
-argument_list|(
+literal|"nlmv3"
+argument_list|,
 name|result
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ans
