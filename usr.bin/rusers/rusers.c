@@ -976,6 +976,11 @@ operator|&
 name|addr
 argument_list|)
 expr_stmt|;
+name|clnt_destroy
+argument_list|(
+name|rusers_clnt
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

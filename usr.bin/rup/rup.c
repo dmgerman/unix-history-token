@@ -819,6 +819,11 @@ name|host
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|clnt_destroy
+argument_list|(
+name|rstat_clnt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -851,6 +856,11 @@ name|host_stat
 argument_list|,
 operator|&
 name|addr
+argument_list|)
+expr_stmt|;
+name|clnt_destroy
+argument_list|(
+name|rstat_clnt
 argument_list|)
 expr_stmt|;
 return|return
