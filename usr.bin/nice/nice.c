@@ -380,13 +380,12 @@ if|if
 condition|(
 name|errno
 condition|)
-name|err
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"getpriority"
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|setpriority
@@ -401,10 +400,8 @@ operator|)
 name|niceness
 argument_list|)
 condition|)
-name|err
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"setpriority"
 argument_list|)
 expr_stmt|;
