@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Sean Eric Fagan  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_coff.c,v 1.11 1994/10/12 19:38:03 sos Exp $  */
+comment|/*-  * Copyright (c) 1994 Sean Eric Fagan  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_coff.c,v 1.1 1994/10/14 08:53:13 sos Exp $  */
 end_comment
 
 begin_include
@@ -338,7 +338,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(%d): vm_allocate(&vmspace->vm_map,&0x%08lx, 0x%x, FALSE)\n"
+literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx, 0x%x, FALSE)\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -352,14 +352,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|map_len
+operator|!=
+literal|0
+condition|)
+block|{
 name|error
 operator|=
-name|vm_allocate
+name|vm_map_find
 argument_list|(
 operator|&
 name|vmspace
 operator|->
 name|vm_map
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|map_addr
@@ -368,10 +377,15 @@ name|map_len
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
 return|;
+block|}
 if|if
 condition|(
 name|error
@@ -415,18 +429,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
 name|data_buf
 argument_list|,
+name|data_buf
+operator|+
 name|PAGE_SIZE
 argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"load_coff_section vm_deallocate failed"
+literal|"load_coff_section vm_map_remove failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1070,19 +1086,21 @@ name|dealloc_and_fail
 label|:
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
 name|ptr
 argument_list|,
+name|ptr
+operator|+
 name|PAGE_SIZE
 argument_list|)
 condition|)
 name|panic
 argument_list|(
 name|__FUNCTION__
-literal|" vm_deallocate failed"
+literal|" vm_map_remove failed"
 argument_list|)
 expr_stmt|;
 name|fail
@@ -1803,18 +1821,20 @@ break|break;
 block|}
 if|if
 condition|(
-name|vm_deallocate
+name|vm_map_remove
 argument_list|(
 name|kernel_map
 argument_list|,
 name|buf
 argument_list|,
+name|buf
+operator|+
 name|len
 argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"exec_coff_imgact vm_deallocate failed"
+literal|"exec_coff_imgact vm_map_remove failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2077,7 +2097,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(%d): vm_allocate(&vmspace->vm_map,&0x%08lx, 1, FALSE)\n"
+literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx, PAGE_SIZE, FALSE)\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -2096,17 +2116,21 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|vm_allocate
+name|vm_map_find
 argument_list|(
 operator|&
 name|vmspace
 operator|->
 name|vm_map
 argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|hole
 argument_list|,
-literal|1
+name|PAGE_SIZE
 argument_list|,
 name|FALSE
 argument_list|)
