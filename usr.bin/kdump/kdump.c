@@ -341,6 +341,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ioctlname
+parameter_list|(
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|timestamp
@@ -1368,14 +1379,6 @@ decl_stmt|;
 name|register_t
 modifier|*
 name|ip
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|ioctlname
-argument_list|(
-name|u_long
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
