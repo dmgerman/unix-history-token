@@ -9261,24 +9261,12 @@ block|{
 case|case
 name|TIOCSBRK
 case|:
-comment|/* Helg: commented */
-comment|/*		error = dgmdrain(port);*/
-if|if
-condition|(
-name|error
-operator|!=
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
-block|}
+block|error = dgmdrain(port);  		if (error != 0) { 			splx(s); 			return error; 		}
+endif|#
+directive|endif
 name|cs
 operator|=
 name|splclock
