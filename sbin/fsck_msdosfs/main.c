@@ -264,7 +264,7 @@ case|:
 comment|/* We can never run in background */
 name|exit
 argument_list|(
-literal|8
+literal|5
 argument_list|)
 expr_stmt|;
 break|break;
