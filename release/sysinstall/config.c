@@ -3015,6 +3015,24 @@ return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/var/run/ld.so.hints"
+argument_list|)
+condition|)
+name|vsystem
+argument_list|(
+literal|"ldconfig -m -aout /usr/lib/aout /usr/lib/compat/aout /usr/local/lib/aout /usr/X11R6/lib/aout"
+argument_list|)
+expr_stmt|;
+else|else
+name|vsystem
+argument_list|(
+literal|"ldconfig -aout /usr/lib/aout /usr/lib/compat/aout /usr/local/lib/aout /usr/X11R6/lib/aout"
+argument_list|)
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The XFree86 setup utility you chose does not appear to be installed!\n"
