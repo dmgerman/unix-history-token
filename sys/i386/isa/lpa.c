@@ -1108,15 +1108,6 @@ name|sc_count
 operator|-=
 literal|1
 expr_stmt|;
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|sc_data
-argument_list|,
-name|ch
-argument_list|)
-expr_stmt|;
 comment|/* Busy wait for printer ready .. */
 name|spin
 operator|=
@@ -1177,6 +1168,16 @@ return|;
 block|}
 block|}
 block|}
+comment|/* output data */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|sc_data
+argument_list|,
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* strobe */
 name|outb
 argument_list|(
