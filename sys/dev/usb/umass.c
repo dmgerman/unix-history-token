@@ -854,14 +854,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|UE_GET_IN
+name|UE_GET_DIR
 argument_list|(
 name|ed
 operator|->
 name|bEndpointAddress
 argument_list|)
+operator|==
+name|UE_IN
 operator|&&
-operator|(
 operator|(
 name|ed
 operator|->
@@ -871,7 +872,6 @@ name|UE_XFERTYPE
 operator|)
 operator|==
 name|UE_BULK
-operator|)
 condition|)
 block|{
 name|sc
@@ -886,15 +886,15 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|UE_GET_IN
+name|UE_GET_DIR
 argument_list|(
 name|ed
 operator|->
 name|bEndpointAddress
 argument_list|)
+operator|==
+name|UE_OUT
 operator|&&
-operator|(
 operator|(
 name|ed
 operator|->
@@ -904,7 +904,6 @@ name|UE_XFERTYPE
 operator|)
 operator|==
 name|UE_BULK
-operator|)
 condition|)
 block|{
 name|sc
@@ -1069,24 +1068,12 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devinfo
-init|=
-name|device_get_desc
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|UDMASS_USB
 argument_list|,
 operator|(
-literal|"%s: disconnected\n"
+literal|"%s: detached\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -1130,11 +1117,6 @@ operator|->
 name|sc_bulkin_pipe
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|devinfo
-condition|)
-block|{
 name|device_set_desc
 argument_list|(
 name|sc
@@ -1144,18 +1126,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|devinfo
-argument_list|,
-name|M_USB
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1215,7 +1185,6 @@ name|usbd_status
 name|err
 decl_stmt|;
 comment|/* A transfer is done synchronously. We create and schedule the 	 * transfer and then wait for it to complete 	 */
-comment|/* XXX we should not fetch a new request buffer for every transfer */
 name|reqh
 operator|=
 name|usbd_alloc_request
@@ -1232,14 +1201,12 @@ argument_list|(
 name|UDMASS_USB
 argument_list|,
 operator|(
-literal|"cannot allocate memory\n"
+literal|"Not enough memory\n"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|USBD_NOMEM
-operator|)
 return|;
 block|}
 operator|(
@@ -1319,11 +1286,6 @@ operator|&
 name|err
 argument_list|)
 expr_stmt|;
-name|usbd_free_request
-argument_list|(
-name|reqh
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|xfer_size
@@ -1332,6 +1294,11 @@ operator|*
 name|xfer_size
 operator|=
 name|size
+expr_stmt|;
+name|usbd_free_request
+argument_list|(
+name|reqh
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
