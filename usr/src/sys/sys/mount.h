@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -817,11 +817,19 @@ struct|struct
 name|nfs_args
 block|{
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 name|addr
 decl_stmt|;
 comment|/* file server address */
+name|int
+name|sotype
+decl_stmt|;
+comment|/* Socket type */
+name|int
+name|proto
+decl_stmt|;
+comment|/* and Protocol */
 name|nfsv2fh_t
 modifier|*
 name|fh
@@ -864,7 +872,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_SOFT
-value|0x001
+value|0x0001
 end_define
 
 begin_comment
@@ -875,7 +883,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_WSIZE
-value|0x002
+value|0x0002
 end_define
 
 begin_comment
@@ -886,7 +894,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_RSIZE
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
@@ -897,7 +905,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_TIMEO
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
@@ -908,7 +916,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_RETRANS
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
@@ -919,7 +927,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_HOSTNAME
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
@@ -930,12 +938,52 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_INT
-value|0x040
+value|0x0040
 end_define
 
 begin_comment
 comment|/* allow interrupts on hard mount */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NOCONN
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Don't Connect the socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_SCKLOCK
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Lock socket against others */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTSCK
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Want a socket lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_LOCKBITS
+value|(NFSMNT_SCKLOCK | NFSMNT_WANTSCK)
+end_define
 
 begin_endif
 endif|#
