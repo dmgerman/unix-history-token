@@ -669,7 +669,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Total   input size %s%d bytes\n"
+literal|"Total   input size %d bytes\n"
 argument_list|,
 name|size
 argument_list|)
