@@ -146,20 +146,6 @@ parameter_list|)
 value|((h)->clientData = (val))
 end_define
 
-begin_comment
-comment|/*  * Hash_Size(n) returns the number of words in an object of n bytes  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Hash_Size
-parameter_list|(
-name|n
-parameter_list|)
-value|(((n) + sizeof(int) - 1) / sizeof(int))
-end_define
-
 begin_function_decl
 name|void
 name|Hash_InitTable
