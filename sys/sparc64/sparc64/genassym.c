@@ -474,16 +474,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|TSB_KERNEL_MASK
-argument_list|,
-name|TSB_KERNEL_MASK
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
 name|INT_SHIFT
 argument_list|,
 name|INT_SHIFT

@@ -79,34 +79,26 @@ name|TSB_BUCKET_MASK
 value|((1<< TSB_BUCKET_ADDRESS_BITS) - 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|TSB_KERNEL_SIZE
-define|\
-value|((KVA_PAGES * PAGE_SIZE_4M) / sizeof(struct tte))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_KERNEL_MASK
-value|(TSB_KERNEL_SIZE - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_KERNEL_VA_MASK
-value|(TSB_KERNEL_MASK<< TTE_SHIFT)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|struct
 name|tte
 modifier|*
 name|tsb_kernel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_size_t
+name|tsb_kernel_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_size_t
+name|tsb_kernel_size
 decl_stmt|;
 end_decl_stmt
 
@@ -196,7 +188,7 @@ name|tsb_kernel
 index|[
 name|vpn
 operator|&
-name|TSB_KERNEL_MASK
+name|tsb_kernel_mask
 index|]
 operator|)
 return|;

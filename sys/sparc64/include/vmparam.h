@@ -170,14 +170,14 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)0x7fe00000000)
+value|(0x7fe00000000UL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_ADDRESS
-value|((vm_offset_t)0)
+value|(0UL)
 end_define
 
 begin_define
@@ -243,40 +243,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Number of 4 meg pages to use for the kernel tsb.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KVA_PAGES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KVA_PAGES
-value|(1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Range of kernel virtual addresses.  max = min + range.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KVA_RANGE
-define|\
-value|((KVA_PAGES * PAGE_SIZE_4M)<< (PAGE_SHIFT - TTE_SHIFT))
-end_define
-
-begin_comment
 comment|/*  * Lowest kernel virtual address, where the kernel is loaded.  This is also  * arbitrary.  We pick a resonably low address, which allows all of kernel  * text, data and bss to be below the 4 gigabyte mark, yet still high enough  * to cover the prom addresses with 1 tsb page.  This also happens to be the  * same as for x86 with default KVA_PAGES...  */
 end_comment
 
@@ -285,20 +251,6 @@ define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
 value|(0xc0000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_KERNEL_ADDRESS
-value|(VM_MIN_KERNEL_ADDRESS + KVA_RANGE - PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|(VM_MIN_KERNEL_ADDRESS)
 end_define
 
 begin_define
@@ -313,6 +265,20 @@ define|#
 directive|define
 name|VM_MAX_PROM_ADDRESS
 value|(0xffffe000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|(VM_MIN_KERNEL_ADDRESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|(vm_max_kernel_address)
 end_define
 
 begin_comment
@@ -336,6 +302,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|vm_max_kernel_address
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

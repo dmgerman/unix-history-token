@@ -415,6 +415,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_size_t
+name|tsb_kernel_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_size_t
+name|tsb_kernel_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_offset_t
 name|tsb_kernel_phys
 decl_stmt|;
