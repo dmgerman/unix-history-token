@@ -144,6 +144,12 @@ return|return
 literal|"UDMA133"
 return|;
 case|case
+name|ATA_SA150
+case|:
+return|return
+literal|"SATA150"
+return|;
+case|case
 name|ATA_DMA
 case|:
 return|return
@@ -639,7 +645,9 @@ literal|"lba%ssupported         "
 argument_list|,
 name|parm
 operator|->
-name|support_lba
+name|capabilities1
+operator|&
+name|ATA_SUPPORT_LBA
 condition|?
 literal|" "
 else|:
@@ -671,7 +679,9 @@ name|parm
 operator|->
 name|support
 operator|.
-name|address48
+name|command2
+operator|&
+name|ATA_SUPPORT_ADDRESS48
 condition|?
 literal|" "
 else|:
@@ -704,7 +714,9 @@ literal|"dma%ssupported\n"
 argument_list|,
 name|parm
 operator|->
-name|support_dma
+name|capabilities1
+operator|&
+name|ATA_SUPPORT_DMA
 condition|?
 literal|" "
 else|:
@@ -717,7 +729,9 @@ literal|"overlap%ssupported\n"
 argument_list|,
 name|parm
 operator|->
-name|support_queueing
+name|capabilities1
+operator|&
+name|ATA_SUPPORT_OVERLAP
 condition|?
 literal|" "
 else|:
@@ -738,7 +752,9 @@ name|parm
 operator|->
 name|support
 operator|.
-name|write_cache
+name|command1
+operator|&
+name|ATA_SUPPORT_WRITECACHE
 condition|?
 literal|"yes"
 else|:
@@ -748,7 +764,9 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|write_cache
+name|command1
+operator|&
+name|ATA_SUPPORT_WRITECACHE
 condition|?
 literal|"yes"
 else|:
@@ -763,7 +781,9 @@ name|parm
 operator|->
 name|support
 operator|.
-name|look_ahead
+name|command1
+operator|&
+name|ATA_SUPPORT_LOOKAHEAD
 condition|?
 literal|"yes"
 else|:
@@ -773,7 +793,9 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|look_ahead
+name|command1
+operator|&
+name|ATA_SUPPORT_LOOKAHEAD
 condition|?
 literal|"yes"
 else|:
@@ -782,13 +804,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dma queued                     %s	%s	%d/%02X\n"
+literal|"dma queued                     %s	%s	%d/0x%02X\n"
 argument_list|,
 name|parm
 operator|->
 name|support
 operator|.
-name|queued
+name|command2
+operator|&
+name|ATA_SUPPORT_QUEUED
 condition|?
 literal|"yes"
 else|:
@@ -798,19 +822,27 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|queued
+name|command2
+operator|&
+name|ATA_SUPPORT_QUEUED
 condition|?
 literal|"yes"
 else|:
 literal|"no"
 argument_list|,
+name|ATA_QUEUE_LEN
+argument_list|(
 name|parm
 operator|->
-name|queuelen
+name|queue
+argument_list|)
 argument_list|,
+name|ATA_QUEUE_LEN
+argument_list|(
 name|parm
 operator|->
-name|queuelen
+name|queue
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -821,7 +853,9 @@ name|parm
 operator|->
 name|support
 operator|.
-name|smart
+name|command1
+operator|&
+name|ATA_SUPPORT_SMART
 condition|?
 literal|"yes"
 else|:
@@ -831,7 +865,9 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|smart
+name|command1
+operator|&
+name|ATA_SUPPORT_SMART
 condition|?
 literal|"yes"
 else|:
@@ -846,7 +882,9 @@ name|parm
 operator|->
 name|support
 operator|.
-name|microcode
+name|command2
+operator|&
+name|ATA_SUPPORT_MICROCODE
 condition|?
 literal|"yes"
 else|:
@@ -856,7 +894,9 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|microcode
+name|command2
+operator|&
+name|ATA_SUPPORT_MICROCODE
 condition|?
 literal|"yes"
 else|:
@@ -871,7 +911,9 @@ name|parm
 operator|->
 name|support
 operator|.
-name|security
+name|command1
+operator|&
+name|ATA_SUPPORT_SECURITY
 condition|?
 literal|"yes"
 else|:
@@ -881,7 +923,9 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|security
+name|command1
+operator|&
+name|ATA_SUPPORT_SECURITY
 condition|?
 literal|"yes"
 else|:
@@ -896,7 +940,9 @@ name|parm
 operator|->
 name|support
 operator|.
-name|power_mngt
+name|command1
+operator|&
+name|ATA_SUPPORT_POWERMGT
 condition|?
 literal|"yes"
 else|:
@@ -906,7 +952,9 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|power_mngt
+name|command1
+operator|&
+name|ATA_SUPPORT_POWERMGT
 condition|?
 literal|"yes"
 else|:
@@ -915,13 +963,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"advanced power management      %s	%s	%d/%02X\n"
+literal|"advanced power management      %s	%s	%d/0x%02X\n"
 argument_list|,
 name|parm
 operator|->
 name|support
 operator|.
-name|apm
+name|command2
+operator|&
+name|ATA_SUPPORT_APM
 condition|?
 literal|"yes"
 else|:
@@ -931,7 +981,9 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|apm
+name|command2
+operator|&
+name|ATA_SUPPORT_APM
 condition|?
 literal|"yes"
 else|:
@@ -949,13 +1001,15 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"automatic acoustic management  %s	%s	"
-literal|"%d/%02X	%d/%02X\n"
+literal|"%d/0x%02X	%d/0x%02X\n"
 argument_list|,
 name|parm
 operator|->
 name|support
 operator|.
-name|auto_acoustic
+name|command2
+operator|&
+name|ATA_SUPPORT_AUTOACOUSTIC
 condition|?
 literal|"yes"
 else|:
@@ -965,27 +1019,41 @@ name|parm
 operator|->
 name|enabled
 operator|.
-name|auto_acoustic
+name|command2
+operator|&
+name|ATA_SUPPORT_AUTOACOUSTIC
 condition|?
 literal|"yes"
 else|:
 literal|"no"
 argument_list|,
+name|ATA_ACOUSTIC_CURRENT
+argument_list|(
 name|parm
 operator|->
-name|current_acoustic
+name|acoustic
+argument_list|)
 argument_list|,
+name|ATA_ACOUSTIC_CURRENT
+argument_list|(
 name|parm
 operator|->
-name|current_acoustic
+name|acoustic
+argument_list|)
 argument_list|,
+name|ATA_ACOUSTIC_VENDOR
+argument_list|(
 name|parm
 operator|->
-name|vendor_acoustic
+name|acoustic
+argument_list|)
 argument_list|,
+name|ATA_ACOUSTIC_VENDOR
+argument_list|(
 name|parm
 operator|->
-name|vendor_acoustic
+name|acoustic
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1044,8 +1112,7 @@ name|iocmd
 operator|.
 name|device
 operator|=
-operator|-
-literal|1
+name|device
 expr_stmt|;
 name|iocmd
 operator|.
