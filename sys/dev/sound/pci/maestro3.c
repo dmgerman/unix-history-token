@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|M3_PCHANS
-value|4
+value|1
 end_define
 
 begin_comment
