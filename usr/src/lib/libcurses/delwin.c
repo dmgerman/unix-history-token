@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine deletes a window and releases it back to the system.  *  * %G% (Berkeley) @(#)delwin.c	1.2  */
+comment|/*  *	This routine deletes a window and releases it back to the system.  *  * %G% (Berkeley) @(#)delwin.c	1.3  */
 end_comment
 
 begin_macro
@@ -30,17 +30,23 @@ name|reg
 name|int
 name|i
 decl_stmt|;
+name|reg
+name|WINDOW
+modifier|*
+name|wp
+decl_stmt|,
+modifier|*
+name|np
+decl_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|win
 operator|->
-name|_flags
-operator|&
-name|_SUBWIN
-operator|)
+name|_orig
+operator|==
+name|NULL
 condition|)
+block|{
 for|for
 control|(
 name|i
@@ -73,6 +79,36 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|wp
+operator|=
+name|win
+operator|->
+name|_nextp
+expr_stmt|;
+while|while
+condition|(
+name|wp
+operator|!=
+name|win
+condition|)
+block|{
+name|np
+operator|=
+name|wp
+operator|->
+name|_nextp
+expr_stmt|;
+name|delwin
+argument_list|(
+name|wp
+argument_list|)
+expr_stmt|;
+name|wp
+operator|=
+name|np
+expr_stmt|;
+block|}
+block|}
 name|cfree
 argument_list|(
 name|win
