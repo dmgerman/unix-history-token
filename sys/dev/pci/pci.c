@@ -4786,6 +4786,12 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 comment|/* 		 * Try to re-route interrupts. Sometimes the BIOS or 		 * firmware may leave bogus values in these registers. 		 * If the re-route fails, then just stick with what we 		 * have. 		 */
 name|irq
 operator|=
