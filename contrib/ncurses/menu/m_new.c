@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_new.c,v 1.10 1999/05/16 17:26:59 juergen Exp $"
+literal|"$Id: m_new.c,v 1.11 2000/12/10 02:16:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -28,16 +28,21 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  MENU *new_menu(ITEM **items) |    |   Description   :  Creates a new menu connected to the item pointer |                    array items and returns a pointer to the new menu. |                    The new menu is initialized with the values from the |                    default menu. | |   Return Values :  NULL on error +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|MENU
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|MENU *
+argument_list|)
+end_macro
+
+begin_macro
 name|new_menu
-parameter_list|(
-name|ITEM
-modifier|*
-modifier|*
-name|items
-parameter_list|)
+argument_list|(
+argument|ITEM ** items
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|MENU
 modifier|*
@@ -140,20 +145,27 @@ name|menu
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int free_menu(MENU *menu)   |    |   Description   :  Disconnects menu from its associated item pointer  |                    array and frees the storage allocated for the menu. | |   Return Values :  E_OK               - success |                    E_BAD_ARGUMENT     - Invalid menu pointer passed |                    E_POSTED           - Menu is already posted +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|free_menu
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|)
+argument_list|(
+argument|MENU * menu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -221,7 +233,7 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* m_new.c ends here */

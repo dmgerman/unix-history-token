@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: add_tries.c,v 1.2 2000/03/18 22:23:56 tom Exp $"
+literal|"$Id: add_tries.c,v 1.4 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
@@ -48,25 +48,25 @@ parameter_list|)
 value|((a)? (a == b) : (b == 128))
 end_define
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_add_to_try
-parameter_list|(
-name|struct
-name|tries
-modifier|*
-modifier|*
-name|tree
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|,
-name|unsigned
-name|short
-name|code
-parameter_list|)
+argument_list|(
+argument|struct tries **tree
+argument_list|,
+argument|const char *str
+argument_list|,
+argument|unsigned short code
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 name|bool
@@ -401,7 +401,7 @@ name|code
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_block
 
 end_unit
 

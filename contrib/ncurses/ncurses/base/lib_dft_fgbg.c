@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_dft_fgbg.c,v 1.13 2000/07/07 16:50:27 tom Exp $"
+literal|"$Id: lib_dft_fgbg.c,v 1.15 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -30,12 +30,21 @@ begin_comment
 comment|/*  * Modify the behavior of color-pair 0 so that the library doesn't assume that  * it is white on black.  This is an extension to XSI curses.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|use_default_colors
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -58,22 +67,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Modify the behavior of color-pair 0 so that the library assumes that it  * is something specific, possibly not white on black.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|assume_default_colors
-parameter_list|(
-name|int
-name|fg
-parameter_list|,
-name|int
-name|bg
-parameter_list|)
+argument_list|(
+argument|int fg
+argument_list|,
+argument|int bg
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -208,7 +224,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -90,7 +90,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mvcur.c,v 1.72 2000/10/08 00:58:25 tom Exp $"
+literal|"$Id: lib_mvcur.c,v 1.78 2001/04/14 22:26:14 tom Exp $"
 argument_list|)
 end_macro
 
@@ -412,20 +412,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_msec_cost
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|cap
-parameter_list|,
-name|int
-name|affcnt
-parameter_list|)
+argument_list|(
+argument|const char *const cap
+argument_list|,
+argument|int affcnt
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* compute the cost of a given operation */
+end_comment
+
+begin_block
 block|{
 if|if
 condition|(
@@ -512,8 +519,11 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|cp
+argument_list|)
 argument_list|)
 condition|)
 name|number
@@ -559,8 +569,11 @@ operator|)
 operator|&&
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|cp
+argument_list|)
 argument_list|)
 condition|)
 name|number
@@ -614,7 +627,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -707,13 +720,25 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_mvcur_resume
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* what to do at initialization time and after each shellout */
+end_comment
+
+begin_block
 block|{
 comment|/* initialize screen for cursor access */
 if|if
@@ -779,15 +804,27 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_mvcur_init
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* initialize the cost structure */
+end_comment
+
+begin_block
 block|{
 comment|/*      * 9 = 7 bits + 1 parity + 1 stop.      */
 name|SP
@@ -1360,15 +1397,27 @@ name|_nc_mvcur_resume
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_mvcur_wrap
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* wrap up cursor-addressing mode */
+end_comment
+
+begin_block
 block|{
 comment|/* leave cursor at screen bottom */
 name|mvcur
@@ -1424,7 +1473,7 @@ literal|'\r'
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/****************************************************************************  *  * Optimized cursor movement  *  ****************************************************************************/
@@ -2053,6 +2102,25 @@ name|defined
 argument_list|(
 name|WANT_CHAR
 argument_list|)
+if|if
+condition|(
+name|n
+operator|<=
+literal|0
+operator|||
+name|n
+operator|>=
+operator|(
+name|int
+operator|)
+name|check
+operator|.
+name|s_size
+condition|)
+name|ovw
+operator|=
+name|FALSE
+expr_stmt|;
 if|#
 directive|if
 name|BSD_TPUTS
@@ -2126,9 +2194,10 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-operator|(
+block|{
+name|chtype
+name|ch
+init|=
 name|WANT_CHAR
 argument_list|(
 name|to_y
@@ -2137,11 +2206,36 @@ name|from_x
 operator|+
 name|i
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ch
 operator|&
 name|A_ATTRIBUTES
 operator|)
 operator|!=
 name|CURRENT_ATTR
+if|#
+directive|if
+name|USE_WIDEC_SUPPORT
+operator|||
+operator|(
+name|TextOf
+argument_list|(
+name|ch
+argument_list|)
+operator|>=
+literal|0x80
+operator|&&
+name|SP
+operator|->
+name|_outch
+operator|==
+name|_nc_utf8_outch
+operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|ovw
@@ -2149,6 +2243,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 if|if
@@ -3286,23 +3381,31 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|mvcur
-parameter_list|(
-name|int
-name|yold
-parameter_list|,
-name|int
-name|xold
-parameter_list|,
-name|int
-name|ynew
-parameter_list|,
-name|int
-name|xnew
-parameter_list|)
+argument_list|(
+argument|int yold
+argument_list|,
+argument|int xold
+argument_list|,
+argument|int ynew
+argument_list|,
+argument|int xnew
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* optimized cursor move from (yold, xold) to (ynew, xnew) */
+end_comment
+
+begin_block
 block|{
 name|TR
 argument_list|(
@@ -3517,7 +3620,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_if
 if|#
@@ -3533,13 +3636,19 @@ name|NCURSES_TEST
 argument_list|)
 end_if
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_optimize_enable
-init|=
+operator|=
 name|OPTIMIZE_ALL
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -3576,15 +3685,19 @@ directive|include
 file|<dump_entry.h>
 end_include
 
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|const char *
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_progname
-init|=
+operator|=
 literal|"mvcur"
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3598,29 +3711,29 @@ begin_comment
 comment|/* these override lib_tputs.c */
 end_comment
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|tputs
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|string
+argument|const char *string
 argument_list|,
-name|int
-name|affcnt
-name|GCC_UNUSED
+argument|int affcnt GCC_UNUSED
 argument_list|,
-name|int
-argument_list|(
-argument|*outc
+argument|int (*outc) (int) GCC_UNUSED
 argument_list|)
-operator|(
-name|int
-operator|)
-name|GCC_UNUSED
-argument_list|)
+end_macro
+
+begin_comment
 comment|/* stub tputs() that dumps sequences in a visible form */
+end_comment
+
+begin_block
 block|{
 if|if
 condition|(
@@ -3653,17 +3766,23 @@ name|OK
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|putp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|)
+argument_list|(
+argument|const char *string
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -3678,15 +3797,23 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_outch
-parameter_list|(
-name|int
-name|ch
-parameter_list|)
+argument_list|(
+argument|int ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|putc
 argument_list|(
@@ -3699,58 +3826,83 @@ return|return
 name|OK
 return|;
 block|}
-end_function
+end_block
 
-begin_decl_stmt
-name|char
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|char
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|PC
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* used by termcap library */
 end_comment
 
-begin_decl_stmt
-name|short
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|NCURSES_OSPEED
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|ospeed
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* used by termcap library */
 end_comment
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_nulls_sent
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* used by 'tack' program */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|delay_output
-parameter_list|(
-name|int
-name|ms
-name|GCC_UNUSED
-parameter_list|)
+argument_list|(
+argument|int ms GCC_UNUSED
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|OK
 return|;
 block|}
-end_function
+end_block
 
 begin_decl_stmt
 specifier|static

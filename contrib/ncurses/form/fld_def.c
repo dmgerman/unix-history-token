@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fld_def.c,v 1.12 1999/05/16 17:37:48 juergen Exp $"
+literal|"$Id: fld_def.c,v 1.13 2000/12/10 02:09:38 tom Exp $"
 argument_list|)
 end_macro
 
@@ -143,15 +143,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FIELD
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|FIELD *
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_Default_Field
-init|=
+operator|=
 operator|&
 name|default_field
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_escape
 end_escape
@@ -160,24 +165,25 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  TypeArgument *_nc_Make_Argument( |                              const FIELDTYPE *typ, |                              va_list *ap, |                              int *err ) |    |   Description   :  Create an argument structure for the specified type. |                    Use the type-dependant argument list to construct |                    it. | |   Return Values :  Pointer to argument structure. Maybe NULL. |                    In case of an error in *err an errorcounter is increased.  +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|TypeArgument
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|TypeArgument*
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Make_Argument
-parameter_list|(
-specifier|const
-name|FIELDTYPE
-modifier|*
-name|typ
-parameter_list|,
-name|va_list
-modifier|*
-name|ap
-parameter_list|,
-name|int
-modifier|*
-name|err
-parameter_list|)
+argument_list|(
+argument|const FIELDTYPE *typ
+argument_list|,
+argument|va_list *ap
+argument_list|,
+argument|int *err
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|TypeArgument
 modifier|*
@@ -320,31 +326,31 @@ return|return
 name|res
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  TypeArgument *_nc_Copy_Argument(const FIELDTYPE *typ, |                                                    const TypeArgument *argp, |                                                    int *err ) |    |   Description   :  Create a copy of an argument structure for the specified  |                    type. | |   Return Values :  Pointer to argument structure. Maybe NULL. |                    In case of an error in *err an errorcounter is increased.  +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|TypeArgument
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|TypeArgument*
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Copy_Argument
-parameter_list|(
-specifier|const
-name|FIELDTYPE
-modifier|*
-name|typ
-parameter_list|,
-specifier|const
-name|TypeArgument
-modifier|*
-name|argp
-parameter_list|,
-name|int
-modifier|*
-name|err
-parameter_list|)
+argument_list|(
+argument|const FIELDTYPE *typ
+argument_list|,
+argument|const TypeArgument *argp
+argument_list|,
+argument|int *err
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|TypeArgument
 modifier|*
@@ -503,25 +509,29 @@ return|return
 name|res
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  void _nc_Free_Argument(const FIELDTYPE *typ, |                                           TypeArgument * argp ) |    |   Description   :  Release memory associated with the argument structure |                    for the given fieldtype. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Free_Argument
-parameter_list|(
-specifier|const
-name|FIELDTYPE
-modifier|*
-name|typ
-parameter_list|,
-name|TypeArgument
-modifier|*
-name|argp
-parameter_list|)
+argument_list|(
+argument|const FIELDTYPE * typ
+argument_list|,
+argument|TypeArgument * argp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -601,25 +611,29 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  bool _nc_Copy_Type( FIELD *dst, FIELD const *src ) |    |   Description   :  Copy argument structure of field src to field dst | |   Return Values :  TRUE       - copy worked |                    FALSE      - error occured +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Copy_Type
-parameter_list|(
-name|FIELD
-modifier|*
-name|dst
-parameter_list|,
-name|FIELD
-specifier|const
-modifier|*
-name|src
-parameter_list|)
+argument_list|(
+argument|FIELD *dst
+argument_list|,
+argument|FIELD const *src
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|err
@@ -735,20 +749,27 @@ name|TRUE
 return|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  void _nc_Free_Type( FIELD *field ) |    |   Description   :  Release Argument structure for this field | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Free_Type
-parameter_list|(
-name|FIELD
-modifier|*
-name|field
-parameter_list|)
+argument_list|(
+argument|FIELD *field
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|assert
 argument_list|(
@@ -786,35 +807,37 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FIELD *new_field( int rows, int cols,  |                                      int frow, int fcol, |                                      int nrow, int nbuf ) |    |   Description   :  Create a new field with this many 'rows' and 'cols', |                    starting at 'frow/fcol' in the subwindow of the form. |                    Allocate 'nrow' off-screen rows and 'nbuf' additional |                    buffers. If an error occurs, errno is set to |                     |                    E_BAD_ARGUMENT - invalid argument |                    E_SYSTEM_ERROR - system error | |   Return Values :  Pointer to the new field or NULL if failure. +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|FIELD
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|FIELD *
+argument_list|)
+end_macro
+
+begin_macro
 name|new_field
-parameter_list|(
-name|int
-name|rows
-parameter_list|,
-name|int
-name|cols
-parameter_list|,
-name|int
-name|frow
-parameter_list|,
-name|int
-name|fcol
-parameter_list|,
-name|int
-name|nrow
-parameter_list|,
-name|int
-name|nbuf
-parameter_list|)
+argument_list|(
+argument|int rows
+argument_list|,
+argument|int cols
+argument_list|,
+argument|int frow
+argument_list|,
+argument|int fcol
+argument_list|,
+argument|int nrow
+argument_list|,
+argument|int nbuf
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FIELD
 modifier|*
@@ -1072,20 +1095,27 @@ operator|)
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int free_field( FIELD *field ) |    |   Description   :  Frees the storage allocated for the field. | |   Return Values :  E_OK           - success |                    E_BAD_ARGUMENT - invalid field pointer |                    E_CONNECTED    - field is connected +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|free_field
-parameter_list|(
-name|FIELD
-modifier|*
-name|field
-parameter_list|)
+argument_list|(
+argument|FIELD * field
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1181,7 +1211,7 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* fld_def.c ends here */

@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	captoinfo.c --- conversion between termcap and terminfo formats  *  *	The captoinfo() code was swiped from Ross Ridge's mytinfo package,  *	adapted to fit ncurses by Eric S. Raymond<esr@snark.thyrsus.com>.  *  *	There is just one entry point:  *  *	char *captoinfo(n, s, parametrized)  *  *	Convert value s for termcap string capability named n into terminfo  *	format.  *  *	This code recognizes all the standard 4.4BSD %-escapes:  *  *	%%       output `%'  *	%d       output value as in printf %d  *	%2       output value as in printf %2d  *	%3       output value as in printf %3d  *	%.       output value as in printf %c  *	%+x      add x to value, then do %.  *	%>xy     if value> x then add y, no output  *	%r       reverse order of two parameters, no output  *	%i       increment by one, no output  *	%n       exclusive-or all parameters with 0140 (Datamedia 2500)  *	%B       BCD (16*(value/10)) + (value%10), no output  *	%D       Reverse coding (value - 2*(value%16)), no output (Delta Data).  *  *	Also, %02 and %03 are accepted as synonyms for %2 and %3.  *  *	Besides all the standard termcap escapes, this translator understands  *	the following extended escapes:  *  *	used by GNU Emacs termcap libraries  *		%a[+*-/=][cp]x	GNU arithmetic.  *		%m		xor the first two parameters by 0177  *		%b		backup to previous parameter  *		%f		skip this parameter  *  *	used by the University of Waterloo (MFCF) termcap libraries  *		%-x	 subtract parameter FROM char x and output it as a char  *		%ax	 add the character x to parameter  *  *	If #define WATERLOO is on, also enable these translations:  *  *		%sx	 subtract parameter FROM the character x  *  *	By default, this Waterloo translations are not compiled in, because  *	the Waterloo %s conflicts with the way terminfo uses %s in strings for  *	function programming.  *  *	Note the two definitions of %a: the GNU definition is translated if the  *	characters after the 'a' are valid for it, otherwise the UW definition  *	is translated.  */
+comment|/*  *	captoinfo.c --- conversion between termcap and terminfo formats  *  *	The captoinfo() code was swiped from Ross Ridge's mytinfo package,  *	adapted to fit ncurses by Eric S. Raymond<esr@snark.thyrsus.com>.  *  *	There is just one entry point:  *  *	char *_nc_captoinfo(n, s, parametrized)  *  *	Convert value s for termcap string capability named n into terminfo  *	format.  *  *	This code recognizes all the standard 4.4BSD %-escapes:  *  *	%%       output `%'  *	%d       output value as in printf %d  *	%2       output value as in printf %2d  *	%3       output value as in printf %3d  *	%.       output value as in printf %c  *	%+x      add x to value, then do %.  *	%>xy     if value> x then add y, no output  *	%r       reverse order of two parameters, no output  *	%i       increment by one, no output  *	%n       exclusive-or all parameters with 0140 (Datamedia 2500)  *	%B       BCD (16*(value/10)) + (value%10), no output  *	%D       Reverse coding (value - 2*(value%16)), no output (Delta Data).  *  *	Also, %02 and %03 are accepted as synonyms for %2 and %3.  *  *	Besides all the standard termcap escapes, this translator understands  *	the following extended escapes:  *  *	used by GNU Emacs termcap libraries  *		%a[+*-/=][cp]x	GNU arithmetic.  *		%m		xor the first two parameters by 0177  *		%b		backup to previous parameter  *		%f		skip this parameter  *  *	used by the University of Waterloo (MFCF) termcap libraries  *		%-x	 subtract parameter FROM char x and output it as a char  *		%ax	 add the character x to parameter  *  *	If #define WATERLOO is on, also enable these translations:  *  *		%sx	 subtract parameter FROM the character x  *  *	By default, this Waterloo translations are not compiled in, because  *	the Waterloo %s conflicts with the way terminfo uses %s in strings for  *	function programming.  *  *	Note the two definitions of %a: the GNU definition is translated if the  *	characters after the 'a' are valid for it, otherwise the UW definition  *	is translated.  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: captoinfo.c,v 1.37 2000/04/01 20:07:34 tom Exp $"
+literal|"$Id: captoinfo.c,v 1.40 2000/11/05 00:22:36 tom Exp $"
 argument_list|)
 end_macro
 
@@ -518,8 +518,11 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|sp
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -891,30 +894,28 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convert a termcap string to terminfo format.  * 'cap' is the relevant terminfo capability index.  * 's' is the string value of the capability.  * 'parametrized' tells what type of translations to do:  *	% translations if 1  *	pad translations if>=0  */
+end_comment
+
 begin_function
 name|char
 modifier|*
 name|_nc_captoinfo
 parameter_list|(
-comment|/* convert a termcap string to terminfo format */
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|cap
 parameter_list|,
-comment|/* relevant terminfo capability index */
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|s
 parameter_list|,
-comment|/* string value of the capability */
 name|int
 specifier|const
 name|parametrized
-comment|/* do % translations if 1, pad translations if>=0 */
 parameter_list|)
 block|{
 specifier|const
@@ -974,8 +975,11 @@ literal|0
 operator|&&
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|)
 for|for
@@ -994,8 +998,11 @@ operator|!
 operator|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 operator|||
 operator|*
@@ -1797,16 +1804,18 @@ literal|"unknown %% code %s (%#x) in %s"
 argument_list|,
 name|unctrl
 argument_list|(
+operator|(
+name|chtype
+operator|)
 operator|*
 name|s
 argument_list|)
 argument_list|,
-operator|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
-operator|)
-operator|&
-literal|0xff
+argument_list|)
 argument_list|,
 name|cap
 argument_list|)
@@ -2208,8 +2217,11 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 operator|||
 operator|*
@@ -2314,12 +2326,18 @@ literal|2
 operator|&&
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 name|ch1
+argument_list|)
 argument_list|)
 operator|&&
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 name|ch2
+argument_list|)
 argument_list|)
 operator|&&
 operator|(
@@ -2467,6 +2485,9 @@ name|temp
 argument_list|,
 name|unctrl
 argument_list|(
+operator|(
+name|chtype
+operator|)
 name|c1
 argument_list|)
 argument_list|)
@@ -2554,31 +2575,29 @@ begin_comment
 comment|/*  * Here are the capabilities infotocap assumes it can translate to:  *  *     %%       output `%'  *     %d       output value as in printf %d  *     %2       output value as in printf %2d  *     %3       output value as in printf %3d  *     %.       output value as in printf %c  *     %+c      add character c to value, then do %.  *     %>xy     if value> x then add y, no output  *     %r       reverse order of two parameters, no output  *     %i       increment by one, no output  *     %n       exclusive-or all parameters with 0140 (Datamedia 2500)  *     %B       BCD (16*(value/10)) + (value%10), no output  *     %D       Reverse coding (value - 2*(value%16)), no output (Delta Data).  *     %m       exclusive-or all parameters with 0177 (not in 4.4BSD)  */
 end_comment
 
+begin_comment
+comment|/*  * Convert a terminfo string to termcap format.  Parameters are as in  * _nc_captoinfo().  */
+end_comment
+
 begin_function
 name|char
 modifier|*
 name|_nc_infotocap
 parameter_list|(
-comment|/* convert a terminfo string to termcap format */
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|cap
 name|GCC_UNUSED
 parameter_list|,
-comment|/* relevant termcap capability index */
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
-comment|/* string value of the capability */
 name|int
 specifier|const
 name|parametrized
-comment|/* do % translations if 1, pad translations if>=0 */
 parameter_list|)
 block|{
 name|int
@@ -2667,8 +2686,11 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|padding
+argument_list|)
 argument_list|)
 operator|||
 operator|*
@@ -2709,8 +2731,11 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|padding
+argument_list|)
 argument_list|)
 operator|||
 operator|*
@@ -2825,8 +2850,11 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|str
+argument_list|)
 argument_list|)
 operator|||
 operator|*
@@ -3348,8 +3376,11 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|str
+argument_list|)
 argument_list|)
 condition|)
 name|bufptr

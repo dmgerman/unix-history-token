@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_ttype.c,v 1.10 2000/08/12 21:56:24 tom Exp $"
+literal|"$Id: alloc_ttype.c,v 1.12 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1991,18 +1991,23 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_align_termtype
-parameter_list|(
-name|TERMTYPE
-modifier|*
-name|to
-parameter_list|,
-name|TERMTYPE
-modifier|*
-name|from
-parameter_list|)
+argument_list|(
+argument|TERMTYPE * to
+argument_list|,
+argument|TERMTYPE * from
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|na
@@ -2468,25 +2473,30 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_copy_termtype
-parameter_list|(
-name|TERMTYPE
-modifier|*
-name|dst
-parameter_list|,
-name|TERMTYPE
-modifier|*
-name|src
-parameter_list|)
+argument_list|(
+argument|TERMTYPE * dst
+argument_list|,
+argument|TERMTYPE * src
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -2664,7 +2674,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 end_unit
 

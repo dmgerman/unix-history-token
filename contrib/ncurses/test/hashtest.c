@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hashtest.c -- test hash mapping  *  * Generate timing statistics for vertical-motion optimization.  *  * $Id: hashtest.c,v 1.15 2000/09/02 19:23:33 tom Exp $  */
+comment|/*  * hashtest.c -- test hash mapping  *  * Generate timing statistics for vertical-motion optimization.  *  * $Id: hashtest.c,v 1.17 2001/03/10 19:47:22 tom Exp $  */
 end_comment
 
 begin_ifdef
@@ -240,7 +240,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Do this so writes to lower-right corner don't cause a spurious 	 * scrolling operation.  This _shouldn't_ break the scrolling 	 * optimization, since that's computed in the refresh() call. 	 */
+comment|/* Do this so writes to lower-right corner don't cause a spurious      * scrolling operation.  This _shouldn't_ break the scrolling      * optimization, since that's computed in the refresh() call.      */
 name|scrollok
 argument_list|(
 name|stdscr
@@ -533,6 +533,7 @@ name|run_test
 parameter_list|(
 name|bool
 name|optimized
+name|GCC_UNUSED
 parameter_list|)
 block|{
 name|char
@@ -722,17 +723,9 @@ literal|0
 init|;
 name|n
 operator|<
-sizeof|sizeof
+name|SIZEOF
 argument_list|(
 name|tbl
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|tbl
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|n

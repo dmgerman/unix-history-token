@@ -20,21 +20,27 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_pad.c,v 1.29 2000/04/29 21:19:44 tom Exp $"
+literal|"$Id: lib_pad.c,v 1.32 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|newpad
-parameter_list|(
-name|int
-name|l
-parameter_list|,
-name|int
-name|c
-parameter_list|)
+argument_list|(
+argument|int l
+argument_list|,
+argument|int c
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -158,6 +164,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|_nc_freewin
 argument_list|(
 name|win
@@ -209,29 +218,31 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|subpad
-parameter_list|(
-name|WINDOW
-modifier|*
-name|orig
-parameter_list|,
-name|int
-name|l
-parameter_list|,
-name|int
-name|c
-parameter_list|,
-name|int
-name|begy
-parameter_list|,
-name|int
-name|begx
-parameter_list|)
+argument_list|(
+argument|WINDOW *orig
+argument_list|,
+argument|int l
+argument_list|,
+argument|int c
+argument_list|,
+argument|int begy
+argument_list|,
+argument|int begx
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -306,34 +317,35 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|prefresh
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-name|pminrow
-parameter_list|,
-name|int
-name|pmincol
-parameter_list|,
-name|int
-name|sminrow
-parameter_list|,
-name|int
-name|smincol
-parameter_list|,
-name|int
-name|smaxrow
-parameter_list|,
-name|int
-name|smaxcol
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|int pminrow
+argument_list|,
+argument|int pmincol
+argument_list|,
+argument|int sminrow
+argument_list|,
+argument|int smincol
+argument_list|,
+argument|int smaxrow
+argument_list|,
+argument|int smaxcol
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -384,42 +396,36 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|pnoutrefresh
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-name|pminrow
-parameter_list|,
-name|int
-name|pmincol
-parameter_list|,
-name|int
-name|sminrow
-parameter_list|,
-name|int
-name|smincol
-parameter_list|,
-name|int
-name|smaxrow
-parameter_list|,
-name|int
-name|smaxcol
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|int pminrow
+argument_list|,
+argument|int pmincol
+argument_list|,
+argument|int sminrow
+argument_list|,
+argument|int smincol
+argument_list|,
+argument|int smaxrow
+argument_list|,
+argument|int smaxcol
+argument_list|)
+end_macro
+
+begin_block
 block|{
-specifier|const
-name|int
-name|my_len
-init|=
-literal|2
-decl_stmt|;
-comment|/* parameterize the threshold for hardscroll */
 name|NCURSES_SIZE_T
 name|i
 decl_stmt|,
@@ -436,12 +442,24 @@ decl_stmt|;
 name|NCURSES_SIZE_T
 name|pmaxcol
 decl_stmt|;
+if|#
+directive|if
+name|USE_SCROLL_HINTS
+specifier|const
+name|int
+name|my_len
+init|=
+literal|2
+decl_stmt|;
+comment|/* parameterize the threshold for hardscroll */
 name|NCURSES_SIZE_T
 name|displaced
 decl_stmt|;
 name|bool
 name|wide
 decl_stmt|;
+endif|#
+directive|endif
 name|T
 argument_list|(
 operator|(
@@ -663,6 +681,9 @@ literal|"pad being refreshed"
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USE_SCROLL_HINTS
 if|if
 condition|(
 name|win
@@ -709,7 +730,12 @@ name|displaced
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * For pure efficiency, we'd want to transfer scrolling information      * from the pad to newscr whenever the window is wide enough that      * its update will dominate the cost of the update for the horizontal      * band of newscr that it occupies.  Unfortunately, this threshold      * tends to be complex to estimate, and in any case scrolling the      * whole band and rewriting the parts outside win's image would look      * really ugly.  So.  What we do is consider the pad "wide" if it      * either (a) occupies the whole width of newscr, or (b) occupies      * all but at most one column on either vertical edge of the screen      * (this caters to fussy people who put boxes around full-screen      * windows).  Note that changing this formula will not break any code,      * merely change the costs of various update cases.      */
+if|#
+directive|if
+name|USE_SCROLL_HINTS
 name|wide
 operator|=
 operator|(
@@ -728,6 +754,8 @@ name|my_len
 operator|)
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -1256,20 +1284,25 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|pechochar
-parameter_list|(
-name|WINDOW
-modifier|*
-name|pad
-parameter_list|,
-specifier|const
-name|chtype
-name|ch
-parameter_list|)
+argument_list|(
+argument|WINDOW *pad
+argument_list|,
+argument|const chtype ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -1374,7 +1407,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

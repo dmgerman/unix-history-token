@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tic.c,v 1.82 2000/10/01 02:11:39 tom Exp $"
+literal|"$Id: tic.c,v 1.90 2001/04/15 00:21:31 tom Exp $"
 argument_list|)
 end_macro
 
@@ -89,6 +89,13 @@ specifier|const
 name|char
 modifier|*
 name|to_remove
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tparm_errs
 decl_stmt|;
 end_decl_stmt
 
@@ -1074,8 +1081,11 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|src
+argument_list|)
 argument_list|)
 condition|)
 name|src
@@ -1125,10 +1135,13 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 name|dst
 index|[
 name|len
 index|]
+argument_list|)
 argument_list|)
 condition|)
 name|dst
@@ -3003,6 +3016,8 @@ if|if
 condition|(
 operator|!
 name|namelst
+operator|&&
+name|_nc_tail
 condition|)
 block|{
 name|int
@@ -3216,6 +3231,7 @@ specifier|static
 name|int
 name|expected_params
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3240,6 +3256,13 @@ index|[]
 init|=
 block|{
 block|{
+literal|"S0"
+block|,
+literal|1
+block|}
+block|,
+comment|/* 'screen' extension */
+block|{
 literal|"birep"
 block|,
 literal|2
@@ -3259,6 +3282,12 @@ block|}
 block|,
 block|{
 literal|"cpi"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"csnm"
 block|,
 literal|1
 block|}
@@ -3294,13 +3323,13 @@ literal|2
 block|}
 block|,
 block|{
-literal|"cvr"
+literal|"cuu"
 block|,
 literal|1
 block|}
 block|,
 block|{
-literal|"cuu"
+literal|"cvr"
 block|,
 literal|1
 block|}
@@ -3318,9 +3347,9 @@ literal|1
 block|}
 block|,
 block|{
-literal|"dclk"
+literal|"defc"
 block|,
-literal|2
+literal|3
 block|}
 block|,
 block|{
@@ -3450,6 +3479,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"rcsd"
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"rep"
 block|,
 literal|2
@@ -3477,6 +3512,12 @@ block|{
 literal|"scs"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"scsd"
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -3566,7 +3607,7 @@ block|,
 block|{
 literal|"smgtp"
 block|,
-literal|2
+literal|1
 block|}
 block|,
 block|{
@@ -3675,6 +3716,7 @@ name|TERMTYPE
 modifier|*
 name|tp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3964,9 +4006,52 @@ name|a
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|b
+index|[
+literal|0
+index|]
+operator|==
+literal|'$'
+operator|&&
+name|b
+index|[
+literal|1
+index|]
+operator|==
+literal|'<'
+condition|)
+block|{
+name|_nc_warning
+argument_list|(
+literal|"Did not find delay %s"
+argument_list|,
+name|_nc_visbuf
+argument_list|(
+name|b
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|_nc_warning
+argument_list|(
+literal|"Unmatched portion %s"
+argument_list|,
+name|_nc_visbuf
+argument_list|(
+name|b
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|FALSE
 return|;
+block|}
 name|a
 operator|++
 expr_stmt|;
@@ -4055,6 +4140,10 @@ operator|==
 literal|9
 argument_list|)
 decl_stmt|;
+name|tparm_errs
+operator|+=
+name|_nc_tparm_err
+expr_stmt|;
 if|if
 condition|(
 name|test
@@ -4552,6 +4641,10 @@ argument_list|,
 name|restore_cursor
 argument_list|)
 expr_stmt|;
+name|tparm_errs
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|PRESENT
@@ -4660,6 +4753,15 @@ expr_stmt|;
 name|free
 argument_list|(
 name|zero
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tparm_errs
+condition|)
+name|_nc_warning
+argument_list|(
+literal|"stack error in sgr string"
 argument_list|)
 expr_stmt|;
 block|}

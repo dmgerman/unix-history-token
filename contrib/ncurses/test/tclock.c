@@ -393,6 +393,8 @@ decl_stmt|,
 name|cy
 decl_stmt|;
 name|double
+name|cr
+decl_stmt|,
 name|mradius
 decl_stmt|,
 name|hradius
@@ -558,25 +560,42 @@ operator|/
 literal|2
 expr_stmt|;
 comment|/* 12 */
-name|ch
+if|if
+condition|(
+name|cx
+operator|/
+name|ASPECT
+operator|<
+name|cy
+condition|)
+name|cr
+operator|=
+name|cx
+operator|/
+name|ASPECT
+expr_stmt|;
+else|else
+name|cr
+operator|=
+name|cy
+expr_stmt|;
+name|sradius
 operator|=
 operator|(
-name|cx
-operator|>
-name|cy
+literal|5
+operator|*
+name|cr
 operator|)
-condition|?
-name|cy
-else|:
-name|cx
+operator|/
+literal|6
 expr_stmt|;
-comment|/* usually cy */
+comment|/* 10 */
 name|mradius
 operator|=
 operator|(
 literal|3
 operator|*
-name|cy
+name|cr
 operator|)
 operator|/
 literal|4
@@ -584,22 +603,11 @@ expr_stmt|;
 comment|/* 9 */
 name|hradius
 operator|=
-name|cy
+name|cr
 operator|/
 literal|2
 expr_stmt|;
 comment|/* 6 */
-name|sradius
-operator|=
-operator|(
-literal|2
-operator|*
-name|cy
-operator|)
-operator|/
-literal|3
-expr_stmt|;
-comment|/* 8 */
 for|for
 control|(
 name|i
@@ -630,17 +638,6 @@ operator|)
 operator|/
 literal|12.0
 expr_stmt|;
-name|sradius
-operator|=
-operator|(
-literal|5
-operator|*
-name|cy
-operator|)
-operator|/
-literal|6
-expr_stmt|;
-comment|/* 10 */
 name|sdx
 operator|=
 name|A2X
@@ -695,7 +692,13 @@ argument_list|)
 expr_stmt|;
 name|sradius
 operator|=
-literal|8
+operator|(
+literal|4
+operator|*
+name|sradius
+operator|)
+operator|/
+literal|5
 expr_stmt|;
 for|for
 control|(
@@ -705,7 +708,7 @@ control|)
 block|{
 name|napms
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|tim
@@ -1011,8 +1014,16 @@ operator|==
 name|KEY_RESIZE
 condition|)
 block|{
+name|flash
+argument_list|()
+expr_stmt|;
 name|erase
 argument_list|()
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|curscr
+argument_list|)
 expr_stmt|;
 goto|goto
 name|restart

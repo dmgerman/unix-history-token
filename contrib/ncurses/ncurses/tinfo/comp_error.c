@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,37 +26,55 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_error.c,v 1.17 1999/10/30 23:00:16 tom Exp $"
+literal|"$Id: comp_error.c,v 1.21 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|bool
-name|_nc_suppress_warnings
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
 
-begin_decl_stmt
-name|int
+begin_expr_stmt
+name|_nc_suppress_warnings
+operator|=
+name|FALSE
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_curr_line
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* current line # in input */
 end_comment
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_curr_col
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* current column # in input */
@@ -83,49 +101,45 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_set_source
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|name
-parameter_list|)
+argument_list|(
+argument|const char *const name
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|sourcename
 operator|=
 name|name
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
-name|_nc_set_type
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|name
-parameter_list|)
-block|{
-if|if
-condition|(
-name|name
-condition|)
-name|strncpy
+begin_macro
+name|NCURSES_EXPORT
 argument_list|(
-name|termtype
-argument_list|,
-name|name
-argument_list|,
-name|MAX_NAME_SIZE
+argument|void
 argument_list|)
-expr_stmt|;
-else|else
+end_macro
+
+begin_macro
+name|_nc_set_type
+argument_list|(
+argument|const char *const name
+argument_list|)
+end_macro
+
+begin_block
+block|{
 name|termtype
 index|[
 literal|0
@@ -133,17 +147,42 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_nc_get_type
-parameter_list|(
-name|char
-modifier|*
+if|if
+condition|(
 name|name
-parameter_list|)
+condition|)
+name|strncat
+argument_list|(
+name|termtype
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|termtype
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_get_type
+argument_list|(
+argument|char *name
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|strcpy
 argument_list|(
@@ -153,7 +192,7 @@ name|termtype
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -236,18 +275,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_warning
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|(
+argument|const char *const fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|va_list
 name|argp
@@ -289,20 +333,25 @@ name|argp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_err_abort
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|(
+argument|const char *const fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|va_list
 name|argp
@@ -344,20 +393,25 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_syserr_abort
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|(
+argument|const char *const fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|va_list
 name|argp
@@ -393,7 +447,7 @@ argument_list|(
 name|argp
 argument_list|)
 expr_stmt|;
-comment|/* If we're debugging, try to show where the problem occurred - this 	 * will dump core. 	 */
+comment|/* If we're debugging, try to show where the problem occurred - this      * will dump core.      */
 if|#
 directive|if
 name|defined
@@ -411,7 +465,7 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-comment|/* Dumping core in production code is not a good idea. 	 */
+comment|/* Dumping core in production code is not a good idea.      */
 name|exit
 argument_list|(
 name|EXIT_FAILURE
@@ -420,7 +474,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 end_unit
 

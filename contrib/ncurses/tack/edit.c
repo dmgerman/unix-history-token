@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: edit.c,v 1.5 2000/03/25 17:26:12 tom Exp $"
+literal|"$Id: edit.c,v 1.7 2001/02/24 22:10:40 tom Exp $"
 argument_list|)
 end_macro
 
@@ -2771,8 +2771,6 @@ block|{
 name|int
 name|ch
 decl_stmt|,
-name|i
-decl_stmt|,
 name|j
 decl_stmt|;
 name|char
@@ -2788,8 +2786,6 @@ condition|)
 block|{
 for|for
 control|(
-name|i
-operator|=
 name|j
 operator|=
 literal|0
@@ -2901,8 +2897,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
-name|i
-decl_stmt|,
 name|j
 decl_stmt|;
 name|char
@@ -2918,8 +2912,6 @@ condition|)
 block|{
 for|for
 control|(
-name|i
-operator|=
 name|j
 operator|=
 literal|0
@@ -4487,10 +4479,13 @@ literal|'\0'
 operator|&&
 name|isalpha
 argument_list|(
+name|CharOf
+argument_list|(
 name|buf
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 operator|)
 condition|)

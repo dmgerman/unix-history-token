@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,19 +20,29 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_window.c,v 1.13 1998/06/28 00:10:59 tom Exp $"
+literal|"$Id: lib_window.c,v 1.15 2000/12/10 02:43:28 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_synchook
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* hook to be called after each window change */
+end_comment
+
+begin_block
 block|{
 if|if
 condition|(
@@ -57,23 +67,31 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|mvderwin
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-name|y
-parameter_list|,
-name|int
-name|x
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|int y
+argument_list|,
+argument|int x
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* move a derived window */
+end_comment
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -251,20 +269,29 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|syncok
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|bool
-name|bf
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|bool bf
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* enable/disable automatic wsyncup() on each change to window */
+end_comment
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -304,18 +331,31 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|wsyncup
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* mark changed every cell in win's ancestors that is changed in win */
+end_comment
+
+begin_comment
 comment|/* Rewritten by J. Pfeifer, 1-Apr-96 (don't even think that...)      */
+end_comment
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -420,8 +460,8 @@ name|left
 operator|>=
 literal|0
 condition|)
-comment|/* line is touched */
 block|{
+comment|/* line is touched */
 name|struct
 name|ldat
 modifier|*
@@ -477,18 +517,31 @@ block|}
 block|}
 block|}
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|wsyncdown
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* mark changed every cell in win that is changed in any of its ancestors */
+end_comment
+
+begin_comment
 comment|/* Rewritten by J. Pfeifer, 1-Apr-96 (don't even think that...)           */
+end_comment
+
+begin_block
 block|{
 if|if
 condition|(
@@ -510,13 +563,13 @@ decl_stmt|;
 name|int
 name|y
 decl_stmt|;
-comment|/* This recursion guarantees, that the changes are propagated down- 	 wards from the root to our direct parent. */
+comment|/* This recursion guarantees, that the changes are propagated down- 	   wards from the root to our direct parent. */
 name|wsyncdown
 argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-comment|/* and now we only have to propagate the changes from our direct 	 parent, if there are any. */
+comment|/* and now we only have to propagate the changes from our direct 	   parent, if there are any. */
 name|assert
 argument_list|(
 operator|(
@@ -579,8 +632,8 @@ name|firstchar
 operator|>=
 literal|0
 condition|)
-comment|/* parent changed */
 block|{
+comment|/* parent changed */
 name|struct
 name|ldat
 modifier|*
@@ -675,17 +728,27 @@ block|}
 block|}
 block|}
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|wcursyncup
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* sync the cursor in all derived windows to its value in the base window */
+end_comment
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -735,18 +798,27 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|dupwin
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* make an exact duplicate of the given window */
+end_comment
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -881,7 +953,7 @@ operator|&
 operator|~
 name|_SUBWIN
 expr_stmt|;
-comment|/* Due to the use of newwin(), the clone is not a subwindow. 	 * The text is really copied into the clone. 	 */
+comment|/* Due to the use of newwin(), the clone is not a subwindow.      * The text is really copied into the clone.      */
 name|nwin
 operator|->
 name|_attrs
@@ -1090,7 +1162,7 @@ name|nwin
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

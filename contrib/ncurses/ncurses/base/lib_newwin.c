@@ -20,18 +20,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newwin.c,v 1.24 2000/04/29 18:49:51 tom Exp $"
+literal|"$Id: lib_newwin.c,v 1.27 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_freewin
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|WINDOWLIST
 modifier|*
@@ -42,6 +49,11 @@ name|q
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|result
+init|=
+name|ERR
 decl_stmt|;
 if|if
 condition|(
@@ -192,6 +204,10 @@ name|newscr
 operator|=
 literal|0
 expr_stmt|;
+name|result
+operator|=
+name|OK
+expr_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -205,26 +221,33 @@ break|break;
 block|}
 block|}
 block|}
+return|return
+name|result
+return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|newwin
-parameter_list|(
-name|int
-name|num_lines
-parameter_list|,
-name|int
-name|num_columns
-parameter_list|,
-name|int
-name|begy
-parameter_list|,
-name|int
-name|begx
-parameter_list|)
+argument_list|(
+argument|int num_lines
+argument_list|,
+argument|int num_columns
+argument_list|,
+argument|int begy
+argument_list|,
+argument|int begx
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -400,6 +423,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|_nc_freewin
 argument_list|(
 name|win
@@ -460,29 +486,31 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|derwin
-parameter_list|(
-name|WINDOW
-modifier|*
-name|orig
-parameter_list|,
-name|int
-name|num_lines
-parameter_list|,
-name|int
-name|num_columns
-parameter_list|,
-name|int
-name|begy
-parameter_list|,
-name|int
-name|begx
-parameter_list|)
+argument_list|(
+argument|WINDOW *orig
+argument_list|,
+argument|int num_lines
+argument_list|,
+argument|int num_columns
+argument_list|,
+argument|int begy
+argument_list|,
+argument|int begx
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -734,29 +762,31 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|subwin
-parameter_list|(
-name|WINDOW
-modifier|*
-name|w
-parameter_list|,
-name|int
-name|l
-parameter_list|,
-name|int
-name|c
-parameter_list|,
-name|int
-name|y
-parameter_list|,
-name|int
-name|x
-parameter_list|)
+argument_list|(
+argument|WINDOW *w
+argument_list|,
+argument|int l
+argument_list|,
+argument|int c
+argument_list|,
+argument|int y
+argument_list|,
+argument|int x
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -818,7 +848,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -848,26 +878,29 @@ return|;
 block|}
 end_function
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_makenew
-parameter_list|(
-name|int
-name|num_lines
-parameter_list|,
-name|int
-name|num_columns
-parameter_list|,
-name|int
-name|begy
-parameter_list|,
-name|int
-name|begx
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
+argument_list|(
+argument|int num_lines
+argument_list|,
+argument|int num_columns
+argument_list|,
+argument|int begy
+argument_list|,
+argument|int begx
+argument_list|,
+argument|int flags
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -1354,7 +1387,7 @@ name|win
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -36,19 +36,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_set_term.c,v 1.58 2000/10/04 22:05:48 tom Exp $"
+literal|"$Id: lib_set_term.c,v 1.61 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|SCREEN
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|SCREEN *
+argument_list|)
+end_macro
+
+begin_macro
 name|set_term
-parameter_list|(
-name|SCREEN
-modifier|*
-name|screenp
-parameter_list|)
+argument_list|(
+argument|SCREEN * screenp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|SCREEN
 modifier|*
@@ -146,7 +152,7 @@ name|oldSP
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -193,14 +199,21 @@ begin_comment
 comment|/*  * Free the storage associated with the given SCREEN sp.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|delscreen
-parameter_list|(
-name|SCREEN
-modifier|*
-name|sp
-parameter_list|)
+argument_list|(
+argument|SCREEN * sp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|SCREEN
 modifier|*
@@ -256,6 +269,9 @@ operator|->
 name|_next_screen
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|_nc_freewin
 argument_list|(
 name|sp
@@ -263,6 +279,9 @@ operator|->
 name|_curscr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|_nc_freewin
 argument_list|(
 name|sp
@@ -270,6 +289,9 @@ operator|->
 name|_newscr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|_nc_freewin
 argument_list|(
 name|sp
@@ -405,7 +427,7 @@ block|}
 name|returnVoid
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_decl_stmt
 specifier|static
@@ -616,22 +638,29 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_setupscreen
-parameter_list|(
-name|short
-name|slines
-parameter_list|,
-name|short
-specifier|const
-name|scolumns
-parameter_list|,
-name|FILE
-modifier|*
-name|output
-parameter_list|)
+argument_list|(
+argument|short slines
+argument_list|,
+argument|short const scolumns
+argument_list|,
+argument|FILE * output
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* OS-independent screen initializations */
+end_comment
+
+begin_block
 block|{
 name|int
 name|bottom_stolen
@@ -1457,31 +1486,29 @@ return|return
 name|OK
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* The internal implementation interprets line as the number of    lines to rip off from the top or bottom.    */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_ripoffline
-parameter_list|(
-name|int
-name|line
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|init
-function_decl|)
-parameter_list|(
-name|WINDOW
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-parameter_list|)
+argument_list|(
+argument|int line
+argument_list|,
+argument|int (*init) (WINDOW *, int)
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1534,27 +1561,25 @@ name|OK
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|ripoffline
-parameter_list|(
-name|int
-name|line
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|init
-function_decl|)
-parameter_list|(
-name|WINDOW
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-parameter_list|)
+argument_list|(
+argument|int line
+argument_list|,
+argument|int (*init) (WINDOW *, int)
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -1601,7 +1626,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

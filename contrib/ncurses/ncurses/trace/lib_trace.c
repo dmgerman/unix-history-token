@@ -32,17 +32,23 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_trace.c,v 1.34 2000/04/01 20:25:47 tom Exp $"
+literal|"$Id: lib_trace.c,v 1.38 2000/12/10 03:02:45 tom Exp $"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|unsigned
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|unsigned
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_tracing
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* always define this */
@@ -54,23 +60,33 @@ directive|ifdef
 name|TRACE
 end_ifdef
 
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|_nc_tputs_trace
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|const char *
+argument_list|)
+end_macro
 
-begin_decl_stmt
-name|long
+begin_expr_stmt
+name|_nc_tputs_trace
+operator|=
+literal|""
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_outchars
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -84,16 +100,21 @@ begin_comment
 comment|/* default to writing to stderr */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|trace
-parameter_list|(
-specifier|const
-name|unsigned
-name|int
-name|tracelevel
-name|GCC_UNUSED
-parameter_list|)
+argument_list|(
+argument|const unsigned int tracelevel GCC_UNUSED
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 name|bool
@@ -142,7 +163,7 @@ name|fopen
 argument_list|(
 name|my_name
 argument_list|,
-literal|"w"
+literal|"wb"
 argument_list|)
 operator|)
 operator|==
@@ -205,37 +226,42 @@ endif|#
 directive|endif
 name|_tracef
 argument_list|(
-literal|"TRACING NCURSES version %s (%d)"
+literal|"TRACING NCURSES version %s"
 argument_list|,
-name|NCURSES_VERSION
-argument_list|,
-name|NCURSES_VERSION_PATCH
+name|curses_version
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function
-specifier|const
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|const char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_visbuf2
-parameter_list|(
-name|int
-name|bufnum
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|buf
-parameter_list|)
+argument_list|(
+argument|int bufnum
+argument_list|,
+argument|const char *buf
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* visibilize a given string */
+end_comment
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -533,9 +559,10 @@ name|tp
 argument_list|,
 literal|"\\%03o"
 argument_list|,
+name|CharOf
+argument_list|(
 name|c
-operator|&
-literal|0xff
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tp
@@ -565,19 +592,23 @@ name|vbuf
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-specifier|const
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|const char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_visbuf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|buf
-parameter_list|)
+argument_list|(
+argument|const char *buf
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|_nc_visbuf2
@@ -588,7 +619,7 @@ name|buf
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -596,17 +627,23 @@ directive|ifdef
 name|TRACE
 end_ifdef
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_tracef
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|(
+argument|const char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 specifier|const
@@ -856,19 +893,27 @@ operator|=
 name|save_err
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* Trace 'int' return-values */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_retrace_int
-parameter_list|(
-name|int
-name|code
-parameter_list|)
+argument_list|(
+argument|int code
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -886,21 +931,27 @@ return|return
 name|code
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* Trace 'char*' return-values */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_retrace_ptr
-parameter_list|(
-name|char
-modifier|*
-name|code
-parameter_list|)
+argument_list|(
+argument|char *code
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -921,21 +972,27 @@ return|return
 name|code
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* Trace 'WINDOW *' return-values */
 end_comment
 
-begin_function
-name|WINDOW
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|WINDOW *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_retrace_win
-parameter_list|(
-name|WINDOW
-modifier|*
-name|code
-parameter_list|)
+argument_list|(
+argument|WINDOW *code
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -953,7 +1010,7 @@ return|return
 name|code
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2000 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2000,2001 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tgoto.c,v 1.2 2000/09/24 00:19:14 tom Exp $"
+literal|"$Id: lib_tgoto.c,v 1.7 2001/03/24 22:25:55 tom Exp $"
 argument_list|)
 end_macro
 
@@ -55,6 +55,26 @@ name|result
 init|=
 name|TRUE
 decl_stmt|;
+if|if
+condition|(
+name|string
+operator|==
+literal|0
+operator|||
+operator|*
+name|string
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* tparm() handles empty strings */
+block|}
+else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -125,6 +145,7 @@ block|}
 name|string
 operator|++
 expr_stmt|;
+block|}
 block|}
 return|return
 name|result
@@ -279,6 +300,7 @@ operator|==
 literal|'%'
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -339,13 +361,12 @@ case|:
 operator|*
 name|value
 operator|+=
-operator|(
+name|CharOf
+argument_list|(
 operator|*
 operator|++
 name|string
-operator|&
-literal|0xff
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* FALLTHRU */
 case|case
@@ -660,22 +681,25 @@ begin_comment
 comment|/*  * Retained solely for upward compatibility.  Note the intentional reversing of  * the last two arguments when invoking tparm().  */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|tgoto
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-name|int
-name|x
-parameter_list|,
-name|int
-name|y
-parameter_list|)
+argument_list|(
+argument|const char *string
+argument_list|,
+argument|int x
+argument_list|,
+argument|int y
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -747,7 +771,7 @@ name|result
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

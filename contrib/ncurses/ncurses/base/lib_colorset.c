@@ -26,25 +26,29 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_colorset.c,v 1.6 2000/07/29 16:37:19 tom Exp $"
+literal|"$Id: lib_colorset.c,v 1.7 2000/12/10 01:24:50 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wcolor_set
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|short
-name|color_pair_number
-parameter_list|,
-name|void
-modifier|*
-name|opts
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|short color_pair_number
+argument_list|,
+argument|void *opts
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -124,7 +128,7 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

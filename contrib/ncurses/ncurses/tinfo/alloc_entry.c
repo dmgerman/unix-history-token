@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_entry.c,v 1.32 2000/03/12 00:16:31 tom Exp $"
+literal|"$Id: alloc_entry.c,v 1.35 2001/01/13 22:40:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -86,16 +86,25 @@ begin_comment
 comment|/* next free character in stringbuf */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_init_entry
-parameter_list|(
-name|TERMTYPE
-modifier|*
-specifier|const
-name|tp
-parameter_list|)
+argument_list|(
+argument|TERMTYPE * const tp
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* initialize a terminal type data block */
+end_comment
+
+begin_block
 block|{
 name|int
 name|i
@@ -249,17 +258,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|ENTRY
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|ENTRY *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_copy_entry
-parameter_list|(
-name|ENTRY
-modifier|*
-name|oldp
-parameter_list|)
+argument_list|(
+argument|ENTRY * oldp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|ENTRY
 modifier|*
@@ -307,20 +322,27 @@ return|return
 name|newp
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_save_str
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|string
-parameter_list|)
+argument_list|(
+argument|const char *const string
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* save a copy of string in the string buffer */
+end_comment
+
+begin_block
 block|{
 name|size_t
 name|old_next_free
@@ -398,18 +420,29 @@ name|old_next_free
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_wrap_entry
-parameter_list|(
-name|ENTRY
-modifier|*
-specifier|const
-name|ep
-parameter_list|)
+argument_list|(
+argument|ENTRY * const ep
+argument_list|,
+argument|bool copy_strings
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* copy the string parts to allocated storage, preserving pointers to it */
+end_comment
+
+begin_block
 block|{
 name|int
 name|offsets
@@ -440,6 +473,136 @@ operator|->
 name|tterm
 operator|)
 decl_stmt|;
+if|if
+condition|(
+name|copy_strings
+condition|)
+block|{
+name|next_free
+operator|=
+literal|0
+expr_stmt|;
+comment|/* clear static storage */
+comment|/* copy term_names, Strings, uses */
+name|tp
+operator|->
+name|term_names
+operator|=
+name|_nc_save_str
+argument_list|(
+name|tp
+operator|->
+name|term_names
+argument_list|)
+expr_stmt|;
+name|for_each_string
+argument_list|(
+argument|i
+argument_list|,
+argument|tp
+argument_list|)
+block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|Strings
+index|[
+name|i
+index|]
+operator|!=
+name|ABSENT_STRING
+operator|&&
+name|tp
+operator|->
+name|Strings
+index|[
+name|i
+index|]
+operator|!=
+name|CANCELLED_STRING
+condition|)
+block|{
+name|tp
+operator|->
+name|Strings
+index|[
+name|i
+index|]
+operator|=
+name|_nc_save_str
+argument_list|(
+name|tp
+operator|->
+name|Strings
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ep
+operator|->
+name|nuses
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ep
+operator|->
+name|uses
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|==
+literal|0
+condition|)
+block|{
+name|ep
+operator|->
+name|uses
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|=
+name|_nc_save_str
+argument_list|(
+name|ep
+operator|->
+name|uses
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|free
+argument_list|(
+name|tp
+operator|->
+name|str_table
+argument_list|)
+expr_stmt|;
+block|}
 name|n
 operator|=
 name|tp
@@ -679,6 +842,12 @@ directive|if
 name|NCURSES_XNAMES
 if|if
 condition|(
+operator|!
+name|copy_strings
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|n
 operator|=
@@ -825,6 +994,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+block|}
 endif|#
 directive|endif
 for|for
@@ -886,23 +1056,29 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_merge_entry
-parameter_list|(
-name|TERMTYPE
-modifier|*
-specifier|const
-name|to
-parameter_list|,
-name|TERMTYPE
-modifier|*
-specifier|const
-name|from
-parameter_list|)
+argument_list|(
+argument|TERMTYPE * const to
+argument_list|,
+argument|TERMTYPE * const from
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* merge capabilities from `from' entry into `to' entry */
+end_comment
+
+begin_block
 block|{
 name|int
 name|i
@@ -1069,7 +1245,7 @@ name|mergestring
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 

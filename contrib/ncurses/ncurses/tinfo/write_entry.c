@@ -98,7 +98,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: write_entry.c,v 1.53 2000/10/04 02:32:14 tom Exp $"
+literal|"$Id: write_entry.c,v 1.56 2000/12/10 02:55:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -433,15 +433,25 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_set_writedir
-parameter_list|(
-name|char
-modifier|*
-name|dir
-parameter_list|)
+argument_list|(
+argument|char *dir
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* set the write directory for compiled entries */
+end_comment
+
+begin_block
 block|{
 specifier|const
 name|char
@@ -580,7 +590,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	check_writeable(char code)  *  *	Miscellaneous initialisations  *  *	Check for access rights to destination directories  *	Create any directories which don't exist.  *	Note: there's no reason to return the result of make_directory(), since  *	this function is called only in instances where that has to succeed.  *  */
@@ -622,6 +632,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|s
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1363,9 +1375,15 @@ name|code
 operator|==
 literal|0
 operator|&&
+operator|(
 name|errno
 operator|==
 name|EPERM
+operator|||
+name|errno
+operator|==
+name|ENOENT
+operator|)
 condition|)
 name|write_file
 argument_list|(
@@ -1375,6 +1393,10 @@ name|tp
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|#
+directive|if
+name|MIXEDCASE_FILENAMES
 name|_nc_syserr_abort
 argument_list|(
 literal|"can't link %s to %s"
@@ -1384,6 +1406,22 @@ argument_list|,
 name|linkname
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|_nc_warning
+argument_list|(
+literal|"can't link %s to %s (errno=%d)"
+argument_list|,
+name|filename
+argument_list|,
+name|linkname
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 else|else
 block|{
@@ -2786,18 +2824,27 @@ begin_comment
 comment|/*  * Returns the total number of entries written by this process  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_tic_written
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|total_written
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -69,7 +69,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_setup.c,v 1.60 2000/09/02 18:13:12 tom Exp $"
+literal|"$Id: lib_setup.c,v 1.64 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
@@ -268,36 +268,70 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|use_env
-parameter_list|(
-name|bool
-name|f
-parameter_list|)
+argument_list|(
+argument|bool f
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|_use_env
 operator|=
 name|f
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|LINES
-init|=
+operator|=
 literal|0
-decl_stmt|,
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|COLS
-init|=
+operator|=
 literal|0
-decl_stmt|,
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|TABSIZE
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -590,21 +624,6 @@ operator|*
 name|linep
 operator|<=
 literal|0
-operator|||
-operator|*
-name|colp
-operator|<=
-literal|0
-condition|)
-if|if
-condition|(
-name|lines
-operator|>
-literal|0
-operator|&&
-name|columns
-operator|>
-literal|0
 condition|)
 block|{
 operator|*
@@ -615,6 +634,15 @@ name|int
 operator|)
 name|lines
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|colp
+operator|<=
+literal|0
+condition|)
+block|{
 operator|*
 name|colp
 operator|=
@@ -721,12 +749,21 @@ directive|if
 name|USE_SIZECHANGE
 end_if
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_update_screensize
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|my_lines
@@ -764,7 +801,7 @@ name|my_cols
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
@@ -900,6 +937,7 @@ argument|n
 argument_list|,
 argument|tp
 argument_list|)
+block|{
 if|if
 condition|(
 operator|!
@@ -922,12 +960,14 @@ index|]
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
 name|for_each_string
 argument_list|(
 argument|n
 argument_list|,
 argument|tp
 argument_list|)
+block|{
 if|if
 condition|(
 name|tp
@@ -949,6 +989,7 @@ operator|=
 name|ABSENT_STRING
 expr_stmt|;
 block|}
+block|}
 return|return
 operator|(
 name|status
@@ -962,37 +1003,46 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|char
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|char
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|ttytype
 index|[
 name|NAMESIZE
 index|]
-init|=
+operator|=
 literal|""
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  *	setupterm(termname, Filedes, errret)  *  *	Find and read the appropriate object file for the terminal  *	Make cur_term point to the structure.  *  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|setupterm
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|tname
-parameter_list|,
-name|int
-name|Filedes
-parameter_list|,
-name|int
-modifier|*
-name|errret
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *tname
+argument_list|,
+argument|int Filedes
+argument_list|,
+argument|int *errret
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|term
@@ -1365,7 +1415,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* **	do_prototype() ** **	Take the real command character out of the CC environment variable **	and substitute it in for the prototype given in 'command_character'. ** */

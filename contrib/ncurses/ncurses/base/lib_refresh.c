@@ -20,18 +20,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_refresh.c,v 1.25 2000/04/29 21:17:08 tom Exp $"
+literal|"$Id: lib_refresh.c,v 1.28 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wrefresh
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
@@ -113,16 +120,23 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wnoutrefresh
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|NCURSES_SIZE_T
 name|limit_x
@@ -143,9 +157,14 @@ name|m
 decl_stmt|,
 name|n
 decl_stmt|;
+if|#
+directive|if
+name|USE_SCROLL_HINTS
 name|bool
 name|wide
 decl_stmt|;
+endif|#
+directive|endif
 name|T
 argument_list|(
 operator|(
@@ -234,6 +253,9 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USE_SCROLL_HINTS
 comment|/*      * For pure efficiency, we'd want to transfer scrolling information      * from the window to newscr whenever the window is wide enough that      * its update will dominate the cost of the update for the horizontal      * band of newscr that it occupies.  Unfortunately, this threshold      * tends to be complex to estimate, and in any case scrolling the      * whole band and rewriting the parts outside win's image would look      * really ugly.  So.  What we do is consider the window "wide" if it      * either (a) occupies the whole width of newscr, or (b) occupies      * all but at most one column on either vertical edge of the screen      * (this caters to fussy people who put boxes around full-screen      * windows).  Note that changing this formula will not break any code,      * merely change the costs of various update cases.      */
 name|wide
 operator|=
@@ -255,6 +277,8 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 name|win
 operator|->
 name|_flags
@@ -587,7 +611,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

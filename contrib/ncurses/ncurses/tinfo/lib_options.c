@@ -26,21 +26,27 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_options.c,v 1.40 2000/09/02 18:02:05 tom Exp $"
+literal|"$Id: lib_options.c,v 1.42 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|idlok
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|bool
-name|flag
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -91,19 +97,25 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|idcok
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|bool
-name|flag
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -139,15 +151,23 @@ expr_stmt|;
 name|returnVoid
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|halfdelay
-parameter_list|(
-name|int
-name|t
-parameter_list|)
+argument_list|(
+argument|int t
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -193,19 +213,25 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|nodelay
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|bool
-name|flag
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -259,19 +285,25 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|notimeout
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|bool
-name|f
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|bool f
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -311,19 +343,25 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|wtimeout
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-name|delay
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|int delay
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -352,19 +390,25 @@ name|delay
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|keypad
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|bool
-name|flag
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -407,20 +451,25 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|meta
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-name|GCC_UNUSED
-parameter_list|,
-name|bool
-name|flag
-parameter_list|)
+argument_list|(
+argument|WINDOW *win GCC_UNUSED
+argument_list|,
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* Ok, we stay relaxed and don't signal an error if win is NULL */
 name|T
@@ -487,19 +536,27 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* curs_set() moved here to narrow the kernel interface */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|curs_set
-parameter_list|(
-name|int
-name|vis
-parameter_list|)
+argument_list|(
+argument|int vis
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|cursor
@@ -652,15 +709,23 @@ name|cursor
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|typeahead
-parameter_list|(
-name|int
-name|fd
-parameter_list|)
+argument_list|(
+argument|int fd
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -686,7 +751,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* **      has_key() ** **      Return TRUE if the current terminal has the given key ** */
@@ -762,13 +827,21 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|has_key
-parameter_list|(
-name|int
-name|keycode
-parameter_list|)
+argument_list|(
+argument|int keycode
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -795,7 +868,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
@@ -810,13 +883,21 @@ begin_comment
 comment|/* Turn the keypad on/off  *  * Note:  we flush the output because changing this mode causes some terminals  * to emit different escape sequences for cursor and keypad keys.  If we don't  * flush, then the next wgetch may get the escape sequence that corresponds to  * the terminal state _before_ switching modes.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_keypad
-parameter_list|(
-name|bool
-name|flag
-parameter_list|)
+argument_list|(
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -888,7 +969,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  * v2.1 with ncurses mouse support, September 1995  *  * $Id: bs.c,v 1.24 1999/08/21 23:14:38 tom Exp $  */
+comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  * v2.1 with ncurses mouse support, September 1995  *  * $Id: bs.c,v 1.29 2001/04/14 22:36:05 Erik.Sigra Exp $  */
 end_comment
 
 begin_include
@@ -255,7 +255,7 @@ name|IS_SHIP
 parameter_list|(
 name|c
 parameter_list|)
-value|(isupper(c) ? TRUE : FALSE)
+value|(isupper(CharOf(c)) ? TRUE : FALSE)
 end_define
 
 begin_comment
@@ -1510,7 +1510,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NCURSES_MOUSE_VERSION*/
+comment|/* NCURSES_MOUSE_VERSION */
 block|}
 end_function
 
@@ -1785,46 +1785,8 @@ name|ss
 parameter_list|)
 comment|/* generate a valid random ship placement into px,py */
 block|{
-specifier|register
-name|int
-name|bwidth
-init|=
-name|BWIDTH
-operator|-
-name|ss
-operator|->
-name|length
-decl_stmt|;
-specifier|register
-name|int
-name|bdepth
-init|=
-name|BDEPTH
-operator|-
-name|ss
-operator|->
-name|length
-decl_stmt|;
 do|do
 block|{
-name|ss
-operator|->
-name|y
-operator|=
-name|rnd
-argument_list|(
-name|bdepth
-argument_list|)
-expr_stmt|;
-name|ss
-operator|->
-name|x
-operator|=
-name|rnd
-argument_list|(
-name|bwidth
-argument_list|)
-expr_stmt|;
 name|ss
 operator|->
 name|dir
@@ -1837,6 +1799,52 @@ condition|?
 name|E
 else|:
 name|S
+expr_stmt|;
+name|ss
+operator|->
+name|x
+operator|=
+name|rnd
+argument_list|(
+name|BWIDTH
+operator|-
+operator|(
+name|ss
+operator|->
+name|dir
+operator|==
+name|E
+condition|?
+name|ss
+operator|->
+name|length
+else|:
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+name|ss
+operator|->
+name|y
+operator|=
+name|rnd
+argument_list|(
+name|BDEPTH
+operator|-
+operator|(
+name|ss
+operator|->
+name|dir
+operator|==
+name|S
+condition|?
+name|ss
+operator|->
+name|length
+else|:
+literal|0
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 do|while
@@ -3849,9 +3857,13 @@ name|ss
 operator|->
 name|x
 operator|+
+operator|(
 name|ss
 operator|->
 name|length
+operator|-
+literal|1
+operator|)
 operator|*
 name|xincr
 index|[
@@ -3866,9 +3878,13 @@ name|ss
 operator|->
 name|y
 operator|+
+operator|(
 name|ss
 operator|->
 name|length
+operator|-
+literal|1
+operator|)
 operator|*
 name|yincr
 index|[
@@ -4250,8 +4266,8 @@ name|NULL
 operator|)
 return|;
 else|else
-comment|/* sunk! */
 block|{
+comment|/* sunk! */
 name|int
 name|i
 decl_stmt|,
@@ -4447,6 +4463,24 @@ endif|#
 directive|endif
 comment|/* A_COLOR */
 block|}
+else|else
+block|{
+name|pgoto
+argument_list|(
+name|y1
+argument_list|,
+name|x1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|addch
+argument_list|(
+name|SHOWSPLASH
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -4545,6 +4579,54 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|pgoto
+argument_list|(
+name|y1
+argument_list|,
+name|x1
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|A_COLOR
+if|if
+condition|(
+name|has_colors
+argument_list|()
+condition|)
+name|attron
+argument_list|(
+name|COLOR_PAIR
+argument_list|(
+name|COLOR_RED
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
+name|addch
+argument_list|(
+name|SHOWHIT
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|A_COLOR
+name|attrset
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* A_COLOR */
+block|}
 block|}
 operator|(
 name|void
@@ -4587,7 +4669,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|plyturn
 parameter_list|(
 name|void
@@ -5263,7 +5345,7 @@ argument_list|(
 name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/*NOTREACHED */
 block|}
 block|}
 end_function
@@ -6912,7 +6994,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/*NOTREACHED */
 block|}
 end_function
 

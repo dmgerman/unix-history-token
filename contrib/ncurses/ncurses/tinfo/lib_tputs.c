@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,41 +52,59 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tputs.c,v 1.51 2000/10/08 00:22:24 tom Exp $"
+literal|"$Id: lib_tputs.c,v 1.56 2001/04/21 18:53:53 tom Exp $"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|char
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|char
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|PC
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* used by termcap library */
 end_comment
 
-begin_decl_stmt
-name|short
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|NCURSES_OSPEED
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|ospeed
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* used by termcap library */
 end_comment
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_nulls_sent
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* used by 'tack' program */
@@ -108,13 +126,21 @@ name|_nc_outch
 function_decl|;
 end_function_decl
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|delay_output
-parameter_list|(
-name|int
-name|ms
-parameter_list|)
+argument_list|(
+argument|int ms
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -195,14 +221,23 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_flush
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -213,15 +248,23 @@ name|NC_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_outch
-parameter_list|(
-name|int
-name|ch
-parameter_list|)
+argument_list|(
+argument|int ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -277,7 +320,7 @@ return|return
 name|OK
 return|;
 block|}
-end_function
+end_block
 
 begin_if
 if|#
@@ -289,13 +332,21 @@ begin_comment
 comment|/*  * Reference: The Unicode Standard 2.0  *  * No surrogates supported (we're storing only one 16-bit Unicode value per  * cell).  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_utf8_outch
-parameter_list|(
-name|int
-name|ch
-parameter_list|)
+argument_list|(
+argument|int ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 specifier|const
@@ -592,22 +643,28 @@ return|return
 name|OK
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|putp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|)
+argument_list|(
+argument|const char *string
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|tputs
@@ -620,29 +677,27 @@ name|_nc_outch
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|tputs
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-name|int
-name|affcnt
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|outc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-parameter_list|)
+argument_list|(
+argument|const char *string
+argument_list|,
+argument|int affcnt
+argument_list|,
+argument|int (*outc) (int)
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|bool
 name|always_delay
@@ -1025,8 +1080,11 @@ operator|(
 operator|!
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|string
+argument_list|)
 argument_list|)
 operator|&&
 operator|*
@@ -1070,8 +1128,11 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|string
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1111,8 +1172,11 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|string
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1133,8 +1197,11 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|string
+argument_list|)
 argument_list|)
 condition|)
 name|string
@@ -1257,7 +1324,7 @@ return|return
 name|OK
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

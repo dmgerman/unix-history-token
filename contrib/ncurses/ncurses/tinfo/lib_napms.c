@@ -123,17 +123,25 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_napms.c,v 1.9 2000/04/29 23:42:56 tom Exp $"
+literal|"$Id: lib_napms.c,v 1.11 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|napms
-parameter_list|(
-name|int
-name|ms
-parameter_list|)
+argument_list|(
+argument|int ms
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -256,7 +264,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

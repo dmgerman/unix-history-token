@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addch.c,v 1.44 2000/05/20 21:13:11 tom Exp $"
+literal|"$Id: lib_addch.c,v 1.47 2000/12/10 02:43:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -152,15 +152,25 @@ return|;
 block|}
 end_function
 
-begin_function
-name|chtype
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|chtype
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_background
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* make render_char() visible while still allowing us to inline it below */
+end_comment
+
+begin_block
 block|{
 return|return
 operator|(
@@ -170,20 +180,29 @@ name|_bkgd
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|chtype
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|chtype
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_render
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|chtype
-name|ch
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|chtype ch
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* make render_char() visible while still allowing us to inline it below */
+end_comment
+
+begin_block
 block|{
 return|return
 name|render_char
@@ -194,7 +213,7 @@ name|ch
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* check if position is legal; if not, return error */
@@ -478,7 +497,7 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-name|int
+name|chtype
 name|t
 init|=
 literal|0
@@ -828,19 +847,27 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_waddch_nosync
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-specifier|const
-name|chtype
-name|c
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|const chtype c
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* export copy of waddch_nosync() so the string-put functions can use it */
+end_comment
+
+begin_block
 block|{
 return|return
 operator|(
@@ -853,7 +880,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * The versions below call _nc_synhook().  We wanted to avoid this in the  * version exported for string puts; they'll call _nc_synchook once at end  * of run.  */
@@ -863,18 +890,23 @@ begin_comment
 comment|/* These are actual entry points */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|waddch
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-specifier|const
-name|chtype
-name|ch
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|const chtype ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
@@ -950,20 +982,25 @@ name|code
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wechochar
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-specifier|const
-name|chtype
-name|ch
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|const chtype ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
@@ -1058,7 +1095,7 @@ name|code
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

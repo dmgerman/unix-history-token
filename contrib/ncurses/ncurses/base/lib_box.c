@@ -20,42 +20,41 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_box.c,v 1.11 2000/04/29 21:12:37 tom Exp $"
+literal|"$Id: lib_box.c,v 1.13 2000/12/10 02:43:26 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wborder
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|chtype
-name|ls
-parameter_list|,
-name|chtype
-name|rs
-parameter_list|,
-name|chtype
-name|ts
-parameter_list|,
-name|chtype
-name|bs
-parameter_list|,
-name|chtype
-name|tl
-parameter_list|,
-name|chtype
-name|tr
-parameter_list|,
-name|chtype
-name|bl
-parameter_list|,
-name|chtype
-name|br
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|chtype ls
+argument_list|,
+argument|chtype rs
+argument_list|,
+argument|chtype ts
+argument_list|,
+argument|chtype bs
+argument_list|,
+argument|chtype tl
+argument_list|,
+argument|chtype tr
+argument_list|,
+argument|chtype bl
+argument_list|,
+argument|chtype br
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|NCURSES_SIZE_T
 name|i
@@ -545,7 +544,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

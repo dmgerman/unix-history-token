@@ -4,7 +4,7 @@ comment|// * this is for making emacs happy: -*-Mode: C++;-*-
 end_comment
 
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -12,19 +12,19 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|// $Id: cursslk.h,v 1.5 1999/05/16 17:30:08 juergen Exp $
+comment|// $Id: cursslk.h,v 1.7 2001/03/24 21:41:47 tom Exp $
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CURSSLK_H
+name|NCURSES_CURSSLK_H_incl
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CURSSLK_H
+name|NCURSES_CURSSLK_H_incl
 end_define
 
 begin_include
@@ -35,12 +35,14 @@ end_include
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|Soft_Label_Key_Set
 block|{
 name|public
 label|:
 comment|// This inner class represents the attributes of a Soft Label Key (SLK)
 name|class
+name|NCURSES_IMPEXP
 name|Soft_Label_Key
 block|{
 name|friend
@@ -189,20 +191,24 @@ name|private
 label|:
 specifier|static
 name|long
+name|NCURSES_IMPEXP
 name|count
 decl_stmt|;
 comment|// Number of Key Sets
 specifier|static
 name|Label_Layout
+name|NCURSES_IMPEXP
 name|format
 decl_stmt|;
 comment|// Layout of the Key Sets
 specifier|static
 name|int
+name|NCURSES_IMPEXP
 name|num_labels
 decl_stmt|;
 comment|// Number Of Labels in Key Sets
 name|bool
+name|NCURSES_IMPEXP
 name|b_attrInit
 decl_stmt|;
 comment|// Are attributes initialized
@@ -311,15 +317,17 @@ argument_list|)
 empty_stmt|;
 comment|// This constructor assumes, that you already constructed a Key Set
 comment|// with a layout by the constructor above. This layout will be reused.
+name|NCURSES_IMPEXP
 name|Soft_Label_Key_Set
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 name|virtual
 operator|~
 name|Soft_Label_Key_Set
 argument_list|()
 expr_stmt|;
 comment|// Get Label# i. Label counting starts with 1!
+name|NCURSES_IMPEXP
 name|Soft_Label_Key
 modifier|&
 name|operator
@@ -592,7 +600,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _CURSSLK_H
+comment|// NCURSES_CURSSLK_H_incl
 end_comment
 
 end_unit

@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: parse_entry.c,v 1.48 2000/10/03 09:38:48 tom Exp $"
+literal|"$Id: parse_entry.c,v 1.53 2001/03/03 21:13:09 Todd.C.Miller Exp $"
 argument_list|)
 end_macro
 
@@ -820,21 +820,25 @@ begin_comment
 comment|/*  *	int  *	_nc_parse_entry(entry, literal, silent)  *  *	Compile one entry.  Doesn't try to resolve use or tc capabilities.  *  *	found-forward-use = FALSE  *	re-initialise internal arrays  *	get_token();  *	if the token was not a name in column 1, complain and die  *	save names in entry's string table  *	while (get_token() is not EOF and not NAMES)  *	        check for existance and type-correctness  *	        enter cap into structure  *	        if STRING  *	            save string in entry's string table  *	push back token  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_parse_entry
-parameter_list|(
-name|struct
-name|entry
-modifier|*
-name|entryp
-parameter_list|,
-name|int
-name|literal
-parameter_list|,
-name|bool
-name|silent
-parameter_list|)
+argument_list|(
+argument|struct entry *entryp
+argument_list|,
+argument|int literal
+argument_list|,
+argument|bool silent
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|token_type
@@ -855,7 +859,9 @@ decl_stmt|;
 name|token_type
 operator|=
 name|_nc_get_token
-argument_list|()
+argument_list|(
+name|silent
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1076,7 +1082,9 @@ control|(
 name|token_type
 operator|=
 name|_nc_get_token
-argument_list|()
+argument_list|(
+name|silent
+argument_list|)
 init|;
 name|token_type
 operator|!=
@@ -1089,7 +1097,9 @@ condition|;
 name|token_type
 operator|=
 name|_nc_get_token
-argument_list|()
+argument_list|(
+name|silent
+argument_list|)
 control|)
 block|{
 if|if
@@ -1963,6 +1973,8 @@ block|}
 name|_nc_wrap_entry
 argument_list|(
 name|entryp
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1971,23 +1983,29 @@ name|OK
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_capcmp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|t
-parameter_list|)
+argument_list|(
+argument|const char *s
+argument_list|,
+argument|const char *t
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* compare two string capabilities, stripping out padding */
+end_comment
+
+begin_block
 block|{
 if|if
 condition|(
@@ -2055,8 +2073,11 @@ operator|!
 operator|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 operator|||
 operator|*
@@ -2115,8 +2136,11 @@ operator|!
 operator|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|t
+argument_list|)
 argument_list|)
 operator|||
 operator|*
@@ -2186,7 +2210,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -3614,6 +3638,12 @@ block|}
 if|if
 condition|(
 operator|!
+name|has_base
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|hard_copy
 condition|)
 block|{
@@ -3659,6 +3689,7 @@ argument_list|(
 name|C_LF
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*      * Translate XENIX forms characters.      */
 if|if

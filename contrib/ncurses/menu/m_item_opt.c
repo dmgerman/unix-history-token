@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_item_opt.c,v 1.10 1999/05/16 17:25:52 juergen Exp $"
+literal|"$Id: m_item_opt.c,v 1.11 2000/12/10 02:16:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -28,17 +28,23 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int set_item_opts(ITEM *item, Item_Options opts)   |    |   Description   :  Set the options of the item. If there are relevant |                    changes, the item is connected and the menu is posted, |                    the menu will be redisplayed. | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid item options +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|set_item_opts
-parameter_list|(
-name|ITEM
-modifier|*
-name|item
-parameter_list|,
-name|Item_Options
-name|opts
-parameter_list|)
+argument_list|(
+argument|ITEM *item
+argument_list|,
+argument|Item_Options opts
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|opts
 operator|&=
@@ -146,23 +152,29 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int item_opts_off(ITEM *item, Item_Options opts)    |    |   Description   :  Switch of the options for this item. | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid options +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|item_opts_off
-parameter_list|(
-name|ITEM
-modifier|*
-name|item
-parameter_list|,
-name|Item_Options
-name|opts
-parameter_list|)
+argument_list|(
+argument|ITEM *item
+argument_list|,
+argument|Item_Options  opts
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|ITEM
 modifier|*
@@ -213,23 +225,29 @@ argument_list|)
 return|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int item_opts_on(ITEM *item, Item_Options opts)    |    |   Description   :  Switch on the options for this item. | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid options +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|item_opts_on
-parameter_list|(
-name|ITEM
-modifier|*
-name|item
-parameter_list|,
-name|Item_Options
-name|opts
-parameter_list|)
+argument_list|(
+argument|ITEM *item
+argument_list|,
+argument|Item_Options opts
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|ITEM
 modifier|*
@@ -279,21 +297,27 @@ argument_list|)
 return|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  Item_Options item_opts(const ITEM *item)    |    |   Description   :  Switch of the options for this item. | |   Return Values :  Items options +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|Item_Options
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|Item_Options
+argument_list|)
+end_macro
+
+begin_macro
 name|item_opts
-parameter_list|(
-specifier|const
-name|ITEM
-modifier|*
-name|item
-parameter_list|)
+argument_list|(
+argument|const ITEM * item
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -308,7 +332,7 @@ name|opt
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* m_item_opt.c ends here */

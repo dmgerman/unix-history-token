@@ -30,7 +30,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_traceatr.c,v 1.30 2000/07/29 18:06:09 tom Exp $"
+literal|"$Id: lib_traceatr.c,v 1.32 2000/12/10 03:02:45 tom Exp $"
 argument_list|)
 end_macro
 
@@ -50,17 +50,23 @@ directive|ifdef
 name|TRACE
 end_ifdef
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_traceattr2
-parameter_list|(
-name|int
-name|bufnum
-parameter_list|,
-name|attr_t
-name|newmode
-parameter_list|)
+argument_list|(
+argument|int bufnum
+argument_list|,
+argument|attr_t newmode
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -444,16 +450,23 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_traceattr
-parameter_list|(
-name|attr_t
-name|newmode
-parameter_list|)
+argument_list|(
+argument|attr_t newmode
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|_traceattr2
@@ -464,19 +477,27 @@ name|newmode
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* Trace 'int' return-values */
 end_comment
 
-begin_function
-name|attr_t
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|attr_t
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_retrace_attr_t
-parameter_list|(
-name|attr_t
-name|code
-parameter_list|)
+argument_list|(
+argument|attr_t code
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -497,19 +518,25 @@ return|return
 name|code
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_tracechtype2
-parameter_list|(
-name|int
-name|bufnum
-parameter_list|,
-name|chtype
-name|ch
-parameter_list|)
+argument_list|(
+argument|int bufnum
+argument_list|,
+argument|chtype ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -977,16 +1004,23 @@ name|buf
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_tracechtype
-parameter_list|(
-name|chtype
-name|ch
-parameter_list|)
+argument_list|(
+argument|chtype ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|_tracechtype2
@@ -997,19 +1031,27 @@ name|ch
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* Trace 'chtype' return-values */
 end_comment
 
-begin_function
-name|attr_t
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|attr_t
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_retrace_chtype
-parameter_list|(
-name|attr_t
-name|code
-parameter_list|)
+argument_list|(
+argument|attr_t code
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -1030,31 +1072,43 @@ return|return
 name|code
 return|;
 block|}
-end_function
+end_block
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_lib_traceatr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_function
-name|void
+begin_expr_stmt
+unit|)
 name|_nc_lib_traceatr
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_lib_traceatr
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{ }
-end_function
+end_block
 
 begin_endif
 endif|#

@@ -32,18 +32,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: free_ttype.c,v 1.5 2000/07/08 00:43:58 tom Exp $"
+literal|"$Id: free_ttype.c,v 1.7 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_free_termtype
-parameter_list|(
-name|TERMTYPE
-modifier|*
-name|ptr
-parameter_list|)
+argument_list|(
+argument|TERMTYPE * ptr
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FreeIfNeeded
 argument_list|(
@@ -112,7 +119,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_if
 if|#
@@ -120,21 +127,35 @@ directive|if
 name|NCURSES_XNAMES
 end_if
 
-begin_decl_stmt
-name|bool
-name|_nc_user_definable
-init|=
-name|TRUE
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
 
-begin_function
-name|int
+begin_expr_stmt
+name|_nc_user_definable
+operator|=
+name|TRUE
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|use_extended_names
-parameter_list|(
-name|bool
-name|flag
-parameter_list|)
+argument_list|(
+argument|bool flag
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|oldflag
@@ -149,7 +170,7 @@ return|return
 name|oldflag
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#

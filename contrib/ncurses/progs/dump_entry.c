@@ -48,7 +48,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: dump_entry.c,v 1.54 2000/10/01 01:34:06 tom Exp $"
+literal|"$Id: dump_entry.c,v 1.55 2001/03/10 19:45:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -3641,6 +3641,9 @@ name|infodump
 operator|?
 name|len
 operator|:
+operator|(
+name|int
+operator|)
 name|termcap_length
 argument_list|(
 name|outbuf

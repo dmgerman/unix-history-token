@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: SigAction.h,v 1.5 1999/06/19 23:00:54 tom Exp $  *  * This file exists to handle non-POSIX systems which don't have<unistd.h>,  * and usually no sigaction() nor<termios.h>  */
+comment|/*  * $Id: SigAction.h,v 1.6 2000/12/10 02:36:10 tom Exp $  *  * This file exists to handle non-POSIX systems which don't have<unistd.h>,  * and usually no sigaction() nor<termios.h>  */
 end_comment
 
 begin_ifndef
@@ -317,97 +317,111 @@ name|sigaddset
 value|_nc_sigaddset
 end_define
 
-begin_function_decl
-specifier|extern
-name|int
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_macro
+unit|)
 name|sigaction
-parameter_list|(
-name|int
-name|sig
-parameter_list|,
-name|sigaction_t
-modifier|*
-name|sigact
-parameter_list|,
-name|sigaction_t
-modifier|*
-name|osigact
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|int sig
+argument_list|,
+argument|sigaction_t * sigact
+argument_list|,
+argument|sigaction_t *  osigact
+argument_list|)
+end_macro
 
-begin_function_decl
-specifier|extern
-name|int
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_macro
+unit|)
 name|sigprocmask
-parameter_list|(
-name|int
-name|how
-parameter_list|,
-name|sigset_t
-modifier|*
-name|mask
-parameter_list|,
-name|sigset_t
-modifier|*
-name|omask
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|int how
+argument_list|,
+argument|sigset_t *mask
+argument_list|,
+argument|sigset_t *omask
+argument_list|)
+end_macro
 
-begin_function_decl
-specifier|extern
-name|int
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_expr_stmt
+unit|)
 name|sigemptyset
-parameter_list|(
+argument_list|(
 name|sigset_t
-modifier|*
+operator|*
 name|mask
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|int
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_expr_stmt
+unit|)
 name|sigsuspend
-parameter_list|(
+argument_list|(
 name|sigset_t
-modifier|*
+operator|*
 name|mask
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|int
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_macro
+unit|)
 name|sigdelset
-parameter_list|(
-name|sigset_t
-modifier|*
-name|mask
-parameter_list|,
-name|int
-name|sig
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|sigset_t *mask
+argument_list|,
+argument|int sig
+argument_list|)
+end_macro
 
-begin_function_decl
-specifier|extern
-name|int
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_macro
+unit|)
 name|sigaddset
-parameter_list|(
-name|sigset_t
-modifier|*
-name|mask
-parameter_list|,
-name|int
-name|sig
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|sigset_t *mask
+argument_list|,
+argument|int sig
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ************************************************************************** */
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -16,163 +16,205 @@ name|TTY_DISPLAY_H
 value|1
 end_define
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_beep
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_check_resize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_cursor
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_flash
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_init_color
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|,
+argument_list|,
 name|int
-parameter_list|,
+argument_list|,
 name|int
-parameter_list|,
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_init_pair
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|,
+argument_list|,
 name|int
-parameter_list|,
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_slk_hide
-parameter_list|(
+argument_list|(
 name|bool
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_slk_update
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|bool
+begin_extern
+extern|extern NCURSES_EXPORT(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_start_color
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_display_resume
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_display_suspend
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_dispose
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* frees SP->_term */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_tty_switch_to
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_function_decl
-specifier|extern
+begin_expr_stmt
+unit|)
+name|_nc_tty_switch_to
+argument_list|(
 name|void
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tty_update
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct

@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: read_termcap.c,v 1.50 2000/10/10 00:56:46 Todd.Miller Exp $"
+literal|"$Id: read_termcap.c,v 1.55 2000/12/10 02:55:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -2533,6 +2533,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|dummy
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -2804,7 +2806,7 @@ operator|||
 operator|*
 name|p
 operator|==
-literal|':'
+name|NCURSES_PATHSEP
 condition|)
 block|{
 operator|*
@@ -2828,7 +2830,7 @@ operator|&&
 operator|*
 name|p
 operator|!=
-literal|':'
+name|NCURSES_PATHSEP
 condition|)
 break|break;
 if|if
@@ -3255,21 +3257,23 @@ begin_comment
 comment|/* !USE_GETCAP */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_read_termcap_entry
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|tn
-parameter_list|,
-name|TERMTYPE
-modifier|*
-specifier|const
-name|tp
-parameter_list|)
+argument_list|(
+argument|const char *const tn
+argument_list|,
+argument|TERMTYPE * const tp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|found
@@ -3587,7 +3591,7 @@ condition|(
 operator|*
 name|cp
 operator|==
-literal|':'
+name|NCURSES_PATHSEP
 condition|)
 operator|*
 name|cp
@@ -3670,6 +3674,9 @@ name|PRIVATE_CAP
 value|"%s/.termcap"
 if|if
 condition|(
+name|use_terminfo_vars
+argument_list|()
+operator|&&
 operator|(
 name|h
 operator|=
@@ -3991,31 +3998,43 @@ name|found
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_read_termcap
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_function
-name|void
+begin_expr_stmt
+unit|)
 name|_nc_read_termcap
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_read_termcap
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{ }
-end_function
+end_block
 
 begin_endif
 endif|#

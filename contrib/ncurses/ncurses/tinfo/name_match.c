@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: name_match.c,v 1.8 1999/03/07 01:58:36 tom Exp $"
+literal|"$Id: name_match.c,v 1.10 2000/12/10 02:55:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -36,18 +36,25 @@ begin_comment
 comment|/*  *	_nc_first_name(char *names)  *  *	Extract the primary name from a compiled entry.  */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_first_name
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|sp
-parameter_list|)
+argument_list|(
+argument|const char *const sp
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* get the first name from the given name list */
+end_comment
+
+begin_block
 block|{
 specifier|static
 name|char
@@ -121,34 +128,31 @@ name|buf
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	int _nc_name_match(namelist, name, delim)  *  *	Is the given name matched in namelist?  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_name_match
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|namelst
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|delim
-parameter_list|)
+argument_list|(
+argument|const char *const namelst
+argument_list|,
+argument|const char *const name
+argument_list|,
+argument|const char *const delim
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|const
 name|char
@@ -300,7 +304,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

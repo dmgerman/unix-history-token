@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_num.c,v 1.13 1999/05/16 17:23:30 juergen Exp $"
+literal|"$Id: fty_num.c,v 1.14 2000/12/09 23:46:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -692,15 +692,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FIELDTYPE
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|FIELDTYPE*
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|TYPE_NUMERIC
-init|=
+operator|=
 operator|&
 name|typeNUMERIC
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* fty_num.c ends here */

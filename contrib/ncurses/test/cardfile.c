@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.5 2000/09/09 19:08:32 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
+comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.6 2000/11/04 23:14:28 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
 end_comment
 
 begin_include
@@ -209,8 +209,11 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|buffer
+argument_list|)
 argument_list|)
 condition|)
 name|buffer
@@ -247,10 +250,13 @@ operator|--
 operator|&&
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 name|buffer
 index|[
 name|n
 index|]
+argument_list|)
 argument_list|)
 condition|)
 name|buffer
@@ -693,8 +699,11 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|buffer
+argument_list|)
 argument_list|)
 condition|)
 block|{

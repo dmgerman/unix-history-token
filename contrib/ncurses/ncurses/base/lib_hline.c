@@ -20,24 +20,29 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_hline.c,v 1.6 2000/07/04 14:08:09 Philippe.Blain Exp $"
+literal|"$Id: lib_hline.c,v 1.8 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|whline
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|chtype
-name|ch
-parameter_list|,
-name|int
-name|n
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|chtype ch
+argument_list|,
+argument|int n
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
@@ -183,7 +188,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

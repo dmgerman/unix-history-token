@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  	 @@@        @@@    @@@@@@@@@@     @@@@@@@@@@@    @@@@@@@@@@@@ 	 @@@        @@@   @@@@@@@@@@@@    @@@@@@@@@@@@   @@@@@@@@@@@@@ 	 @@@        @@@  @@@@      @@@@   @@@@           @@@@ @@@  @@@@ 	 @@@   @@   @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@  @@@@  @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@@ @@@@ @@@@  @@@        @@@   @@@            @@@  @@@   @@@ 	  @@@@@@@@@@@@   @@@@      @@@@   @@@            @@@  @@@   @@@ 	   @@@@  @@@@     @@@@@@@@@@@@    @@@            @@@  @@@   @@@ 	    @@    @@       @@@@@@@@@@     @@@            @@@  @@@   @@@  				 Eric P. Scott 			  Caltech High Energy Physics 				 October, 1980  		Hacks to turn this into a test frame for cursor movement: 			Eric S. Raymond<esr@snark.thyrsus.com> 				January, 1995  		July 1995 (esr): worms is now in living color! :-)  Options: 	-f			fill screen with copies of 'WORM' at start. 	-l<n>			set worm length 	-n<n>			set number of worms 	-t			make worms leave droppings 	-T<start><end>	set trace interval 	-S			set single-stepping during trace interval 	-N			suppress cursor-movement optimization    This program makes a good torture-test for the ncurses cursor-optimization   code.  You can use -T to set the worm move interval over which movement   traces will be dumped.  The program stops and waits for one character of   input at the beginning and end of the interval.    $Id: worm.c,v 1.31 2000/09/02 18:41:01 tom Exp $ */
+comment|/*  	 @@@        @@@    @@@@@@@@@@     @@@@@@@@@@@    @@@@@@@@@@@@ 	 @@@        @@@   @@@@@@@@@@@@    @@@@@@@@@@@@   @@@@@@@@@@@@@ 	 @@@        @@@  @@@@      @@@@   @@@@           @@@@ @@@  @@@@ 	 @@@   @@   @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@  @@@@  @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@@ @@@@ @@@@  @@@        @@@   @@@            @@@  @@@   @@@ 	  @@@@@@@@@@@@   @@@@      @@@@   @@@            @@@  @@@   @@@ 	   @@@@  @@@@     @@@@@@@@@@@@    @@@            @@@  @@@   @@@ 	    @@    @@       @@@@@@@@@@     @@@            @@@  @@@   @@@  				 Eric P. Scott 			  Caltech High Energy Physics 				 October, 1980  		Hacks to turn this into a test frame for cursor movement: 			Eric S. Raymond<esr@snark.thyrsus.com> 				January, 1995  		July 1995 (esr): worms is now in living color! :-)  Options: 	-f			fill screen with copies of 'WORM' at start. 	-l<n>			set worm length 	-n<n>			set number of worms 	-t			make worms leave droppings 	-T<start><end>	set trace interval 	-S			set single-stepping during trace interval 	-N			suppress cursor-movement optimization    This program makes a good torture-test for the ncurses cursor-optimization   code.  You can use -T to set the worm move interval over which movement   traces will be dumped.  The program stops and waits for one character of   input at the beginning and end of the interval.    $Id: worm.c,v 1.32 2000/12/31 01:54:07 tom Exp $ */
 end_comment
 
 begin_include
@@ -38,13 +38,6 @@ literal|'@'
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MAXWORMS
-value|(sizeof(flavor)/sizeof(chtype))
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -2332,7 +2325,10 @@ name|flavor
 index|[
 name|n
 operator|%
-name|MAXWORMS
+name|SIZEOF
+argument_list|(
+name|flavor
+argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
@@ -2632,7 +2628,10 @@ name|flavor
 index|[
 name|n
 operator|%
-name|MAXWORMS
+name|SIZEOF
+argument_list|(
+name|flavor
+argument_list|)
 index|]
 argument_list|)
 expr_stmt|;

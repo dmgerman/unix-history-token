@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_alnum.c,v 1.9 1999/05/16 17:22:49 juergen Exp $"
+literal|"$Id: fty_alnum.c,v 1.10 2000/12/09 23:46:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -403,15 +403,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FIELDTYPE
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|FIELDTYPE*
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|TYPE_ALNUM
-init|=
+operator|=
 operator|&
 name|typeALNUM
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* fty_alnum.c ends here */

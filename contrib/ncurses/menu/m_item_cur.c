@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_item_cur.c,v 1.11 1999/05/16 17:25:34 juergen Exp $"
+literal|"$Id: m_item_cur.c,v 1.12 2000/12/10 02:16:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -28,18 +28,23 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int set_current_item(MENU *menu, const ITEM *item) |    |   Description   :  Make the item the current item | |   Return Values :  E_OK                - success +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|set_current_item
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|,
-name|ITEM
-modifier|*
-name|item
-parameter_list|)
+argument_list|(
+argument|MENU * menu
+argument_list|,
+argument|ITEM * item
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -139,22 +144,27 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  ITEM *current_item(const MENU *menu) |    |   Description   :  Return the menus current item | |   Return Values :  Item pointer or NULL if failure +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|ITEM
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|ITEM *
+argument_list|)
+end_macro
+
+begin_macro
 name|current_item
-parameter_list|(
-specifier|const
-name|MENU
-modifier|*
-name|menu
-parameter_list|)
+argument_list|(
+argument|const MENU * menu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -176,21 +186,27 @@ operator|)
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int item_index(const ITEM *) |    |   Description   :  Return the logical index of this item. | |   Return Values :  The index or ERR if this is an invalid item pointer +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|item_index
-parameter_list|(
-specifier|const
-name|ITEM
-modifier|*
-name|item
-parameter_list|)
+argument_list|(
+argument|const ITEM *item
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -208,7 +224,7 @@ else|:
 name|ERR
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* m_item_cur.c ends here */

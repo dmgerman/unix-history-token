@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: output.c,v 1.5 2000/03/04 21:06:57 tom Exp $"
+literal|"$Id: output.c,v 1.6 2000/11/05 00:21:58 tom Exp $"
 argument_list|)
 end_macro
 
@@ -590,8 +590,11 @@ condition|)
 block|{
 comment|/* terminal output logging */
 name|c
-operator|&=
-literal|0xff
+operator|=
+name|CharOf
+argument_list|(
+name|c
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2266,10 +2269,11 @@ name|t
 argument_list|,
 literal|"%02X "
 argument_list|,
+name|CharOf
+argument_list|(
 operator|*
 name|s
-operator|&
-literal|0xff
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t
@@ -2374,13 +2378,14 @@ init|;
 operator|(
 name|ch
 operator|=
-operator|(
+name|CharOf
+argument_list|(
 operator|*
 name|c
-operator|&
-literal|0xff
+argument_list|)
 operator|)
-operator|)
+operator|!=
+literal|0
 condition|;
 name|c
 operator|++
@@ -2411,12 +2416,13 @@ condition|)
 block|{
 name|j
 operator|=
+name|CharOf
+argument_list|(
 name|c
 index|[
 literal|1
 index|]
-operator|&
-literal|0xff
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2503,12 +2509,13 @@ name|ch
 expr_stmt|;
 name|j
 operator|=
+name|CharOf
+argument_list|(
 name|c
 index|[
 literal|1
 index|]
-operator|&
-literal|0xff
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -22,19 +22,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: access.c,v 1.4 2000/10/08 01:25:06 tom Exp $"
+literal|"$Id: access.c,v 1.7 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_basename
-parameter_list|(
-name|char
-modifier|*
-name|path
-parameter_list|)
+argument_list|(
+argument|char *path
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -85,20 +91,25 @@ return|return
 name|result
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_access
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|int
-name|mode
-parameter_list|)
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|int mode
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -207,7 +218,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_ifndef
 ifndef|#
@@ -219,12 +230,21 @@ begin_comment
 comment|/*  * Returns true if we allow application to use environment variables that are  * used for searching lists of directories, etc.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_env_access
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|#
 directive|if
@@ -266,10 +286,15 @@ name|getuid
 argument_list|()
 operator|!=
 literal|0
+operator|&&
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
 return|;
 comment|/* ...finally, disallow root */
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
