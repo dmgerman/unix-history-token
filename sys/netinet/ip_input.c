@@ -3938,9 +3938,6 @@ name|mtag
 argument_list|)
 expr_stmt|;
 block|}
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 operator|(
 operator|*
 name|inetsw
@@ -3960,9 +3957,6 @@ name|m
 operator|,
 name|hlen
 operator|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 return|return;
 name|bad

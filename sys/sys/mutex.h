@@ -1291,7 +1291,7 @@ define|#
 directive|define
 name|NET_LOCK_GIANT
 parameter_list|()
-value|do {						\ 	if (debug_mpsafenet)						\ 		mtx_lock(&Giant);					\ } while (0)
+value|do {						\ 	if (!debug_mpsafenet)						\ 		mtx_lock(&Giant);					\ } while (0)
 end_define
 
 begin_define
@@ -1299,7 +1299,7 @@ define|#
 directive|define
 name|NET_UNLOCK_GIANT
 parameter_list|()
-value|do {						\ 	if (debug_mpsafenet)						\ 		mtx_unlock(&Giant);					\ } while (0)
+value|do {						\ 	if (!debug_mpsafenet)						\ 		mtx_unlock(&Giant);					\ } while (0)
 end_define
 
 begin_define
@@ -1307,7 +1307,7 @@ define|#
 directive|define
 name|NET_ASSERT_GIANT
 parameter_list|()
-value|do {						\ 	if (debug_mpsafenet)						\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
+value|do {						\ 	if (!debug_mpsafenet)						\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
 end_define
 
 begin_define
