@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.123 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.124 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,29 +82,21 @@ begin_comment
 comment|/* **  SENDALL -- actually send all the messages. ** **	Parameters: **		e -- the envelope to send. **		mode -- the delivery mode to use.  If SM_DEFAULT, use **			the current e->e_sendmode. ** **	Returns: **		none. ** **	Side Effects: **		Scans the send lists and sends everything it finds. **		Delivers any appropriate error messages. **		If we are running in a non-interactive mode, takes the **			appropriate action. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sendall
-argument_list|(
-argument|e
-argument_list|,
-argument|mode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|e
+parameter_list|,
+name|mode
+parameter_list|)
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|ADDRESS
@@ -129,10 +121,11 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
-name|char
-modifier|*
-name|qid
-decl_stmt|;
+specifier|extern
+name|void
+name|sendenvelope
+parameter_list|()
+function_decl|;
 name|int
 name|pid
 decl_stmt|;
@@ -1736,38 +1729,29 @@ operator|=
 name|oldverbose
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|sendenvelope
-argument_list|(
+parameter_list|(
 name|e
-argument_list|,
+parameter_list|,
 name|mode
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|ADDRESS
 modifier|*
 name|q
-decl_stmt|;
-name|char
-modifier|*
-name|qf
 decl_stmt|;
 name|bool
 name|didany
@@ -2058,7 +2042,7 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2120,6 +2104,9 @@ block|{
 specifier|register
 name|int
 name|pid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|DOFORK
 argument_list|(
@@ -2141,28 +2128,23 @@ begin_comment
 comment|/* **  DELIVER -- Deliver a message to a list of addresses. ** **	This routine delivers to everyone on the same host as the **	user on the head of the list.  It is clever about mailers **	that don't handle multiple users.  It is NOT guaranteed **	that it will deliver to all these addresses however -- so **	deliver should be called once for each address on the **	list. ** **	Parameters: **		e -- the envelope to deliver. **		firstto -- head of the address list to deliver to. ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|deliver
-argument_list|(
+parameter_list|(
 name|e
-argument_list|,
+parameter_list|,
 name|firstto
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|ADDRESS
 modifier|*
 name|firstto
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2224,7 +2206,7 @@ name|tochain
 init|=
 name|NULL
 decl_stmt|;
-comment|/* chain of users in this mailer call */
+comment|/* users chain in this mailer call */
 name|int
 name|rcode
 decl_stmt|;
@@ -2236,6 +2218,9 @@ decl_stmt|;
 comment|/* signature of firstto */
 name|int
 name|pid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|char
 modifier|*
@@ -3895,6 +3880,8 @@ decl_stmt|;
 specifier|register
 name|u_short
 name|port
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -4030,11 +4017,6 @@ index|[
 literal|2
 index|]
 argument_list|)
-expr_stmt|;
-else|else
-name|port
-operator|=
-literal|0
 expr_stmt|;
 name|tryhost
 label|:
@@ -6603,7 +6585,7 @@ name|rcode
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -9433,6 +9415,8 @@ name|buflim
 decl_stmt|;
 name|int
 name|pos
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|peekbuf
@@ -10289,6 +10273,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|pid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|mode
@@ -11011,6 +10998,10 @@ name|endp
 decl_stmt|;
 name|int
 name|oldoptions
+init|=
+name|_res
+operator|.
+name|options
 decl_stmt|;
 name|char
 modifier|*
@@ -11091,13 +11082,6 @@ name|ConfigLevel
 operator|<
 literal|2
 condition|)
-block|{
-name|oldoptions
-operator|=
-name|_res
-operator|.
-name|options
-expr_stmt|;
 name|_res
 operator|.
 name|options
@@ -11110,7 +11094,6 @@ name|RES_DNSRCH
 operator|)
 expr_stmt|;
 comment|/* XXX */
-block|}
 for|for
 control|(
 name|hp
@@ -11194,17 +11177,12 @@ name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
-if|#
-directive|if
-name|NAMED_BIND
 name|mci
 operator|->
 name|mci_herrno
 operator|=
 name|h_errno
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* and return the original host name as the signature */
 name|nmx
 operator|=

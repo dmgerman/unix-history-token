@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.41.1.1 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.63 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.41.1.1 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.63 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2336,20 +2336,15 @@ begin_comment
 comment|/* the queue run envelope */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|runqueue
-argument_list|(
-argument|forkflag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|forkflag
+parameter_list|)
 name|bool
 name|forkflag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|ENVELOPE
@@ -2779,7 +2774,7 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

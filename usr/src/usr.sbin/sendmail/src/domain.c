@@ -351,9 +351,12 @@ decl_stmt|;
 name|u_short
 name|pref
 decl_stmt|,
-name|localpref
-decl_stmt|,
 name|type
+decl_stmt|;
+name|u_short
+name|localpref
+init|=
+literal|256
 decl_stmt|;
 name|char
 modifier|*
@@ -1700,6 +1703,8 @@ name|amatch
 decl_stmt|;
 name|bool
 name|gotmx
+init|=
+name|FALSE
 decl_stmt|;
 name|int
 name|qtype
@@ -2687,6 +2692,8 @@ specifier|register
 name|char
 modifier|*
 name|p
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|buf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.26 (Berkeley) %G%"
+literal|"@(#)collect.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|collecttimeout
 parameter_list|()
 function_decl|;
@@ -183,21 +183,16 @@ begin_comment
 comment|/* reading message body */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|maketemp
-argument_list|(
-argument|from
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|from
+parameter_list|)
 name|char
 modifier|*
 name|from
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -229,9 +224,10 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|int
 name|c
+init|=
+literal|'\0'
 decl_stmt|;
 name|bool
 name|inputerr
@@ -275,6 +271,16 @@ decl_stmt|;
 specifier|extern
 name|bool
 name|isheader
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|eatheader
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|tferror
 parameter_list|()
 function_decl|;
 specifier|extern
@@ -1129,6 +1135,11 @@ condition|(
 name|mstate
 condition|)
 block|{
+specifier|extern
+name|int
+name|chompheader
+parameter_list|()
+function_decl|;
 case|case
 name|MS_UFROM
 case|:
@@ -1150,6 +1161,11 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|extern
+name|void
+name|eatfrom
+parameter_list|()
+function_decl|;
 name|bp
 operator|=
 name|buf
@@ -1736,6 +1752,12 @@ name|OpMode
 operator|!=
 name|MD_VERIFY
 condition|)
+block|{
+specifier|extern
+name|void
+name|markstats
+parameter_list|()
+function_decl|;
 name|markstats
 argument_list|(
 name|e
@@ -1747,6 +1769,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	**  Add an Apparently-To: line if we have no recipient lines. 	*/
 if|if
 condition|(
@@ -1821,6 +1844,11 @@ operator|->
 name|q_next
 control|)
 block|{
+specifier|extern
+name|void
+name|addheader
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|q
@@ -1951,20 +1979,18 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|collecttimeout
-argument_list|(
-argument|timeout
-argument_list|)
+parameter_list|(
+name|timeout
+parameter_list|)
 name|time_t
 name|timeout
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 comment|/* if no progress was made, die now */
 if|if
@@ -1996,7 +2022,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2005,31 +2031,23 @@ begin_comment
 comment|/* **  TFERROR -- signal error on writing the temporary file. ** **	Parameters: **		tf -- the file pointer for the temporary file. ** **	Returns: **		none. ** **	Side Effects: **		Gives an error message. **		Arranges for following output to go elsewhere. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tferror
-argument_list|(
-argument|tf
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tf
+parameter_list|,
+name|e
+parameter_list|)
 name|FILE
 modifier|*
 name|tf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|CollectErrno
 operator|=
@@ -2230,7 +2248,7 @@ name|tf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2307,31 +2325,23 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|eatfrom
-argument_list|(
-argument|fm
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fm
+parameter_list|,
+name|e
+parameter_list|)
 name|char
 modifier|*
 name|fm
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2584,7 +2594,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

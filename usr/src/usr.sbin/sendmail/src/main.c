@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.83 (Berkeley) %G%"
+literal|"@(#)main.c	8.84 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,11 +367,6 @@ name|char
 modifier|*
 name|locname
 decl_stmt|;
-specifier|extern
-name|int
-name|finis
-parameter_list|()
-function_decl|;
 specifier|extern
 name|char
 name|Version
@@ -5555,10 +5550,13 @@ begin_comment
 comment|/* **  FINIS -- Clean up and exit. ** **	Parameters: **		none ** **	Returns: **		never ** **	Side Effects: **		exits sendmail */
 end_comment
 
-begin_expr_stmt
-unit|finis
-operator|(
-operator|)
+begin_macro
+unit|void
+name|finis
+argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -5584,17 +5582,14 @@ operator|->
 name|e_id
 operator|==
 name|NULL
-operator|?
+condition|?
 literal|"NOQUEUE"
-operator|:
+else|:
 name|CurEnv
 operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tTd
@@ -5609,34 +5604,19 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* clean up temp files */
-end_comment
-
-begin_expr_stmt
 name|CurEnv
 operator|->
 name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dropenvelope
 argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* flush any cached connections */
-end_comment
-
-begin_expr_stmt
 name|mci_flush
 argument_list|(
 name|TRUE
@@ -5644,40 +5624,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|XLA
-end_ifdef
-
-begin_comment
 comment|/* clean up extended load average stuff */
-end_comment
-
-begin_expr_stmt
 name|xla_all_end
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* and exit */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|LOG
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|LogLevel
@@ -5694,18 +5653,9 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* LOG */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|ExitStat
@@ -5716,43 +5666,31 @@ name|ExitStat
 operator|=
 name|EX_OK
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* reset uid for process accounting */
-end_comment
-
-begin_expr_stmt
 name|setuid
 argument_list|(
 name|RealUid
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|exit
 argument_list|(
 name|ExitStat
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
 comment|/* **  INTSIG -- clean up on interrupt ** **	This just arranges to exit.  It pessimises in that it **	may resend a message. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Unlocks the current job. */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|intsig
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|FileName
 operator|=
@@ -5783,7 +5721,7 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

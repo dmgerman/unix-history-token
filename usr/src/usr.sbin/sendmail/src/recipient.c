@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.66 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3141,7 +3141,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|includetimeout
 parameter_list|()
 function_decl|;
@@ -3205,7 +3205,6 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -4340,10 +4339,11 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|includetimeout
-argument_list|()
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -4351,8 +4351,18 @@ name|CtxIncludeTimeout
 argument_list|,
 literal|1
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  SENDTOARGV -- send to an argument vector. ** **	Parameters: **		argv -- argument vector to send to. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		puts all addresses on the argument vector onto the **			send queue. */
+end_comment
+
+begin_expr_stmt
 name|sendtoargv
 argument_list|(
 name|argv

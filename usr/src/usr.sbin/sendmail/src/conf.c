@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.131 (Berkeley) %G%"
+literal|"@(#)conf.c	8.132 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,23 +354,41 @@ name|DAYS
 value|* 24 * 60 * 60
 end_define
 
-begin_expr_stmt
+begin_function
+name|void
 name|setdefaults
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|i
 decl_stmt|;
+specifier|extern
+name|void
+name|inittimeouts
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|setdefuser
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|setupmaps
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|setupmailers
+parameter_list|()
+function_decl|;
 name|SpaceSub
 operator|=
 literal|' '
@@ -544,18 +562,16 @@ name|setupmailers
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  SETDEFUSER -- set/reset DefUser using DefUid (for initgroups()) */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setdefuser
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|passwd
@@ -604,7 +620,7 @@ literal|"nobody"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -776,12 +792,10 @@ begin_comment
 comment|/* **  SETUPMAILERS -- initialize default mailers */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setupmailers
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|buf
@@ -789,6 +803,11 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+specifier|extern
+name|void
+name|makemailer
+parameter_list|()
+function_decl|;
 name|strcpy
 argument_list|(
 name|buf
@@ -826,7 +845,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -860,12 +879,10 @@ define|\
 value|{ \ 		extern bool parse __P((MAP *, char *)); \ 		extern bool open __P((MAP *, int)); \ 		extern void close __P((MAP *)); \ 		extern char *lookup __P((MAP *, char *, char **, int *)); \ 		extern void store __P((MAP *, char *, char *)); \ 		s = stab(name, ST_MAPCLASS, ST_ENTER); \ 		s->s_mapclass.map_cname = name; \ 		s->s_mapclass.map_ext = ext; \ 		s->s_mapclass.map_cflags = flags; \ 		s->s_mapclass.map_parse = parse; \ 		s->s_mapclass.map_open = open; \ 		s->s_mapclass.map_close = close; \ 		s->s_mapclass.map_lookup = lookup; \ 		s->s_mapclass.map_store = store; \ 	}
 end_define
 
-begin_macro
+begin_function
+name|void
 name|setupmaps
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|STAB
@@ -1249,7 +1266,7 @@ name|seq_map_store
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_undef
 undef|#
@@ -2651,29 +2668,24 @@ begin_comment
 comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and 0 should **	be returned. ** **	EF_NORETURN can be set in e->e_flags to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		an exit status ** **	Side Effects: **		none (unless you include the usrerr stuff) */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|checkcompat
-argument_list|(
+parameter_list|(
 name|to
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ADDRESS
-operator|*
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -2785,7 +2797,7 @@ name|EX_OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2902,14 +2914,12 @@ begin_comment
 comment|/* **  HOLDSIGS -- arrange to hold all signals ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Arranges that signals are held. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|holdsigs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{ }
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2918,14 +2928,12 @@ begin_comment
 comment|/* **  RLSESIGS -- arrange to release all signals ** **	This undoes the effect of holdsigs. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Arranges that signals are released. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rlsesigs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{ }
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2951,30 +2959,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|init_md
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -3005,7 +3005,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -5190,52 +5190,34 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
-begin_ifdef
+begin_function
+name|void
 ifdef|#
 directive|ifdef
 name|__STDC__
-end_ifdef
-
-begin_macro
 name|setproctitle
-argument_list|(
-argument|char *fmt
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_else
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 else|#
 directive|else
-end_else
-
-begin_macro
-name|setproctitle
-argument_list|(
-argument|fmt
-argument_list|,
-argument|va_alist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+function|setproctitle
+parameter_list|(
+name|fmt
+parameter_list|,
+name|va_alist
+parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
+function|va_dcl
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 if|#
 directive|if
@@ -5437,7 +5419,7 @@ endif|#
 directive|endif
 comment|/* SPT_TYPE != SPT_NONE */
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -7863,10 +7845,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 if|#
 directive|if
 name|SFS_TYPE
@@ -9220,12 +9198,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|resetlimits
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|#
 directive|if
@@ -9286,7 +9262,7 @@ directive|endif
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.35 (Berkeley) %G%"
+literal|"@(#)alias.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,47 +73,36 @@ begin_comment
 comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|alias
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|sendq
-argument_list|,
+parameter_list|,
 name|aliaslevel
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ADDRESS
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|aliaslevel
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -526,7 +515,7 @@ operator||=
 name|QREPORT
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -649,21 +638,16 @@ begin_comment
 comment|/* **  SETALIAS -- set up an alias map ** **	Called when reading configuration file. ** **	Parameters: **		spec -- the alias specification ** **	Returns: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setalias
-argument_list|(
-argument|spec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|spec
+parameter_list|)
 name|char
 modifier|*
 name|spec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1066,7 +1050,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1545,27 +1529,22 @@ begin_comment
 comment|/* **  REBUILDALIASES -- rebuild the alias database. ** **	Parameters: **		map -- the database to rebuild. **		automatic -- set if this was automatically generated. ** **	Returns: **		none. ** **	Side Effects: **		Reads the text version of the database, builds the **		DBM or DB version. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|rebuildaliases
-argument_list|(
+parameter_list|(
 name|map
-argument_list|,
+parameter_list|,
 name|automatic
-argument_list|)
+parameter_list|)
 specifier|register
 name|MAP
-operator|*
+modifier|*
 name|map
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|automatic
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -2024,7 +2003,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2033,44 +2012,33 @@ begin_comment
 comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		map -- the alias database descriptor. **		af -- file to read the aliases from. **		announcestats -- anounce statistics regarding number of **			aliases, longest alias, etc. **		logstats -- lot the same info. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|readaliases
-argument_list|(
+parameter_list|(
 name|map
-argument_list|,
+parameter_list|,
 name|af
-argument_list|,
+parameter_list|,
 name|announcestats
-argument_list|,
+parameter_list|,
 name|logstats
-argument_list|)
+parameter_list|)
 specifier|register
 name|MAP
-operator|*
+modifier|*
 name|map
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|FILE
 modifier|*
 name|af
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|announcestats
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|logstats
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2867,7 +2835,7 @@ endif|#
 directive|endif
 comment|/* LOG */
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2876,49 +2844,35 @@ begin_comment
 comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. **		sendq -- a pointer to the head of the send queue to **			put this user's aliases in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|forward
-argument_list|(
-argument|user
-argument_list|,
-argument|sendq
-argument_list|,
-argument|aliaslevel
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|user
+parameter_list|,
+name|sendq
+parameter_list|,
+name|aliaslevel
+parameter_list|,
+name|e
+parameter_list|)
 name|ADDRESS
 modifier|*
 name|user
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|aliaslevel
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -3064,6 +3018,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|extern
+name|int
+name|include
+parameter_list|()
+function_decl|;
 name|ep
 operator|=
 name|strchr
@@ -3239,7 +3198,7 @@ return|return;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.9 (Berkeley) %G%"
+literal|"@(#)clock.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|func
@@ -296,19 +296,17 @@ begin_comment
 comment|/* **  CLREVENT -- remove an event from the event queue. ** **	Parameters: **		ev -- pointer to event to remove. ** **	Returns: **		none. ** **	Side Effects: **		arranges for event ev to not happen. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|clrevent
-argument_list|(
+parameter_list|(
 name|ev
-argument_list|)
+parameter_list|)
 specifier|register
 name|EVENT
-operator|*
+modifier|*
 name|ev
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|EVENT
@@ -415,7 +413,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -527,7 +525,7 @@ name|mypid
 operator|)
 condition|)
 block|{
-name|int
+name|void
 function_decl|(
 modifier|*
 name|f
@@ -808,7 +806,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|endsleep
 parameter_list|()
 function_decl|;
@@ -880,16 +878,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|endsleep
-argument_list|()
+parameter_list|()
 block|{
 name|SleepDone
 operator|=
 name|TRUE
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

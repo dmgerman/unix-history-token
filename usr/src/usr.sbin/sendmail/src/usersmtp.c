@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.35 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.36 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.35 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.36 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2269,7 +2269,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|datatimeout
 parameter_list|()
 function_decl|;
@@ -2856,7 +2856,7 @@ end_block
 
 begin_function
 specifier|static
-name|int
+name|void
 name|datatimeout
 parameter_list|()
 block|{

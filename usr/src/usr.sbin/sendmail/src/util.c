@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.49 (Berkeley) %G%"
+literal|"@(#)util.c	8.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -865,19 +865,17 @@ begin_comment
 comment|/* **  MAKELOWER -- Translate a line into lower case ** **	Parameters: **		p -- the string to translate.  If NULL, return is **			immediate. ** **	Returns: **		none. ** **	Side Effects: **		String pointed to by p is translated to lower case. ** **	Called By: **		parse */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|makelower
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -926,7 +924,7 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3316,7 +3314,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|readtimeout
 parameter_list|()
 function_decl|;
@@ -3661,18 +3659,16 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|readtimeout
-argument_list|(
-argument|timeout
-argument_list|)
+parameter_list|(
+name|timeout
+parameter_list|)
 name|time_t
 name|timeout
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|longjmp
 argument_list|(
@@ -3682,7 +3678,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

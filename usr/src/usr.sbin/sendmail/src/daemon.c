@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.2 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.69 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.2 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.69 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,12 +189,10 @@ begin_comment
 comment|/* size of TCP send buffer */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|getrequests
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|t
@@ -514,7 +512,7 @@ name|wbuf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -564,7 +562,11 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+specifier|register
+name|int
 name|s
 decl_stmt|;
 specifier|register
@@ -1512,6 +1514,8 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
+operator|!=
+name|NULL
 operator|&&
 name|hp
 operator|->
@@ -1875,10 +1879,6 @@ operator|==
 name|TRY_AGAIN
 condition|)
 block|{
-name|struct
-name|stat
-name|stbuf
-decl_stmt|;
 comment|/* try twice in case name server not yet started up */
 name|message
 argument_list|(
@@ -1935,10 +1935,11 @@ name|CtxAuthTimeout
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|authtimeout
-argument_list|()
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -1946,19 +1947,20 @@ name|CtxAuthTimeout
 argument_list|,
 literal|1
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|char
-operator|*
+modifier|*
 name|getauthinfo
-argument_list|(
-argument|fd
-argument_list|)
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|falen
@@ -2764,7 +2766,7 @@ return|return
 name|hbuf
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2817,9 +2819,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 specifier|register
 name|STAB

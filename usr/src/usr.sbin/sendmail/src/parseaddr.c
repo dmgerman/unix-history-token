@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.53 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,6 +691,8 @@ decl_stmt|;
 block|{
 name|char
 name|savedelim
+init|=
+literal|'\0'
 decl_stmt|;
 if|if
 condition|(
@@ -7335,6 +7337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|void
 name|void
 name|printaddr
 parameter_list|(

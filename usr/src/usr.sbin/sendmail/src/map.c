@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.43 (Berkeley) %G%"
+literal|"@(#)map.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8780,6 +8780,8 @@ block|{
 name|char
 modifier|*
 name|rwval
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|buf
