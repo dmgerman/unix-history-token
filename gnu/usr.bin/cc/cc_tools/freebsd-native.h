@@ -160,23 +160,5 @@ directive|define
 name|bsd4_4
 end_define
 
-begin_comment
-comment|/* Tell gcc to locate libgcc.a for us according to the -m rules.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LIBGCC_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIBGCC_SPEC
-define|\
-value|"%{!shared: \     %{!pthread:libgcc.a%s} \     %{pthread:libgcc_r.a%s}} \   %{shared: \     %{!pthread:libgcc_pic.a%s} \     %{pthread:libgcc_r_pic.a%s}}"
-end_define
-
 end_unit
 
