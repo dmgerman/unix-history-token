@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -2343,6 +2343,27 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
+comment|/* extract user and group id */
+name|CurEnv
+operator|->
+name|e_from
+operator|.
+name|q_uid
+operator|=
+name|pw
+operator|->
+name|pw_uid
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_from
+operator|.
+name|q_gid
+operator|=
+name|pw
+operator|->
+name|pw_gid
+expr_stmt|;
 comment|/* run user's .mailcf file */
 name|define
 argument_list|(
@@ -2500,6 +2521,8 @@ name|CurEnv
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 ifndef|#
 directive|ifndef
 name|V6
@@ -2545,6 +2568,7 @@ operator|=
 name|getgid
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|CurEnv
