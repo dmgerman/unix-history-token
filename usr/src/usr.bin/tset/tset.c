@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	1.12 (Berkeley) %G%"
+literal|"@(#)tset.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4450,31 +4450,6 @@ condition|(
 name|DoSetenv
 condition|)
 block|{
-name|ioctl
-argument_list|(
-name|FILEDES
-argument_list|,
-name|TIOCGWINSZ
-argument_list|,
-operator|&
-name|win
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|win
-operator|.
-name|ws_row
-operator|==
-literal|0
-operator|&&
-name|win
-operator|.
-name|ws_col
-operator|==
-literal|0
-condition|)
-block|{
 name|win
 operator|.
 name|ws_row
@@ -4497,7 +4472,6 @@ operator|&
 name|win
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* output startup string */
 if|if
