@@ -80,6 +80,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
 begin_comment
 comment|/*  * The cd and pwd commands.  */
 end_comment
@@ -1361,13 +1367,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|MAXPWD
-value|256
-end_define
-
 begin_function
 name|int
 name|pwdcmd
@@ -1384,7 +1383,7 @@ block|{
 name|char
 name|buf
 index|[
-name|MAXPWD
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int
@@ -1553,7 +1552,7 @@ block|{
 name|char
 name|buf
 index|[
-name|MAXPWD
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|if
