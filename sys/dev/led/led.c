@@ -234,9 +234,9 @@ index|]
 operator|>=
 literal|'a'
 condition|?
-literal|1
-else|:
 literal|0
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 name|sc
@@ -596,11 +596,11 @@ name|sb
 argument_list|,
 literal|"%c%c"
 argument_list|,
-literal|'a'
+literal|'A'
 operator|+
 name|i
 argument_list|,
-literal|'A'
+literal|'a'
 operator|+
 name|i
 argument_list|)
@@ -663,14 +663,14 @@ name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"aA"
+literal|"Aa"
 argument_list|)
 expr_stmt|;
 name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"aJ"
+literal|"Aj"
 argument_list|)
 expr_stmt|;
 block|}
@@ -678,11 +678,11 @@ name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"JJ"
+literal|"jj"
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * String, roll your own. 		 * 'A-J' gives "off" for n/10 sec. 		 * 'a-j' gives "on" for n/10 sec. 		 * no delay before repeat 		 * 'sAaAbBa' becomes _-_--__- 		 */
+comment|/* 		 * String, roll your own. 		 * 'a-j' gives "off" for n/10 sec. 		 * 'A-J' gives "on" for n/10 sec. 		 * no delay before repeat 		 * 'sAaAbBa' becomes _-_--__- 		 */
 case|case
 literal|'s'
 case|:
@@ -760,7 +760,7 @@ name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"Aa"
+literal|"aA"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -775,7 +775,7 @@ name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"Ac"
+literal|"aC"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -790,7 +790,7 @@ name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"B"
+literal|"b"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -805,7 +805,7 @@ name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"D"
+literal|"d"
 argument_list|)
 expr_stmt|;
 block|}
@@ -813,7 +813,7 @@ name|sbuf_cat
 argument_list|(
 name|sb
 argument_list|,
-literal|"J"
+literal|"j"
 argument_list|)
 expr_stmt|;
 break|break;
