@@ -1110,12 +1110,6 @@ name|sb_lowat
 operator|=
 name|PIPE_BUF
 expr_stmt|;
-name|rso
-operator|->
-name|so_state
-operator||=
-name|SS_CANTRCVMORE
-expr_stmt|;
 block|}
 if|if
 condition|(
