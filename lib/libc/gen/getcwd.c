@@ -128,6 +128,19 @@ define|\
 value|(dp->d_name[0] == '.'&& (dp->d_name[1] == '\0' || \ 	    (dp->d_name[1] == '.'&& dp->d_name[2] == '\0')))
 end_define
 
+begin_function_decl
+specifier|extern
+name|int
+name|__getcwd
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|char
 modifier|*
