@@ -15,6 +15,12 @@ directive|define
 name|_SYS_RANDOM_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|u_int
 name|read_random
@@ -38,6 +44,26 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|random_harvest
+parameter_list|(
+name|u_int64_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
