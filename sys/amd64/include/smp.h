@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.14 1997/07/23 05:41:55 smp Exp smp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.15 1997/07/23 20:16:11 smp Exp smp $  *  */
 end_comment
 
 begin_ifndef
@@ -279,6 +279,14 @@ name|mask8254
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simple_lock
+name|imen_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* functions in apic_ipl.s */
 end_comment
@@ -361,19 +369,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|write_io_apic_mask24
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* also in apic_ipl.s, experimental versions of simple_lock(), etc. */
+end_comment
 
 begin_include
 include|#
