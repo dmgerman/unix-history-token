@@ -626,6 +626,11 @@ name|one
 init|=
 literal|1
 decl_stmt|;
+name|int
+name|authenticated
+init|=
+literal|0
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1056,6 +1061,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|opieverify
 argument_list|(
 operator|&
@@ -1064,10 +1070,19 @@ argument_list|,
 name|pass
 argument_list|)
 condition|)
-block|{
-else|#
-directive|else
+name|authenticated
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* OPIE */
+if|if
+condition|(
+operator|!
+name|authenticated
+condition|)
+block|{
 name|namep
 operator|=
 name|crypt
@@ -1081,6 +1096,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|namep
@@ -1090,10 +1106,17 @@ operator|->
 name|pw_passwd
 argument_list|)
 condition|)
+name|authenticated
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|authenticated
+condition|)
 block|{
-endif|#
-directive|endif
-comment|/* OPIE */
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1848,6 +1871,9 @@ name|pw_shell
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|error
 parameter_list|(
@@ -1924,6 +1950,9 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|getstr
 parameter_list|(
