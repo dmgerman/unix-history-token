@@ -87,13 +87,6 @@ name|u_short
 name|int_transitions
 decl_stmt|;
 comment|/* times gone up-down */
-name|int
-name|int_ripsock
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* socket to listen for RIP packets on */
 block|}
 struct|;
 end_struct

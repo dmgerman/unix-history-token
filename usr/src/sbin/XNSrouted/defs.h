@@ -28,14 +28,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netxns/xn.h>
+file|<netns/ns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netxns/idp.h>
+file|<netns/idp.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|xnnet
+parameter_list|(
+name|p
+parameter_list|)
+value|(*(long *)&(p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDPPORT_RIF
+value|1
+end_define
 
 begin_include
 include|#
@@ -108,6 +125,27 @@ name|b
 parameter_list|)
 value|((a)>(b)?(b):(a))
 end_define
+
+begin_decl_stmt
+name|struct
+name|sockaddr_ns
+name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Daemon's Address */
+end_comment
+
+begin_decl_stmt
+name|int
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Socket to listen on */
+end_comment
 
 begin_decl_stmt
 name|int

@@ -74,15 +74,12 @@ comment|/* if 1 call kernel */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
-name|s
+name|delete
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* for routing table ioctl's */
-end_comment
 
 begin_comment
 comment|/*  * Lookup dst in the tables for an exact match.  */
@@ -421,8 +418,6 @@ name|rt
 operator|)
 return|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|rt
@@ -451,7 +446,6 @@ operator|(
 name|rt
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -993,6 +987,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|delete
+condition|)
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|s
@@ -1045,6 +1043,8 @@ expr_stmt|;
 if|if
 condition|(
 name|install
+operator|&&
+name|delete
 operator|&&
 name|ioctl
 argument_list|(
@@ -1161,35 +1161,6 @@ operator|*
 operator|)
 name|rh
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|s
-operator|=
-name|socket
-argument_list|(
-name|AF_XNS
-argument_list|,
-name|SOCK_RAW
-argument_list|,
-name|IDPPROTO_RAW
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"socket"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
