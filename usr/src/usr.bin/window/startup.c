@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.1 83/08/11"
+literal|"@(#)startup.c	3.2 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,8 @@ operator|=
 name|wwnrow
 operator|/
 literal|2
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -115,12 +117,10 @@ operator|-
 literal|1
 argument_list|,
 name|r
-operator|+
-literal|1
 argument_list|,
 name|wwncol
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -141,10 +141,14 @@ argument_list|,
 name|wwnrow
 operator|-
 name|r
+operator|-
+literal|2
 argument_list|,
 name|wwncol
 argument_list|,
 name|r
+operator|+
+literal|2
 argument_list|,
 literal|0
 argument_list|)
@@ -154,6 +158,18 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"Escape character is %s.\r\n"
+argument_list|,
+name|unctrl
+argument_list|(
+name|escapec
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|setselwin
 argument_list|(
 name|w
