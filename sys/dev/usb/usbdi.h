@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.56 2001/12/03 01:47:12 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.57 2001/12/12 15:24:00 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1115,6 +1115,13 @@ name|product
 parameter_list|)
 define|\
 value|usb_match_device((const struct usb_devno *)(tbl), sizeof (tbl) / sizeof ((tbl)[0]), sizeof ((tbl)[0]), (vendor), (product))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ANY
+value|0xffff
 end_define
 
 begin_comment
