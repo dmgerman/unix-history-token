@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5165,22 +5165,6 @@ name|tl
 operator|+=
 literal|2
 expr_stmt|;
-if|if
-condition|(
-name|ioflags
-operator|&
-name|IO_APPEND
-condition|)
-operator|*
-name|tl
-operator|++
-operator|=
-name|txdr_unsigned
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
 operator|*
 name|tl
 operator|++
