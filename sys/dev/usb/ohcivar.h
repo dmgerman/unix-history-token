@@ -138,12 +138,6 @@ comment|/* XXX should keep track of all DMA memory */
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
-name|bus_space_tag_t
-name|iot
-decl_stmt|;
-name|bus_space_handle_t
-name|ioh
-decl_stmt|;
 name|usb_dma_t
 name|sc_hccadma
 decl_stmt|;
