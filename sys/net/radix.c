@@ -277,29 +277,28 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|rn_masktop
-value|(mask_rnhead->rnh_treetop)
+name|MKGet
+parameter_list|(
+name|m
+parameter_list|)
+value|{						\ 	if (rn_mkfreelist) {					\ 		m = rn_mkfreelist;				\ 		rn_mkfreelist = (m)->rm_mklist;			\ 	} else							\ 		R_Malloc(m, struct radix_mask *, sizeof (struct radix_mask)); }
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|Bcmp
-end_undef
 
 begin_define
 define|#
 directive|define
-name|Bcmp
+name|MKFree
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|l
+name|m
 parameter_list|)
-define|\
-value|((l) == 0 ? 0 : bcmp((caddr_t)(a), (caddr_t)(b), (u_long)(l)))
+value|{ (m)->rm_mklist = rn_mkfreelist; rn_mkfreelist = (m);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|rn_masktop
+value|(mask_rnhead->rnh_treetop)
 end_define
 
 begin_function_decl
@@ -2186,7 +2185,7 @@ name|skip
 operator|>
 literal|1
 condition|)
-name|Bcopy
+name|bcopy
 argument_list|(
 name|rn_ones
 operator|+
@@ -2211,7 +2210,7 @@ operator|)
 operator|>
 name|skip
 condition|)
-name|Bcopy
+name|bcopy
 argument_list|(
 name|netmask
 operator|+
@@ -2290,7 +2289,7 @@ name|m0
 operator|<
 name|last_zeroed
 condition|)
-name|Bzero
+name|bzero
 argument_list|(
 name|addmask_key
 operator|+
@@ -2319,7 +2318,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Bcmp
+name|bcmp
 argument_list|(
 name|addmask_key
 argument_list|,
@@ -2381,7 +2380,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|Bzero
+name|bzero
 argument_list|(
 name|x
 argument_list|,
@@ -2409,7 +2408,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|Bcopy
+name|bcopy
 argument_list|(
 name|addmask_key
 argument_list|,
@@ -2726,7 +2725,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|Bzero
+name|bzero
 argument_list|(
 name|m
 argument_list|,
@@ -3771,7 +3770,7 @@ name|tt
 operator|==
 literal|0
 operator|||
-name|Bcmp
+name|bcmp
 argument_list|(
 name|v
 operator|+
@@ -5293,7 +5292,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|Bzero
+name|bzero
 argument_list|(
 name|rnh
 argument_list|,
@@ -5530,7 +5529,7 @@ argument_list|(
 literal|"rn_init"
 argument_list|)
 expr_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 name|rn_zeros
 argument_list|,

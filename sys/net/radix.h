@@ -281,16 +281,6 @@ begin_comment
 comment|/* extra field would make 32 bytes */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MKGet
-parameter_list|(
-name|m
-parameter_list|)
-value|{\ 	if (rn_mkfreelist) {\ 		m = rn_mkfreelist; \ 		rn_mkfreelist = (m)->rm_mklist; \ 	} else \ 		R_Malloc(m, struct radix_mask *, sizeof (*(m))); }\  #define MKFree(m) { (m)->rm_mklist = rn_mkfreelist; rn_mkfreelist = (m);}
-end_define
-
 begin_typedef
 typedef|typedef
 name|int
@@ -585,46 +575,6 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|Bcmp
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|n
-parameter_list|)
-value|bcmp(((char *)(a)), ((char *)(b)), (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|Bcopy
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|n
-parameter_list|)
-value|bcopy(((char *)(a)), ((char *)(b)), (unsigned)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|Bzero
-parameter_list|(
-name|p
-parameter_list|,
-name|n
-parameter_list|)
-value|bzero((char *)(p), (int)(n));
-end_define
-
-begin_define
-define|#
-directive|define
 name|R_Malloc
 parameter_list|(
 name|p
@@ -664,46 +614,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|Bcmp
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|n
-parameter_list|)
-value|bcmp(((caddr_t)(a)), ((caddr_t)(b)), (unsigned)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|Bcopy
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|n
-parameter_list|)
-value|bcopy(((caddr_t)(a)), ((caddr_t)(b)), (unsigned)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|Bzero
-parameter_list|(
-name|p
-parameter_list|,
-name|n
-parameter_list|)
-value|bzero((caddr_t)(p), (unsigned)(n));
-end_define
 
 begin_define
 define|#
