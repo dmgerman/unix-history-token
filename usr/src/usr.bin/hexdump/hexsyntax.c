@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hexsyntax.c	5.1 (Berkeley) %G%"
+literal|"@(#)hexsyntax.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,7 +179,7 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ax \" 8/2 \"%05u \" \"\\n\""
+literal|"\"%07.7_ax \" 8/2 \"  %05u \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -245,7 +245,7 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ax \" 8/2 \"%06o \" \"\\n\""
+literal|"\"%07.7_ax \" 8/2 \" %06o \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -337,7 +337,7 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%07.7_ax \" 8/2 \"%04x \" \"\\n\""
+literal|"\"%07.7_ax \" 8/2 \"   %04x \" \"\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
