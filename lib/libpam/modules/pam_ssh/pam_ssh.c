@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999, 2000 Andrew J. Korty  * All rights reserved.  * Copyright (c) 2001 Networks Associates Technology, Inc.  * All rights reserved.  *  * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999, 2000 Andrew J. Korty  * All rights reserved.  * Copyright (c) 2001 Networks Associates Technologies, Inc.  * All rights reserved.  *  * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -81,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_include
@@ -630,8 +624,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|options
+name|int
 name|options
 decl_stmt|;
 comment|/* module options */
@@ -691,21 +684,19 @@ modifier|*
 name|user
 decl_stmt|;
 comment|/* username */
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
 name|pam_std_option
 argument_list|(
 operator|&
 name|options
 argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
+operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
+operator|++
 argument_list|)
 expr_stmt|;
 name|retval
@@ -756,17 +747,10 @@ argument_list|(
 name|PAM_AUTH_ERR
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Got user: %s"
-argument_list|,
-name|user
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Pass prompt message to application and receive 	 * passphrase. 	 */
 name|retval
 operator|=
-name|pam_get_authtok
+name|pam_get_pass
 argument_list|(
 name|pamh
 argument_list|,
@@ -774,6 +758,8 @@ operator|&
 name|pass
 argument_list|,
 name|NEED_PASSPHRASE
+argument_list|,
+name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -791,11 +777,6 @@ name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* required for DSA */
-name|PAM_LOG
-argument_list|(
-literal|"Got passphrase"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Either the DSA or the RSA key will authenticate us, but if 	 * we can decrypt both, we'll do so here so we can cache them in 	 * the session phase. 	 */
 if|if
 condition|(
@@ -885,13 +866,6 @@ name|PAM_SUCCESS
 condition|)
 name|authenticated
 operator|++
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Done pre-authenticating; got %d"
-argument_list|,
-name|authenticated
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Compatibility with SSH2 from SSH Communications Security. 	 */
 if|if
@@ -1081,13 +1055,6 @@ name|PAM_AUTH_ERR
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Done authenticating; got %d"
-argument_list|,
-name|authenticated
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Copy the passwd entry (in case successive calls are made) 	 * and save it for the session phase. 	 */
 name|pwd_keep
 operator|=
@@ -1160,11 +1127,6 @@ name|retval
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Saved ssh_passwd_entry"
-argument_list|)
-expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_SUCCESS
@@ -1197,26 +1159,22 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|options
+name|int
 name|options
 decl_stmt|;
-comment|/* module options */
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
 name|pam_std_option
 argument_list|(
 operator|&
 name|options
 argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
+operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
+operator|++
 argument_list|)
 expr_stmt|;
 name|PAM_RETURN
@@ -1251,25 +1209,22 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|options
+name|int
 name|options
 decl_stmt|;
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
 name|pam_std_option
 argument_list|(
 operator|&
 name|options
 argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
+operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
+operator|++
 argument_list|)
 expr_stmt|;
 name|PAM_RETURN
@@ -1304,25 +1259,22 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|options
+name|int
 name|options
 decl_stmt|;
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
 name|pam_std_option
 argument_list|(
 operator|&
 name|options
 argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
+operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
+operator|++
 argument_list|)
 expr_stmt|;
 name|PAM_RETURN
@@ -1363,8 +1315,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|options
+name|int
 name|options
 decl_stmt|;
 comment|/* module options */
@@ -1460,21 +1411,19 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 comment|/* environment string */
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
 name|pam_std_option
 argument_list|(
 operator|&
 name|options
 argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
+operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
+operator|++
 argument_list|)
 expr_stmt|;
 comment|/* dump output of ssh-agent in ~/.ssh */
@@ -1507,11 +1456,6 @@ argument_list|(
 name|retval
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Got ssh_passwd_entry"
-argument_list|)
-expr_stmt|;
 comment|/* use the tty or X display name in the filename */
 name|retval
 operator|=
@@ -1540,11 +1484,6 @@ condition|)
 name|PAM_RETURN
 argument_list|(
 name|retval
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Got TTY"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1643,13 +1582,6 @@ name|PAM_SERVICE_ERR
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Got env_file: %s"
-argument_list|,
-name|env_file
-argument_list|)
-expr_stmt|;
 comment|/* save the filename so we can delete the file on session close */
 name|retval
 operator|=
@@ -1682,11 +1614,6 @@ name|retval
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Saved env_file"
-argument_list|)
-expr_stmt|;
 comment|/* start the agent as the user */
 name|saved_uid
 operator|=
@@ -1768,11 +1695,6 @@ name|PAM_SESSION_ERR
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Agent started as user"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Save environment for application with pam_putenv(). 	 */
 name|agent_socket
 operator|=
@@ -1876,13 +1798,6 @@ name|PAM_SERVICE_ERR
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Put to environment: %s"
-argument_list|,
-name|env_string
-argument_list|)
-expr_stmt|;
 operator|*
 name|env_value
 operator|++
@@ -2021,11 +1936,6 @@ argument_list|(
 name|retval
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Environment write successful"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -2145,11 +2055,6 @@ argument_list|(
 name|PAM_SESSION_ERR
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Environment saved"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Connect to the agent. 	 * 	 * XXX Because ssh_get_authentication_connection() gets the 	 * XXX agent parameters from the environment, we have to 	 * XXX temporarily replace the environment with the PAM 	 * XXX environment list.  This is a hack. 	 */
 block|{
 specifier|extern
@@ -2260,11 +2165,6 @@ name|PAM_SESSION_ERR
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Connected to agent"
-argument_list|)
-expr_stmt|;
 comment|/* hand off each private key to the agent */
 name|final
 operator|=
@@ -2435,11 +2335,6 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Keys handed off"
-argument_list|)
-expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|final
@@ -2475,8 +2370,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|options
+name|int
 name|options
 decl_stmt|;
 comment|/* module options */
@@ -2500,21 +2394,19 @@ modifier|*
 name|ssh_agent_pid
 decl_stmt|;
 comment|/* ssh-agent pid string */
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
 name|pam_std_option
 argument_list|(
 operator|&
 name|options
 argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
+operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
+operator|++
 argument_list|)
 expr_stmt|;
 comment|/* retrieve environment filename, then remove the file */
@@ -2552,11 +2444,6 @@ argument_list|(
 name|env_file
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Got ssh_agent_env"
-argument_list|)
-expr_stmt|;
 comment|/* retrieve the agent's process id */
 name|retval
 operator|=
@@ -2585,11 +2472,6 @@ condition|)
 name|PAM_RETURN
 argument_list|(
 name|retval
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Got ssh_agent_pid"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Kill the agent.  SSH2 from SSH Communications Security does 	 * not have a -k option, so we just call kill(). 	 */
@@ -2640,11 +2522,6 @@ name|PAM_SESSION_ERR
 argument_list|)
 expr_stmt|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"Agent killed"
-argument_list|)
-expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_SUCCESS
