@@ -2914,7 +2914,7 @@ end_ifdef
 begin_function
 specifier|static
 name|__inline
-name|u_int16_t
+name|uint16_t
 name|cs_inw
 parameter_list|(
 name|struct
@@ -2968,7 +2968,7 @@ end_else
 begin_function
 specifier|static
 name|__inline
-name|u_int16_t
+name|uint16_t
 name|cs_inw
 parameter_list|(
 name|struct
@@ -3014,7 +3014,7 @@ parameter_list|,
 name|int
 name|off
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|val
 parameter_list|)
 block|{
@@ -3035,7 +3035,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int16_t
+name|uint16_t
 name|cs_readreg
 parameter_list|(
 name|struct
@@ -3043,7 +3043,7 @@ name|cs_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|port
 parameter_list|)
 block|{
@@ -3080,10 +3080,10 @@ name|cs_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|port
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|val
 parameter_list|)
 block|{
