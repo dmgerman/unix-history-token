@@ -2577,6 +2577,50 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ccb_trans_settings_fc
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_FC_VALID_WWNN
+value|0x8000
+define|#
+directive|define
+name|CTS_FC_VALID_WWPN
+value|0x4000
+define|#
+directive|define
+name|CTS_FC_VALID_PORT
+value|0x2000
+define|#
+directive|define
+name|CTS_FC_VALID_SPEED
+value|0x1000
+name|u_int64_t
+name|wwnn
+decl_stmt|;
+comment|/* world wide node name */
+name|u_int64_t
+name|wwpn
+decl_stmt|;
+comment|/* world wide port name */
+name|u_int32_t
+name|port
+decl_stmt|;
+comment|/* 24 bit port id, if known */
+name|u_int32_t
+name|bitrate
+decl_stmt|;
+comment|/* Mbps */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Get/Set transfer rate/width/disconnection/tag queueing settings */
 end_comment
@@ -2627,6 +2671,10 @@ comment|/* Which fields to honor */
 name|struct
 name|ccb_trans_settings_spi
 name|spi
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_fc
+name|fc
 decl_stmt|;
 block|}
 name|xport_specific
