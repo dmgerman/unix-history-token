@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.21 1997/02/22 19:57:55 peter Exp $"
+literal|"$Id: xinstall.c,v 1.22 1997/03/29 04:34:07 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +176,32 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_comment
+comment|/* Bootstrap aid - this doesn't exist in most older releases */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAP_FAILED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_FAILED
+value|((caddr_t)-1)
+end_define
+
+begin_comment
+comment|/* from<sys/mman.h> */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
