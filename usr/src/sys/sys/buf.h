@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -223,6 +223,14 @@ name|caddr_t
 name|b_saveaddr
 decl_stmt|;
 comment|/* original b_addr for PHYSIO */
+name|int
+name|b_validoff
+decl_stmt|;
+comment|/* offset in buffer of valid region */
+name|int
+name|b_validend
+decl_stmt|;
+comment|/* offset of end of valid region */
 block|}
 struct|;
 end_struct
