@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: clock.c,v 1.4 1998/10/06 08:40:18 dfr Exp $ */
+comment|/* $Id: clock.c,v 1.5 1998/11/08 19:26:23 phk Exp $ */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
