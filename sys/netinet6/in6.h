@@ -1457,6 +1457,10 @@ begin_comment
 comment|/* get entire firewall rule chain */
 end_comment
 
+begin_comment
+comment|/* to define items, should talk with KAME guys first, for *BSD compatibility */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1912,6 +1916,10 @@ end_comment
 
 begin_comment
 comment|/* New entries should be added here from current IPV6CTL_MAXID value. */
+end_comment
+
+begin_comment
+comment|/* to define items, should talk with KAME guys first, for *BSD compatibility */
 end_comment
 
 begin_define
