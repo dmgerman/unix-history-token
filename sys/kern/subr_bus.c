@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus_private.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -86,6 +86,261 @@ include|#
 directive|include
 file|<vm/uma.h>
 end_include
+
+begin_comment
+comment|/*  * Used to attach drivers to devclasses.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|driverlink
+modifier|*
+name|driverlink_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|driverlink
+block|{
+name|driver_t
+modifier|*
+name|driver
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|driverlink
+argument_list|)
+name|link
+expr_stmt|;
+comment|/* list of drivers in devclass */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Forward declarations  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|TAILQ_HEAD
+argument_list|(
+argument|devclass_list
+argument_list|,
+argument|devclass
+argument_list|)
+name|devclass_list_t
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|TAILQ_HEAD
+argument_list|(
+argument|driver_list
+argument_list|,
+argument|driverlink
+argument_list|)
+name|driver_list_t
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|TAILQ_HEAD
+argument_list|(
+argument|device_list
+argument_list|,
+argument|device
+argument_list|)
+name|device_list_t
+expr_stmt|;
+end_typedef
+
+begin_struct
+struct|struct
+name|devclass
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|devclass
+argument_list|)
+name|link
+expr_stmt|;
+name|driver_list_t
+name|drivers
+decl_stmt|;
+comment|/* bus devclasses store drivers for bus */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|device_t
+modifier|*
+name|devices
+decl_stmt|;
+comment|/* array of devices indexed by unit */
+name|int
+name|maxunit
+decl_stmt|;
+comment|/* size of devices array */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Implementation of device.  */
+end_comment
+
+begin_struct
+struct|struct
+name|device
+block|{
+comment|/* 	 * A device is a kernel object. The first field must be the 	 * current ops table for the object. 	 */
+name|KOBJ_FIELDS
+expr_stmt|;
+comment|/* 	 * Device hierarchy. 	 */
+name|TAILQ_ENTRY
+argument_list|(
+argument|device
+argument_list|)
+name|link
+expr_stmt|;
+comment|/* list of devices in parent */
+name|TAILQ_ENTRY
+argument_list|(
+argument|device
+argument_list|)
+name|devlink
+expr_stmt|;
+comment|/* global device list membership */
+name|device_t
+name|parent
+decl_stmt|;
+name|device_list_t
+name|children
+decl_stmt|;
+comment|/* list of subordinate devices */
+comment|/* 	 * Details of this device. 	 */
+name|driver_t
+modifier|*
+name|driver
+decl_stmt|;
+name|devclass_t
+name|devclass
+decl_stmt|;
+comment|/* device class which we are in */
+name|int
+name|unit
+decl_stmt|;
+name|char
+modifier|*
+name|nameunit
+decl_stmt|;
+comment|/* name+unit e.g. foodev0 */
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* driver specific description */
+name|int
+name|busy
+decl_stmt|;
+comment|/* count of calls to device_busy() */
+name|device_state_t
+name|state
+decl_stmt|;
+name|u_int32_t
+name|devflags
+decl_stmt|;
+comment|/* api level flags for device_get_flags() */
+name|u_short
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|DF_ENABLED
+value|1
+comment|/* device should be probed/attached */
+define|#
+directive|define
+name|DF_FIXEDCLASS
+value|2
+comment|/* devclass specified at create time */
+define|#
+directive|define
+name|DF_WILDCARD
+value|4
+comment|/* unit was originally wildcard */
+define|#
+directive|define
+name|DF_DESCMALLOCED
+value|8
+comment|/* description was malloced */
+define|#
+directive|define
+name|DF_QUIET
+value|16
+comment|/* don't print verbose attach message */
+define|#
+directive|define
+name|DF_DONENOMATCH
+value|32
+comment|/* don't execute DEVICE_NOMATCH again */
+define|#
+directive|define
+name|DF_EXTERNALSOFTC
+value|64
+comment|/* softc not allocated by us */
+name|u_char
+name|order
+decl_stmt|;
+comment|/* order from device_add_child_ordered() */
+name|u_char
+name|pad
+decl_stmt|;
+name|void
+modifier|*
+name|ivars
+decl_stmt|;
+name|void
+modifier|*
+name|softc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|device_op_desc
+block|{
+name|unsigned
+name|int
+name|offset
+decl_stmt|;
+comment|/* offset in driver ops */
+name|struct
+name|method
+modifier|*
+name|method
+decl_stmt|;
+comment|/* internal method implementation */
+name|devop_t
+name|deflt
+decl_stmt|;
+comment|/* default implementation */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* unique name (for registration) */
+block|}
+struct|;
+end_struct
 
 begin_expr_stmt
 specifier|static
