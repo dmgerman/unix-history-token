@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.7 1999/01/06 19:55:49 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.8 1999/01/07 23:01:11 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ name|char
 modifier|*
 name|uhci_device_piix3
 init|=
-literal|"Intel 82371SB USB Host Controller"
+literal|"Intel 82371SB (PIIX3) USB Host Controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +259,7 @@ name|char
 modifier|*
 name|uhci_device_piix4
 init|=
-literal|"Intel 82371AB/EB USB Host Controller"
+literal|"Intel 82371AB/EB (PIIX4) USB Host Controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,7 +288,7 @@ name|char
 modifier|*
 name|uhci_device_generic
 init|=
-literal|"UHCI USB Controller (generic)"
+literal|"UHCI (generic) USB Controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -786,58 +786,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|r
-operator|=
-name|uhci_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s%d: init failed, error=%d\n"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-argument_list|,
-name|r
-argument_list|)
-expr_stmt|;
-name|device_delete_child
-argument_list|(
-name|root_bus
-argument_list|,
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 switch|switch
 condition|(
 name|id
@@ -905,6 +853,57 @@ operator|.
 name|bdev
 argument_list|,
 name|uhci_device_generic
+argument_list|)
+expr_stmt|;
+block|}
+name|r
+operator|=
+name|uhci_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|!=
+name|USBD_NORMAL_COMPLETION
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%d: init failed, error=%d\n"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|,
+name|r
+argument_list|)
+expr_stmt|;
+name|device_delete_child
+argument_list|(
+name|root_bus
+argument_list|,
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
 argument_list|)
 expr_stmt|;
 block|}
