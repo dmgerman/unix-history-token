@@ -1047,7 +1047,7 @@ argument_list|(
 literal|"Error dumping block 0x%jx\n"
 argument_list|,
 operator|(
-name|uintptr_t
+name|uintmax_t
 operator|)
 name|physical
 argument_list|)
