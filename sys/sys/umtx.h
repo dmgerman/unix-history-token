@@ -41,10 +41,6 @@ name|thr_id_t
 name|u_owner
 decl_stmt|;
 comment|/* Owner of the mutex. */
-name|thr_id_t
-name|u_blocked
-decl_stmt|;
-comment|/* First blocked thread, owns wait queue. */
 block|}
 struct|;
 end_struct
