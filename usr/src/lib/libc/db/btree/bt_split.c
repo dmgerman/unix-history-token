@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.4 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,9 +668,11 @@ argument_list|)
 expr_stmt|;
 name|nbytes
 operator|=
-name|NBLEAF
+name|NBINTERNAL
 argument_list|(
 name|bl
+operator|->
+name|ksize
 argument_list|)
 expr_stmt|;
 if|if
@@ -2399,25 +2401,12 @@ name|char
 modifier|*
 name|dest
 decl_stmt|;
-comment|/* 	 * If the root page was a leaf page, change it into an internal page. 	 * We copy the key we split on (but not the key's data, in the case of 	 * a leaf page) to the new root page.  If the key is on an overflow 	 * page, mark the overflow chain so it isn't deleted when the leaf copy 	 * of the key is deleted. 	 * 	 * The btree comparison code guarantees that the left-most key on any 	 * level of the tree is never used, so it doesn't need to be filled 	 * in.  (This is not just convenience -- if the insert index is 0, we 	 * don't *have* a key to fill in.)  The right key is available because 	 * the split code guarantees not to split on the skipped index. 	 */
+comment|/* 	 * If the root page was a leaf page, change it into an internal page. 	 * We copy the key we split on (but not the key's data, in the case of 	 * a leaf page) to the new root page. 	 * 	 * The btree comparison code guarantees that the left-most key on any 	 * level of the tree is never used, so it doesn't need to be filled 	 * in.  (This is not just convenience -- if the insert index is 0, we 	 * don't *have* a key to fill in.)  The right key is available because 	 * the split code guarantees not to split on the skipped index. 	 */
 name|nbytes
 operator|=
-name|LALIGN
+name|NBINTERNAL
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|size_t
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|pgno_t
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|u_char
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|h
@@ -2545,6 +2534,7 @@ operator|->
 name|ksize
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the key is on an overflow page, mark the overflow chain 		 * so it isn't deleted when the leaf copy of the key is deleted. 		 */
 if|if
 condition|(
 name|bl
@@ -2990,6 +2980,12 @@ condition|(
 name|half
 operator|<
 name|nbytes
+operator|&&
+name|skip
+operator|!=
+name|off
+operator|+
+literal|1
 condition|)
 if|if
 condition|(
