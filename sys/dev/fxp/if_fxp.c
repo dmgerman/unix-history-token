@@ -9029,8 +9029,12 @@ operator|=
 name|sc
 operator|->
 name|tunable_int_delay
-operator|*
-literal|1.4881
+operator|+
+name|sc
+operator|->
+name|tunable_int_delay
+operator|/
+literal|2
 expr_stmt|;
 if|if
 condition|(
