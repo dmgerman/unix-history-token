@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_function_decl
@@ -211,22 +211,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|fakepg_zone
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static struct vm_zone fakepg_zone_store;
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -301,15 +289,9 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|fakepg_zone =&fakepg_zone_store; 	zinitna(fakepg_zone, NULL, "DP fakepg", sizeof(struct vm_page), 0, 0, 2);
-endif|#
-directive|endif
 name|fakepg_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"DP fakepg"
 argument_list|,
@@ -319,11 +301,17 @@ expr|struct
 name|vm_page
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1013,9 +1001,11 @@ name|m
 decl_stmt|;
 name|m
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|fakepg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|m
@@ -1109,7 +1099,7 @@ argument_list|(
 literal|"dev_pager_putfake: bad page"
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|fakepg_zone
 argument_list|,

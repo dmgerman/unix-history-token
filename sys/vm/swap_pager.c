@@ -175,12 +175,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/swap_pager.h>
 end_include
 
@@ -188,6 +182,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_define
@@ -462,7 +462,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|swap_zone
 decl_stmt|;
 end_decl_stmt
@@ -1062,7 +1062,7 @@ name|n
 expr_stmt|;
 name|swap_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"SWAPMETA"
 argument_list|,
@@ -1072,11 +1072,17 @@ expr|struct
 name|swblock
 argument_list|)
 argument_list|,
-name|n
+name|NULL
 argument_list|,
-name|ZONE_INTERRUPT
+name|NULL
 argument_list|,
-literal|1
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 do|do
@@ -1122,7 +1128,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"failed to zinit swap_zone."
+literal|"failed to create swap_zone."
 argument_list|)
 expr_stmt|;
 if|if
@@ -4839,9 +4845,11 @@ operator|=
 operator|*
 name|pswap
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|swap_zone
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5098,7 +5106,7 @@ name|swap
 operator|->
 name|swb_hnext
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|swap_zone
 argument_list|,
@@ -5289,7 +5297,7 @@ name|swap
 operator|->
 name|swb_hnext
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|swap_zone
 argument_list|,
@@ -5475,7 +5483,7 @@ name|swap
 operator|->
 name|swb_hnext
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|swap_zone
 argument_list|,

@@ -134,7 +134,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_zone_t
+name|uma_zone_t
 name|swap_zone
 decl_stmt|;
 end_decl_stmt

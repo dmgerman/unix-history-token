@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/swap_pager.h>
 end_include
 
@@ -159,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_define
@@ -337,7 +337,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|obj_zone
 decl_stmt|;
 end_decl_stmt
@@ -1135,9 +1135,11 @@ operator|=
 operator|(
 name|vm_object_t
 operator|)
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|obj_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
@@ -1955,7 +1957,7 @@ name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free the space for the object. 	 */
-name|zfree
+name|uma_zfree
 argument_list|(
 name|obj_zone
 argument_list|,
@@ -4837,7 +4839,7 @@ argument_list|,
 name|object_list
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|obj_zone
 argument_list|,
