@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.115
+literal|3.116
 operator|%
 name|G
 operator|%
@@ -5025,13 +5025,13 @@ name|tTd
 argument_list|(
 literal|13
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nSend Queue:\n"
+literal|"\nSENDALL: verify %d, sendqueue:\n"
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -5158,6 +5158,35 @@ name|ADDRESS
 modifier|*
 name|qq
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|13
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Checking "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|q
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 if|if
 condition|(
 name|bitset
@@ -5175,19 +5204,6 @@ name|e_queueup
 operator|=
 name|TRUE
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|QBADADDR
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-continue|continue;
 comment|/* we have an address that failed -- find the parent */
 for|for
 control|(
@@ -5295,6 +5311,44 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|13
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"Errors to %s\n"
+argument_list|,
+name|obuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+comment|/* add in an errors-to field */
+comment|/*   ugh... must happen before delivery..... 			addheader("errors-to", newstr(obuf), e); 				.... i guess this should go in sendto */
+comment|/* only send errors if the message failed */
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+break|break;
 comment|/* owner list exists -- add it to the error queue */
 name|qq
 operator|->

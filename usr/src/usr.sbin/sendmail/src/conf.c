@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.56
+literal|3.57
 operator|%
 name|G
 operator|%
@@ -99,12 +99,6 @@ name|H_CHECK
 block|,
 name|M_NEEDFROM
 block|,
-literal|"original-from"
-block|,
-literal|0
-block|,
-literal|0
-block|,
 literal|"full-name"
 block|,
 name|H_ACHECK
@@ -118,6 +112,12 @@ block|,
 name|M_LOCAL
 block|,
 literal|"return-receipt-to"
+block|,
+name|H_FROM
+block|,
+literal|0
+block|,
+literal|"errors-to"
 block|,
 name|H_FROM
 block|,

@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -122,8 +122,8 @@ condition|(
 name|CurEnv
 operator|->
 name|e_class
-operator|<=
-name|PRI_JUNK
+operator|<
+literal|0
 condition|)
 block|{
 name|message

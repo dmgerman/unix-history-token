@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.87		%G%"
+literal|"@(#)sendmail.h	3.88		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,17 @@ end_define
 
 begin_comment
 comment|/* max # of sets of rewriting rules */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPRIORITIES
+value|25
+end_define
+
+begin_comment
+comment|/* max values for Precedence: field */
 end_comment
 
 begin_define
@@ -1070,54 +1081,44 @@ begin_comment
 comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PRI_ALERT
-value|50
-end_define
+begin_struct
+struct|struct
+name|priority
+block|{
+name|char
+modifier|*
+name|pri_name
+decl_stmt|;
+comment|/* external name of priority */
+name|int
+name|pri_val
+decl_stmt|;
+comment|/* internal value for same */
+block|}
+struct|;
+end_struct
 
-begin_define
-define|#
-directive|define
-name|PRI_QUICK
-value|30
-end_define
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|priority
+name|Priorities
+index|[
+name|MAXPRIORITIES
+index|]
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PRI_FIRSTCL
-value|10
-end_define
+begin_decl_stmt
+name|EXTERN
+name|int
+name|NumPriorities
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PRI_NORMAL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_SECONDCL
-value|-10
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_THIRDCL
-value|-40
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_JUNK
-value|-100
-end_define
+begin_comment
+comment|/* pointer into Priorities */
+end_comment
 
 begin_define
 define|#
@@ -1732,6 +1733,43 @@ end_define
 
 begin_comment
 comment|/* default operation mode */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  Options ** **	These are assorted options that can be set from the configuration **	file. */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|Option
+index|[
+literal|128
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* miscellaneous option values */
+end_comment
+
+begin_comment
+comment|/* option values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPT_QUEUEALL
+value|'q'
+end_define
+
+begin_comment
+comment|/* force all messages to queue */
 end_comment
 
 begin_escape
