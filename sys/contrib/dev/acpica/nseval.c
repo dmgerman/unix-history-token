@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 124 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 125 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -663,6 +663,29 @@ expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * For a method alias, we must grab the actual method node      * so that proper scoping context will be established      * before execution.      */
+if|if
+condition|(
+name|AcpiNsGetType
+argument_list|(
+name|Node
+argument_list|)
+operator|==
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
+condition|)
+block|{
+name|Node
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_NAMESPACE_NODE
+argument_list|,
+name|Node
+operator|->
+name|Object
 argument_list|)
 expr_stmt|;
 block|}

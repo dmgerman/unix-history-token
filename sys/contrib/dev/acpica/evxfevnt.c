@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 74 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 75 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -492,7 +492,44 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Enable the requested GPE number */
+comment|/* Check for Wake vs Runtime GPE */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EVENT_WAKE_ENABLE
+condition|)
+block|{
+comment|/* Ensure the requested wake GPE is disabled */
+name|Status
+operator|=
+name|AcpiHwDisableGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+comment|/* Defer Enable of Wake GPE until sleep time */
+name|AcpiHwEnableGpeForWakeup
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Enable the requested runtime GPE  */
 name|Status
 operator|=
 name|AcpiHwEnableGpe
@@ -512,18 +549,6 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_EVENT_WAKE_ENABLE
-condition|)
-block|{
-name|AcpiHwEnableGpeForWakeup
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
 block|}
 name|UnlockAndExit
 label|:

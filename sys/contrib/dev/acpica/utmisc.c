@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 99 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 100 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1254,7 +1254,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 157 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 158 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -961,6 +961,9 @@ expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_LOCAL_ALIAS
+case|:
+case|case
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 case|:
 name|AcpiOsPrintf
 argument_list|(

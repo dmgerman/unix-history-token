@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -236,6 +236,9 @@ block|}
 break|break;
 case|case
 name|ACPI_TYPE_LOCAL_ALIAS
+case|:
+case|case
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 case|:
 comment|/*          * Aliases are resolved by AcpiExPrepOperands          */
 name|ACPI_REPORT_ERROR

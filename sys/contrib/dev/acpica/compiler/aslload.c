@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 60 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1003,7 +1003,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%s, %s, Changing type to (Scope)"
+literal|"%s [%s], changing type to [Scope]"
 argument_list|,
 name|Op
 operator|->
@@ -1030,13 +1030,38 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
-comment|/*              * Switch the type              */
+comment|/*              * Switch the type to scope, open the new scope              */
 name|Node
 operator|->
 name|Type
 operator|=
-name|ACPI_TYPE_ANY
+name|ACPI_TYPE_LOCAL_SCOPE
 expr_stmt|;
+name|Status
+operator|=
+name|AcpiDsScopeStackPush
+argument_list|(
+name|Node
+argument_list|,
+name|ACPI_TYPE_LOCAL_SCOPE
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/*              * All other types are an error              */
@@ -1044,7 +1069,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%s, %s"
+literal|"%s [%s]"
 argument_list|,
 name|Op
 operator|->
@@ -1071,13 +1096,38 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
-comment|/*              * However, switch the type to be an actual scope so              * that compilation can continue without generating a whole              * cascade of additional errors.              */
+comment|/*              * However, switch the type to be an actual scope so              * that compilation can continue without generating a whole              * cascade of additional errors.  Open the new scope.              */
 name|Node
 operator|->
 name|Type
 operator|=
-name|ACPI_TYPE_ANY
+name|ACPI_TYPE_LOCAL_SCOPE
 expr_stmt|;
+name|Status
+operator|=
+name|AcpiDsScopeStackPush
+argument_list|(
+name|Node
+argument_list|,
+name|ACPI_TYPE_LOCAL_SCOPE
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 name|Status

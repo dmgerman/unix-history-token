@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 179 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 180 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -617,6 +617,30 @@ argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+comment|/* Save a handle to "_GPE", it is always present */
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiNsGetNodeByPath
+argument_list|(
+literal|"\\_GPE"
+argument_list|,
+name|NULL
+argument_list|,
+name|ACPI_NS_NO_UPSEARCH
+argument_list|,
+operator|&
+name|AcpiGbl_FadtGpeDevice
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1336,6 +1360,12 @@ operator|(
 name|TypeToCheckFor
 operator|!=
 name|ACPI_TYPE_LOCAL_ALIAS
+operator|)
+operator|&&
+operator|(
+name|TypeToCheckFor
+operator|!=
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 operator|)
 operator|&&
 operator|(

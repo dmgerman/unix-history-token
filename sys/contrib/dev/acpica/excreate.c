@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 102 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -129,23 +129,34 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|TargetNode
 operator|->
 name|Type
 operator|==
 name|ACPI_TYPE_LOCAL_ALIAS
+operator|)
+operator|||
+operator|(
+name|TargetNode
+operator|->
+name|Type
+operator|==
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
+operator|)
 condition|)
 block|{
 comment|/*          * Dereference an existing alias so that we don't create a chain          * of aliases.  With this code, we guarantee that an alias is          * always exactly one level of indirection away from the          * actual aliased name.          */
 name|TargetNode
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
+argument_list|,
 name|TargetNode
 operator|->
 name|Object
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * For objects that can never change (i.e., the NS node will      * permanently point to the same object), we can simply attach      * the object to the new NS node.  For other objects (such as      * Integers, buffers, etc.), we have to point the Alias node      * to the original Node.      */
@@ -177,6 +188,28 @@ operator|->
 name|Type
 operator|=
 name|ACPI_TYPE_LOCAL_ALIAS
+expr_stmt|;
+name|AliasNode
+operator|->
+name|Object
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_OPERAND_OBJECT
+argument_list|,
+name|TargetNode
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_METHOD
+case|:
+comment|/*          * The new alias has the type ALIAS and points to the original          * NS node, not the object itself.  This is because for these          * types, the object can change dynamically via a Store.          */
+name|AliasNode
+operator|->
+name|Type
+operator|=
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 expr_stmt|;
 name|AliasNode
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 11 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 12 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acinterp.h"
 end_include
 
 begin_define
@@ -261,7 +267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObject  *  * PARAMETERS:  Handle              - Object handle (optional)  *              *Pathname           - Object pathname (optional)  *              **ExternalParams    - List of parameters to pass to method,  *                                    terminated by NULL.  May be NULL  *                                    if no parameters are being passed.  *              *ReturnBuffer       - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary.  One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObject  *  * PARAMETERS:  Handle              - Object handle (optional)  *              Pathname            - Object pathname (optional)  *              ExternalParams      - List of parameters to pass to method,  *                                    terminated by NULL.  May be NULL  *                                    if no parameters are being passed.  *              ReturnBuffer        - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary.  One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -285,6 +291,9 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|ACPI_STATUS
+name|Status2
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -667,18 +676,35 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Delete the return and parameter objects */
 if|if
 condition|(
 name|InternalReturnObj
 condition|)
 block|{
-comment|/*          * Delete the internal return object. (Or at least          * decrement the reference count by one)          */
+comment|/*           * Delete the internal return object.  NOTE: Interpreter          * must be locked to avoid race condition.          */
+name|Status2
+operator|=
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status2
+argument_list|)
+condition|)
+block|{
+comment|/*              * Delete the internal return object. (Or at least              * decrement the reference count by one)              */
 name|AcpiUtRemoveReference
 argument_list|(
 name|InternalReturnObj
 argument_list|)
 expr_stmt|;
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 comment|/*      * Free the input parameter list (if we created one),      */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 148 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 152 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ name|__ACGLOBAL_H__
 end_define
 
 begin_comment
-comment|/*  * Ensure that the globals are actually defined only once.  *  * The use of these defines allows a single list of globals (here) in order  * to simplify maintenance of the code.  */
+comment|/*  * Ensure that the globals are actually defined and initialized only once.  *  * The use of these macros allows a single list of globals (here) in order  * to simplify maintenance of the code.  */
 end_comment
 
 begin_ifdef
@@ -35,6 +35,18 @@ directive|define
 name|ACPI_EXTERN
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|a=b
+end_define
+
 begin_else
 else|#
 directive|else
@@ -45,6 +57,18 @@ define|#
 directive|define
 name|ACPI_EXTERN
 value|extern
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|a
 end_define
 
 begin_endif
@@ -104,29 +128,63 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*****************************************************************************  *  * Runtime configuration  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * Runtime configuration (static defaults that can be overriden at runtime)  *  ****************************************************************************/
 end_comment
 
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT8
-name|AcpiGbl_CreateOsiMethod
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * Create the predefined _OSI method in the namespace? Default is TRUE  * because ACPI CA is fully compatible with other ACPI implementations.  * Changing this will revert ACPI CA (and machine ASL) to pre-OSI behavior.  */
+end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ACPI_EXTERN
 name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_CreateOsiMethod
+parameter_list|,
+name|TRUE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Automatically serialize ALL control methods? Default is FALSE, meaning  * to use the Serialized/NotSerialized method flags on a per method basis.  * Only change this if the ASL code is poorly written and cannot handle  * reentrancy even though methods are marked "NotSerialized".  */
+end_comment
+
+begin_function_decl
+name|ACPI_EXTERN
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
 name|AcpiGbl_AllMethodsSerialized
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Disable wakeup GPEs during runtime? Default is TRUE because WAKE and  * RUNTIME GPEs should never be shared, and WAKE GPEs should typically only  * be enabled just before going to sleep.  */
+end_comment
+
+begin_function_decl
+name|ACPI_EXTERN
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_LeaveWakeGpesDisabled
+parameter_list|,
+name|TRUE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*****************************************************************************  *  * ACPI Table globals  *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Table pointers.  * Although these pointers are somewhat redundant with the global AcpiTable,  * they are convenient because they are typed pointers.  *  * These tables are single-table only; meaning that there can be at most one  * of each in the system.  Each global points to the actual table.  *  */
+comment|/*  * Table pointers.  * Although these pointers are somewhat redundant with the global AcpiTable,  * they are convenient because they are typed pointers.  *  * These tables are single-table only; meaning that there can be at most one  * of each in the system.  Each global points to the actual table.  */
 end_comment
 
 begin_decl_stmt
@@ -558,6 +616,14 @@ name|ACPI_EXTERN
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|AcpiGbl_RootNode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|AcpiGbl_FadtGpeDevice
 decl_stmt|;
 end_decl_stmt
 

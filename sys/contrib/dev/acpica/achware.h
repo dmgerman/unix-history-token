@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -288,7 +288,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiHwDisableNonWakeupGpes
+name|AcpiHwPrepareGpesForSleep
 parameter_list|(
 name|void
 parameter_list|)
@@ -297,7 +297,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiHwEnableNonWakeupGpes
+name|AcpiHwRestoreGpesOnWake
 parameter_list|(
 name|void
 parameter_list|)

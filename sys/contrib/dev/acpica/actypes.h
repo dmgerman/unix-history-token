@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 265 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 266 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1432,7 +1432,7 @@ value|(ACPI_TABLE_MAX+1)
 end_define
 
 begin_comment
-comment|/*  * Types associated with ACPI names and objects.  The first group of  * values (up to ACPI_TYPE_EXTERNAL_MAX) correspond to the definition  * of the ACPI ObjectType() operator (See the ACPI Spec).  Therefore,  * only add to the first group if the spec changes.  *  * Types must be kept in sync with the global AcpiNsProperties  * and AcpiNsTypeNames arrays.  */
+comment|/*  * Types associated with ACPI names and objects.  The first group of  * values (up to ACPI_TYPE_EXTERNAL_MAX) correspond to the definition  * of the ACPI ObjectType() operator (See the ACPI Spec).  Therefore,  * only add to the first group if the spec changes.  *  * NOTE: Types must be kept in sync with the global AcpiNsProperties  * and AcpiNsTypeNames arrays.  */
 end_comment
 
 begin_typedef
@@ -1642,36 +1642,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_TYPE_LOCAL_NOTIFY
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
 value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TYPE_LOCAL_ADDRESS_HANDLER
+name|ACPI_TYPE_LOCAL_NOTIFY
 value|0x17
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TYPE_LOCAL_RESOURCE
+name|ACPI_TYPE_LOCAL_ADDRESS_HANDLER
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
+name|ACPI_TYPE_LOCAL_RESOURCE
 value|0x19
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TYPE_LOCAL_SCOPE
+name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
 value|0x1A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TYPE_LOCAL_SCOPE
+value|0x1B
 end_define
 
 begin_comment
@@ -1682,7 +1689,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_TYPE_NS_NODE_MAX
-value|0x1A
+value|0x1B
 end_define
 
 begin_comment
@@ -1697,21 +1704,21 @@ begin_define
 define|#
 directive|define
 name|ACPI_TYPE_LOCAL_EXTRA
-value|0x1B
+value|0x1C
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_LOCAL_DATA
-value|0x1C
+value|0x1D
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_TYPE_LOCAL_MAX
-value|0x1C
+value|0x1D
 end_define
 
 begin_comment
@@ -1722,7 +1729,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_TYPE_INVALID
-value|0x1D
+value|0x1E
 end_define
 
 begin_define
@@ -1941,7 +1948,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Acpi Event Types: Fixed& General Purpose  */
+comment|/*  * Event Types: Fixed& General Purpose  */
 end_comment
 
 begin_typedef
@@ -2004,75 +2011,8 @@ name|ACPI_NUM_FIXED_EVENTS
 value|ACPI_EVENT_MAX + 1
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_INVALID
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_MAX
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_GPE
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_LEVEL_TRIGGERED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_EDGE_TRIGGERED
-value|2
-end_define
-
 begin_comment
-comment|/*  * Flags for GPE and Lock interfaces  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_WAKE_ENABLE
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_WAKE_DISABLE
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NOT_ISR
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ISR
-value|0x0
-end_define
-
-begin_comment
-comment|/*  * AcpiEvent Status:  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+  * |   Bits 31:3 |2|1|0|  * +-------------+-+-+-+  *          |     | | |  *          |     | | +- Enabled?  *          |     | +--- Enabled for wake?  *          |     +----- Set?  *          +-----------<Reserved>  */
+comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+  * |   Bits 31:3 |2|1|0|  * +-------------+-+-+-+  *          |     | | |  *          |     | | +- Enabled?  *          |     | +--- Enabled for wake?  *          |     +----- Set?  *          +-----------<Reserved>  */
 end_comment
 
 begin_typedef
@@ -2108,6 +2048,138 @@ define|#
 directive|define
 name|ACPI_EVENT_FLAG_SET
 value|(ACPI_EVENT_STATUS) 0x04
+end_define
+
+begin_comment
+comment|/*  * General Purpose Events (GPE)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_INVALID
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_MAX
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_GPE
+value|256
+end_define
+
+begin_comment
+comment|/*  * GPE info flags - Per GPE  * +---------+-+-+-+  * |Bits 8:3 |2|1|0|  * +---------+-+-+-+  *          | | | |  *          | | | +- Edge or Level Triggered  *          | | +--- Type: Wake or Runtime  *          | +----- Enabled for wake?  *          +--------<Reserved>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_XRUPT_TYPE_MASK
+value|(UINT8) 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_LEVEL_TRIGGERED
+value|(UINT8) 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_EDGE_TRIGGERED
+value|(UINT8) 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_TYPE_MASK
+value|(UINT8) 2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_TYPE_WAKE
+value|(UINT8) 2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_TYPE_RUNTIME
+value|(UINT8) 0
+end_define
+
+begin_comment
+comment|/* Default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_ENABLE_MASK
+value|(UINT8) 4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_ENABLED
+value|(UINT8) 4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISABLED
+value|(UINT8) 0
+end_define
+
+begin_comment
+comment|/* Default */
+end_comment
+
+begin_comment
+comment|/*  * Flags for GPE and Lock interfaces  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_WAKE_ENABLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_WAKE_DISABLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOT_ISR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ISR
+value|0x0
 end_define
 
 begin_comment

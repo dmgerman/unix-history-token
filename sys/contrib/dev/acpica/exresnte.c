@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -151,21 +151,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|EntryType
 operator|==
 name|ACPI_TYPE_LOCAL_ALIAS
+operator|)
+operator|||
+operator|(
+name|EntryType
+operator|==
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
+operator|)
 condition|)
 block|{
 comment|/* There is always exactly one level of indirection */
 name|Node
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
+argument_list|,
 name|Node
 operator|->
 name|Object
+argument_list|)
 expr_stmt|;
 name|SourceDesc
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1094,6 +1094,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/*      * TBD: We want to cross reference the namespace here, in order to       * generate External() statements.  The problem is that the parse      * tree is in run-time (interpreter) format, not compiler format,       * so we cannot directly use the function below:      *      *    Status = LkCrossReferenceNamespace ();      *      * We need to either convert the parse tree or create a new      * cross ref function that can handle interpreter parse trees      */
 comment|/* Optional displays */
 if|if
 condition|(
@@ -2302,14 +2303,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|_HPET
-name|AfGetHpet
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|AE_OK
 return|;
