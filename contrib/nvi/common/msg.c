@@ -2670,7 +2670,7 @@ name|msg_cat
 argument_list|(
 name|sp
 argument_list|,
-literal|"027|line %lu of %lu [%ld%%]"
+literal|"027|line %lu of %lu [%lu%%]"
 argument_list|,
 operator|&
 name|len
@@ -2685,15 +2685,24 @@ name|p
 argument_list|,
 name|t
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lno
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|last
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|lno
 operator|*
 literal|100
-operator|)
+argument_list|)
 operator|/
 name|last
 argument_list|)
@@ -2730,6 +2739,9 @@ name|p
 argument_list|,
 name|t
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lno
 argument_list|)
 expr_stmt|;
