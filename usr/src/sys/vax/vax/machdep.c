@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.20	81/02/28	*/
+comment|/*	machdep.c	4.21	81/03/03	*/
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.20) 81/02/28 14:46:46 \n"
+literal|"VM/UNIX (Berkeley Version 4.21) 81/03/03 11:04:57 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,13 +231,6 @@ name|icode
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|memchk
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Machine-dependent startup code  */
@@ -747,19 +740,6 @@ argument_list|(
 name|TXDB_CCSI
 argument_list|)
 expr_stmt|;
-name|timeout
-argument_list|(
-name|memchk
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
-comment|/* it will pick its own intvl */
 block|}
 end_block
 
@@ -1252,18 +1232,37 @@ operator|++
 operator|=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|SIGILL
+operator|||
+name|n
+operator|==
+name|SIGFPE
+condition|)
+block|{
 operator|*
 name|usp
 operator|++
 operator|=
-name|n
-operator|==
-name|SIGILL
-condition|?
 name|u
 operator|.
-name|u_cfcode
-else|:
+name|u_code
+expr_stmt|;
+name|u
+operator|.
+name|u_code
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|usp
+operator|++
+operator|=
 literal|0
 expr_stmt|;
 operator|*
@@ -1632,7 +1631,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check memory controller for memory parity errors  */
+comment|/*  * Memenable enables the memory controlle corrected data reporting.  * This runs at regular intervals, turning on the interrupt.  * The interrupt is turned off, per memory controller, when error  * reporting occurs.  Thus we report at most once per memintvl.  */
 end_comment
 
 begin_decl_stmt
@@ -1644,7 +1643,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|memchk
+name|memenable
 argument_list|()
 end_macro
 
@@ -1659,9 +1658,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|m
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 for|for
 control|(
@@ -1695,100 +1691,11 @@ name|VAX780
 case|case
 name|VAX_780
 case|:
-name|error
-operator|=
-name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|2
-index|]
-operator|&
-name|M780_ERLOG
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-if|#
-directive|if
-name|VAX750
-case|case
-name|VAX_750
-case|:
-name|error
-operator|=
-name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|0
-index|]
-operator|&
-name|M750_ERLOG
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-default|default:
-name|error
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|error
-condition|)
-name|printf
+name|M780_ENA
 argument_list|(
-literal|"MEMERR %d: %x %x %x\n"
-argument_list|,
-name|m
-argument_list|,
 name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|0
-index|]
-argument_list|,
-name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|1
-index|]
-argument_list|,
-name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|2
-index|]
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|cpu
-condition|)
-block|{
-if|#
-directive|if
-name|VAX780
-case|case
-name|VAX_780
-case|:
-name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|2
-index|]
-operator|=
-name|M780_ERLOG
-operator||
-name|M780_HIERR
-expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -1798,23 +1705,10 @@ name|VAX750
 case|case
 name|VAX_750
 case|:
+name|M750_ENA
+argument_list|(
 name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|0
-index|]
-operator|=
-name|M750_ERLOG
-expr_stmt|;
-name|mcr
-operator|->
-name|mc_reg
-index|[
-literal|1
-index|]
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -1829,7 +1723,7 @@ literal|0
 condition|)
 name|timeout
 argument_list|(
-name|memchk
+name|memenable
 argument_list|,
 operator|(
 name|caddr_t
@@ -1839,6 +1733,138 @@ argument_list|,
 name|memintvl
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Memerr is the interrupt routine for corrected read data  * interrupts.  It looks to see which memory controllers have  * unreported errors, reports them, and disables further  * reporting for a time on those controller.  */
+end_comment
+
+begin_macro
+name|memerr
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|mcr
+modifier|*
+name|mcr
+decl_stmt|;
+specifier|register
+name|int
+name|m
+decl_stmt|;
+for|for
+control|(
+name|m
+operator|=
+literal|0
+init|;
+name|m
+operator|<
+name|nmcr
+condition|;
+name|m
+operator|++
+control|)
+block|{
+name|mcr
+operator|=
+name|mcraddr
+index|[
+name|m
+index|]
+expr_stmt|;
+switch|switch
+condition|(
+name|cpu
+condition|)
+block|{
+if|#
+directive|if
+name|VAX780
+case|case
+name|VAX_780
+case|:
+if|if
+condition|(
+name|M780_ERR
+argument_list|(
+name|mcr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"memerr mcr%d addr %x syn %x\n"
+argument_list|,
+name|m
+argument_list|,
+name|M780_ADDR
+argument_list|(
+name|mcr
+argument_list|)
+argument_list|,
+name|M780_SYN
+argument_list|(
+name|mcr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|M780_INH
+argument_list|(
+name|mcr
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX750
+case|case
+name|VAX_750
+case|:
+if|if
+condition|(
+name|M750_ERR
+argument_list|(
+name|mcr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"memerr mcr%d addr %x syn %x\n"
+argument_list|,
+name|m
+argument_list|,
+name|M750_ADDR
+argument_list|(
+name|mcr
+argument_list|)
+argument_list|,
+name|M750_SYN
+argument_list|(
+name|mcr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|M750_INH
+argument_list|(
+name|mcr
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+endif|#
+directive|endif
+block|}
+block|}
 block|}
 end_block
 
@@ -2179,8 +2205,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dump %s\n"
-argument_list|,
+literal|"dump "
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
 operator|(
 operator|*
 name|bdevsw
@@ -2196,14 +2225,58 @@ operator|)
 operator|(
 name|dumpdev
 operator|)
-condition|?
-literal|"failed"
-else|:
+condition|)
+block|{
+case|case
+name|ENXIO
+case|:
+name|printf
+argument_list|(
+literal|"device bad\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EFAULT
+case|:
+name|printf
+argument_list|(
+literal|"device not ready\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EINVAL
+case|:
+name|printf
+argument_list|(
+literal|"area improper\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EIO
+case|:
+name|printf
+argument_list|(
+literal|"i/o error"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
 literal|"succeeded"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_block
+
+begin_comment
+comment|/*  * Machine check error recovery code.  * Print out the machine check frame and then give up.  */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -2247,6 +2320,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Frame for a 780  */
+end_comment
+
 begin_struct
 struct|struct
 name|mc780frame
@@ -2254,42 +2331,55 @@ block|{
 name|int
 name|mc8_bcnt
 decl_stmt|;
+comment|/* byte count == 28 */
 name|int
 name|mc8_summary
 decl_stmt|;
+comment|/* summary parameter (as above) */
 name|int
 name|mc8_cpues
 decl_stmt|;
+comment|/* cpu error status */
 name|int
 name|mc8_upc
 decl_stmt|;
+comment|/* micro pc */
 name|int
 name|mc8_vaviba
 decl_stmt|;
+comment|/* va/viba register */
 name|int
 name|mc8_dreg
 decl_stmt|;
+comment|/* d register */
 name|int
 name|mc8_tber0
 decl_stmt|;
+comment|/* tbuf error reg 0 */
 name|int
 name|mc8_tber1
 decl_stmt|;
+comment|/* tbuf error reg 1 */
 name|int
 name|mc8_timo
 decl_stmt|;
+comment|/* timeout address divided by 4 */
 name|int
 name|mc8_parity
 decl_stmt|;
+comment|/* parity */
 name|int
 name|mc8_sbier
 decl_stmt|;
+comment|/* sbi error register */
 name|int
 name|mc8_pc
 decl_stmt|;
+comment|/* trapped pc */
 name|int
 name|mc8_psl
 decl_stmt|;
+comment|/* trapped psl */
 block|}
 struct|;
 end_struct
@@ -2301,42 +2391,54 @@ block|{
 name|int
 name|mc5_bcnt
 decl_stmt|;
+comment|/* byte count == 28 */
 name|int
 name|mc5_summary
 decl_stmt|;
+comment|/* summary parameter (as above) */
 name|int
 name|mc5_va
 decl_stmt|;
+comment|/* virtual address register */
 name|int
 name|mc5_errpc
 decl_stmt|;
+comment|/* error pc */
 name|int
 name|mc5_mdr
 decl_stmt|;
 name|int
 name|mc5_svmode
 decl_stmt|;
+comment|/* saved mode register */
 name|int
 name|mc5_rdtimo
 decl_stmt|;
+comment|/* read lock timeout */
 name|int
 name|mc5_tbgpar
 decl_stmt|;
+comment|/* tb group parity error register */
 name|int
 name|mc5_cacherr
 decl_stmt|;
+comment|/* cache error register */
 name|int
 name|mc5_buserr
 decl_stmt|;
+comment|/* bus error register */
 name|int
 name|mc5_mcesr
 decl_stmt|;
+comment|/* machine check status register */
 name|int
 name|mc5_pc
 decl_stmt|;
+comment|/* trapped pc */
 name|int
 name|mc5_psl
 decl_stmt|;
+comment|/* trapped psl */
 block|}
 struct|;
 end_struct
