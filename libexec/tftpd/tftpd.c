@@ -1666,16 +1666,10 @@ operator|+
 name|size
 condition|)
 block|{
-name|nak
-argument_list|(
-name|EBADOP
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* 				 * Don't reject the request, just stop trying 				 * to parse the option and get on with it. 				 * Some Apple OpenFirmware versions have 				 * trailing garbage on the end of otherwise 				 * valid requests. 				 */
+goto|goto
+name|option_fail
+goto|;
 block|}
 elseif|else
 if|if
@@ -1775,6 +1769,8 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|option_fail
+label|:
 if|if
 condition|(
 name|options
