@@ -144,7 +144,13 @@ operator|=
 name|val
 operator|>>
 operator|(
+operator|(
+name|size
+operator|-
 name|i
+operator|-
+literal|1
+operator|)
 operator|*
 literal|8
 operator|)
