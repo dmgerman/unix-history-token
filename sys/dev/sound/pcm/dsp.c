@@ -3368,7 +3368,30 @@ operator|=
 name|EINVAL
 expr_stmt|;
 break|break;
-comment|/*     	case SNDCTL_DSP_POST: 		if (wrch) { 			wrch->flags&= ~CHN_F_NOTRIGGER; 			chn_start(wrch, 1); 		} 		break; */
+case|case
+name|SNDCTL_DSP_POST
+case|:
+if|if
+condition|(
+name|wrch
+condition|)
+block|{
+name|wrch
+operator|->
+name|flags
+operator|&=
+operator|~
+name|CHN_F_NOTRIGGER
+expr_stmt|;
+name|chn_start
+argument_list|(
+name|wrch
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 case|case
 name|SNDCTL_DSP_MAPINBUF
 case|:
@@ -3379,9 +3402,6 @@ case|case
 name|SNDCTL_DSP_SETSYNCRO
 case|:
 comment|/* undocumented */
-case|case
-name|SNDCTL_DSP_POST
-case|:
 case|case
 name|SOUND_PCM_WRITE_FILTER
 case|:
