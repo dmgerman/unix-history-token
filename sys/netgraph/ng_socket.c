@@ -1219,6 +1219,14 @@ name|msg
 operator|->
 name|header
 operator|.
+name|typecookie
+operator|==
+name|NGM_GENERIC_COOKIE
+operator|&&
+name|msg
+operator|->
+name|header
+operator|.
 name|cmd
 operator|==
 name|NGM_MKPEER
