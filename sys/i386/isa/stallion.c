@@ -96,6 +96,36 @@ directive|include
 file|"pci.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILING_LINT
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+literal|"The stallion pci device is broken and not compiled with LINT"
+end_warning
+
+begin_undef
+undef|#
+directive|undef
+name|NPCI
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NPCI
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -103,6 +133,23 @@ name|NPCI
 operator|>
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The stallion pci driver requires the old pci compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
