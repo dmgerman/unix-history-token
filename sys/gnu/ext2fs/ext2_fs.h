@@ -2159,7 +2159,7 @@ begin_define
 define|#
 directive|define
 name|EXT2_FEATURE_RO_COMPAT_SUPP
-value|0
+value|EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER
 end_define
 
 begin_endif
