@@ -1,7 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: if_skreg.h,v 1.10 2003/08/12 05:23:06 nate Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1997, 1998, 1999, 2000  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 2003 Nathan L. Binkert<binkertn@umich.edu>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/* Values to keep the different chip revisions apart */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GENESIS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YUKON
+value|1
+end_define
 
 begin_comment
 comment|/*  * SysKonnect PCI vendor ID  */
@@ -10,19 +36,48 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SK_VENDORID
+name|VENDORID_SK
 value|0x1148
 end_define
 
 begin_comment
-comment|/*  * SK-NET gigabit ethernet device ID  */
+comment|/*  * SK-NET gigabit ethernet device IDs  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SK_DEVICEID_GE
+name|DEVICEID_SK_V1
 value|0x4300
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_SK_V2
+value|0x4320
+end_define
+
+begin_comment
+comment|/*  * 3Com PCI vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VENDORID_3COM
+value|0x10b7
+end_define
+
+begin_comment
+comment|/*  * 3Com gigabit ethernet device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_3COM_3C940
+value|0x1700
 end_define
 
 begin_comment
@@ -1542,6 +1597,28 @@ begin_comment
 comment|/* National DP83891 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SK_PHYTYPE_MARV_COPPER
+value|4
+end_define
+
+begin_comment
+comment|/* Marvell 88E1011S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PHYTYPE_MARV_FIBER
+value|5
+end_define
+
+begin_comment
+comment|/* Marvell 88E1011S (fiber) */
+end_comment
+
 begin_comment
 comment|/*  * PHY addresses.  */
 end_comment
@@ -1571,6 +1648,13 @@ begin_define
 define|#
 directive|define
 name|SK_PHYADDR_NAT
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_PHYADDR_MARV
 value|0x0
 end_define
 
@@ -4360,6 +4444,191 @@ value|0x3F
 end_define
 
 begin_comment
+comment|/* Receive MAC FIFO 1 (Yukon Only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RXMF1_END
+value|0x0C40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_RXMF1_THRESHOLD
+value|0x0C44
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_RXMF1_CTRL_TEST
+value|0x0C48
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_RXMF1_WRITE_PTR
+value|0x0C60
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_RXMF1_WRITE_LEVEL
+value|0x0C68
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_RXMF1_READ_PTR
+value|0x0C70
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_RXMF1_READ_LEVEL
+value|0x0C78
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_WR_PTR_TST_ON
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Write pointer test on*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_WR_PTR_TST_OFF
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Write pointer test off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_WR_PTR_STEP
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Write pointer increment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_RD_PTR_TST_ON
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Read pointer test on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_RD_PTR_TST_OFF
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Read pointer test off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_RD_PTR_STEP
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Read pointer increment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_RX_FIFO_OVER
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Clear IRQ RX FIFO Overrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_FRAME_RX_DONE
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Clear IRQ Frame RX Done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_OPERATION_ON
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Operational mode on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_OPERATION_OFF
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Operational mode off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_RESET_CLEAR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* MAC FIFO Reset Clear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_RFCTL_RESET_SET
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* MAC FIFO Reset Set */
+end_comment
+
+begin_comment
 comment|/* Block 25 -- RX MAC FIFO 2 regisrers and LINK_SYNC counter */
 end_comment
 
@@ -4732,6 +5001,216 @@ value|0x0D29
 end_define
 
 begin_comment
+comment|/* Receive MAC FIFO 1 (Yukon Only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_END
+value|0x0D40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_THRESHOLD
+value|0x0D44
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_CTRL_TEST
+value|0x0D48
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_WRITE_PTR
+value|0x0D60
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_WRITE_SHADOW
+value|0x0D64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_WRITE_LEVEL
+value|0x0D68
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_READ_PTR
+value|0x0D70
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_RESTART_PTR
+value|0x0D74
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TXMF1_READ_LEVEL
+value|0x0D78
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_WR_PTR_TST_ON
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Write pointer test on*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_WR_PTR_TST_OFF
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Write pointer test off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_WR_PTR_STEP
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Write pointer increment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_RD_PTR_TST_ON
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Read pointer test on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_RD_PTR_TST_OFF
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Read pointer test off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_RD_PTR_STEP
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Read pointer increment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_TX_FIFO_UNDER
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Clear IRQ TX FIFO Under */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_FRAME_TX_DONE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Clear IRQ Frame TX Done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_IRQ_PARITY_ER
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Clear IRQ Parity Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_OPERATION_ON
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Operational mode on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_OPERATION_OFF
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Operational mode off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_RESET_CLEAR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* MAC FIFO Reset Clear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_TFCTL_RESET_SET
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* MAC FIFO Reset Set */
+end_comment
+
+begin_comment
 comment|/* Block 27 -- TX MAC FIFO 2 regisrers  */
 end_comment
 
@@ -4974,6 +5453,883 @@ value|0x00000008
 end_define
 
 begin_comment
+comment|/* Block 28 -- Descriptor Poll Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_INIT
+value|0x0e00
+end_define
+
+begin_comment
+comment|/* Initial value 24 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TIMER
+value|0x0e04
+end_define
+
+begin_comment
+comment|/* Mul of 78.12MHz clk (24b) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TIMER_CTRL
+value|0x0e08
+end_define
+
+begin_comment
+comment|/* Timer Control 16 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TCTL_STOP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Stop Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TCTL_START
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Start Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TIMER_TEST
+value|0x0e0a
+end_define
+
+begin_comment
+comment|/* Timer Test 16 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TTEST_STEP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Timer Decrement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TTEST_OFF
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Test Mode Off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_DPT_TTEST_ON
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Test Mode On */
+end_comment
+
+begin_comment
+comment|/* Block 29 -- reserved */
+end_comment
+
+begin_comment
+comment|/* Block 30 -- GMAC/GPHY Control Registers (Yukon Only)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_CTRL
+value|0x0f00
+end_define
+
+begin_comment
+comment|/* GMAC Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_CTRL
+value|0x0f04
+end_define
+
+begin_comment
+comment|/* GPHY Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_ISR
+value|0x0f08
+end_define
+
+begin_comment
+comment|/* GMAC Interrupt Source Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_IMR
+value|0x0f08
+end_define
+
+begin_comment
+comment|/* GMAC Interrupt Mask Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_LINK_CTRL
+value|0x0f10
+end_define
+
+begin_comment
+comment|/* Link Control Register (LCR) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_WOL_CTRL
+value|0x0f20
+end_define
+
+begin_comment
+comment|/* Wake on LAN Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_MAC_ADDR_LOW
+value|0x0f24
+end_define
+
+begin_comment
+comment|/* Mack Address Registers LOW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_MAC_ADDR_HIGH
+value|0x0f28
+end_define
+
+begin_comment
+comment|/* Mack Address Registers HIGH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_READ_PTR
+value|0x0f2c
+end_define
+
+begin_comment
+comment|/* Pattern Read Pointer Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN_REG0
+value|0x0f30
+end_define
+
+begin_comment
+comment|/* Pattern Length Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN0
+value|0x0f30
+end_define
+
+begin_comment
+comment|/* Pattern Length 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN1
+value|0x0f31
+end_define
+
+begin_comment
+comment|/* Pattern Length 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN2
+value|0x0f32
+end_define
+
+begin_comment
+comment|/* Pattern Length 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN3
+value|0x0f33
+end_define
+
+begin_comment
+comment|/* Pattern Length 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN_REG1
+value|0x0f34
+end_define
+
+begin_comment
+comment|/* Pattern Length Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN4
+value|0x0f34
+end_define
+
+begin_comment
+comment|/* Pattern Length 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN5
+value|0x0f35
+end_define
+
+begin_comment
+comment|/* Pattern Length 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN6
+value|0x0f36
+end_define
+
+begin_comment
+comment|/* Pattern Length 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_LEN7
+value|0x0f37
+end_define
+
+begin_comment
+comment|/* Pattern Length 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR_REG0
+value|0x0f38
+end_define
+
+begin_comment
+comment|/* Pattern Counter Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR0
+value|0x0f38
+end_define
+
+begin_comment
+comment|/* Pattern Counter 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR1
+value|0x0f39
+end_define
+
+begin_comment
+comment|/* Pattern Counter 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR2
+value|0x0f3a
+end_define
+
+begin_comment
+comment|/* Pattern Counter 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR3
+value|0x0f3b
+end_define
+
+begin_comment
+comment|/* Pattern Counter 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR_REG1
+value|0x0f3c
+end_define
+
+begin_comment
+comment|/* Pattern Counter Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR4
+value|0x0f3c
+end_define
+
+begin_comment
+comment|/* Pattern Counter 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR5
+value|0x0f3d
+end_define
+
+begin_comment
+comment|/* Pattern Counter 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR6
+value|0x0f3e
+end_define
+
+begin_comment
+comment|/* Pattern Counter 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_PAT_CTR7
+value|0x0f3f
+end_define
+
+begin_comment
+comment|/* Pattern Counter 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_LOOP_ON
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Loopback mode for testing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_LOOP_OFF
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* purposes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_PAUSE_ON
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* enable forward of pause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_PAUSE_OFF
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* signal to GMAC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_RESET_CLEAR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Clear GMAC Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_RESET_SET
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Set GMAC Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_SEL_BDT
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Select Bidirectional xfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_INT_POL_HI
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* IRQ Polarity Active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_75_OHM
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Use 75 Ohm Termination */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_DIS_FC
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Disable Auto Fiber/Copper */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_DIS_SLEEP
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Disable Energy Detect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_HWCFG_M_3
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* HWCFG_MODE[3] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_HWCFG_M_2
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* HWCFG_MODE[2] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_HWCFG_M_1
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* HWCFG_MODE[1] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_HWCFG_M_0
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* HWCFG_MODE[0] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_ANEG_0
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* ANEG[0] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_ENA_XC
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Enable MDI Crossover */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_DIS_125
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Disable 125MHz Clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_ANEG_3
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* ANEG[3] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_ANEG_2
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* ANEG[2] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_ANEG_1
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* ANEG[1] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_ENA_PAUSE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Enable Pause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_PHYADDR_4
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Bit 4 of Phy Addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_PHYADDR_3
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Bit 3 of Phy Addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_PHYADDR_2
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Bit 2 of Phy Addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_PHYADDR_1
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Bit 1 of Phy Addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_PHYADDR_0
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Bit 0 of Phy Addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_RESET_CLEAR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Clear GPHY Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_RESET_SET
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Set GPHY Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_COPPER
+value|(SK_GPHY_HWCFG_M_0 | SK_GPHY_HWCFG_M_1 | \ 				 SK_GPHY_HWCFG_M_2 | SK_GPHY_HWCFG_M_3 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_FIBER
+value|(SK_GPHY_HWCFG_M_0 | SK_GPHY_HWCFG_M_1 | \ 				 SK_GPHY_HWCFG_M_2 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_GPHY_ANEG_ALL
+value|(SK_GPHY_ANEG_0 | SK_GPHY_ANEG_1 | \ 				 SK_GPHY_ANEG_2 | SK_GPHY_ANEG_3 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_INT_TX_OFLOW
+value|0x20
+end_define
+
+begin_comment
+comment|/* Transmit Counter Overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_INT_RX_OFLOW
+value|0x10
+end_define
+
+begin_comment
+comment|/* Receiver Overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_INT_TX_UNDER
+value|0x08
+end_define
+
+begin_comment
+comment|/* Transmit FIFO Underrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_INT_TX_DONE
+value|0x04
+end_define
+
+begin_comment
+comment|/* Transmit Complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_INT_RX_OVER
+value|0x02
+end_define
+
+begin_comment
+comment|/* Receive FIFO Overrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_GMAC_INT_RX_DONE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Receive Complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_LINK_RESET_CLEAR
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Link Reset Clear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_LINK_RESET_SET
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Link Reset Set */
+end_comment
+
+begin_comment
+comment|/* Block 31 -- reserved */
+end_comment
+
+begin_comment
+comment|/* Block 32-33 -- Pattern Ram */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_WOL_PRAM
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Block 0x22 - 0x3f -- reserved */
+end_comment
+
+begin_comment
 comment|/* Block 0x40 to 0x4F -- XMAC 1 registers */
 end_comment
 
@@ -4984,11 +6340,15 @@ name|SK_XMAC1_BASE
 value|0x2000
 end_define
 
+begin_comment
+comment|/* Block 0x50 to 0x5F -- MARV 1 registers */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|SK_XMAC1_END
-value|0x23FF
+name|SK_MARV1_BASE
+value|0x2800
 end_define
 
 begin_comment
@@ -5002,11 +6362,15 @@ name|SK_XMAC2_BASE
 value|0x3000
 end_define
 
+begin_comment
+comment|/* Block 0x70 to 0x7F -- MARV 2 registers */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|SK_XMAC2_END
-value|0x33FF
+name|SK_MARV2_BASE
+value|0x3800
 end_define
 
 begin_comment
@@ -5018,12 +6382,18 @@ define|#
 directive|define
 name|SK_XMAC_REG
 parameter_list|(
-name|reg
+name|sc
 parameter_list|,
-name|mac
+name|reg
 parameter_list|)
-value|(((reg) * 2) + SK_XMAC1_BASE + \ 	(mac * (SK_XMAC2_BASE - SK_XMAC1_BASE)))
+value|(((reg) * 2) + SK_XMAC1_BASE +		\ 	(((sc)->sk_port) * (SK_XMAC2_BASE - SK_XMAC1_BASE)))
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -5035,7 +6405,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|(sk_win_read_2(sc->sk_softc,				\ 	SK_XMAC_REG(reg, sc->sk_port))& 0xFFFF) |		\ 	((sk_win_read_2(sc->sk_softc,				\ 	SK_XMAC_REG(reg + 2, sc->sk_port))<< 16)& 0xFFFF0000)
+value|((sk_win_read_2(sc->sk_softc,					\ 	SK_XMAC_REG(sc, reg))& 0xFFFF) |				\ 	((sk_win_read_2(sc->sk_softc,					\ 	SK_XMAC_REG(sc, reg + 2))& 0xFFFF)<< 16))
 end_define
 
 begin_define
@@ -5050,8 +6420,46 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|sk_win_write_2(sc->sk_softc,				\ 	SK_XMAC_REG(reg, sc->sk_port), ((val)& 0xFFFF));	\ 	sk_win_write_2(sc->sk_softc,				\ 	SK_XMAC_REG(reg + 2, sc->sk_port), ((val)>> 16)& 0xFFFF);
+value|sk_win_write_2(sc->sk_softc, SK_XMAC_REG(sc, reg),		\ 	((val)& 0xFFFF));						\ 	sk_win_write_2(sc->sk_softc, SK_XMAC_REG(sc, reg + 2),		\ 	((val)>> 16)& 0xFFFF)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SK_XM_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|sk_win_read_4(sc->sk_softc, SK_XMAC_REG(sc, reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_XM_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|sk_win_write_4(sc->sk_softc, SK_XMAC_REG(sc, reg), (val))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -5063,7 +6471,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|sk_win_read_2(sc->sk_softc, SK_XMAC_REG(reg, sc->sk_port))
+value|sk_win_read_2(sc->sk_softc, SK_XMAC_REG(sc, reg))
 end_define
 
 begin_define
@@ -5078,7 +6486,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|sk_win_write_2(sc->sk_softc, SK_XMAC_REG(reg, sc->sk_port), val)
+value|sk_win_write_2(sc->sk_softc, SK_XMAC_REG(sc, reg), val)
 end_define
 
 begin_define
@@ -5139,6 +6547,139 @@ name|x
 parameter_list|)
 define|\
 value|SK_XM_WRITE_2(sc, reg, (SK_XM_READ_2(sc, reg))& ~(x))
+end_define
+
+begin_comment
+comment|/* Compute relative offset of an MARV register in the MARV window(s). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_YU_REG
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|((reg) + SK_MARV1_BASE + \ 	(((sc)->sk_port) * (SK_MARV2_BASE - SK_MARV1_BASE)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|sk_win_read_4((sc)->sk_softc, SK_YU_REG((sc), (reg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|sk_win_read_2((sc)->sk_softc, SK_YU_REG((sc), (reg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|sk_win_write_4((sc)->sk_softc, SK_YU_REG((sc), (reg)), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|sk_win_write_2((sc)->sk_softc, SK_YU_REG((sc), (reg)), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_SETBIT_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|SK_YU_WRITE_4(sc, reg, (SK_YU_READ_4(sc, reg)) | (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_CLRBIT_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|SK_YU_WRITE_4(sc, reg, (SK_YU_READ_4(sc, reg))& ~(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_SETBIT_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|SK_YU_WRITE_2(sc, reg, (SK_YU_READ_2(sc, reg)) | (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YU_CLRBIT_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|SK_YU_WRITE_2(sc, reg, (SK_YU_READ_2(sc, reg))& ~(x))
 end_define
 
 begin_comment
@@ -5529,7 +7070,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->sk_btag, sc->sk_bhandle, reg, val)
+value|bus_space_write_4((sc)->sk_btag, (sc)->sk_bhandle, (reg), (val))
 end_define
 
 begin_define
@@ -5544,7 +7085,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->sk_btag, sc->sk_bhandle, reg, val)
+value|bus_space_write_2((sc)->sk_btag, (sc)->sk_bhandle, (reg), (val))
 end_define
 
 begin_define
@@ -5559,7 +7100,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->sk_btag, sc->sk_bhandle, reg, val)
+value|bus_space_write_1((sc)->sk_btag, (sc)->sk_bhandle, (reg), (val))
 end_define
 
 begin_define
@@ -5572,7 +7113,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->sk_btag, sc->sk_bhandle, reg)
+value|bus_space_read_4((sc)->sk_btag, (sc)->sk_bhandle, (reg))
 end_define
 
 begin_define
@@ -5585,7 +7126,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(sc->sk_btag, sc->sk_bhandle, reg)
+value|bus_space_read_2((sc)->sk_btag, (sc)->sk_bhandle, (reg))
 end_define
 
 begin_define
@@ -5598,7 +7139,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->sk_btag, sc->sk_bhandle, reg)
+value|bus_space_read_1((sc)->sk_btag, (sc)->sk_bhandle, (reg))
 end_define
 
 begin_struct
