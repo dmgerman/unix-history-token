@@ -1647,6 +1647,21 @@ name|cmd
 init|=
 name|bootcmds
 decl_stmt|;
+while|while
+condition|(
+operator|*
+name|buf
+operator|==
+literal|' '
+operator|||
+operator|*
+name|buf
+operator|==
+literal|'\t'
+condition|)
+name|buf
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1722,6 +1737,13 @@ operator|*
 name|p
 operator|==
 literal|' '
+operator|)
+operator|||
+operator|(
+operator|*
+name|p
+operator|==
+literal|'\t'
 operator|)
 operator|||
 operator|(
