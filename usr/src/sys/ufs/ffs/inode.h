@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -456,59 +456,6 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|((ip)->i_vnode)
-end_define
-
-begin_comment
-comment|/* Convert between vnode types and inode formats. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|vtype
-name|iftovt_tab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vttoif_tab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IFTOVT
-parameter_list|(
-name|mode
-parameter_list|)
-value|(iftovt_tab[((mode)& IFMT)>> 12])
-end_define
-
-begin_define
-define|#
-directive|define
-name|VTTOIF
-parameter_list|(
-name|indx
-parameter_list|)
-value|(vttoif_tab[(int)(indx)])
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAKEIMODE
-parameter_list|(
-name|indx
-parameter_list|,
-name|mode
-parameter_list|)
-value|(int)(VTTOIF(indx) | (mode))
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.75 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.76 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -168,79 +168,6 @@ name|proc
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|enum
-name|vtype
-name|iftovt_tab
-index|[
-literal|16
-index|]
-init|=
-block|{
-name|VNON
-block|,
-name|VFIFO
-block|,
-name|VCHR
-block|,
-name|VNON
-block|,
-name|VDIR
-block|,
-name|VNON
-block|,
-name|VBLK
-block|,
-name|VNON
-block|,
-name|VREG
-block|,
-name|VNON
-block|,
-name|VLNK
-block|,
-name|VNON
-block|,
-name|VSOCK
-block|,
-name|VNON
-block|,
-name|VNON
-block|,
-name|VBAD
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vttoif_tab
-index|[
-literal|9
-index|]
-init|=
-block|{
-literal|0
-block|,
-name|IFREG
-block|,
-name|IFDIR
-block|,
-name|IFBLK
-block|,
-name|IFCHR
-block|,
-name|IFLNK
-block|,
-name|IFSOCK
-block|,
-name|IFIFO
-block|,
-name|IFMT
-block|, }
 decl_stmt|;
 end_decl_stmt
 
