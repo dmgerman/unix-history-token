@@ -161,6 +161,9 @@ name|c
 decl_stmt|,
 name|r
 decl_stmt|;
+name|time_t
+name|t
+decl_stmt|;
 name|yp_get_default_domain
 argument_list|(
 operator|&
@@ -264,6 +267,13 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|t
+operator|=
+name|int_to_time
+argument_list|(
+name|order
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Map %s has order number %d. %s"
@@ -274,12 +284,8 @@ name|order
 argument_list|,
 name|ctime
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
 operator|&
-name|order
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
