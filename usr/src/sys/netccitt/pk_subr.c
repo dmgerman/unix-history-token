@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -209,6 +209,18 @@ operator|&
 name|pklcd_q
 argument_list|)
 expr_stmt|;
+name|lcp
+operator|->
+name|lcd_state
+operator|=
+name|READY
+expr_stmt|;
+name|lcp
+operator|->
+name|lcd_send
+operator|=
+name|pk_output
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -245,13 +257,6 @@ name|lcd_state
 operator|=
 name|LISTEN
 expr_stmt|;
-else|else
-name|lcp
-operator|->
-name|lcd_state
-operator|=
-name|READY
-expr_stmt|;
 block|}
 else|else
 name|sbreserve
@@ -286,12 +291,6 @@ operator|=
 name|error
 expr_stmt|;
 block|}
-name|lcp
-operator|->
-name|lcd_send
-operator|=
-name|pk_output
-expr_stmt|;
 return|return
 operator|(
 name|lcp
@@ -601,6 +600,12 @@ name|max_linkhdr
 expr_stmt|;
 name|m
 operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|m
+operator|->
 name|m_len
 operator|=
 name|PKHEADERLN
@@ -827,6 +832,12 @@ argument_list|,
 name|X25_RESTART
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
 name|m
 operator|->
 name|m_len
@@ -2070,6 +2081,12 @@ literal|0xf0
 expr_stmt|;
 name|m
 operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|m
+operator|->
 name|m_len
 operator|+=
 name|cp
@@ -2936,6 +2953,12 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|m
+operator|->
 name|m_len
 operator|+=
 literal|2
@@ -3371,24 +3394,6 @@ condition|)
 name|sowwakeup
 argument_list|(
 name|so
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lcp
-operator|->
-name|lcd_upper
-condition|)
-call|(
-modifier|*
-name|lcp
-operator|->
-name|lcd_upper
-call|)
-argument_list|(
-name|lcp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -4013,6 +4018,12 @@ operator|=
 literal|5
 expr_stmt|;
 comment|/* EXRNCG */
+if|if
+condition|(
+name|lcp
+operator|->
+name|lcd_so
+condition|)
 name|lcp
 operator|->
 name|lcd_so
@@ -4325,7 +4336,9 @@ name|m
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|m
