@@ -511,6 +511,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 specifier|inline
 name|void
 name|write_csr
@@ -553,6 +554,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|u_short
 name|read_csr
