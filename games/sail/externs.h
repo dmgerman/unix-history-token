@@ -1133,6 +1133,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|scenario
 name|scene
@@ -1212,6 +1213,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|shipspecs
 name|specs
@@ -1397,6 +1399,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|countryname
@@ -1405,6 +1408,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|classname
@@ -1413,6 +1417,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|directionname
@@ -1421,6 +1426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|qualname
@@ -1429,6 +1435,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|loadname
 index|[]
@@ -1436,6 +1443,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|rangeofshot
 index|[]
@@ -1443,6 +1451,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|dr
 index|[]

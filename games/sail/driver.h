@@ -10,6 +10,7 @@ file|"externs.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|dtab
 index|[]
