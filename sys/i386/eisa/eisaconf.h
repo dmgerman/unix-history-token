@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus device definitions  *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.h,v 1.6 1995/11/21 12:52:49 bde Exp $  */
+comment|/*  * EISA bus device definitions  *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.h,v 1.8 1996/01/30 22:53:51 mpp Exp $  */
 end_comment
 
 begin_ifndef
@@ -16,6 +16,12 @@ name|_I386_EISA_EISACONF_H_
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -26,6 +32,13 @@ end_define
 begin_comment
 comment|/* PCI clashes with higher ones.. fix later */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EISA_SLOT_SIZE
+value|0x1000
+end_define
 
 begin_define
 define|#
@@ -121,14 +134,61 @@ end_decl_stmt
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int32_t
 name|eisa_id_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Should use u_int32? */
-end_comment
+begin_typedef
+typedef|typedef
+struct|struct
+name|resvaddr
+block|{
+name|u_long
+name|addr
+decl_stmt|;
+comment|/* start address */
+name|u_long
+name|size
+decl_stmt|;
+comment|/* size of reserved area */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|RESVADDR_NONE
+value|0x00
+define|#
+directive|define
+name|RESVADDR_BITMASK
+value|0x01
+comment|/* size is a mask of reserved  						 * bits at addr 						 */
+define|#
+directive|define
+name|RESVADDR_RELOCATABLE
+value|0x02
+name|LIST_ENTRY
+argument_list|(
+argument|resvaddr
+argument_list|)
+name|links
+expr_stmt|;
+comment|/* List links */
+block|}
+name|resvaddr_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|resvlist
+argument_list|,
+name|resvaddr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -137,26 +197,20 @@ block|{
 name|int
 name|slot
 decl_stmt|;
-name|u_long
-name|iobase
+name|struct
+name|resvlist
+name|ioaddrs
 decl_stmt|;
-comment|/* base i/o address */
-name|int
-name|iosize
+comment|/* list of reserved I/O ranges */
+name|struct
+name|resvlist
+name|maddrs
 decl_stmt|;
-comment|/* size of i/o space */
+comment|/* list of reserved memory ranges */
 name|u_short
 name|irq
 decl_stmt|;
-comment|/* interrupt request */
-name|caddr_t
-name|maddr
-decl_stmt|;
-comment|/* physical i/o memory address on bus (if any)*/
-name|int
-name|msize
-decl_stmt|;
-comment|/* size of i/o memory */
+comment|/* bitmask of interrupt */
 block|}
 struct|;
 end_struct
@@ -228,7 +282,7 @@ name|u_long
 modifier|*
 name|unit
 decl_stmt|;
-comment|/* Next availible unit */
+comment|/* Next available unit */
 block|}
 struct|;
 end_struct
@@ -437,6 +491,8 @@ operator|*
 operator|,
 name|u_long
 operator|,
+name|u_long
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -453,9 +509,45 @@ expr|struct
 name|eisa_device
 operator|*
 operator|,
+name|resvaddr_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|eisa_add_mspace
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|eisa_device
+operator|*
+operator|,
+name|u_long
+operator|,
 name|u_long
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|eisa_reg_mspace
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|eisa_device
+operator|*
+operator|,
+name|resvaddr_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -489,48 +581,33 @@ name|sysctl_req
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-name|int
-name|eisa_externalize
-parameter_list|(
-name|struct
-name|eisa_device
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-name|userp
-parameter_list|,
-name|size_t
-modifier|*
-name|maxlen
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
+specifier|extern
 name|int
 name|eisa_generic_externalize
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|proc
-modifier|*
+operator|*
 name|p
-parameter_list|,
-name|struct
+operator|,
+expr|struct
 name|kern_devconf
-modifier|*
+operator|*
 name|kdc
-parameter_list|,
+operator|,
 name|void
-modifier|*
+operator|*
 name|userp
-parameter_list|,
+operator|,
 name|size_t
 name|l
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

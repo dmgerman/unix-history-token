@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.20 1995/12/14 23:23:48 bde Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.26 1996/03/31 03:04:38 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -112,6 +112,13 @@ end_define
 begin_comment
 comment|/* BIOS disabled*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_EISA_SLOT_OFFSET
+value|0xc00
+end_define
 
 begin_define
 define|#
@@ -364,11 +371,17 @@ condition|)
 block|{
 name|iobase
 operator|=
+operator|(
 name|e_dev
 operator|->
 name|ioconf
 operator|.
-name|iobase
+name|slot
+operator|*
+name|EISA_SLOT_SIZE
+operator|)
+operator|+
+name|AHC_EISA_SLOT_OFFSET
 expr_stmt|;
 name|ahc_reset
 argument_list|(
@@ -382,6 +395,8 @@ argument_list|,
 name|iobase
 argument_list|,
 name|AHC_EISA_IOSIZE
+argument_list|,
+name|RESVADDR_NONE
 argument_list|)
 expr_stmt|;
 name|intdef
@@ -540,6 +555,10 @@ name|ahc_data
 modifier|*
 name|ahc
 decl_stmt|;
+name|resvaddr_t
+modifier|*
+name|iospace
+decl_stmt|;
 name|u_long
 name|iobase
 decl_stmt|;
@@ -564,6 +583,31 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
+name|iospace
+operator|=
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|ioaddrs
+operator|.
+name|lh_first
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|iospace
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|iobase
+operator|=
+name|iospace
+operator|->
+name|addr
+expr_stmt|;
 switch|switch
 condition|(
 name|e_dev
@@ -620,11 +664,9 @@ name|ahc_alloc
 argument_list|(
 name|unit
 argument_list|,
-name|e_dev
+name|iospace
 operator|->
-name|ioconf
-operator|.
-name|iobase
+name|addr
 argument_list|,
 name|type
 argument_list|,
@@ -647,13 +689,7 @@ name|eisa_reg_iospace
 argument_list|(
 name|e_dev
 argument_list|,
-name|e_dev
-operator|->
-name|ioconf
-operator|.
-name|iobase
-argument_list|,
-name|AHC_EISA_IOSIZE
+name|iospace
 argument_list|)
 condition|)
 block|{
@@ -676,7 +712,7 @@ name|e_dev
 argument_list|,
 name|irq
 argument_list|,
-name|ahc_eisa_intr
+name|ahc_intr
 argument_list|,
 operator|(
 name|void
@@ -743,14 +779,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now that we know we own the resources we need, do the  	 * card initialization. 	 */
-name|iobase
-operator|=
-name|ahc
-operator|->
-name|baseport
-expr_stmt|;
-comment|/* 	 * First, the aic7770 card specific setup. 	 */
+comment|/* 	 * Now that we know we own the resources we need, do the  	 * card initialization. 	 * 	 * First, the aic7770 card specific setup. 	 */
 switch|switch
 condition|(
 name|ahc
@@ -887,13 +916,6 @@ name|id_string
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Only four SCBs on these cards.  If we ever do SCB paging, 	 * we could support 255 on the Rev E cards. 	 */
-name|ahc
-operator|->
-name|maxscbs
-operator|=
-literal|0x4
-expr_stmt|;
 comment|/* Setup the FIFO threshold and the bus off time */
 if|if
 condition|(
@@ -983,7 +1005,7 @@ name|e_dev
 argument_list|,
 name|irq
 argument_list|,
-name|ahc_eisa_intr
+name|ahc_intr
 argument_list|)
 expr_stmt|;
 return|return
@@ -1023,7 +1045,7 @@ name|e_dev
 argument_list|,
 name|irq
 argument_list|,
-name|ahc_eisa_intr
+name|ahc_intr
 argument_list|)
 expr_stmt|;
 return|return

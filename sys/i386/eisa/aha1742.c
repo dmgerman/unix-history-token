@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.45 1995/12/14 23:26:53 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.50 1996/01/31 18:02:16 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -46,13 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
+file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -71,6 +65,18 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsiconf.h>
 end_include
 
 begin_include
@@ -117,24 +123,6 @@ end_endif
 begin_comment
 comment|/*KERNEL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
 
 begin_comment
 comment|/*
@@ -286,6 +274,13 @@ define|#
 directive|define
 name|AHB_EISA_IOSIZE
 value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHB_EISA_SLOT_OFFSET
+value|0xc00
 end_define
 
 begin_comment
@@ -1094,7 +1089,6 @@ struct|;
 end_struct
 
 begin_struct
-specifier|static
 struct|struct
 name|ahb_data
 block|{
@@ -1145,17 +1139,12 @@ name|int
 name|numecbs
 decl_stmt|;
 block|}
-modifier|*
-name|ahbdata
-index|[
-name|NAHB
-index|]
 struct|;
 end_struct
 
 begin_decl_stmt
 specifier|static
-name|u_int32
+name|u_int32_t
 name|ahb_adapter_info
 name|__P
 argument_list|(
@@ -1228,8 +1217,10 @@ name|ahb_done
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|,
 expr|struct
 name|ecb
@@ -1266,8 +1257,10 @@ name|ahb_free_ecb
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|,
 expr|struct
 name|ecb
@@ -1290,8 +1283,10 @@ name|ahb_get_ecb
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|,
 name|int
 name|flags
@@ -1328,8 +1323,10 @@ name|ahb_init
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1388,8 +1385,10 @@ name|ahb_poll
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|,
 name|int
 name|wait
@@ -1411,8 +1410,10 @@ name|ahb_print_active_ecb
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1468,7 +1469,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int32
+name|int32_t
 name|ahb_scsi_cmd
 name|__P
 argument_list|(
@@ -1489,8 +1490,10 @@ name|ahb_send_immed
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|,
 name|int
 name|target
@@ -1509,8 +1512,10 @@ name|ahb_send_mbox
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ahb_data
+operator|*
+name|ahb
 operator|,
 name|int
 name|opcode
@@ -1826,8 +1831,10 @@ specifier|static
 name|void
 name|ahb_send_mbox
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|ahb_data
+modifier|*
+name|ahb
 parameter_list|,
 name|int
 name|opcode
@@ -1844,10 +1851,7 @@ block|{
 name|int
 name|port
 init|=
-name|ahbdata
-index|[
-name|unit
-index|]
+name|ahb
 operator|->
 name|baseport
 decl_stmt|;
@@ -1913,6 +1917,8 @@ name|printf
 argument_list|(
 literal|"ahb%d: board not responding\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -1966,24 +1972,16 @@ specifier|static
 name|int
 name|ahb_poll
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|ahb_data
+modifier|*
+name|ahb
 parameter_list|,
 name|int
 name|wait
 parameter_list|)
 block|{
 comment|/* in msec  */
-name|struct
-name|ahb_data
-modifier|*
-name|ahb
-init|=
-name|ahbdata
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|int
 name|port
 init|=
@@ -2033,6 +2031,8 @@ name|printf
 argument_list|(
 literal|"ahb%d: board not responding\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -2116,8 +2116,10 @@ specifier|static
 name|void
 name|ahb_send_immed
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|ahb_data
+modifier|*
+name|ahb
 parameter_list|,
 name|int
 name|target
@@ -2129,10 +2131,7 @@ block|{
 name|int
 name|port
 init|=
-name|ahbdata
-index|[
-name|unit
-index|]
+name|ahb
 operator|->
 name|baseport
 decl_stmt|;
@@ -2198,6 +2197,8 @@ name|printf
 argument_list|(
 literal|"ahb%d: board not responding\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -2333,11 +2334,17 @@ condition|)
 block|{
 name|iobase
 operator|=
+operator|(
 name|e_dev
 operator|->
 name|ioconf
 operator|.
-name|iobase
+name|slot
+operator|*
+name|EISA_SLOT_SIZE
+operator|)
+operator|+
+name|AHB_EISA_SLOT_OFFSET
 expr_stmt|;
 name|eisa_add_iospace
 argument_list|(
@@ -2346,6 +2353,8 @@ argument_list|,
 name|iobase
 argument_list|,
 name|AHB_EISA_IOSIZE
+argument_list|,
+name|RESVADDR_NONE
 argument_list|)
 expr_stmt|;
 name|intdef
@@ -2489,44 +2498,7 @@ name|ahb_data
 modifier|*
 name|ahb
 decl_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NAHB
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ahb: unit number (%d) too high\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 comment|/* 	 * Allocate a storage area for us 	 */
-if|if
-condition|(
-name|ahbdata
-index|[
-name|unit
-index|]
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ahb%d: memory already allocated\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|ahb
 operator|=
 name|malloc
@@ -2570,13 +2542,6 @@ name|ahb_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ahbdata
-index|[
-name|unit
-index|]
-operator|=
-name|ahb
-expr_stmt|;
 name|ahb
 operator|->
 name|unit
@@ -2616,15 +2581,6 @@ modifier|*
 name|ahb
 decl_stmt|;
 block|{
-name|ahbdata
-index|[
-name|ahb
-operator|->
-name|unit
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 name|free
 argument_list|(
 name|ahb
@@ -2874,6 +2830,10 @@ name|ahb_data
 modifier|*
 name|ahb
 decl_stmt|;
+name|resvaddr_t
+modifier|*
+name|iospace
+decl_stmt|;
 name|int
 name|irq
 init|=
@@ -2888,17 +2848,34 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
+name|iospace
+operator|=
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|ioaddrs
+operator|.
+name|lh_first
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|iospace
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 operator|!
 operator|(
 name|ahb_reset
 argument_list|(
-name|e_dev
+name|iospace
 operator|->
-name|ioconf
-operator|.
-name|iobase
+name|addr
 argument_list|)
 operator|)
 condition|)
@@ -2917,13 +2894,7 @@ name|eisa_reg_iospace
 argument_list|(
 name|e_dev
 argument_list|,
-name|e_dev
-operator|->
-name|ioconf
-operator|.
-name|iobase
-argument_list|,
-name|AHB_EISA_IOSIZE
+name|iospace
 argument_list|)
 condition|)
 block|{
@@ -2947,11 +2918,9 @@ name|ahb_alloc
 argument_list|(
 name|unit
 argument_list|,
-name|e_dev
+name|iospace
 operator|->
-name|ioconf
-operator|.
-name|iobase
+name|addr
 argument_list|,
 name|irq
 argument_list|)
@@ -3022,7 +2991,7 @@ if|if
 condition|(
 name|ahb_init
 argument_list|(
-name|unit
+name|ahb
 argument_list|)
 condition|)
 block|{
@@ -3091,13 +3060,6 @@ modifier|*
 name|ahb
 decl_stmt|;
 block|{
-name|int
-name|unit
-init|=
-name|ahb
-operator|->
-name|unit
-decl_stmt|;
 name|struct
 name|scsibus_data
 modifier|*
@@ -3110,6 +3072,8 @@ name|sc_link
 operator|.
 name|adapter_unit
 operator|=
+name|ahb
+operator|->
 name|unit
 expr_stmt|;
 name|ahb
@@ -3121,6 +3085,14 @@ operator|=
 name|ahb
 operator|->
 name|our_id
+expr_stmt|;
+name|ahb
+operator|->
+name|sc_link
+operator|.
+name|adapter_softc
+operator|=
+name|ahb
 expr_stmt|;
 name|ahb
 operator|->
@@ -3181,7 +3153,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32
+name|u_int32_t
 name|ahb_adapter_info
 parameter_list|(
 name|unit
@@ -3253,12 +3225,6 @@ name|ahb_data
 operator|*
 operator|)
 name|arg
-expr_stmt|;
-name|unit
-operator|=
-name|ahb
-operator|->
-name|unit
 expr_stmt|;
 name|port
 operator|=
@@ -3416,6 +3382,8 @@ argument_list|(
 literal|"ahb%d: "
 literal|"Unexpected ASN interrupt(0x%lx)\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|,
 name|mboxval
@@ -3434,6 +3402,8 @@ argument_list|(
 literal|"ahb%d: "
 literal|"Hardware error interrupt(0x%lx)\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|,
 name|mboxval
@@ -3475,6 +3445,8 @@ name|printf
 argument_list|(
 literal|" Unknown return from ahb%d(%x)\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|,
 name|ahbstat
@@ -3541,7 +3513,7 @@ argument_list|)
 expr_stmt|;
 name|ahb_done
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|ecb
 argument_list|,
@@ -3572,15 +3544,18 @@ specifier|static
 name|void
 name|ahb_done
 parameter_list|(
-name|unit
+name|ahb
 parameter_list|,
 name|ecb
 parameter_list|,
 name|state
 parameter_list|)
+name|struct
+name|ahb_data
+modifier|*
+name|ahb
+decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|state
 decl_stmt|;
 name|struct
@@ -3883,7 +3858,7 @@ name|ITSDONE
 expr_stmt|;
 name|ahb_free_ecb
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|ecb
 argument_list|,
@@ -3909,15 +3884,18 @@ specifier|static
 name|void
 name|ahb_free_ecb
 parameter_list|(
-name|unit
+name|ahb
 parameter_list|,
 name|ecb
 parameter_list|,
 name|flags
 parameter_list|)
+name|struct
+name|ahb_data
+modifier|*
+name|ahb
+decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|flags
 decl_stmt|;
 name|struct
@@ -3931,16 +3909,6 @@ name|int
 name|opri
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|ahb_data
-modifier|*
-name|ahb
-init|=
-name|ahbdata
-index|[
-name|unit
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -4025,26 +3993,19 @@ name|ecb
 modifier|*
 name|ahb_get_ecb
 parameter_list|(
-name|unit
+name|ahb
 parameter_list|,
 name|flags
 parameter_list|)
-name|int
-name|unit
-decl_stmt|,
-name|flags
-decl_stmt|;
-block|{
 name|struct
 name|ahb_data
 modifier|*
 name|ahb
-init|=
-name|ahbdata
-index|[
-name|unit
-index|]
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|{
 name|unsigned
 name|opri
 init|=
@@ -4178,6 +4139,8 @@ name|printf
 argument_list|(
 literal|"ahb%d: Can't malloc ECB\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -4332,24 +4295,16 @@ specifier|static
 name|int
 name|ahb_init
 parameter_list|(
-name|unit
+name|ahb
 parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
-name|u_char
-name|intdef
-decl_stmt|;
 name|struct
 name|ahb_data
 modifier|*
 name|ahb
-init|=
-name|ahbdata
-index|[
-name|unit
-index|]
+decl_stmt|;
+block|{
+name|u_char
+name|intdef
 decl_stmt|;
 name|int
 name|port
@@ -4494,7 +4449,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int32
+name|int32_t
 name|ahb_scsi_cmd
 parameter_list|(
 name|xs
@@ -4528,15 +4483,6 @@ decl_stmt|,
 name|nextphys
 decl_stmt|;
 name|int
-name|unit
-init|=
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|adapter_unit
-decl_stmt|;
-name|int
 name|bytes_this_seg
 decl_stmt|,
 name|bytes_this_page
@@ -4549,15 +4495,23 @@ name|struct
 name|ahb_data
 modifier|*
 name|ahb
-init|=
-name|ahbdata
-index|[
-name|unit
-index|]
 decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|ahb
+operator|=
+operator|(
+expr|struct
+name|ahb_data
+operator|*
+operator|)
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_softc
+expr_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|xs
@@ -4602,6 +4556,8 @@ name|printf
 argument_list|(
 literal|"ahb%d: Already done?"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -4627,6 +4583,8 @@ name|printf
 argument_list|(
 literal|"ahb%d: Not in use?"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -4645,7 +4603,7 @@ name|ecb
 operator|=
 name|ahb_get_ecb
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|flags
 argument_list|)
@@ -4739,7 +4697,7 @@ argument_list|()
 expr_stmt|;
 name|ahb_send_immed
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|xs
 operator|->
@@ -4785,7 +4743,7 @@ else|else
 block|{
 name|ahb_send_immed
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|xs
 operator|->
@@ -4814,7 +4772,7 @@ if|if
 condition|(
 name|ahb_poll
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|xs
 operator|->
@@ -4824,7 +4782,7 @@ condition|)
 block|{
 name|ahb_free_ecb
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|ecb
 argument_list|,
@@ -5331,6 +5289,8 @@ name|printf
 argument_list|(
 literal|"ahb_scsi_cmd%d: more than %d DMA segs\n"
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|,
 name|AHB_NSEG
@@ -5344,7 +5304,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 name|ahb_free_ecb
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|ecb
 argument_list|,
@@ -5420,7 +5380,7 @@ argument_list|()
 expr_stmt|;
 name|ahb_send_mbox
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|OP_START_ECB
 argument_list|,
@@ -5480,7 +5440,7 @@ block|}
 comment|/* 	 * If we can't use interrupts, poll on completion 	 */
 name|ahb_send_mbox
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|OP_START_ECB
 argument_list|,
@@ -5512,7 +5472,7 @@ if|if
 condition|(
 name|ahb_poll
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|xs
 operator|->
@@ -5538,7 +5498,7 @@ argument_list|)
 expr_stmt|;
 name|ahb_send_mbox
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|OP_ABORT_ECB
 argument_list|,
@@ -5555,7 +5515,7 @@ if|if
 condition|(
 name|ahb_poll
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 literal|2000
 argument_list|)
@@ -5568,7 +5528,7 @@ argument_list|)
 expr_stmt|;
 name|ahb_free_ecb
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|ecb
 argument_list|,
@@ -5645,9 +5605,6 @@ operator|*
 operator|)
 name|arg1
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
 name|struct
 name|ahb_data
 modifier|*
@@ -5659,7 +5616,7 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
-name|unit
+name|ahb
 operator|=
 name|ecb
 operator|->
@@ -5667,19 +5624,14 @@ name|xs
 operator|->
 name|sc_link
 operator|->
-name|adapter_unit
-expr_stmt|;
-name|ahb
-operator|=
-name|ahbdata
-index|[
-name|unit
-index|]
+name|adapter_softc
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"ahb%d:%d:%d (%s%d) timed out "
 argument_list|,
+name|ahb
+operator|->
 name|unit
 argument_list|,
 name|ecb
@@ -5728,7 +5680,7 @@ name|AHB_SHOWECBS
 condition|)
 name|ahb_print_active_ecb
 argument_list|(
-name|unit
+name|ahb
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5761,7 +5713,7 @@ name|ECB_IMMED_FAIL
 expr_stmt|;
 name|ahb_done
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|ecb
 argument_list|,
@@ -5810,7 +5762,7 @@ name|HS_CMD_ABORTED_HOST
 expr_stmt|;
 name|ahb_done
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|ecb
 argument_list|,
@@ -5828,7 +5780,7 @@ argument_list|)
 expr_stmt|;
 name|ahb_send_mbox
 argument_list|(
-name|unit
+name|ahb
 argument_list|,
 name|OP_ABORT_ECB
 argument_list|,
@@ -5951,20 +5903,14 @@ specifier|static
 name|void
 name|ahb_print_active_ecb
 parameter_list|(
-name|int
-name|unit
+name|ahb
 parameter_list|)
-block|{
 name|struct
 name|ahb_data
 modifier|*
 name|ahb
-init|=
-name|ahbdata
-index|[
-name|unit
-index|]
 decl_stmt|;
+block|{
 name|struct
 name|ecb
 modifier|*
