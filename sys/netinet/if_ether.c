@@ -2442,14 +2442,18 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* 	 * If ARP is disabled on this interface, stop. 	 * XXX 	 * Probably should not allocate empty llinfo struct if we are 	 * not going to be sending out an arp request. 	 */
+comment|/* 	 * If ARP is disabled or static on this interface, stop. 	 * XXX 	 * Probably should not allocate empty llinfo struct if we are 	 * not going to be sending out an arp request. 	 */
 if|if
 condition|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
+operator|(
 name|IFF_NOARP
+operator||
+name|IFF_STATICARP
+operator|)
 condition|)
 block|{
 name|m_freem
@@ -3381,6 +3385,17 @@ goto|goto
 name|reply
 goto|;
 block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_STATICARP
+condition|)
+goto|goto
+name|reply
+goto|;
 name|la
 operator|=
 name|arplookup

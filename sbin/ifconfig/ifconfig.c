@@ -1368,6 +1368,23 @@ block|,
 name|setifflags
 block|}
 block|,
+block|{
+literal|"staticarp"
+block|,
+name|IFF_STATICARP
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"-staticarp"
+block|,
+operator|-
+name|IFF_STATICARP
+block|,
+name|setifflags
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|USE_IF_MEDIA
@@ -5795,7 +5812,7 @@ define|#
 directive|define
 name|IFFBITS
 define|\
-value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6SMART\7RUNNING" \ "\10NOARP\11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LINK0\16LINK1\17LINK2" \ "\20MULTICAST\023MONITOR"
+value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6SMART\7RUNNING" \ "\10NOARP\11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LINK0\16LINK1\17LINK2" \ "\20MULTICAST\023MONITOR\024STATICARP"
 end_define
 
 begin_define

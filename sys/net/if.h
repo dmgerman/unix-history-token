@@ -575,6 +575,17 @@ begin_comment
 comment|/* user-requested monitor mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_STATICARP
+value|0x80000
+end_define
+
+begin_comment
+comment|/* static ARP */
+end_comment
+
 begin_comment
 comment|/* flags set internally only: */
 end_comment
