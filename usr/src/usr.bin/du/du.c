@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)du.c	4.1 (Berkeley) %G%"
+literal|"@(#)du.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -532,7 +532,6 @@ name|linked
 expr_stmt|;
 block|}
 block|}
-comment|/* 	blocks = (Statb.st_size + BSIZE-1)>> BSHIFT; */
 name|blocks
 operator|=
 operator|(
@@ -540,10 +539,12 @@ name|Statb
 operator|.
 name|st_size
 operator|+
-literal|511
+literal|1023
+operator|-
+literal|1
 operator|)
 operator|>>
-literal|9
+literal|10
 expr_stmt|;
 if|if
 condition|(
