@@ -8656,8 +8656,7 @@ name|secpertrk
 decl_stmt|,
 name|secpercyl
 decl_stmt|;
-name|char
-modifier|*
+name|vm_paddr_t
 name|addr
 decl_stmt|;
 comment|/* Toss any characters present prior to dump. */
@@ -8927,10 +8926,6 @@ name|DKFL_SINGLE
 expr_stmt|;
 name|addr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 literal|0
 expr_stmt|;
 name|blknum
@@ -9139,9 +9134,6 @@ if|if
 condition|(
 name|is_physical_memory
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
 name|addr
 argument_list|)
 condition|)
@@ -9151,9 +9143,6 @@ name|pmap_kenter_temporary
 argument_list|(
 name|trunc_page
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
 name|addr
 argument_list|)
 argument_list|,

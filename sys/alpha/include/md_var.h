@@ -143,7 +143,7 @@ name|is_physical_memory
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 operator|)
 argument_list|)

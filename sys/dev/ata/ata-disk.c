@@ -1770,7 +1770,7 @@ name|blkno
 decl_stmt|,
 name|secsize
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 init|=
 literal|0
@@ -1894,7 +1894,7 @@ operator|++
 name|i
 control|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|a
 init|=
 name|addr

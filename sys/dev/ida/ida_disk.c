@@ -767,7 +767,7 @@ decl_stmt|;
 name|caddr_t
 name|va
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 decl_stmt|,
 name|a

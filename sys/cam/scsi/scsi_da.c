@@ -2970,7 +2970,7 @@ decl_stmt|;
 name|long
 name|blkcnt
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 decl_stmt|;
 name|struct
@@ -3143,7 +3143,7 @@ operator|++
 name|i
 control|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|a
 init|=
 name|addr

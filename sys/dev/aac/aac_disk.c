@@ -809,7 +809,7 @@ name|aac_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 decl_stmt|;
 name|long
@@ -940,7 +940,7 @@ operator|++
 name|i
 control|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|a
 init|=
 name|addr

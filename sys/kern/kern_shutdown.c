@@ -2108,7 +2108,7 @@ begin_function
 name|int
 name|dumpstatus
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 parameter_list|,
 name|off_t
