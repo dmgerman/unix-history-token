@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: apm.c,v 1.10 1997/09/02 06:36:39 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,7 +712,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
 literal|"can't open %s"
 argument_list|,
