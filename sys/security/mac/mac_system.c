@@ -317,6 +317,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Has the kernel started generating labeled objects yet?  All read/write  * access to this variable is serialized during the boot process.  Following  * the end of serialization, we don't update this flag; no locking.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
