@@ -2411,24 +2411,11 @@ operator|&=
 operator|~
 name|CBB_16BIT_CARD
 expr_stmt|;
-if|if
-condition|(
 name|CARD_ATTACH_CARD
 argument_list|(
 name|sc
 operator|->
 name|cbdev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"CardBus card activation failed\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -690,6 +690,14 @@ block|,
 name|CB_O2MICRO
 block|}
 block|,
+block|{
+name|PCIC_ID_OZ711M1
+block|,
+literal|"O2Micro OZ711M1 PCI-CardBus Bridge"
+block|,
+name|CB_O2MICRO
+block|}
+block|,
 comment|/* sentinel */
 block|{
 literal|0
