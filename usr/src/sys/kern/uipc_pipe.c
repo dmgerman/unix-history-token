@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.4	81/11/21	*/
+comment|/*	uipc_pipe.c	4.5	81/11/21	*/
 end_comment
 
 begin_include
@@ -86,6 +86,8 @@ block|,
 literal|0
 block|,
 name|PR_CONNREQUIRED
+operator||
+name|PR_WANTRCVD
 block|,
 literal|0
 block|,
@@ -113,7 +115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Connect a pipe from wso to rso.  The protocol control block  * for a pipe is used to store a pointer to the matching socket.  * Each half of the pipe gets half of the buffer space (half send  * buffers, half receive buffers).  */
+comment|/*  * Connect a pipe from wso to rso.  The protocol control block  * for a pipe is used to store a pointer to the matching socket.  */
 end_comment
 
 begin_macro
@@ -330,9 +332,16 @@ block|{
 case|case
 name|PRU_ATTACH
 case|:
+break|break;
 case|case
 name|PRU_DETACH
 case|:
+name|so
+operator|->
+name|so_pcb
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|PRU_CONNECT
@@ -368,6 +377,11 @@ expr_stmt|;
 name|soisdisconnected
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|soisdisconnected
+argument_list|(
+name|so2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -407,6 +421,7 @@ define|#
 directive|define
 name|snd
 value|(&so2->so_snd)
+comment|/* printf("pru_rcvd in: "); psndrcv(snd, rcv); */
 comment|/* 		 * Transfer resources back to send port 		 * and wakeup any waiting to write. 		 */
 name|snd
 operator|->
@@ -448,6 +463,7 @@ name|rcv
 operator|->
 name|sb_cc
 expr_stmt|;
+comment|/* printf("pru_rcvd out: "); psndrcv(snd, rcv); */
 name|sbwakeup
 argument_list|(
 name|snd
@@ -472,6 +488,7 @@ directive|define
 name|snd
 value|(&so->so_snd)
 comment|/* 		 * Send to paired receive port, and then 		 * give it enough resources to hold what it already has. 		 * Wake up readers. 		 */
+comment|/* printf("pru_send in: "); psndrcv(snd, rcv); */
 name|sbappend
 argument_list|(
 name|rcv
@@ -524,6 +541,7 @@ argument_list|(
 name|rcv
 argument_list|)
 expr_stmt|;
+comment|/* printf("pru_send out: "); psndrcv(snd, rcv); */
 undef|#
 directive|undef
 name|snd
@@ -559,6 +577,115 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|psndrcv
+argument_list|(
+argument|snd
+argument_list|,
+argument|rcv
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|sockbuf
+modifier|*
+name|snd
+decl_stmt|,
+modifier|*
+name|rcv
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"snd: (cc,hiwat,mbcnt,mbmax) (%d,%d,%d,%d) "
+argument_list|,
+name|snd
+operator|->
+name|sb_cc
+argument_list|,
+name|snd
+operator|->
+name|sb_hiwat
+argument_list|,
+name|snd
+operator|->
+name|sb_mbcnt
+argument_list|,
+name|snd
+operator|->
+name|sb_mbmax
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"m %x, m->m_len %d\n"
+argument_list|,
+name|snd
+operator|->
+name|sb_mb
+argument_list|,
+name|snd
+operator|->
+name|sb_mb
+condition|?
+name|snd
+operator|->
+name|sb_mb
+operator|->
+name|m_len
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rcv: (cc,hiwat,mbcnt,mbmax) (%d,%d,%d,%d) "
+argument_list|,
+name|rcv
+operator|->
+name|sb_cc
+argument_list|,
+name|rcv
+operator|->
+name|sb_hiwat
+argument_list|,
+name|rcv
+operator|->
+name|sb_mbcnt
+argument_list|,
+name|rcv
+operator|->
+name|sb_mbmax
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"m %x, m->m_len %d\n"
+argument_list|,
+name|rcv
+operator|->
+name|sb_mb
+argument_list|,
+name|rcv
+operator|->
+name|sb_mb
+condition|?
+name|rcv
+operator|->
+name|sb_mb
+operator|->
+name|m_len
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
