@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)swap_pager.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2069,7 +2069,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * For reads (pageins) and synchronous writes, we clean up 	 * all completed async pageouts and check to see if this 	 * page is currently being cleaned.  If it is, we just wait 	 * til the operation is done before continuing. 	 */
+comment|/* 	 * For reads (pageins) and synchronous writes, we clean up 	 * all completed async pageouts. 	 */
 if|if
 condition|(
 operator|(
@@ -2086,6 +2086,10 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+comment|/* 		 * Check to see if this page is currently being cleaned. 		 * If it is, we just wait til the operation is done before 		 * continuing. 		 */
 while|while
 condition|(
 name|swap_pager_clean
@@ -2098,6 +2102,19 @@ name|B_READ
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|swpagerdebug
+operator|&
+name|SDB_ANOM
+condition|)
+name|printf
+argument_list|(
+literal|"swap_pager_io: page %x cleaning\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|swp
 operator|->
 name|sw_flags
@@ -2116,6 +2133,22 @@ name|thread_block
 argument_list|()
 expr_stmt|;
 block|}
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|swap_pager_clean
+argument_list|(
+name|m
+argument_list|,
+name|flags
+operator|&
+name|B_READ
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -2139,11 +2172,40 @@ operator|&
 name|swap_pager_free
 argument_list|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+operator|(
+name|swpagerdebug
+operator|&
+name|SDB_ANOM
+operator|)
+operator|&&
+operator|!
+name|queue_empty
+argument_list|(
+operator|&
+name|swap_pager_free
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"swap_pager_io: page %x already cleaning\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|VM_PAGER_FAIL
 operator|)
 return|;
+block|}
 comment|/* 	 * Determine swap block and allocate as necessary. 	 */
 name|off
 operator|=
@@ -2453,7 +2515,7 @@ name|SDB_ANOM
 condition|)
 name|printf
 argument_list|(
-literal|"swpg_io: wait on swbuf for %x (%d)\n"
+literal|"swap_pager_io: wait on swbuf for %x (%d)\n"
 argument_list|,
 name|m
 argument_list|,
@@ -2689,17 +2751,6 @@ name|spc_m
 operator|=
 name|m
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|m
-operator|->
-name|pagerowned
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_flags
@@ -2818,27 +2869,6 @@ argument_list|(
 name|off
 argument_list|)
 operator|)
-expr_stmt|;
-comment|/* 		 * XXX: Block write faults til we are done. 		 */
-name|m
-operator|->
-name|page_lock
-operator|=
-name|VM_PROT_WRITE
-expr_stmt|;
-name|m
-operator|->
-name|unlock_request
-operator|=
-name|VM_PROT_ALL
-expr_stmt|;
-name|pmap_copy_on_write
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -3093,7 +3123,7 @@ name|m
 operator|->
 name|clean
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
@@ -3310,7 +3340,7 @@ name|SDB_ANOM
 condition|)
 name|printf
 argument_list|(
-literal|"swpg_clean: %x on list, flags %x\n"
+literal|"swap_pager_clean: page %x on list, flags %x\n"
 argument_list|,
 name|m
 argument_list|,
@@ -3381,7 +3411,7 @@ name|SDB_ANOM
 condition|)
 name|printf
 argument_list|(
-literal|"swpg_clean: %x done while looking\n"
+literal|"swap_pager_clean: page %x done while looking\n"
 argument_list|,
 name|m
 argument_list|)
@@ -3437,6 +3467,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 comment|/* 	 * If we found that the desired page is already being cleaned 	 * mark it so that swap_pager_iodone() will not set the clean 	 * flag before the pageout daemon has another chance to clean it. 	 */
 if|if
 condition|(
@@ -3447,9 +3480,6 @@ operator|==
 name|B_WRITE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|swpagerdebug
@@ -3458,13 +3488,11 @@ name|SDB_ANOM
 condition|)
 name|printf
 argument_list|(
-literal|"swpg_clean: %x on clean list\n"
+literal|"swap_pager_clean: page %x on clean list\n"
 argument_list|,
 name|tspc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|tspc
 operator|->
 name|spc_flags
@@ -3472,6 +3500,8 @@ operator||=
 name|SPC_DIRTY
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -3572,19 +3602,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|spc
-operator|->
-name|spc_m
-operator|->
-name|pagerowned
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|--
@@ -3602,20 +3619,63 @@ operator|)
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: this isn't even close to the right thing to do, 	 * introduces a variety of race conditions. 	 * 	 * If dirty, vm_pageout() has attempted to clean the page 	 * again.  In this case we do not do anything as we will 	 * see the page again shortly.  Otherwise, if no error mark 	 * as clean and inform the pmap system.  If error, mark as 	 * dirty so we will try again (XXX: could get stuck doing 	 * this, should give up after awhile). 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+comment|/* 	 * XXX: this isn't even close to the right thing to do, 	 * introduces a variety of race conditions. 	 * 	 * If dirty, vm_pageout() has attempted to clean the page 	 * again.  In this case we do not do anything as we will 	 * see the page again shortly. 	 */
 if|if
 condition|(
-operator|(
 name|spc
 operator|->
 name|spc_flags
 operator|&
 name|SPC_DIRTY
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|swpagerdebug
+operator|&
+name|SDB_ANOM
+condition|)
+name|printf
+argument_list|(
+literal|"swap_pager_finish: page %x dirty again\n"
+argument_list|,
+name|spc
+operator|->
+name|spc_m
+argument_list|)
+expr_stmt|;
+name|spc
+operator|->
+name|spc_m
+operator|->
+name|busy
+operator|=
+name|FALSE
+expr_stmt|;
+name|PAGE_WAKEUP
+argument_list|(
+name|spc
+operator|->
+name|spc_m
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* 	 * If no error mark as clean and inform the pmap system. 	 * If error, mark as dirty so we will try again. 	 * (XXX could get stuck doing this, should give up after awhile) 	 */
 if|if
 condition|(
 name|spc
@@ -3627,7 +3687,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"swap_pager: clean of %x failed\n"
+literal|"swap_pager_finish: clean of page %x failed\n"
 argument_list|,
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -3667,21 +3727,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * XXX: allow blocked write faults to continue 	 */
 name|spc
 operator|->
 name|spc_m
 operator|->
-name|page_lock
+name|busy
 operator|=
-name|spc
-operator|->
-name|spc_m
-operator|->
-name|unlock_request
-operator|=
-name|VM_PROT_NONE
+name|FALSE
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(
@@ -3830,7 +3882,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"swpg_iodone: bp not found"
+literal|"swap_pager_iodone: bp not found"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4021,15 +4073,6 @@ name|bswlist
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX: this isn't even close to the right thing to do, 	 * introduces a variety of race conditions. 	 * 	 * If dirty, vm_pageout() has attempted to clean the page 	 * again.  In this case we do not do anything as we will 	 * see the page again shortly.  Otherwise, if no error mark 	 * as clean and inform the pmap system.  If error, mark as 	 * dirty so we will try again (XXX: could get stuck doing 	 * this, should give up after awhile). 	 */
-block|if ((spc->spc_flags& SPC_DIRTY) == 0) { 		if (spc->spc_flags& SPC_ERROR) { 			printf("swap_pager: clean of %x (block %x) failed\n", 			       VM_PAGE_TO_PHYS(spc->spc_m), blk); 			spc->spc_m->laundry = TRUE; 		} else { 			spc->spc_m->clean = TRUE; 			pmap_clear_modify(VM_PAGE_TO_PHYS(spc->spc_m)); 		} 	}
-comment|/* 	 * XXX: allow blocked write faults to continue 	 */
-block|spc->spc_m->page_lock = spc->spc_m->unlock_request = VM_PROT_NONE; 	PAGE_WAKEUP(spc->spc_m);
-endif|#
-directive|endif
 name|thread_wakeup
 argument_list|(
 operator|(
