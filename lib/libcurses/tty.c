@@ -910,7 +910,7 @@ literal|0
 argument_list|,
 name|curscr
 operator|->
-name|maxx
+name|maxy
 operator|-
 literal|1
 argument_list|,
@@ -1077,7 +1077,7 @@ literal|0
 argument_list|,
 name|curscr
 operator|->
-name|maxx
+name|maxy
 operator|-
 literal|1
 argument_list|,
@@ -1090,7 +1090,7 @@ name|__mvcur
 argument_list|(
 name|curscr
 operator|->
-name|cury
+name|curx
 argument_list|,
 name|curscr
 operator|->
