@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw.c,v 1.13 1999/02/23 10:35:47 davidn Exp $"
+literal|"$Id: pw.c,v 1.14 1999/02/23 11:01:50 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,7 +338,7 @@ literal|"V:C:qn:u:rY"
 block|,
 literal|"V:C:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:FNPY"
 block|,
-literal|"V:C:qn:u:FPa"
+literal|"V:C:qn:u:FPa7"
 block|,
 literal|"V:C:q"
 block|}
@@ -1324,6 +1324,7 @@ literal|"\t-u uid         user id\n"
 literal|"\t-F             force print\n"
 literal|"\t-P             prettier format\n"
 literal|"\t-a             print all users\n"
+literal|"\t-7             print in v7 format\n"
 block|,
 literal|"usage: pw usernext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"

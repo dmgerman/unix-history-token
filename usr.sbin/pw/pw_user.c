@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_user.c,v 1.26 1999/02/08 21:26:44 des Exp $"
+literal|"$Id: pw_user.c,v 1.27 1999/02/23 07:15:10 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,9 @@ name|pwd
 parameter_list|,
 name|int
 name|pretty
+parameter_list|,
+name|int
+name|v7
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1687,6 +1690,18 @@ argument_list|)
 operator|!=
 name|NULL
 decl_stmt|;
+name|int
+name|v7
+init|=
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'7'
+argument_list|)
+operator|!=
+name|NULL
+decl_stmt|;
 name|SETPWENT
 argument_list|()
 expr_stmt|;
@@ -1706,6 +1721,8 @@ argument_list|(
 name|pwd
 argument_list|,
 name|pretty
+argument_list|,
+name|v7
 argument_list|)
 expr_stmt|;
 name|ENDPWENT
@@ -1933,6 +1950,15 @@ argument_list|(
 name|args
 argument_list|,
 literal|'P'
+argument_list|)
+operator|!=
+name|NULL
+argument_list|,
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'7'
 argument_list|)
 operator|!=
 name|NULL
@@ -2340,6 +2366,15 @@ argument_list|(
 name|args
 argument_list|,
 literal|'P'
+argument_list|)
+operator|!=
+name|NULL
+argument_list|,
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'7'
 argument_list|)
 operator|!=
 name|NULL
@@ -3396,6 +3431,15 @@ argument_list|(
 name|args
 argument_list|,
 literal|'P'
+argument_list|)
+operator|!=
+name|NULL
+argument_list|,
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'7'
 argument_list|)
 operator|!=
 name|NULL
@@ -5907,6 +5951,9 @@ name|pwd
 parameter_list|,
 name|int
 name|pretty
+parameter_list|,
+name|int
+name|v7
 parameter_list|)
 block|{
 if|if
@@ -5921,11 +5968,17 @@ index|[
 name|_UC_MAXLINE
 index|]
 decl_stmt|;
-name|fmtpwent
+name|fmtpwentry
 argument_list|(
 name|buf
 argument_list|,
 name|pwd
+argument_list|,
+name|v7
+condition|?
+name|PWF_PASSWD
+else|:
+name|PWF_STANDARD
 argument_list|)
 expr_stmt|;
 name|fputs
