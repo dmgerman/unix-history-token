@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c	5.5 (Berkeley) %G%"
+literal|"@(#)canfield.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,6 +830,8 @@ name|struct
 name|betinfo
 name|this
 decl_stmt|,
+name|game
+decl_stmt|,
 name|total
 decl_stmt|;
 end_decl_stmt
@@ -908,7 +910,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|                          |"
+literal|"|                                  |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -920,7 +922,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|                          |"
+literal|"|                                  |"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -976,7 +978,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"*--------------------------*"
+literal|"*----------------------------------*"
 argument_list|)
 expr_stmt|;
 name|move
@@ -990,7 +992,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|         MOVES            |"
+literal|"|         MOVES                    |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1004,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|s# = stock to tableau     |"
+literal|"|s# = stock to tableau             |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1018,7 +1020,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|sf = stock to foundation  |"
+literal|"|sf = stock to foundation          |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1032,7 +1034,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|t# = talon to tableau     |"
+literal|"|t# = talon to tableau             |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1046,7 +1048,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|tf = talon to foundation  |"
+literal|"|tf = talon to foundation          |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1060,7 +1062,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|## = tableau to tableau   |"
+literal|"|## = tableau to tableau           |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1074,7 +1076,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|#f = tableau to foundation|"
+literal|"|#f = tableau to foundation        |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1088,7 +1090,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|ht = hand to talon        |"
+literal|"|ht = hand to talon                |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1102,7 +1104,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|c = toggle card counting  |"
+literal|"|c = toggle card counting          |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1116,7 +1118,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|b = present betting info  |"
+literal|"|b = present betting information   |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1130,7 +1132,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|q = quit to end the game  |"
+literal|"|q = quit to end the game          |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1144,7 +1146,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|==========================|"
+literal|"|==================================|"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1170,7 +1172,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"*--------------------------*"
+literal|"*----------------------------------*"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1184,7 +1186,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Costs        Hand   Total |"
+literal|"|Costs        Hand   Game    Total |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1198,7 +1200,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Hands                    |"
+literal|"| Hands                            |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1212,7 +1214,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Inspections              |"
+literal|"| Inspections                      |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1226,7 +1228,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Games                    |"
+literal|"| Games                            |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1240,7 +1242,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Runs                     |"
+literal|"| Runs                             |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1254,7 +1256,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Information              |"
+literal|"| Information                      |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1268,7 +1270,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Think time               |"
+literal|"| Think time                       |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1282,7 +1284,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Total Costs               |"
+literal|"|Total Costs                       |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1296,7 +1298,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Winnings                  |"
+literal|"|Winnings                          |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1310,7 +1312,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Net Worth                 |"
+literal|"|Net Worth                         |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1324,7 +1326,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Return                    |"
+literal|"|Return                            |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1338,7 +1340,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|==========================|"
+literal|"|==================================|"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1383,7 +1385,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"                            "
+literal|"                                    "
 argument_list|)
 expr_stmt|;
 block|}
@@ -1398,7 +1400,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"*--------------------------*"
+literal|"*----------------------------------*"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1424,7 +1426,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Replace # with the number |"
+literal|"|Replace # with the number of the  |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1438,7 +1440,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|of the tableau you want.  |"
+literal|"|tableau you want.                 |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1452,7 +1454,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"*--------------------------*"
+literal|"*----------------------------------*"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1478,7 +1480,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|x = toggle information box|"
+literal|"|x = toggle information box        |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1492,7 +1494,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|i = list instructions     |"
+literal|"|i = list playing instructions     |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1506,7 +1508,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"*--------------------------*"
+literal|"*----------------------------------*"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1535,7 +1537,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"*--------------------------*"
+literal|"*----------------------------------*"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1563,7 +1565,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"                            "
+literal|"                                    "
 argument_list|)
 expr_stmt|;
 block|}
@@ -2899,6 +2901,12 @@ name|wins
 operator|+=
 name|valuepercardup
 expr_stmt|;
+name|game
+operator|.
+name|wins
+operator|+=
+name|valuepercardup
+expr_stmt|;
 name|total
 operator|.
 name|wins
@@ -3250,6 +3258,12 @@ name|this
 operator|.
 name|hand
 operator|=
+name|costofhand
+expr_stmt|;
+name|game
+operator|.
+name|hand
+operator|+=
 name|costofhand
 expr_stmt|;
 name|total
@@ -4004,6 +4018,12 @@ name|runs
 operator|+=
 name|costofrunthroughhand
 expr_stmt|;
+name|game
+operator|.
+name|runs
+operator|+=
+name|costofrunthroughhand
+expr_stmt|;
 name|total
 operator|.
 name|runs
@@ -4201,6 +4221,12 @@ name|TRUE
 condition|)
 block|{
 name|this
+operator|.
+name|information
+operator|+=
+name|costofinformation
+expr_stmt|;
+name|game
 operator|.
 name|information
 operator|+=
@@ -4430,6 +4456,12 @@ name|information
 operator|+=
 name|costofinformation
 expr_stmt|;
+name|game
+operator|.
+name|information
+operator|+=
+name|costofinformation
+expr_stmt|;
 name|total
 operator|.
 name|information
@@ -4501,6 +4533,12 @@ operator|=
 name|TRUE
 expr_stmt|;
 name|this
+operator|.
+name|information
+operator|+=
+name|costofinformation
+expr_stmt|;
+name|game
 operator|.
 name|information
 operator|+=
@@ -4673,6 +4711,12 @@ name|Cflag
 condition|)
 block|{
 name|this
+operator|.
+name|information
+operator|+=
+name|costofinformation
+expr_stmt|;
+name|game
 operator|.
 name|information
 operator|+=
@@ -5058,10 +5102,14 @@ block|{
 name|long
 name|thiscosts
 decl_stmt|,
+name|gamecosts
+decl_stmt|,
 name|totalcosts
 decl_stmt|;
 name|double
 name|thisreturn
+decl_stmt|,
+name|gamereturn
 decl_stmt|,
 name|totalreturn
 decl_stmt|;
@@ -5117,6 +5165,12 @@ name|thinktime
 operator|+=
 name|dollars
 expr_stmt|;
+name|game
+operator|.
+name|thinktime
+operator|+=
+name|dollars
+expr_stmt|;
 name|total
 operator|.
 name|thinktime
@@ -5150,6 +5204,32 @@ name|this
 operator|.
 name|thinktime
 expr_stmt|;
+name|gamecosts
+operator|=
+name|game
+operator|.
+name|hand
+operator|+
+name|game
+operator|.
+name|inspection
+operator|+
+name|game
+operator|.
+name|game
+operator|+
+name|game
+operator|.
+name|runs
+operator|+
+name|game
+operator|.
+name|information
+operator|+
+name|game
+operator|.
+name|thinktime
+expr_stmt|;
 name|totalcosts
 operator|=
 name|total
@@ -5186,6 +5266,16 @@ name|wins
 operator|-
 name|thiscosts
 expr_stmt|;
+name|game
+operator|.
+name|worth
+operator|=
+name|game
+operator|.
+name|wins
+operator|-
+name|gamecosts
+expr_stmt|;
 name|total
 operator|.
 name|worth
@@ -5210,6 +5300,26 @@ operator|(
 name|double
 operator|)
 name|thiscosts
+operator|-
+literal|1.0
+operator|)
+operator|*
+literal|100.0
+expr_stmt|;
+name|gamereturn
+operator|=
+operator|(
+operator|(
+name|double
+operator|)
+name|game
+operator|.
+name|wins
+operator|/
+operator|(
+name|double
+operator|)
+name|gamecosts
 operator|-
 literal|1.0
 operator|)
@@ -5256,9 +5366,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|hand
+argument_list|,
+name|game
 operator|.
 name|hand
 argument_list|,
@@ -5280,9 +5394,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|inspection
+argument_list|,
+name|game
 operator|.
 name|inspection
 argument_list|,
@@ -5304,9 +5422,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|game
+argument_list|,
+name|game
 operator|.
 name|game
 argument_list|,
@@ -5328,9 +5450,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|runs
+argument_list|,
+name|game
 operator|.
 name|runs
 argument_list|,
@@ -5352,9 +5478,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|information
+argument_list|,
+name|game
 operator|.
 name|information
 argument_list|,
@@ -5376,9 +5506,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|thinktime
+argument_list|,
+name|game
 operator|.
 name|thinktime
 argument_list|,
@@ -5400,9 +5534,11 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|thiscosts
+argument_list|,
+name|gamecosts
 argument_list|,
 name|totalcosts
 argument_list|)
@@ -5420,9 +5556,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|wins
+argument_list|,
+name|game
 operator|.
 name|wins
 argument_list|,
@@ -5444,9 +5584,13 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4d%9d"
+literal|"%4d%8d%9d"
 argument_list|,
 name|this
+operator|.
+name|worth
+argument_list|,
+name|game
 operator|.
 name|worth
 argument_list|,
@@ -5468,9 +5612,11 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%4.0f%%%8.1f%%"
+literal|"%4.0f%%%7.1f%%%8.1f%%"
 argument_list|,
 name|thisreturn
+argument_list|,
+name|gamereturn
 argument_list|,
 name|totalreturn
 argument_list|)
@@ -6283,6 +6429,12 @@ name|wins
 operator|+=
 name|valuepercardup
 expr_stmt|;
+name|game
+operator|.
+name|wins
+operator|+=
+name|valuepercardup
+expr_stmt|;
 name|total
 operator|.
 name|wins
@@ -7046,6 +7198,12 @@ name|inspection
 operator|+=
 name|costofinspection
 expr_stmt|;
+name|game
+operator|.
+name|inspection
+operator|+=
+name|costofinspection
+expr_stmt|;
 name|total
 operator|.
 name|inspection
@@ -7245,6 +7403,14 @@ name|valuepercardup
 operator|*
 name|cardsoff
 expr_stmt|;
+name|game
+operator|.
+name|wins
+operator|+=
+name|valuepercardup
+operator|*
+name|cardsoff
+expr_stmt|;
 name|total
 operator|.
 name|wins
@@ -7254,6 +7420,12 @@ operator|*
 name|cardsoff
 expr_stmt|;
 name|this
+operator|.
+name|game
+operator|+=
+name|costofgame
+expr_stmt|;
+name|game
 operator|.
 name|game
 operator|+=
