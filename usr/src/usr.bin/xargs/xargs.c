@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xargs.c	5.1 (Berkeley) %G%"
+literal|"@(#)xargs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,12 +487,33 @@ name|p
 operator|==
 name|bp
 condition|)
-comment|/* empty line */
+comment|/* nothing to display */
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mark
+operator|==
+name|p
+condition|)
+block|{
+comment|/* nothing since last arg end */
+name|run
+argument_list|(
+name|prog
+argument_list|,
+name|xargs
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|addarg
 goto|;
