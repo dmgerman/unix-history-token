@@ -250,7 +250,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr 99 \\n(.s\n.nr 98 \\n(.f\n"
+literal|".nr 99 \\n(.s\n.nr 98 \\n(.f\n.af 98 01\n"
 argument_list|)
 expr_stmt|;
 name|markline
@@ -490,7 +490,7 @@ name|ds
 block|;
 name|printf
 argument_list|(
-literal|".nr 99 \\n(.s\n.nr 98 \\n(.f\n"
+literal|".nr 99 \\n(.s\n.nr 98 \\n(.f\n.af 98 01\n"
 argument_list|)
 block|;
 name|ds
@@ -722,7 +722,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\\f%c\\s%d\\*(%d%s\\s\\n(99\\f\\n(98"
+literal|"\\f%c\\s%d\\*(%d%s\\s\\n(99\\f(\\n(98"
 argument_list|,
 name|gfont
 argument_list|,
