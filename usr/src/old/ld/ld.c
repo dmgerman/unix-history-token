@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 4.4 %G%"
+literal|"@(#)ld.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -460,8 +460,29 @@ comment|/* string table for table of contents */
 end_comment
 
 begin_comment
-comment|/*  * We open each input file or library only once, but in pass2 we  * (historically) read from such a file at 2 different places at the  * same time.  These structures are remnants from those days,  * and now serve only to catch ``Premature EOF''.  */
+comment|/*  * We open each input file or library only once, but in pass2 we  * (historically) read from such a file at 2 different places at the  * same time.  These structures are remnants from those days,  * and now serve only to catch ``Premature EOF''.  * In order to make I/O more efficient, we provide routines which  * work in hardware page sizes. The associated constants are defined   * as BLKSIZE, BLKSHIFT, and BLKMASK.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLKSHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLKMASK
+value|(BLKSIZE - 1)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -483,7 +504,7 @@ decl_stmt|;
 name|char
 name|buff
 index|[
-name|BSIZE
+name|BLKSIZE
 index|]
 decl_stmt|;
 block|}
@@ -7207,7 +7228,7 @@ name|n
 operator|-
 name|n
 operator|%
-name|BSIZE
+name|BLKSIZE
 expr_stmt|;
 name|lseek
 argument_list|(
@@ -7221,7 +7242,7 @@ operator|+
 literal|1
 operator|)
 operator|*
-name|BSIZE
+name|BLKSIZE
 argument_list|,
 literal|0
 argument_list|)
@@ -7285,10 +7306,10 @@ literal|1
 operator|+
 name|take
 operator|/
-name|BSIZE
+name|BLKSIZE
 operator|)
 operator|*
-name|BSIZE
+name|BLKSIZE
 argument_list|,
 operator|-
 literal|1
@@ -7463,13 +7484,13 @@ name|b
 operator|=
 name|loc
 operator|>>
-name|BSHIFT
+name|BLKSHIFT
 expr_stmt|;
 name|o
 operator|=
 name|loc
 operator|&
-name|BMASK
+name|BLKMASK
 expr_stmt|;
 if|if
 condition|(
@@ -7604,7 +7625,7 @@ operator|~
 operator|(
 name|long
 operator|)
-name|BMASK
+name|BLKMASK
 argument_list|,
 literal|0
 argument_list|)
@@ -7783,7 +7804,7 @@ operator|+
 literal|1
 argument_list|)
 operator|<<
-name|BSHIFT
+name|BLKSHIFT
 operator|)
 argument_list|,
 operator|(
