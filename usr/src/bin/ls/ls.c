@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.19 (Berkeley) %G%"
+literal|"@(#)ls.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3884,6 +3884,8 @@ operator|(
 name|outrangename
 operator|)
 return|;
+name|rescan
+label|:
 if|if
 condition|(
 name|init
@@ -4058,7 +4060,6 @@ name|pw_uid
 operator|==
 name|uid
 condition|)
-block|{
 return|return
 operator|(
 operator|&
@@ -4072,19 +4073,13 @@ index|]
 operator|)
 return|;
 block|}
-block|}
 name|init
 operator|=
 literal|2
 expr_stmt|;
-name|endpwent
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|rescan
+goto|;
 block|}
 end_function
 
@@ -4156,6 +4151,8 @@ operator|(
 name|outrangegroup
 operator|)
 return|;
+name|rescan
+label|:
 if|if
 condition|(
 name|init
@@ -4330,7 +4327,6 @@ name|gr_gid
 operator|==
 name|gid
 condition|)
-block|{
 return|return
 operator|(
 operator|&
@@ -4344,19 +4340,13 @@ index|]
 operator|)
 return|;
 block|}
-block|}
 name|init
 operator|=
 literal|2
 expr_stmt|;
-name|endgrent
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|rescan
+goto|;
 block|}
 end_function
 
