@@ -670,7 +670,7 @@ name|el_state
 operator|.
 name|argument
 argument_list|,
-name|cv__isword
+name|c___isword
 argument_list|)
 expr_stmt|;
 if|if
@@ -702,7 +702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_prev_word():  *	Vi move to the previous word  *	[B]  */
+comment|/* vi_prev_word():  *	Vi move to the previous word  *	[b]  */
 end_comment
 
 begin_function
@@ -768,7 +768,7 @@ name|el_state
 operator|.
 name|argument
 argument_list|,
-name|ce__isword
+name|cv__isword
 argument_list|)
 expr_stmt|;
 if|if
@@ -866,7 +866,7 @@ name|el_state
 operator|.
 name|argument
 argument_list|,
-name|cv__isword
+name|c___isword
 argument_list|)
 expr_stmt|;
 if|if
@@ -974,7 +974,7 @@ name|el_state
 operator|.
 name|argument
 argument_list|,
-name|ce__isword
+name|cv__isword
 argument_list|)
 expr_stmt|;
 if|if
@@ -1341,7 +1341,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|CC_NORM
+name|CC_ARGHACK
 return|;
 block|}
 end_function
@@ -1433,13 +1433,13 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|CC_NORM
+name|CC_ARGHACK
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* vi_substitute_char():  *	Vi replace character under the cursor and enter insert mode  *	[r]  */
+comment|/* vi_substitute_char():  *	Vi replace character under the cursor and enter insert mode  *	[s]  */
 end_comment
 
 begin_function
@@ -1689,7 +1689,7 @@ name|int
 name|c
 decl_stmt|;
 block|{
-name|int
+name|el_action_t
 name|ret
 decl_stmt|;
 name|el
@@ -2722,6 +2722,37 @@ return|;
 block|}
 return|return
 name|CC_REFRESH
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* vi_undo_line():  *	Vi undo all changes  *	[U]  */
+end_comment
+
+begin_function
+name|protected
+name|el_action_t
+comment|/*ARGSUSED*/
+name|vi_undo_line
+parameter_list|(
+name|el
+parameter_list|,
+name|c
+parameter_list|)
+name|EditLine
+modifier|*
+name|el
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+block|{
+return|return
+name|hist_get
+argument_list|(
+name|el
+argument_list|)
 return|;
 block|}
 end_function

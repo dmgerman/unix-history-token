@@ -2725,7 +2725,7 @@ name|VI_TO_PREV_CHAR
 block|,
 comment|/* T */
 comment|/*  85 */
-name|ED_UNASSIGNED
+name|VI_UNDO_LINE
 block|,
 comment|/* U */
 comment|/*  86 */

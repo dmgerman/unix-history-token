@@ -806,7 +806,7 @@ block|{
 name|el_action_t
 name|cmd
 init|=
-literal|0
+name|ED_UNASSIGNED
 decl_stmt|;
 name|int
 name|num
@@ -815,7 +815,7 @@ while|while
 condition|(
 name|cmd
 operator|==
-literal|0
+name|ED_UNASSIGNED
 operator|||
 name|cmd
 operator|==
