@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Top level of GNU C compiler    Copyright (C) 1987, 88, 89, 92-99, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Top level of GNU C compiler    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -14557,6 +14557,8 @@ expr_stmt|;
 comment|/* Copy any shared structure that should not be shared.  */
 name|unshare_all_rtl
 argument_list|(
+name|current_function_decl
+argument_list|,
 name|insns
 argument_list|)
 expr_stmt|;
@@ -17235,6 +17237,9 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|int
+name|numopts
+decl_stmt|;
 name|long
 name|k
 decl_stmt|;
@@ -17347,6 +17352,13 @@ name|indep_options
 operator|=
 name|f_options
 expr_stmt|;
+name|numopts
+operator|=
+name|NUM_ELEM
+argument_list|(
+name|f_options
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'W'
@@ -17354,6 +17366,13 @@ case|:
 name|indep_options
 operator|=
 name|W_options
+expr_stmt|;
+name|numopts
+operator|=
+name|NUM_ELEM
+argument_list|(
+name|W_options
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -17397,10 +17416,7 @@ for|for
 control|(
 name|k
 operator|=
-name|NUM_ELEM
-argument_list|(
-name|indep_options
-argument_list|)
+name|numopts
 init|;
 name|k
 operator|--

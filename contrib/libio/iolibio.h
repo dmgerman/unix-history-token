@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|"libio.h"
+file|<libio.h>
 end_include
 
 begin_comment
@@ -425,10 +425,28 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|_IO_pos_BAD
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_G_IO_IO_FILE_VERSION
+argument_list|)
+operator|&&
+name|_G_IO_IO_FILE_VERSION
+operator|==
+literal|0x20001
 define|#
 directive|define
 name|_IO_pos_BAD
-value|((_IO_fpos_t)(-1))
+value|((_IO_off64_t) -1)
+else|#
+directive|else
+define|#
+directive|define
+name|_IO_pos_BAD
+value|((_IO_off_t) -1)
+endif|#
+directive|endif
 endif|#
 directive|endif
 define|#

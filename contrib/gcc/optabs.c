@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Expand the basic unary and binary arithmetic operations, for GNU compiler.    Copyright (C) 1987, 88, 92-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Expand the basic unary and binary arithmetic operations, for GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12804,6 +12804,11 @@ name|equiv
 decl_stmt|;
 block|{
 name|rtx
+name|final_dest
+init|=
+name|target
+decl_stmt|;
+name|rtx
 name|prev
 decl_stmt|,
 name|next
@@ -12814,6 +12819,30 @@ name|last
 decl_stmt|,
 name|insn
 decl_stmt|;
+comment|/* If this is a reg with REG_USERVAR_P set, then it could possibly turn      into a MEM later.  Protect the libcall block from this change.  */
+if|if
+condition|(
+operator|!
+name|REG_P
+argument_list|(
+name|target
+argument_list|)
+operator|||
+name|REG_USERVAR_P
+argument_list|(
+name|target
+argument_list|)
+condition|)
+name|target
+operator|=
+name|gen_reg_rtx
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* look for any CALL_INSNs in this sequence, and attach a REG_EH_REGION      reg note to indicate that this call cannot throw. (Unless there is      already a REG_EH_REGION note.) */
 for|for
 control|(
@@ -13110,6 +13139,19 @@ name|copy_rtx
 argument_list|(
 name|equiv
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|final_dest
+operator|!=
+name|target
+condition|)
+name|emit_move_insn
+argument_list|(
+name|final_dest
+argument_list|,
+name|target
 argument_list|)
 expr_stmt|;
 if|if

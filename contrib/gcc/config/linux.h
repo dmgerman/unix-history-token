@@ -220,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_VTABLE_THUNKS
-value|2
+value|1
 end_define
 
 begin_endif

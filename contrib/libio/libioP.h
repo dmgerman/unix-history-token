@@ -481,7 +481,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 typedef|typedef
-name|_IO_fpos64_t
+name|_IO_off64_t
 argument_list|(
 argument|*_IO_seekoff_t
 argument_list|)
@@ -506,7 +506,7 @@ expr_stmt|;
 else|#
 directive|else
 typedef|typedef
-name|_IO_fpos_t
+name|_IO_off_t
 argument_list|(
 argument|*_IO_seekoff_t
 argument_list|)
@@ -556,7 +556,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 typedef|typedef
-name|_IO_fpos64_t
+name|_IO_off64_t
 argument_list|(
 argument|*_IO_seekpos_t
 argument_list|)
@@ -566,7 +566,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos64_t
+name|_IO_off64_t
 operator|,
 name|int
 operator|)
@@ -575,7 +575,7 @@ expr_stmt|;
 else|#
 directive|else
 typedef|typedef
-name|_IO_fpos_t
+name|_IO_off_t
 argument_list|(
 argument|*_IO_seekpos_t
 argument_list|)
@@ -585,7 +585,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos_t
+name|_IO_off_t
 operator|,
 name|int
 operator|)
@@ -752,7 +752,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 typedef|typedef
-name|_IO_fpos64_t
+name|_IO_off64_t
 argument_list|(
 argument|*_IO_seek_t
 argument_list|)
@@ -771,7 +771,7 @@ expr_stmt|;
 else|#
 directive|else
 typedef|typedef
-name|_IO_fpos_t
+name|_IO_off_t
 argument_list|(
 argument|*_IO_seek_t
 argument_list|)
@@ -1109,7 +1109,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_seekoff
 name|__P
 argument_list|(
@@ -1126,7 +1126,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_seekpos
 name|__P
 argument_list|(
@@ -1134,7 +1134,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos64_t
+name|_IO_off64_t
 operator|,
 name|int
 operator|)
@@ -1143,7 +1143,7 @@ decl_stmt|;
 else|#
 directive|else
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_seekoff
 name|__P
 argument_list|(
@@ -1160,7 +1160,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_seekpos
 name|__P
 argument_list|(
@@ -1168,7 +1168,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos_t
+name|_IO_off_t
 operator|,
 name|int
 operator|)
@@ -1530,7 +1530,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_default_seekoff
 name|__P
 argument_list|(
@@ -1547,7 +1547,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_default_seekpos
 name|__P
 argument_list|(
@@ -1555,7 +1555,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos64_t
+name|_IO_off64_t
 operator|,
 name|int
 operator|)
@@ -1564,7 +1564,7 @@ decl_stmt|;
 else|#
 directive|else
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_default_seekoff
 name|__P
 argument_list|(
@@ -1581,7 +1581,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_default_seekpos
 name|__P
 argument_list|(
@@ -1589,7 +1589,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos_t
+name|_IO_off_t
 operator|,
 name|int
 operator|)
@@ -1655,7 +1655,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_default_seek
 name|__P
 argument_list|(
@@ -1672,7 +1672,7 @@ decl_stmt|;
 else|#
 directive|else
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_default_seek
 name|__P
 argument_list|(
@@ -1890,7 +1890,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_file_seekoff
 name|__P
 argument_list|(
@@ -1907,7 +1907,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_file_seek
 name|__P
 argument_list|(
@@ -1924,7 +1924,7 @@ decl_stmt|;
 else|#
 directive|else
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_file_seekoff
 name|__P
 argument_list|(
@@ -1941,7 +1941,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_file_seek
 name|__P
 argument_list|(
@@ -2279,7 +2279,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_str_seekoff
 name|__P
 argument_list|(
@@ -2298,7 +2298,7 @@ decl_stmt|;
 else|#
 directive|else
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_str_seekoff
 name|__P
 argument_list|(
@@ -3053,7 +3053,7 @@ comment|/* Operations on _IO_fpos_t.    Normally, these are trivial, but we prov
 end_comment
 
 begin_comment
-comment|/* _IO_pos_BAD is an _IO_fpos_t value indicating error, unknown, or EOF. */
+comment|/* _IO_pos_BAD is an _IO_off_t value indicating error, unknown, or EOF. */
 end_comment
 
 begin_ifndef
@@ -3079,7 +3079,7 @@ begin_define
 define|#
 directive|define
 name|_IO_pos_BAD
-value|((_IO_fpos64_t) -1)
+value|((_IO_off64_t) -1)
 end_define
 
 begin_else
@@ -3091,7 +3091,7 @@ begin_define
 define|#
 directive|define
 name|_IO_pos_BAD
-value|((_IO_fpos_t) -1)
+value|((_IO_off_t) -1)
 end_define
 
 begin_endif

@@ -707,6 +707,13 @@ name|_IO_BAD_SEEN
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|_IO_USER_LOCK
+value|0x8000
+end_define
+
 begin_comment
 comment|/* These are "formatting flags" matching the iostream fmtflags enum values. */
 end_comment
@@ -1338,7 +1345,7 @@ name|_IO_ssize_t
 operator|)
 argument_list|)
 expr_stmt|;
-name|_IO_fpos_t
+name|_IO_off_t
 argument_list|(
 argument|*seek
 argument_list|)
@@ -1731,7 +1738,7 @@ name|_G_IO_IO_FILE_VERSION
 operator|==
 literal|0x20001
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_seekoff
 name|__P
 argument_list|(
@@ -1748,7 +1755,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|_IO_seekpos
 name|__P
 argument_list|(
@@ -1756,7 +1763,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos64_t
+name|_IO_off64_t
 operator|,
 name|int
 operator|)
@@ -1765,7 +1772,7 @@ decl_stmt|;
 else|#
 directive|else
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_seekoff
 name|__P
 argument_list|(
@@ -1782,7 +1789,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|_IO_fpos_t
+name|_IO_off_t
 name|_IO_seekpos
 name|__P
 argument_list|(
@@ -1790,7 +1797,7 @@ operator|(
 name|_IO_FILE
 operator|*
 operator|,
-name|_IO_fpos_t
+name|_IO_off_t
 operator|,
 name|int
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output Dwarf2 format symbol table information from the GNU C compiler.    Copyright (C) 1992, 93, 95-98, 1999 Free Software Foundation, Inc.    Contributed by Gary Funck (gary@intrepid.com).    Derived from DWARF 1 implementation of Ron Guilmette (rfg@monkeys.com).    Extensively modified by Jason Merrill (jason@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output Dwarf2 format symbol table information from the GNU C compiler.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000 Free Software    Foundation, Inc.    Contributed by Gary Funck (gary@intrepid.com).    Derived from DWARF 1 implementation of Ron Guilmette (rfg@monkeys.com).    Extensively modified by Jason Merrill (jason@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -2689,6 +2689,12 @@ case|:
 return|return
 literal|"DW_CFA_GNU_args_size"
 return|;
+case|case
+name|DW_CFA_GNU_negative_offset_extended
+case|:
+return|return
+literal|"DW_CFA_GNU_negative_offset_extended"
+return|;
 default|default:
 return|return
 literal|"DW_CFA_<unknown>"
@@ -3544,9 +3550,19 @@ name|offset
 operator|<
 literal|0
 condition|)
-name|abort
-argument_list|()
+block|{
+name|cfi
+operator|->
+name|dw_cfi_opc
+operator|=
+name|DW_CFA_GNU_negative_offset_extended
 expr_stmt|;
+name|offset
+operator|=
+operator|-
+name|offset
+expr_stmt|;
+block|}
 name|cfi
 operator|->
 name|dw_cfi_oprnd2
@@ -6350,6 +6366,9 @@ endif|#
 directive|endif
 case|case
 name|DW_CFA_offset_extended
+case|:
+case|case
+name|DW_CFA_GNU_negative_offset_extended
 case|:
 case|case
 name|DW_CFA_def_cfa
