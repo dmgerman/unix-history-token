@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.16	82/12/14	*/
+comment|/*	if_imphost.c	4.17	83/02/23	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Host table manipulation routines.  * Only needed when shipping stuff through an IMP.  */
+comment|/*  * Host table manipulation routines.  * Only needed when shipping stuff through an IMP.  *  * Everything in here is called at splimp from  * from the IMP protocol code (if_imp.c), or  * interlocks with the code at splimp.  */
 end_comment
 
 begin_include
@@ -107,12 +107,6 @@ argument_list|(
 name|addr
 argument_list|)
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 for|for
 control|(
 name|m
@@ -164,25 +158,21 @@ name|h_flags
 operator||=
 name|HF_INUSE
 expr_stmt|;
-goto|goto
-name|found
-goto|;
-block|}
-block|}
-name|hp
-operator|=
-literal|0
-expr_stmt|;
-name|found
-label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|hp
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+operator|(
+expr|struct
+name|host
+operator|*
+operator|)
+literal|0
 operator|)
 return|;
 block|}
@@ -234,12 +224,6 @@ name|HOSTHASH
 argument_list|(
 name|addr
 argument_list|)
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
 decl_stmt|;
 name|mprev
 operator|=
@@ -355,20 +339,18 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
+operator|(
+expr|struct
+name|host
+operator|*
+operator|)
 literal|0
 operator|)
 return|;
-block|}
 operator|*
 name|mprev
 operator|=
@@ -437,11 +419,6 @@ name|h_flags
 operator||=
 name|HF_INUSE
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|hp
@@ -469,12 +446,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|hp
 operator|->
 name|h_flags
@@ -493,11 +464,6 @@ operator|->
 name|h_rfnm
 operator|=
 literal|0
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -540,12 +506,6 @@ name|struct
 name|hmbuf
 modifier|*
 name|hm
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
 decl_stmt|;
 for|for
 control|(
@@ -627,16 +587,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Remove a host structure and release  * any resources it's accumulated.  * This routine is always called at splnet.  */
+comment|/*  * Remove a host structure and release  * any resources it's accumulated.  */
 end_comment
 
 begin_expr_stmt
@@ -878,7 +833,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|splnet
+name|splimp
 argument_list|()
 decl_stmt|;
 for|for
@@ -965,7 +920,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
+name|splimp
 argument_list|(
 name|s
 argument_list|)

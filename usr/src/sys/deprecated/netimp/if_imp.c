@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.48	83/02/10	*/
+comment|/*	if_imp.c	4.49	83/02/23	*/
 end_comment
 
 begin_include
@@ -1158,13 +1158,6 @@ case|:
 case|case
 name|IMPTYPE_HOSTUNREACH
 case|:
-block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|impnotify
 argument_list|(
 operator|(
@@ -1187,34 +1180,19 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|rawlinkin
 goto|;
-block|}
 comment|/* 	 * Error in data.  Clear RFNM status for this host and send 	 * noops to the IMP to clear the interface. 	 */
 case|case
 name|IMPTYPE_BADDATA
 case|:
-block|{
-name|int
-name|s
-decl_stmt|;
 name|impmsg
 argument_list|(
 name|sc
 argument_list|,
 literal|"data error"
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1231,11 +1209,6 @@ name|h_rfnm
 operator|=
 literal|0
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|impnoops
 argument_list|(
 name|sc
@@ -1244,7 +1217,6 @@ expr_stmt|;
 goto|goto
 name|drop
 goto|;
-block|}
 comment|/* 	 * Interface reset. 	 */
 case|case
 name|IMPTYPE_RESET
@@ -1470,6 +1442,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+init|=
+name|splimp
+argument_list|()
+decl_stmt|;
 name|sc
 operator|->
 name|imp_state
@@ -1498,6 +1476,11 @@ operator|&
 name|sc
 operator|->
 name|imp_if
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
