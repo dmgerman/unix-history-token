@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.10 1994/11/07 11:26:29 davidg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.11 1995/01/20 07:48:21 wpaul Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"boot.h"
+end_include
 
 begin_include
 include|#
@@ -114,15 +120,6 @@ begin_comment
 comment|/*  * Gate A20 for high memory  */
 end_comment
 
-begin_decl_stmt
-name|unsigned
-name|char
-name|x_20
-init|=
-name|KB_A20
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|gateA20
 argument_list|()
@@ -191,7 +188,7 @@ name|outb
 argument_list|(
 name|K_RDWR
 argument_list|,
-name|x_20
+name|KB_A20
 argument_list|)
 expr_stmt|;
 while|while
@@ -888,20 +885,6 @@ end_block
 
 begin_comment
 comment|/* To quote Ken: "You are not expected to understand this." :) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|tw_chars
-init|=
-literal|0x5C2D2F7C
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* "\-/|" */
 end_comment
 
 begin_macro

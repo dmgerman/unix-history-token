@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.29 1994/12/18 20:30:10 joerg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.30 1995/01/20 07:48:19 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -37,6 +37,17 @@ directive|include
 file|<machine/bootinfo.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ouraddr
+value|(BOOTSEG<< 4)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|exec
@@ -46,19 +57,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|bootinfo_t
 name|bootinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|name
-init|=
-block|{
-literal|"/kernel"
-block|}
+name|bootinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -85,8 +85,13 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|loadflags
-init|=
-literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|loadsyms
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +159,7 @@ operator|++
 control|)
 name|bootinfo
 operator|.
-name|bios_geom
+name|bi_bios_geom
 index|[
 name|ret
 index|]
@@ -166,45 +171,59 @@ operator|+
 literal|0x80
 argument_list|)
 expr_stmt|;
-comment|/* This is nasty, but why use 4 printf()s when 1 will do. */
-name|printf
-argument_list|(
-literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\nUse hd(1,a)/kernel to boot sd0 when wd0 is also installed.\nUsage: [[[%s(%d,a)]%s][-s][-r][-a][-c][-d][-b][-v][-h]]\nUse ? for file list or simply press Return for defaults\n"
-argument_list|,
-name|ouraddr
-argument_list|,
+name|bootinfo
+operator|.
+name|bi_basemem
+operator|=
 name|memsize
 argument_list|(
 literal|0
 argument_list|)
-argument_list|,
+expr_stmt|;
+name|bootinfo
+operator|.
+name|bi_extmem
+operator|=
 name|memsize
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+name|bootinfo
+operator|.
+name|bi_memsizes_valid
+operator|=
+literal|1
+expr_stmt|;
+comment|/* This is ugly, but why use 4 printf()s when 1 will do? */
+name|printf
+argument_list|(
+literal|"\n\>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n\ Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n\ Usage: [[[%s(%d,a)]%s][-s][-r][-a][-c][-d][-D][-b][-v][-h]]\n\ Use ? for file list or simply press Return for defaults\n"
+argument_list|,
+name|ouraddr
+argument_list|,
+name|bootinfo
+operator|.
+name|bi_basemem
+argument_list|,
+name|bootinfo
+operator|.
+name|bi_extmem
 argument_list|,
 name|devs
 index|[
-operator|(
 name|drive
 operator|&
 literal|0x80
-operator|)
 condition|?
 literal|0
 else|:
 literal|2
 index|]
 argument_list|,
-operator|(
-name|unit
-operator|=
-operator|(
 name|drive
 operator|&
 literal|0x7f
-operator|)
-operator|)
 argument_list|,
 name|name
 argument_list|)
@@ -214,10 +233,16 @@ argument_list|()
 expr_stmt|;
 name|loadstart
 label|:
-comment|/***************************************************************\ 	* As a default set it to the first partition of the first	* 	* floppy or hard drive						* 	\***************************************************************/
+comment|/***************************************************************\ 	* As a default set it to the first partition of the boot	* 	* floppy or hard drive						* 	\***************************************************************/
 name|part
 operator|=
 literal|0
+expr_stmt|;
+name|unit
+operator|=
+name|drive
+operator|&
+literal|0x7f
 expr_stmt|;
 name|maj
 operator|=
@@ -312,13 +337,12 @@ name|long
 name|int
 name|bootdev
 decl_stmt|;
-name|long
-name|int
-name|total
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|REDUNDANT
 name|unsigned
 name|char
 name|tmpbuf
@@ -327,6 +351,8 @@ literal|4096
 index|]
 decl_stmt|;
 comment|/* we need to load the first 4k here */
+endif|#
+directive|endif
 name|read
 argument_list|(
 operator|&
@@ -361,18 +387,15 @@ name|head
 argument_list|)
 expr_stmt|;
 comment|/*if(poff==0) 		poff = 32;*/
+comment|/* 	 * We assume that the entry address is the same as the lowest text 	 * address and that the kernel startup code handles relocation by 	 * this address rounded down to a multiple of 16M. 	 */
 name|startaddr
 operator|=
-operator|(
-name|int
-operator|)
 name|head
 operator|.
 name|a_entry
 operator|&
 literal|0x00FFFFFF
 expr_stmt|;
-comment|/* some MEG boundary */
 name|addr
 operator|=
 name|startaddr
@@ -474,6 +497,9 @@ argument_list|)
 expr_stmt|;
 comment|/********************************************************/
 comment|/* LOAD THE TEXT SEGMENT				*/
+ifdef|#
+directive|ifdef
+name|REDUNDANT
 comment|/* don't clobber the first 4k yet (BIOS NEEDS IT) 	*/
 comment|/********************************************************/
 name|read
@@ -506,6 +532,26 @@ name|a_text
 operator|-
 literal|4096
 expr_stmt|;
+else|#
+directive|else
+comment|/* Assume we're loading high, so that the BIOS isn't in the way. */
+name|xread
+argument_list|(
+name|addr
+argument_list|,
+name|head
+operator|.
+name|a_text
+argument_list|)
+expr_stmt|;
+name|addr
+operator|+=
+name|head
+operator|.
+name|a_text
+expr_stmt|;
+endif|#
+directive|endif
 comment|/********************************************************/
 comment|/* Load the Initialised data after the text		*/
 comment|/********************************************************/
@@ -562,7 +608,7 @@ operator|.
 name|a_bss
 argument_list|)
 expr_stmt|;
-comment|/*  * This doesn't do us any good anymore either.  */
+comment|/*  * This doesn't do us any good anymore either.  * XXX however, we should be checking that we don't load over the top of  * ourselves or into nonexistent memory.  A full symbol table is unlikely  * to fit on 4MB machines.  */
 ifdef|#
 directive|ifdef
 name|REDUNDANT
@@ -612,12 +658,6 @@ name|a_bss
 argument_list|)
 expr_stmt|;
 block|}
-name|addr
-operator|+=
-name|head
-operator|.
-name|a_bss
-expr_stmt|;
 else|#
 directive|else
 name|pbzero
@@ -631,19 +671,56 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|LOADSYMS
-comment|/* not yet, haven't worked this out yet */
+name|addr
+operator|+=
+name|head
+operator|.
+name|a_bss
+expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|>
-literal|0x100000
+name|loadsyms
 condition|)
 block|{
+name|unsigned
+name|pad
+decl_stmt|;
+comment|/* Pad to a page boundary. */
+name|pad
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|addr
+operator|%
+name|NBPG
+expr_stmt|;
+if|if
+condition|(
+name|pad
+operator|!=
+literal|0
+condition|)
+block|{
+name|pad
+operator|=
+name|NBPG
+operator|-
+name|pad
+expr_stmt|;
+name|addr
+operator|+=
+name|pad
+expr_stmt|;
+block|}
+name|bootinfo
+operator|.
+name|bi_symtab
+operator|=
+name|addr
+expr_stmt|;
 comment|/********************************************************/
-comment|/*copy in the symbol header				*/
+comment|/* Copy the symbol table size				*/
 comment|/********************************************************/
 name|pcpy
 argument_list|(
@@ -672,11 +749,20 @@ name|a_syms
 argument_list|)
 expr_stmt|;
 comment|/********************************************************/
-comment|/* READ in the symbol table				*/
+comment|/* Load the symbol table				*/
 comment|/********************************************************/
 name|printf
 argument_list|(
-literal|"symbols=[+0x%x"
+literal|"symbols=[+0x%x+0x%x+0x%x"
+argument_list|,
+name|pad
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|head
+operator|.
+name|a_syms
+argument_list|)
 argument_list|,
 name|head
 operator|.
@@ -699,8 +785,7 @@ operator|.
 name|a_syms
 expr_stmt|;
 comment|/********************************************************/
-comment|/* Followed by the next integer (another header)	*/
-comment|/* more debug symbols?					*/
+comment|/* Load the string table size				*/
 comment|/********************************************************/
 name|read
 argument_list|(
@@ -741,11 +826,16 @@ name|int
 argument_list|)
 expr_stmt|;
 comment|/********************************************************/
-comment|/* and that many bytes of (debug symbols?)		*/
+comment|/* Load the string table				*/
 comment|/********************************************************/
 name|printf
 argument_list|(
-literal|"+0x%x] "
+literal|"+0x%x+0x%x] "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -761,45 +851,13 @@ name|addr
 operator|+=
 name|i
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|LOADSYMS
-comment|/********************************************************/
-comment|/* and note the end address of all this			*/
-comment|/********************************************************/
-name|total
+name|bootinfo
+operator|.
+name|bi_esymtab
 operator|=
-operator|(
-operator|(
 name|addr
-operator|+
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|)
-operator|&
-operator|~
-operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|-
-literal|1
-operator|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"total=0x%x "
-argument_list|,
-name|total
-argument_list|)
-expr_stmt|;
+block|}
 comment|/* 	 * For backwards compatibility, use the previously-unused adaptor 	 * and controller bitfields to hold the slice number. 	 */
 name|bootdev
 operator|=
@@ -822,19 +880,12 @@ argument_list|,
 name|part
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REDUNDANT
 comment|/****************************************************************/
 comment|/* copy that first page and overwrite any BIOS variables	*/
 comment|/****************************************************************/
-name|printf
-argument_list|(
-literal|"entry point=0x%x\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|startaddr
-argument_list|)
-expr_stmt|;
 comment|/* Under no circumstances overwrite precious BIOS variables! */
 name|pcpy
 argument_list|(
@@ -860,38 +911,51 @@ operator|-
 literal|0x500
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bootinfo
 operator|.
-name|version
+name|bi_version
 operator|=
-literal|1
+name|BOOTINFO_VERSION
 expr_stmt|;
 name|bootinfo
 operator|.
-name|kernelname
+name|bi_kernelname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
+name|name
+operator|+
+name|ouraddr
+expr_stmt|;
+name|bootinfo
+operator|.
+name|bi_nfs_diskless
+operator|=
+name|NULL
+expr_stmt|;
+name|bootinfo
+operator|.
+name|bi_size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|bootinfo
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"total=0x%x entry point=0x%x\n"
+argument_list|,
 operator|(
 name|int
 operator|)
-name|name
-operator|+
+name|addr
+argument_list|,
 operator|(
-name|BOOTSEG
-operator|<<
-literal|4
+name|int
 operator|)
-operator|)
-expr_stmt|;
-name|bootinfo
-operator|.
-name|nfs_diskless
-operator|=
-literal|0
+name|startaddr
+argument_list|)
 expr_stmt|;
 name|startprog
 argument_list|(
@@ -901,6 +965,8 @@ operator|)
 name|startaddr
 argument_list|,
 name|howto
+operator||
+name|RB_BOOTINFO
 argument_list|,
 name|bootdev
 argument_list|,
@@ -910,14 +976,9 @@ operator|)
 operator|&
 name|bootinfo
 operator|+
-operator|(
-name|BOOTSEG
-operator|<<
-literal|4
-operator|)
+name|ouraddr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_block
 
@@ -1066,6 +1127,14 @@ name|RB_KDB
 expr_stmt|;
 continue|continue;
 case|case
+literal|'D'
+case|:
+name|loadsyms
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
 literal|'b'
 case|:
 operator|*
@@ -1090,6 +1159,16 @@ operator|*
 name|howto
 operator|^=
 name|RB_SERIAL
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|howto
+operator|&
+name|RB_SERIAL
+condition|)
+name|init_serial
+argument_list|()
 expr_stmt|;
 continue|continue;
 block|}

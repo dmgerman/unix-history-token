@@ -129,7 +129,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|bootinfo_t
+name|bootinfo
 name|bootinfo
 decl_stmt|;
 end_decl_stmt
@@ -1754,19 +1754,19 @@ expr_stmt|;
 comment|/* Jump to kernel */
 name|bootinfo
 operator|.
-name|version
+name|bi_version
 operator|=
-literal|1
+name|BOOTINFO_VERSION
 expr_stmt|;
 name|bootinfo
 operator|.
-name|kernelname
+name|bi_kernelname
 operator|=
 name|kernel
 expr_stmt|;
 name|bootinfo
 operator|.
-name|nfs_diskless
+name|bi_nfs_diskless
 operator|=
 operator|&
 name|nfsdiskless
