@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)callout.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)callout.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -13,17 +13,23 @@ modifier|*
 name|c_next
 decl_stmt|;
 comment|/* next callout in queue */
-name|caddr_t
+name|void
+modifier|*
 name|c_arg
 decl_stmt|;
 comment|/* function argument */
-name|int
-function_decl|(
-modifier|*
-name|c_func
-function_decl|)
-parameter_list|()
-function_decl|;
+name|void
+argument_list|(
+argument|*c_func
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to call */
 name|int
 name|c_time
