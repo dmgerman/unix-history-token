@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -699,7 +699,7 @@ name|LOG_ODELAY
 operator||
 name|LOG_CONS
 argument_list|,
-literal|0
+name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 name|gethostname
