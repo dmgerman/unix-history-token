@@ -2156,6 +2156,13 @@ literal|"transfer draining lock"
 operator|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+name|from
+operator|->
+name|lk_interlock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|from
@@ -2164,7 +2171,16 @@ name|lk_waitcount
 operator|==
 literal|0
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+name|from
+operator|->
+name|lk_interlock
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|from
 operator|->
 name|lk_newlock
@@ -2187,7 +2203,9 @@ name|from
 operator|->
 name|lk_newlock
 argument_list|,
-name|NULL
+name|from
+operator|->
+name|lk_interlock
 argument_list|,
 name|from
 operator|->
@@ -2226,6 +2244,13 @@ argument_list|,
 operator|(
 literal|"active lock"
 operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+name|from
+operator|->
+name|lk_interlock
 argument_list|)
 expr_stmt|;
 block|}
