@@ -2113,7 +2113,8 @@ expr_stmt|;
 comment|/* Copy the core file. */
 name|dumpsize
 operator|*=
-name|NBPG
+name|getpagesize
+argument_list|()
 expr_stmt|;
 name|syslog
 argument_list|(

@@ -739,7 +739,8 @@ index|]
 operator|.
 name|n_value
 operator|+
-name|NBPG
+name|getpagesize
+argument_list|()
 operator|-
 name|entry
 expr_stmt|;

@@ -331,7 +331,8 @@ name|hdefault
 operator|.
 name|bsize
 operator|=
-name|NBPG
+name|getpagesize
+argument_list|()
 expr_stmt|;
 name|hdefault
 operator|.
@@ -339,7 +340,8 @@ name|cachesize
 operator|=
 literal|50
 operator|*
-name|NBPG
+name|getpagesize
+argument_list|()
 expr_stmt|;
 name|hdefault
 operator|.
