@@ -425,6 +425,9 @@ name|char
 modifier|*
 name|argv
 index|[]
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -741,7 +744,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|close_up_shop
 parameter_list|(
 name|void

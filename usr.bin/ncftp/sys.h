@@ -1767,12 +1767,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__386BSD__
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
@@ -1796,11 +1790,6 @@ directive|define
 name|HAS_DOMAINNAME
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1875,7 +1864,7 @@ end_ifdef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__386BSD__
+name|__FreeBSD__
 end_ifndef
 
 begin_ifndef

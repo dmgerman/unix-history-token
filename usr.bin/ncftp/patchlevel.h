@@ -1,14 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 name|v1
-literal|.8.6
+literal|.8.7
 operator|-
-name|October
-literal|30
+name|December
+literal|11
 operator|,
 literal|1994.
 name|Tweaks
 end_expr_stmt
+
+begin_for
+for|for FreeBSD.  Passive mode enabled and   turned on by default.  This should be the last version of ncftp before   version 2.  v1.8.6 - October 30
+operator|,
+literal|1994.
+name|Tweaks
+end_for
 
 begin_for
 for|for Solaris in sys.h.  v1.8.5 - September 20
