@@ -699,12 +699,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|codadevsw
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -782,12 +776,6 @@ name|i
 index|]
 operator|.
 name|dev
-argument_list|)
-expr_stmt|;
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|codadevsw
 argument_list|)
 expr_stmt|;
 block|}

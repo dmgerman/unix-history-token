@@ -220,15 +220,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|iir_devsw_installed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1499,61 +1490,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function
-specifier|static
-name|void
-name|iir_drvinit
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
-block|{
-name|GDT_DPRINTF
-argument_list|(
-name|GDT_D_DEBUG
-argument_list|,
-operator|(
-literal|"iir_drvinit()\n"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|iir_devsw_installed
-condition|)
-block|{
-comment|/* Add the I/O (data) channel */
-name|cdevsw_add
-argument_list|(
-operator|&
-name|iir_cdevsw
-argument_list|)
-expr_stmt|;
-name|iir_devsw_installed
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|iir_dev
-argument_list|,
-argument|SI_SUB_DRIVERS
-argument_list|,
-argument|SI_ORDER_MIDDLE + CDEV_MAJOR
-argument_list|,
-argument|iir_drvinit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
 
 end_unit
 
