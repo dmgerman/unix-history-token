@@ -2755,7 +2755,13 @@ argument_list|(
 literal|"** Leaving BAD MAGIC on Eflag 2\n"
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|Oflag
+operator|!=
+literal|1
+condition|)
 name|sblock
 operator|.
 name|fs_magic
