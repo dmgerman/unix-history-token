@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.6 %G%"
+literal|"@(#)write.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,8 +843,7 @@ name|fprintf
 argument_list|(
 name|tf
 argument_list|,
-literal|"%s!%s on %s at %d:%02d ...\r\n
-literal|"
+literal|"%s!%s on %s at %d:%02d ...\r\n\007\007\007"
 argument_list|,
 name|hostname
 argument_list|,
@@ -942,7 +941,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\7Write failed (%s logged out?)\n"
+literal|"\n\007Write failed (%s logged out?)\n"
 argument_list|,
 name|him
 argument_list|)
