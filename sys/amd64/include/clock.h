@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.33 1998/02/25 02:20:30 bde Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.34 1998/03/05 21:45:42 tegge Exp $  */
 end_comment
 
 begin_ifndef
@@ -64,6 +64,13 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|tsc_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tsc_is_broken
 decl_stmt|;
 end_decl_stmt
 
