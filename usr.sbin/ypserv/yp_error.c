@@ -51,6 +51,12 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"yp_extern.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|debug
@@ -99,6 +105,31 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|static
+name|void
+name|__verr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|_BSD_VA_LIST_
+name|ap
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
