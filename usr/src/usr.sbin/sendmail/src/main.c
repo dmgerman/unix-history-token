@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.55 (Berkeley) %G%"
+literal|"@(#)main.c	8.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_if
@@ -451,6 +457,11 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
 name|char
 name|jbuf
 index|[
@@ -495,8 +506,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|struct
+name|hostent
 modifier|*
 name|myhostname
 parameter_list|()
@@ -1642,7 +1653,7 @@ comment|/* hostname */
 end_comment
 
 begin_expr_stmt
-name|av
+name|hp
 operator|=
 name|myhostname
 argument_list|(
@@ -1878,7 +1889,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"UUCP nodename: %s\n"
+literal|" UUCP nodename: %s\n"
 argument_list|,
 name|p
 argument_list|)
@@ -1916,9 +1927,22 @@ expr_stmt|;
 block|}
 end_if
 
-begin_while
-while|while
+begin_if
+if|if
 condition|(
+name|hp
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|av
+operator|=
+name|hp
+operator|->
+name|h_aliases
+init|;
 name|av
 operator|!=
 name|NULL
@@ -1927,7 +1951,10 @@ operator|*
 name|av
 operator|!=
 name|NULL
-condition|)
+condition|;
+name|av
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -1952,11 +1979,105 @@ literal|'w'
 argument_list|,
 operator|*
 name|av
-operator|++
 argument_list|)
 expr_stmt|;
 block|}
-end_while
+if|if
+condition|(
+name|hp
+operator|->
+name|h_addrtype
+operator|==
+name|AF_INET
+operator|&&
+name|hp
+operator|->
+name|h_length
+operator|==
+literal|4
+condition|)
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|hp
+operator|->
+name|h_addr_list
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|char
+name|ipbuf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|ipbuf
+argument_list|,
+literal|"[%s]"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+operator|*
+operator|(
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|)
+name|hp
+operator|->
+name|h_addr_list
+index|[
+name|i
+index|]
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\ta.k.a.: %s\n"
+argument_list|,
+name|ipbuf
+argument_list|)
+expr_stmt|;
+name|setclass
+argument_list|(
+literal|'w'
+argument_list|,
+name|ipbuf
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_if
 
 begin_comment
 comment|/* current time */
@@ -6017,8 +6138,8 @@ literal|48
 index|]
 decl_stmt|;
 specifier|extern
-name|char
-modifier|*
+name|struct
+name|hostent
 modifier|*
 name|myhostname
 parameter_list|()
