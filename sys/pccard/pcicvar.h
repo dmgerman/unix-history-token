@@ -35,7 +35,7 @@ modifier|*
 name|sc
 decl_stmt|;
 comment|/* Back pointer to softc */
-name|u_char
+name|u_int8_t
 function_decl|(
 modifier|*
 name|getb
@@ -60,7 +60,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_char
+name|u_int8_t
 parameter_list|)
 function_decl|;
 name|bus_space_tag_t
