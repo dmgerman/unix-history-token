@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)at.c	4.1 (Berkeley) %G%"
+literal|"@(#)at.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1837,7 +1837,7 @@ name|sprintf
 argument_list|(
 name|fname
 argument_list|,
-literal|"%s/%.2d%.3d%.4d%.2d"
+literal|"%s/%02d.%03d.%04d.%02d"
 argument_list|,
 name|dir
 argument_list|,
