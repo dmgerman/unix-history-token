@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,16 +11,28 @@ begin_struct
 struct|struct
 name|session
 block|{
+name|int
+name|s_count
+decl_stmt|;
+comment|/* ref cnt; pgrps in session */
 name|struct
 name|proc
 modifier|*
 name|s_leader
 decl_stmt|;
-comment|/* pointer to session leader */
-name|int
-name|s_count
+comment|/* session leader */
+name|struct
+name|vnode
+modifier|*
+name|s_ttyvp
 decl_stmt|;
-comment|/* number of pgrps in session */
+comment|/* vnode of controlling terminal */
+name|struct
+name|tty
+modifier|*
+name|s_ttyp
+decl_stmt|;
+comment|/* controlling terminal */
 block|}
 struct|;
 end_struct
@@ -319,7 +331,7 @@ comment|/* quotas for this process */
 name|int
 name|p_traceflag
 decl_stmt|;
-comment|/* kernel tracing flags (facilities) */
+comment|/* kernel trace points */
 name|struct
 name|vnode
 modifier|*
@@ -813,8 +825,15 @@ begin_comment
 comment|/* no SIGCHLD when children stop */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTTY
+value|0x0100000
+end_define
+
 begin_comment
-comment|/* was SOUSIG	0x0100000	/* using old signal mechanism */
+comment|/* has a controlling terminal */
 end_comment
 
 begin_define
