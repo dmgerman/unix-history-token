@@ -83,6 +83,12 @@ name|acl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|acl
+operator|!=
+name|NULL
+condition|)
 name|bzero
 argument_list|(
 name|acl
