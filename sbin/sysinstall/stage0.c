@@ -94,7 +94,7 @@ name|dialog_menu
 argument_list|(
 literal|"Welcome to FreeBSD!"
 argument_list|,
-literal|"Please select one of the following options:"
+literal|"Use ALT-F2 and ALT-F1 to toggle between debugging\ninformation screen (ALT-F2) or this dialog screen (ALT-F1)\n\nPlease select one of the following options:"
 argument_list|,
 literal|15
 argument_list|,
@@ -109,19 +109,9 @@ argument_list|,
 name|selection
 argument_list|)
 condition|)
-block|{
-name|dialog_clear
+name|ExitSysinstall
 argument_list|()
 expr_stmt|;
-name|end_dialog
-argument_list|()
-expr_stmt|;
-name|reboot
-argument_list|(
-name|RB_AUTOBOOT
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|atoi
@@ -204,16 +194,8 @@ case|case
 literal|6
 case|:
 comment|/* Be neat.. */
-name|dialog_clear
+name|ExitSysinstall
 argument_list|()
-expr_stmt|;
-name|end_dialog
-argument_list|()
-expr_stmt|;
-name|reboot
-argument_list|(
-name|RB_AUTOBOOT
-argument_list|)
 expr_stmt|;
 break|break;
 comment|/* hope not! :) */
