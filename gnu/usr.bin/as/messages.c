@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: messages.c,v 1.6 1997/02/22 15:43:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2138,6 +2138,9 @@ name|file
 argument_list|,
 literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -2211,6 +2214,9 @@ name|buf
 argument_list|,
 literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|val
 argument_list|)
 expr_stmt|;

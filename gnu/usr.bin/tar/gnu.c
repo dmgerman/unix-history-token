@@ -794,6 +794,10 @@ name|fp
 argument_list|,
 literal|"%lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|this_time
 argument_list|)
 expr_stmt|;

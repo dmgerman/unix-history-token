@@ -284,7 +284,7 @@ name|line_buffer
 operator|+
 name|len
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|node
 operator|->

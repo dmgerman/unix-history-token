@@ -1866,6 +1866,11 @@ name|printf
 argument_list|(
 literal|"%lu%c"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|totalcc
 operator|+
 operator|(
@@ -1873,6 +1878,7 @@ name|beg
 operator|-
 name|bufbeg
 operator|)
+argument_list|)
 argument_list|,
 name|sep
 argument_list|)

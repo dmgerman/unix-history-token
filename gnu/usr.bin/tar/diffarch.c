@@ -1731,7 +1731,7 @@ name|fprintf
 argument_list|(
 name|msg_file
 argument_list|,
-literal|"%s: could only read %d of %d bytes\n"
+literal|"%s: could only read %d of %ld bytes\n"
 argument_list|,
 name|current_file_name
 argument_list|,
@@ -2344,7 +2344,7 @@ name|fprintf
 argument_list|(
 name|msg_file
 argument_list|,
-literal|"%s: could only read %d of %d bytes\n"
+literal|"%s: could only read %d of %ld bytes\n"
 argument_list|,
 name|current_file_name
 argument_list|,
@@ -2429,7 +2429,7 @@ name|fprintf
 argument_list|(
 name|msg_file
 argument_list|,
-literal|"%s: could only read %d of %d bytes\n"
+literal|"%s: could only read %d of %ld bytes\n"
 argument_list|,
 name|current_file_name
 argument_list|,

@@ -3963,7 +3963,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rec %d: "
+literal|"rec %ld: "
 argument_list|,
 name|baserec
 operator|+
@@ -4046,7 +4046,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rec %d: "
+literal|"rec %ld: "
 argument_list|,
 name|baserec
 operator|+

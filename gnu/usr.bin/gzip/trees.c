@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trees.c,v 1.6 1997/02/22 15:46:01 peter Exp $"
+literal|"$Id: trees.c,v 1.7 1997/08/29 16:14:19 sos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5487,8 +5487,6 @@ operator|(
 name|stderr
 operator|,
 literal|"-l used on binary file"
-operator|,
-literal|""
 operator|)
 argument_list|)
 expr_stmt|;

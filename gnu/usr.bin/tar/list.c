@@ -2115,7 +2115,7 @@ name|fprintf
 argument_list|(
 name|msg_file
 argument_list|,
-literal|"rec %10d: "
+literal|"rec %10ld: "
 argument_list|,
 name|baserec
 operator|+
@@ -2448,7 +2448,7 @@ name|sprintf
 argument_list|(
 name|uform
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|from_oct
 argument_list|(
@@ -2497,7 +2497,7 @@ name|sprintf
 argument_list|(
 name|gform
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|from_oct
 argument_list|(
@@ -2969,7 +2969,7 @@ name|fprintf
 argument_list|(
 name|msg_file
 argument_list|,
-literal|"rec %10d: "
+literal|"rec %10ld: "
 argument_list|,
 name|baserec
 operator|+

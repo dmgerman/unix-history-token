@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tc-i386.c,v 1.8 1997/02/22 15:44:23 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2283,7 +2283,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"    add_number    %d (%x)\n"
+literal|"    add_number    %ld (%lx)\n"
 argument_list|,
 name|e
 operator|->
