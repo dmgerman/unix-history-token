@@ -8244,6 +8244,16 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Any other processes trying to obtain this lock must first 	 * wait for VXLOCK to clear, then call the new lock operation. 	 */
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If purging an active vnode, it must be closed and 	 * deactivated before being reclaimed. Note that the 	 * VOP_INACTIVE will unlock the vnode. 	 */
 if|if
 condition|(
@@ -8267,22 +8277,29 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|VOP_INACTIVE
+if|if
+condition|(
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
 argument_list|,
 name|td
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vclean: cannot relock."
+argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Any other processes trying to obtain this lock must first 		 * wait for VXLOCK to clear, then call the new lock operation. 		 */
-name|VOP_UNLOCK
+name|VOP_INACTIVE
 argument_list|(
 name|vp
-argument_list|,
-literal|0
 argument_list|,
 name|td
 argument_list|)
