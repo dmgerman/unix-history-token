@@ -1165,7 +1165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * kern_sigaction  * sigaction  * freebsd4_sigaction  * osigaction  */
+comment|/*  * kern_sigaction  * sigaction  * freebsd4_sigaction  * osigaction  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -1242,6 +1242,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1446,6 +1452,12 @@ block|{
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -2056,6 +2068,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2199,12 +2217,6 @@ name|error
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|kern_sigaction
@@ -2222,12 +2234,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|oactp
@@ -2235,7 +2241,6 @@ operator|&&
 operator|!
 name|error
 condition|)
-block|{
 name|error
 operator|=
 name|copyout
@@ -2252,7 +2257,6 @@ name|oact
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -2669,12 +2673,6 @@ name|sa_mask
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|kern_sigaction
@@ -2690,12 +2688,6 @@ argument_list|,
 name|osap
 argument_list|,
 name|KSA_OSIGSET
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -4807,12 +4799,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|kern_sigaction
@@ -4828,12 +4814,6 @@ argument_list|,
 name|osap
 argument_list|,
 name|KSA_OSIGSET
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
