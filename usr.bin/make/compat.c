@@ -138,20 +138,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|CompatRunCommand
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|CompatMake
 parameter_list|(
 name|void
@@ -212,6 +198,58 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|CompatInit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+comment|/* Pointer to string of shell meta-characters */
+for|for
+control|(
+name|cp
+operator|=
+literal|"#=|^(){};&<>*?[]:$`\\\n"
+init|;
+operator|*
+name|cp
+operator|!=
+literal|'\0'
+condition|;
+name|cp
+operator|++
+control|)
+block|{
+name|meta
+index|[
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|cp
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/*      * The null character serves as a sentinel in the string.      */
+name|meta
+index|[
+literal|0
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CompatInterrupt --  *	Interrupt the creation of the current target and remove it if  *	it ain't precious.  *  * Results:  *	None.  *  * Side Effects:  *	The target is removed and the process exits. If .INTERRUPT exists,  *	its commands are run first WITH INTERRUPTS IGNORED..  *  *-----------------------------------------------------------------------  */
@@ -320,7 +358,7 @@ name|gn
 operator|->
 name|commands
 argument_list|,
-name|CompatRunCommand
+name|Compat_RunCommand
 argument_list|,
 operator|(
 name|void
@@ -454,13 +492,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CompatRunCommand --  *	Execute the next command for a target. If the command returns an  *	error, the node's made field is set to ERROR and creation stops.  *	The node from which the command came is also given.  *  * Results:  *	0 if the command succeeded, 1 if an error occurred.  *  * Side Effects:  *	The node's 'made' field may be set to ERROR.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Compat_RunCommand --  *	Execute the next command for a target. If the command returns an  *	error, the node's made field is set to ERROR and creation stops.  *	The node from which the command came is also given.  *  * Results:  *	0 if the command succeeded, 1 if an error occurred.  *  * Side Effects:  *	The node's 'made' field may be set to ERROR.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|CompatRunCommand
+name|Compat_RunCommand
 parameter_list|(
 name|void
 modifier|*
@@ -484,6 +521,9 @@ name|Boolean
 name|silent
 decl_stmt|,
 comment|/* Don't print command */
+name|doit
+decl_stmt|,
+comment|/* Execute even in -n */
 name|errCheck
 decl_stmt|;
 comment|/* Check errors */
@@ -577,6 +617,10 @@ name|type
 operator|&
 name|OP_IGNORE
 operator|)
+expr_stmt|;
+name|doit
+operator|=
+name|FALSE
 expr_stmt|;
 name|cmdNode
 operator|=
@@ -730,16 +774,24 @@ name|cmd
 operator|==
 literal|'-'
 operator|)
-condition|)
-block|{
-if|if
-condition|(
+operator|||
+operator|(
 operator|*
 name|cmd
 operator|==
-literal|'@'
+literal|'+'
+operator|)
 condition|)
 block|{
+switch|switch
+condition|(
+operator|*
+name|cmd
+condition|)
+block|{
+case|case
+literal|'@'
+case|:
 name|silent
 operator|=
 name|DEBUG
@@ -751,13 +803,35 @@ name|FALSE
 else|:
 name|TRUE
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+literal|'-'
+case|:
 name|errCheck
 operator|=
 name|FALSE
 expr_stmt|;
+break|break;
+case|case
+literal|'+'
+case|:
+name|doit
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|meta
+index|[
+literal|0
+index|]
+condition|)
+comment|/* we came here from jobs */
+name|CompatInit
+argument_list|()
+expr_stmt|;
+break|break;
 block|}
 name|cmd
 operator|++
@@ -802,13 +876,18 @@ control|)
 block|{
 continue|continue;
 block|}
-comment|/*      * Print the command before echoing if we're not supposed to be quiet for      * this one. We also print the command if -n given.      */
+comment|/*      * Print the command before echoing if we're not supposed to be quiet for      * this one. We also print the command if -n given, but not if '+'.      */
 if|if
 condition|(
 operator|!
 name|silent
 operator|||
+operator|(
 name|noExecute
+operator|&&
+operator|!
+name|doit
+operator|)
 condition|)
 block|{
 name|printf
@@ -827,6 +906,9 @@ block|}
 comment|/*      * If we're not supposed to execute any commands, this is as far as      * we go...      */
 if|if
 condition|(
+operator|!
+name|doit
+operator|&&
 name|noExecute
 condition|)
 block|{
@@ -1558,7 +1640,7 @@ argument_list|(
 name|gn
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Alter our type to tell if errors should be ignored or things 	 * should not be printed so CompatRunCommand knows what to do. 	 */
+comment|/* 	 * Alter our type to tell if errors should be ignored or things 	 * should not be printed so Compat_RunCommand knows what to do. 	 */
 if|if
 condition|(
 name|Targ_Ignore
@@ -1616,7 +1698,7 @@ name|gn
 operator|->
 name|commands
 argument_list|,
-name|CompatRunCommand
+name|Compat_RunCommand
 argument_list|,
 operator|(
 name|void
@@ -2006,11 +2088,6 @@ name|Lst
 name|targs
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-comment|/* Pointer to string of shell meta-characters */
 name|GNode
 modifier|*
 name|gn
@@ -2022,6 +2099,9 @@ name|int
 name|errors
 decl_stmt|;
 comment|/* Number of targets not remade due to errors */
+name|CompatInit
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|signal
@@ -2102,42 +2182,6 @@ name|CompatInterrupt
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|cp
-operator|=
-literal|"#=|^(){};&<>*?[]:$`\\\n"
-init|;
-operator|*
-name|cp
-operator|!=
-literal|'\0'
-condition|;
-name|cp
-operator|++
-control|)
-block|{
-name|meta
-index|[
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|cp
-index|]
-operator|=
-literal|1
-expr_stmt|;
-block|}
-comment|/*      * The null character serves as a sentinel in the string.      */
-name|meta
-index|[
-literal|0
-index|]
-operator|=
-literal|1
-expr_stmt|;
 name|ENDNode
 operator|=
 name|Targ_FindNode
@@ -2176,7 +2220,7 @@ name|gn
 operator|->
 name|commands
 argument_list|,
-name|CompatRunCommand
+name|Compat_RunCommand
 argument_list|,
 operator|(
 name|void
@@ -2297,7 +2341,7 @@ name|ENDNode
 operator|->
 name|commands
 argument_list|,
-name|CompatRunCommand
+name|Compat_RunCommand
 argument_list|,
 operator|(
 name|void
