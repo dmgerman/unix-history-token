@@ -519,6 +519,14 @@ name|watchdog_patpat
 argument_list|()
 operator|<
 literal|0
+operator|&&
+operator|(
+name|timeout
+operator|&
+name|WD_INTERVAL
+operator|)
+operator|!=
+name|WD_TO_NEVER
 condition|)
 name|err
 argument_list|(
