@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.12 1995/12/08 11:16:24 julian Exp $ */
+comment|/* $Id: matcd.c,v 1.13 1995/12/10 13:40:42 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1274,7 +1274,7 @@ block|,
 name|matcdioctl
 block|,
 comment|/*17*/
-name|nxdump
+name|nodump
 block|,
 name|matcdsize
 block|,
