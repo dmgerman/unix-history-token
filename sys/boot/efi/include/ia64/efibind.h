@@ -391,7 +391,7 @@ value|volatile
 end_define
 
 begin_comment
-comment|/*  * XXX Need to find out if this is portable accross compliers.  */
+comment|/*  * XXX Need to find out if this is portable across compilers.  */
 end_comment
 
 begin_function_decl
