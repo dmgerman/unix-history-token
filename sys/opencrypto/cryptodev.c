@@ -3584,17 +3584,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-if|if
-condition|(
-name|crypto_usercrypto
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 return|return
 operator|(
 literal|0
