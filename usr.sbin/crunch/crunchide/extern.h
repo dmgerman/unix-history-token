@@ -37,6 +37,40 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|arch_ia64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NLIST_ELF64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|arch_sparc64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NLIST_ELF64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|arch_mips
 end_ifdef
 
@@ -87,6 +121,16 @@ end_define
 begin_comment
 comment|/* #define	NLIST_ELF64 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

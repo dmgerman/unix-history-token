@@ -623,6 +623,14 @@ case|case
 name|EM_ALPHA
 case|:
 break|break;
+case|case
+name|EM_IA_64
+case|:
+break|break;
+case|case
+name|EM_SPARCV9
+case|:
+break|break;
 comment|/*        ELFDEFNNAME(MACHDEP_ID_CASES) */
 default|default:
 return|return
