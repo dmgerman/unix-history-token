@@ -6040,6 +6040,13 @@ end_struct
 begin_define
 define|#
 directive|define
+name|SK_MAXUNIT
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
 name|SK_TIMEOUT
 value|1000
 end_define
