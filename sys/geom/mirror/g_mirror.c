@@ -8808,33 +8808,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|timeout
-decl_stmt|;
-comment|/* No valid disks still, wait some more. */
-name|timeout
-operator|=
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|g_mirror_timeout
-argument_list|)
-expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
+comment|/* No valid disks found, destroy device. */
 name|sc
 operator|->
-name|sc_callout
-argument_list|,
-name|timeout
-operator|*
-name|hz
-argument_list|,
-name|g_mirror_go
-argument_list|,
-name|sc
-argument_list|)
+name|sc_flags
+operator||=
+name|G_MIRROR_DEVICE_FLAG_DESTROY
 expr_stmt|;
 return|return;
 block|}
