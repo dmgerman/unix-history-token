@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.4	%H%	*/
+comment|/*	tty.c	3.5	%H%	*/
 end_comment
 
 begin_comment
@@ -798,6 +798,10 @@ begin_comment
 comment|/*  * Do nothing specific version of line  * discipline specific ioctl command.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|nullioctl
 argument_list|(
@@ -1130,6 +1134,10 @@ name|struct
 name|sgttyb
 name|iocb
 decl_stmt|;
+name|struct
+name|clist
+name|tq
+decl_stmt|;
 specifier|extern
 name|int
 name|nldisp
@@ -1318,14 +1326,6 @@ case|:
 case|case
 name|TIOCSETN
 case|:
-block|{
-name|struct
-name|clist
-name|tq
-decl_stmt|;
-specifier|register
-name|c
-expr_stmt|;
 if|if
 condition|(
 name|copyin
@@ -1603,7 +1603,6 @@ name|spl0
 argument_list|()
 expr_stmt|;
 break|break;
-block|}
 comment|/* 	 * send current parameters to user 	 */
 case|case
 name|TIOCGETP
