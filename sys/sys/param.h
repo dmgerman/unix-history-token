@@ -217,6 +217,12 @@ end_ifdef
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 operator|(
 name|defined
 argument_list|(
@@ -240,6 +246,11 @@ error|#
 directive|error
 literal|"This file contains obsolete code to be removed in 6.0-current"
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
