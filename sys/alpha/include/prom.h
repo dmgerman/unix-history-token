@@ -350,6 +350,18 @@ end_ifdef
 
 begin_decl_stmt
 name|void
+name|promcnattach
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|promcnputc
 name|__P
 argument_list|(
