@@ -136,7 +136,7 @@ operator|&&
 operator|(
 name|defined
 argument_list|(
-name|i386
+name|__i386__
 argument_list|)
 operator|||
 name|defined

@@ -172,7 +172,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|i386
+name|__i386__
 end_if
 
 begin_include
