@@ -81,6 +81,28 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_comment
+comment|/* Miniumum timeout:  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LABPC_MIN_TMO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LABPC_MIN_TMO
+value|(hz)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -229,6 +251,13 @@ name|long
 name|tmo
 decl_stmt|;
 comment|/* Timeout in Herz */
+name|long
+name|min_tmo
+decl_stmt|;
+comment|/* Timeout in Herz */
+name|int
+name|cleared_intr
+decl_stmt|;
 name|int
 name|gains
 index|[
@@ -381,7 +410,7 @@ name|CR
 parameter_list|,
 name|EXPR
 parameter_list|)
-value|do { \ 	(LABPC)->cr_image[CR - 1] EXPR ; \ 	loutb((LABPC)->base + (CR == 4 ? 0x0F : CR - 1), (LABPC)->cr_image[(CR - 1)]); \ } while (0)
+value|do { \ 	(LABPC)->cr_image[CR - 1] EXPR ; \ 	loutb(((LABPC)->base + ( (CR == 4) ? (0x0F) : (CR - 1))), ((LABPC)->cr_image[(CR - 1)])); \ } while (0)
 end_define
 
 begin_define
@@ -1105,17 +1134,21 @@ name|int
 name|err
 parameter_list|)
 block|{
-if|if
-condition|(
-name|err
-condition|)
-block|{
 name|bp
 operator|->
 name|b_error
 operator|=
 name|err
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|||
+name|bp
+operator|->
+name|b_resid
+condition|)
+block|{
 name|bp
 operator|->
 name|b_flags
@@ -1146,7 +1179,7 @@ end_function_decl
 begin_function
 specifier|static
 name|void
-name|done_and_dequeu
+name|done_and_start_next
 parameter_list|(
 name|struct
 name|ctlr
@@ -2055,6 +2088,12 @@ argument_list|)
 expr_stmt|;
 name|ctlr
 operator|->
+name|min_tmo
+operator|=
+name|LABPC_MIN_TMO
+expr_stmt|;
+name|ctlr
+operator|->
 name|dcr_val
 operator|=
 literal|0x80
@@ -2393,7 +2432,9 @@ operator|)
 operator|/
 literal|1000000
 operator|+
-literal|1
+name|ctlr
+operator|->
+name|min_tmo
 expr_stmt|;
 block|}
 end_function
@@ -2657,7 +2698,9 @@ operator|)
 operator|/
 literal|1000000
 operator|+
-literal|1
+name|ctlr
+operator|->
+name|min_tmo
 expr_stmt|;
 block|}
 end_function
@@ -2726,11 +2769,16 @@ argument_list|(
 literal|"labpc?: Null ctlr struct?\n"
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|printf
 argument_list|(
-literal|"labpc%d: timeout\n"
+literal|"labpc%d: timeout"
 argument_list|,
 name|ctlr
 operator|->
@@ -2764,17 +2812,22 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"labpc%d timeout: Null bp.\n"
-argument_list|,
-name|ctlr
-operator|->
-name|unit
+literal|", Null bp.\n"
 argument_list|)
 expr_stmt|;
-comment|/* No more data being transferred. 		 */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
-name|done_and_dequeu
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|done_and_start_next
 argument_list|(
 name|ctlr
 argument_list|,
@@ -2805,6 +2858,60 @@ block|{
 name|u_char
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|ctlr
+operator|->
+name|cr_image
+index|[
+literal|2
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|ctlr
+operator|->
+name|cleared_intr
+condition|)
+block|{
+name|ctlr
+operator|->
+name|cleared_intr
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|"ad_intr (should not happen) interrupt with interrupts off\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"status %x, cr3 %x\n"
+argument_list|,
+name|inb
+argument_list|(
+name|STATUS
+argument_list|(
+name|ctlr
+argument_list|)
+argument_list|)
+argument_list|,
+name|ctlr
+operator|->
+name|cr_image
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 while|while
 condition|(
 operator|(
@@ -2856,7 +2963,9 @@ name|b_actf
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ad_intr: error: data %p, status %x"
+literal|"ad_intr: error: bp %0p, data %0p, status %x"
+argument_list|,
+name|bp
 argument_list|,
 name|ctlr
 operator|->
@@ -2873,7 +2982,7 @@ name|OVERRUN
 condition|)
 name|printf
 argument_list|(
-literal|" OVERRUN"
+literal|" Conversion overrun (multiple A-D trigger)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2884,7 +2993,7 @@ name|OVERFLOW
 condition|)
 name|printf
 argument_list|(
-literal|" OVERFLOW"
+literal|" FIFO overflow"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2892,23 +3001,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
-name|ctlr
-operator|->
-name|stop
-call|)
-argument_list|(
-name|ctlr
-argument_list|)
-expr_stmt|;
-comment|/* There may not be a bp if the interrupt went off between 			 * frames, that is, when no process was ready to receive and 			 * we are using a mode that is driven by the sample clock. 			 */
 if|if
 condition|(
 name|bp
 condition|)
 block|{
-name|done_and_dequeu
+name|done_and_start_next
 argument_list|(
 name|ctlr
 argument_list|,
@@ -2920,6 +3018,12 @@ expr_stmt|;
 return|return;
 block|}
 else|else
+block|{
+name|printf
+argument_list|(
+literal|"ad_intr: (should not happen) error between records\n"
+argument_list|)
+expr_stmt|;
 name|ctlr
 operator|->
 name|err
@@ -2927,10 +3031,23 @@ operator|=
 name|status
 expr_stmt|;
 comment|/* Set overrun condition */
+return|return;
+block|}
 block|}
 else|else
 comment|/* FIFO interrupt */
 block|{
+name|struct
+name|buf
+modifier|*
+name|bp
+init|=
+name|ctlr
+operator|->
+name|start_queue
+operator|.
+name|b_actf
+decl_stmt|;
 if|if
 condition|(
 name|ctlr
@@ -2964,18 +3081,7 @@ name|data_end
 condition|)
 comment|/* Normal completion */
 block|{
-name|struct
-name|buf
-modifier|*
-name|bp
-init|=
-name|ctlr
-operator|->
-name|start_queue
-operator|.
-name|b_actf
-decl_stmt|;
-name|done_and_dequeu
+name|done_and_start_next
 argument_list|(
 name|ctlr
 argument_list|,
@@ -2990,6 +3096,11 @@ block|}
 else|else
 comment|/* Interrupt with no where to put the data.  */
 block|{
+name|printf
+argument_list|(
+literal|"ad_intr: (should not happen) dropped input.\n"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2999,6 +3110,22 @@ name|ADFIFO
 argument_list|(
 name|ctlr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"bp %0p, status %x, cr3 %x\n"
+argument_list|,
+name|bp
+argument_list|,
+name|status
+argument_list|,
+name|ctlr
+operator|->
+name|cr_image
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 name|ctlr
@@ -3046,13 +3173,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* mode_change_needed: Return whether or not we can open again, or  * if the new mode is inconsistent with an already opened mode.  * We only permit multiple opens for digital I/O now.  */
+comment|/* lockout_multiple_opens: Return whether or not we can open again, or  * if the new mode is inconsistent with an already opened mode.  * We only permit multiple opens for digital I/O now.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|mode_change_needed
+name|lockout_multiple_open
 parameter_list|(
 name|dev_t
 name|current
@@ -3198,21 +3325,11 @@ name|stop
 operator|=
 name|null_stop
 expr_stmt|;
-name|CR_EXPR
-argument_list|(
-name|ctlr
-argument_list|,
-literal|3
-argument_list|,
-operator||=
-name|ERRINTEN
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|mode_change_needed
+name|lockout_multiple_open
 argument_list|(
 name|ctlr
 operator|->
@@ -3337,8 +3454,18 @@ literal|3
 argument_list|,
 operator|&=
 operator|~
+operator|(
 name|FIFOINTEN
+operator||
+name|ERRINTEN
+operator|)
 argument_list|)
+expr_stmt|;
+name|ctlr
+operator|->
+name|cleared_intr
+operator|=
+literal|1
 expr_stmt|;
 name|ctlr
 operator|->
@@ -3378,50 +3505,52 @@ name|b_bcount
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|FIFOINTENABLED
-argument_list|(
-name|ctlr
-argument_list|)
-condition|)
-comment|/* We can store the data again */
-block|{
-if|if
-condition|(
 name|ctlr
 operator|->
 name|err
 condition|)
-comment|/* Dropped input between records */
 block|{
-name|done_and_dequeu
+name|printf
+argument_list|(
+literal|"labpc start: (should not happen) error between records.\n"
+argument_list|)
+expr_stmt|;
+name|done_and_start_next
 argument_list|(
 name|ctlr
 argument_list|,
 name|bp
 argument_list|,
-name|ENOSPC
+name|EIO
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|CR_EXPR
+if|if
+condition|(
+name|ctlr
+operator|->
+name|data
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"labpc start: (should not happen) NULL data pointer.\n"
+argument_list|)
+expr_stmt|;
+name|done_and_start_next
 argument_list|(
 name|ctlr
 argument_list|,
-literal|3
+name|bp
 argument_list|,
-operator||=
-name|FIFOINTEN
+name|EIO
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-name|ctlr
-operator|->
-name|err
-operator|=
-literal|0
-expr_stmt|;
 call|(
 modifier|*
 name|ctlr
@@ -3436,6 +3565,42 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|FIFOINTENABLED
+argument_list|(
+name|ctlr
+argument_list|)
+condition|)
+comment|/* We can store the data again */
+block|{
+name|CR_EXPR
+argument_list|(
+name|ctlr
+argument_list|,
+literal|3
+argument_list|,
+operator||=
+operator|(
+name|FIFOINTEN
+operator||
+name|ERRINTEN
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Don't wait for the interrupts to fill things up. 		 */
+call|(
+modifier|*
+name|ctlr
+operator|->
+name|intr
+call|)
+argument_list|(
+name|ctlr
+argument_list|)
+expr_stmt|;
+block|}
 name|timeout
 argument_list|(
 name|tmo_stop
