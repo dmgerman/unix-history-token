@@ -236,6 +236,17 @@ begin_comment
 comment|/* do not log more */
 end_comment
 
+begin_comment
+comment|/*  * Stop retrying after this many DMA overruns.  Since each retry takes  * one revolution, with 300 rpm., 25 retries take approximately 10  * seconds which the read attempt will block in case the DMA overrun  * is persistent.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDC_DMAOV_MAX
+value|25
+end_define
+
 begin_define
 define|#
 directive|define
@@ -6809,6 +6820,13 @@ operator|->
 name|fdc_dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Clearing the DMA overrun counter at open time is a bit messy. 	 * Since we're only managing one counter per controller, opening 	 * the second drive could mess it up.  Anyway, if the DMA overrun 	 * condition is really persistent, it will eventually time out 	 * still.  OTOH, clearing it here will ensure we'll at least start 	 * trying again after a previous (maybe even long ago) failure. 	 * Also, this is merely a stop-gap measure only that should not 	 * happen during normal operation, so we can tolerate it to be a 	 * bit sloppy about this. 	 */
+name|fdc
+operator|->
+name|dma_overruns
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -9312,7 +9330,17 @@ operator|&
 name|NE7_ST1_OR
 condition|)
 block|{
-comment|/* 				 * DMA overrun. Someone hogged the bus 				 * and didn't release it in time for the 				 * next FDC transfer. 				 * Just restart it, don't increment retry 				 * count. (vak)                                  */
+comment|/* 				 * DMA overrun. Someone hogged the bus and 				 * didn't release it in time for the next 				 * FDC transfer. 				 * 				 * We normally restart this without bumping 				 * the retry counter.  However, in case 				 * something is seriously messed up (like 				 * broken hardware), we rather limit the 				 * number of retries so the IO operation 				 * doesn't block indefinately. 				 */
+if|if
+condition|(
+name|fdc
+operator|->
+name|dma_overruns
+operator|++
+operator|<
+name|FDC_DMAOV_MAX
+condition|)
+block|{
 name|fdc
 operator|->
 name|state
@@ -9325,7 +9353,8 @@ literal|1
 operator|)
 return|;
 block|}
-elseif|else
+comment|/* else fall through */
+block|}
 if|if
 condition|(
 operator|(
@@ -9402,6 +9431,13 @@ operator|)
 return|;
 block|}
 comment|/* All OK */
+comment|/* Operation successful, retry DMA overruns again next time. */
+name|fdc
+operator|->
+name|dma_overruns
+operator|=
+literal|0
+expr_stmt|;
 name|fd
 operator|->
 name|skip

@@ -104,6 +104,10 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* active buffer */
+name|int
+name|dma_overruns
+decl_stmt|;
+comment|/* number of DMA overruns */
 name|struct
 name|resource
 modifier|*
