@@ -6043,6 +6043,14 @@ operator|=
 literal|"Voodoo Banshee"
 expr_stmt|;
 break|break;
+case|case
+literal|0x0005
+case|:
+name|chip
+operator|=
+literal|"Voodoo 3"
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
