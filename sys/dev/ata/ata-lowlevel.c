@@ -435,7 +435,12 @@ name|request
 operator|->
 name|device
 argument_list|,
-literal|"error issueing PIO command\n"
+literal|"error issueing %s command\n"
+argument_list|,
+name|ata_cmd2str
+argument_list|(
+name|request
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|request
@@ -707,7 +712,12 @@ name|request
 operator|->
 name|device
 argument_list|,
-literal|"error issuing DMA command\n"
+literal|"error issueing %s command\n"
+argument_list|,
+name|ata_cmd2str
+argument_list|(
+name|request
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|request
@@ -2340,40 +2350,6 @@ argument_list|)
 expr_stmt|;
 comment|/* done with HW */
 break|break;
-block|}
-comment|/* if we timed out the unlocking of the ATA channel is done later */
-if|if
-condition|(
-operator|!
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|ATA_R_TIMEOUT
-operator|)
-condition|)
-block|{
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
-expr_stmt|;
-name|ATA_UNLOCK_CH
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-name|ch
-operator|->
-name|locking
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_LF_UNLOCK
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* schedule completition for this request */
 name|ata_finish

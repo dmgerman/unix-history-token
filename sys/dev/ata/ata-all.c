@@ -3351,8 +3351,7 @@ name|request
 operator|->
 name|retries
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|request
 operator|->
