@@ -1734,7 +1734,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|news
+name|new
 operator|)
 return|;
 block|}
