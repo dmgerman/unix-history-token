@@ -343,11 +343,9 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
 name|linkspeed
 index|[]
-index|[
-literal|0x10
-index|]
 decl_stmt|;
 end_decl_stmt
 
