@@ -617,19 +617,15 @@ name|msg_size
 expr_stmt|;
 name|bufpos
 operator|=
+name|MSGBUF_SEQ_TO_POS
+argument_list|(
+operator|&
+name|cur
+argument_list|,
 name|cur
 operator|.
-name|msg_bufx
-expr_stmt|;
-if|if
-condition|(
-name|bufpos
-operator|>=
-name|buflen
-condition|)
-name|bufpos
-operator|=
-literal|0
+name|msg_wseq
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * The message buffer is circular.  If the buffer has wrapped, the 	 * write pointer points to the oldest data.  Otherwise, the write 	 * pointer points to \0's following the data.  Read the entire 	 * buffer starting at the write pointer and ignore nulls so that 	 * we effectively start at the oldest data. 	 */
