@@ -3070,6 +3070,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|iosize
+operator|==
+literal|0
+operator|&&
 name|cio
 condition|)
 name|xmax
