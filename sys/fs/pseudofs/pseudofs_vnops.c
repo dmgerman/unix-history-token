@@ -710,19 +710,31 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
+block|{
 comment|/* pretend it doesn't exist */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
 if|#
 directive|if
 literal|0
-block|if (!pn->pn_shadow) 				pfs_create_shadow(pn, p); 			pn = pn->pn_shadow; 			goto got_pnode;
+block|if (!pn->pn_shadow) 				pfs_create_shadow(pn, p); 			pn = pn->pn_shadow; 			PROC_UNLOCK(p); 			goto got_pnode;
 else|#
 directive|else
 comment|/* not yet implemented */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
