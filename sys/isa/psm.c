@@ -4259,7 +4259,7 @@ comment|/*  	 * Don't try to reset the pointing device.  It may possibly be 	 * 
 block|}
 else|else
 block|{
-comment|/* 	 * NOTE: some controllers appears to hang the `keyboard' when the aux 	 * port doesn't exist and `PSMC_RESET_DEV' is issued. 	 */
+comment|/* 	 * NOTE: some controllers appears to hang the `keyboard' when the aux 	 * port doesn't exist and `PSMC_RESET_DEV' is issued. 	 * 	 * Attempt to reset the controller twice -- this helps 	 * pierce through some KVM switches. The second reset 	 * is non-fatal. 	 */
 if|if
 condition|(
 operator|!
@@ -4301,6 +4301,39 @@ expr_stmt|;
 name|endprobe
 argument_list|(
 name|ENXIO
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|reset_aux_dev
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+condition|)
+block|{
+name|recover_from_error
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|>=
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"psm%d: failed to reset the aux device (2).\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
