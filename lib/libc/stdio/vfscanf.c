@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfscanf.c,v 1.10 1997/04/04 19:07:02 ache Exp $"
+literal|"$Id: vfscanf.c,v 1.11 1997/07/01 17:46:39 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,7 +160,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* L: long double; unimplemented */
+comment|/* L: long double */
 end_comment
 
 begin_define
@@ -2720,6 +2720,7 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX this loses precision for long doubles. */
 name|res
 operator|=
 name|strtod
@@ -2734,6 +2735,23 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|LONGDBL
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+argument|ap
+argument_list|,
+argument|long double *
+argument_list|)
+operator|=
+name|res
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|flags
