@@ -3955,8 +3955,6 @@ decl_stmt|;
 name|vm_object_t
 name|result
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|source
 operator|=
 operator|*
