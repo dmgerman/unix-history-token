@@ -2864,13 +2864,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|XE_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"xe%d: media_change\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"media_change\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2964,13 +2962,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|XE_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"xe%d: media_status\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"media_status\n"
 argument_list|)
 expr_stmt|;
 endif|#
