@@ -959,7 +959,7 @@ name|cs
 expr_stmt|;
 comment|/* offset to next symbol */
 break|break;
-comment|/* reurn from a recursion */
+comment|/* return from a recursion */
 case|case
 literal|')'
 case|:
