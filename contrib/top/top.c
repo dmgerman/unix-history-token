@@ -9,7 +9,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  */
+comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -2879,6 +2879,8 @@ block|{
 name|new_message
 argument_list|(
 name|MT_standout
+argument_list|,
+literal|"%s"
 argument_list|,
 name|errmsg
 argument_list|)
