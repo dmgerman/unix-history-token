@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.5 (Berkeley) %G%"
+literal|"@(#)trpt.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,17 +283,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|tcp_debug
-name|tcp_debug
-index|[
-name|TCP_NDEBUG
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|caddr_t
 name|tcp_pcbs
 index|[
@@ -321,8 +310,6 @@ decl_stmt|,
 name|follow
 decl_stmt|,
 name|sflag
-decl_stmt|,
-name|tcp_debx
 decl_stmt|,
 name|tflag
 decl_stmt|;
