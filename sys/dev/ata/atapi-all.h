@@ -891,11 +891,16 @@ name|ata_softc
 modifier|*
 name|controller
 decl_stmt|;
-comment|/* ptr to parent ctrl */
+comment|/* ptr to controller softc */
 name|int32_t
 name|unit
 decl_stmt|;
 comment|/* ATA_MASTER or ATA_SLAVE */
+name|void
+modifier|*
+name|driver
+decl_stmt|;
+comment|/* ptr to subdriver softc */
 name|int8_t
 modifier|*
 name|devname
@@ -947,11 +952,6 @@ modifier|*
 name|device
 decl_stmt|;
 comment|/* ptr to parent device */
-name|void
-modifier|*
-name|driver
-decl_stmt|;
-comment|/* ptr to calling driver */
 name|u_int8_t
 name|ccb
 index|[
@@ -1030,6 +1030,19 @@ end_struct
 begin_function_decl
 name|void
 name|atapi_attach
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|,
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atapi_detach
 parameter_list|(
 name|struct
 name|ata_softc

@@ -123,25 +123,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/apm_bios.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -153,6 +134,10 @@ include|#
 directive|include
 file|<dev/ata/ata-disk.h>
 end_include
+
+begin_comment
+comment|/* device structures */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -337,6 +322,15 @@ begin_comment
 comment|/* internal vars */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|adp_lun_map
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -385,38 +379,12 @@ name|ad_softc
 modifier|*
 name|adp
 decl_stmt|;
-specifier|static
-name|int32_t
-name|adnlun
-init|=
-literal|0
-decl_stmt|;
 name|dev_t
-name|dev1
+name|dev
 decl_stmt|;
 name|int32_t
 name|secsperint
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_STATIC_ID
-name|adnlun
-operator|=
-operator|(
-name|scp
-operator|->
-name|lun
-operator|<<
-literal|1
-operator|)
-operator|+
-name|ATA_DEV
-argument_list|(
-name|device
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -438,11 +406,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: failed to allocate driver storage\n"
+name|scp
 argument_list|,
-name|adnlun
+name|device
+argument_list|,
+literal|"failed to allocate driver storage\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -482,13 +452,43 @@ name|unit
 operator|=
 name|device
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATA_STATIC_ID
 name|adp
 operator|->
 name|lun
 operator|=
-name|adnlun
-operator|++
+operator|(
+name|device_get_unit
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|)
+operator|<<
+literal|1
+operator|)
+operator|+
+name|ATA_DEV
+argument_list|(
+name|device
+argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|adp
+operator|->
+name|lun
+operator|=
+name|ata_get_lun
+argument_list|(
+operator|&
+name|adp_lun_map
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|adp
 operator|->
 name|heads
@@ -788,9 +788,12 @@ operator|->
 name|versmajor
 argument_list|)
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|scp
 operator|->
-name|lun
+name|dev
+argument_list|)
 argument_list|,
 operator|(
 name|adp
@@ -970,9 +973,12 @@ name|adp
 operator|->
 name|sectors
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|scp
 operator|->
-name|lun
+name|dev
+argument_list|)
 argument_list|,
 operator|(
 name|adp
@@ -1028,7 +1034,7 @@ argument_list|,
 name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
-name|dev1
+name|dev
 operator|=
 name|disk_create
 argument_list|(
@@ -1050,13 +1056,13 @@ operator|&
 name|addisk_cdevsw
 argument_list|)
 expr_stmt|;
-name|dev1
+name|dev
 operator|->
 name|si_drv1
 operator|=
 name|adp
 expr_stmt|;
-name|dev1
+name|dev
 operator|->
 name|si_iosize_max
 operator|=
@@ -1064,7 +1070,13 @@ literal|256
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
+name|adp
+operator|->
 name|dev1
+operator|=
+name|dev
+expr_stmt|;
+name|dev
 operator|=
 name|disk_create
 argument_list|(
@@ -1086,19 +1098,25 @@ operator|&
 name|fakewddisk_cdevsw
 argument_list|)
 expr_stmt|;
-name|dev1
+name|dev
 operator|->
 name|si_drv1
 operator|=
 name|adp
 expr_stmt|;
-name|dev1
+name|dev
 operator|->
 name|si_iosize_max
 operator|=
 literal|256
 operator|*
 name|DEV_BSIZE
+expr_stmt|;
+name|adp
+operator|->
+name|dev2
+operator|=
+name|dev
 expr_stmt|;
 name|bufq_init
 argument_list|(
@@ -1107,6 +1125,96 @@ name|adp
 operator|->
 name|queue
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ad_detach
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+name|scp
+parameter_list|,
+name|int32_t
+name|device
+parameter_list|)
+block|{
+name|struct
+name|ad_softc
+modifier|*
+name|adp
+init|=
+name|scp
+operator|->
+name|dev_softc
+index|[
+name|ATA_DEV
+argument_list|(
+name|device
+argument_list|)
+index|]
+decl_stmt|;
+name|disk_invalidate
+argument_list|(
+operator|&
+name|adp
+operator|->
+name|disk
+argument_list|)
+expr_stmt|;
+name|disk_destroy
+argument_list|(
+name|adp
+operator|->
+name|dev1
+argument_list|)
+expr_stmt|;
+name|disk_destroy
+argument_list|(
+name|adp
+operator|->
+name|dev2
+argument_list|)
+expr_stmt|;
+name|devstat_remove_entry
+argument_list|(
+operator|&
+name|adp
+operator|->
+name|stats
+argument_list|)
+expr_stmt|;
+name|ata_free_lun
+argument_list|(
+operator|&
+name|adp_lun_map
+argument_list|,
+name|adp
+operator|->
+name|lun
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|adp
+argument_list|,
+name|M_AD
+argument_list|)
+expr_stmt|;
+name|scp
+operator|->
+name|dev_softc
+index|[
+name|ATA_DEV
+argument_list|(
+name|device
+argument_list|)
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -1642,7 +1750,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"addump: timeout waiting for final ready\n"
+literal|"ad%d: timeout waiting for final ready\n"
+argument_list|,
+name|adp
+operator|->
+name|lun
 argument_list|)
 expr_stmt|;
 return|return
@@ -1709,7 +1821,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ad_start: out of memory\n"
+literal|"ad%d: out of memory in start\n"
+argument_list|,
+name|adp
+operator|->
+name|lun
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1945,7 +2061,7 @@ literal|256
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ad%d: count=%d not supported\n"
+literal|"ad%d: count %d size transfers not supported\n"
 argument_list|,
 name|adp
 operator|->
@@ -2220,7 +2336,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ad%d: wouldn't take transfer command\n"
+literal|"ad%d: error executing command\n"
 argument_list|,
 name|adp
 operator|->
@@ -2459,7 +2575,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"ad_interrupt: timeout waiting for status"
+literal|"ad%d: timeout waiting for status"
+argument_list|,
+name|adp
+operator|->
+name|lun
 argument_list|)
 expr_stmt|;
 comment|/* do we have a corrected soft error ? */
@@ -2762,7 +2882,7 @@ name|AR_F_FORCE_PIO
 condition|)
 name|printf
 argument_list|(
-literal|"ad%d: DMA problem, fallback to PIO mode\n"
+literal|"ad%d: DMA problem fallback to PIO mode\n"
 argument_list|,
 name|adp
 operator|->
@@ -2827,7 +2947,11 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"ad_interrupt: read interrupt arrived early"
+literal|"ad%d: read interrupt arrived early"
+argument_list|,
+name|adp
+operator|->
+name|lun
 argument_list|)
 expr_stmt|;
 if|if
@@ -2856,7 +2980,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ad_interrupt: read error detected late"
+literal|"ad%d: read error detected late"
+argument_list|,
+name|adp
+operator|->
+name|lun
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3223,11 +3351,23 @@ name|NULL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ad%d: ad_timeout: lost disk contact - resetting\n"
+literal|"ad%d: %s command timeout - resetting\n"
 argument_list|,
 name|adp
 operator|->
 name|lun
+argument_list|,
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|AR_F_READ
+operator|)
+condition|?
+literal|"READ"
+else|:
+literal|"WRITE"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3279,7 +3419,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ad%d: ad_timeout: trying fallback to PIO mode\n"
+literal|"ad%d: trying fallback to PIO mode\n"
 argument_list|,
 name|adp
 operator|->

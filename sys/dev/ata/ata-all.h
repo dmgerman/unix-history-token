@@ -576,7 +576,18 @@ value|0x206
 end_define
 
 begin_comment
-comment|/* alternate Status register */
+comment|/* alternate status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_ALTPORT_PCCARD
+value|0x8
+end_define
+
+begin_comment
+comment|/* ditto on PCCARD devices */
 end_comment
 
 begin_define
@@ -611,6 +622,13 @@ end_define
 begin_comment
 comment|/* 4 head bits */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_ALTIOSIZE
+value|0x01
+end_define
 
 begin_comment
 comment|/* misc defines */
@@ -780,6 +798,13 @@ define|#
 directive|define
 name|ATA_BMDTP_PORT
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_BMIOSIZE
+value|0x20
 end_define
 
 begin_comment
@@ -1261,14 +1286,6 @@ begin_struct
 struct|struct
 name|ata_softc
 block|{
-name|int32_t
-name|unit
-decl_stmt|;
-comment|/* unit on this controller */
-name|int32_t
-name|lun
-decl_stmt|;
-comment|/* logical unit # */
 name|struct
 name|device
 modifier|*
@@ -1276,17 +1293,45 @@ name|dev
 decl_stmt|;
 comment|/* device handle */
 name|int32_t
+name|unit
+decl_stmt|;
+comment|/* unit on this controller */
+name|struct
+name|resource
+modifier|*
+name|r_io
+decl_stmt|;
+comment|/* io addr resource handle */
+name|struct
+name|resource
+modifier|*
+name|r_altio
+decl_stmt|;
+comment|/* altio addr resource handle */
+name|struct
+name|resource
+modifier|*
+name|r_bmio
+decl_stmt|;
+comment|/* bmio addr resource handle */
+name|struct
+name|resource
+modifier|*
+name|r_irq
+decl_stmt|;
+comment|/* interrupt of this channel */
+name|int32_t
 name|ioaddr
 decl_stmt|;
-comment|/* port addr */
+comment|/* physical port addr */
 name|int32_t
 name|altioaddr
 decl_stmt|;
-comment|/* alternate port addr */
+comment|/* physical alt port addr */
 name|int32_t
 name|bmaddr
 decl_stmt|;
-comment|/* bus master DMA port */
+comment|/* physical bus master port */
 name|int32_t
 name|chiptype
 decl_stmt|;
@@ -1380,6 +1425,10 @@ define|#
 directive|define
 name|ATA_USE_16BIT
 value|0x04
+define|#
+directive|define
+name|ATA_ATTACHED
+value|0x08
 name|int32_t
 name|devices
 decl_stmt|;
@@ -1465,42 +1514,20 @@ modifier|*
 name|running
 decl_stmt|;
 comment|/* currently running request */
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-name|struct
-name|apmhook
-name|resume_hook
-decl_stmt|;
-comment|/* hook for apm */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* array to hold all ata softc's */
+comment|/* To convert unit numbers to devices */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|ata_softc
-modifier|*
-name|atadevices
-index|[]
+name|devclass_t
+name|ata_devclass
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MAXATA
-value|16
-end_define
 
 begin_comment
 comment|/* public prototypes */
@@ -1585,6 +1612,108 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ata_printf
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|,
+name|int32_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|int
+name|ata_get_lun
+parameter_list|(
+name|u_int32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_free_lun
+parameter_list|(
+name|u_int32_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int8_t
+modifier|*
+name|ata_mode2str
+parameter_list|(
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int8_t
+name|ata_pio2mode
+parameter_list|(
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_pmode
+parameter_list|(
+name|struct
+name|ata_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_wmode
+parameter_list|(
+name|struct
+name|ata_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_umode
+parameter_list|(
+name|struct
+name|ata_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ata_dmainit
 parameter_list|(
@@ -1655,97 +1784,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|int32_t
-name|ata_pmode
-parameter_list|(
-name|struct
-name|ata_params
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
-name|ata_wmode
-parameter_list|(
-name|struct
-name|ata_params
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
-name|ata_umode
-parameter_list|(
-name|struct
-name|ata_params
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int8_t
-modifier|*
-name|ata_mode2str
-parameter_list|(
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int8_t
-name|ata_pio2mode
-parameter_list|(
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
-name|ata_find_dev
-parameter_list|(
-name|device_t
-parameter_list|,
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
-name|ata_printf
-parameter_list|(
-name|struct
-name|ata_softc
-modifier|*
-parameter_list|,
-name|int32_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 end_unit
 

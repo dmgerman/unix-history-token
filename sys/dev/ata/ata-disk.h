@@ -78,6 +78,12 @@ name|disk
 name|disk
 decl_stmt|;
 comment|/* disklabel/slice stuff */
+name|dev_t
+name|dev1
+decl_stmt|,
+name|dev2
+decl_stmt|;
+comment|/* device place holder */
 block|}
 struct|;
 end_struct
@@ -165,6 +171,19 @@ end_struct
 begin_function_decl
 name|void
 name|ad_attach
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|,
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ad_detach
 parameter_list|(
 name|struct
 name|ata_softc
