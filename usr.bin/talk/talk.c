@@ -124,6 +124,11 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 name|check_writeable
 argument_list|()
 expr_stmt|;
