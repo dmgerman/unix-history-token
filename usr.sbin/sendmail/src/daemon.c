@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.186 (Berkeley) 8/2/97 (with daemon mode)"
+literal|"@(#)daemon.c	8.195 (Berkeley) 10/23/97 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.186 (Berkeley) 8/2/97 (without daemon mode)"
+literal|"@(#)daemon.c	8.195 (Berkeley) 10/23/97 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +198,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		e -- the current envelope. ** **	Returns: **		TRUE -- if a "null server" should be used -- that is, one **			that rejects all commands. **		FALSE -- to use a normal server. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child.  The file pointers **		"InChannel" and "OutChannel" should be set to point **		to the communication channel. */
+comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child.  The file pointers **		"InChannel" and "OutChannel" should be set to point **		to the communication channel. */
 end_comment
 
 begin_decl_stmt
@@ -261,7 +261,7 @@ comment|/* size of TCP send buffer */
 end_comment
 
 begin_function
-name|bool
+name|void
 name|getrequests
 parameter_list|(
 name|e
@@ -465,11 +465,7 @@ name|printf
 argument_list|(
 literal|"getrequests: port 0x%x\n"
 argument_list|,
-name|DaemonAddr
-operator|.
-name|sin
-operator|.
-name|sin_port
+name|port
 argument_list|)
 expr_stmt|;
 comment|/* get a socket for the SMTP connection */
@@ -664,11 +660,7 @@ name|refuseconnections
 argument_list|(
 name|ntohs
 argument_list|(
-name|DaemonAddr
-operator|.
-name|sin
-operator|.
-name|sin_port
+name|port
 argument_list|)
 argument_list|)
 condition|)
@@ -831,11 +823,7 @@ literal|"accepting connections on port %d"
 argument_list|,
 name|ntohs
 argument_list|(
-name|DaemonAddr
-operator|.
-name|sin
-operator|.
-name|sin_port
+name|port
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1181,9 +1169,6 @@ decl_stmt|,
 modifier|*
 name|outchannel
 decl_stmt|;
-name|bool
-name|nullconn
-decl_stmt|;
 comment|/* 			**  CHILD -- return to caller. 			**	Collect verified idea of sending host. 			**	Verify calling user id if possible here. 			*/
 operator|(
 name|void
@@ -1426,33 +1411,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* validate the connection */
-name|HoldErrs
-operator|=
-name|TRUE
-expr_stmt|;
-name|nullconn
-operator|=
-operator|!
-name|validate_connection
-argument_list|(
-operator|&
-name|RealHostAddr
-argument_list|,
-name|RealHostName
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-name|HoldErrs
-operator|=
-name|FALSE
-expr_stmt|;
-if|if
-condition|(
-name|nullconn
-condition|)
-break|break;
 ifdef|#
 directive|ifdef
 name|XLA
@@ -1478,23 +1436,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|15
-argument_list|,
-literal|2
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"getreq: returning (normal server)\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
+break|break;
 block|}
 comment|/* parent -- keep track of children */
 name|proc_list_add
@@ -1575,12 +1517,10 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getreq: returning (null server)\n"
+literal|"getreq: returning\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
+return|return;
 block|}
 end_function
 
@@ -4555,6 +4495,7 @@ modifier|*
 modifier|*
 name|ha
 decl_stmt|;
+specifier|volatile
 name|bool
 name|may_be_forged
 decl_stmt|;
@@ -6656,6 +6597,25 @@ operator|)
 return|;
 block|}
 comment|/* found a match -- copy out */
+name|hp
+operator|->
+name|h_name
+operator|=
+name|denlstring
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|hp
+operator|->
+name|h_name
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 name|s
 operator|->
 name|s_namecanon
@@ -7648,6 +7608,8 @@ operator|!=
 literal|'['
 condition|)
 return|return
+name|denlstring
+argument_list|(
 operator|(
 name|char
 operator|*
@@ -7655,6 +7617,36 @@ operator|)
 name|hp
 operator|->
 name|h_name
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|sap
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_UNIX
+operator|&&
+name|sap
+operator|->
+name|sunix
+operator|.
+name|sun_path
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+literal|"localhost"
 return|;
 else|else
 block|{

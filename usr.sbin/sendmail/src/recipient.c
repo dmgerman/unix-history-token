@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.130 (Berkeley) 5/29/97"
+literal|"@(#)recipient.c	8.133 (Berkeley) 10/19/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -879,6 +879,12 @@ condition|)
 block|{
 name|a
 operator|->
+name|q_flags
+operator||=
+name|QBADADDR
+expr_stmt|;
+name|a
+operator|->
 name|q_status
 operator|=
 literal|"5.4.6"
@@ -1146,6 +1152,15 @@ argument_list|(
 name|q
 argument_list|,
 name|a
+argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|QRCPTOK
+argument_list|,
+name|q
+operator|->
+name|q_flags
 argument_list|)
 condition|)
 block|{
@@ -2661,6 +2676,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QRCPTOK
+expr_stmt|;
 return|return
 operator|(
 name|a
@@ -3558,6 +3579,7 @@ name|safechown
 init|=
 name|FALSE
 decl_stmt|;
+specifier|volatile
 name|bool
 name|safedir
 init|=

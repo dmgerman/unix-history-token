@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.285 (Berkeley) 8/2/97"
+literal|"@(#)deliver.c	8.296 (Berkeley) 10/22/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,23 @@ name|int
 name|h_errno
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HASSETUSERCONTEXT
+end_if
+
+begin_include
+include|#
+directive|include
+file|<login_cap.h>
+end_include
 
 begin_endif
 endif|#
@@ -133,6 +150,10 @@ name|Verbose
 decl_stmt|;
 name|bool
 name|somedeliveries
+init|=
+name|FALSE
+decl_stmt|,
+name|expensive
 init|=
 name|FALSE
 decl_stmt|;
@@ -971,6 +992,10 @@ name|q_flags
 operator||=
 name|QQUEUEUP
 expr_stmt|;
+name|expensive
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1576,6 +1601,11 @@ operator|=
 name|curtime
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|expensive
+condition|)
 name|e
 operator|->
 name|e_ntries
@@ -1605,6 +1635,11 @@ operator|=
 name|curtime
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|expensive
+condition|)
 name|ee
 operator|->
 name|e_ntries
@@ -1930,39 +1965,12 @@ if|#
 directive|if
 operator|!
 name|HASFLOCK
-comment|/* 		**  Since fcntl locking has the interesting semantic that 		**  the lock is owned by a process, not by an open file 		**  descriptor, we have to flush this to the queue, and 		**  then restart from scratch in the child. 		*/
-block|{
-comment|/* save id for future use */
-name|char
-modifier|*
-name|qid
-init|=
-name|e
-operator|->
-name|e_id
-decl_stmt|;
-comment|/* now drop the envelope in the parent */
-name|e
-operator|->
-name|e_flags
-operator||=
-name|EF_INQUEUE
-expr_stmt|;
-name|dropenvelope
+comment|/* 		**  Since fcntl locking has the interesting semantic that 		**  the lock is owned by a process, not by an open file 		**  descriptor, we have to unlock this envelope, and 		**  then restart from scratch in the child. 		*/
+name|unlockqueue
 argument_list|(
 name|e
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* arrange to reacquire lock after fork */
-name|e
-operator|->
-name|e_id
-operator|=
-name|qid
-expr_stmt|;
-block|}
 for|for
 control|(
 name|ee
@@ -1979,38 +1987,11 @@ name|ee
 operator|->
 name|e_sibling
 control|)
-block|{
-comment|/* save id for future use */
-name|char
-modifier|*
-name|qid
-init|=
-name|ee
-operator|->
-name|e_id
-decl_stmt|;
-comment|/* drop envelope in parent */
-name|ee
-operator|->
-name|e_flags
-operator||=
-name|EF_INQUEUE
-expr_stmt|;
-name|dropenvelope
+name|unlockqueue
 argument_list|(
 name|ee
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* and save qid for reacquisition */
-name|ee
-operator|->
-name|e_id
-operator|=
-name|qid
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* !HASFLOCK */
@@ -5372,7 +5353,10 @@ literal|"Connecting to %s port %d via %s..."
 argument_list|,
 name|hostbuf
 argument_list|,
+name|ntohs
+argument_list|(
 name|port
+argument_list|)
 argument_list|,
 name|m
 operator|->
@@ -8120,7 +8104,7 @@ name|tobuf
 operator|)
 operator|+
 literal|2
-operator|>=
+operator|>
 sizeof|sizeof
 name|tobuf
 condition|)
@@ -9320,6 +9304,11 @@ block|{
 name|int
 name|st
 decl_stmt|;
+name|mci_unlock_host
+argument_list|(
+name|mci
+argument_list|)
+expr_stmt|;
 comment|/* close any connections */
 if|if
 condition|(
@@ -9632,6 +9621,17 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|e
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"giveresponse: null envelope"
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Compute status message from code. 	*/
 name|i
 operator|=
@@ -10048,6 +10048,20 @@ block|}
 comment|/* 	**  Final cleanup. 	**	Log a record of the transaction.  Compute the new 	**	ExitStat -- if we already had an error, stick with 	**	that. 	*/
 if|if
 condition|(
+name|OpMode
+operator|!=
+name|MD_VERIFY
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_VRFYONLY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
 name|LogLevel
 operator|>
 operator|(
@@ -11564,7 +11578,7 @@ argument_list|)
 argument_list|,
 name|mci
 argument_list|,
-name|PXLF_NOTHINGSPECIAL
+name|PXLF_HEADER
 argument_list|)
 expr_stmt|;
 block|}
@@ -13009,6 +13023,21 @@ begin_comment
 comment|/* **  MAILFILE -- Send a message to a file. ** **	If the file has the setuid/setgid bits set, but NO execute **	bits, sendmail will try to become the owner of that file **	rather than the real user.  Obviously, this only works if **	sendmail runs as root. ** **	This could be done as a subordinate mailer, except that it **	is used implicitly to save messages in ~/dead.letter.  We **	view this as being sufficiently important as to include it **	here.  For example, if the system is dying, we shouldn't have **	to create another process plus some pipes to save the message. ** **	Parameters: **		filename -- the name of the file to send to. **		ctladdr -- the controlling address header -- includes **			the userid/groupid to be when sending. **		sfflags -- flags for opening. **		e -- the current envelope. ** **	Returns: **		The exit code associated with the operation. ** **	Side Effects: **		none. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|jmp_buf
+name|CtxMailfileTimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|mailfiletimeout
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|mailfile
@@ -13023,12 +13052,14 @@ name|e
 parameter_list|)
 name|char
 modifier|*
+specifier|volatile
 name|filename
 decl_stmt|;
 name|ADDRESS
 modifier|*
 name|ctladdr
 decl_stmt|;
+specifier|volatile
 name|int
 name|sfflags
 decl_stmt|;
@@ -13050,6 +13081,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+specifier|volatile
 name|int
 name|mode
 init|=
@@ -13062,6 +13094,10 @@ name|geteuid
 argument_list|()
 operator|==
 literal|0
+decl_stmt|;
+name|EVENT
+modifier|*
+name|ev
 decl_stmt|;
 if|if
 condition|(
@@ -13151,6 +13187,7 @@ decl_stmt|;
 name|MCI
 name|mcibuf
 decl_stmt|;
+specifier|volatile
 name|int
 name|oflags
 init|=
@@ -13226,6 +13263,48 @@ expr_stmt|;
 name|ExitStat
 operator|=
 name|EX_OK
+expr_stmt|;
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|CtxMailfileTimeout
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|TimeOuts
+operator|.
+name|to_fileopen
+operator|>
+literal|0
+condition|)
+name|ev
+operator|=
+name|setevent
+argument_list|(
+name|TimeOuts
+operator|.
+name|to_fileopen
+argument_list|,
+name|mailfiletimeout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|ev
+operator|=
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -13891,6 +13970,17 @@ name|EX_CANTCREAT
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ev
+operator|!=
+name|NULL
+condition|)
+name|clrevent
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -14130,6 +14220,22 @@ return|return
 name|EX_UNAVAILABLE
 return|;
 comment|/* avoid compiler warning on IRIX */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mailfiletimeout
+parameter_list|()
+block|{
+name|longjmp
+argument_list|(
+name|CtxMailfileTimeout
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
