@@ -92,18 +92,11 @@ operator|++
 name|cp
 control|)
 block|{
-comment|/* 		 * gcc-2.6.3 generates poor (un)sign extension code on i386's. 		 * The cast to volatile should have no effect, but in fact it 		 * improves the code on i386's. 		 */
 if|if
 condition|(
 name|table
 index|[
 operator|*
-operator|(
-specifier|volatile
-specifier|const
-name|u_char
-operator|*
-operator|)
 name|cp
 index|]
 operator|&
