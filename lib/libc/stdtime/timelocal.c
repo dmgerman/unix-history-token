@@ -844,8 +844,8 @@ expr_stmt|;
 if|if
 condition|(
 name|num_lines
-operator|==
-name|LCTIME_SIZE_FULL
+operator|>=
+name|LCTIME_SIZE_2
 condition|)
 return|return;
 for|for
