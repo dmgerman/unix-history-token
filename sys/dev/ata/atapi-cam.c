@@ -2050,10 +2050,7 @@ break|break;
 case|case
 name|CAM_DIR_NONE
 case|:
-name|request_flags
-operator||=
-name|ATA_R_CONTROL
-expr_stmt|;
+comment|/* No flags need to be set */
 break|break;
 default|default:
 name|ata_prtdev
