@@ -1710,9 +1710,9 @@ if|if
 condition|(
 name|ke2
 operator|->
-name|ke_flags
-operator|&
-name|KEF_IDLEKSE
+name|ke_state
+operator|==
+name|KES_IDLE
 condition|)
 block|{
 name|ke
