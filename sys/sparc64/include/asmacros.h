@@ -213,92 +213,12 @@ define|\
 value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	printf ; \ 	 nop
 end_define
 
-begin_comment
-comment|/*  * If the kernel can be located above 4G, setx needs to be used to load  * symbol values, otherwise set is sufficient.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HIGH_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SET
-parameter_list|(
-name|sym
-parameter_list|,
-name|tmp
-parameter_list|,
-name|dst
-parameter_list|)
-define|\
-value|setx	sym, tmp, dst
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SET
-parameter_list|(
-name|sym
-parameter_list|,
-name|tmp
-parameter_list|,
-name|dst
-parameter_list|)
-define|\
-value|set	sym, dst
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|_ALIGN_DATA
 value|.align 8
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPROF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_ALIGN_TEXT
-value|.align 32
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_ALIGN_TEXT
-value|.align 16
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -315,32 +235,6 @@ begin_define
 define|#
 directive|define
 name|EMPTY
-end_define
-
-begin_comment
-comment|/*  * Define a function entry point.  *  * The compiler produces #function for the .type pseudo-op, but the '#'  * character has special meaning in cpp macros, so we use @function like  * other architectures.  The assembler seems to accept both.  * The assembler also accepts a .proc pseudo-op, which is used by the  * peep hole optimizer, whose argument is the type code of the return  * value.  Since this is difficult to predict and its expected that  * assembler code is already optimized, we leave it out.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENTRY
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|.text ; \ 	_ALIGN_TEXT ; \ 	.globl	name ; \ 	.type	name, @function ; \ name:
-end_define
-
-begin_define
-define|#
-directive|define
-name|END
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|.size	name, . - name
 end_define
 
 begin_endif

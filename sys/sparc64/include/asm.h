@@ -121,12 +121,37 @@ parameter_list|)
 value|__CONCAT(.,asmsym)
 end_define
 
+begin_comment
+comment|/* sys/sparc64/sparc64/ *.S have their own definitions. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CCFSZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|CCFSZ
 value|192
 end_define
+
+begin_comment
+comment|/* 0xc0 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SPOFF
+end_ifndef
 
 begin_define
 define|#
@@ -136,8 +161,96 @@ value|2047
 end_define
 
 begin_comment
+comment|/* 0x7ff */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_ALIGN_TEXT
+value|.align 32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_ALIGN_TEXT
+value|.p2align 4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_START_ENTRY
+define|\
+value|.text ; \ 	_ALIGN_TEXT
+end_define
+
+begin_comment
+comment|/*  * Define a function entry point.  *  * The compiler produces #function for the .type pseudo-op, but the '#'  * character has special meaning in cpp macros, so we use @function like  * other architectures.  The assembler seems to accept both.  * The assembler also accepts a .proc pseudo-op, which is used by the  * peep hole optimizer, whose argument is the type code of the return  * value.  Since this is difficult to predict and its expected that  * assembler code is already optimized, we leave it out.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ENTRY
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|_START_ENTRY ; \ 	.globl	CNAME(x) ; \ 	.type	CNAME(x),@function ; \ CNAME(x):
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|_ENTRY(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|END
+parameter_list|(
+name|x
+parameter_list|)
+value|.size x, . - x
+end_define
+
+begin_comment
 comment|/*  * Kernel RCS ID tag and copyright macros  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|__FBSDID
+end_undef
 
 begin_if
 if|#
