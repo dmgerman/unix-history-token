@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.87 1998/10/10 02:44:53 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.88 1998/10/13 09:05:57 peter Exp $ */
 end_comment
 
 begin_comment
@@ -29059,7 +29059,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|vaddr_t
+name|vm_offset_t
 name|pa_csrs
 decl_stmt|;
 endif|#
@@ -29848,7 +29848,7 @@ argument_list|,
 name|PCI_CBMA
 argument_list|,
 operator|(
-name|vaddr_t
+name|vm_offset_t
 operator|*
 operator|)
 operator|&
@@ -29917,12 +29917,12 @@ directive|else
 name|csr_base
 operator|=
 operator|(
-name|vaddr_t
+name|vm_offset_t
 operator|)
 name|mapphys
 argument_list|(
 operator|(
-name|vaddr_t
+name|vm_offset_t
 operator|)
 name|ia
 operator|->

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.31 1998/09/29 22:40:52 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.9 1998/09/16 08:27:07 dfr Exp $ */
+comment|/*	$Id: if_devar.h,v 1.10 1998/10/13 09:05:58 peter Exp $ */
 end_comment
 
 begin_comment
@@ -4343,7 +4343,7 @@ name|sc
 parameter_list|,
 name|va
 parameter_list|)
-value|alpha_XXX_dmamap((vaddr_t)(va))
+value|alpha_XXX_dmamap((vm_offset_t)(va))
 end_define
 
 begin_endif
