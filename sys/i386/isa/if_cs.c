@@ -38,13 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sockio.h>
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -80,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -105,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
 end_include
 
 begin_ifdef
@@ -466,7 +460,7 @@ expr|struct
 name|ifnet
 operator|*
 operator|,
-name|u_long
+name|int
 operator|,
 name|caddr_t
 operator|)
@@ -500,10 +494,10 @@ expr|struct
 name|cs_softc
 operator|*
 operator|,
-name|u_int
+name|u_short
 operator|*
 operator|,
-name|int
+name|short
 operator|*
 operator|,
 name|int
@@ -1711,11 +1705,11 @@ name|cs_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int
+name|u_short
 modifier|*
 name|dev_irq
 parameter_list|,
-name|int
+name|short
 modifier|*
 name|dev_drq
 parameter_list|,
@@ -3142,18 +3136,19 @@ name|result
 decl_stmt|,
 name|rx_cfg
 decl_stmt|;
-comment|/* address not known */
 if|if
 condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
 name|ifp
 operator|->
-name|if_addrhead
-argument_list|)
+name|if_addrlist
+operator|==
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
+literal|0
 condition|)
-comment|/* unlikely? XXX */
 return|return;
 comment|/* 	 * reset whatchdog timer 	 */
 name|ifp
@@ -4027,6 +4022,7 @@ comment|/*  * Handle interrupts  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|csintr
 parameter_list|(
@@ -4756,7 +4752,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|u_long
+name|int
 name|command
 parameter_list|,
 name|caddr_t
@@ -4921,7 +4917,43 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-comment|/* 	     * Multicast list has changed; set the hardware filter 	     * accordingly. 	     * 	     * See note about multicasts in cs_setmode 	     */
+comment|/* 		 * Update out multicast list. 		 */
+name|error
+operator|=
+operator|(
+name|command
+operator|==
+name|SIOCADDMULTI
+operator|)
+condition|?
+name|ether_addmulti
+argument_list|(
+name|ifr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arpcom
+argument_list|)
+else|:
+name|ether_delmulti
+argument_list|(
+name|ifr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arpcom
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|ENETRESET
+condition|)
+block|{
+comment|/*                          * Multicast list has changed; set the hardware filter                          * accordingly.                          *                          * See note about multicasts in cs_setmode 			 */
 name|cs_setmode
 argument_list|(
 name|sc
@@ -4931,6 +4963,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCSIFMEDIA
@@ -5349,7 +5382,6 @@ name|media
 argument_list|)
 condition|)
 block|{
-default|default:
 case|case
 name|IFM_AUTO
 case|:
