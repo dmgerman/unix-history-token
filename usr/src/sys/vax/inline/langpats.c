@@ -161,13 +161,13 @@ block|,
 block|{
 literal|"3,_copyin\n"
 block|,
-literal|"	jsb	_Copyin\n\ 	addl2	$12,sp\n"
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 	movl	(sp)+,r5\n\ 	jsb	_Copyin\n"
 block|}
 block|,
 block|{
 literal|"3,_copyout\n"
 block|,
-literal|"	jsb	_Copyout\n\ 	addl2	$12,sp\n"
+literal|"	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 	movl	(sp)+,r5\n\ 	jsb	_Copyout\n"
 block|}
 block|,
 block|{
