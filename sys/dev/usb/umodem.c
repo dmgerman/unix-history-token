@@ -4150,6 +4150,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
+name|struct
 name|uio
 modifier|*
 name|uio
@@ -5311,6 +5312,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|usb_cdc_line_state_t
+modifier|*
 name|state
 parameter_list|)
 block|{
