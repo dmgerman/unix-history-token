@@ -52,13 +52,6 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_typedef
-typedef|typedef
-name|int
-name|osigset_t
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|osigcontext
