@@ -409,10 +409,6 @@ name|p_sflag
 decl_stmt|;
 comment|/* (j) PS_* flags. */
 name|int
-name|p_intr_nesting_level
-decl_stmt|;
-comment|/* (k) Interrupt recursion. */
-name|int
 name|p_stat
 decl_stmt|;
 comment|/* (j) S* process status. */
@@ -682,6 +678,21 @@ argument_list|)
 name|p_contested
 expr_stmt|;
 comment|/* (j) Contested locks. */
+name|void
+modifier|*
+name|p_aioinfo
+decl_stmt|;
+comment|/* (c) ASYNC I/O info. */
+name|struct
+name|ithd
+modifier|*
+name|p_ithd
+decl_stmt|;
+comment|/* (b) For interrupt threads only. */
+name|int
+name|p_intr_nesting_level
+decl_stmt|;
+comment|/* (k) Interrupt recursion. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -770,11 +781,6 @@ modifier|*
 name|p_ru
 decl_stmt|;
 comment|/* (a) Exit information. XXX */
-name|void
-modifier|*
-name|p_aioinfo
-decl_stmt|;
-comment|/* (c) ASYNC I/O info. */
 name|struct
 name|proc
 modifier|*
@@ -797,12 +803,6 @@ modifier|*
 name|p_emuldata
 decl_stmt|;
 comment|/* (c) Emulator state data. */
-name|struct
-name|ithd
-modifier|*
-name|p_ithd
-decl_stmt|;
-comment|/* (b) For interrupt threads only. */
 block|}
 struct|;
 end_struct
