@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)times.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)times.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -57,6 +57,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -87,6 +93,11 @@ name|times
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

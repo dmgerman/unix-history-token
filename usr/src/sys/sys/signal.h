@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1067,6 +1067,12 @@ begin_comment
 comment|/* KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -1075,33 +1081,11 @@ operator|||
 name|c_plusplus
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -1208,6 +1192,11 @@ name|sigsuspend
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

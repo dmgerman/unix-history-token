@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wait.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wait.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -443,12 +443,6 @@ directive|ifndef
 name|KERNEL
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -456,6 +450,12 @@ name|__STDC__
 operator|||
 name|c_plusplus
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_function_decl
 name|pid_t
