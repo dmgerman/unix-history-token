@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.11 (Berkeley) %G%"
+literal|"@(#)ls.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1602,9 +1602,9 @@ name|Lflg
 operator|||
 name|Fflg
 condition|?
-name|lstat
-operator|:
 name|stat
+operator|:
+name|lstat
 function_decl|;
 name|char
 name|buf
