@@ -11500,7 +11500,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|sc
