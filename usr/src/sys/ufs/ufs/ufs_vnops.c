@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.89 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.90 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7022,15 +7022,18 @@ name|vp
 operator|->
 name|v_rdev
 expr_stmt|;
-call|(
+name|VOCALL
+argument_list|(
 name|vp
 operator|->
 name|v_op
-operator|->
-name|vop_strategy
-call|)
+argument_list|,
+name|VOFFSET
 argument_list|(
-name|bp
+name|vop_strategy
+argument_list|)
+argument_list|,
+name|ap
 argument_list|)
 expr_stmt|;
 return|return
@@ -7225,6 +7228,15 @@ directive|define
 name|cred
 value|(ap->a_cred)
 block|{
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|spec_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 comment|/* 	 * Set access flag. 	 */
 name|VTOI
 argument_list|(
@@ -7235,18 +7247,18 @@ name|i_flag
 operator||=
 name|IACC
 expr_stmt|;
-comment|/*  * NEEDSWORK: direct function call (ufsspec != spec).  *<	return (spec_read(vp, uio, ioflag, cred));>  * as<	return (VOP_READ(vp, uio, ioflag, cred));>  */
 return|return
 operator|(
-name|spec_read
+name|VOCALL
 argument_list|(
-name|vp
+name|spec_vnodeop_p
 argument_list|,
-name|uio
+name|VOFFSET
+argument_list|(
+name|vop_read
+argument_list|)
 argument_list|,
-name|ioflag
-argument_list|,
-name|cred
+name|ap
 argument_list|)
 operator|)
 return|;
@@ -7309,6 +7321,15 @@ directive|define
 name|cred
 value|(ap->a_cred)
 block|{
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|spec_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 comment|/* 	 * Set update and change flags. 	 */
 name|VTOI
 argument_list|(
@@ -7321,18 +7342,18 @@ name|IUPD
 operator||
 name|ICHG
 expr_stmt|;
-comment|/*  * NEEDSWORK: direct function call (ufsspec != spec).  *<	return (spec_write(vp, uio, ioflag, cred));>  * as<	return (VOP_WRITE(vp, uio, ioflag, cred));>  */
 return|return
 operator|(
-name|spec_write
+name|VOCALL
 argument_list|(
-name|vp
+name|spec_vnodeop_p
 argument_list|,
-name|uio
+name|VOFFSET
+argument_list|(
+name|vop_write
+argument_list|)
 argument_list|,
-name|ioflag
-argument_list|,
-name|cred
+name|ap
 argument_list|)
 operator|)
 return|;
@@ -7395,6 +7416,15 @@ directive|define
 name|p
 value|(ap->a_p)
 block|{
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|spec_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 specifier|register
 name|struct
 name|inode
@@ -7434,18 +7464,18 @@ operator|&
 name|time
 argument_list|)
 expr_stmt|;
-comment|/*  * NEEDSWORK: direct function call (ufsspec != spec).  *<	return (spec_close(vp, fflag, cred, p));>  * as<	return (VOP_CLOSE(vp, fflag, cred, p));>  */
 return|return
 operator|(
-name|spec_close
+name|VOCALL
 argument_list|(
-name|vp
+name|spec_vnodeop_p
 argument_list|,
-name|fflag
+name|VOFFSET
+argument_list|(
+name|vop_close
+argument_list|)
 argument_list|,
-name|cred
-argument_list|,
-name|p
+name|ap
 argument_list|)
 operator|)
 return|;
@@ -7514,6 +7544,15 @@ directive|define
 name|cred
 value|(ap->a_cred)
 block|{
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|fifo_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 comment|/* 	 * Set access flag. 	 */
 name|VTOI
 argument_list|(
@@ -7524,18 +7563,18 @@ name|i_flag
 operator||=
 name|IACC
 expr_stmt|;
-comment|/*  * NEEDSWORK: direct function call (ufsfifo != fifo).  *<	return (fifo_read(vp, uio, ioflag, cred));>  * as<	return (VOP_READ(vp, uio, ioflag, cred));>  */
 return|return
 operator|(
-name|fifo_read
+name|VOCALL
 argument_list|(
-name|vp
+name|fifo_vnodeop_p
 argument_list|,
-name|uio
+name|VOFFSET
+argument_list|(
+name|vop_read
+argument_list|)
 argument_list|,
-name|ioflag
-argument_list|,
-name|cred
+name|ap
 argument_list|)
 operator|)
 return|;
@@ -7598,6 +7637,15 @@ directive|define
 name|cred
 value|(ap->a_cred)
 block|{
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|fifo_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 comment|/* 	 * Set update and change flags. 	 */
 name|VTOI
 argument_list|(
@@ -7610,18 +7658,18 @@ name|IUPD
 operator||
 name|ICHG
 expr_stmt|;
-comment|/*  * NEEDSWORK: direct function call (ufsfifo != fifo).  *<	return (fifo_write(vp, uio, ioflag, cred));>  * as<	return (VOP_WRITE(vp, uio, ioflag, cred));>  */
 return|return
 operator|(
-name|fifo_write
+name|VOCALL
 argument_list|(
-name|vp
+name|fifo_vnodeop_p
 argument_list|,
-name|uio
+name|VOFFSET
+argument_list|(
+name|vop_write
+argument_list|)
 argument_list|,
-name|ioflag
-argument_list|,
-name|cred
+name|ap
 argument_list|)
 operator|)
 return|;
@@ -7701,6 +7749,15 @@ end_define
 
 begin_block
 block|{
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|fifo_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 specifier|register
 name|struct
 name|inode
@@ -7740,18 +7797,18 @@ operator|&
 name|time
 argument_list|)
 expr_stmt|;
-comment|/*  * NEEDSWORK: direct function call (ufsfifo != fifo).  *<	return (fifo_close(vp, fflag, cred, p));>  * as<	return (VOP_CLOSE(vp, fflag, cred, p));>  */
 return|return
 operator|(
-name|fifo_close
+name|VOCALL
 argument_list|(
-name|vp
+name|fifo_vnodeop_p
 argument_list|,
-name|fflag
+name|VOFFSET
+argument_list|(
+name|vop_close
+argument_list|)
 argument_list|,
-name|cred
-argument_list|,
-name|p
+name|ap
 argument_list|)
 operator|)
 return|;
