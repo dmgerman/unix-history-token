@@ -2543,7 +2543,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|p
+name|line
 argument_list|,
 name|name
 argument_list|)
