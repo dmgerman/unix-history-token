@@ -4,7 +4,7 @@ comment|/**  ** Copyright (c) 1995 Michael Smith, All rights reserved.  **  ** R
 end_comment
 
 begin_comment
-comment|/**  ** MOUSED.C  **  ** Mouse daemon : listens to a serial port, the bus mouse interface, or  ** the PS/2 mouse port for mouse data stream, interprets data and passes   ** ioctls off to the console driver.  **  ** The mouse interface functions are derived closely from the mouse  ** handler in the XFree86 X server.  Many thanks to the XFree86 people  ** for their great work!  **   **/
+comment|/**  ** MOUSED.C  **  ** Mouse daemon : listens to a serial port, the bus mouse interface, or  ** the PS/2 mouse port for mouse data stream, interprets data and passes  ** ioctls off to the console driver.  **  ** The mouse interface functions are derived closely from the mouse  ** handler in the XFree86 X server.  Many thanks to the XFree86 people  ** for their great work!  **  **/
 end_comment
 
 begin_ifndef
@@ -3144,7 +3144,7 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Use button i for negative Z axis movement and  		 * button (i + 1) for positive Z axis movement. 		 */
+comment|/* 		 * Use button i for negative Z axis movement and 		 * button (i + 1) for positive Z axis movement. 		 */
 if|if
 condition|(
 operator|(
@@ -4064,7 +4064,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 	         * We cannot continue because of error.  Exit if the  		 * program has not become a daemon.  Otherwise, block  		 * until the the user corrects the problem and issues SIGHUP.  	         */
+comment|/* 		 * We cannot continue because of error.  Exit if the 		 * program has not become a daemon.  Otherwise, block 		 * until the the user corrects the problem and issues SIGHUP. 		 */
 if|if
 condition|(
 operator|!
@@ -5872,7 +5872,7 @@ name|level
 else|:
 literal|0
 expr_stmt|;
-comment|/*      * Interrogate the driver and get some intelligence on the device...       * The following ioctl functions are not always supported by device      * drivers.  When the driver doesn't support them, we just trust the      * user to supply valid information.      */
+comment|/*      * Interrogate the driver and get some intelligence on the device...      * The following ioctl functions are not always supported by device      * drivers.  When the driver doesn't support them, we just trust the      * user to supply valid information.      */
 name|rodent
 operator|.
 name|hw
@@ -6645,7 +6645,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/**      ** This comment is a little out of context here, but it contains       ** some useful information...      ********************************************************************      **      ** The following lines take care of the Logitech MouseMan protocols.      **      ** NOTE: There are different versions of both MouseMan and TrackMan!      **       Hence I add another protocol P_LOGIMAN, which the user can      **       specify as MouseMan in his XF86Config file. This entry was      **       formerly handled as a special case of P_MS. However, people      **       who don't have the middle button problem, can still specify      **       Microsoft and use P_MS.      **      ** By default, these mice should use a 3 byte Microsoft protocol      ** plus a 4th byte for the middle button. However, the mouse might      ** have switched to a different protocol before we use it, so I send      ** the proper sequence just in case.      **      ** NOTE: - all commands to (at least the European) MouseMan have to      **         be sent at 1200 Baud.      **       - each command starts with a '*'.      **       - whenever the MouseMan receives a '*', it will switch back      **	 to 1200 Baud. Hence I have to select the desired protocol      **	 first, then select the baud rate.      **      ** The protocols supported by the (European) MouseMan are:      **   -  5 byte packed binary protocol, as with the Mouse Systems      **      mouse. Selected by sequence "*U".      **   -  2 button 3 byte MicroSoft compatible protocol. Selected      **      by sequence "*V".      **   -  3 button 3+1 byte MicroSoft compatible protocol (default).      **      Selected by sequence "*X".      **      ** The following baud rates are supported:      **   -  1200 Baud (default). Selected by sequence "*n".      **   -  9600 Baud. Selected by sequence "*q".      **      ** Selecting a sample rate is no longer supported with the MouseMan!      ** Some additional lines in xf86Config.c take care of ill configured      ** baud rates and sample rates. (The user will get an error.)      */
+comment|/**      ** This comment is a little out of context here, but it contains      ** some useful information...      ********************************************************************      **      ** The following lines take care of the Logitech MouseMan protocols.      **      ** NOTE: There are different versions of both MouseMan and TrackMan!      **       Hence I add another protocol P_LOGIMAN, which the user can      **       specify as MouseMan in his XF86Config file. This entry was      **       formerly handled as a special case of P_MS. However, people      **       who don't have the middle button problem, can still specify      **       Microsoft and use P_MS.      **      ** By default, these mice should use a 3 byte Microsoft protocol      ** plus a 4th byte for the middle button. However, the mouse might      ** have switched to a different protocol before we use it, so I send      ** the proper sequence just in case.      **      ** NOTE: - all commands to (at least the European) MouseMan have to      **         be sent at 1200 Baud.      **       - each command starts with a '*'.      **       - whenever the MouseMan receives a '*', it will switch back      **	 to 1200 Baud. Hence I have to select the desired protocol      **	 first, then select the baud rate.      **      ** The protocols supported by the (European) MouseMan are:      **   -  5 byte packed binary protocol, as with the Mouse Systems      **      mouse. Selected by sequence "*U".      **   -  2 button 3 byte MicroSoft compatible protocol. Selected      **      by sequence "*V".      **   -  3 button 3+1 byte MicroSoft compatible protocol (default).      **      Selected by sequence "*X".      **      ** The following baud rates are supported:      **   -  1200 Baud (default). Selected by sequence "*n".      **   -  9600 Baud. Selected by sequence "*q".      **      ** Selecting a sample rate is no longer supported with the MouseMan!      ** Some additional lines in xf86Config.c take care of ill configured      ** baud rates and sample rates. (The user will get an error.)      */
 switch|switch
 condition|(
 name|rodent
@@ -6656,7 +6656,7 @@ block|{
 case|case
 name|MOUSE_PROTO_LOGI
 case|:
-comment|/*  	 * The baud rate selection command must be sent at the current 	 * baud rate; try all likely settings  	 */
+comment|/* 	 * The baud rate selection command must be sent at the current 	 * baud rate; try all likely settings 	 */
 name|setmousespeed
 argument_list|(
 literal|9600
@@ -7842,7 +7842,7 @@ literal|4
 index|]
 init|=
 block|{
-comment|/* Microsoft, MouseMan, GlidePoint,  				   IntelliMouse, Thinking Mouse */
+comment|/* Microsoft, MouseMan, GlidePoint, 				   IntelliMouse, Thinking Mouse */
 literal|0
 block|,
 name|MOUSE_BUTTON3DOWN
@@ -7852,7 +7852,7 @@ block|,
 name|MOUSE_BUTTON1DOWN
 operator||
 name|MOUSE_BUTTON3DOWN
-block|,      }
+block|,     }
 decl_stmt|;
 specifier|static
 name|int
@@ -7862,7 +7862,7 @@ literal|4
 index|]
 init|=
 block|{
-comment|/* Microsoft, MouseMan, GlidePoint,  				    Thinking Mouse */
+comment|/* Microsoft, MouseMan, GlidePoint, 				    Thinking Mouse */
 literal|0
 block|,
 name|MOUSE_BUTTON4DOWN
@@ -7872,7 +7872,7 @@ block|,
 name|MOUSE_BUTTON2DOWN
 operator||
 name|MOUSE_BUTTON4DOWN
-block|,      }
+block|,     }
 decl_stmt|;
 comment|/* MOUSE_INTELLI_BUTTON?DOWN -> MOUSE_BUTTON?DOWN */
 specifier|static
@@ -7893,7 +7893,7 @@ block|,
 name|MOUSE_BUTTON2DOWN
 operator||
 name|MOUSE_BUTTON4DOWN
-block|,      }
+block|,     }
 decl_stmt|;
 comment|/* MOUSE_MSC_BUTTON?UP -> MOUSE_BUTTON?DOWN */
 specifier|static
@@ -7904,7 +7904,7 @@ literal|8
 index|]
 init|=
 block|{
-comment|/* MouseSystems, MMSeries, Logitech,  				   Bus, sysmouse */
+comment|/* MouseSystems, MMSeries, Logitech, 				   Bus, sysmouse */
 literal|0
 block|,
 name|MOUSE_BUTTON3DOWN
@@ -7994,7 +7994,7 @@ block|,
 name|MOUSE_BUTTON6DOWN
 block|,
 name|MOUSE_BUTTON7DOWN
-block|,      }
+block|,     }
 decl_stmt|;
 comment|/* for serial VersaPad */
 specifier|static
@@ -8025,7 +8025,7 @@ block|,
 name|MOUSE_BUTTON1DOWN
 operator||
 name|MOUSE_BUTTON3DOWN
-block|,      }
+block|,     }
 decl_stmt|;
 comment|/* for PS/2 VersaPad */
 specifier|static
@@ -8056,7 +8056,7 @@ block|,
 name|MOUSE_BUTTON1DOWN
 operator||
 name|MOUSE_BUTTON3DOWN
-block|,      }
+block|,     }
 decl_stmt|;
 specifier|static
 name|int
@@ -8204,8 +8204,8 @@ index|]
 condition|)
 block|{
 comment|/* 	 * Hack for Logitech MouseMan Mouse - Middle button 	 * 	 * Unfortunately this mouse has variable length packets: the standard 	 * Microsoft 3 byte packet plus an optional 4th byte whenever the 	 * middle button status changes. 	 * 	 * We have already processed the standard packet with the movement 	 * and button info.  Now post an event message with the old status 	 * of the left and right buttons and the updated middle button. 	 */
-comment|/* 	 * Even worse, different MouseMen and TrackMen differ in the 4th 	 * byte: some will send 0x00/0x20, others 0x01/0x21, or even 	 * 0x02/0x22, so I have to strip off the lower bits.          *          * [JCH-96/01/21]          * HACK for ALPS "fourth button". (It's bit 0x10 of the "fourth byte"          * and it is activated by tapping the glidepad with the finger! 8^)          * We map it to bit bit3, and the reverse map in xf86Events just has          * to be extended so that it is identified as Button 4. The lower          * half of the reverse-map may remain unchanged. 	 */
-comment|/* 	 * [KY-97/08/03] 	 * Receive the fourth byte only when preceding three bytes have 	 * been detected (pBufP>= cur_proto[4]).  In the previous 	 * versions, the test was pBufP == 0; thus, we may have mistakingly 	 * received a byte even if we didn't see anything preceding  	 * the byte. 	 */
+comment|/* 	 * Even worse, different MouseMen and TrackMen differ in the 4th 	 * byte: some will send 0x00/0x20, others 0x01/0x21, or even 	 * 0x02/0x22, so I have to strip off the lower bits. 	 * 	 * [JCH-96/01/21] 	 * HACK for ALPS "fourth button". (It's bit 0x10 of the "fourth byte" 	 * and it is activated by tapping the glidepad with the finger! 8^) 	 * We map it to bit bit3, and the reverse map in xf86Events just has 	 * to be extended so that it is identified as Button 4. The lower 	 * half of the reverse-map may remain unchanged. 	 */
+comment|/* 	 * [KY-97/08/03] 	 * Receive the fourth byte only when preceding three bytes have 	 * been detected (pBufP>= cur_proto[4]).  In the previous 	 * versions, the test was pBufP == 0; thus, we may have mistakingly 	 * received a byte even if we didn't see anything preceding 	 * the byte. 	 */
 if|if
 condition|(
 operator|(
@@ -8244,7 +8244,7 @@ name|notyet
 case|case
 name|MOUSE_PROTO_MARIQUA
 case|:
-comment|/*  	     * This mouse has 16! buttons in addition to the standard 	     * three of them.  They return 0x10 though 0x1f in the 	     * so-called `ten key' mode and 0x30 though 0x3f in the 	     * `function key' mode.  As there are only 31 bits for  	     * button state (including the standard three), we ignore 	     * the bit 0x20 and don't distinguish the two modes. 	     */
+comment|/* 	     * This mouse has 16! buttons in addition to the standard 	     * three of them.  They return 0x10 though 0x1f in the 	     * so-called `ten key' mode and 0x30 though 0x3f in the 	     * `function key' mode.  As there are only 31 bits for 	     * button state (including the standard three), we ignore 	     * the bit 0x20 and don't distinguish the two modes. 	     */
 name|act
 operator|->
 name|dx
@@ -8297,7 +8297,7 @@ name|MOUSE_BUTTON3DOWN
 operator|)
 operator|)
 expr_stmt|;
-comment|/*  	     * FIXME: this is a button "down" event. There needs to be  	     * a corresponding button "up" event... XXX 	     */
+comment|/* 	     * FIXME: this is a button "down" event. There needs to be 	     * a corresponding button "up" event... XXX 	     */
 break|break;
 endif|#
 directive|endif
@@ -8306,7 +8306,7 @@ case|case
 name|MOUSE_PROTO_JOGDIAL
 case|:
 break|break;
-comment|/* 	 * IntelliMouse, NetMouse (including NetMouse Pro) and Mie Mouse 	 * always send the fourth byte, whereas the fourth byte is 	 * optional for GlidePoint and ThinkingMouse. The fourth byte  	 * is also optional for MouseMan+ and FirstMouse+ in their  	 * native mode. It is always sent if they are in the IntelliMouse  	 * compatible mode. 	 */
+comment|/* 	 * IntelliMouse, NetMouse (including NetMouse Pro) and Mie Mouse 	 * always send the fourth byte, whereas the fourth byte is 	 * optional for GlidePoint and ThinkingMouse. The fourth byte 	 * is also optional for MouseMan+ and FirstMouse+ in their 	 * native mode. It is always sent if they are in the IntelliMouse 	 * compatible mode. 	 */
 case|case
 name|MOUSE_PROTO_INTELLI
 case|:
@@ -9522,7 +9522,7 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-comment|/* 	 * Moused usually operates the psm driver at the operation level 1 	 * which sends mouse data in MOUSE_PROTO_SYSMOUSE protocol. 	 * The following code takes effect only when the user explicitly  	 * requets the level 2 at which wheel movement and additional button  	 * actions are encoded in model-dependent formats. At the level 0 	 * the following code is no-op because the psm driver says the model 	 * is MOUSE_MODEL_GENERIC. 	 */
+comment|/* 	 * Moused usually operates the psm driver at the operation level 1 	 * which sends mouse data in MOUSE_PROTO_SYSMOUSE protocol. 	 * The following code takes effect only when the user explicitly 	 * requets the level 2 at which wheel movement and additional button 	 * actions are encoded in model-dependent formats. At the level 0 	 * the following code is no-op because the psm driver says the model 	 * is MOUSE_MODEL_GENERIC. 	 */
 switch|switch
 condition|(
 name|rodent
@@ -10612,7 +10612,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*       * We don't reset pBufP here yet, as there may be an additional data      * byte in some protocols. See above.      */
+comment|/*      * We don't reset pBufP here yet, as there may be an additional data      * byte in some protocols. See above.      */
 comment|/* has something changed? */
 name|act
 operator|->
@@ -12368,7 +12368,7 @@ comment|/* $XFree86: xc/programs/Xserver/hw/xfree86/os-support/shared/posix_tty.
 end_comment
 
 begin_comment
-comment|/*  * Copyright 1993 by David Dawes<dawes@physics.su.oz.au>  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of David Dawes   * not be used in advertising or publicity pertaining to distribution of   * the software without specific, written prior permission.  * David Dawes makes no representations about the suitability of this   * software for any purpose.  It is provided "as is" without express or   * implied warranty.  *  * DAVID DAWES DISCLAIMS ALL WARRANTIES WITH REGARD TO   * THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND   * FITNESS, IN NO EVENT SHALL DAVID DAWES BE LIABLE FOR   * ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER   * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF   * CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN   * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  */
+comment|/*  * Copyright 1993 by David Dawes<dawes@physics.su.oz.au>  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of David Dawes  * not be used in advertising or publicity pertaining to distribution of  * the software without specific, written prior permission.  * David Dawes makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without express or  * implied warranty.  *  * DAVID DAWES DISCLAIMS ALL WARRANTIES WITH REGARD TO  * THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS, IN NO EVENT SHALL DAVID DAWES BE LIABLE FOR  * ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER  * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF  * CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  */
 end_comment
 
 begin_function
@@ -12744,11 +12744,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * PnP COM device support   *   * It's a simplistic implementation, but it works :-)  * KY, 31/7/97.  */
+comment|/*  * PnP COM device support  *  * It's a simplistic implementation, but it works :-)  * KY, 31/7/97.  */
 end_comment
 
 begin_comment
-comment|/*  * Try to elicit a PnP ID as described in   * Microsoft, Hayes: "Plug and Play External COM Device Specification,   * rev 1.00", 1995.  *  * The routine does not fully implement the COM Enumerator as par Section  * 2.1 of the document.  In particular, we don't have idle state in which  * the driver software monitors the com port for dynamic connection or   * removal of a device at the port, because `moused' simply quits if no   * device is found.  *  * In addition, as PnP COM device enumeration procedure slightly has   * changed since its first publication, devices which follow earlier  * revisions of the above spec. may fail to respond if the rev 1.0   * procedure is used. XXX  */
+comment|/*  * Try to elicit a PnP ID as described in  * Microsoft, Hayes: "Plug and Play External COM Device Specification,  * rev 1.00", 1995.  *  * The routine does not fully implement the COM Enumerator as par Section  * 2.1 of the document.  In particular, we don't have idle state in which  * the driver software monitors the com port for dynamic connection or  * removal of a device at the port, because `moused' simply quits if no  * device is found.  *  * In addition, as PnP COM device enumeration procedure slightly has  * changed since its first publication, devices which follow earlier  * revisions of the above spec. may fail to respond if the rev 1.0  * procedure is used. XXX  */
 end_comment
 
 begin_function
@@ -12769,7 +12769,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*       * This is the procedure described in rev 1.0 of PnP COM device spec.      * Unfortunately, some devices which comform to earlier revisions of      * the spec gets confused and do not return the ID string...      */
+comment|/*      * This is the procedure described in rev 1.0 of PnP COM device spec.      * Unfortunately, some devices which comform to earlier revisions of      * the spec gets confused and do not return the ID string...      */
 name|debug
 argument_list|(
 literal|"PnP COM device rev 1.0 probe..."
@@ -12816,7 +12816,7 @@ argument_list|(
 literal|240000
 argument_list|)
 expr_stmt|;
-comment|/*      * The PnP COM device spec. dictates that the mouse must set DSR       * in response to DTR (by hardware or by software) and that if DSR is       * not asserted, the host computer should think that there is no device      * at this serial port.  But some mice just don't do that...      */
+comment|/*      * The PnP COM device spec. dictates that the mouse must set DSR      * in response to DTR (by hardware or by software) and that if DSR is      * not asserted, the host computer should think that there is no device      * at this serial port.  But some mice just don't do that...      */
 name|ioctl
 argument_list|(
 name|rodent
@@ -13348,7 +13348,7 @@ name|pnpwakeup2
 argument_list|()
 condition|)
 block|{
-comment|/* 	 * According to PnP spec, we should set DTR = 1 and RTS = 0 while  	 * in idle state.  But, `moused' shall set DTR = RTS = 1 and proceed,  	 * assuming there is something at the port even if it didn't  	 * respond to the PnP enumeration procedure. 	 */
+comment|/* 	 * According to PnP spec, we should set DTR = 1 and RTS = 0 while 	 * in idle state.  But, `moused' shall set DTR = RTS = 1 and proceed, 	 * assuming there is something at the port even if it didn't 	 * respond to the PnP enumeration procedure. 	 */
 name|i
 operator|=
 name|TIOCM_DTR
@@ -13625,7 +13625,7 @@ return|return
 name|i
 return|;
 comment|/* a valid PnP string */
-comment|/*      * According to PnP spec, we should set DTR = 1 and RTS = 0 while       * in idle state.  But, `moused' shall leave the modem control lines      * as they are. See above.      */
+comment|/*      * According to PnP spec, we should set DTR = 1 and RTS = 0 while      * in idle state.  But, `moused' shall leave the modem control lines      * as they are. See above.      */
 name|connect_idle
 label|:
 comment|/* we may still have something in the buffer */
@@ -14192,7 +14192,7 @@ literal|'\\'
 condition|)
 break|break;
 block|}
-comment|/* 	 * PnP COM spec prior to v0.96 allowed '*' in this field,  	 * it's not allowed now; just igore it. 	 */
+comment|/* 	 * PnP COM spec prior to v0.96 allowed '*' in this field, 	 * it's not allowed now; just igore it. 	 */
 if|if
 condition|(
 name|buf
@@ -14397,7 +14397,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* 	     * I found some mice do not comply with the PnP COM device  	     * spec regarding checksum... XXX 	     */
+comment|/* 	     * I found some mice do not comply with the PnP COM device 	     * spec regarding checksum... XXX 	     */
 block|logwarnx("PnP checksum error", 0); 	    return FALSE;
 endif|#
 directive|endif
@@ -15255,7 +15255,7 @@ name|SUN_LEN
 parameter_list|(
 name|unp
 parameter_list|)
-value|( ((char *)(unp)->sun_path - (char *)(unp)) + \                        strlen((unp)->path) )
+value|( ((char *)(unp)->sun_path - (char *)(unp)) + \ 		       strlen((unp)->path) )
 endif|#
 directive|endif
 if|if
