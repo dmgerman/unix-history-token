@@ -162,6 +162,12 @@ directive|include
 file|<dev/lnc/if_lncvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/lnc/if_lncreg.h>
+end_include
+
 begin_struct
 struct|struct
 name|lnc_softc
