@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright 1987, 1988 by MIT Student Information Processing Board  *  * For copyright info, see copyright.h.  */
 end_comment
 
@@ -30,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -50,13 +60,6 @@ include|#
 directive|include
 file|"copyright.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
