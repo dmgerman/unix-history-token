@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1017,6 +1017,55 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+while|while
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VXLOCK
+condition|)
+block|{
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VXWANT
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vp
+argument_list|,
+name|PINOD
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|vp
+operator|->
+name|v_tag
+operator|==
+name|VT_NON
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 return|return
 operator|(
 literal|0
