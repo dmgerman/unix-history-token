@@ -110,7 +110,7 @@ name|e
 parameter_list|,
 name|msg
 parameter_list|)
-value|{ (err == NULL ? (printerr(msg), exit(1), 0) \ 				       : (*err = e)); return ERR; }
+value|{ (err == NULL ? (printerr(msg), exit(1)) \ 				       : (*err = e)); return ERR; }
 end_define
 
 begin_else
@@ -127,7 +127,7 @@ name|e
 parameter_list|,
 name|msg
 parameter_list|)
-value|{ (err == NULL ? (fprintf(stderr, msg), exit(1), 0) \ 				       : (*err = e)); return ERR; }
+value|{ (err == NULL ? (fprintf(stderr, "setupterm(\"%s\",%d,NULL): %s", term, fd, msg), exit(1)) \ 				       : (*err = e)); return ERR; }
 end_define
 
 begin_endif
