@@ -3670,6 +3670,20 @@ name|DC_DEVICEID_987x5
 value|0x0531
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_98727
+value|0x0532
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_98732
+value|0x0532
+end_define
+
 begin_comment
 comment|/* Macronix PCI revision codes. */
 end_comment
