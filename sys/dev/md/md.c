@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1001,8 +1007,11 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"s_read(%lld)\n"
+literal|"s_read(%jd)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|offset
 argument_list|)
 expr_stmt|;
@@ -1134,8 +1143,11 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"s_write(%lld, %p)\n"
+literal|"s_write(%jd, %p)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|offset
 argument_list|,
 operator|(
