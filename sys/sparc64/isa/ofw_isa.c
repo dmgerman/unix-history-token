@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ofw_pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -35,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_pci.h>
 end_include
 
 begin_include
@@ -312,12 +300,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
-end_ifdef
-
 begin_function
 name|ofw_pci_intr_t
 name|ofw_isa_route_intr
@@ -429,15 +411,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OFW_NEWPCI */
-end_comment
 
 end_unit
 

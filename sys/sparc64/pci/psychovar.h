@@ -96,15 +96,10 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|struct
 name|ofw_bus_iinfo
 name|sc_iinfo
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|upa_ranges
 modifier|*

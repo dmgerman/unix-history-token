@@ -24,9 +24,6 @@ name|struct
 name|pcib_softc
 name|ops_pcib_sc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|phandle_t
 name|ops_node
 decl_stmt|;
@@ -34,8 +31,6 @@ name|struct
 name|ofw_bus_iinfo
 name|ops_iinfo
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

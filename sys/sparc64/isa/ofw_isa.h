@@ -117,54 +117,6 @@ name|ofw_isa_intr_t
 typedef|;
 end_typedef
 
-begin_struct
-struct|struct
-name|isa_imap
-block|{
-name|u_int32_t
-name|phys_hi
-decl_stmt|;
-comment|/* high phys addr mask */
-name|u_int32_t
-name|phys_lo
-decl_stmt|;
-comment|/* low phys addr mask */
-name|ofw_isa_intr_t
-name|intr
-decl_stmt|;
-comment|/* interrupt mask */
-name|phandle_t
-name|cnode
-decl_stmt|;
-comment|/* child node */
-name|ofw_pci_intr_t
-name|cintr
-decl_stmt|;
-comment|/* child interrupt */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|isa_imap_msk
-block|{
-name|u_int32_t
-name|phys_hi
-decl_stmt|;
-comment|/* high phys addr */
-name|u_int32_t
-name|phys_lo
-decl_stmt|;
-comment|/* low phys addr */
-name|ofw_isa_intr_t
-name|intr
-decl_stmt|;
-comment|/* interrupt */
-block|}
-struct|;
-end_struct
-
 begin_function_decl
 name|int
 name|ofw_isa_range_restype
@@ -202,12 +154,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
-end_ifdef
-
 begin_function_decl
 name|ofw_pci_intr_t
 name|ofw_isa_route_intr
@@ -224,11 +170,6 @@ name|ofw_isa_intr_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

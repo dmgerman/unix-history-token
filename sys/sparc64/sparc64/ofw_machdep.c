@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ofw_pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -170,9 +164,6 @@ block|{
 name|phandle_t
 name|node
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|node
 operator|=
 name|ofw_pci_get_node
@@ -180,17 +171,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|node
-operator|=
-name|ofw_pci_node
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|node

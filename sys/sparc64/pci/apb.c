@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1994,1995 Stefan Esser, Wolfgang StanglMeier  * Cop
 end_comment
 
 begin_comment
-comment|/*  * Support for the Sun APB (Advanced PCI Bridge) PCI-PCI bridge.  * This bridge does not fully comply to the PCI bridge specification, and is  * therefore not supported by the generic driver.  * We can use some pf the pcib methods anyway.  */
+comment|/*  * Support for the Sun APB (Advanced PCI Bridge) PCI-PCI bridge.  * This bridge does not fully comply to the PCI bridge specification, and is  * therefore not supported by the generic driver.  * We can use some of the pcib methods anyway.  */
 end_comment
 
 begin_include
@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_pci.h>
 end_include
 
 begin_include
@@ -151,24 +139,6 @@ name|bus_alloc_resource_t
 name|apb_alloc_resource
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OFW_NEWPCI
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|pcib_route_interrupt_t
-name|apb_route_interrupt
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -299,9 +269,6 @@ argument_list|,
 name|pcib_write_config
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|DEVMETHOD
 argument_list|(
 name|pcib_route_interrupt
@@ -309,21 +276,7 @@ argument_list|,
 name|ofw_pcib_gen_route_interrupt
 argument_list|)
 block|,
-else|#
-directive|else
-name|DEVMETHOD
-argument_list|(
-name|pcib_route_interrupt
-argument_list|,
-name|apb_route_interrupt
-argument_list|)
-block|,
-endif|#
-directive|endif
 comment|/* ofw_pci interface */
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|DEVMETHOD
 argument_list|(
 name|ofw_pci_get_node
@@ -338,8 +291,6 @@ argument_list|,
 name|ofw_pcib_gen_adjust_busrange
 argument_list|)
 block|,
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
@@ -694,62 +645,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|ofw_pcib_gen_setup
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sc
-operator|->
-name|sc_bsc
-operator|.
-name|ops_pcib_sc
-operator|.
-name|dev
-operator|=
-name|dev
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bsc
-operator|.
-name|ops_pcib_sc
-operator|.
-name|secbus
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_SECBUS_1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bsc
-operator|.
-name|ops_pcib_sc
-operator|.
-name|subbus
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_SUBBUS_1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bootverbose
@@ -828,28 +728,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|OFW_NEWPCI
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_bsc
-operator|.
-name|ops_pcib_sc
-operator|.
-name|secbus
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"apb_attach: APB with uninitialized secbus"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|device_add_child
 argument_list|(
 name|dev
@@ -925,7 +803,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this is a "default" allocation against this rid, we can't work 	 * out where it's coming from (we should actually never see these) so we 	 * just have to punt. 	 */
+comment|/* 	 * If this is a "default" allocation against this rid, we can't work 	 * out where it's coming from (we should actually never see these) so 	 * we just have to punt. 	 */
 if|if
 condition|(
 operator|(
@@ -1163,49 +1041,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OFW_NEWPCI
-end_ifndef
-
-begin_comment
-comment|/*  * Route an interrupt across a PCI bridge - we need to rely on the firmware  * here.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|apb_route_interrupt
-parameter_list|(
-name|device_t
-name|pcib
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|pin
-parameter_list|)
-block|{
-comment|/* 	 * XXX: ugly loathsome hack: 	 * We can't use ofw_pci_route_intr() here; the device passed may be 	 * the one of a bridge, so the original device can't be recovered. 	 * 	 * We need to use the firmware to route interrupts, however it has 	 * no interface which could be used to interpret intpins; instead, 	 * all assignments are done by device. 	 * 	 * The MI pci code will try to reroute interrupts of 0, although they 	 * are correct; all other interrupts are preinitialized, so if we 	 * get here, the intline is either 0 (so return 0), or we hit a 	 * device which was not preinitialized (e.g. hotplugged stuff), in 	 * which case we are lost. 	 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !OFW_NEWPCI */
-end_comment
 
 end_unit
 

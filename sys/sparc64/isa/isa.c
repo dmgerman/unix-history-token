@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ofw_pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -19,18 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
 end_include
 
 begin_include
@@ -48,25 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/interrupt.h>
 end_include
 
 begin_include
@@ -90,6 +54,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
@@ -97,36 +73,6 @@ begin_include
 include|#
 directive|include
 file|<dev/pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_pci.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
 end_include
 
 begin_include
@@ -174,24 +120,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int64_t
 name|isa_io_base
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int64_t
 name|isa_io_limit
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int64_t
 name|isa_mem_base
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int64_t
 name|isa_mem_limit
 decl_stmt|;
@@ -220,23 +170,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|ofw_bus_iinfo
 name|isa_iinfo
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * XXX: This is really partly partly PCI-specific, but unfortunately is  * differently enough to have to duplicate it here...  */
@@ -398,14 +337,6 @@ decl_stmt|;
 name|ofw_isa_intr_t
 name|ino
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|OFW_NEWPCI
-name|ofw_pci_intr_t
-name|rino
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|isa_ranges
 modifier|*
@@ -424,9 +355,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|isab_node
 operator|=
 name|ofw_pci_get_node
@@ -434,17 +362,6 @@ argument_list|(
 name|bridge
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|isab_node
-operator|=
-name|ofw_pci_node
-argument_list|(
-name|bridge
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|nbr
 operator|=
 name|OF_getprop_alloc
@@ -479,9 +396,6 @@ argument_list|(
 literal|"isa_init: cannot get bridge range property"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|ofw_bus_setup_iinfo
 argument_list|(
 name|isab_node
@@ -495,8 +409,6 @@ name|ofw_isa_intr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * This is really a bad kludge; however, it is needed to provide 	 * isa_irq_pending(), which is unfortunately still used by some 	 * drivers. 	 */
 for|for
 control|(
@@ -571,9 +483,6 @@ argument_list|(
 literal|"isa_init: XXX: ino too large"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OFW_NEWPCI
 name|isa_ino
 index|[
 name|ino
@@ -591,36 +500,6 @@ argument_list|,
 name|ino
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|rino
-operator|=
-name|ofw_bus_route_intr
-argument_list|(
-name|node
-argument_list|,
-name|ino
-argument_list|,
-name|ofw_pci_orb_callback
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
-name|isa_ino
-index|[
-name|ino
-index|]
-operator|=
-name|rino
-operator|==
-name|ORIR_NOTFOUND
-condition|?
-name|PCI_INVALID_IRQ
-else|:
-name|rino
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 for|for
 control|(
