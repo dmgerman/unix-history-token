@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.2 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,26 +31,25 @@ directive|include
 file|"dump.h"
 end_include
 
-begin_macro
+begin_expr_stmt
 name|pass
 argument_list|(
-argument|fn
-argument_list|,
-argument|map
-argument_list|)
-end_macro
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
 name|fn
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|,
+name|map
+argument_list|)
+specifier|register
+name|int
+argument_list|(
+operator|*
+name|fn
+argument_list|)
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
+specifier|register
 name|char
 modifier|*
 name|map
@@ -59,11 +58,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|dinode
-modifier|*
-name|dp
-decl_stmt|;
+specifier|register
 name|int
 name|bits
 decl_stmt|;
@@ -132,23 +127,17 @@ name|bits
 operator|&
 literal|1
 condition|)
-block|{
-name|dp
-operator|=
-name|getino
-argument_list|(
-name|ino
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|fn
 call|)
 argument_list|(
-name|dp
+name|getino
+argument_list|(
+name|ino
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|bits
 operator|>>=
 literal|1
@@ -175,8 +164,13 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|f
-expr_stmt|;
+decl_stmt|;
+specifier|extern
+name|int
+name|anydskipped
+decl_stmt|;
 name|f
 operator|=
 name|ip
@@ -275,6 +269,17 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|f
+operator|==
+name|IFDIR
+condition|)
+name|anydskipped
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_block
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|anydskipped
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set true in mark() if any directories are skipped */
+end_comment
+
+begin_comment
+comment|/* this lets us avoid map pass 2 in some cases */
+end_comment
 
 begin_function
 name|main
@@ -1019,6 +1033,10 @@ name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|anydskipped
+operator|=
+literal|0
+expr_stmt|;
 name|msg
 argument_list|(
 literal|"mapping (Pass I) [regular files]\n"
@@ -1036,6 +1054,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* mark updates esize */
+if|if
+condition|(
+name|anydskipped
+condition|)
+block|{
 do|do
 block|{
 name|msg
@@ -1060,6 +1083,14 @@ condition|(
 name|nadded
 condition|)
 do|;
+block|}
+else|else
+comment|/* keep the operators happy */
+name|msg
+argument_list|(
+literal|"mapping (Pass II) [directories]\n"
+argument_list|)
+expr_stmt|;
 name|bmapest
 argument_list|(
 name|clrmap
