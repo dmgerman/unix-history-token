@@ -134,6 +134,12 @@ name|fw_ipnopt
 decl_stmt|;
 comment|/* IP options set/unset */
 name|u_char
+name|fw_tcpopt
+decl_stmt|,
+name|fw_tcpnopt
+decl_stmt|;
+comment|/* TCP options set/unset */
+name|u_char
 name|fw_tcpf
 decl_stmt|,
 name|fw_tcpnf
@@ -159,7 +165,7 @@ comment|/* Divert/tee port (options IPDIVERT) */
 name|u_short
 name|fu_pipe_nr
 decl_stmt|;
-comment|/* pipe number (option DUMMYNET) */
+comment|/* queue number (option DUMMYNET) */
 name|u_short
 name|fu_skipto_rule
 decl_stmt|;
@@ -843,6 +849,45 @@ define|#
 directive|define
 name|IP_FW_IPOPT_TS
 value|0x08
+end_define
+
+begin_comment
+comment|/*  * Definitions for TCP option names.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPOPT_MSS
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPOPT_WINDOW
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPOPT_SACK
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPOPT_TS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPOPT_CC
+value|0x10
 end_define
 
 begin_comment
