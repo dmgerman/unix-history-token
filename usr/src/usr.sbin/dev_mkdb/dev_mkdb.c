@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.13 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,7 +443,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|dp
 operator|->
