@@ -329,6 +329,12 @@ begin_comment
 comment|/* PREEMPTION exposes scheduler bugs that need to be fixed. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -346,6 +352,11 @@ define|#
 directive|define
 name|PREEMPTION
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
