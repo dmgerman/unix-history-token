@@ -165,6 +165,10 @@ name|vbafind
 argument_list|(
 name|numvba
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
 name|vmem
 argument_list|,
 name|VMEMmap
@@ -547,8 +551,6 @@ argument_list|()
 decl_stmt|;
 specifier|extern
 name|long
-name|cold
-decl_stmt|,
 name|catcher
 index|[
 name|SCB_LASTIV
@@ -582,6 +584,9 @@ name|vbaccess
 argument_list|(
 name|memmap
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|VBIOBASE
 argument_list|,
 name|VBIOSIZE
@@ -673,7 +678,7 @@ name|vbaddr
 parameter_list|(
 name|off
 parameter_list|)
-value|(u_short *)((int)vumem + vboff(off))
+value|(u_short *)(vumem + vboff(off))
 for|for
 control|(
 name|um
@@ -1505,7 +1510,11 @@ end_macro
 begin_decl_stmt
 name|caddr_t
 name|valloc
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
 name|addr
 decl_stmt|;
 end_decl_stmt
