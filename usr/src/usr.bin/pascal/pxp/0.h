@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char *sccsid = "@(#)0.h	1.2 (Berkeley) %G%";*/
+comment|/* static	char *sccsid = "@(#)0.h	1.3 (Berkeley) %G%";*/
 end_comment
 
 begin_comment
@@ -336,6 +336,14 @@ directive|define
 name|quit
 parameter_list|()
 value|setpfx('Q')
+end_define
+
+begin_define
+define|#
+directive|define
+name|continuation
+parameter_list|()
+value|setpfx(' ')
 end_define
 
 begin_escape
