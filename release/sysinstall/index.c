@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.56 1998/10/13 07:31:37 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.57 1998/10/15 06:50:43 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -156,7 +156,7 @@ literal|"Audio utilities - most require a supported sound card."
 block|,
 literal|"biology"
 block|,
-literal|"Software related to Biology."
+literal|"Software related to biology."
 block|,
 literal|"benchmarks"
 block|,
@@ -180,7 +180,7 @@ literal|"Communications utilities."
 block|,
 literal|"converters"
 block|,
-literal|"Format conversion utilities.."
+literal|"Format conversion utilities."
 block|,
 literal|"databases"
 block|,
@@ -260,7 +260,7 @@ literal|"Mathematical computation software."
 block|,
 literal|"mbone"
 block|,
-literal|"Applications and utilities for the mbone."
+literal|"Applications and utilities for the MBONE."
 block|,
 literal|"misc"
 block|,
@@ -292,15 +292,15 @@ literal|"Packages without a home elsewhere."
 block|,
 literal|"perl5"
 block|,
-literal|"Utilities/modules for the PERL5 language.."
+literal|"Utilities/modules for the PERL5 language."
 block|,
 literal|"pilot"
 block|,
-literal|"Software support for the USR Palm Pilot(tm)."
+literal|"Software support for the 3COM/USR Palm Pilot(tm)."
 block|,
 literal|"plan9"
 block|,
-literal|"Software from the plan9 Operating System."
+literal|"Software from the Plan9 operating system."
 block|,
 literal|"print"
 block|,
@@ -316,7 +316,7 @@ literal|"Software development utilities and libraries."
 block|,
 literal|"python"
 block|,
-literal|"Software related to the python language."
+literal|"Software related to the Python language."
 block|,
 literal|"russian"
 block|,
@@ -340,39 +340,39 @@ literal|"Text processing/search utilities."
 block|,
 literal|"tcl75"
 block|,
-literal|"TCL v7.5 and packages which depend on it."
+literal|"TCL v7.5 and packages that depend on it."
 block|,
 literal|"tcl76"
 block|,
-literal|"TCL v7.6 and packages which depend on it."
+literal|"TCL v7.6 and packages that depend on it."
 block|,
 literal|"tcl80"
 block|,
-literal|"TCL v8.0 and packages which depend on it."
+literal|"TCL v8.0 and packages that depend on it."
 block|,
 literal|"tcl81"
 block|,
-literal|"TCL v8.1 and packages which depend on it."
+literal|"TCL v8.1 and packages that depend on it."
 block|,
 literal|"tk41"
 block|,
-literal|"Tk4.1 and packages which depend on it."
+literal|"Tk4.1 and packages that depend on it."
 block|,
 literal|"tk42"
 block|,
-literal|"Tk4.2 and packages which depend on it."
+literal|"Tk4.2 and packages that depend on it."
 block|,
 literal|"tk80"
 block|,
-literal|"Tk8.0 and packages which depend on it."
+literal|"Tk8.0 and packages that depend on it."
 block|,
 literal|"tk81"
 block|,
-literal|"Tk8.1 and packages which depend on it."
+literal|"Tk8.1 and packages that depend on it."
 block|,
 literal|"troff"
 block|,
-literal|"TROFF Text formatting utilities."
+literal|"TROFF text formatting utilities."
 block|,
 literal|"utils"
 block|,
@@ -412,7 +412,7 @@ literal|"X Window System based development toolkits."
 block|,
 literal|"x11-wm"
 block|,
-literal|"X Window System Window Managers."
+literal|"X Window System window managers."
 block|,
 name|NULL
 block|,
