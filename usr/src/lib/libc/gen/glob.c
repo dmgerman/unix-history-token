@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.11 (Berkeley) %G%"
+literal|"@(#)glob.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,23 @@ define|#
 directive|define
 name|M_MASK
 value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ASCII
+value|0x00ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)&M_ASCII)
 end_define
 
 begin_define
@@ -569,7 +586,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|const
-name|char
+name|u_char
 modifier|*
 name|compilepat
 decl_stmt|,
@@ -605,6 +622,10 @@ index|]
 decl_stmt|;
 name|patnext
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|pattern
 expr_stmt|;
 if|if
@@ -903,7 +924,10 @@ operator|*
 name|bufnext
 operator|++
 operator|=
+name|CHAR
+argument_list|(
 name|c
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -934,7 +958,10 @@ operator|*
 name|bufnext
 operator|++
 operator|=
+name|CHAR
+argument_list|(
 name|c
+argument_list|)
 expr_stmt|;
 name|qpatnext
 operator|+=
@@ -999,7 +1026,10 @@ operator|*
 name|bufnext
 operator|++
 operator|=
+name|CHAR
+argument_list|(
 name|c
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1069,7 +1099,7 @@ init|=
 name|compilebuf
 decl_stmt|;
 specifier|const
-name|char
+name|u_char
 modifier|*
 name|sp
 init|=
@@ -1081,9 +1111,6 @@ operator|*
 name|dp
 operator|++
 operator|=
-operator|(
-name|u_char
-operator|)
 operator|*
 name|sp
 operator|++
@@ -1705,7 +1732,7 @@ operator|)
 condition|)
 block|{
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|sc
 decl_stmt|;
@@ -1736,6 +1763,10 @@ for|for
 control|(
 name|sc
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|dp
 operator|->
 name|d_name
@@ -1748,9 +1779,6 @@ operator|*
 name|dc
 operator|++
 operator|=
-operator|(
-name|u_char
-operator|)
 operator|*
 name|sc
 operator|++
