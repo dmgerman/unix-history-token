@@ -4,6 +4,10 @@ comment|/* ELF executable support for BFD.    Copyright 1993, 94, 95, 96, 97, 19
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  SECTION 	ELF backends  	BFD support for ELF formats is being worked on. 	Currently, the best supported back ends are for sparc and i386 	(running svr4 or Solaris 2).  	Documentation of the internals of the support code still needs 	to be written.  The code is changing quickly enough that we 	haven't bothered yet.  */
 end_comment
 
@@ -13948,6 +13952,30 @@ name|s
 operator|->
 name|ev_current
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* Quick and dirty hack to brand the file as a FreeBSD ELF file. */
+name|i_ehdrp
+operator|->
+name|e_ident
+index|[
+name|EI_OSABI
+index|]
+operator|=
+name|ELFOSABI_FREEBSD
+expr_stmt|;
+name|i_ehdrp
+operator|->
+name|e_ident
+index|[
+name|EI_ABIVERSION
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|count
@@ -13970,6 +13998,42 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* #ifdef BRANDELF_CHANGE_BOOTSTRAP */
+define|#
+directive|define
+name|_OLD_EI_BRAND_OFFSET
+value|8
+define|#
+directive|define
+name|_OLD_BRANDING
+value|"FreeBSD"
+name|strncpy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|i_ehdrp
+operator|->
+name|e_ident
+index|[
+name|_OLD_EI_BRAND_OFFSET
+index|]
+argument_list|,
+name|_OLD_BRANDING
+argument_list|,
+name|EI_NIDENT
+operator|-
+name|_OLD_EI_BRAND_OFFSET
+argument_list|)
+expr_stmt|;
+comment|/* #endif */
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -14049,7 +14113,7 @@ name|i_ehdrp
 operator|->
 name|e_machine
 operator|=
-name|EM_SPARC64
+name|EM_SPARCV9
 expr_stmt|;
 else|else
 name|i_ehdrp
@@ -14254,33 +14318,6 @@ name|s
 operator|->
 name|sizeof_ehdr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* Quick and dirty hack to brand the file as a FreeBSD ELF file. */
-name|strncpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|i_ehdrp
-operator|->
-name|e_ident
-index|[
-literal|8
-index|]
-argument_list|,
-literal|"FreeBSD"
-argument_list|,
-name|EI_NIDENT
-operator|-
-literal|8
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* no program header, for now. */
 name|i_ehdrp
 operator|->
