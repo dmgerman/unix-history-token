@@ -82,7 +82,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: crypt_server.c,v 1.3 1997/09/23 06:36:26 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,12 +644,39 @@ directive|ifndef
 name|LIBDES
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJFORMAT_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LIBDES
+value|"libdes.so.3"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LIBDES
 value|"libdes.so.3."
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OBJFORMAT_ELF */
+end_comment
 
 begin_endif
 endif|#
@@ -703,6 +730,27 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OBJFORMAT_ELF
+name|snprintf
+argument_list|(
+name|dlpath
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dlpath
+argument_list|)
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|_PATH_USRLIB
+argument_list|,
+name|LIBDES
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|len
 operator|=
 name|strlen
@@ -831,6 +879,9 @@ argument_list|(
 name|dird
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* OBJFORMAT_ELF */
 block|}
 else|else
 name|snprintf
@@ -866,6 +917,27 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+ifdef|#
+directive|ifdef
+name|OBJFORMAT_ELF
+name|_my_crypt
+operator|=
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|dlsym
+argument_list|(
+name|dlhandle
+argument_list|,
+literal|"_des_crypt"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|_my_crypt
 operator|=
 operator|(
@@ -882,6 +954,9 @@ argument_list|,
 literal|"__des_crypt"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* OBJFORMAT_ELF */
 if|if
 condition|(
 name|_my_crypt
