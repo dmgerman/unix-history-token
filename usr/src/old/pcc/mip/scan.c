@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.7 (Berkeley) %G%"
+literal|"@(#)scan.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3200,13 +3200,90 @@ endif|#
 directive|endif
 argument|return; 			}  		lxget(
 literal|' '
-argument|, LEXWS ); 		val =
+argument|, LEXWS ); 		c = getchar(); 		if( c ==
+literal|'\n'
+argument|) 			continue; 		if( c ==
+literal|'i'
+argument|){
+comment|/* #ident -- currently a no-op */
+argument|lxget( c, LEXLET ); 			if( strcmp( yytext,
+literal|"ident"
+argument|) ) 				werror(
+literal|"%s: undefined control"
+argument|, yytext ); 			while( (c = getchar()) !=
+literal|'\n'
+argument|&& c != EOF ) 				; 			continue; 			} 		if( c ==
+literal|'p'
+argument|){
+comment|/* #pragma -- special instructions */
+argument|lxget( c, LEXLET ); 			if( strcmp( yytext,
+literal|"pragma"
+argument|) ) { 				werror(
+literal|"%s: undefined control"
+argument|, yytext ); 				while( (c = getchar()) !=
+literal|'\n'
+argument|&& c != EOF ) 					; 				continue; 				} 			lxget(
+literal|' '
+argument|, LEXWS ); 			switch( c = getchar() ){
+ifdef|#
+directive|ifdef
+name|LINT
+argument|case
+literal|'V'
+argument|: 				lxget( c, LEXLET|LEXDIG ); 				{ 					extern int vaflag; 					int i; 					i = yytext[
+literal|7
+argument|]?yytext[
+literal|7
+argument|]-
+literal|'0'
+argument|:
 literal|0
-argument|; 		for( c=getchar(); isdigit(c); c=getchar() ){ 			val = val*
+argument|; 					yytext[
+literal|7
+argument|] =
+literal|'\0'
+argument|; 					if( strcmp( yytext,
+literal|"VARARGS"
+argument|) ) break; 					vaflag = i; 					break; 					} 			case
+literal|'L'
+argument|: 				lxget( c, LEXLET ); 				if( strcmp( yytext,
+literal|"LINTLIBRARY"
+argument|) ) break; 				{ 					extern int libflag; 					libflag =
+literal|1
+argument|; 					} 				break;  			case
+literal|'A'
+argument|: 				lxget( c, LEXLET ); 				if( strcmp( yytext,
+literal|"ARGSUSED"
+argument|) ) break; 				{ 					extern int argflag
+argument_list|,
+argument|vflag; 					argflag =
+literal|1
+argument|; 					vflag =
+literal|0
+argument|; 					} 				break;  			case
+literal|'N'
+argument|: 				lxget( c, LEXLET ); 				if( strcmp( yytext,
+literal|"NOTREACHED"
+argument|) ) break; 				reached =
+literal|0
+argument|; 				break;
+endif|#
+directive|endif
+argument|case
+literal|'\n'
+argument|: 			case EOF: 				continue; 				} 			while( (c = getchar()) !=
+literal|'\n'
+argument|&& c != EOF ) 				; 			continue; 			} 		if( !isdigit(c) ){ 			if( isalpha(c) ){ 				lxget( c, LEXLET ); 				werror(
+literal|"%s: undefined control"
+argument|, yytext ); 				} 			while( (c = getchar()) !=
+literal|'\n'
+argument|&& c != EOF ) 				; 			continue; 			} 			 		val =
+literal|0
+argument|; 		do { 			val = val*
 literal|10
 argument|+ c -
 literal|'0'
-argument|; 			} 		if( c == EOF ) 			continue; 		ungetc( c, stdin ); 		lineno = val; 		lxget(
+argument|; 			} 		while( isdigit( c = getchar() ) );  		if( c == EOF ) 			continue; 		ungetc( c, stdin ); 		lineno = val; 		lxget(
 literal|' '
 argument|, LEXWS ); 		if( (c=getchar()) !=
 literal|'\n'
