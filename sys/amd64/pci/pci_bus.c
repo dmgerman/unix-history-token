@@ -648,13 +648,13 @@ operator|=
 literal|"OPTi 82C822 host to PCI Bridge"
 expr_stmt|;
 break|break;
-comment|/* RCC -- vendor 0x1166 */
+comment|/* ServerWorks -- vendor 0x1166 */
 case|case
 literal|0x00051166
 case|:
 name|s
 operator|=
-literal|"RCC HE host to PCI bridge"
+literal|"ServerWorks NB6536 2.0HE host to PCI bridge"
 expr_stmt|;
 operator|*
 name|busnum
@@ -684,7 +684,7 @@ literal|0x00081166
 case|:
 name|s
 operator|=
-literal|"RCC host to PCI bridge"
+literal|"ServerWorks host to PCI bridge"
 expr_stmt|;
 operator|*
 name|busnum
@@ -710,7 +710,7 @@ literal|0x00091166
 case|:
 name|s
 operator|=
-literal|"RCC LE host to PCI bridge"
+literal|"ServerWorks NB6635 3.0LE host to PCI bridge"
 expr_stmt|;
 operator|*
 name|busnum
