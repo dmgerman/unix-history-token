@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.37	82/09/06	*/
+comment|/*	kern_proc.c	4.38	82/09/08	*/
 end_comment
 
 begin_include
@@ -2882,14 +2882,6 @@ name|p_flag
 operator||=
 name|SWEXIT
 expr_stmt|;
-name|timerclear
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_seltimer
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2981,6 +2973,13 @@ name|i
 index|]
 operator|=
 name|SIG_IGN
+expr_stmt|;
+name|untimeout
+argument_list|(
+name|unrto
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Release virtual memory.  If we resulted from 	 * a vfork(), instead give the resources back to 	 * the parent. 	 */
 if|if
@@ -4102,9 +4101,10 @@ operator|)
 operator|&&
 name|setjmp
 argument_list|(
+operator|&
 name|u
 operator|.
-name|u_qsav
+name|u_qsave
 argument_list|)
 condition|)
 block|{
