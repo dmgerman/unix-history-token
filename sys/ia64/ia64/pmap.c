@@ -2514,7 +2514,7 @@ operator|+=
 name|pmap_ptc_e_stride1
 expr_stmt|;
 block|}
-name|intr_enable
+name|intr_restore
 argument_list|(
 name|psr
 argument_list|)

@@ -339,7 +339,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|intr_enable
+name|intr_restore
 argument_list|(
 name|c
 argument_list|)
@@ -423,7 +423,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|intr_enable
+name|intr_restore
 argument_list|(
 name|c
 argument_list|)

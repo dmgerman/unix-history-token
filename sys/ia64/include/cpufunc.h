@@ -1146,7 +1146,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|intr_enable
+name|intr_restore
 parameter_list|(
 name|critical_t
 name|psr
@@ -1184,7 +1184,7 @@ name|critical_t
 name|psr
 parameter_list|)
 block|{
-name|intr_enable
+name|intr_restore
 argument_list|(
 name|psr
 argument_list|)

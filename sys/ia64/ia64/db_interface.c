@@ -2843,7 +2843,7 @@ name|regs
 operator|=
 name|ddb_regs
 expr_stmt|;
-name|intr_enable
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)
