@@ -2040,6 +2040,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|smp_started
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+comment|/* nothing */
 block|}
 end_function
 
