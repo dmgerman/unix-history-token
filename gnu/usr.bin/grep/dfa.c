@@ -140,7 +140,7 @@ name|isgraph
 parameter_list|(
 name|C
 parameter_list|)
-value|(isprint(C)&& !isspace(C))
+value|(isprint((unsigned char)C)&& !isspace((unsigned char)C))
 end_define
 
 begin_endif
@@ -155,7 +155,7 @@ name|ISALPHA
 parameter_list|(
 name|C
 parameter_list|)
-value|isalpha(C)
+value|isalpha((unsigned char)C)
 end_define
 
 begin_define
@@ -165,7 +165,7 @@ name|ISUPPER
 parameter_list|(
 name|C
 parameter_list|)
-value|isupper(C)
+value|isupper((unsigned char)C)
 end_define
 
 begin_define
@@ -175,7 +175,7 @@ name|ISLOWER
 parameter_list|(
 name|C
 parameter_list|)
-value|islower(C)
+value|islower((unsigned char)C)
 end_define
 
 begin_define
@@ -185,7 +185,7 @@ name|ISDIGIT
 parameter_list|(
 name|C
 parameter_list|)
-value|isdigit(C)
+value|isdigit((unsigned char)C)
 end_define
 
 begin_define
@@ -195,7 +195,7 @@ name|ISXDIGIT
 parameter_list|(
 name|C
 parameter_list|)
-value|isxdigit(C)
+value|isxdigit((unsigned char)C)
 end_define
 
 begin_define
@@ -205,7 +205,7 @@ name|ISSPACE
 parameter_list|(
 name|C
 parameter_list|)
-value|isspace(C)
+value|isspace((unsigned char)C)
 end_define
 
 begin_define
@@ -215,7 +215,7 @@ name|ISPUNCT
 parameter_list|(
 name|C
 parameter_list|)
-value|ispunct(C)
+value|ispunct((unsigned char)C)
 end_define
 
 begin_define
@@ -225,7 +225,7 @@ name|ISALNUM
 parameter_list|(
 name|C
 parameter_list|)
-value|isalnum(C)
+value|isalnum((unsigned char)C)
 end_define
 
 begin_define
@@ -235,7 +235,7 @@ name|ISPRINT
 parameter_list|(
 name|C
 parameter_list|)
-value|isprint(C)
+value|isprint((unsigned char)C)
 end_define
 
 begin_define
@@ -245,7 +245,7 @@ name|ISGRAPH
 parameter_list|(
 name|C
 parameter_list|)
-value|isgraph(C)
+value|isgraph((unsigned char)C)
 end_define
 
 begin_define
@@ -255,7 +255,7 @@ name|ISCNTRL
 parameter_list|(
 name|C
 parameter_list|)
-value|iscntrl(C)
+value|iscntrl((unsigned char)C)
 end_define
 
 begin_include
@@ -267,7 +267,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gnuregex.h"
+file|<gnuregex.h>
 end_include
 
 begin_if
@@ -2890,6 +2890,10 @@ name|setbit
 argument_list|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c3
 argument_list|)
 argument_list|,
@@ -2908,6 +2912,10 @@ name|setbit
 argument_list|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c3
 argument_list|)
 argument_list|,
@@ -2947,6 +2955,10 @@ name|setbit
 argument_list|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -2965,6 +2977,10 @@ name|setbit
 argument_list|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -3063,6 +3079,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -3070,6 +3090,10 @@ name|setbit
 argument_list|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -3081,6 +3105,10 @@ name|setbit
 argument_list|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -9561,6 +9589,10 @@ index|]
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|s
 index|[
 name|i

@@ -218,7 +218,7 @@ name|ISALNUM
 parameter_list|(
 name|C
 parameter_list|)
-value|isalnum(C)
+value|isalnum((unsigned char)C)
 end_define
 
 begin_define
@@ -228,7 +228,7 @@ name|ISUPPER
 parameter_list|(
 name|C
 parameter_list|)
-value|isupper(C)
+value|isupper((unsigned char)C)
 end_define
 
 begin_endif
@@ -243,7 +243,7 @@ name|TOLOWER
 parameter_list|(
 name|C
 parameter_list|)
-value|(ISUPPER(C) ? tolower(C) : (C))
+value|(ISUPPER(C) ? tolower((unsigned char)C) : (C))
 end_define
 
 begin_include
