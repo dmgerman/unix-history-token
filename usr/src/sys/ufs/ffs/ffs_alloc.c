@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5540,7 +5540,7 @@ comment|/*  * Free an inode.  *  * The specified inode is placed back in the fre
 end_comment
 
 begin_function
-name|void
+name|int
 name|ffs_vfree
 parameter_list|(
 name|ap
@@ -5724,7 +5724,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 endif|#
 directive|endif
@@ -5751,7 +5755,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|cgp
 operator|->
@@ -5908,6 +5916,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
