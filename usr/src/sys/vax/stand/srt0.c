@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_empty
-empty|#	srt0.c	1.1	%G%
+empty|#	srt0.c	1.2	%G%
 end_empty
 
 begin_empty
@@ -100,31 +100,24 @@ operator|+
 literal|4
 operator|#
 name|init
-name|subl3
-name|$_edata
-operator|,
-name|$RELOC
-operator|-
-literal|0x2000
-operator|,
-name|r0
-name|movc5
-name|$0
-operator|,
-operator|(
-name|sp
-operator|)
-operator|,
-name|$0
-operator|,
-name|r0
-operator|,
-name|_edata
-name|start
+name|clr
 case|:
 end_case
 
 begin_expr_stmt
+name|clrl
+argument_list|(
+name|r0
+argument_list|)
+operator|+
+name|cmpl
+name|r0
+operator|,
+name|sp
+name|jlss
+name|clr
+name|start
+operator|:
 name|movl
 name|$RELOC
 operator|-
