@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c 1.3 %G%"
+literal|"@(#)operators.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,6 +149,9 @@ comment|/* change (or print) the current source file */
 name|O_CONT
 block|,
 comment|/* continue execution */
+name|O_DEBUG
+block|,
+comment|/* invoke a dbx internal debugging routine */
 name|O_DELETE
 block|,
 comment|/* remove a trace/stop */
@@ -790,6 +793,13 @@ block|,
 name|null
 block|,
 literal|"cont"
+block|,
+comment|/* O_DEBUG */
+literal|0
+block|,
+name|null
+block|,
+literal|"debug"
 block|,
 comment|/* O_DELETE */
 literal|0
