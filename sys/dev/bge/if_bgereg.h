@@ -9611,8 +9611,11 @@ directive|define
 name|BGE_HOSTADDR
 parameter_list|(
 name|x
+parameter_list|,
+name|y
 parameter_list|)
-value|((x).bge_addr_lo)
+define|\
+value|do {								\ 		(x).bge_addr_lo = ((u_int64_t) (y)& 0xffffffff);	\ 		(x).bge_addr_hi = ((u_int64_t) (y)>> 32);		\ 	} while(0)
 end_define
 
 begin_comment
