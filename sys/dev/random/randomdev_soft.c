@@ -308,6 +308,8 @@ name|entropyfifo
 name|harvestfifo
 index|[
 name|ENTROPYSOURCE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
