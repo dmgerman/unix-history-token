@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/endian.h>
 end_include
 
 begin_include
