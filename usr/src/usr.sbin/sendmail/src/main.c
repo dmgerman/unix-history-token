@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.60 (Berkeley) %G%"
+literal|"@(#)main.c	8.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3105,6 +3105,25 @@ literal|"Processed from queue %s"
 argument_list|,
 name|QueueDir
 argument_list|)
+expr_stmt|;
+end_if
+
+begin_comment
+comment|/* supress error printing if errors mailed back or whatever */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_errormode
+operator|!=
+name|EM_PRINT
+condition|)
+name|HoldErrs
+operator|=
+name|TRUE
 expr_stmt|;
 end_if
 

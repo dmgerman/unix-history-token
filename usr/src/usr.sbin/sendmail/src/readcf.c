@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.24 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4230,11 +4230,6 @@ case|case
 name|EM_WRITE
 case|:
 comment|/* write back (or mail) */
-name|HoldErrs
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* fall through... */
 case|case
 name|EM_PRINT
 case|:
