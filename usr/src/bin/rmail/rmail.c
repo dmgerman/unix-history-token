@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	4.5 (Berkeley) %G%"
+literal|"@(#)rmail.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ comment|/* output to sendmail */
 name|char
 name|lbuf
 index|[
-literal|512
+literal|1024
 index|]
 decl_stmt|;
 comment|/* one line of the message */
@@ -138,21 +138,21 @@ comment|/* accumulated path of sender */
 name|char
 name|ufrom
 index|[
-literal|64
+literal|512
 index|]
 decl_stmt|;
 comment|/* user on remote system */
 name|char
 name|sys
 index|[
-literal|64
+literal|512
 index|]
 decl_stmt|;
 comment|/* a system in path */
 name|char
 name|junk
 index|[
-literal|512
+literal|1024
 index|]
 decl_stmt|;
 comment|/* scratchpad */
