@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)halt.c	4.4 (Berkeley) %G%"
+literal|"@(#)halt.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -643,6 +643,13 @@ argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+return|return;
 name|fseek
 argument_list|(
 name|fp
