@@ -207,11 +207,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|fp
 operator|->
 name|_file
@@ -237,6 +232,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Release this FILE for reuse. */
+name|FUNLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|r
