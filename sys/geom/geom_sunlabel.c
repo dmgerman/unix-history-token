@@ -124,7 +124,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|BSD_CLASS_NAME
+name|SUNLABEL_CLASS_NAME
 value|"SUNLABEL-class"
 end_define
 
@@ -341,7 +341,7 @@ name|class
 operator|->
 name|name
 argument_list|,
-name|BSD_CLASS_NAME
+name|SUNLABEL_CLASS_NAME
 argument_list|)
 condition|)
 return|return
@@ -954,7 +954,7 @@ name|g_class
 name|g_sunlabel_class
 init|=
 block|{
-name|BSD_CLASS_NAME
+name|SUNLABEL_CLASS_NAME
 block|,
 name|g_sunlabel_taste
 block|,
