@@ -826,7 +826,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|" byte %qd"
+literal|" byte %d"
 argument_list|,
 name|pos
 argument_list|)
@@ -856,7 +856,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|"/%qd pct %qd%%"
+literal|"/%d pct %d%%"
 argument_list|,
 name|len
 argument_list|,
@@ -959,7 +959,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|" (%qd%%)"
+literal|" (%d%%)"
 argument_list|,
 operator|(
 operator|(
