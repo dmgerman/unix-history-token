@@ -1332,10 +1332,6 @@ argument_list|,
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/* 		* Initialize DMA mapping 		*/
-name|DMA_INIT
-argument_list|()
-expr_stmt|;
 comment|/* 		* Start up watchdog timer 		*/
 name|atm_timeout
 argument_list|(
@@ -1353,10 +1349,6 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* 		 * Release DMA mapping 		 */
-name|DMA_RELEASE
-argument_list|()
-expr_stmt|;
 comment|/* 		 * Stop watchdog timer 		 */
 name|atm_untimeout
 argument_list|(

@@ -1051,55 +1051,6 @@ comment|/* Size of small buffers */
 end_comment
 
 begin_comment
-comment|/*  * Macros to manage DMA addresses  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA_INIT
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_GET_ADDR
-parameter_list|(
-name|addr
-parameter_list|,
-name|len
-parameter_list|,
-name|align
-parameter_list|,
-name|flags
-parameter_list|)
-value|((void *)vtophys(addr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_FREE_ADDR
-parameter_list|(
-name|addr
-parameter_list|,
-name|daddr
-parameter_list|,
-name|len
-parameter_list|,
-name|flags
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_RELEASE
-parameter_list|()
-end_define
-
-begin_comment
 comment|/*  * Macros to lock out device interrupts  */
 end_comment
 

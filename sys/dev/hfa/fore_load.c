@@ -422,10 +422,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Initialize DMA mapping 	 */
-name|DMA_INIT
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Start up watchdog timer 	 */
 name|atm_timeout
 argument_list|(
