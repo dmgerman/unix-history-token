@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.83 2004/04/09 17:08:12 rsm Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.84 2004/05/10 02:24:55 emax Exp   */
 end_comment
 
 begin_comment
@@ -1012,6 +1012,27 @@ define|#
 directive|define
 name|PCMCIA_STR_3COM_3CXEM556INT
 value|"3Com/Megahertz 3CXEM556-INT Ethernet/Modem"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_3COM_3CRWB609
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_3COM_3CRWB609
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_3COM_3CRWB609
+value|"3Com Bluetooth PC Card 3CRWB60-A"
 end_define
 
 begin_define
