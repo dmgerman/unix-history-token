@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|FTP_VERSION
-value|"1.9.1 (January 1, 1995)"
+value|"1.9.2 (January 20, 1995)"
 end_define
 
 begin_comment
@@ -1797,11 +1797,13 @@ argument_list|)
 operator|!=
 name|NOERR
 condition|)
+block|{
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|eventnumber
 operator|=

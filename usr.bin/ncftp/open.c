@@ -2122,9 +2122,17 @@ condition|)
 return|return
 name|USAGE
 return|;
+comment|/* Return an error if colon-mode/URL didn't work. */
 return|return
 operator|(
-name|www
+name|openopt
+operator|.
+name|colonmodepath
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|?
 name|result
 else|:
