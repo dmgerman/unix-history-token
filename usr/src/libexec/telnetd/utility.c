@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	8.1 (Berkeley) %G%"
+literal|"@(#)utility.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1466,12 +1466,25 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|STREAMSPTY
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+else|#
+directive|else
 specifier|extern
 name|char
 modifier|*
 name|rindex
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 name|putlocation
 operator|=
 name|where
@@ -1992,7 +2005,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|"(Empty suboption???)"
+literal|"(Empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -2126,7 +2139,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -2278,7 +2291,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -2426,7 +2439,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -2667,7 +2680,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -2756,7 +2769,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|"(no option???)"
+literal|"(no option??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -3241,7 +3254,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|"(no mode???)"
+literal|"(no mode??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -3994,15 +4007,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TELOPT_ENVIRON
+name|TELOPT_NEW_ENVIRON
 case|:
 name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|"ENVIRON "
+literal|"NEW-ENVIRON "
 argument_list|)
 expr_stmt|;
+goto|goto
+name|env_common1
+goto|;
+case|case
+name|TELOPT_OLD_ENVIRON
+case|:
+name|sprintf
+argument_list|(
+name|nfrontp
+argument_list|,
+literal|"OLD-ENVIRON"
+argument_list|)
+expr_stmt|;
+name|env_common1
+label|:
 name|nfrontp
 operator|+=
 name|strlen
@@ -4093,7 +4121,7 @@ index|]
 condition|)
 block|{
 case|case
-name|ENV_VAR
+name|NEW_ENV_VAR
 case|:
 name|sprintf
 argument_list|(
@@ -4117,7 +4145,7 @@ literal|2
 expr_stmt|;
 break|break;
 case|case
-name|ENV_VALUE
+name|NEW_ENV_VALUE
 case|:
 name|sprintf
 argument_list|(
@@ -4315,7 +4343,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -4424,7 +4452,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|"(partial suboption???)"
+literal|"(partial suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -4606,7 +4634,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|"(partial suboption???)"
+literal|"(partial suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -4784,7 +4812,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -4920,7 +4948,7 @@ name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
-literal|" (partial suboption???)"
+literal|" (partial suboption??\?)"
 argument_list|)
 expr_stmt|;
 name|nfrontp

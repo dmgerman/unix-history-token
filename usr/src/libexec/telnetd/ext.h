@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ext.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ext.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -980,7 +980,6 @@ argument_list|)
 decl_stmt|,
 endif|#
 directive|endif
-endif|convex
 name|login_tty
 name|P
 argument_list|(
@@ -1318,6 +1317,9 @@ comment|/* tspeed subopt is received */
 name|environsubopt
 decl_stmt|,
 comment|/* environ subopt is received */
+name|oenvironsubopt
+decl_stmt|,
+comment|/* old environ subopt is received */
 name|xdisplocsubopt
 decl_stmt|,
 comment|/* xdisploc subopt is received */
