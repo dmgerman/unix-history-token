@@ -10807,7 +10807,7 @@ name|script
 argument_list|)
 argument_list|)
 argument_list|,
-literal|0x100000
+literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -10872,7 +10872,7 @@ name|scripth
 argument_list|)
 argument_list|)
 argument_list|,
-literal|0x100000
+literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,

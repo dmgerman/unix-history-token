@@ -29771,7 +29771,7 @@ name|vm_page_alloc_contig
 argument_list|(
 name|size
 argument_list|,
-literal|0x100000
+literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -29792,7 +29792,7 @@ name|vm_page_alloc_contig
 argument_list|(
 name|size
 argument_list|,
-literal|0x100000
+literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -31578,7 +31578,7 @@ name|vm_page_alloc_contig
 argument_list|(
 name|size
 argument_list|,
-literal|0x100000
+literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -31599,7 +31599,7 @@ name|vm_page_alloc_contig
 argument_list|(
 name|size
 argument_list|,
-literal|0x100000
+literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,

@@ -4769,7 +4769,7 @@ name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
 argument_list|,
-literal|0x100000
+literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
