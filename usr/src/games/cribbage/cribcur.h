@@ -56,30 +56,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCORE_Y
-value|0
-end_define
-
-begin_comment
-comment|/* starting position of scoring board */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCORE_X
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|Y_SCORE_SZ
-value|11
+value|9
 end_define
 
 begin_comment
-comment|/* X size of score board */
+comment|/* Y size of score board */
 end_comment
 
 begin_define
@@ -96,6 +78,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCORE_Y
+value|0
+end_define
+
+begin_comment
+comment|/* starting position of scoring board */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCORE_X
+value|(PLAY_X + TABLE_X + COMP_X)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CRIB_Y
 value|17
 end_define
@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|CRIB_X
-value|(PLAY_X + TABLE_X + X_SCORE_SZ)
+value|(PLAY_X + TABLE_X)
 end_define
 
 begin_define
@@ -122,7 +122,14 @@ begin_define
 define|#
 directive|define
 name|MSG_X
-value|X_SCORE_SZ
+value|(COLS - SCORE_X - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Y_MSG_START
+value|(Y_SCORE_SZ + 1)
 end_define
 
 begin_define

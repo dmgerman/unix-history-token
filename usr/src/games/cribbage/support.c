@@ -655,7 +655,7 @@ argument_list|)
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"It's really only %d points, I get %d."
+literal|"It's really only %d points; I get %d"
 argument_list|,
 name|i
 argument_list|,
@@ -710,6 +710,9 @@ literal|"Explanation: %s"
 argument_list|,
 name|expl
 argument_list|)
+expr_stmt|;
+name|do_wait
+argument_list|()
 expr_stmt|;
 block|}
 else|else

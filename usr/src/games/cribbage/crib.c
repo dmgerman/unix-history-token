@@ -233,7 +233,7 @@ name|PLAY_X
 argument_list|,
 literal|0
 argument_list|,
-name|X_SCORE_SZ
+literal|0
 argument_list|)
 expr_stmt|;
 name|Tablewin
@@ -249,8 +249,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|PLAY_X
-operator|+
-name|X_SCORE_SZ
 argument_list|)
 expr_stmt|;
 name|Compwin
@@ -268,8 +266,6 @@ argument_list|,
 name|TABLE_X
 operator|+
 name|PLAY_X
-operator|+
-name|X_SCORE_SZ
 argument_list|)
 expr_stmt|;
 name|Msgwin
@@ -282,11 +278,11 @@ name|MSG_Y
 argument_list|,
 name|MSG_X
 argument_list|,
-name|Y_SCORE_SZ
+name|Y_MSG_START
+argument_list|,
+name|SCORE_X
 operator|+
 literal|1
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|leaveok
@@ -374,6 +370,11 @@ name|TRUE
 expr_stmt|;
 do|do
 block|{
+name|wclrtobot
+argument_list|(
+name|Msgwin
+argument_list|)
+expr_stmt|;
 name|msg
 argument_list|(
 name|quiet
@@ -960,7 +961,7 @@ argument_list|)
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"Loser (%s) gets first crib."
+literal|"Loser (%s) gets first crib"
 argument_list|,
 operator|(
 name|iwon
@@ -1676,7 +1677,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"I get two for his heels."
+literal|"I get two for his heels"
 argument_list|)
 expr_stmt|;
 name|win
@@ -1747,7 +1748,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"You get two for his heels."
+literal|"You get two for his heels"
 argument_list|)
 expr_stmt|;
 name|win
@@ -1823,7 +1824,7 @@ expr_stmt|;
 else|else
 name|cardx
 operator|=
-name|X_SCORE_SZ
+literal|0
 expr_stmt|;
 name|mvaddstr
 argument_list|(
@@ -1857,7 +1858,7 @@ name|mycrib
 condition|)
 name|cardx
 operator|=
-name|X_SCORE_SZ
+literal|0
 expr_stmt|;
 else|else
 name|cardx
@@ -2106,7 +2107,7 @@ block|{
 comment|/* go for comp? */
 name|msg
 argument_list|(
-literal|"GO."
+literal|"GO"
 argument_list|)
 expr_stmt|;
 name|mego
@@ -2138,9 +2139,9 @@ name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"You get one."
+literal|"You get one"
 else|:
-literal|"You get one point."
+literal|"You get one point"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2363,7 +2364,7 @@ block|{
 comment|/* go for player */
 name|msg
 argument_list|(
-literal|"You have a GO."
+literal|"You have a GO"
 argument_list|)
 expr_stmt|;
 name|ugo
@@ -2394,10 +2395,13 @@ name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"I get one."
+literal|"I get one"
 else|:
-literal|"I get one point."
+literal|"I get one point"
 argument_list|)
+expr_stmt|;
+name|do_wait
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2504,7 +2508,7 @@ break|break;
 else|else
 name|msg
 argument_list|(
-literal|"Total> 31 -- try again."
+literal|"Total> 31 -- try again"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2602,6 +2606,14 @@ operator|>=
 literal|31
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|myturn
+condition|)
+name|do_wait
+argument_list|()
+expr_stmt|;
 name|sum
 operator|=
 literal|0
@@ -2677,6 +2689,9 @@ literal|"I get one for last"
 else|:
 literal|"I get one point for last"
 argument_list|)
+expr_stmt|;
+name|do_wait
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2837,6 +2852,9 @@ condition|)
 return|return
 name|TRUE
 return|;
+name|do_wait
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|comphand
