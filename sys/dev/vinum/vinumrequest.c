@@ -3549,6 +3549,26 @@ name|ubp
 operator|->
 name|b_iocmd
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+if|if
+condition|(
+name|rqe
+operator|->
+name|flags
+operator|&
+name|XFR_BUFLOCKED
+condition|)
+comment|/* paranoia */
+name|panic
+argument_list|(
+literal|"build_rq_buffer: rqe already locked"
+argument_list|)
+expr_stmt|;
+comment|/* XXX remove this when we're sure */
+endif|#
+directive|endif
 name|BUF_LOCKINIT
 argument_list|(
 name|bp
@@ -3563,6 +3583,17 @@ name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */
+name|BUF_KERNPROC
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|rqe
+operator|->
+name|flags
+operator||=
+name|XFR_BUFLOCKED
+expr_stmt|;
 name|bp
 operator|->
 name|b_iodone
@@ -4236,6 +4267,14 @@ name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */
+name|BUF_KERNPROC
+argument_list|(
+operator|&
+name|sbp
+operator|->
+name|b
+argument_list|)
+expr_stmt|;
 name|sbp
 operator|->
 name|bp
@@ -4326,6 +4365,22 @@ comment|/* nothing transferred */
 name|bufdone
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|BUF_UNLOCK
+argument_list|(
+operator|&
+name|sbp
+operator|->
+name|b
+argument_list|)
+expr_stmt|;
+name|BUF_LOCKFREE
+argument_list|(
+operator|&
+name|sbp
+operator|->
+name|b
 argument_list|)
 expr_stmt|;
 name|Free
