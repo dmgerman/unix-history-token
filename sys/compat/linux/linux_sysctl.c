@@ -253,9 +253,9 @@ name|int
 name|linux_sysctl
 parameter_list|(
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|,
 name|struct
 name|linux_sysctl_args
