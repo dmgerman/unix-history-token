@@ -93,7 +93,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.22 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.23 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -108,7 +108,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.22 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.23 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.22 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.23 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +149,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.22 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.23 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2551,6 +2551,38 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|nlp
+decl_stmt|;
+name|nlp
+operator|=
+operator|&
+name|p
+index|[
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|nlp
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+operator|*
+operator|--
+name|nlp
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|init
@@ -2643,30 +2675,7 @@ else|else
 block|{
 name|p
 operator|=
-operator|&
-name|p
-index|[
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|p
-index|[
-operator|-
-literal|1
-index|]
-operator|==
-literal|'\n'
-condition|)
-operator|*
-operator|--
-name|p
-operator|=
-literal|'\0'
+name|nlp
 expr_stmt|;
 block|}
 comment|/* see if there should be a continuation line */
