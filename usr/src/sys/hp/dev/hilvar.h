@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilvar.h 1.1 90/07/09$  *  *	@(#)hilvar.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilvar.h 1.1 90/07/09$  *  *	@(#)hilvar.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -158,8 +158,7 @@ name|hd_queue
 decl_stmt|;
 comment|/* event queue for HPUX-style input */
 name|struct
-name|proc
-modifier|*
+name|selinfo
 name|hd_selr
 decl_stmt|;
 comment|/* process read selecting */
@@ -217,17 +216,6 @@ end_define
 
 begin_comment
 comment|/* device using shared Q input interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HIL_SELCOLL
-value|0x10
-end_define
-
-begin_comment
-comment|/* select collision on device */
 end_comment
 
 begin_define
