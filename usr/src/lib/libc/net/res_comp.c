@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.10 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -889,10 +889,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Search for expanded name from a list of previously compressed names.  * Return the offset from msg if found or -1.  */
+comment|/*  * Search for expanded name from a list of previously compressed names.  * Return the offset from msg if found or -1.  * dnptrs is the pointer to the first name on the list,  * not the pointer to the start of the message.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|dn_find
 argument_list|(
 argument|exp_dn
@@ -903,17 +904,14 @@ argument|dnptrs
 argument_list|,
 argument|lastdnptr
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|u_char
-modifier|*
+operator|*
 name|exp_dn
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|msg
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|u_char
@@ -954,8 +952,6 @@ control|(
 name|cpp
 operator|=
 name|dnptrs
-operator|+
-literal|1
 init|;
 name|cpp
 operator|<
