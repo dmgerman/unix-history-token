@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.4 (Berkeley) %G%"
+literal|"@(#)proc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2994,14 +2994,20 @@ name|PSIGNALED
 case|:
 if|if
 condition|(
+operator|(
 name|flag
 operator|&
+operator|(
 name|REASON
-operator|||
+operator||
+name|AREASON
+operator|)
+operator|)
+operator|&&
 name|reason
 operator|!=
 name|SIGINT
-operator|||
+operator|&&
 name|reason
 operator|!=
 name|SIGPIPE
@@ -4089,7 +4095,7 @@ if|if
 condition|(
 name|signum
 operator|<
-literal|1
+literal|0
 operator|||
 name|signum
 operator|>
@@ -4426,11 +4432,18 @@ elseif|else
 if|if
 condition|(
 operator|!
+operator|(
 name|digit
 argument_list|(
 operator|*
 name|cp
 argument_list|)
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'-'
+operator|)
 condition|)
 name|bferr
 argument_list|(
@@ -5636,13 +5649,6 @@ name|PRIO_PROCESS
 argument_list|,
 literal|0
 argument_list|,
-name|getpriority
-argument_list|(
-name|PRIO_PROCESS
-argument_list|,
-literal|0
-argument_list|)
-operator|+
 name|t
 operator|->
 name|t_nice
