@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	8.1 (Berkeley) %G%"
+literal|"@(#)tree.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -58,52 +64,61 @@ directive|include
 file|"ctags.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|add_node
+name|__P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+operator|,
+name|NODE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|free_tree
+name|__P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * pfnote --  *	enter a new node in the tree  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pfnote
-argument_list|(
-argument|name
-argument_list|,
-argument|ln
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|ln
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ln
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|extern
-name|NODE
-modifier|*
-name|head
-decl_stmt|;
-comment|/* head of the sorted binary tree */
-specifier|extern
-name|char
-modifier|*
-name|curfile
-decl_stmt|;
-comment|/* current input file name */
-specifier|register
 name|NODE
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|fp
@@ -135,11 +150,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fputs
+name|warnx
 argument_list|(
-literal|"ctags: too many entries to sort\n"
-argument_list|,
-name|stderr
+literal|"too many entries to sort"
 argument_list|)
 expr_stmt|;
 name|put_entries
@@ -174,20 +187,13 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"ctags: out of space.\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"out of space"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -209,7 +215,7 @@ operator|!
 operator|(
 name|fp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|curfile
 argument_list|,
@@ -239,7 +245,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|nbuf
 argument_list|,
@@ -280,28 +286,13 @@ name|name
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ctags: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|np
 operator|->
 name|file
@@ -338,28 +329,13 @@ name|lbuf
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ctags: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -378,33 +354,28 @@ name|head
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|add_node
-argument_list|(
+parameter_list|(
 name|node
-argument_list|,
+parameter_list|,
 name|cur_node
-argument_list|)
-specifier|register
+parameter_list|)
 name|NODE
-operator|*
+modifier|*
 name|node
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|cur_node
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|wflag
-decl_stmt|;
-comment|/* -w: suppress warnings */
-specifier|register
 name|int
 name|dif
 decl_stmt|;
@@ -555,19 +526,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|free_tree
-argument_list|(
+parameter_list|(
 name|node
-argument_list|)
-specifier|register
+parameter_list|)
 name|NODE
-operator|*
+modifier|*
 name|node
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -600,7 +569,7 @@ name|left
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

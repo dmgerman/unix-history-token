@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yacc.c	8.1 (Berkeley) %G%"
+literal|"@(#)yacc.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -50,23 +62,18 @@ begin_comment
 comment|/*  * y_entries:  *	find the yacc tags and put them in.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|y_entries
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|bool
 name|in_rule
 decl_stmt|;
@@ -76,6 +83,10 @@ index|[
 name|MAXTOKEN
 index|]
 decl_stmt|;
+name|in_rule
+operator|=
+name|NO
+expr_stmt|;
 while|while
 condition|(
 name|GETC
@@ -87,9 +98,6 @@ argument_list|)
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
@@ -119,9 +127,6 @@ if|if
 condition|(
 name|skip_key
 argument_list|(
-operator|(
-name|int
-operator|)
 literal|'}'
 argument_list|)
 condition|)
@@ -223,16 +228,10 @@ argument_list|)
 operator|&&
 name|c
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'.'
 operator|&&
 name|c
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'_'
 condition|)
 break|break;
@@ -263,9 +262,6 @@ argument_list|)
 operator|||
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'.'
 operator|)
 condition|)
@@ -296,9 +292,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 name|SETLINE
@@ -318,9 +311,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|':'
 condition|)
 block|{
@@ -349,24 +339,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * toss_yysec --  *	throw away lines up to the next "\n%%\n"  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|toss_yysec
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
 comment|/* read character */
+name|int
 name|state
 decl_stmt|;
 comment|/* 	 * state == 0 : waiting 	 * state == 1 : received a newline 	 * state == 2 : received first % 	 * state == 3 : recieved second % 	 */
@@ -393,9 +381,6 @@ condition|;
 control|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
@@ -445,9 +430,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset */
+break|break;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

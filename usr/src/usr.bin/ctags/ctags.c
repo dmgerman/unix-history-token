@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctags.c	8.1 (Berkeley) %G%"
+literal|"@(#)ctags.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -69,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -100,27 +118,27 @@ begin_decl_stmt
 name|bool
 name|_wht
 index|[
-literal|0177
+literal|256
 index|]
 decl_stmt|,
 name|_etk
 index|[
-literal|0177
+literal|256
 index|]
 decl_stmt|,
 name|_itk
 index|[
-literal|0177
+literal|256
 index|]
 decl_stmt|,
 name|_btk
 index|[
-literal|0177
+literal|256
 index|]
 decl_stmt|,
 name|_gd
 index|[
-literal|0177
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -129,8 +147,15 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|inf
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* ioptr for current input file */
+end_comment
+
+begin_decl_stmt
+name|FILE
 modifier|*
 name|outf
 decl_stmt|;
@@ -153,20 +178,55 @@ end_comment
 begin_decl_stmt
 name|int
 name|lineno
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* line number of current line */
+end_comment
+
+begin_decl_stmt
+name|int
 name|dflag
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* -d: non-macro defines */
+end_comment
+
+begin_decl_stmt
+name|int
 name|tflag
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* -t: create tags for typedefs */
-name|wflag
-decl_stmt|,
-comment|/* -w: suppress warnings */
+end_comment
+
+begin_decl_stmt
+name|int
 name|vflag
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* -v: vgrind style index output */
+end_comment
+
+begin_decl_stmt
+name|int
+name|wflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -w: suppress warnings */
+end_comment
+
+begin_decl_stmt
+name|int
 name|xflag
 decl_stmt|;
 end_decl_stmt
@@ -179,21 +239,61 @@ begin_decl_stmt
 name|char
 modifier|*
 name|curfile
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* current input file name */
+end_comment
+
+begin_decl_stmt
+name|char
 name|searchar
 init|=
 literal|'/'
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* use /.../ searches by default */
+end_comment
+
+begin_decl_stmt
+name|char
 name|lbuf
 index|[
-name|BUFSIZ
+name|LINE_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|find_entries
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -209,16 +309,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-comment|/* getopt arguments */
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|static
 name|char
 modifier|*
@@ -229,17 +319,21 @@ decl_stmt|;
 comment|/* output file */
 name|int
 name|aflag
-decl_stmt|,
+decl_stmt|;
 comment|/* -a: append to tags */
+name|int
 name|uflag
-decl_stmt|,
+decl_stmt|;
 comment|/* -u: update tags */
+name|int
 name|exit_val
-decl_stmt|,
+decl_stmt|;
 comment|/* exit value */
+name|int
 name|step
-decl_stmt|,
+decl_stmt|;
 comment|/* step through args */
+name|int
 name|ch
 decl_stmt|;
 comment|/* getopts char */
@@ -275,9 +369,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -377,9 +468,14 @@ condition|)
 block|{
 name|usage
 label|:
-name|puts
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"Usage: ctags [-BFadtuwvx] [-f tagsfile] file ..."
+name|stderr
+argument_list|,
+literal|"usage: ctags [-BFadtuwvx] [-f tagsfile] file ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -424,8 +520,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 name|step
@@ -504,7 +602,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"mv %s OTAGS;fgrep -v '\t%s\t' OTAGS>%s;rm OTAGS"
+literal|"mv %s OTAGS; fgrep -v '\t%s\t' OTAGS>%s; rm OTAGS"
 argument_list|,
 name|outfile
 argument_list|,
@@ -544,18 +642,15 @@ literal|"w"
 argument_list|)
 operator|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|exit_val
+argument_list|,
+literal|"%s"
+argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|exit_val
-argument_list|)
-expr_stmt|;
-block|}
 name|put_entries
 argument_list|(
 name|head
@@ -581,7 +676,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"sort %s -o %s"
+literal|"sort -o %s %s"
 argument_list|,
 name|outfile
 argument_list|,
@@ -607,18 +702,15 @@ begin_comment
 comment|/*  * init --  *	this routine sets up the boolean psuedo-functions which work by  *	setting boolean flags dependent upon the corresponding character.  *	Every char which is NOT in that string is false with respect to  *	the pseudo-function.  Therefore, all of the array "_wht" is NO  *	by default and then the elements subscripted by the chars in  *	CWHITE are set to YES.  Thus, "_wht" of a char is YES if it is in  *	the string CWHITE, else NO.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
+name|unsigned
 name|char
 modifier|*
 name|sp
@@ -631,7 +723,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|0177
+literal|256
 condition|;
 name|i
 operator|++
@@ -793,29 +885,23 @@ operator|=
 name|NO
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * find_entries --  *	this routine opens the specified file and calls the function  *	which searches the file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|find_entries
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -829,7 +915,7 @@ if|if
 condition|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,
@@ -853,7 +939,6 @@ literal|2
 index|]
 condition|)
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -897,13 +982,10 @@ value|";(["
 comment|/* lisp */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|LISPCHR
 argument_list|,
-operator|(
-name|char
-operator|)
 name|c
 argument_list|)
 condition|)
@@ -1032,7 +1114,7 @@ name|c_entries
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

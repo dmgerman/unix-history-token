@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)C.c	8.2 (Berkeley) %G%"
+literal|"@(#)C.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -50,69 +56,88 @@ begin_decl_stmt
 specifier|static
 name|int
 name|func_entry
-argument_list|()
-decl_stmt|,
-name|str_entry
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|hash_entry
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|skip_string
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|str_entry
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * c_entries --  *	read .c and .h files and call appropriate routines  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|c_entries
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|extern
-name|int
-name|tflag
-decl_stmt|;
-comment|/* -t: create tags for typedefs */
-specifier|register
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
 comment|/* current character */
+name|int
 name|level
 decl_stmt|;
 comment|/* brace level */
-specifier|register
+name|int
+name|token
+decl_stmt|;
+comment|/* if reading a token */
+name|int
+name|t_def
+decl_stmt|;
+comment|/* if reading a typedef */
+name|int
+name|t_level
+decl_stmt|;
+comment|/* typedef's brace level */
 name|char
 modifier|*
 name|sp
 decl_stmt|;
 comment|/* buffer pointer */
-name|int
-name|token
-decl_stmt|,
-comment|/* if reading a token */
-name|t_def
-decl_stmt|,
-comment|/* if reading a typedef */
-name|t_level
-decl_stmt|;
-comment|/* typedef's brace level */
 name|char
 name|tok
 index|[
@@ -162,13 +187,10 @@ condition|)
 block|{
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
-comment|/* 		 * Here's where it DOESN'T handle: 		 *	foo(a) 		 *	{ 		 *	#ifdef notdef 		 *		} 		 *	#endif 		 *		if (a) 		 *			puts("hello, world"); 		 *	} 		 */
+comment|/* 		 * Here's where it DOESN'T handle: { 		 *	foo(a) 		 *	{ 		 *	#ifdef notdef 		 *		} 		 *	#endif 		 *		if (a) 		 *			puts("hello, world"); 		 *	} 		 */
 case|case
 literal|'{'
 case|:
@@ -302,7 +324,7 @@ block|}
 goto|goto
 name|storec
 goto|;
-comment|/* 	 	 * if we have a current token, parenthesis on 		 * level zero indicates a function. 		 */
+comment|/* 		 * if we have a current token, parenthesis on 		 * level zero indicates a function. 		 */
 case|case
 literal|'('
 case|:
@@ -438,7 +460,7 @@ operator|!
 name|t_def
 operator|&&
 operator|!
-name|bcmp
+name|memcmp
 argument_list|(
 name|tok
 argument_list|,
@@ -472,7 +494,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|bcmp
+name|memcmp
 argument_list|(
 name|tok
 argument_list|,
@@ -482,7 +504,7 @@ literal|7
 argument_list|)
 operator|||
 operator|!
-name|bcmp
+name|memcmp
 argument_list|(
 name|tok
 argument_list|,
@@ -492,7 +514,7 @@ literal|6
 argument_list|)
 operator|||
 operator|!
-name|bcmp
+name|memcmp
 argument_list|(
 name|tok
 argument_list|,
@@ -518,6 +540,7 @@ operator|++
 name|level
 expr_stmt|;
 break|break;
+comment|/* } */
 block|}
 block|}
 name|sp
@@ -561,7 +584,7 @@ name|NO
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * func_entry --  *	handle a function reference  */
@@ -573,7 +596,6 @@ name|int
 name|func_entry
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -597,9 +619,6 @@ condition|)
 block|{
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
@@ -695,9 +714,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 name|SETLINE
@@ -711,9 +727,6 @@ argument_list|)
 operator|||
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'{'
 condition|)
 break|break;
@@ -721,9 +734,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'/'
 operator|&&
 name|GETC
@@ -760,9 +770,6 @@ if|if
 condition|(
 name|c
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'{'
 condition|)
 operator|(
@@ -770,9 +777,6 @@ name|void
 operator|)
 name|skip_key
 argument_list|(
-operator|(
-name|int
-operator|)
 literal|'{'
 argument_list|)
 expr_stmt|;
@@ -794,20 +798,14 @@ name|void
 name|hash_entry
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|dflag
-decl_stmt|;
-comment|/* -d: non-macro defines */
-specifier|register
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
 comment|/* character read */
+name|int
 name|curline
 decl_stmt|;
 comment|/* line started on */
-specifier|register
 name|char
 modifier|*
 name|sp
@@ -866,7 +864,7 @@ name|EOS
 expr_stmt|;
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 name|tok
 argument_list|,
@@ -954,9 +952,6 @@ name|dflag
 operator|||
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'('
 condition|)
 block|{
@@ -978,9 +973,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 block|{
@@ -1004,9 +996,6 @@ name|void
 operator|)
 name|skip_key
 argument_list|(
-operator|(
-name|int
-operator|)
 literal|'\n'
 argument_list|)
 expr_stmt|;
@@ -1017,38 +1006,31 @@ begin_comment
 comment|/*  * str_entry --  *	handle a struct, union or enum entry  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|str_entry
-argument_list|(
+parameter_list|(
 name|c
-argument_list|)
-specifier|register
+parameter_list|)
 name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* current character */
-end_comment
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|sp
 decl_stmt|;
-comment|/* buffer pointer */
+comment|/* current character */
+block|{
 name|int
 name|curline
 decl_stmt|;
 comment|/* line started on */
 name|char
+modifier|*
+name|sp
+decl_stmt|;
+comment|/* buffer pointer */
+name|char
 name|tok
 index|[
-name|BUFSIZ
+name|LINE_MAX
 index|]
 decl_stmt|;
 comment|/* storage buffer */
@@ -1081,9 +1063,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'{'
 condition|)
 comment|/* it was "struct {" */
@@ -1134,9 +1113,6 @@ break|break;
 block|}
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
@@ -1179,9 +1155,6 @@ if|if
 condition|(
 name|c
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'{'
 condition|)
 block|{
@@ -1220,24 +1193,22 @@ name|YES
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * skip_comment --  *	skip over comment  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|skip_comment
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
 comment|/* character read */
+name|int
 name|star
 decl_stmt|;
 comment|/* '*' flag */
@@ -1257,9 +1228,6 @@ condition|;
 control|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
@@ -1292,9 +1260,10 @@ name|star
 operator|=
 name|NO
 expr_stmt|;
+break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * skip_string --  *	skip to the end of a string or character constant.  */
@@ -1306,12 +1275,10 @@ name|skip_string
 parameter_list|(
 name|key
 parameter_list|)
-specifier|register
 name|int
 name|key
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|,
@@ -1333,9 +1300,6 @@ condition|;
 control|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
@@ -1385,12 +1349,10 @@ name|skip_key
 parameter_list|(
 name|key
 parameter_list|)
-specifier|register
 name|int
 name|key
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|,
@@ -1416,9 +1378,6 @@ condition|;
 control|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortran.c	8.1 (Berkeley) %G%"
+literal|"@(#)fortran.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -46,13 +58,18 @@ directive|include
 file|"ctags.h"
 end_include
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|takeprec
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -65,19 +82,15 @@ begin_comment
 comment|/* line buffer pointer */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|PF_funcs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|bool
 name|pfcnt
 decl_stmt|;
 comment|/* pascal/fortran functions found */
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -87,10 +100,6 @@ name|tok
 index|[
 name|MAXTOKEN
 index|]
-decl_stmt|,
-modifier|*
-name|gettoken
-argument_list|()
 decl_stmt|;
 for|for
 control|(
@@ -158,7 +167,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -217,7 +226,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -291,7 +300,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -362,7 +371,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -390,7 +399,7 @@ condition|;
 operator|++
 name|cp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|cp
@@ -433,31 +442,26 @@ expr_stmt|;
 block|}
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * cicmp --  *	do case-independent strcmp  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|cicmp
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|bp
@@ -498,7 +502,7 @@ operator|,
 operator|++
 name|len
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -522,7 +526,7 @@ name|NO
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -542,7 +546,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|*
@@ -565,7 +569,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -589,7 +593,7 @@ operator|++
 name|lbp
 argument_list|)
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 block|}
 end_function

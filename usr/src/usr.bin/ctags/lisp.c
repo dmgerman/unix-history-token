@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lisp.c	8.1 (Berkeley) %G%"
+literal|"@(#)lisp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -46,38 +58,23 @@ directive|include
 file|"ctags.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|lbp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pointer shared with fortran */
-end_comment
-
 begin_comment
 comment|/*  * lisp tag functions  * just look for (def or (DEF  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|l_entries
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|int
 name|special
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+name|char
 name|savedc
 decl_stmt|;
 name|char
@@ -191,7 +188,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 init|;
@@ -204,7 +201,7 @@ condition|;
 operator|++
 name|lbp
 control|)
-empty_stmt|;
+continue|continue;
 for|for
 control|(
 name|cp
@@ -222,7 +219,7 @@ condition|;
 operator|++
 name|cp
 control|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|cp
 operator|=
@@ -239,7 +236,7 @@ operator|!
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|lbp
 argument_list|,
@@ -263,7 +260,7 @@ condition|;
 operator|--
 name|cp
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|cp
@@ -294,7 +291,7 @@ condition|;
 operator|++
 name|cp
 control|)
-empty_stmt|;
+continue|continue;
 block|}
 else|else
 for|for
@@ -321,7 +318,7 @@ condition|;
 operator|++
 name|cp
 control|)
-empty_stmt|;
+continue|continue;
 name|savedc
 operator|=
 operator|*
@@ -360,7 +357,7 @@ expr_stmt|;
 block|}
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 end_unit
 

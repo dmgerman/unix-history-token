@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.1 (Berkeley) %G%"
+literal|"@(#)print.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -55,42 +55,33 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ctags.h"
+file|<unistd.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|searchar
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ex search character */
-end_comment
+begin_include
+include|#
+directive|include
+file|"ctags.h"
+end_include
 
 begin_comment
 comment|/*  * getline --  *	get the line the token of interest occurred on,  *	prepare it for printing.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|getline
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|long
 name|saveftell
 decl_stmt|;
-specifier|register
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
+name|int
 name|cnt
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -137,7 +128,7 @@ operator|++
 operator|=
 name|c
 control|)
-empty_stmt|;
+continue|continue;
 comment|/* 	 * do all processing here, so we don't step through the 	 * line more than once; means you don't call this routine 	 * unless you're sure you've got a keeper. 	 */
 else|else
 for|for
@@ -169,9 +160,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'\\'
 condition|)
 block|{
@@ -243,9 +231,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 block|{
@@ -285,37 +270,23 @@ name|L_SET
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * put_entries --  *	write out the tags  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|put_entries
-argument_list|(
+parameter_list|(
 name|node
-argument_list|)
-specifier|register
+parameter_list|)
 name|NODE
-operator|*
-name|node
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|extern
-name|FILE
 modifier|*
-name|outf
+name|node
 decl_stmt|;
-comment|/* ioptr for tags file */
-specifier|extern
-name|int
-name|vflag
-decl_stmt|;
-comment|/* -v: vgrind style output */
+block|{
 if|if
 condition|(
 name|node
@@ -420,7 +391,7 @@ name|right
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

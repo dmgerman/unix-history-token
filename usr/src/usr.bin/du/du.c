@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	8.3 (Berkeley) %G%"
+literal|"@(#)du.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,7 +668,6 @@ name|linkchk
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|FTSENT
 modifier|*
 name|p
@@ -685,7 +684,6 @@ name|maxfiles
 decl_stmt|,
 name|nfiles
 decl_stmt|;
-specifier|register
 name|ID
 modifier|*
 name|fp
@@ -693,11 +691,9 @@ decl_stmt|,
 modifier|*
 name|start
 decl_stmt|;
-specifier|register
 name|ino_t
 name|ino
 decl_stmt|;
-specifier|register
 name|dev_t
 name|dev
 decl_stmt|;
