@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -242,6 +242,17 @@ begin_comment
 comment|/* put (RECNO) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|R_RECNOSYNC
+value|11
+end_define
+
+begin_comment
+comment|/* sync (RECNO) */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -389,6 +400,8 @@ specifier|const
 expr|struct
 name|__db
 operator|*
+operator|,
+name|u_int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -530,14 +543,22 @@ name|int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
-name|int
-function_decl|(
-modifier|*
-name|hash
-function_decl|)
-parameter_list|()
-function_decl|;
 comment|/* hash function */
+name|int
+argument_list|(
+argument|*hash
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
 name|lorder
 decl_stmt|;
@@ -589,48 +610,13 @@ name|u_char
 name|bval
 decl_stmt|;
 comment|/* delimiting byte (variable-length records */
+name|char
+modifier|*
+name|bfname
+decl_stmt|;
+comment|/* btree file name */
 block|}
 name|RECNOINFO
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Key structure for the record routines. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_long
-name|number
-decl_stmt|;
-name|u_long
-name|offset
-decl_stmt|;
-name|u_long
-name|length
-decl_stmt|;
-define|#
-directive|define
-name|R_LENGTH
-value|0x01
-comment|/* length is valid */
-define|#
-directive|define
-name|R_NUMBER
-value|0x02
-comment|/* record number is valid */
-define|#
-directive|define
-name|R_OFFSET
-value|0x04
-comment|/* offset is valid */
-name|u_char
-name|valid
-decl_stmt|;
-block|}
-name|RECNOKEY
 typedef|;
 end_typedef
 
