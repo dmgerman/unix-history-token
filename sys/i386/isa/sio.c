@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.64 1995/01/06 15:03:41 bde Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.65 1995/01/20 07:34:15 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -170,13 +170,6 @@ end_include
 begin_comment
 comment|/*  * XXX temporary kludges for 2.0 (XXX TK2.0).  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_RTS_IFLOW
-value|0
-end_define
 
 begin_define
 define|#
@@ -6783,7 +6776,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_RTS_IFLOW
+name|TS_TBLOCK
 operator|)
 condition|)
 name|outb
@@ -6947,11 +6940,32 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+operator|(
 name|com
 operator|->
 name|state
 operator|&
 name|CS_RTS_IFLOW
+operator|)
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_iflag
+operator|&
+name|IXOFF
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_TBLOCK
+operator|)
 operator|&&
 name|tp
 operator|->
@@ -6962,16 +6976,7 @@ operator|+
 name|incc
 operator|>=
 name|RB_I_HIGH_WATER
-operator|&&
-operator|!
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_RTS_IFLOW
-operator|)
-comment|/* 		     * XXX - need RTS flow control for all line disciplines. 		     * Only have it in standard one now. 		     */
+comment|/* 		     * XXX - need flow control for all line disciplines. 		     * Only have it in standard one now. 		     */
 operator|&&
 name|linesw
 index|[
@@ -6985,17 +6990,63 @@ operator|==
 name|ttyinput
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_iflag
+operator|&
+name|IXOFF
+operator|)
+operator|&&
+name|tp
+operator|->
+name|t_cc
+index|[
+name|VSTOP
+index|]
+operator|!=
+name|_POSIX_VDISABLE
+operator|&&
+name|putc
+argument_list|(
+name|tp
+operator|->
+name|t_cc
+index|[
+name|VSTOP
+index|]
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|com
+operator|->
+name|state
+operator|&
+name|CS_RTS_IFLOW
+operator|)
+condition|)
+block|{
 name|tp
 operator|->
 name|t_state
 operator||=
-name|TS_RTS_IFLOW
+name|TS_TBLOCK
 expr_stmt|;
 name|ttstart
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * Avoid the grotesquely inefficient lineswitch routine 		 * (ttyinput) in "raw" mode.  It usually takes about 450 		 * instructions (that's without canonical processing or echo!). 		 * slinput is reasonably fast (usually 40 instructions plus 		 * call overhead). 		 */
 if|if
@@ -7971,7 +8022,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_RTS_IFLOW
+name|TS_TBLOCK
 condition|)
 block|{
 if|if
