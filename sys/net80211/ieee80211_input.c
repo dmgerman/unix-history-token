@@ -4560,6 +4560,8 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX handle rollover at 2007 */
+comment|/* XXX guarantee uniqueness */
 name|ni
 operator|->
 name|ni_associd
