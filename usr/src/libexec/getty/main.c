@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -786,6 +786,21 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"+"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|chown
 argument_list|(
 name|ttyn
@@ -893,6 +908,7 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|gettable
 argument_list|(
