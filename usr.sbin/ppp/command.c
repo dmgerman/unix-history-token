@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.179 1999/01/28 09:40:15 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.180 1999/02/11 10:14:07 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -602,6 +602,13 @@ name|VAR_RADIUS
 value|29
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_CD
+value|30
+end_define
+
 begin_comment
 comment|/* ``accept|deny|disable|enable'' masks */
 end_comment
@@ -707,7 +714,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"2.1"
+literal|"2.11"
 decl_stmt|;
 end_decl_stmt
 
@@ -717,7 +724,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/01/28 09:40:15 $"
+literal|"$Date: 1999/02/11 10:14:07 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -11517,6 +11524,95 @@ block|}
 break|break;
 endif|#
 directive|endif
+case|case
+name|VAR_CD
+case|:
+if|if
+condition|(
+operator|*
+name|argp
+condition|)
+block|{
+name|long_val
+operator|=
+name|atol
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|long_val
+operator|<
+literal|0
+condition|)
+name|long_val
+operator|=
+literal|0
+expr_stmt|;
+name|cx
+operator|->
+name|physical
+operator|->
+name|cfg
+operator|.
+name|cd
+operator|.
+name|delay
+operator|=
+name|long_val
+expr_stmt|;
+name|cx
+operator|->
+name|physical
+operator|->
+name|cfg
+operator|.
+name|cd
+operator|.
+name|required
+operator|=
+name|argp
+index|[
+name|strlen
+argument_list|(
+name|argp
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|==
+literal|'!'
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cx
+operator|->
+name|physical
+operator|->
+name|cfg
+operator|.
+name|cd
+operator|.
+name|delay
+operator|=
+name|DEF_CDDELAY
+expr_stmt|;
+name|cx
+operator|->
+name|physical
+operator|->
+name|cfg
+operator|.
+name|cd
+operator|.
+name|required
+operator|=
+literal|0
+expr_stmt|;
+block|}
+break|break;
 block|}
 return|return
 name|err
@@ -11791,6 +11887,29 @@ name|void
 operator|*
 operator|)
 name|VAR_CCPRETRY
+block|}
+block|,
+block|{
+literal|"cd"
+block|,
+name|NULL
+block|,
+name|SetVariable
+block|,
+name|LOCAL_AUTH
+operator||
+name|LOCAL_CX
+block|,
+literal|"Carrier delay requirement"
+block|,
+literal|"set cd value[!]"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|VAR_CD
 block|}
 block|,
 block|{
