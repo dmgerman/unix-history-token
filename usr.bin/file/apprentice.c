@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: apprentice.c,v 1.7 1998/01/28 07:36:21 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,15 @@ name|int
 name|maxmagic
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|alloc_incr
+init|=
+literal|256
 decl_stmt|;
 end_decl_stmt
 
@@ -743,10 +752,6 @@ decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
-define|#
-directive|define
-name|ALLOC_INCR
-value|20
 if|if
 condition|(
 name|nd
@@ -758,7 +763,7 @@ condition|)
 block|{
 name|maxmagic
 operator|+=
-name|ALLOC_INCR
+name|alloc_incr
 expr_stmt|;
 if|if
 condition|(
@@ -824,8 +829,12 @@ expr|struct
 name|magic
 argument_list|)
 operator|*
-name|ALLOC_INCR
+name|alloc_incr
 argument_list|)
+expr_stmt|;
+name|alloc_incr
+operator|*=
+literal|2
 expr_stmt|;
 block|}
 name|m
