@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1987, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	8.1 (Berkeley) %G%"
+literal|"@(#)last.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -674,14 +674,12 @@ name|void
 name|wtmp
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|utmp
 modifier|*
 name|bp
 decl_stmt|;
 comment|/* current structure */
-specifier|register
 name|TTY
 modifier|*
 name|T
@@ -1412,7 +1410,6 @@ name|bp
 parameter_list|,
 name|check
 parameter_list|)
-specifier|register
 name|struct
 name|utmp
 modifier|*
@@ -1422,7 +1419,6 @@ name|int
 name|check
 decl_stmt|;
 block|{
-specifier|register
 name|ARG
 modifier|*
 name|step
@@ -1624,7 +1620,6 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-specifier|register
 name|ARG
 modifier|*
 name|cur
@@ -1651,20 +1646,13 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"last: malloc failure.\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc failure"
 argument_list|)
 expr_stmt|;
-block|}
 name|cur
 operator|->
 name|next
@@ -1706,7 +1694,6 @@ modifier|*
 name|ttyname
 decl_stmt|;
 block|{
-specifier|register
 name|TTY
 modifier|*
 name|cur
@@ -1733,20 +1720,13 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"last: malloc failure.\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc failure"
 argument_list|)
 expr_stmt|;
-block|}
 name|cur
 operator|->
 name|next
@@ -1759,13 +1739,13 @@ name|logout
 operator|=
 name|currentout
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|ttyname
-argument_list|,
 name|cur
 operator|->
 name|tty
+argument_list|,
+name|ttyname
 argument_list|,
 name|UT_LINESIZE
 argument_list|)
@@ -1821,7 +1801,7 @@ operator|!
 operator|(
 name|argdot
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|arg
 argument_list|,
@@ -1860,7 +1840,7 @@ argument_list|)
 expr_stmt|;
 name|hostdot
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -1935,20 +1915,13 @@ literal|8
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"last: malloc failure.\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc failure"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
