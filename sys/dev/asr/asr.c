@@ -807,83 +807,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|STATIC
-value|static
-end_define
-
-begin_define
-define|#
-directive|define
-name|INLINE
-end_define
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|DEBUG_ASR
-argument_list|)
-operator|&&
-operator|(
-name|DEBUG_ASR
-operator|>
-literal|0
-operator|)
-operator|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|STATIC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STATIC
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|INLINE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INLINE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|IN
-end_define
-
-begin_define
-define|#
-directive|define
-name|OUT
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT
-end_define
-
-begin_define
-define|#
-directive|define
 name|osdSwap4
 parameter_list|(
 name|x
@@ -1367,7 +1290,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|Asr_softc_t
 modifier|*
 name|Asr_softc
@@ -1386,7 +1309,7 @@ begin_define
 define|#
 directive|define
 name|PROBE_ARGS
-value|IN device_t tag
+value|device_t tag
 end_define
 
 begin_define
@@ -1418,7 +1341,7 @@ begin_define
 define|#
 directive|define
 name|ATTACH_ARGS
-value|IN device_t tag
+value|device_t tag
 end_define
 
 begin_define
@@ -1451,7 +1374,7 @@ comment|/* I2O HDM interface */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|PROBE_RET
 name|asr_probe
 parameter_list|(
@@ -1461,7 +1384,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|ATTACH_RET
 name|asr_attach
 parameter_list|(
@@ -1475,7 +1398,7 @@ comment|/* DOMINO placeholder */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|PROBE_RET
 name|domino_probe
 parameter_list|(
@@ -1485,7 +1408,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|ATTACH_RET
 name|domino_attach
 parameter_list|(
@@ -1499,7 +1422,7 @@ comment|/* MODE0 adapter placeholder */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|PROBE_RET
 name|mode0_probe
 parameter_list|(
@@ -1509,7 +1432,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|ATTACH_RET
 name|mode0_attach
 parameter_list|(
@@ -1519,12 +1442,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|Asr_softc_t
 modifier|*
 name|ASR_get_sc
 parameter_list|(
-name|IN
 name|dev_t
 name|dev
 parameter_list|)
@@ -1532,19 +1454,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|asr_ioctl
 parameter_list|(
-name|IN
 name|dev_t
 name|dev
 parameter_list|,
-name|IN
 name|u_long
 name|cmd
 parameter_list|,
-name|INOUT
 name|caddr_t
 name|data
 parameter_list|,
@@ -1560,11 +1479,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|asr_open
 parameter_list|(
-name|IN
 name|dev_t
 name|dev
 parameter_list|,
@@ -1574,7 +1492,6 @@ parameter_list|,
 name|int32_t
 name|ifmt
 parameter_list|,
-name|IN
 name|struct
 name|thread
 modifier|*
@@ -1584,7 +1501,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|asr_close
 parameter_list|(
@@ -1606,11 +1523,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|asr_intr
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -1619,11 +1535,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|asr_timeout
 parameter_list|(
-name|INOUT
 name|void
 modifier|*
 name|arg
@@ -1632,11 +1547,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|ASR_init
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -1645,12 +1559,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_acquireLct
 parameter_list|(
-name|INOUT
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -1659,12 +1571,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_acquireHrt
 parameter_list|(
-name|INOUT
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -1673,17 +1583,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|asr_action
 parameter_list|(
-name|IN
 name|struct
 name|cam_sim
 modifier|*
 name|sim
 parameter_list|,
-name|IN
 name|union
 name|ccb
 modifier|*
@@ -1693,15 +1601,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|asr_poll
 parameter_list|(
-name|IN
 name|struct
 name|cam_sim
 modifier|*
 name|sim
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ASR_queue
+parameter_list|(
+name|Asr_softc_t
+modifier|*
+name|sc
+parameter_list|,
+name|PI2O_MESSAGE_FRAME
+name|Message
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1711,7 +1633,7 @@ comment|/*  *	Here is the auto-probe structure used to nest our tests appropriat
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|device_method_t
 name|asr_methods
 index|[]
@@ -1741,7 +1663,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|driver_t
 name|asr_driver
 init|=
@@ -1759,7 +1681,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|devclass_t
 name|asr_devclass
 decl_stmt|;
@@ -1784,7 +1706,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|device_method_t
 name|domino_methods
 index|[]
@@ -1814,7 +1736,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|driver_t
 name|domino_driver
 init|=
@@ -1829,7 +1751,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|devclass_t
 name|domino_devclass
 decl_stmt|;
@@ -1854,7 +1776,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|device_method_t
 name|mode0_methods
 index|[]
@@ -1884,7 +1806,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|driver_t
 name|mode0_driver
 init|=
@@ -1899,7 +1821,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|devclass_t
 name|mode0_devclass
 decl_stmt|;
@@ -1939,7 +1861,7 @@ comment|/* preferred default character major */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|cdevsw
 name|asr_cdevsw
@@ -2016,21 +1938,18 @@ comment|/*  *	Fill message with default.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|PI2O_MESSAGE_FRAME
 name|ASR_fillMessage
 parameter_list|(
-name|IN
 name|char
 modifier|*
 name|Message
 parameter_list|,
-name|IN
 name|u_int16_t
 name|size
 parameter_list|)
 block|{
-name|OUT
 name|PI2O_MESSAGE_FRAME
 name|Message_Ptr
 decl_stmt|;
@@ -2106,18 +2025,16 @@ value|((U32)-1L)
 end_define
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|U32
 name|ASR_getMessage
 parameter_list|(
-name|IN
 name|i2oRegs_t
 modifier|*
 name|virt
 parameter_list|)
 block|{
-name|OUT
 name|U32
 name|MessageOffset
 decl_stmt|;
@@ -2158,26 +2075,22 @@ comment|/* Issue a polled command */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|U32
 name|ASR_initiateCp
 parameter_list|(
-name|INOUT
 name|i2oRegs_t
 modifier|*
 name|virt
 parameter_list|,
-name|INOUT
 name|U8
 modifier|*
 name|fvirt
 parameter_list|,
-name|IN
 name|PI2O_MESSAGE_FRAME
 name|Message
 parameter_list|)
 block|{
-name|OUT
 name|U32
 name|Mask
 init|=
@@ -2284,16 +2197,14 @@ comment|/*  *	Reset the adapter.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|U32
 name|ASR_resetIOP
 parameter_list|(
-name|INOUT
 name|i2oRegs_t
 modifier|*
 name|virt
 parameter_list|,
-name|INOUT
 name|U8
 modifier|*
 name|fvirt
@@ -2321,7 +2232,6 @@ expr_stmt|;
 name|PI2O_EXEC_IOP_RESET_MESSAGE
 name|Message_Ptr
 decl_stmt|;
-name|OUT
 name|U32
 modifier|*
 specifier|volatile
@@ -2495,22 +2405,18 @@ comment|/*  *	Get the curent state of the adapter  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|PI2O_EXEC_STATUS_GET_REPLY
 name|ASR_getStatus
 parameter_list|(
-name|INOUT
 name|i2oRegs_t
 modifier|*
 name|virt
 parameter_list|,
-name|INOUT
 name|U8
 modifier|*
 name|fvirt
 parameter_list|,
-name|OUT
 name|PI2O_EXEC_STATUS_GET_REPLY
 name|buffer
 parameter_list|)
@@ -2697,7 +2603,7 @@ comment|/*  * Probe for ASR controller.  If we find it, we will use it.  * virtu
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|PROBE_RET
 name|asr_probe
 parameter_list|(
@@ -2745,7 +2651,7 @@ comment|/*  * Probe/Attach for DOMINO chipset.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|PROBE_RET
 name|domino_probe
 parameter_list|(
@@ -2781,7 +2687,7 @@ comment|/* domino_probe */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|ATTACH_RET
 name|domino_attach
 parameter_list|(
@@ -2805,7 +2711,7 @@ comment|/*  * Probe/Attach for MODE0 adapters.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|PROBE_RET
 name|mode0_probe
 parameter_list|(
@@ -2899,7 +2805,7 @@ comment|/* mode0_probe */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|ATTACH_RET
 name|mode0_attach
 parameter_list|(
@@ -2919,17 +2825,16 @@ comment|/* mode0_attach */
 end_comment
 
 begin_expr_stmt
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 expr|union
 name|asr_ccb
 operator|*
 name|asr_alloc_ccb
 argument_list|(
-argument|IN Asr_softc_t	  * sc
+argument|Asr_softc_t *sc
 argument_list|)
 block|{
-name|OUT
 expr|union
 name|asr_ccb
 operator|*
@@ -3009,12 +2914,11 @@ comment|/* asr_alloc_ccb */
 end_comment
 
 begin_function
-unit|STATIC
-name|INLINE
+unit|static
+name|__inline
 name|void
 name|asr_free_ccb
 parameter_list|(
-name|IN
 name|union
 name|asr_ccb
 modifier|*
@@ -3040,7 +2944,7 @@ comment|/*  *	Print inquiry data `carefully'  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|ASR_prstring
 parameter_list|(
@@ -3101,43 +3005,19 @@ comment|/* ASR_prstring */
 end_comment
 
 begin_comment
-comment|/*  * Prototypes  */
-end_comment
-
-begin_function_decl
-name|STATIC
-name|INLINE
-name|int
-name|ASR_queue
-parameter_list|(
-name|IN
-name|Asr_softc_t
-modifier|*
-name|sc
-parameter_list|,
-name|IN
-name|PI2O_MESSAGE_FRAME
-name|Message
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  *	Send a message synchronously and without Interrupt to a ccb.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|ASR_queue_s
 parameter_list|(
-name|INOUT
 name|union
 name|asr_ccb
 modifier|*
 name|ccb
 parameter_list|,
-name|IN
 name|PI2O_MESSAGE_FRAME
 name|Message
 parameter_list|)
@@ -3289,16 +3169,14 @@ comment|/*  *	Send a message synchronously to an Asr_softc_t.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|ASR_queue_c
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|PI2O_MESSAGE_FRAME
 name|Message
 parameter_list|)
@@ -3308,7 +3186,6 @@ name|asr_ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|OUT
 name|int
 name|status
 decl_stmt|;
@@ -3363,17 +3240,15 @@ comment|/*  *	Add the specified ccb to the active queue  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|void
 name|ASR_ccbAdd
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|INOUT
 name|union
 name|asr_ccb
 modifier|*
@@ -3491,17 +3366,15 @@ comment|/*  *	Remove the specified ccb from the active queue.  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|void
 name|ASR_ccbRemove
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|INOUT
 name|union
 name|asr_ccb
 modifier|*
@@ -3563,12 +3436,10 @@ comment|/*  *	Fail all the active commands, so they get re-issued by the operati
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|void
 name|ASR_failActiveCommands
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -3699,17 +3570,14 @@ comment|/*  *	The following command causes the HBA to reset the specific bus  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|void
 name|ASR_resetBus
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|int
 name|bus
 parameter_list|)
@@ -3853,12 +3721,11 @@ comment|/* ASR_resetBus */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|int
 name|ASR_getBlinkLedCode
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -3920,30 +3787,24 @@ comment|/*  *	Determine the address of an TID lookup. Must be done at high prior
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|tid_t
 modifier|*
 name|ASR_getTidAddress
 parameter_list|(
-name|INOUT
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|int
 name|bus
 parameter_list|,
-name|IN
 name|int
 name|target
 parameter_list|,
-name|IN
 name|int
 name|lun
 parameter_list|,
-name|IN
 name|int
 name|new_entry
 parameter_list|)
@@ -4547,25 +4408,21 @@ comment|/*  *	Get a pre-existing TID relationship.  *  *	If the TID was never se
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|tid_t
 name|ASR_getTid
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|int
 name|bus
 parameter_list|,
-name|IN
 name|int
 name|target
 parameter_list|,
-name|IN
 name|int
 name|lun
 parameter_list|)
@@ -4577,7 +4434,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|OUT
 name|tid_t
 name|retval
 decl_stmt|;
@@ -4663,29 +4519,24 @@ comment|/*  *	Set a TID relationship.  *  *	If the TID was not set, return (tid_
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|tid_t
 name|ASR_setTid
 parameter_list|(
-name|INOUT
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|int
 name|bus
 parameter_list|,
-name|IN
 name|int
 name|target
 parameter_list|,
-name|IN
 name|int
 name|lun
 parameter_list|,
-name|INOUT
 name|tid_t
 name|TID
 parameter_list|)
@@ -4831,12 +4682,10 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_rescan
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -4845,7 +4694,6 @@ block|{
 name|int
 name|bus
 decl_stmt|;
-name|OUT
 name|int
 name|error
 decl_stmt|;
@@ -5371,12 +5219,10 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_reset
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -5587,11 +5433,10 @@ comment|/*  *	Device timeout handler.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|asr_timeout
 parameter_list|(
-name|INOUT
 name|void
 modifier|*
 name|arg
@@ -5886,22 +5731,18 @@ comment|/*  * send a message asynchronously  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_queue
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|PI2O_MESSAGE_FRAME
 name|Message
 parameter_list|)
 block|{
-name|OUT
 name|U32
 name|MessageOffset
 decl_stmt|;
@@ -6053,30 +5894,25 @@ comment|/*  *	Retrieve Parameter Group.  *		Buffer must be allocated using defAl
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 modifier|*
 name|ASR_getParams
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|tid_t
 name|TID
 parameter_list|,
-name|IN
 name|int
 name|Group
 parameter_list|,
-name|OUT
 name|void
 modifier|*
 name|Buffer
 parameter_list|,
-name|IN
 name|unsigned
 name|BufferSize
 parameter_list|)
@@ -6469,12 +6305,10 @@ comment|/*  *	Acquire the LCT information.  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_acquireLct
 parameter_list|(
-name|INOUT
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -7599,34 +7433,24 @@ comment|/*  * Initialize a message frame.  * We assume that the CDB has already 
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|PI2O_MESSAGE_FRAME
 name|ASR_init_message
 parameter_list|(
-name|IN
 name|union
 name|asr_ccb
 modifier|*
 name|ccb
 parameter_list|,
-name|OUT
 name|PI2O_MESSAGE_FRAME
 name|Message
 parameter_list|)
 block|{
-name|int
-name|next
-decl_stmt|,
-name|span
-decl_stmt|,
-name|base
-decl_stmt|,
-name|rw
-decl_stmt|;
-name|OUT
 name|PI2O_MESSAGE_FRAME
 name|Message_Ptr
+decl_stmt|;
+name|PI2O_SGE_SIMPLE_ELEMENT
+name|sg
 decl_stmt|;
 name|Asr_softc_t
 modifier|*
@@ -7644,46 +7468,26 @@ operator|.
 name|spriv_ptr0
 operator|)
 decl_stmt|;
-name|PI2O_SGE_SIMPLE_ELEMENT
-name|sg
-decl_stmt|;
-name|caddr_t
-name|v
-decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|,
 name|len
 decl_stmt|;
+name|caddr_t
+name|v
+decl_stmt|;
 name|U32
 name|MessageSize
 decl_stmt|;
-comment|/* We only need to zero out the PRIVATE_SCSI_SCB_EXECUTE_MESSAGE */
-name|bzero
-argument_list|(
-name|Message_Ptr
-operator|=
-name|getAlignLong
-argument_list|(
-name|I2O_MESSAGE_FRAME
-argument_list|,
-name|Message
-argument_list|)
-argument_list|,
-operator|(
-sizeof|sizeof
-argument_list|(
-name|PRIVATE_SCSI_SCB_EXECUTE_MESSAGE
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|I2O_SG_ELEMENT
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|{
+name|int
+name|next
+decl_stmt|,
+name|span
+decl_stmt|,
+name|base
+decl_stmt|,
+name|rw
+decl_stmt|;
 name|int
 name|target
 init|=
@@ -7720,6 +7524,33 @@ decl_stmt|;
 name|tid_t
 name|TID
 decl_stmt|;
+comment|/* We only need to zero out the PRIVATE_SCSI_SCB_EXECUTE_MESSAGE */
+name|Message_Ptr
+operator|=
+name|getAlignLong
+argument_list|(
+name|I2O_MESSAGE_FRAME
+argument_list|,
+name|Message
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|Message_Ptr
+argument_list|,
+operator|(
+sizeof|sizeof
+argument_list|(
+name|PRIVATE_SCSI_SCB_EXECUTE_MESSAGE
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|I2O_SG_ELEMENT
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7749,9 +7580,6 @@ name|Device
 decl_stmt|;
 name|TID
 operator|=
-operator|(
-name|tid_t
-operator|)
 literal|0
 expr_stmt|;
 for|for
@@ -7899,7 +7727,6 @@ argument_list|,
 name|TID
 argument_list|)
 expr_stmt|;
-block|}
 name|I2O_MESSAGE_FRAME_setVersionOffset
 argument_list|(
 name|Message_Ptr
@@ -8439,12 +8266,10 @@ comment|/*  *	Reset the adapter.  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|U32
 name|ASR_initOutBound
 parameter_list|(
-name|INOUT
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -8472,7 +8297,6 @@ expr_stmt|;
 name|PI2O_EXEC_OUTBOUND_INIT_MESSAGE
 name|Message_Ptr
 decl_stmt|;
-name|OUT
 name|U32
 modifier|*
 specifier|volatile
@@ -8783,12 +8607,10 @@ comment|/*  *	Set the system table  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_setSysTab
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -9186,12 +9008,10 @@ comment|/* ASR_setSysTab */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_acquireHrt
 parameter_list|(
-name|INOUT
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -9532,12 +9352,10 @@ comment|/*  *	Enable the adapter.  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_enableSys
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -9607,11 +9425,10 @@ comment|/*  *	Perform the stages necessary to initialize the adapter  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|ASR_init
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -9659,25 +9476,20 @@ comment|/*  *	Send a Synchronize Cache command to the target device.  */
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|void
 name|ASR_sync
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|IN
 name|int
 name|bus
 parameter_list|,
-name|IN
 name|int
 name|target
 parameter_list|,
-name|IN
 name|int
 name|lun
 parameter_list|)
@@ -9966,12 +9778,10 @@ block|}
 end_function
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|void
 name|ASR_synchronize
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -10054,12 +9864,11 @@ comment|/*  *	Reset the HBA, targets and BUS.  *		Currently this resets *all* th
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|void
 name|asr_hbareset
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -10090,15 +9899,13 @@ comment|/*  *	A reduced copy of the real pci_map_mem, incorporating the MAX_MAP 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|asr_pci_map_mem
 parameter_list|(
-name|IN
 name|device_t
 name|tag
 parameter_list|,
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -10640,15 +10447,13 @@ comment|/*  *	A simplified copy of the real pci_map_int with additional  * regis
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|asr_pci_map_int
 parameter_list|(
-name|IN
 name|device_t
 name|tag
 parameter_list|,
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -10766,7 +10571,7 @@ comment|/*  *	Attach the devices, and virtual devices to the driver list.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|ATTACH_RET
 name|asr_attach
 parameter_list|(
@@ -12389,11 +12194,10 @@ comment|/* asr_attach */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|asr_poll
 parameter_list|(
-name|IN
 name|struct
 name|cam_sim
 modifier|*
@@ -12416,17 +12220,15 @@ comment|/* asr_poll */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|asr_action
 parameter_list|(
-name|IN
 name|struct
 name|cam_sim
 modifier|*
 name|sim
 parameter_list|,
-name|IN
 name|union
 name|ccb
 modifier|*
@@ -13387,17 +13189,15 @@ comment|/*  * Handle processing of current CCB as pointed to by the Status.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|asr_intr
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|)
 block|{
-name|OUT
 name|int
 name|processed
 decl_stmt|;
@@ -14174,13 +13974,12 @@ value|minor(dev)
 end_define
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
+name|__inline
 name|Asr_softc_t
 modifier|*
 name|ASR_get_sc
 parameter_list|(
-name|IN
 name|dev_t
 name|dev
 parameter_list|)
@@ -14193,7 +13992,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|OUT
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -14246,45 +14044,17 @@ comment|/* ASR_get_sc */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|u_int8_t
 name|ASR_ctlr_held
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|UNREFERENCED_PARAMETER
-argument_list|)
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|UNREFERENCED_PARAMETER
-parameter_list|(
-name|x
-parameter_list|)
-value|(void)(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|asr_open
 parameter_list|(
-name|IN
 name|dev_t
 name|dev
 parameter_list|,
@@ -14294,7 +14064,6 @@ parameter_list|,
 name|int32_t
 name|ifmt
 parameter_list|,
-name|IN
 name|struct
 name|thread
 modifier|*
@@ -14304,20 +14073,9 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|OUT
 name|int
 name|error
 decl_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|ifmt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ASR_get_sc
@@ -14386,7 +14144,7 @@ comment|/* asr_open */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|asr_close
 parameter_list|(
@@ -14405,26 +14163,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|ifmt
-argument_list|)
-expr_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|ASR_ctlr_held
 operator|=
 literal|0
@@ -14494,17 +14232,14 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|STATIC
-name|INLINE
+specifier|static
 name|int
 name|ASR_queue_i
 parameter_list|(
-name|IN
 name|Asr_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|INOUT
 name|PI2O_MESSAGE_FRAME
 name|Packet
 parameter_list|)
@@ -16742,19 +16477,16 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|asr_ioctl
 parameter_list|(
-name|IN
 name|dev_t
 name|dev
 parameter_list|,
-name|IN
 name|u_long
 name|cmd
 parameter_list|,
-name|INOUT
 name|caddr_t
 name|data
 parameter_list|,
@@ -16767,17 +16499,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-name|OUT
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -16787,16 +16508,16 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|flag
-argument_list|)
-expr_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|sc
