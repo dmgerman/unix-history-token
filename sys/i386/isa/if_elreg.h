@@ -596,5 +596,12 @@ name|EL_BUFSIZ
 value|2048
 end_define
 
+begin_define
+define|#
+directive|define
+name|EL_IOSIZ
+value|16
+end_define
+
 end_unit
 
