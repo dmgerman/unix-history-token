@@ -2991,6 +2991,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sysctl_wire_old_buffer
+parameter_list|(
+name|struct
+name|sysctl_req
+modifier|*
+name|req
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
