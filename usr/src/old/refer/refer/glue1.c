@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue1.c	4.2 (Berkeley) %G%"
+literal|"@(#)glue1.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1458,6 +1458,13 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|usedir
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|s
 operator|=
 name|t
