@@ -65,6 +65,12 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/_null.h>
+end_include
+
 begin_comment
 comment|/* definitions for library routines operating on directories. */
 end_comment
@@ -201,24 +207,6 @@ end_define
 begin_comment
 comment|/* everything has been read */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
