@@ -1890,7 +1890,11 @@ control|)
 block|{
 name|ffs_blkfree
 argument_list|(
+name|fs
+argument_list|,
 name|ip
+operator|->
+name|i_devvp
 argument_list|,
 operator|*
 name|blkp
@@ -1898,6 +1902,10 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+name|ip
+operator|->
+name|i_number
 argument_list|)
 expr_stmt|;
 name|deallocated
