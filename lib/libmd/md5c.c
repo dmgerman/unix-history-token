@@ -253,11 +253,13 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|u_int32_t
 modifier|*
 name|ip
 init|=
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
