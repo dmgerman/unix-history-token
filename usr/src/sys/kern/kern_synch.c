@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.6	%G%	*/
+comment|/*	kern_synch.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -785,32 +785,11 @@ name|p_flag
 operator|&
 name|SLOAD
 condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|FASTVAX
-name|p
-operator|->
-name|p_link
-operator|=
-name|runq
-expr_stmt|;
-name|runq
-operator|=
-name|p
-operator|->
-name|p_link
-expr_stmt|;
-else|#
-directive|else
 name|setrq
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-block|}
 if|if
 condition|(
 name|p
@@ -881,12 +860,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FASTVAX
-end_ifdef
-
 begin_comment
 comment|/*  * Initialize the (doubly-linked) run queues  * to be empty.  */
 end_comment
@@ -942,11 +915,6 @@ index|]
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Set the process running;  * arrange for it to be swapped in if necessary.  */

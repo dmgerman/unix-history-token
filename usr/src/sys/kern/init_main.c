@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.6	%G%	*/
+comment|/*	init_main.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -137,14 +137,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FASTVAX
 name|rqinit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|startup
 argument_list|(
 name|firstaddr
