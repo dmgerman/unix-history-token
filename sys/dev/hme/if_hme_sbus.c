@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: if_hme_sbus.c,v 1.9 2001/11/13 06:58:17 lukem Exp  */
+comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: if_hme_sbus.c,v 1.19 2004/03/17 17:04:58 pk Exp  */
 end_comment
 
 begin_include
@@ -526,30 +526,10 @@ name|count
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Map five register banks: 	 * 	 *	bank 0: HME SEB registers 	 *	bank 1: HME ETX registers 	 *	bank 2: HME ERX registers 	 *	bank 3: HME MAC registers 	 *	bank 4: HME MIF registers 	 * 	 */
-name|sc
-operator|->
-name|sc_sebo
-operator|=
-name|sc
-operator|->
-name|sc_etxo
-operator|=
-name|sc
-operator|->
-name|sc_erxo
-operator|=
-name|sc
-operator|->
-name|sc_maco
-operator|=
-name|sc
-operator|->
-name|sc_mifo
-operator|=
-literal|0
-expr_stmt|;
 name|hsc
 operator|->
 name|hsc_seb_rid
@@ -658,6 +638,10 @@ argument_list|,
 literal|"cannot map ETX registers\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|fail_seb_res
 goto|;
@@ -723,6 +707,10 @@ name|dev
 argument_list|,
 literal|"cannot map ERX registers\n"
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail_etx_res
@@ -790,6 +778,10 @@ argument_list|,
 literal|"cannot map MAC registers\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|fail_erx_res
 goto|;
@@ -816,7 +808,7 @@ operator|->
 name|hsc_mac_res
 argument_list|)
 expr_stmt|;
-comment|/* 	 * At least on some HMEs, the MIF registers seem to be inside the MAC 	 * range, so map try to kluge around it. 	 */
+comment|/* 	 * At least on some HMEs, the MIF registers seem to be inside the MAC 	 * range, so try to kludge around it. 	 */
 name|hsc
 operator|->
 name|hsc_mif_rid
@@ -879,6 +871,10 @@ argument_list|,
 literal|"cannot get MIF registers\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|fail_mac_res
 goto|;
@@ -916,6 +912,10 @@ literal|"cannot move MIF registers to MAC "
 literal|"bank\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|fail_mac_res
 goto|;
@@ -928,22 +928,16 @@ name|sc
 operator|->
 name|sc_mact
 expr_stmt|;
+name|bus_space_subregion
+argument_list|(
 name|sc
 operator|->
-name|sc_mifh
-operator|=
+name|sc_mact
+argument_list|,
 name|sc
 operator|->
 name|sc_mach
-expr_stmt|;
-name|sc
-operator|->
-name|sc_mifo
-operator|=
-name|sc
-operator|->
-name|sc_maco
-operator|+
+argument_list|,
 name|start
 operator|-
 name|rman_get_start
@@ -951,6 +945,14 @@ argument_list|(
 name|hsc
 operator|->
 name|hsc_mac_res
+argument_list|)
+argument_list|,
+name|count
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_mifh
 argument_list|)
 expr_stmt|;
 block|}
@@ -1301,7 +1303,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|error
 operator|)
 return|;
 block|}

@@ -620,7 +620,7 @@ parameter_list|,
 name|offs
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->sc_ ## spc ## t, (sc)->sc_ ## spc ## h, \ 	    (sc)->sc_ ## spc ## o + (offs))
+value|bus_space_read_4((sc)->sc_ ## spc ## t, (sc)->sc_ ## spc ## h, \ 	    (offs))
 end_define
 
 begin_define
@@ -637,7 +637,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->sc_ ## spc ## t, (sc)->sc_ ## spc ## h, \ 	    (sc)->sc_ ## spc ## o + (offs), (v))
+value|bus_space_write_4((sc)->sc_ ## spc ## t, (sc)->sc_ ## spc ## h, \ 	    (offs), (v))
 end_define
 
 begin_define

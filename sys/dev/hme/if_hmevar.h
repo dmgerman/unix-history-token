@@ -289,26 +289,6 @@ name|bus_space_tag_t
 name|sc_mift
 decl_stmt|;
 comment|/* HME MIF registers */
-name|bus_addr_t
-name|sc_sebo
-decl_stmt|;
-comment|/* HME Global registers */
-name|bus_addr_t
-name|sc_erxo
-decl_stmt|;
-comment|/* HME ERX registers */
-name|bus_addr_t
-name|sc_etxo
-decl_stmt|;
-comment|/* HME ETX registers */
-name|bus_addr_t
-name|sc_maco
-decl_stmt|;
-comment|/* HME MAC registers */
-name|bus_addr_t
-name|sc_mifo
-decl_stmt|;
-comment|/* HME MIF registers */
 name|int
 name|sc_burst
 decl_stmt|;
