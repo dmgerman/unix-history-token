@@ -239,6 +239,18 @@ begin_comment
 comment|/* fixed point number */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GID_T_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_GID_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|u_int32_t
@@ -249,6 +261,11 @@ end_typedef
 begin_comment
 comment|/* group id */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

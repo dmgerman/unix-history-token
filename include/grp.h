@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -39,6 +33,30 @@ directive|define
 name|_PATH_GROUP
 value|"/etc/group"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GID_T_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_GID_T_DECLARED
+end_define
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|gid_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
