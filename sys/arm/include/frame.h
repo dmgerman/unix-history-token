@@ -359,19 +359,6 @@ name|clockframe_t
 typedef|;
 end_typedef
 
-begin_function_decl
-name|int
-name|kdb_trap
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Switch frame  */
 end_comment
