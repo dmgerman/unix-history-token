@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	2.2 %G%"
+literal|"@(#)cmd2.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1280,6 +1280,21 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|lastdot
+decl_stmt|;
+name|lastdot
+operator|=
+name|dot
+operator|-
+operator|&
+name|message
+index|[
+literal|0
+index|]
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|delm
@@ -1309,6 +1324,16 @@ literal|0
 index|]
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|list
+index|[
+literal|0
+index|]
+operator|>
+name|lastdot
+condition|)
+block|{
 name|touch
 argument_list|(
 name|list
@@ -1330,6 +1355,17 @@ name|type
 argument_list|(
 name|list
 argument_list|)
+operator|)
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"At EOF\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
