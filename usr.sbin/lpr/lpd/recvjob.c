@@ -160,7 +160,7 @@ specifier|static
 name|char
 name|dfname
 index|[
-literal|40
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -195,7 +195,7 @@ specifier|static
 name|char
 name|tfname
 index|[
-literal|40
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
