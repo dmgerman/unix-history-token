@@ -396,6 +396,12 @@ name|j
 operator|.
 name|path
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|chroot
@@ -404,6 +410,12 @@ name|td
 argument_list|,
 operator|&
 name|ca
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
