@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcireg.h>
 end_include
 
@@ -75,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|<alpha/pci/ciareg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sc.h"
 end_include
 
 begin_ifndef
@@ -204,6 +222,17 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|comconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_function
 name|void
 name|dec_kn20aa_init
@@ -295,12 +324,6 @@ name|pci_intr_enable
 operator|=
 name|dec_kn20aa_intr_enable
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|platform.device_register = dec_kn20aa_device_register;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -310,44 +333,137 @@ name|void
 name|dec_kn20aa_cons_init
 parameter_list|()
 block|{
+name|struct
+name|ctb
+modifier|*
+name|ctb
+decl_stmt|;
 name|cia_init
 argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
+name|siogdbattach
+argument_list|(
+literal|0x2f8
+argument_list|,
+literal|9600
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ctb
+operator|=
+operator|(
+expr|struct
+name|ctb
+operator|*
+operator|)
+operator|(
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|hwrpb
+operator|)
+operator|+
+name|hwrpb
+operator|->
+name|rpb_ctb_off
+operator|)
+expr_stmt|;
+switch|switch
+condition|(
+name|ctb
+operator|->
+name|ctb_term_type
+condition|)
+block|{
+case|case
+literal|2
+case|:
+comment|/* serial console ... */
+comment|/* XXX */
+block|{
+comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
+name|DELAY
+argument_list|(
+literal|160000000
+operator|/
+name|comcnrate
+argument_list|)
+expr_stmt|;
+name|comconsole
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|siocnattach
 argument_list|(
 literal|0x3f8
 argument_list|,
 name|comcnrate
 argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"can't init serial console"
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|struct ctb *ctb; 	struct cia_config *ccp; 	extern struct cia_config cia_configuration;  	ccp =&cia_configuration; 	cia_init(ccp, 0);  	ctb = (struct ctb *)(((caddr_t)hwrpb) + hwrpb->rpb_ctb_off);  	switch (ctb->ctb_term_type) { 	case 2:
-comment|/* serial console ... */
+break|break;
+block|}
+case|case
+literal|3
+case|:
+comment|/* display console ... */
 comment|/* XXX */
-block|{
-comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
-block|DELAY(160000000 / comcnrate);  			if(comcnattach(&ccp->cc_iot, 0x3f8, comcnrate, 			    COM_FREQ, 			    (TTYDEF_CFLAG& ~(CSIZE | PARENB)) | CS8)) 				panic("can't init serial console");  			break; 		}  	case 3:
 if|#
 directive|if
 name|NPCKBD
 operator|>
 literal|0
-comment|/* display console ... */
-comment|/* XXX */
-block|(void) pckbc_cnattach(&ccp->cc_iot, PCKBC_KBD_SLOT);  		if ((ctb->ctb_turboslot& 0xffff) == 0) 			isa_display_console(&ccp->cc_iot,&ccp->cc_memt); 		else 			pci_display_console(&ccp->cc_iot,&ccp->cc_memt,&ccp->cc_pc, (ctb->ctb_turboslot>> 8)& 0xff, 			    ctb->ctb_turboslot& 0xff, 0);
+name|sccnattach
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
-block|panic("not configured to use display&& keyboard console");
-endif|#
-directive|endif
-block|break;  	default: 		printf("ctb->ctb_term_type = 0x%lx\n", ctb->ctb_term_type); 		printf("ctb->ctb_turboslot = 0x%lx\n", ctb->ctb_turboslot);  		panic("consinit: unknown console type %d\n", 		    ctb->ctb_term_type); 	}
+name|panic
+argument_list|(
+literal|"not configured to use display&& keyboard console"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"ctb->ctb_term_type = 0x%lx\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_term_type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ctb->ctb_turboslot = 0x%lx\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_turboslot
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"consinit: unknown console type %d\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_term_type
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -556,6 +672,14 @@ case|:
 comment|/* 8275EB on AlphaStation 500 */
 return|return;
 default|default:
+if|if
+condition|(
+operator|!
+name|cfg
+operator|->
+name|bus
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"dec_kn20aa_intr_map: weird slot %d\n"
@@ -567,6 +691,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+else|else
+block|{
+name|cfg
+operator|->
+name|intline
+operator|=
+name|cfg
+operator|->
+name|slot
+expr_stmt|;
+block|}
+block|}
 name|cfg
 operator|->
 name|intline
@@ -574,6 +710,8 @@ operator|+=
 name|cfg
 operator|->
 name|bus
+operator|*
+literal|16
 expr_stmt|;
 if|if
 condition|(
