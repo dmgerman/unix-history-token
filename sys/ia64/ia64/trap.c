@@ -3356,6 +3356,16 @@ operator|->
 name|tf_special
 operator|.
 name|ndirty
+operator|+
+operator|(
+name|tf
+operator|->
+name|tf_special
+operator|.
+name|bspstore
+operator|&
+literal|0x1ffUL
+operator|)
 operator|)
 expr_stmt|;
 name|bsp
