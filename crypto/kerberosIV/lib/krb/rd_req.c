@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_req.c,v 1.27.2.1 1999/12/06 22:04:36 assar Exp $"
+literal|"$Id: rd_req.c,v 1.27.2.2 2000/06/23 04:00:20 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -231,7 +231,7 @@ parameter_list|,
 comment|/* Structure to be filled in */
 name|char
 modifier|*
-name|fn
+name|a_fn
 parameter_list|)
 comment|/* Filename to get keys from */
 block|{
@@ -342,6 +342,13 @@ name|type
 decl_stmt|;
 name|int
 name|little_endian
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fn
+init|=
+name|a_fn
 decl_stmt|;
 name|unsigned
 name|char
@@ -818,12 +825,26 @@ name|p
 argument_list|,
 name|r_aname
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r_aname
+argument_list|)
+argument_list|,
 name|r_inst
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r_inst
+argument_list|)
+argument_list|,
+name|r_realm
+argument_list|,
+sizeof|sizeof
+argument_list|(
 name|r_realm
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* XXX no rangecheck */
 name|p
 operator|+=
 name|krb_get_int

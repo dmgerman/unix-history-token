@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/* $Id: ext.h,v 1.17 1998/07/09 23:16:38 assar Exp $ */
+comment|/* $Id: ext.h,v 1.19 1999/09/05 19:15:21 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -764,15 +764,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|getterminaltype
 parameter_list|(
@@ -801,18 +792,6 @@ parameter_list|(
 name|char
 modifier|*
 name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|doit
-parameter_list|(
-name|struct
-name|sockaddr_in
-modifier|*
-name|who
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -909,7 +888,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ttloop
 parameter_list|(
 name|void

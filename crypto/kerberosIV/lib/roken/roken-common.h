@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska Högs
 end_comment
 
 begin_comment
-comment|/* $Id: roken-common.h,v 1.19 1999/12/02 16:58:52 joda Exp $ */
+comment|/* $Id: roken-common.h,v 1.19.2.2 2000/08/16 03:37:26 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -342,6 +342,24 @@ define|#
 directive|define
 name|O_ACCMODE
 value|003
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_DEV
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEV
+value|"/dev/"
 end_define
 
 begin_endif
@@ -1133,6 +1151,34 @@ name|sock
 parameter_list|,
 name|int
 name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+modifier|*
+name|vstrcollect
+parameter_list|(
+name|va_list
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+modifier|*
+name|strcollect
+parameter_list|(
+name|char
+modifier|*
+name|first
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

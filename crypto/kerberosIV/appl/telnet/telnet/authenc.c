@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: authenc.c,v 1.9 1999/03/19 23:13:51 assar Exp $"
+literal|"$Id: authenc.c,v 1.10 1999/09/16 20:41:35 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -262,7 +262,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|result
 argument_list|,

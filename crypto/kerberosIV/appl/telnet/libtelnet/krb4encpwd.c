@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb4encpwd.c,v 1.17 1998/07/09 23:16:29 assar Exp $"
+literal|"$Id: krb4encpwd.c,v 1.18 1999/09/16 20:41:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1271,7 +1271,7 @@ name|Challenge
 operator|=
 name|challenge
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|instance
 argument_list|,
@@ -1411,7 +1411,7 @@ name|UserPassword
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -1524,7 +1524,7 @@ case|case
 name|KRB4_ENCPWD_REJECT
 case|:
 comment|/* Rejected (reason might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1544,7 +1544,7 @@ case|case
 name|KRB4_ENCPWD_ACCEPT
 case|:
 comment|/* Accepted (name might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1630,7 +1630,7 @@ case|case
 name|KRB4_ENCPWD_AUTH
 case|:
 comment|/* Authentication data follows */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1649,7 +1649,7 @@ goto|;
 case|case
 name|KRB4_ENCPWD_CHALLENGE
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1668,7 +1668,7 @@ goto|;
 case|case
 name|KRB4_ENCPWD_ACK
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char

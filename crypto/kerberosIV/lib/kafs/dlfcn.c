@@ -438,6 +438,11 @@ name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
+argument_list|,
 literal|"calloc: %s"
 argument_list|,
 name|strerror
@@ -472,6 +477,11 @@ expr_stmt|;
 name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"strdup: %s"
 argument_list|,

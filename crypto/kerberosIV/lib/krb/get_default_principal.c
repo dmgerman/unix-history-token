@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_default_principal.c,v 1.14 1999/12/02 16:58:41 joda Exp $"
+literal|"$Id: get_default_principal.c,v 1.14.2.1 2000/06/23 03:29:10 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -45,22 +45,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|file
 operator|=
-name|getenv
-argument_list|(
-literal|"KRBTKFILE"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|file
-operator|=
-name|TKT_FILE
+name|tkt_string
+argument_list|()
 expr_stmt|;
 name|ret
 operator|=

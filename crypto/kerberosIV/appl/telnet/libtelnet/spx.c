@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: spx.c,v 1.16 1998/07/09 23:16:33 assar Exp $"
+literal|"$Id: spx.c,v 1.17 1999/09/16 20:41:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2208,7 +2208,7 @@ operator|==
 name|GSS_S_COMPLETE
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -2321,7 +2321,7 @@ case|case
 name|SPX_REJECT
 case|:
 comment|/* Rejected (reason might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2341,7 +2341,7 @@ case|case
 name|SPX_ACCEPT
 case|:
 comment|/* Accepted (name might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2427,7 +2427,7 @@ case|case
 name|SPX_AUTH
 case|:
 comment|/* Authentication data follows */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char

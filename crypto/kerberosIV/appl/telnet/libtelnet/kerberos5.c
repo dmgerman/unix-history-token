@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos5.c,v 1.37 1999/06/24 17:09:10 assar Exp $"
+literal|"$Id: kerberos5.c,v 1.38 1999/09/16 20:41:33 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2464,7 +2464,7 @@ name|UserNameRequested
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -2564,7 +2564,7 @@ case|case
 name|KRB_REJECT
 case|:
 comment|/* Rejected (reason might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2584,7 +2584,7 @@ case|case
 name|KRB_ACCEPT
 case|:
 comment|/* Accepted (name might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2670,7 +2670,7 @@ case|case
 name|KRB_AUTH
 case|:
 comment|/* Authentication data follows */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2689,7 +2689,7 @@ goto|;
 case|case
 name|KRB_RESPONSE
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2709,7 +2709,7 @@ case|case
 name|KRB_FORWARD
 case|:
 comment|/* Forwarded credentials follow */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2729,7 +2729,7 @@ case|case
 name|KRB_FORWARD_ACCEPT
 case|:
 comment|/* Forwarded credentials accepted */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2750,7 +2750,7 @@ name|KRB_FORWARD_REJECT
 case|:
 comment|/* Forwarded credentials rejected */
 comment|/* (reason might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char

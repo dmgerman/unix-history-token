@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sample_server.c,v 1.14 1999/11/13 06:28:49 assar Exp $"
+literal|"$Id: sample_server.c,v 1.14.2.1 2000/06/28 19:08:00 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -401,6 +401,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|retbuf
 argument_list|)

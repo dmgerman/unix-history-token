@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rcp.c,v 1.52 1999/11/16 16:54:16 bg Exp $"
+literal|"$Id: rcp.c,v 1.52.2.1 2000/06/23 02:35:16 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2302,7 +2302,7 @@ condition|(
 name|use_kerberos
 condition|)
 block|{
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|getuid
 argument_list|()
@@ -3100,7 +3100,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|userid
 argument_list|)
@@ -5471,7 +5471,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|userid
 argument_list|)

@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cmds.c,v 1.36 1999/09/16 20:37:28 assar Exp $"
+literal|"$Id: cmds.c,v 1.36.2.2 2000/06/23 02:43:49 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3085,6 +3085,13 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
+name|time_t
+name|mtime
+init|=
+name|stbuf
+operator|.
+name|st_mtime
+decl_stmt|;
 name|overbose
 operator|=
 name|verbose
@@ -3182,9 +3189,7 @@ operator|=
 name|gmtime
 argument_list|(
 operator|&
-name|stbuf
-operator|.
-name|st_mtime
+name|mtime
 argument_list|)
 expr_stmt|;
 name|tm

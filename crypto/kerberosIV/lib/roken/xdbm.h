@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 1999 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: xdbm.h,v 1.6 1999/12/02 16:58:54 joda Exp $ */
+comment|/* $Id: xdbm.h,v 1.6.2.1 2000/08/16 04:11:29 assar Exp $ */
 end_comment
 
 begin_comment
@@ -33,6 +33,21 @@ begin_include
 include|#
 directive|include
 file|<ndbm.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_GDBM_NDBM_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<gdbm/ndbm.h>
 end_include
 
 begin_elif

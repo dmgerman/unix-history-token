@@ -102,5 +102,19 @@ name|_PATH_FTPLOGINMESG
 value|"/etc/motd"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_ISSUE
+value|"/etc/issue"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_ISSUE_NET
+value|"/etc/issue.net"
+end_define
+
 end_unit
 

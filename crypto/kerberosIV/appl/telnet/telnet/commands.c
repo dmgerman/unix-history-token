@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: commands.c,v 1.53 1999/07/07 14:56:17 assar Exp $"
+literal|"$Id: commands.c,v 1.56 1999/09/16 20:41:35 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -204,7 +204,7 @@ condition|)
 block|{
 comment|/* Special case shell escape */
 comment|/* save for shell command */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|saveline
 argument_list|,
@@ -7481,7 +7481,7 @@ name|he
 operator|!=
 name|NULL
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|hbuf
 argument_list|,
@@ -9513,7 +9513,7 @@ condition|(
 name|skiprc
 condition|)
 return|return;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|m1save
 argument_list|,
@@ -10045,7 +10045,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|line
 argument_list|,
@@ -10481,7 +10481,7 @@ argument_list|(
 name|sin6
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|_hostname
 argument_list|,
@@ -10539,7 +10539,7 @@ argument_list|(
 name|sin
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|_hostname
 argument_list|,
@@ -10606,7 +10606,7 @@ condition|(
 name|host
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|_hostname
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kauthd.c,v 1.25 1999/12/02 16:58:31 joda Exp $"
+literal|"$Id: kauthd.c,v 1.25.2.1 2000/06/28 19:07:58 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -607,6 +607,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -670,6 +672,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
@@ -746,6 +750,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
@@ -996,6 +1002,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)

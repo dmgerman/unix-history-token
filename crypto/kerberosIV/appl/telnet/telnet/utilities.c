@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utilities.c,v 1.21 1998/06/09 19:24:47 joda Exp $"
+literal|"$Id: utilities.c,v 1.22.2.1 2000/10/10 13:10:27 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -224,7 +224,7 @@ condition|(
 name|NetTrace
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|NetTraceFile
 argument_list|,
@@ -252,7 +252,7 @@ name|NetTrace
 operator|=
 name|stdout
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|NetTraceFile
 argument_list|,
@@ -4255,6 +4255,19 @@ name|FD_ZERO
 argument_list|(
 operator|&
 name|outs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tout
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|ExitString
+argument_list|(
+literal|"fd too large"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
