@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fmt[] = "@(#)fmt.c	1.7";  *  * fortran format parser  */
+comment|/* char id_fmt[] = "@(#)fmt.c	1.8";  *  * fortran format parser  */
 end_comment
 
 begin_include
