@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)CONFIG.c	2.2 (Berkeley) 82/04/01"
+literal|"@(#)CONFIG.c	2.3 (Berkeley) 82/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,8 @@ sizeof|sizeof
 argument_list|(
 literal|"LIBDIR/"
 argument_list|)
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +73,8 @@ sizeof|sizeof
 argument_list|(
 literal|"LIBDIR/"
 argument_list|)
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
