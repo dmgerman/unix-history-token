@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|Sccsid
 init|=
-literal|"@(#)cat.c	4.4 (Berkeley) %G%"
+literal|"@(#)cat.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,12 +340,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"cat: can't open %s\n"
-argument_list|,
 operator|*
 name|argv
 argument_list|)
