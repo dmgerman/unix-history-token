@@ -2815,6 +2815,26 @@ operator|->
 name|sc_rngto
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HIFN_RNDTEST
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_rndtest
+condition|)
+name|rndtest_detach
+argument_list|(
+name|sc
+operator|->
+name|sc
+operator|->
+name|rndtest
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Turn off DMA polling */
 name|WRITE_REG_1
 argument_list|(
