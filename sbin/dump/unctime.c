@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)unctime.c	8.2 (Berkeley) 6/14/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)unctime.c	8.2 (Berkeley) 6/14/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,18 +40,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -62,23 +63,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
 end_include
 
 begin_endif
