@@ -428,14 +428,14 @@ begin_define
 define|#
 directive|define
 name|CUE_RX_FRAMES
-value|10
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|CUE_TX_FRAMES
-value|10
+value|1
 end_define
 
 begin_define

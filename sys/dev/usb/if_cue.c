@@ -2370,16 +2370,11 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|foo
+name|notdef
 comment|/* Reset the adapter. */
 name|cue_reset
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"reset...\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3757,9 +3752,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|foo
 if|if
 condition|(
 name|status
@@ -3776,8 +3768,6 @@ name|CUE_ENDPT_TX
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -4071,21 +4061,6 @@ name|len
 operator|+
 literal|2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|foo
-name|total_len
-operator|+=
-literal|64
-operator|-
-operator|(
-name|total_len
-operator|%
-literal|64
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* The first two bytes are the frame length */
 name|c
 operator|->
