@@ -145,11 +145,9 @@ block|{
 name|long
 name|quot
 decl_stmt|;
-comment|/* quotient */
 name|long
 name|rem
 decl_stmt|;
-comment|/* remainder */
 block|}
 name|ldiv_t
 typedef|;
@@ -525,7 +523,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* float strtof(const char *__restrict, char **__restrict); */
+comment|/* float strtof(const char * __restrict, char ** __restrict); */
 end_comment
 
 begin_function_decl
@@ -548,7 +546,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* long double 	 strtold(const char *__restrict, char **__restrict); */
+comment|/* long double 	 strtold(const char * __restrict, char ** __restrict); */
 end_comment
 
 begin_function_decl
@@ -871,7 +869,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* char	*ecvt(double, int, int *__restrict, int *__restrict); */
+comment|/* char	*ecvt(double, int, int * __restrict, int * __restrict); */
 end_comment
 
 begin_function_decl
@@ -888,11 +886,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* char	*fcvt(double, int, int *__restrict, int *__restrict); */
+comment|/* char	*fcvt(double, int, int * __restrict, int * __restrict); */
 end_comment
 
 begin_comment
-comment|/* char	*gcvt(double, int, int *__restrict, int *__restrict); */
+comment|/* char	*gcvt(double, int, int * __restrict, int * __restrict); */
 end_comment
 
 begin_ifndef
