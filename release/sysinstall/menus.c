@@ -8466,7 +8466,7 @@ block|,
 block|{
 literal|"Australia"
 block|,
-literal|"ntp.syd.dms.csiro.au (HP 5061 Cesium Beam)"
+literal|"ntp.tip.csiro.au (HP 5071A Cesium Beam)"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -8474,7 +8474,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.syd.dms.csiro.au"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp.tip.csiro.au"
 block|}
 block|,
 block|{
