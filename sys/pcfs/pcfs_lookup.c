@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_lookup.c,v 1.3 1993/10/16 19:29:35 rgrimes Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_lookup.c,v 1.4 1993/10/17 01:48:37 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -1109,7 +1109,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*		dp->de_flag |= DEUPD; /* never update dos directories */
+comment|/*		dp->de_flag |= DEUPD;*/
+comment|/* never update dos directories */
 name|ndp
 operator|->
 name|ni_nameiop

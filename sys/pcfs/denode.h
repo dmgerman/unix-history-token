@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: denode.h,v 1.2 1993/10/16 19:29:26 rgrimes Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: denode.h,v 1.3 1993/11/07 17:51:13 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -473,7 +473,8 @@ name|u_long
 name|defid_dirofs
 decl_stmt|;
 comment|/* index of entry within the cluster	*/
-comment|/*	u_long	defid_gen;	/* generation number */
+comment|/*	u_long	defid_gen;*/
+comment|/* generation number */
 block|}
 struct|;
 end_struct
