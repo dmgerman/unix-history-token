@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mt.c	4.5 (Berkeley) 83/01/02"
+literal|"@(#)mt.c	4.6 (Berkeley) 83/02/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,38 +150,6 @@ block|{
 literal|"status"
 block|,
 name|MTNOP
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"tense"
-block|,
-name|MTTENSE
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"tension"
-block|,
-name|MTTENSE
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"retension"
-block|,
-name|MTTENSE
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"erase"
-block|,
-name|MTERASE
 block|,
 literal|1
 block|}
