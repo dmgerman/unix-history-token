@@ -3956,6 +3956,31 @@ name|reset_keyboard
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+comment|/* 	 * Turn off scancode translation early so that UserConfig  	 * and DDB can read the keyboard. 	 */
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_SCANSET == 2 */
 endif|#
 directive|endif
 comment|/* _I386_ISA_KBDIO_H_ */
