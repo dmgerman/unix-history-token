@@ -1057,6 +1057,11 @@ argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
+name|PUSH
+argument_list|)
+expr_stmt|;
+name|pf
+argument_list|(
 name|URG
 argument_list|)
 expr_stmt|;
