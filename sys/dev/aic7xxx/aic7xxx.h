@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#4 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#6 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1210,6 +1210,25 @@ begin_struct
 struct|struct
 name|scb_data
 block|{
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|free_scbs
+expr_stmt|;
+comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
+name|struct
+name|scb
+modifier|*
+name|scbindex
+index|[
+name|AHC_SCB_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* Mapping from tag to SCB */
 name|struct
 name|hardware_scb
 modifier|*
@@ -1222,14 +1241,6 @@ modifier|*
 name|scbarray
 decl_stmt|;
 comment|/* Array of kernel SCBs */
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|scb
-argument_list|)
-name|free_scbs
-expr_stmt|;
-comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
 name|struct
 name|scsi_sense_data
 modifier|*
@@ -2109,6 +2120,11 @@ name|scb_data
 modifier|*
 name|scb_data
 decl_stmt|;
+name|struct
+name|scb
+modifier|*
+name|next_queued_scb
+decl_stmt|;
 comment|/* 	 * SCBs that have been sent to the controller 	 */
 name|LIST_HEAD
 argument_list|(
@@ -2194,6 +2210,15 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|qinfifo
+decl_stmt|;
+comment|/* Critical Section Data */
+name|struct
+name|cs
+modifier|*
+name|critical_sections
+decl_stmt|;
+name|u_int
+name|num_critical_sections
 decl_stmt|;
 comment|/* Links for chaining softcs */
 name|TAILQ_ENTRY
@@ -2879,6 +2904,18 @@ name|ahc
 parameter_list|,
 name|u_int
 name|intstat
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_clear_critical_section
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
 parameter_list|)
 function_decl|;
 end_function_decl
