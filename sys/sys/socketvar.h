@@ -182,6 +182,18 @@ modifier|*
 name|sb_mb
 decl_stmt|;
 comment|/* the mbuf chain */
+name|struct
+name|mbuf
+modifier|*
+name|sb_mbtail
+decl_stmt|;
+comment|/* the last mbuf in the chain */
+name|struct
+name|mbuf
+modifier|*
+name|sb_lastrecord
+decl_stmt|;
+comment|/* first mbuf of last record in 						 * socket buffer */
 name|u_int
 name|sb_cc
 decl_stmt|;
@@ -340,6 +352,18 @@ struct|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SB_EMPTY_FIXUP
+parameter_list|(
+name|sb
+parameter_list|)
+value|do {						\ 	if ((sb)->sb_mb == NULL) {					\ 		(sb)->sb_mbtail = NULL;					\ 		(sb)->sb_lastrecord = NULL;				\ 	}								\ } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
 
 begin_comment
 comment|/*  * Socket state bits.  */
@@ -1084,6 +1108,23 @@ end_function_decl
 begin_function_decl
 name|void
 name|sbappend
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbappendstream
 parameter_list|(
 name|struct
 name|sockbuf
@@ -2037,6 +2078,106 @@ name|sb
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOCKBUF_DEBUG
+end_ifdef
+
+begin_function_decl
+name|void
+name|sblastrecordchk
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|SBLASTRECORDCHK
+parameter_list|(
+name|sb
+parameter_list|)
+value|sblastrecordchk((sb), __FILE__, __LINE__)
+end_define
+
+begin_function_decl
+name|void
+name|sblastmbufchk
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|SBLASTMBUFCHK
+parameter_list|(
+name|sb
+parameter_list|)
+value|sblastmbufchk((sb), __FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SBLASTRECORDCHK
+parameter_list|(
+name|sb
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBLASTMBUFCHK
+parameter_list|(
+name|sb
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOCKBUF_DEBUG */
+end_comment
 
 begin_comment
 comment|/*  * Accept filter functions (duh).  */
