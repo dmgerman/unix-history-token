@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.85 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.86 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -492,6 +492,24 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|mp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mount
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_op
@@ -502,18 +520,6 @@ name|uap
 operator|->
 name|type
 index|]
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_flag
-operator|=
-literal|0
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_mounth
-operator|=
-name|NULLVP
 expr_stmt|;
 if|if
 condition|(
