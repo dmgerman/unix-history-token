@@ -377,6 +377,7 @@ name|srandom
 argument_list|(
 operator|(
 name|unsigned
+name|long
 operator|)
 name|s
 argument_list|)

@@ -1226,7 +1226,8 @@ expr_stmt|;
 name|srandom
 argument_list|(
 call|(
-name|int
+name|unsigned
+name|long
 call|)
 argument_list|(
 name|time
