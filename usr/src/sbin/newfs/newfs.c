@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.12 %G%"
+literal|"@(#)newfs.c	4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1619,6 +1619,8 @@ condition|)
 name|exit
 argument_list|(
 name|status
+operator|>>
+literal|8
 argument_list|)
 expr_stmt|;
 if|if
