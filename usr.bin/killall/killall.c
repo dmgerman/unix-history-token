@@ -1784,21 +1784,58 @@ name|warn
 argument_list|(
 literal|"kill -%s %d"
 argument_list|,
-argument|upper(sys_signame[sig], 				    thispid); 				errors =
+name|upper
+argument_list|(
+name|sys_signame
+index|[
+name|sig
+index|]
+argument_list|)
+argument_list|,
+name|thispid
+argument_list|)
+expr_stmt|;
+name|errors
+operator|=
 literal|1
-argument|; 			} 		} 	} 	if (killed ==
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|killed
+operator|==
 literal|0
-argument|) { 		fprintf(stderr,
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"No matching processes %swere found\n"
-argument|, 		    getuid() !=
+argument_list|,
+name|getuid
+argument_list|()
+operator|!=
 literal|0
-argument|?
+condition|?
 literal|"belonging to you "
-argument|:
+else|:
 literal|""
-argument|); 		errors =
+argument_list|)
+expr_stmt|;
+name|errors
+operator|=
 literal|1
-argument|; 	} 	exit(errors); }
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+name|errors
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 end_unit
