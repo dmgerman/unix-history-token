@@ -970,7 +970,7 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-name|vm_page_unqueue_nowakeup
+name|vm_pageq_remove_nowakeup
 argument_list|(
 name|fs
 operator|.

@@ -1160,8 +1160,14 @@ value|_mtx_assert((m), (what), __FILE__, __LINE__)
 end_define
 
 begin_comment
-comment|/*  *  GIANT_REQUIRED;	- place at the beginning of a procedure   *  *  */
+comment|/*  *  GIANT_IRRELEVANT	- empty place mark assertion for system startup code  *			  where serialization is implied or utterly trivial  *			  routines that do not need giant.  *  *  GIANT_REQUIRED	- Giant must be held on entry  *  *  *_GIANT_DEPRECATED	- Giant may or may not be held, we may hold giant here  *			  based on a sysctl, and no deeper subroutine  *			  may require giant.  *  *  *_GIANT_OPTIONAL	- Giant may or may not be held and no deeper subroutine  *			  may require giant.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GIANT_IRRELEVANT
+end_define
 
 begin_define
 define|#
@@ -1224,6 +1230,12 @@ name|m
 parameter_list|,
 name|what
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIANT_IRRELEVANT
 end_define
 
 begin_define

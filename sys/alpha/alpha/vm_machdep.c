@@ -1399,7 +1399,7 @@ argument_list|()
 expr_stmt|;
 name|m
 operator|=
-name|vm_page_list_find
+name|vm_pageq_find
 argument_list|(
 name|PQ_FREE
 argument_list|,
