@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -488,12 +488,6 @@ end_endif
 begin_comment
 comment|/*  * Operations on vnodes.  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|file
-struct_decl|;
-end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -1914,7 +1908,6 @@ name|vn_open
 name|__P
 argument_list|(
 operator|(
-comment|/* open vnode */
 expr|struct
 name|nameidata
 operator|*
@@ -1941,7 +1934,6 @@ name|vn_rdwr
 name|__P
 argument_list|(
 operator|(
-comment|/* read or write vnode */
 expr|enum
 name|uio_rw
 name|rw
@@ -1991,7 +1983,6 @@ name|vn_read
 name|__P
 argument_list|(
 operator|(
-comment|/* read a vnode into a uio structure */
 expr|struct
 name|file
 operator|*
@@ -2017,7 +2008,6 @@ name|vn_write
 name|__P
 argument_list|(
 operator|(
-comment|/* write a vnode from a uio structure */
 expr|struct
 name|file
 operator|*
@@ -2043,7 +2033,6 @@ name|vn_ioctl
 name|__P
 argument_list|(
 operator|(
-comment|/* do an ioctl operation on a vnode */
 expr|struct
 name|file
 operator|*
@@ -2070,7 +2059,6 @@ name|vn_select
 name|__P
 argument_list|(
 operator|(
-comment|/* do a select operation on a vnode */
 expr|struct
 name|file
 operator|*
@@ -2094,7 +2082,6 @@ name|vn_close
 name|__P
 argument_list|(
 operator|(
-comment|/* close vnode */
 expr|struct
 name|file
 operator|*
@@ -2115,7 +2102,6 @@ name|getnewvnode
 name|__P
 argument_list|(
 operator|(
-comment|/* allocate a new vnode */
 expr|enum
 name|vtagtype
 name|tag
@@ -2146,11 +2132,9 @@ name|bdevvp
 name|__P
 argument_list|(
 operator|(
-comment|/* allocate a new special dev vnode */
 name|int
 name|dev
 operator|,
-comment|/* XXX should be type dev_t, not int */
 expr|struct
 name|vnode
 operator|*
@@ -2161,6 +2145,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* check for special device aliases */
+end_comment
+
+begin_comment
+comment|/* XXX nvp_rdev should be type dev_t, not int */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|vnode
@@ -2169,7 +2161,6 @@ name|checkalias
 name|__P
 argument_list|(
 operator|(
-comment|/* check for special device aliases */
 expr|struct
 name|vnode
 operator|*
@@ -2178,7 +2169,6 @@ operator|,
 name|int
 name|nvp_rdev
 operator|,
-comment|/* XXX should be type dev_t, not int */
 expr|struct
 name|mount
 operator|*
@@ -2194,7 +2184,6 @@ name|vattr_null
 name|__P
 argument_list|(
 operator|(
-comment|/* set attributes to null */
 expr|struct
 name|vattr
 operator|*
@@ -2391,7 +2380,7 @@ value|(vp)->v_usecount++
 end_define
 
 begin_comment
-comment|/* increase reference to a vnode */
+comment|/* increase reference */
 end_comment
 
 begin_define
@@ -2405,7 +2394,7 @@ value|(vp)->v_holdcnt++
 end_define
 
 begin_comment
-comment|/* increase buf or page ref to vnode */
+comment|/* increase buf or page ref */
 end_comment
 
 begin_define
@@ -2419,7 +2408,7 @@ value|(vp)->v_holdcnt--
 end_define
 
 begin_comment
-comment|/* decrease buf or page ref to vnode */
+comment|/* decrease buf or page ref */
 end_comment
 
 begin_define
@@ -2429,11 +2418,11 @@ name|VATTR_NULL
 parameter_list|(
 name|vap
 parameter_list|)
-value|*(vap) = va_null
+value|(*(vap) = va_null)
 end_define
 
 begin_comment
-comment|/* initialize a vattr stucture */
+comment|/* initialize a vattr */
 end_comment
 
 begin_else
@@ -2494,7 +2483,7 @@ begin_define
 define|#
 directive|define
 name|NULLVP
-value|((struct vnode *)0)
+value|((struct vnode *)NULL)
 end_define
 
 begin_comment
