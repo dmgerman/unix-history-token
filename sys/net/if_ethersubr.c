@@ -5567,10 +5567,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Doing anything more is likely to get more  				 * expensive than it's worth.. 				 * it's probable that everything else is in one 				 * big lump. The next node will do an m_pullup() 				 * for exactly the amount of data it needs and 				 * hopefully everything after that will not 				 * need one. So let's just use m_prepend. 				 */
-name|m
-operator|=
-name|m_prepend
+comment|/* 				 * Doing anything more is likely to get more  				 * expensive than it's worth.. 				 * it's probable that everything else is in one 				 * big lump. The next node will do an m_pullup() 				 * for exactly the amount of data it needs and 				 * hopefully everything after that will not 				 * need one. So let's just use M_PREPEND. 				 */
+name|M_PREPEND
 argument_list|(
 name|m
 argument_list|,
