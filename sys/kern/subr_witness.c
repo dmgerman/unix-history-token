@@ -9584,19 +9584,6 @@ name|p
 argument_list|)
 condition|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"Process %d (%s)\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -9615,7 +9602,17 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"Thread 0x%x\n"
+literal|"Process %d (%s) thread %p (%d)\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|td
 argument_list|,
 name|td
 operator|->
