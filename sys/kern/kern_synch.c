@@ -2046,6 +2046,13 @@ argument_list|,
 name|new_switchtime
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|switchticks
+argument_list|,
+name|ticks
+argument_list|)
+expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -2083,7 +2090,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Start setting up stats etc. for the incoming thread. 	 * Similar code in fork_exit() is returned to by cpu_switch() 	 * in the case of a new thread/process. 	 */
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -2099,32 +2105,6 @@ argument_list|,
 name|p
 operator|->
 name|p_comm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|switchtime
-operator|.
-name|sec
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|binuptime
-argument_list|(
-name|PCPU_PTR
-argument_list|(
-name|switchtime
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchticks
-argument_list|,
-name|ticks
 argument_list|)
 expr_stmt|;
 comment|/*  	 * If the last thread was exiting, finish cleaning it up. 	 */
