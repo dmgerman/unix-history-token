@@ -3703,6 +3703,19 @@ name|v_type
 operator|==
 name|VCHR
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|buf_prewrite
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
+name|bp
+argument_list|)
+condition|)
 name|VOP_SPECSTRATEGY
 argument_list|(
 name|bp
@@ -3712,7 +3725,9 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|VOP_STRATEGY
 argument_list|(
 name|bp
@@ -3722,6 +3737,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

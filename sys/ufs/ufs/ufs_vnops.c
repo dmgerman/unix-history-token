@@ -9682,6 +9682,16 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf_prewrite
+argument_list|(
+name|vp
+argument_list|,
+name|bp
+argument_list|)
+condition|)
 name|VOP_SPECSTRATEGY
 argument_list|(
 name|vp
