@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -73,6 +79,7 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
+comment|/* XXX */
 name|MALLOC
 argument_list|(
 name|kth
@@ -1674,11 +1681,15 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
+init|=
+name|curproc
 decl_stmt|;
+comment|/* XXX */
 name|int
 name|error
 decl_stmt|;
@@ -1758,6 +1769,17 @@ name|uio_iovcnt
 operator|=
 literal|1
 expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|kth
@@ -1821,7 +1843,7 @@ name|IO_UNIT
 operator||
 name|IO_APPEND
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_ucred
 argument_list|)
