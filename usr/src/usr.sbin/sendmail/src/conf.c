@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.3 (Berkeley) %G%"
+literal|"@(#)conf.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1391,7 +1391,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-endif|lint
+comment|/* lint */
 ifdef|#
 directive|ifdef
 name|EXAMPLE_CODE
@@ -4667,9 +4667,26 @@ case|:
 comment|/* Can't assign requested address */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ENOSR
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|ENOBUFS
+argument_list|)
+operator|||
+operator|(
+name|ENOBUFS
+operator|!=
+name|ENOSR
+operator|)
+operator|)
 case|case
 name|ENOSR
 case|:
