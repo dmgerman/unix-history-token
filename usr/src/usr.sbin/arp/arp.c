@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.16 (Berkeley) %G%"
+literal|"@(#)arp.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,7 +77,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -1876,27 +1876,13 @@ end_decl_stmt
 begin_block
 block|{
 name|int
-name|sz
-decl_stmt|,
-name|needed
-decl_stmt|,
-name|rlen
+name|mib
+index|[
+literal|6
+index|]
 decl_stmt|;
-name|long
-name|op
-init|=
-name|KINFO_RT_FLAGS
-operator||
-operator|(
-operator|(
-operator|(
-name|long
-operator|)
-name|AF_INET
-operator|)
-operator|<<
-literal|16
-operator|)
+name|size_t
+name|needed
 decl_stmt|;
 name|char
 modifier|*
