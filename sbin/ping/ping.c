@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.39 1998/07/15 06:45:02 charnier Exp $"
+literal|"$Id: ping.c,v 1.40 1998/08/26 01:58:39 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,20 +451,6 @@ define|#
 directive|define
 name|F_AUDIBLE
 value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|NPACKETS
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXUSRPACKETS
-value|100
 end_define
 
 begin_comment
@@ -1155,23 +1141,6 @@ name|npackets
 operator|=
 name|ultmp
 expr_stmt|;
-if|if
-condition|(
-name|uid
-operator|&&
-name|npackets
-operator|>
-name|MAXUSRPACKETS
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"you cannot send more than %d packets."
-argument_list|,
-name|MAXUSRPACKETS
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|'d'
@@ -1614,18 +1583,6 @@ name|argv
 index|[
 name|optind
 index|]
-expr_stmt|;
-comment|/* 	 * If not root, infinite packets not allowed.  Limit to NPACKETS. 	 */
-if|if
-condition|(
-name|uid
-operator|&&
-operator|!
-name|npackets
-condition|)
-name|npackets
-operator|=
-name|NPACKETS
 expr_stmt|;
 name|bzero
 argument_list|(
