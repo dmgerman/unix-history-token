@@ -1454,7 +1454,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"The Dark Lord leaps away and runs down secret tunnels and corridoors."
+literal|"The Dark Lord leaps away and runs down secret tunnels and corridors."
 argument_list|)
 expr_stmt|;
 name|puts

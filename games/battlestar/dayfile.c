@@ -2704,7 +2704,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"The light tan soil of the road contrasts artistically with the lush green\n\ vegetation and seering blue sky.*  There is a clearing and many people +.\n\ The road continues - and -.\n"
+literal|"The light tan soil of the road contrasts artistically with the lush green\n\ vegetation and searing blue sky.*  There is a clearing and many people +.\n\ The road continues - and -.\n"
 block|}
 block|,
 block|{
@@ -3716,7 +3716,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"This is a grassy little spot near the water. A sightly native girl is frolicing\n\ in the water close to shore here.** The path continues - and -. \n"
+literal|"This is a grassy little spot near the water. A sightly native girl is frolicking\n\ in the water close to shore here.** The path continues - and -. \n"
 block|}
 block|,
 block|{

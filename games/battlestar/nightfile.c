@@ -3144,7 +3144,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"The forest is dense on either side.  The trees seem to be actually squeezing\n\ together to keep us from passing.  A feeling of emnity is in the air.**\n\ The road continues - and -.\n"
+literal|"The forest is dense on either side.  The trees seem to be actually squeezing\n\ together to keep us from passing.  A feeling of enmity is in the air.**\n\ The road continues - and -.\n"
 block|}
 block|,
 block|{
@@ -5454,7 +5454,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"The ceiling here sparkles with iridiscent gems and minerals. Colorful starfish\n\ and sea anemones cling to the slippery walls and floor.  The passage continues\n\ +.***\n"
+literal|"The ceiling here sparkles with iridescent gems and minerals. Colorful starfish\n\ and sea anemones cling to the slippery walls and floor.  The passage continues\n\ +.***\n"
 block|}
 block|,
 block|{

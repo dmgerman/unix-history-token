@@ -70,7 +70,7 @@ block|,
 comment|/* can land from here */
 literal|"There is a fierce woodsman here brandishing a heavy mallet."
 block|,
-literal|"There is an unweildly two-handed sword here."
+literal|"There is an unwieldy two-handed sword here."
 block|,
 literal|"There is a bloody meat cleaver here."
 block|,
@@ -159,7 +159,7 @@ literal|"A gold bracelet is on the ground here."
 block|,
 literal|"A swarthy woman with stern features pulls you aside from the crowd,\n'I must talk to you -- but not here.  Meet me at midnight in the gardens.'"
 block|,
-literal|"The swarthy woman has been awaiting you anxiousy. 'I must warn you that the\nIsland has anticipated your Quest.  You will not be welcomed. The Darkness is\nstrong where you must search.  Seek not the shadows save only at night, for\nthen are they the weakest.  In the mountains far from here a canyon winds\nwith ferns and streams and forgotten vines.  There you must go. Take this\nrope.'"
+literal|"The swarthy woman has been awaiting you anxiously. 'I must warn you that the\nIsland has anticipated your Quest.  You will not be welcomed. The Darkness is\nstrong where you must search.  Seek not the shadows save only at night, for\nthen are they the weakest.  In the mountains far from here a canyon winds\nwith ferns and streams and forgotten vines.  There you must go. Take this\nrope.'"
 block|,
 literal|"Out from the shadows a figure leaps!  His black cape swirls around, and he\nholds a laser sword at your chest.  'So, you have come to fulfill the Quest.\nHa! Your weapons are no match for me!'"
 block|,

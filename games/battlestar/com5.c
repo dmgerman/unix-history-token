@@ -372,7 +372,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"The girl is easy prey.  She peals off her sarong and indulges you."
+literal|"The girl is easy prey.  She peels off her sarong and indulges you."
 argument_list|)
 expr_stmt|;
 name|power
@@ -1313,7 +1313,7 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"after having been out drinking with the girls, she kicks the throne particulary"
+literal|"after having been out drinking with the girls, she kicks the throne particularly"
 argument_list|)
 expr_stmt|;
 name|puts
