@@ -1299,6 +1299,12 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|linker_load_module
@@ -1313,6 +1319,12 @@ name|NULL
 argument_list|,
 operator|&
 name|lf
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
