@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd5.c	1.6 83/07/28"
+literal|"@(#)cmd5.c	1.7 83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,13 @@ name|argc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|insource
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|s_window
@@ -114,6 +121,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|s_refresh
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|s_source
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -219,6 +233,16 @@ literal|2
 block|,
 name|s_refresh
 block|,
+literal|"source"
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|s_source
+block|,
 literal|0
 block|}
 decl_stmt|;
@@ -266,7 +290,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
+name|insource
+operator|++
+expr_stmt|;
 name|beginerror
 argument_list|(
 name|filename
@@ -300,6 +330,10 @@ argument_list|)
 expr_stmt|;
 name|enderror
 argument_list|()
+expr_stmt|;
+name|insource
+operator|=
+literal|0
 expr_stmt|;
 return|return
 literal|0
@@ -1223,6 +1257,50 @@ operator|->
 name|ww_refresh
 operator|=
 literal|1
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|s_source
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|insource
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Recursive source."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|dosource
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Can't open %s."
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 end_block
