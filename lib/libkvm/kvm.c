@@ -1093,13 +1093,15 @@ name|errout
 operator|!=
 literal|0
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|errout
 argument_list|,
 name|kd
 operator|->
 name|errbuf
+argument_list|,
+name|_POSIX2_LINE_MAX
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1182,7 +1184,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|errout
 argument_list|,
@@ -1190,6 +1192,8 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|_POSIX2_LINE_MAX
 argument_list|)
 expr_stmt|;
 return|return
