@@ -7575,7 +7575,10 @@ name|ip
 decl_stmt|;
 name|u_int32_t
 name|opc
+init|=
+literal|0
 decl_stmt|;
+comment|/* make the compiler happy */
 if|if
 condition|(
 name|pc
@@ -8259,9 +8262,12 @@ name|mtag
 decl_stmt|;
 name|int
 name|len
+init|=
+literal|0
 decl_stmt|,
 name|tlen
 decl_stmt|;
+comment|/* make the compiler happy */
 ifdef|#
 directive|ifdef
 name|INET
@@ -8269,7 +8275,10 @@ name|struct
 name|ip
 modifier|*
 name|h
+init|=
+name|NULL
 decl_stmt|;
+comment|/* make the compiler happy */
 endif|#
 directive|endif
 comment|/* INET */
@@ -8280,7 +8289,10 @@ name|struct
 name|ip6_hdr
 modifier|*
 name|h6
+init|=
+name|NULL
 decl_stmt|;
+comment|/* make the compiler happy */
 endif|#
 directive|endif
 comment|/* INET6 */
@@ -8288,7 +8300,10 @@ name|struct
 name|tcphdr
 modifier|*
 name|th
+init|=
+name|NULL
 decl_stmt|;
+comment|/* make the compiler happy */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -14839,7 +14854,10 @@ name|NULL
 decl_stmt|;
 name|int
 name|hlen
+init|=
+literal|0
 decl_stmt|;
+comment|/* make the compiler happy */
 name|u_int16_t
 name|mss
 init|=
@@ -20210,7 +20228,10 @@ name|reason
 decl_stmt|;
 name|u_int16_t
 name|icmpid
+init|=
+literal|0
 decl_stmt|;
+comment|/* make the compiler happy */
 name|sa_family_t
 name|af
 init|=
@@ -20220,9 +20241,16 @@ name|af
 decl_stmt|;
 name|u_int8_t
 name|icmptype
-decl_stmt|,
-name|icmpcode
+init|=
+literal|0
 decl_stmt|;
+comment|/* make the compiler happy */
+name|u_int8_t
+name|icmpcode
+init|=
+literal|0
+decl_stmt|;
+comment|/* make the compiler happy */
 name|int
 name|state_icmp
 init|=
@@ -27877,13 +27905,23 @@ name|dst
 decl_stmt|;
 name|u_int16_t
 name|icmpid
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+comment|/* make the compiler happy */
+name|u_int16_t
 modifier|*
 name|icmpsum
+init|=
+name|NULL
 decl_stmt|;
+comment|/* make the compiler happy */
 name|u_int8_t
 name|icmptype
+init|=
+literal|0
 decl_stmt|;
+comment|/* make the compiler happy */
 name|int
 name|state_icmp
 init|=
@@ -28480,10 +28518,16 @@ directive|endif
 comment|/* INET6 */
 name|int
 name|ipoff2
+init|=
+literal|0
 decl_stmt|;
+comment|/* make the compiler happy */
 name|int
 name|off2
+init|=
+literal|0
 decl_stmt|;
+comment|/* make the compiler happy */
 name|pd2
 operator|.
 name|af
@@ -32681,7 +32725,10 @@ name|struct
 name|route
 modifier|*
 name|ro
+init|=
+name|NULL
 decl_stmt|;
+comment|/* XXX: was uninitialized */
 name|struct
 name|sockaddr_in
 modifier|*
@@ -35806,7 +35853,10 @@ name|struct
 name|ip
 modifier|*
 name|h
+init|=
+name|NULL
 decl_stmt|;
+comment|/* XXX: was uninitialized */
 name|struct
 name|pf_rule
 modifier|*
