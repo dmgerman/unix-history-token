@@ -2339,6 +2339,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Array of counts of dummy handlers for SIG_DFL signals.  This is used to  * assure that there is always a dummy signal handler installed while there is a  * thread sigwait()ing on the corresponding signal.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_thread_dfl_count
+index|[
+name|NSIG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Pending signals for this process.  */
 end_comment
 
