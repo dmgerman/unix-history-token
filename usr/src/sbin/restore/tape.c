@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.2 (Berkeley) %G%"
+literal|"@(#)tape.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3662,9 +3662,6 @@ argument_list|,
 name|SEEK_CUR
 argument_list|)
 operator|==
-operator|(
-name|long
-operator|)
 operator|-
 literal|1
 condition|)
