@@ -166,6 +166,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_LOCALE
+value|"/usr/share/locale"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_LOGIN
 value|"/usr/bin/login"
 end_define
