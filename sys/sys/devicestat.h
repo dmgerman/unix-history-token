@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|DEVSTAT_VERSION
-value|5
+value|6
 end_define
 
 begin_comment
@@ -100,6 +100,13 @@ block|}
 name|devstat_trans_flags
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|DEVSTAT_N_TRANS_FLAGS
+value|4
+end_define
 
 begin_typedef
 typedef|typedef
@@ -273,7 +280,8 @@ begin_struct
 struct|struct
 name|devstat
 block|{
-name|int
+comment|/* Internal house-keeping fields */
+name|u_int
 name|sequence0
 decl_stmt|;
 comment|/* Update sequence# */
@@ -281,6 +289,19 @@ name|int
 name|allocated
 decl_stmt|;
 comment|/* Allocated entry */
+name|u_int
+name|start_count
+decl_stmt|;
+comment|/* started ops */
+name|u_int
+name|end_count
+decl_stmt|;
+comment|/* completed ops */
+name|struct
+name|bintime
+name|busy_from
+decl_stmt|;
+comment|/* 						      * busy time unaccounted 						      * for since this time 						      */
 name|STAILQ_ENTRY
 argument_list|(
 argument|devstat
@@ -301,37 +322,33 @@ name|int
 name|unit_number
 decl_stmt|;
 name|u_int64_t
-name|bytes_read
+name|bytes
+index|[
+name|DEVSTAT_N_TRANS_FLAGS
+index|]
 decl_stmt|;
-comment|/* 						      * Total bytes read 						      * from a device. 						      */
 name|u_int64_t
-name|bytes_written
+name|operations
+index|[
+name|DEVSTAT_N_TRANS_FLAGS
+index|]
 decl_stmt|;
-comment|/* 						      * Total bytes written 						      * to a device. 						      */
-name|u_int64_t
-name|bytes_freed
+name|struct
+name|bintime
+name|duration
+index|[
+name|DEVSTAT_N_TRANS_FLAGS
+index|]
 decl_stmt|;
-comment|/* 						      * Total bytes freed 						      * from a device. 						      */
-name|u_int64_t
-name|num_reads
+name|struct
+name|bintime
+name|busy_time
 decl_stmt|;
-comment|/* 						      * Total number of 						      * read requests to  						      * the device. 						      */
-name|u_int64_t
-name|num_writes
+name|struct
+name|bintime
+name|creation_time
 decl_stmt|;
-comment|/* 						      * Total number of 						      * write requests to  						      * the device. 						      */
-name|u_int64_t
-name|num_frees
-decl_stmt|;
-comment|/* 						      * Total number of 						      * free requests to  						      * the device. 						      */
-name|u_int64_t
-name|num_other
-decl_stmt|;
-comment|/* 						      * Total number of 						      * transactions that  						      * don't read or write  						      * data. 						      */
-name|int32_t
-name|busy_count
-decl_stmt|;
-comment|/* 						      * Total number of  						      * transactions 						      * outstanding for  						      * the device.  						      */
+comment|/*  						      * Time the device was 						      * created. 						      */
 name|u_int32_t
 name|block_size
 decl_stmt|;
@@ -343,26 +360,6 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* 						      * The number of 						      * simple, ordered,  						      * and head of queue  						      * tags sent. 						      */
-name|struct
-name|timeval
-name|dev_creation_time
-decl_stmt|;
-comment|/*  						      * Time the device was 						      * created. 						      */
-name|struct
-name|timeval
-name|busy_time
-decl_stmt|;
-comment|/* 						      * Total amount of 						      * time drive has spent  						      * processing requests. 						      */
-name|struct
-name|timeval
-name|start_time
-decl_stmt|;
-comment|/* 						      * The time when 						      * busy_count was  						      * last == 0.  Or, the 						      * start of the latest  						      * busy period. 						      */
-name|struct
-name|timeval
-name|last_comp_time
-decl_stmt|;
-comment|/* 						      * Last time a 						      * transaction was  						      * completed. 						      */
 name|devstat_support_flags
 name|flags
 decl_stmt|;
@@ -375,7 +372,12 @@ name|devstat_priority
 name|priority
 decl_stmt|;
 comment|/* Controls list pos. */
-name|int
+name|void
+modifier|*
+name|id
+decl_stmt|;
+comment|/* 						      * Identification for 						      * GEOM nodes 						      */
+name|u_int
 name|sequence1
 decl_stmt|;
 comment|/* Update sequence# */
@@ -454,6 +456,11 @@ name|struct
 name|devstat
 modifier|*
 name|ds
+parameter_list|,
+name|struct
+name|bintime
+modifier|*
+name|now
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -492,6 +499,16 @@ name|tag_type
 parameter_list|,
 name|devstat_trans_flags
 name|flags
+parameter_list|,
+name|struct
+name|bintime
+modifier|*
+name|now
+parameter_list|,
+name|struct
+name|bintime
+modifier|*
+name|then
 parameter_list|)
 function_decl|;
 end_function_decl

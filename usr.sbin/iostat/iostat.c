@@ -1368,36 +1368,12 @@ name|tk_nin
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Set the busy time to the system boot time, so the stats are 	 * calculated since system boot. 	 */
-if|if
-condition|(
-name|readvar
-argument_list|(
-name|kd
-argument_list|,
-literal|"kern.boottime"
-argument_list|,
-name|X_BOOTTIME
-argument_list|,
-operator|&
+comment|/* 	 * Set the snap time to the system boot time (ie: zero), so the  	 * stats are calculated since system boot. 	 */
 name|cur
 operator|.
-name|busy_time
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cur
-operator|.
-name|busy_time
-argument_list|)
-argument_list|)
-operator|!=
+name|snap_time
+operator|=
 literal|0
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 comment|/* 	 * If the user stops the program (control-Z) and then resumes it, 	 * print out the header again. 	 */
 operator|(
@@ -1583,11 +1559,11 @@ name|tmp_dinfo
 expr_stmt|;
 name|last
 operator|.
-name|busy_time
+name|snap_time
 operator|=
 name|cur
 operator|.
-name|busy_time
+name|snap_time
 expr_stmt|;
 comment|/* 		 * Here what we want to do is refresh our device stats. 		 * devstat_getdevs() returns 1 when the device list has changed. 		 * If the device list has changed, we want to go through 		 * the selection process again, in case a device that we 		 * were previously displaying has gone away. 		 */
 switch|switch
@@ -1853,16 +1829,13 @@ expr_stmt|;
 block|}
 name|etime
 operator|=
-name|devstat_compute_etime
-argument_list|(
 name|cur
 operator|.
-name|busy_time
-argument_list|,
+name|snap_time
+operator|-
 name|last
 operator|.
-name|busy_time
-argument_list|)
+name|snap_time
 expr_stmt|;
 if|if
 condition|(

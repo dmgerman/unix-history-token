@@ -3818,6 +3818,8 @@ condition|)
 name|devstat_start_transaction
 argument_list|(
 name|ds
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|xpt_action
@@ -3984,6 +3986,10 @@ condition|?
 name|DEVSTAT_WRITE
 else|:
 name|DEVSTAT_READ
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
