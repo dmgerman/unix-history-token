@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rpc_prot.c,v 1.2 1995/05/30 05:41:31 rgrimes Exp $"
+literal|"$Id: rpc_prot.c,v 1.3 1996/06/10 20:13:06 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,7 +290,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -311,7 +311,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -400,7 +400,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -421,7 +421,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -530,7 +530,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -659,7 +659,7 @@ operator|==
 name|XDR_ENCODE
 operator|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -687,7 +687,7 @@ name|rm_direction
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -701,7 +701,7 @@ name|cb_rpcvers
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -717,7 +717,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
