@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.13 (Berkeley) %G%"
+literal|"@(#)collect.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,6 +1066,28 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* check for message too large */
+if|if
+condition|(
+name|MaxMessageSize
+operator|>
+literal|0
+operator|&&
+name|e
+operator|->
+name|e_msgsize
+operator|>
+name|MaxMessageSize
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"552 Message exceeds maximum fixed size (%ld)"
+argument_list|,
+name|MaxMessageSize
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
