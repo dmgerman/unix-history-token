@@ -762,7 +762,7 @@ name|tmbx
 operator|.
 name|tm_dflags
 operator|&
-name|TMDF_DONOTRUNUSER
+name|TMDF_SUSPEND
 condition|)
 block|{
 name|mtx_lock_spin
@@ -4915,7 +4915,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|TMDF_DONOTRUNUSER
+name|TMDF_SUSPEND
 condition|)
 block|{
 name|mtx_lock_spin

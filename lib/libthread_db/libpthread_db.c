@@ -2598,13 +2598,13 @@ name|suspend
 condition|)
 name|dflags
 operator||=
-name|TMDF_DONOTRUNUSER
+name|TMDF_SUSPEND
 expr_stmt|;
 else|else
 name|dflags
 operator|&=
 operator|~
-name|TMDF_DONOTRUNUSER
+name|TMDF_SUSPEND
 expr_stmt|;
 name|ret
 operator|=
@@ -3169,7 +3169,7 @@ operator|(
 operator|(
 name|dflags
 operator|&
-name|TMDF_DONOTRUNUSER
+name|TMDF_SUSPEND
 operator|)
 operator|!=
 literal|0

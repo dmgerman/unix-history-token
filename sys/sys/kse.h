@@ -258,7 +258,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TMDF_DONOTRUNUSER
+name|TMDF_SUSPEND
 value|0x02
 end_define
 

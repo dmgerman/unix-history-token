@@ -2342,7 +2342,7 @@ name|DBG_CAN_RUN
 parameter_list|(
 name|thrd
 parameter_list|)
-value|(((thrd)->tcb->tcb_tmbx.tm_dflags& \ 	TMDF_DONOTRUNUSER) == 0)
+value|(((thrd)->tcb->tcb_tmbx.tm_dflags& \ 	TMDF_SUSPEND) == 0)
 end_define
 
 begin_decl_stmt
