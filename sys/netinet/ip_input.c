@@ -1628,6 +1628,22 @@ name|route
 name|cro
 decl_stmt|;
 comment|/* copy of cached route */
+name|int
+name|srcrt
+init|=
+literal|0
+decl_stmt|;
+comment|/* forward by ``src routing'' */
+ifdef|#
+directive|ifdef
+name|PFIL_HOOKS
+name|struct
+name|in_addr
+name|odst
+decl_stmt|;
+comment|/* original dst address */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
@@ -2304,7 +2320,13 @@ label|:
 ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
-comment|/* 	 * Run through list of hooks for input packets. 	 */
+comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing (e.g. 	 *     by NAT rewriting).  When this happens, tell 	 *     ip_forward to do the right thing. 	 */
+name|odst
+operator|=
+name|ip
+operator|->
+name|ip_dst
+expr_stmt|;
 if|if
 condition|(
 name|pfil_run_hooks
@@ -2345,6 +2367,20 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
+expr_stmt|;
+name|srcrt
+operator|=
+operator|(
+name|odst
+operator|.
+name|s_addr
+operator|!=
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3182,7 +3218,7 @@ argument_list|,
 operator|&
 name|cro
 argument_list|,
-literal|0
+name|srcrt
 argument_list|,
 name|args
 operator|.
