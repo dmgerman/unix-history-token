@@ -24,7 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -46,6 +52,10 @@ expr_stmt|;
 name|int
 name|ee_priority
 decl_stmt|;
+define|#
+directive|define
+name|EHE_DEAD_PRIORITY
+value|(-1)
 name|void
 modifier|*
 name|ee_arg
@@ -67,10 +77,13 @@ name|el_flags
 decl_stmt|;
 define|#
 directive|define
-name|EHE_INITTED
+name|EHL_INITTED
 value|(1<<0)
+name|u_int
+name|el_runcount
+decl_stmt|;
 name|struct
-name|sx
+name|mtx
 name|el_lock
 decl_stmt|;
 name|TAILQ_ENTRY
@@ -102,21 +115,51 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|EHE_LOCK
+name|EHL_LOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|sx_xlock(&(p)->el_lock)
+value|mtx_lock(&(p)->el_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|EHE_UNLOCK
+name|EHL_UNLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|sx_xunlock(&(p)->el_lock)
+value|mtx_unlock(&(p)->el_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHL_LOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|x
+parameter_list|)
+value|mtx_assert(&(p)->el_lock, x)
+end_define
+
+begin_comment
+comment|/*  * Macro to invoke the handlers for a given event.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_EVENTHANDLER_INVOKE
+parameter_list|(
+name|name
+parameter_list|,
+name|list
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	struct eventhandler_entry *_ep;					\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	KASSERT((list)->el_flags& EHL_INITTED,				\  	   ("eventhandler_invoke: running non-inited list"));		\ 	EHL_LOCK_ASSERT((list), MA_OWNED);				\ 	(list)->el_runcount++;						\ 	KASSERT((list)->el_runcount> 0,				\ 	    ("eventhandler_invoke: runcount overflow"));		\ 	CTR0(KTR_EVH, "eventhandler_invoke(\"" __STRING(name) "\")");	\ 	TAILQ_FOREACH(_ep,&((list)->el_entries), ee_link) {		\ 		if (_ep->ee_priority != EHE_DEAD_PRIORITY) {		\ 			EHL_UNLOCK((list));				\ 			_t = (struct eventhandler_entry_ ## name *)_ep;	\ 			CTR1(KTR_EVH, "eventhandler_invoke: executing %p", \  			    (void *)_t->eh_func);			\ 			_t->eh_func(_ep->ee_arg , ## __VA_ARGS__);	\ 			EHL_LOCK((list));				\ 		}							\ 	}								\ 	KASSERT((list)->el_runcount> 0,				\ 	    ("eventhandler_invoke: runcount underflow"));		\ 	(list)->el_runcount--;						\ 	if ((list)->el_runcount == 0)					\ 		eventhandler_prune_list(list);				\ 	EHL_UNLOCK((list));						\ } while (0)
 end_define
 
 begin_comment
@@ -158,8 +201,7 @@ name|name
 parameter_list|,
 modifier|...
 parameter_list|)
-define|\
-value|do {									\ 	struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\ 	struct eventhandler_entry *_ep, *_en;				\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	if (_el->el_flags& EHE_INITTED) {				\ 		EHE_LOCK(_el);						\ 		_ep = TAILQ_FIRST(&(_el->el_entries));			\ 		while (_ep != NULL) {					\ 			_en = TAILQ_NEXT(_ep, ee_link);			\ 			_t = (struct eventhandler_entry_ ## name *)_ep; \ 			_t->eh_func(_ep->ee_arg , __VA_ARGS__);		\ 			_ep = _en;					\ 		}							\ 		EHE_UNLOCK(_el);					\ 	}								\ } while (0)
+value|do {			\ 	struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\ 									\ 	if (_el->el_flags& EHL_INITTED) {				\ 		EHL_LOCK(_el);						\ 		_EVENTHANDLER_INVOKE(name, _el , ## __VA_ARGS__);	\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -188,8 +230,7 @@ name|name
 parameter_list|,
 name|tag
 parameter_list|)
-define|\
-value|eventhandler_deregister(&Xeventhandler_list_ ## name, tag)
+value|do {			\ 	struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\ 									\ 	KASSERT(_el->el_flags& EHL_INITTED,				\ 	    ("eventhandler_fast_deregister on un-inited list %s", ## name)); \ 	EHL_LOCK(_el);							\ 	eventhandler_deregister(_el, tag);				\ } while (0)
 end_define
 
 begin_comment
@@ -219,7 +260,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {									\ 	struct eventhandler_list *_el;					\ 	struct eventhandler_entry *_ep, *_en;				\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	if (((_el = eventhandler_find_list(#name)) != NULL)&& 		\ 		(_el->el_flags& EHE_INITTED)) {			\ 		EHE_LOCK(_el);						\ 		_ep = TAILQ_FIRST(&(_el->el_entries));			\ 		while (_ep != NULL) {					\ 			_en = TAILQ_NEXT(_ep, ee_link);			\ 			_t = (struct eventhandler_entry_ ## name *)_ep;	\ 			_t->eh_func(_ep->ee_arg , __VA_ARGS__);		\ 			_ep = _en;					\ 		}							\ 		EHE_UNLOCK(_el);					\ 	}								\ } while (0)
+value|do {									\ 	struct eventhandler_list *_el;					\ 									\ 	if ((_el = eventhandler_find_list(#name)) != NULL) 		\ 		_EVENTHANDLER_INVOKE(name, _el , ## __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_define
@@ -253,7 +294,6 @@ value|do {									\ 	struct eventhandler_list *_el;					\ 									\ 	if ((_el 
 end_define
 
 begin_function_decl
-specifier|extern
 name|eventhandler_tag
 name|eventhandler_register
 parameter_list|(
@@ -281,7 +321,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|eventhandler_deregister
 parameter_list|(
@@ -297,7 +336,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|eventhandler_list
 modifier|*
@@ -306,6 +344,18 @@ parameter_list|(
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eventhandler_prune_list
+parameter_list|(
+name|struct
+name|eventhandler_list
+modifier|*
+name|list
 parameter_list|)
 function_decl|;
 end_function_decl
