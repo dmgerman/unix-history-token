@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *    - Initial distribution.  *  * Modified June 1993 by Paul Mackerras, paulus@cs.anu.edu.au,  * so that the entire packet being decompressed doesn't have  * to be in contiguous memory (just the compressed header).  *  *	$Id: pppcompress.c,v 1.4 1995/05/30 08:08:17 rgrimes Exp $  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *    - Initial distribution.  *  * Modified June 1993 by Paul Mackerras, paulus@cs.anu.edu.au,  * so that the entire packet being decompressed doesn't have  * to be in contiguous memory (just the compressed header).  *  *	$Id: pppcompress.c,v 1.4.4.1 1996/04/11 06:51:52 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1785,7 +1785,7 @@ expr|struct
 name|tcphdr
 argument_list|)
 operator|>
-name|len
+name|buflen
 condition|)
 goto|goto
 name|bad
