@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fdcio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -127,12 +133,6 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ioctl_fd.h>
 end_include
 
 begin_include
