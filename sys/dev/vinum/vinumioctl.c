@@ -1211,6 +1211,44 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+name|VINUM_CHECKPARITY
+case|:
+comment|/* check RAID-5 parity */
+name|parityops
+argument_list|(
+operator|(
+expr|struct
+name|vinum_ioctl_msg
+operator|*
+operator|)
+name|data
+argument_list|,
+name|checkparity
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|VINUM_REBUILDPARITY
+case|:
+comment|/* rebuild RAID-5 parity */
+name|parityops
+argument_list|(
+operator|(
+expr|struct
+name|vinum_ioctl_msg
+operator|*
+operator|)
+name|data
+argument_list|,
+name|rebuildparity
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 comment|/* FALLTHROUGH */
 block|}
