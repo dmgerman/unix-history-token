@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	5.7 (Berkeley) %G%"
+literal|"@(#)arpadate.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,12 +63,6 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|V6
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -84,12 +78,6 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|V6
-end_endif
-
-begin_endif
-endif|#
-directive|endif
 endif|USG
 end_endif
 
@@ -98,24 +86,6 @@ include|#
 directive|include
 file|"useful.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OLDTIME
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|V6
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -219,20 +189,6 @@ function_decl|;
 endif|#
 directive|endif
 endif|OLDTIME
-ifdef|#
-directive|ifdef
-name|V6
-specifier|extern
-name|char
-modifier|*
-name|StdTimezone
-decl_stmt|,
-modifier|*
-name|DstTimezone
-decl_stmt|;
-endif|#
-directive|endif
-endif|V6
 ifdef|#
 directive|ifdef
 name|USG
@@ -496,30 +452,6 @@ expr_stmt|;
 comment|/* -PST or -PDT */
 ifdef|#
 directive|ifdef
-name|V6
-if|if
-condition|(
-name|localtime
-argument_list|(
-operator|&
-name|t
-argument_list|)
-operator|->
-name|tm_isdst
-condition|)
-name|p
-operator|=
-name|DstTimezone
-expr_stmt|;
-else|else
-name|p
-operator|=
-name|StdTimezone
-expr_stmt|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
 name|USG
 if|if
 condition|(
@@ -563,9 +495,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|USG
-endif|#
-directive|endif
-endif|V6
 if|if
 condition|(
 operator|(

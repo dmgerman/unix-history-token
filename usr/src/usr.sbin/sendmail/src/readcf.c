@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.11 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2982,51 +2982,11 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/*FALLTHROUGH*/
 case|case
 literal|'t'
 case|:
 comment|/* time zone name */
-ifdef|#
-directive|ifdef
-name|V6
-name|StdTimezone
-operator|=
-name|newstr
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-name|DstTimezone
-operator|=
-name|index
-argument_list|(
-name|StdTimeZone
-argument_list|,
-literal|','
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DstTimezone
-operator|==
-name|NULL
-condition|)
-name|syserr
-argument_list|(
-literal|"bad time zone spec"
-argument_list|)
-expr_stmt|;
-else|else
-operator|*
-name|DstTimezone
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
-endif|#
-directive|endif
-endif|V6
 break|break;
 case|case
 literal|'u'

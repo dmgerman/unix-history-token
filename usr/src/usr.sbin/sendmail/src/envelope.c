@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.13 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,9 +1941,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifndef|#
-directive|ifndef
-name|V6
 if|if
 condition|(
 name|CurEnv
@@ -1965,9 +1962,6 @@ argument_list|(
 literal|"HOME"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|V6
 name|CurEnv
 operator|->
 name|e_from
