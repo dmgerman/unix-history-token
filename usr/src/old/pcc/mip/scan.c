@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	1.3 (Berkeley) %G%"
+literal|"@(#)scan.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -808,6 +808,10 @@ name|stype
 operator|=
 name|TNULL
 expr_stmt|;
+name|lineno
+operator|=
+literal|1
+expr_stmt|;
 name|lxinit
 argument_list|()
 expr_stmt|;
@@ -816,10 +820,6 @@ argument_list|()
 expr_stmt|;
 name|mkdope
 argument_list|()
-expr_stmt|;
-name|lineno
-operator|=
-literal|1
 expr_stmt|;
 comment|/* dimension table initialization */
 name|dimtab
