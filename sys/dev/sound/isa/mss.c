@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|MSS_BUFFSIZE
-value|(65536 - 256)
+value|(4096)
 end_define
 
 begin_define
