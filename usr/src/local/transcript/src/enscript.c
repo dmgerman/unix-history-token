@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)enscript.c	1.7 (Berkeley) %G%"
+literal|"@(#)enscript.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,10 +434,6 @@ begin_decl_stmt
 name|private
 name|int
 name|TabWidth
-init|=
-name|TruePageWidth
-operator|/
-literal|10
 decl_stmt|;
 end_decl_stmt
 
@@ -4343,7 +4339,11 @@ operator|+=
 name|TabWidth
 operator|-
 operator|(
+operator|(
 name|dX
+operator|-
+name|lX
+operator|)
 operator|%
 name|TabWidth
 operator|)
