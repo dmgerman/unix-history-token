@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trace.h	5.3 (Berkeley) %G%";  *  * Includes material written at Cornell University by Bill Nesheim,  * by permission of the author.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trace.h	5.4 (Berkeley) %G%";  *  * Includes material written at Cornell University by Bill Nesheim,  * by permission of the author.  */
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ name|src
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src,&packet[sizeof(struct idp)], size, \ 				ntohl(ifp->int_metric)); \ 	  } \ 	  if (tracepackets) \ 		dumppacket(stdout, "from", src,&packet[sizeof(struct idp)], size); \ 	}
+value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src,&packet[sizeof(struct idp)], size, \ 				ntohl(ifp->int_metric)); \ 	  } \ 	  if (tracepackets&& ftrace) \ 		dumppacket(ftrace, "from", src,&packet[sizeof(struct idp)], size); \ 	}
 end_define
 
 begin_define
@@ -147,7 +147,7 @@ name|dst
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(dst); \ 		if (ifp) \ 		    trace(&ifp->int_output, dst,&packet[sizeof(struct idp)], size, ifp->int_metric); \ 	  } \ 	  if (tracepackets) \ 		dumppacket(stdout, "to", dst,&packet[sizeof(struct idp)], size); \ 	}
+value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(dst); \ 		if (ifp) \ 		    trace(&ifp->int_output, dst,&packet[sizeof(struct idp)], size, ifp->int_metric); \ 	  } \ 	  if (tracepackets&& ftrace) \ 		dumppacket(ftrace, "to", dst,&packet[sizeof(struct idp)], size); \ 	}
 end_define
 
 end_unit

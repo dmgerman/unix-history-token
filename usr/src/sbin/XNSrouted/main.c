@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,12 +90,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_decl_stmt
@@ -241,6 +235,30 @@ block|{
 name|supplier
 operator|=
 literal|0
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-R"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|noteremoterequests
+operator|++
 expr_stmt|;
 name|argv
 operator|++
@@ -460,6 +478,15 @@ block|}
 block|}
 endif|#
 directive|endif
+name|openlog
+argument_list|(
+literal|"XNSrouted"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 name|addr
 operator|.
 name|sns_family
@@ -613,22 +640,11 @@ control|(
 init|;
 condition|;
 control|)
-block|{
-name|int
-name|ibits
-decl_stmt|;
-specifier|register
-name|int
-name|n
-decl_stmt|;
-comment|/*ibits = 1<< s; 		n = select(20,&ibits, 0, 0, 0); 		if (n< 0) 			continue; 		if (ibits& (1<< s)) */
 name|process
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* handle ICMP redirects */
-block|}
 block|}
 end_function
 
@@ -714,9 +730,9 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"recvfrom"
+literal|"recvfrom: %m"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -726,6 +742,8 @@ condition|(
 name|tracepackets
 operator|>
 literal|1
+operator|&&
+name|ftrace
 condition|)
 block|{
 name|fprintf
@@ -763,13 +781,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|tracepackets
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
+name|noteremoterequests
+operator|&&
+name|ns_netof
+argument_list|(
+name|idp
+operator|->
+name|idp_sna
+argument_list|)
+operator|&&
 name|ns_netof
 argument_list|(
 name|idp
@@ -785,11 +805,11 @@ name|idp_dna
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|ftrace
+name|LOG_ERR
 argument_list|,
-literal|"XNSrouted: net of interface (%d) "
+literal|"net of interface (%d) != net on ether (%d)!\n"
 argument_list|,
 name|ns_netof
 argument_list|(
@@ -797,45 +817,12 @@ name|idp
 operator|->
 name|idp_dna
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|ftrace
-argument_list|,
-literal|"!= net on ether (%d)!\n"
 argument_list|,
 name|ns_netof
 argument_list|(
 name|idp
 operator|->
 name|idp_sna
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|fromlen
-operator|!=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_ns
-argument_list|)
-condition|)
-name|fprintf
-argument_list|(
-name|ftrace
-argument_list|,
-literal|"fromlen is %d instead of %d\n"
-argument_list|,
-name|fromlen
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_ns
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -951,9 +938,9 @@ operator|&&
 name|retry
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"socket"
+literal|"socket: %m"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1002,9 +989,9 @@ operator|&&
 name|retry
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"bind"
+literal|"bind: %m"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1062,9 +1049,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"setsockopt SEE HEADERS"
+literal|"setsockopt SEE HEADERS: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1099,9 +1086,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"setsockopt SET HEADERS"
+literal|"setsockopt SET HEADER: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1133,9 +1120,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"setsockopt SO_BROADCAST"
+literal|"setsockopt SO_BROADCAST: %m"
 argument_list|)
 expr_stmt|;
 name|exit

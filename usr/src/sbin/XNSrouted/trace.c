@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.4 (Berkeley) %G%"
+literal|"@(#)trace.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,29 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+else|DEBUG
+end_else
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|ftrace
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tracing
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -130,9 +153,9 @@ name|tracing
 operator|=
 literal|0
 expr_stmt|;
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
 literal|"traceinit: can't init %s\n"
 argument_list|,
@@ -969,6 +992,13 @@ operator|*
 name|ifp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|fd
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

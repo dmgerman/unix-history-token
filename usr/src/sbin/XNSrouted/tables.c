@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.3 (Berkeley) %G%"
+literal|"@(#)tables.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -778,9 +778,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"SIOCADDRT"
+name|LOG_ERR
+argument_list|,
+literal|"SIOCADDRT: %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -988,9 +990,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"SIOCADDRT"
+name|LOG_ERR
+argument_list|,
+literal|"SIOCADDRT %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1015,9 +1019,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"SIOCDELRT"
+name|LOG_ERR
+argument_list|,
+literal|"SIOCDELRT %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1070,9 +1076,11 @@ operator|->
 name|rt_rt
 argument_list|)
 condition|)
-name|perror
+name|syslog
 argument_list|(
-literal|"SIOCDELRT"
+name|LOG_ERR
+argument_list|,
+literal|"SIOCDELR %m"
 argument_list|)
 expr_stmt|;
 name|remque

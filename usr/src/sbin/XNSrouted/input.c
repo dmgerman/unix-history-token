@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.3 (Berkeley) %G%"
+literal|"@(#)input.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,9 +329,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tracepackets
-operator|>
-literal|1
+name|ftrace
 condition|)
 block|{
 name|fprintf
@@ -424,15 +422,6 @@ name|u_short
 argument_list|)
 expr_stmt|;
 comment|/* should check for if with dstaddr(from) first */
-operator|(
-name|ifp
-operator|=
-name|if_ifwithnet
-argument_list|(
-name|from
-argument_list|)
-operator|)
-expr_stmt|;
 call|(
 modifier|*
 name|afp
@@ -447,11 +436,18 @@ argument_list|,
 name|newsize
 argument_list|)
 expr_stmt|;
+operator|(
+name|ifp
+operator|=
+name|if_ifwithnet
+argument_list|(
+name|from
+argument_list|)
+operator|)
+expr_stmt|;
 if|if
 condition|(
-name|tracepackets
-operator|>
-literal|1
+name|ftrace
 condition|)
 block|{
 name|fprintf
@@ -566,9 +562,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|tracepackets
-operator|>
-literal|1
+name|ftrace
 condition|)
 name|fprintf
 argument_list|(
@@ -597,9 +591,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|tracepackets
-operator|>
-literal|1
+name|ftrace
 condition|)
 name|fprintf
 argument_list|(
