@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.13	82/07/16	*/
-end_comment
-
-begin_comment
-comment|/*	inode.h	2.1	3/25/82	*/
+comment|/*	dinode.h	4.14	82/08/10	*/
 end_comment
 
 begin_comment
@@ -46,7 +42,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* must be first */
-name|char
+name|u_short
 name|i_flag
 decl_stmt|;
 name|u_short
@@ -57,6 +53,14 @@ name|dev_t
 name|i_dev
 decl_stmt|;
 comment|/* device where inode resides */
+name|u_short
+name|i_rdlockc
+decl_stmt|;
+comment|/* count of locked readers on inode */
+name|u_short
+name|i_wrlockc
+decl_stmt|;
+comment|/* count of locked writers on inode */
 name|ino_t
 name|i_number
 decl_stmt|;
@@ -509,7 +513,7 @@ begin_define
 define|#
 directive|define
 name|ILOCK
-value|01
+value|0x1
 end_define
 
 begin_comment
@@ -520,7 +524,7 @@ begin_define
 define|#
 directive|define
 name|IUPD
-value|02
+value|0x2
 end_define
 
 begin_comment
@@ -531,7 +535,7 @@ begin_define
 define|#
 directive|define
 name|IACC
-value|04
+value|0x4
 end_define
 
 begin_comment
@@ -542,7 +546,7 @@ begin_define
 define|#
 directive|define
 name|IMOUNT
-value|010
+value|0x8
 end_define
 
 begin_comment
@@ -553,7 +557,7 @@ begin_define
 define|#
 directive|define
 name|IWANT
-value|020
+value|0x10
 end_define
 
 begin_comment
@@ -564,7 +568,7 @@ begin_define
 define|#
 directive|define
 name|ITEXT
-value|040
+value|0x20
 end_define
 
 begin_comment
@@ -575,11 +579,44 @@ begin_define
 define|#
 directive|define
 name|ICHG
-value|0100
+value|0x40
 end_define
 
 begin_comment
 comment|/* inode has been changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRDLOCK
+value|0x80
+end_define
+
+begin_comment
+comment|/* file is read locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWRLOCK
+value|0x100
+end_define
+
+begin_comment
+comment|/* file is write locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILWAIT
+value|0x200
+end_define
+
+begin_comment
+comment|/* someone waiting on file lock */
 end_comment
 
 begin_comment
