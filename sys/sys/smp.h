@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.10 1997/05/29 05:57:43 fsmp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.3 1997/06/25 20:43:48 smp Exp smp $  *  */
 end_comment
 
 begin_ifndef
@@ -357,8 +357,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|u_int
+name|isa_apic_mask
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|get_isa_apic_irq
+name|isa_apic_pin
 name|__P
 argument_list|(
 operator|(
@@ -369,12 +381,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
-name|get_isa_apic_mask
+name|int
+name|pci_apic_pin
 name|__P
 argument_list|(
 operator|(
-name|u_int
+name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -386,34 +402,6 @@ name|undirect_isa_irq
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|get_eisa_apic_irq
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|get_pci_apic_irq
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|,
 name|int
 operator|)
 argument_list|)
