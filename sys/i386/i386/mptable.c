@@ -4003,6 +4003,9 @@ decl_stmt|;
 name|int_entry_ptr
 name|intr
 decl_stmt|;
+name|int
+name|vector
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -4046,24 +4049,7 @@ operator|->
 name|irq
 condition|)
 return|return;
-name|KASSERT
-argument_list|(
-name|args
-operator|->
-name|vector
-operator|==
-operator|-
-literal|1
-argument_list|,
-operator|(
-literal|"Multiple entries for PCI IRQ %d"
-operator|,
-name|args
-operator|->
-name|vector
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* Make sure the APIC maps to a known APIC. */
 name|KASSERT
 argument_list|(
 name|ioapics
@@ -4084,8 +4070,7 @@ name|dst_apic_id
 operator|)
 argument_list|)
 expr_stmt|;
-name|args
-operator|->
+comment|/* 	 * Look up the vector for this APIC / pin combination.  If we 	 * have previously matched an entry for this PCI IRQ but it 	 * has the same vector as this entry, just return.  Otherwise, 	 * we use the vector for this APIC / pin combination. 	 */
 name|vector
 operator|=
 name|ioapic_get_vector
@@ -4101,6 +4086,39 @@ name|intr
 operator|->
 name|dst_apic_int
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|args
+operator|->
+name|vector
+operator|==
+name|vector
+condition|)
+return|return;
+name|KASSERT
+argument_list|(
+name|args
+operator|->
+name|vector
+operator|==
+operator|-
+literal|1
+argument_list|,
+operator|(
+literal|"Multiple entries for PCI IRQ %d"
+operator|,
+name|args
+operator|->
+name|vector
+operator|)
+argument_list|)
+expr_stmt|;
+name|args
+operator|->
+name|vector
+operator|=
+name|vector
 expr_stmt|;
 block|}
 end_function
