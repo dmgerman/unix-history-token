@@ -9521,10 +9521,6 @@ modifier|*
 modifier|*
 name|linkp
 decl_stmt|;
-name|Objlist_Entry
-modifier|*
-name|elm
-decl_stmt|;
 name|assert
 argument_list|(
 name|root
@@ -9532,36 +9528,6 @@ operator|->
 name|refcount
 operator|==
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Remove the DAG from all objects' DAG lists. */
-name|STAILQ_FOREACH
-argument_list|(
-argument|elm
-argument_list|,
-argument|&root->dagmembers
-argument_list|,
-argument|link
-argument_list|)
-name|objlist_remove
-argument_list|(
-operator|&
-name|elm
-operator|->
-name|obj
-operator|->
-name|dldags
-argument_list|,
-name|root
-argument_list|)
-expr_stmt|;
-comment|/* Remove the DAG from the RTLD_GLOBAL list. */
-name|objlist_remove
-argument_list|(
-operator|&
-name|list_global
-argument_list|,
-name|root
 argument_list|)
 expr_stmt|;
 comment|/* Unmap all objects that are no longer referenced. */
@@ -9665,6 +9631,10 @@ name|Needed_Entry
 modifier|*
 name|needed
 decl_stmt|;
+name|Objlist_Entry
+modifier|*
+name|elm
+decl_stmt|;
 if|if
 condition|(
 name|root
@@ -9687,6 +9657,7 @@ name|refcount
 operator|==
 literal|0
 condition|)
+block|{
 for|for
 control|(
 name|needed
@@ -9720,6 +9691,37 @@ operator|->
 name|obj
 argument_list|)
 expr_stmt|;
+comment|/* Remove the object from the RTLD_GLOBAL list. */
+name|objlist_remove
+argument_list|(
+operator|&
+name|list_global
+argument_list|,
+name|root
+argument_list|)
+expr_stmt|;
+comment|/* Remove the object from all objects' DAG lists. */
+name|STAILQ_FOREACH
+argument_list|(
+argument|elm
+argument_list|,
+argument|&root->dagmembers
+argument_list|,
+argument|link
+argument_list|)
+name|objlist_remove
+argument_list|(
+operator|&
+name|elm
+operator|->
+name|obj
+operator|->
+name|dldags
+argument_list|,
+name|root
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
