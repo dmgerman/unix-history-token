@@ -256,9 +256,11 @@ directive|define
 name|TXP_USEIOSPACE
 end_define
 
-begin_comment
-comment|/*#define __STRICT_ALIGNMENT*/
-end_comment
+begin_define
+define|#
+directive|define
+name|__STRICT_ALIGNMENT
+end_define
 
 begin_include
 include|#
