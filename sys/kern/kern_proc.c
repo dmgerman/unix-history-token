@@ -3245,6 +3245,15 @@ operator|.
 name|tv_usec
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_ZOMBIE
+condition|)
+block|{
 name|td
 operator|=
 name|FIRST_THREAD_IN_PROC
@@ -3426,23 +3435,6 @@ operator|=
 name|SWAIT
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|p_state
-operator|==
-name|PRS_ZOMBIE
-condition|)
-block|{
-name|kp
-operator|->
-name|ki_stat
-operator|=
-name|SZOMB
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3691,6 +3683,16 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* All the reast are 0 */
+block|}
+block|}
+else|else
+block|{
+name|kp
+operator|->
+name|ki_stat
+operator|=
+name|SZOMB
+expr_stmt|;
 block|}
 comment|/* ^^^ XXXKSE */
 name|mtx_unlock_spin
