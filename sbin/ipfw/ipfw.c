@@ -3353,7 +3353,7 @@ name|p
 operator|->
 name|flow_mask
 operator|.
-name|src_port
+name|dst_port
 argument_list|)
 expr_stmt|;
 name|printf
