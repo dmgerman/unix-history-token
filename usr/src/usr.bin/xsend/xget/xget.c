@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xget.c	4.3 %G%"
+literal|"@(#)xget.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,31 +29,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dir.h"
+file|<sys/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ctype.h"
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pwd.h"
+file|<pwd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_decl_stmt
