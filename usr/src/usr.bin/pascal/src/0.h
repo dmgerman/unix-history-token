@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)0.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)0.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -1963,13 +1969,6 @@ comment|/*  * Routines which need types  * other than "integer" to be  * assumed
 end_comment
 
 begin_function_decl
-name|double
-name|atof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|long
 name|lwidth
 parameter_list|()
@@ -2023,13 +2022,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|double
-name|atof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 modifier|*
 name|hash
@@ -2073,14 +2065,6 @@ begin_function_decl
 name|char
 modifier|*
 name|parnam
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
