@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	8.1 (Berkeley) %G%"
+literal|"@(#)process.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1614,6 +1614,20 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_so
+operator|!=
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_eo
+operator|&&
 name|regexec_e
 argument_list|(
 name|re
