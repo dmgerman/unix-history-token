@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.29 1997/10/08 07:47:54 charnier Exp $"
+literal|"$Id: file.c,v 1.30 1997/10/18 05:54:17 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,17 +1011,6 @@ name|me
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"Trying to fetch %s.\n"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
 name|ftp
 operator|=
 name|ftpGetURL
@@ -1041,6 +1030,27 @@ condition|(
 name|ftp
 condition|)
 block|{
+if|if
+condition|(
+name|isatty
+argument_list|(
+literal|0
+argument_list|)
+operator|||
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Fetching %s..."
+argument_list|,
+name|fname
+argument_list|)
+operator|,
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|pen
 index|[
 literal|0
@@ -1064,17 +1074,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"Extracting from FTP connection into %s\n"
-argument_list|,
-name|pen
-argument_list|)
-expr_stmt|;
 name|tpid
 operator|=
 name|fork
@@ -1168,6 +1167,24 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|ftp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rp
+operator|&&
+operator|(
+name|isatty
+argument_list|(
+literal|0
+argument_list|)
+operator|||
+name|Verbose
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|" Done.\n"
 argument_list|)
 expr_stmt|;
 block|}

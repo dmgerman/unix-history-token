@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.42 1998/07/28 11:55:39 jkh Exp $"
+literal|"$Id: perform.c,v 1.43 1998/09/08 03:15:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,11 +137,6 @@ decl_stmt|;
 name|Package
 name|plist
 decl_stmt|;
-name|char
-modifier|*
-name|suffix
-decl_stmt|;
-comment|/* What we tack on to the end of the finished package */
 name|int
 name|len
 decl_stmt|;
