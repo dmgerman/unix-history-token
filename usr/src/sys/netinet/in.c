@@ -880,6 +880,9 @@ case|:
 case|case
 name|SIOCSIFNETMASK
 case|:
+case|case
+name|SIOCSIFDSTADDR
+case|:
 if|if
 condition|(
 operator|!
@@ -1075,9 +1078,6 @@ block|}
 break|break;
 case|case
 name|SIOCSIFBRDADDR
-case|:
-case|case
-name|SIOCSIFDSTADDR
 case|:
 if|if
 condition|(
