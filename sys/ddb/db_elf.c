@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ddb/db_sym.h>
 end_include
 
@@ -76,6 +82,29 @@ include|#
 directive|include
 file|<machine/elf.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALIGNED_POINTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALIGNED_POINTER
+parameter_list|(
+name|ptr
+parameter_list|,
+name|type
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -209,7 +238,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|ALIGNED_POINTER
+name|_ALIGNED_POINTER
 argument_list|(
 name|symtab
 argument_list|,
@@ -516,7 +545,7 @@ name|strtab_start
 operator|==
 name|NULL
 operator|||
-name|ALIGNED_POINTER
+name|_ALIGNED_POINTER
 argument_list|(
 name|symtab_start
 argument_list|,
@@ -525,7 +554,7 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-name|ALIGNED_POINTER
+name|_ALIGNED_POINTER
 argument_list|(
 name|strtab_start
 argument_list|,
@@ -762,7 +791,7 @@ comment|/*  * Lookup the symbol with the given name.  */
 end_comment
 
 begin_function
-name|db_sym_t
+name|c_db_sym_t
 name|X_db_lookup
 parameter_list|(
 name|stab
@@ -888,7 +917,7 @@ comment|/*  * Search for the symbol with the given address (matching within the 
 end_comment
 
 begin_function
-name|db_sym_t
+name|c_db_sym_t
 name|X_db_search_symbol
 parameter_list|(
 name|symtab
@@ -1183,7 +1212,7 @@ name|db_symtab_t
 modifier|*
 name|symtab
 decl_stmt|;
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 specifier|const
@@ -1197,11 +1226,13 @@ modifier|*
 name|valuep
 decl_stmt|;
 block|{
+specifier|const
 name|Elf_Sym
 modifier|*
 name|symp
 init|=
 operator|(
+specifier|const
 name|Elf_Sym
 operator|*
 operator|)
@@ -1281,7 +1312,7 @@ name|db_symtab_t
 modifier|*
 name|symtab
 decl_stmt|;
-name|db_sym_t
+name|c_db_sym_t
 name|cursym
 decl_stmt|;
 name|char
@@ -1352,6 +1383,27 @@ begin_comment
 comment|/*  * Initialization routine for Elf files.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_decl_stmt
+name|void
+modifier|*
+name|ksym_start
+decl_stmt|,
+modifier|*
+name|ksym_end
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -1362,6 +1414,11 @@ modifier|*
 name|ksym_end
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
