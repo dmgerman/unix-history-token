@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	5.7 (Berkeley) %G%"
+literal|"@(#)field.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,7 +130,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty login field"
+literal|"chpass: empty login field.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -185,7 +185,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't save entry"
+literal|"chpass: can't save entry.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -327,7 +327,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't save password entry"
+literal|"chpass: can't save password entry.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -399,7 +399,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty uid field"
+literal|"chpass: empty uid field.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -425,7 +425,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: illegal uid"
+literal|"chpass: illegal uid.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -458,7 +458,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %d> max uid value (%d)"
+literal|"chpass: %d> max uid value (%d).\n"
 argument_list|,
 name|id
 argument_list|,
@@ -545,7 +545,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty gid field"
+literal|"chpass: empty gid field.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -584,7 +584,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: unknown group %s"
+literal|"chpass: unknown group %s.\n"
 argument_list|,
 name|p
 argument_list|)
@@ -633,7 +633,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %d> max gid value (%d)"
+literal|"chpass: %d> max gid value (%d).\n"
 argument_list|,
 name|id
 argument_list|,
@@ -735,7 +735,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't save entry"
+literal|"chpass: can't save entry.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -817,7 +817,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: illegal date for change field"
+literal|"chpass: illegal date for change field.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -893,7 +893,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: illegal date for expire field"
+literal|"chpass: illegal date for expire field.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -979,7 +979,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't save entry"
+literal|"chpass: can't save entry.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1050,7 +1050,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty home directory field"
+literal|"chpass: empty home directory field.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1081,7 +1081,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't save entry"
+literal|"chpass: can't save entry.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1202,7 +1202,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %s: non-standard shell"
+literal|"chpass: %s: non-standard shell.\n"
 argument_list|,
 name|p
 argument_list|)
@@ -1276,7 +1276,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't save entry"
+literal|"chpass: can't save entry.\n"
 argument_list|)
 expr_stmt|;
 return|return

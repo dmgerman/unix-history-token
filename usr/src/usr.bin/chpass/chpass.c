@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.7 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -803,7 +803,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %s: %s"
+literal|"chpass: %s: %s; "
 argument_list|,
 name|temp
 argument_list|,
@@ -839,7 +839,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't write %s"
+literal|"chpass: can't write %s; "
 argument_list|,
 name|temp
 argument_list|)
@@ -969,7 +969,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't read %s"
+literal|"chpass: can't read %s; "
 argument_list|,
 name|passwd
 argument_list|)
@@ -1028,7 +1028,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: can't fork"
+literal|"chpass: can't fork; "
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1058,7 +1058,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: mkpasswd failed"
+literal|"chpass: mkpasswd failed; "
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1070,7 +1070,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"; information unchanged.\n"
+literal|"%s unchanged.\n"
+argument_list|,
+name|_PATH_MASTERPASSWD
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1268,24 +1270,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|entry
-modifier|*
-name|ep
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-specifier|static
-name|char
-name|buf
-index|[
-literal|1024
-index|]
-decl_stmt|;
 name|struct
 name|stat
 name|begin
@@ -1304,10 +1288,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|tfile
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
 decl_stmt|;
 name|tfile
 operator|=
@@ -1386,6 +1366,15 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|rval
+operator|=
+literal|0
+init|;
+condition|;
+control|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1397,24 +1386,12 @@ operator|&
 name|begin
 argument_list|)
 expr_stmt|;
-name|rval
-operator|=
+if|if
+condition|(
 name|edit
 argument_list|(
 name|tfile
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|tfile
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rval
 condition|)
 block|{
 operator|(
@@ -1424,14 +1401,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: edit failed"
+literal|"chpass: edit failed; "
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 operator|(
 name|void
@@ -1462,14 +1435,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: no changes made"
+literal|"chpass: no changes made; "
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 operator|(
 name|void
@@ -1479,6 +1448,105 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|check
+argument_list|(
+name|fp
+argument_list|,
+name|pw
+argument_list|)
+condition|)
+block|{
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prompt
+argument_list|()
+condition|)
+break|break;
+block|}
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|tfile
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|check
+argument_list|(
+argument|fp
+argument_list|,
+argument|pw
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|entry
+modifier|*
+name|ep
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+specifier|static
+name|char
+name|buf
+index|[
+literal|1024
+index|]
+decl_stmt|;
 while|while
 condition|(
 name|fgets
@@ -1501,6 +1569,13 @@ name|buf
 index|[
 literal|0
 index|]
+operator|||
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
 condition|)
 continue|continue;
 if|if
@@ -1525,7 +1600,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: line too long"
+literal|"chpass: line too long.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1545,13 +1620,35 @@ name|ep
 operator|=
 name|list
 init|;
-name|ep
-operator|->
-name|prompt
 condition|;
 operator|++
 name|ep
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|ep
+operator|->
+name|prompt
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: unrecognized field.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1577,7 +1674,7 @@ name|restricted
 operator|&&
 name|uid
 condition|)
-continue|continue;
+break|break;
 if|if
 condition|(
 operator|!
@@ -1600,7 +1697,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: line corrupted"
+literal|"chpass: line corrupted.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1642,7 +1739,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: illegal character in the \"%s\" field"
+literal|"chpass: illegal character in the \"%s\" field.\n"
 argument_list|,
 name|ep
 operator|->
@@ -1678,14 +1775,7 @@ return|;
 break|break;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
+block|}
 comment|/* 	 * special checks... 	 * 	 * there has to be a limit on the size of the gecos fields, 	 * otherwise getpwent(3) can choke. 	 * ``if I swallow anything evil, put your fingers down my throat...'' 	 *	-- The Who 	 */
 if|if
 condition|(
@@ -1878,7 +1968,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: line too long"
+literal|"chpass: line too long; "
 argument_list|)
 expr_stmt|;
 return|return
@@ -1928,7 +2018,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: corrupted entry"
+literal|"chpass: corrupted entry; "
 argument_list|)
 expr_stmt|;
 return|return
@@ -2611,6 +2701,83 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|prompt
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|c
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"re-edit the password file? [y]: "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+name|EOF
+operator|&&
+name|c
+operator|!=
+operator|(
+name|int
+operator|)
+literal|'\n'
+condition|)
+while|while
+condition|(
+name|getchar
+argument_list|()
+operator|!=
+operator|(
+name|int
+operator|)
+literal|'\n'
+condition|)
+empty_stmt|;
+return|return
+operator|(
+name|c
+operator|==
+operator|(
+name|int
+operator|)
+literal|'n'
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
 block|}
 end_block
 
