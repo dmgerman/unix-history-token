@@ -212,6 +212,9 @@ modifier|*
 name|context
 parameter_list|)
 block|{
+name|int
+name|newstatus
+decl_stmt|;
 name|device_t
 name|dev
 init|=
@@ -244,9 +247,7 @@ argument_list|,
 literal|"_PSR"
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|status
+name|newstatus
 argument_list|)
 operator|!=
 name|AE_OK
@@ -260,6 +261,34 @@ operator|-
 literal|1
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|status
+operator|!=
+name|newstatus
+condition|)
+block|{
+name|sc
+operator|->
+name|status
+operator|=
+name|newstatus
+expr_stmt|;
+comment|/* set system power profile based on AC adapter status */
+name|powerprofile_set_state
+argument_list|(
+name|sc
+operator|->
+name|status
+condition|?
+name|POWERPROFILE_PERFORMANCE
+else|:
+name|POWERPROFILE_ECONOMY
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -284,18 +313,6 @@ literal|"Off Line"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set system power profile based on AC adapter status */
-name|powerprofile_set_state
-argument_list|(
-name|sc
-operator|->
-name|status
-condition|?
-name|POWERPROFILE_PERFORMANCE
-else|:
-name|POWERPROFILE_ECONOMY
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -567,6 +584,16 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get initial status after whole system is up. */
+name|AcpiOsQueueForExecution
+argument_list|(
+name|OSD_PRIORITY_LO
+argument_list|,
+name|acpi_acad_get_status
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
