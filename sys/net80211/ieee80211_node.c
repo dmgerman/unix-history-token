@@ -3195,6 +3195,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|ni
+operator|==
+name|ic
+operator|->
+name|ic_bss
+operator|||
 name|IEEE80211_ADDR_EQ
 argument_list|(
 name|ni
