@@ -120,6 +120,10 @@ name|dsi_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * This is what we have embedded in every boot1 for supporting the bogus  * "Dangerously Dedicated" mode.  However, the old table is broken because  * it has an illegal geometry in it - it specifies 256 heads (heads = end  * head + 1) which causes nasty stuff when that wraps to zero in bios code.  * eg: divide by zero etc.  This caused the dead-thinkpad problem, numerous  * SCSI bios crashes, EFI to crash, etc.  *   * We still have to recognize the old table though, even though we stopped  * inflicting it apon the world.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -208,6 +212,107 @@ block|,
 name|DOSPTYP_386BSD
 block|,
 literal|255
+block|,
+literal|255
+block|,
+literal|255
+block|,
+literal|0
+block|,
+literal|50000
+block|, }
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|dos_partition
+name|historical_bogus_partition_table_fixed
+index|[
+name|NDOSPART
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+block|{
+literal|0x80
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|DOSPTYP_386BSD
+block|,
+literal|254
 block|,
 literal|255
 block|,
@@ -457,7 +562,7 @@ name|dp
 operator|->
 name|dp_start
 expr_stmt|;
-comment|/* 	 * If ssector1 is on a cylinder>= 1024, then ssector can't be right. 	 * Allow the C/H/S for it to be 1023/ntracks-1/nsectors, or correct 	 * apart from the cylinder being reduced modulo 1024.  Always allow 	 * 1023/255/63. 	 */
+comment|/* 	 * If ssector1 is on a cylinder>= 1024, then ssector can't be right. 	 * Allow the C/H/S for it to be 1023/ntracks-1/nsectors, or correct 	 * apart from the cylinder being reduced modulo 1024.  Always allow 	 * 1023/255/63, because this is the official way to represent 	 * pure-LBA for the starting position. 	 */
 if|if
 condition|(
 operator|(
@@ -601,7 +706,7 @@ name|dp_size
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Allow certain bogus C/H/S values for esector, as above. */
+comment|/* 	 * Allow certain bogus C/H/S values for esector, as above.  However, 	 * heads == 255 isn't really legal and causes some BIOS crashes.  The 	 * correct value to indicate a pure-LBA end is 1023/heads-1/sectors - 	 * usually 1023/254/63.  "heads" is base 0, "sectors" is base 1. 	 */
 if|if
 condition|(
 operator|(
@@ -1166,15 +1271,25 @@ name|historical_bogus_partition_table
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|bcmp
+argument_list|(
+name|dp0
+argument_list|,
+name|historical_bogus_partition_table_fixed
+argument_list|,
+sizeof|sizeof
+name|historical_bogus_partition_table_fixed
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-name|TRACE
+name|printf
 argument_list|(
-operator|(
-literal|"%s: invalid primary partition table: historical\n"
-operator|,
+literal|"%s: invalid primary partition table: Dangerously Dedicated (ignored)\n"
+argument_list|,
 name|sname
-operator|)
 argument_list|)
 expr_stmt|;
 name|error
