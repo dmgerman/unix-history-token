@@ -3601,7 +3601,7 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|rl_res
+name|rl_irq
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -3689,7 +3689,7 @@ if|if
 condition|(
 name|rl_did
 operator|!=
-literal|8129
+literal|0x8129
 condition|)
 name|sc
 operator|->
@@ -3844,7 +3844,7 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|rl_res
+name|rl_irq
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -3934,7 +3934,7 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|rl_res
+name|rl_irq
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -4032,7 +4032,7 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|rl_res
+name|rl_irq
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -4286,7 +4286,7 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|rl_res
+name|rl_irq
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
