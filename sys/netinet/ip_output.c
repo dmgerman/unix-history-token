@@ -2904,6 +2904,12 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+condition|)
 name|RTFREE
 argument_list|(
 name|ro
