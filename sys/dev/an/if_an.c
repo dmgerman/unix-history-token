@@ -16273,9 +16273,11 @@ define|#
 directive|define
 name|FLASH_DELAY
 parameter_list|(
+name|_sc
+parameter_list|,
 name|x
 parameter_list|)
-value|tsleep(ifp, PZERO, "flash", ((x) / hz) + 1);
+value|AN_UNLOCK(_sc) ; \ 	tsleep(ifp, PZERO, "flash", ((x) / hz) + 1); \ 	AN_LOCK(_sc) ;
 end_define
 
 begin_define
@@ -16415,6 +16417,8 @@ condition|)
 block|{
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
@@ -16560,6 +16564,8 @@ argument_list|)
 expr_stmt|;
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
@@ -16689,6 +16695,8 @@ expr_stmt|;
 comment|/* 	 * mdelay(500); // 500ms delay 	 */
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|500
 argument_list|)
 expr_stmt|;
@@ -16808,6 +16816,8 @@ literal|10
 expr_stmt|;
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
@@ -16993,6 +17003,8 @@ condition|)
 block|{
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|50
 argument_list|)
 expr_stmt|;
@@ -17053,6 +17065,8 @@ argument_list|)
 expr_stmt|;
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|50
 argument_list|)
 expr_stmt|;
@@ -17300,6 +17314,8 @@ name|if_softc
 decl_stmt|;
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
@@ -17311,6 +17327,8 @@ argument_list|)
 expr_stmt|;
 name|FLASH_DELAY
 argument_list|(
+name|sc
+argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
