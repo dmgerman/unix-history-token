@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	4.1 (Berkeley) %G%"
+literal|"@(#)res_send.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -778,35 +778,9 @@ operator|&
 name|RES_DEBUG
 condition|)
 block|{
-name|int
-name|f
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"old answer:\n"
-argument_list|)
-expr_stmt|;
-name|f
-operator|=
-name|creat
-argument_list|(
-literal|"ro"
-argument_list|,
-literal|0644
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-name|f
-argument_list|,
-name|answer
-argument_list|,
-name|resplen
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|f
 argument_list|)
 expr_stmt|;
 name|p_query
