@@ -1589,10 +1589,8 @@ name|flist
 parameter_list|)
 block|{
 name|char
-name|args
-index|[
-literal|10
-index|]
+modifier|*
+name|comp
 decl_stmt|,
 name|suff
 index|[
@@ -1602,12 +1600,9 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|args
-index|[
-literal|0
-index|]
+name|comp
 operator|=
-literal|'\0'
+literal|""
 expr_stmt|;
 comment|/*      * Figure out by a crude heuristic whether this or not this is probably      * compressed and whichever compression utility was used (gzip or bzip2).      */
 if|if
@@ -1669,47 +1664,31 @@ argument_list|,
 literal|'b'
 argument_list|)
 condition|)
-name|strcpy
-argument_list|(
-name|args
-argument_list|,
+name|comp
+operator|=
 literal|"-j"
-argument_list|)
 expr_stmt|;
 else|else
-name|strcpy
-argument_list|(
-name|args
-argument_list|,
+name|comp
+operator|=
 literal|"-z"
-argument_list|)
 expr_stmt|;
 block|}
 block|}
 block|}
 else|else
 comment|/* XXX: need to handle .tgz also */
-name|strcpy
-argument_list|(
-name|args
-argument_list|,
+name|comp
+operator|=
 literal|"-j"
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|args
-argument_list|,
-literal|" -xpf"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"tar %s '%s' %s"
+literal|"tar -xp %s -f '%s' %s"
 argument_list|,
-name|args
+name|comp
 argument_list|,
 name|pkg
 argument_list|,
