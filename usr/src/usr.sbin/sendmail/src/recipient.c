@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.82 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.83 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3444,6 +3444,10 @@ condition|)
 name|sfflags
 operator||=
 name|SFF_MUSTOWN
+operator||
+name|SFF_ROOTOK
+operator||
+name|SFF_NOSLINK
 expr_stmt|;
 name|ca
 operator|=
