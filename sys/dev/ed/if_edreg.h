@@ -3769,8 +3769,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_CHIP_TYPE_DL100XX
+name|ED_CHIP_TYPE_DL10019
 value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_DL10022
+value|0x04
 end_define
 
 begin_comment
@@ -3954,8 +3961,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_DLINK_MII_DIROUT
+name|ED_DLINK_MII_DIROUT_22
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_DLINK_MII_DIROUT_19
+value|0x10
 end_define
 
 begin_define
