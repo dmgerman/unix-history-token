@@ -25,24 +25,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|com_thr
+name|REG_DATA
 value|com_data
 end_define
-
-begin_comment
-comment|/* transmitter holding register (W) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|com_rhr
-value|com_data
-end_define
-
-begin_comment
-comment|/* receiver holding register (R) */
-end_comment
 
 begin_define
 define|#
@@ -54,6 +39,13 @@ end_define
 begin_comment
 comment|/* interrupt enable register (W) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_IER
+value|com_ier
+end_define
 
 begin_define
 define|#
@@ -97,13 +89,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|com_isr
+name|REG_IIR
 value|com_iir
 end_define
-
-begin_comment
-comment|/* interrupt status register (R) */
-end_comment
 
 begin_define
 define|#
@@ -179,13 +167,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|com_lctl
-value|com_lcr
-end_define
-
-begin_define
-define|#
-directive|define
 name|com_cfcr
 value|com_lcr
 end_define
@@ -193,6 +174,13 @@ end_define
 begin_comment
 comment|/* character format control register (R/W) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_LCR
+value|com_lcr
+end_define
 
 begin_define
 define|#
@@ -229,78 +217,155 @@ end_define
 begin_define
 define|#
 directive|define
-name|CFCR_SBREAK
+name|LCR_SBREAK
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_PZERO
+name|CFCR_SBREAK
+value|LCR_SBREAK
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_PZERO
 value|0x30
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_PONE
+name|CFCR_PZERO
+value|LCR_PZERO
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_PONE
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_PEVEN
+name|CFCR_PONE
+value|LCR_PONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_PEVEN
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_PODD
+name|CFCR_PEVEN
+value|LCR_PEVEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_PODD
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_PENAB
+name|CFCR_PODD
+value|LCR_PODD
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_PENAB
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_STOPB
+name|CFCR_PENAB
+value|LCR_PENAB
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_STOPB
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_8BITS
+name|CFCR_STOPB
+value|LCR_STOPB
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_8BITS
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_7BITS
+name|CFCR_8BITS
+value|LCR_8BITS
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_7BITS
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_6BITS
+name|CFCR_7BITS
+value|LCR_7BITS
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_6BITS
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFCR_5BITS
+name|CFCR_6BITS
+value|LCR_6BITS
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_5BITS
 value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|CFCR_5BITS
+value|LCR_5BITS
 end_define
 
 begin_define
@@ -313,6 +378,13 @@ end_define
 begin_comment
 comment|/* modem control register (R/W) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_MCR
+value|com_mcr
+end_define
 
 begin_define
 define|#
@@ -335,8 +407,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MCR_IENABLE
+name|MCR_IE
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCR_IENABLE
+value|MCR_IE
 end_define
 
 begin_define
@@ -374,6 +453,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|REG_LSR
+value|com_lsr
+end_define
+
+begin_define
+define|#
+directive|define
 name|LSR_RCV_FIFO
 value|0x80
 end_define
@@ -381,15 +467,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|LSR_TSRE
+name|LSR_TEMT
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|LSR_TXRDY
+name|LSR_TSRE
+value|LSR_TEMT
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSR_THRE
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSR_TXRDY
+value|LSR_THRE
 end_define
 
 begin_define
@@ -444,6 +544,13 @@ end_define
 begin_comment
 comment|/* modem status register (R/W) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_MSR
+value|com_msr
+end_define
 
 begin_define
 define|#
@@ -541,6 +648,13 @@ name|com_dlbh
 value|com_dlm
 end_define
 
+begin_define
+define|#
+directive|define
+name|REG_DL
+value|com_dll
+end_define
+
 begin_comment
 comment|/* 16450 register #7.  Not multiplexed. */
 end_comment
@@ -581,57 +695,120 @@ end_define
 begin_define
 define|#
 directive|define
-name|FIFO_ENABLE
+name|REG_FCR
+value|com_fcr
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_ENABLE
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RCV_RST
+name|FIFO_ENABLE
+value|FCR_ENABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_RCV_RST
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_XMT_RST
+name|FIFO_RCV_RST
+value|FCR_RCV_RST
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_XMT_RST
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_DMA_MODE
+name|FIFO_XMT_RST
+value|FCR_XMT_RST
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_DMA
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_LOW
+name|FIFO_DMA_MODE
+value|FCR_DMA
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_RX_LOW
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_MEDL
+name|FIFO_RX_LOW
+value|FCR_RX_LOW
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_RX_MEDL
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_MEDH
+name|FIFO_RX_MEDL
+value|FCR_RX_MEDL
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_RX_MEDH
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIFO_RX_HIGH
+name|FIFO_RX_MEDH
+value|FCR_RX_MEDH
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCR_RX_HIGH
 value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_HIGH
+value|FCR_RX_HIGH
 end_define
 
 begin_comment
@@ -652,15 +829,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EFR_AUTOCTS
+name|REG_EFR
+value|com_efr
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFR_CTS
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|EFR_AUTORTS
+name|EFR_AUTOCTS
+value|EFR_CTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFR_RTS
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFR_AUTORTS
+value|EFR_RTS
 end_define
 
 begin_define
@@ -792,6 +990,13 @@ end_define
 begin_comment
 comment|/* scratch pad (and index) register (R/W) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_SPR
+value|com_scr
+end_define
 
 begin_comment
 comment|/*  * 16950 indexed control registers #[0-0x13].  Access is via index in SPR,  * data in ICR (if ICR is accessible).  */
