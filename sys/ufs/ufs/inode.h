@@ -52,13 +52,6 @@ begin_struct
 struct|struct
 name|inode
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|inode
-argument_list|)
-name|i_hash
-expr_stmt|;
-comment|/* Hash chain. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|inode
@@ -284,17 +277,6 @@ end_define
 
 begin_comment
 comment|/* Inode is being renamed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_HASHED
-value|0x0020
-end_define
-
-begin_comment
-comment|/* Inode is on hash list */
 end_comment
 
 begin_define

@@ -485,9 +485,6 @@ modifier|*
 name|vfsp
 decl_stmt|;
 block|{
-name|ufs_ihashinit
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -528,9 +525,6 @@ modifier|*
 name|vfsp
 decl_stmt|;
 block|{
-name|ufs_ihashuninit
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
