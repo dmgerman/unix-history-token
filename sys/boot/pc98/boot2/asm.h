@@ -293,7 +293,7 @@ name|LEXT
 parameter_list|(
 name|x
 parameter_list|)
-value|x ## :
+value|.type EXT(x),@function; EXT(x):
 end_define
 
 begin_define
@@ -348,9 +348,7 @@ name|LEXT
 parameter_list|(
 name|x
 parameter_list|)
-value|_
-comment|/**/
-value|x
+value|.type EXT(x),@function; EXT(x)
 comment|/**/
 value|:
 end_define
