@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.94 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.95 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.94		%G%"
+literal|"@(#)sendmail.h	8.95		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4391,6 +4391,28 @@ begin_comment
 comment|/* don't bother checking dir path */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SFF_SETUIDOK
+value|0x0020
+end_define
+
+begin_comment
+comment|/* setuid files are ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_CREAT
+value|0x0040
+end_define
+
+begin_comment
+comment|/* ok to create file if necessary */
+end_comment
+
 begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
 end_comment
@@ -6655,6 +6677,27 @@ operator|*
 operator|*
 operator|,
 name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|safefopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

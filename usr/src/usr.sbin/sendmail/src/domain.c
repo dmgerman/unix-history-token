@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.31 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.32 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.31 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.32 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2724,11 +2724,15 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|fopen
+name|safefopen
 argument_list|(
 name|fname
 argument_list|,
-literal|"r"
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|,
+name|SFF_ANYFILE
 argument_list|)
 operator|)
 operator|==
