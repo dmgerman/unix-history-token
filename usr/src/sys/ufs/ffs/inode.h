@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -96,16 +96,16 @@ name|MAXQUOTAS
 index|]
 decl_stmt|;
 comment|/* pointer to dquot structures */
+name|u_quad_t
+name|i_modrev
+decl_stmt|;
+comment|/* revision level for lease */
 name|struct
 name|lockf
 modifier|*
 name|i_lockf
 decl_stmt|;
 comment|/* head of byte-level lock list */
-name|u_quad_t
-name|i_modrev
-decl_stmt|;
-comment|/* revision level for lease */
 name|pid_t
 name|i_lockholder
 decl_stmt|;
