@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -55,6 +55,8 @@ name|M_NEEDDATE
 block|,
 literal|"from"
 block|,
+name|H_ADDR
+operator||
 name|H_CHECK
 block|,
 name|M_NEEDFROM
@@ -67,7 +69,7 @@ literal|0
 block|,
 literal|"sender"
 block|,
-literal|0
+name|H_ADDR
 block|,
 literal|0
 block|,
@@ -80,12 +82,16 @@ block|,
 literal|"to"
 block|,
 name|H_ADDR
+operator||
+name|H_RCPT
 block|,
 literal|0
 block|,
 literal|"cc"
 block|,
 name|H_ADDR
+operator||
+name|H_RCPT
 block|,
 literal|0
 block|,
@@ -94,6 +100,8 @@ block|,
 name|H_ADDR
 operator||
 name|H_ACHECK
+operator||
+name|H_RCPT
 block|,
 literal|0
 block|,

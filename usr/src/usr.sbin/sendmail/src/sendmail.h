@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.59		%G%"
+literal|"@(#)sendmail.h	3.60		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -730,6 +730,17 @@ end_define
 
 begin_comment
 comment|/* this field terminates header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_RCPT
+value|00002
+end_define
+
+begin_comment
+comment|/* contains recipient addresses */
 end_comment
 
 begin_define
