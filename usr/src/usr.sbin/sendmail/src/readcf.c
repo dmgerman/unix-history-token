@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.28 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3719,7 +3719,37 @@ break|break;
 case|case
 literal|'b'
 case|:
-comment|/* minimum number of blocks free on queue fs */
+comment|/* min blocks free on queue fs/max msg size */
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|val
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|MaxMessageSize
+operator|=
+name|atol
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 name|MinBlocksFree
 operator|=
 name|atol
