@@ -3310,7 +3310,7 @@ block|{
 case|case
 name|ETHERTYPE_PPPOE_DISC
 case|:
-comment|/* 			 * We need to try make sure that the tag area 			 * is contiguous, or we could wander of the end 			 * of a buffer and make a mess.  			 * (Linux wouldn't have this problem). 			 */
+comment|/* 			 * We need to try to make sure that the tag area 			 * is contiguous, or we could wander off the end 			 * of a buffer and make a mess.  			 * (Linux wouldn't have this problem). 			 */
 comment|/*XXX fix this mess */
 if|if
 condition|(
@@ -3922,6 +3922,8 @@ comment|/* AC_NAME */
 if|if
 condition|(
 operator|(
+name|tag
+operator|=
 name|get_tag
 argument_list|(
 name|ph
@@ -3979,23 +3981,16 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|sp
-operator|->
-name|state
-operator|=
-name|PPPOE_NEWCONNECTED
-expr_stmt|;
 name|sendpacket
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|pppoe_send_event
-argument_list|(
 name|sp
-argument_list|,
-name|NGM_PPPOE_SUCCESS
-argument_list|)
+operator|->
+name|state
+operator|=
+name|PPPOE_NEWCONNECTED
 expr_stmt|;
 comment|/* 				 * Having sent the last Negotiation header, 				 * Set up the stored packet header to  				 * be correct for the actual session. 				 * But keep the negotialtion stuff 				 * around in case we need to resend this last  				 * packet. We'll discard it when we move 				 * from NEWCONNECTED to CONNECTED 				 */
 name|sp
@@ -4620,6 +4615,9 @@ operator|*
 name|wh
 argument_list|)
 condition|)
+block|{
+name|m
+operator|=
 name|m_pullup
 argument_list|(
 name|m
@@ -4643,6 +4641,7 @@ argument_list|(
 name|ENOBUFS
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|wh
 operator|=
