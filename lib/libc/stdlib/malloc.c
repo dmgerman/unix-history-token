@@ -1818,9 +1818,13 @@ for|for
 control|(
 init|;
 name|p
+operator|!=
+name|NULL
 operator|&&
 operator|*
 name|p
+operator|!=
+literal|'\0'
 condition|;
 name|p
 operator|++
@@ -2115,6 +2119,10 @@ sizeof|sizeof
 expr|*
 name|page_dir
 expr_stmt|;
+comment|/* Been here, done that */
+name|malloc_started
+operator|++
+expr_stmt|;
 comment|/* Recalculate the cache size in bytes, and make sure it's nonzero */
 if|if
 condition|(
@@ -2143,10 +2151,6 @@ expr|*
 name|px
 argument_list|)
 expr_stmt|;
-comment|/* Been here, done that */
-name|malloc_started
-operator|++
-expr_stmt|;
 block|}
 end_function
 
@@ -2171,7 +2175,7 @@ decl_stmt|,
 modifier|*
 name|delay_free
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|size_t
 name|i
@@ -2193,7 +2197,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* Look for free pages before asking for more */
 for|for
@@ -2367,6 +2371,8 @@ condition|(
 name|pf
 operator|->
 name|next
+operator|!=
+name|NULL
 condition|)
 name|pf
 operator|->
@@ -2428,6 +2434,8 @@ name|MALLOC_EXTRA_SANITY
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 operator|&&
 name|page_dir
 index|[
@@ -2454,8 +2462,9 @@ expr_stmt|;
 comment|/* Map new pages */
 if|if
 condition|(
-operator|!
 name|p
+operator|==
+name|NULL
 condition|)
 name|p
 operator|=
@@ -2467,6 +2476,8 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 condition|)
 block|{
 name|index
@@ -2528,8 +2539,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|px
+operator|==
+name|NULL
 condition|)
 name|px
 operator|=
@@ -2590,8 +2602,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|pp
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2680,8 +2693,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|bp
+operator|==
+name|NULL
 condition|)
 block|{
 name|ifree
@@ -2962,11 +2976,12 @@ expr_stmt|;
 comment|/* If it's empty, make a page more of that size chunks */
 if|if
 condition|(
-operator|!
 name|page_dir
 index|[
 name|j
 index|]
+operator|==
+name|NULL
 operator|&&
 operator|!
 name|malloc_make_chunks
@@ -3059,7 +3074,7 @@ name|bp
 operator|->
 name|next
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Adjust to the real offset of that chunk */
@@ -3140,6 +3155,14 @@ name|result
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|malloc_started
+condition|)
+name|malloc_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|suicide
 condition|)
 name|abort
@@ -3198,6 +3221,19 @@ operator|=
 name|malloc_pages
 argument_list|(
 name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|malloc_abort
+operator|&&
+name|result
+operator|==
+name|NULL
+condition|)
+name|wrterror
+argument_list|(
+literal|"allocation failed.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3268,6 +3304,23 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|malloc_started
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"malloc() has never been called.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|index
 operator|=
 name|ptr2index
@@ -3358,8 +3411,10 @@ operator|=
 name|malloc_pagesize
 init|;
 operator|*
+operator|(
 operator|++
 name|mp
+operator|)
 operator|==
 name|MALLOC_FOLLOW
 condition|;
@@ -3373,7 +3428,7 @@ condition|(
 operator|!
 name|malloc_realloc
 operator|&&
-comment|/* unless we have to, */
+comment|/* Unless we have to, */
 name|size
 operator|<=
 name|osize
@@ -3389,6 +3444,27 @@ operator|)
 condition|)
 block|{
 comment|/* .. or can free a page, */
+if|if
+condition|(
+name|malloc_junk
+condition|)
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|ptr
+operator|+
+name|size
+argument_list|,
+name|SOME_JUNK
+argument_list|,
+name|osize
+operator|-
+name|size
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ptr
@@ -3512,7 +3588,7 @@ name|malloc_realloc
 operator|&&
 comment|/* Unless we have to, */
 name|size
-operator|<
+operator|<=
 name|osize
 operator|&&
 comment|/* ..or are too small, */
@@ -3531,6 +3607,27 @@ operator|)
 condition|)
 block|{
 comment|/* ..(if there is one) */
+if|if
+condition|(
+name|malloc_junk
+condition|)
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|ptr
+operator|+
+name|size
+argument_list|,
+name|SOME_JUNK
+argument_list|,
+name|osize
+operator|-
+name|size
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ptr
@@ -3562,6 +3659,8 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* copy the lesser of the two sizes, and free the old one */
@@ -3649,7 +3748,7 @@ decl_stmt|,
 modifier|*
 name|pt
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|u_long
 name|l
@@ -3783,8 +3882,9 @@ expr_stmt|;
 comment|/* add to free-list */
 if|if
 condition|(
-operator|!
 name|px
+operator|==
+name|NULL
 condition|)
 name|px
 operator|=
@@ -3792,7 +3892,7 @@ name|imalloc
 argument_list|(
 sizeof|sizeof
 expr|*
-name|pt
+name|px
 argument_list|)
 expr_stmt|;
 comment|/* This cannot fail... */
@@ -3816,10 +3916,11 @@ name|l
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|free_list
 operator|.
 name|next
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* Nothing on free list, put this at head */
@@ -3850,7 +3951,7 @@ name|px
 expr_stmt|;
 name|px
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -3883,6 +3984,8 @@ operator|&&
 name|pf
 operator|->
 name|next
+operator|!=
+name|NULL
 condition|;
 name|pf
 operator|=
@@ -3936,7 +4039,7 @@ name|px
 expr_stmt|;
 name|px
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 elseif|else
@@ -3975,6 +4078,8 @@ condition|(
 name|pf
 operator|->
 name|next
+operator|!=
+name|NULL
 operator|&&
 name|pf
 operator|->
@@ -4023,6 +4128,8 @@ condition|(
 name|pf
 operator|->
 name|next
+operator|!=
+name|NULL
 condition|)
 name|pf
 operator|->
@@ -4061,10 +4168,11 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
 name|pf
 operator|->
 name|next
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* Append at tail of chain */
@@ -4072,7 +4180,7 @@ name|px
 operator|->
 name|next
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|px
 operator|->
@@ -4092,7 +4200,7 @@ name|px
 expr_stmt|;
 name|px
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -4107,10 +4215,11 @@ block|}
 comment|/* Return something to OS ? */
 if|if
 condition|(
-operator|!
 name|pf
 operator|->
 name|next
+operator|==
+name|NULL
 operator|&&
 comment|/* If we're the last one, */
 name|pf
@@ -4209,6 +4318,8 @@ block|}
 if|if
 condition|(
 name|pt
+operator|!=
+name|NULL
 condition|)
 name|ifree
 argument_list|(
@@ -4558,8 +4669,9 @@ decl_stmt|;
 comment|/* This is legal */
 if|if
 condition|(
-operator|!
 name|ptr
+operator|==
+name|NULL
 condition|)
 return|return;
 if|if
@@ -4705,14 +4817,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|malloc_started
-condition|)
-name|malloc_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|malloc_sysv
 operator|&&
 operator|!
@@ -4720,7 +4824,7 @@ name|size
 condition|)
 name|r
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -4759,8 +4863,9 @@ if|if
 condition|(
 name|malloc_xmalloc
 operator|&&
-operator|!
 name|r
+operator|==
+name|NULL
 condition|)
 name|wrterror
 argument_list|(
@@ -4769,8 +4874,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|r
+operator|==
+name|NULL
 condition|)
 name|errno
 operator|=
@@ -4912,32 +5018,6 @@ block|}
 if|if
 condition|(
 name|ptr
-operator|&&
-operator|!
-name|malloc_started
-condition|)
-block|{
-name|wrtwarning
-argument_list|(
-literal|"malloc() has never been called.\n"
-argument_list|)
-expr_stmt|;
-name|ptr
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|malloc_started
-condition|)
-name|malloc_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ptr
 operator|==
 name|ZEROSIZEPTR
 condition|)
@@ -4983,8 +5063,9 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
 name|ptr
+operator|==
+name|NULL
 condition|)
 block|{
 name|r
