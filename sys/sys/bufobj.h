@@ -96,9 +96,65 @@ name|bufv
 name|bo_dirty
 decl_stmt|;
 comment|/* i Dirty buffers */
+name|long
+name|bo_numoutput
+decl_stmt|;
+comment|/* i Writes in progress */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BO_LOCK
+parameter_list|(
+name|bo
+parameter_list|)
+define|\
+value|do { \ 		KASSERT (bo->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_lock((bo)->bo_mtx); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BO_UNLOCK
+parameter_list|(
+name|bo
+parameter_list|)
+define|\
+value|do { \ 		KASSERT (bo->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_unlock((bo)->bo_mtx); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BO_MTX
+parameter_list|(
+name|bo
+parameter_list|)
+value|((bo)->bo_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_BO_LOCKED
+parameter_list|(
+name|bo
+parameter_list|)
+value|mtx_assert(bo->bo_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_BO_UNLOCKED
+parameter_list|(
+name|bo
+parameter_list|)
+value|mtx_assert(bo->bo_mtx, MA_NOTOWNED)
+end_define
 
 begin_endif
 endif|#

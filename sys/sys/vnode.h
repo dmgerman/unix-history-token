@@ -200,10 +200,6 @@ name|int
 name|v_usecount
 decl_stmt|;
 comment|/* i ref count of users */
-name|long
-name|v_numoutput
-decl_stmt|;
-comment|/* i writes in progress */
 name|struct
 name|thread
 modifier|*
@@ -511,6 +507,13 @@ define|#
 directive|define
 name|v_dirtybufcnt
 value|v_bufobj.bo_dirty.bv_cnt
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_numoutput
+value|v_bufobj.bo_numoutput
 end_define
 
 begin_comment
