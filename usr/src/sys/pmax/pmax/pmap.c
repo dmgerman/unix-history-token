@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.3 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -86,10 +86,6 @@ name|vm_offset_t
 name|pv_va
 decl_stmt|;
 comment|/* virtual address for mapping */
-name|int
-name|pv_flags
-decl_stmt|;
-comment|/* flags */
 block|}
 typedef|*
 name|pv_entry_t
@@ -488,9 +484,6 @@ name|start
 init|=
 name|firstaddr
 decl_stmt|;
-name|vm_offset_t
-name|pa
-decl_stmt|;
 specifier|extern
 name|int
 name|maxmem
@@ -562,16 +555,6 @@ argument_list|(
 name|firstaddr
 argument_list|)
 expr_stmt|;
-name|pa
-operator|=
-name|firstaddr
-expr_stmt|;
-name|firstaddr
-operator|+=
-name|PMAP_HASH_UPAGES
-operator|*
-name|NBPG
-expr_stmt|;
 comment|/* init proc[0]'s pmap hash table */
 for|for
 control|(
@@ -594,7 +577,7 @@ index|[
 name|i
 index|]
 operator|=
-name|pa
+name|firstaddr
 operator||
 name|PG_V
 operator||
@@ -630,7 +613,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|pa
+name|firstaddr
 operator|+=
 name|NBPG
 expr_stmt|;
@@ -734,13 +717,13 @@ expr_stmt|;
 name|simple_lock_init
 argument_list|(
 operator|&
-name|kernel_pmap
-operator|->
+name|kernel_pmap_store
+operator|.
 name|pm_lock
 argument_list|)
 expr_stmt|;
-name|kernel_pmap
-operator|->
+name|kernel_pmap_store
+operator|.
 name|pm_count
 operator|=
 literal|1
@@ -1134,10 +1117,10 @@ name|i
 index|]
 operator|=
 operator|(
-operator|(
-name|u_int
-operator|)
+name|MACH_CACHED_TO_PHYS
+argument_list|(
 name|zero_pmap_hash
+argument_list|)
 operator|+
 operator|(
 name|i
@@ -2796,9 +2779,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|pmap
-operator|==
-name|kernel_pmap
+operator|->
+name|pm_hash
 condition|)
 block|{
 name|enter_stats
@@ -2808,13 +2792,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|va
-operator|&
-literal|0xE0000000
-operator|)
-operator|!=
-literal|0xC0000000
+operator|<
+name|VM_MIN_KERNEL_ADDRESS
+operator|||
+name|va
+operator|>=
+name|VM_MIN_KERNEL_ADDRESS
+operator|+
+name|PMAP_HASH_KPAGES
+operator|*
+name|NPTEPG
+operator|*
+name|NBPG
 condition|)
 name|panic
 argument_list|(
@@ -2953,24 +2943,6 @@ operator|==
 name|cur_pmap
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|pmap
-operator|->
-name|pm_tlbpid
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"pmap_enter: tlbpid"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -3266,12 +3238,6 @@ operator|->
 name|pv_next
 operator|=
 name|NULL
-expr_stmt|;
-name|pv
-operator|->
-name|pv_flags
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -3620,6 +3586,24 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|pte
+operator|->
+name|pt_entry
+operator|&
+name|PG_WIRED
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_enter: kernel wired"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 				 * Update the same virtual address entry. 				 */
 name|MachTLBUpdate
 argument_list|(
@@ -3628,6 +3612,20 @@ argument_list|,
 name|npte
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"TLB update kva %x pte %x -> %x\n"
+argument_list|,
+name|va
+argument_list|,
+name|pte
+operator|->
+name|pt_entry
+argument_list|,
+name|npte
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 block|}
 name|pte
 operator|->
@@ -3778,14 +3776,40 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
+operator|(
+name|hp
+operator|->
+name|low
+operator|&
+name|PG_WIRED
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|hp
 operator|->
 name|high
 operator|==
 name|va
+operator|&&
+operator|(
+name|hp
+operator|->
+name|low
+operator|&
+name|PG_FRAME
+operator|)
+operator|==
+operator|(
+name|npte
+operator|&
+name|PG_FRAME
+operator|)
 condition|)
 block|{
-comment|/* 				 * Update the same entry. 				 */
+comment|/* 					 * Update the same entry. 					 */
 name|hp
 operator|->
 name|low
@@ -3800,18 +3824,7 @@ name|npte
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-operator|(
-name|hp
-operator|->
-name|low
-operator|&
-name|PG_WIRED
-operator|)
-condition|)
+else|else
 block|{
 name|MachTLBFlushAddr
 argument_list|(
@@ -3856,6 +3869,7 @@ argument_list|,
 name|npte
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
