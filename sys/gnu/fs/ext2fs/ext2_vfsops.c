@@ -3346,7 +3346,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Open the device with write access even if the filesystem 	 * is read-only: someone may remount it read-write later, and 	 * we don't VOP_OPEN the device again in that case. 	 */
+comment|/* 	 * XXX: open the device with read and write access even if only 	 * read access is needed now.  Write access is needed if the 	 * filesystem is ever mounted read/write, and we don't change the 	 * access mode for remounts. 	 */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -3880,7 +3880,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* XXX See comment at VOP_OPEN call */
+comment|/* XXX: see comment above VOP_OPEN. */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -4213,7 +4213,7 @@ name|si_mountpoint
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX See comment at VOP_OPEN call */
+comment|/* XXX: see comment above VOP_OPEN. */
 ifdef|#
 directive|ifdef
 name|notyet
