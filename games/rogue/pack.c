@@ -1203,6 +1203,21 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+literal|0
+argument_list|)
+operator|||
+operator|!
+name|isatty
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+return|return;
 while|while
 condition|(
 name|rgetchar
