@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -241,22 +247,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|maybe_resched
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|chk
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|roundrobin
 name|__P
 argument_list|(
@@ -279,22 +269,6 @@ operator|(
 name|void
 operator|*
 name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|updatepri
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -519,7 +493,6 @@ comment|/*  * Arrange to reschedule if necessary, taking the priorities and  * s
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|maybe_resched
 parameter_list|(
@@ -1194,7 +1167,6 @@ comment|/*  * Recalculate the priority of a process after it has slept for a whi
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|updatepri
 parameter_list|(
@@ -3842,12 +3814,26 @@ case|:
 case|case
 name|SSLEEP
 case|:
+comment|/* e.g. when sending signals */
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_CVWAITQ
+condition|)
+name|cv_waitq_remove
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 name|unsleep
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* e.g. when sending signals */
 break|break;
 case|case
 name|SIDL
