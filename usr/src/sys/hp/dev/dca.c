@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -396,7 +396,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|dev_t
 name|kgdb_dev
 decl_stmt|;
 end_decl_stmt
@@ -699,8 +699,7 @@ name|unit
 condition|)
 name|kgdb_dev
 operator|=
-operator|-
-literal|1
+name|NODEV
 expr_stmt|;
 comment|/* can't debug over console port */
 else|else
@@ -715,6 +714,11 @@ argument_list|,
 name|kgdb_rate
 argument_list|)
 expr_stmt|;
+name|dcaconsinit
+operator|=
+literal|1
+expr_stmt|;
+comment|/* don't re-init in dcaputc */
 if|if
 condition|(
 name|kgdb_debug_init
@@ -1303,6 +1307,30 @@ name|dca_ier
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_cflag
+operator|&
+name|HUPCL
+operator|||
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_WOPEN
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
+operator|)
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -1314,31 +1342,6 @@ literal|0
 argument_list|,
 name|DMSET
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_HUPCLS
-condition|)
-operator|(
-operator|*
-name|linesw
-index|[
-name|tp
-operator|->
-name|t_line
-index|]
-operator|.
-name|l_modem
-operator|)
-operator|(
-name|tp
-operator|,
-literal|0
-operator|)
 expr_stmt|;
 name|ttyclose
 argument_list|(
@@ -1621,7 +1624,7 @@ directive|define
 name|RCVBYTE
 parameter_list|()
 define|\
-value|code = dca->dca_data; \ 			if ((tp->t_state& TS_ISOPEN) == 0) { \ 				if (kgdb_dev == makedev(dcamajor, unit)&& \ 				    code == FRAME_END) \ 					kgdb_connect(0);
+value|code = dca->dca_data; \ 			if ((tp->t_state& TS_ISOPEN) == 0) { \ 				if (code == FRAME_END&& \ 				    kgdb_dev == makedev(dcamajor, unit)) \ 					kgdb_connect(0);
 comment|/* trap into kgdb */
 value|\ 			} else \ 				(*linesw[tp->t_line].l_rint)(code, tp)
 else|#
@@ -3794,17 +3797,6 @@ condition|(
 name|stat
 condition|)
 return|return;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KGDB
-if|if
-condition|(
-name|dev
-operator|!=
-name|kgdb_dev
-condition|)
 endif|#
 directive|endif
 if|if
