@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.40 1997/03/13 21:22:07 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.41 1997/04/09 17:35:54 ache Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -3258,6 +3258,23 @@ block|{
 name|tries
 operator|++
 expr_stmt|;
+comment|/* Tries are per number, not per list of numbers. */
+if|if
+condition|(
+name|VarDialTries
+condition|)
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT_BIT
+argument_list|,
+literal|"Dial attempt %u of %d\n"
+argument_list|,
+name|tries
+argument_list|,
+name|VarDialTries
+argument_list|)
+expr_stmt|;
+else|else
 name|LogPrintf
 argument_list|(
 name|LOG_CHAT_BIT
@@ -3299,10 +3316,6 @@ block|{
 name|CloseModem
 argument_list|()
 expr_stmt|;
-comment|/* Dial failed. Keep quite during redial wait period. */
-name|StartRedialTimer
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|VarDialTries
@@ -3312,6 +3325,10 @@ operator|>=
 name|VarDialTries
 condition|)
 block|{
+comment|/* I give up !  Can't get through :( */
+name|StartRedialTimer
+argument_list|()
+expr_stmt|;
 name|dial_up
 operator|=
 name|FALSE
@@ -3321,6 +3338,24 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|VarNextPhone
+operator|==
+name|NULL
+condition|)
+comment|/* Dial failed. Keep quite during redial wait period. */
+name|StartRedialTimer
+argument_list|()
+expr_stmt|;
+else|else
+comment|/* 	     * Give the modem a chance to recover, then dial the next 	     * number in our list 	     */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
