@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lockf.c	8.3 (Berkeley) 1/6/94  * $Id: kern_lockf.c,v 1.3 1994/10/25 11:27:51 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lockf.c	8.3 (Berkeley) 1/6/94  * $Id: kern_lockf.c,v 1.4 1995/05/30 08:05:31 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -108,6 +108,157 @@ directive|define
 name|OTHERS
 value|0x2
 end_define
+
+begin_decl_stmt
+specifier|static
+name|void
+name|lf_addblock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|,
+expr|struct
+name|lockf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lf_clearlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lf_findoverlap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|,
+expr|struct
+name|lockf
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|lockf
+operator|*
+operator|*
+operator|*
+operator|,
+expr|struct
+name|lockf
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|lockf
+modifier|*
+name|lf_getblock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lf_getlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|,
+expr|struct
+name|flock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lf_setlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|lf_split
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|,
+expr|struct
+name|lockf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|lf_wakelock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lockf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Advisory record locking support  */
@@ -445,6 +596,7 @@ comment|/*  * Set a byte-range lock.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lf_setlock
 parameter_list|(
@@ -1320,6 +1472,7 @@ comment|/*  * Remove a byte-range lock on an inode.  *  * Generally, find the lo
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lf_clearlock
 parameter_list|(
@@ -1608,6 +1761,7 @@ comment|/*  * Check whether there is a blocking lock,  * and if so return its pr
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lf_getlock
 parameter_list|(
@@ -1775,6 +1929,7 @@ comment|/*  * Walk the list of locks for an inode and  * return the first blocki
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|lockf
 modifier|*
@@ -1882,6 +2037,7 @@ comment|/*  * Walk the list of locks for an inode to  * find an overlapping lock
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lf_findoverlap
 parameter_list|(
@@ -2441,6 +2597,7 @@ comment|/*  * Add a lock to the end of the blocked list.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lf_addblock
 parameter_list|(
@@ -2550,6 +2707,7 @@ comment|/*  * Split a lock and a contained region into  * two or three locks as 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lf_split
 parameter_list|(
@@ -2761,6 +2919,7 @@ comment|/*  * Wakeup a blocklist  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lf_wakelock
 parameter_list|(

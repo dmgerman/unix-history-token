@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.8 1995/09/09 18:10:06 davidg Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.9 1995/10/21 19:49:57 bde Exp $ */
 end_comment
 
 begin_comment
@@ -235,6 +235,7 @@ comment|/* XXX casting to (sy_call_t *) is bogus, as usual. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|sy_call_t
 modifier|*
 name|msgcalls
@@ -269,6 +270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfree_msgmaps
 decl_stmt|;
@@ -279,6 +281,7 @@ comment|/* # of free map entries */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|short
 name|free_msgmaps
 decl_stmt|;
@@ -289,6 +292,7 @@ comment|/* head of linked list of free map entries */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|msg
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.9 1995/09/09 18:10:07 davidg Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.10 1995/10/21 19:49:59 bde Exp $ */
 end_comment
 
 begin_comment
@@ -203,6 +203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sem_undo
 modifier|*
@@ -220,6 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|semundo_adjust
 name|__P
@@ -250,6 +252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|semundo_clear
 name|__P
@@ -266,6 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|semexit
 name|__P
@@ -285,6 +289,7 @@ comment|/* XXX casting to (sy_call_t *) is bogus, as usual. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|sy_call_t
 modifier|*
 name|semcalls
@@ -319,6 +324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|semtot
 init|=
@@ -351,6 +357,7 @@ comment|/* semaphore pool */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|map
 modifier|*
@@ -363,6 +370,7 @@ comment|/* semaphore allocation map */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sem_undo
 modifier|*
@@ -736,6 +744,7 @@ comment|/*  * Allocate a new sem_undo structure for a process  * (returns ptr to
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|sem_undo
 modifier|*
@@ -950,6 +959,7 @@ comment|/*  * Adjust a particular entry for a particular proc  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|semundo_adjust
 parameter_list|(
@@ -1270,6 +1280,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|semundo_clear
 parameter_list|(
@@ -4405,6 +4416,7 @@ comment|/*  * Go through the undo structures for this process and apply the adju
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|semexit
 parameter_list|(

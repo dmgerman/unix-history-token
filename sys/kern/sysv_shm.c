@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.12 1995/12/04 02:26:53 jkh Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.13 1995/12/07 12:46:55 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -279,6 +279,7 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|oshmctl
 name|__P
@@ -434,12 +435,14 @@ value|0x1000
 end_define
 
 begin_decl_stmt
+specifier|static
 name|vm_map_t
 name|sysvshm_map
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|shm_last_free
 decl_stmt|,
@@ -1598,6 +1601,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|oshmctl
 parameter_list|(

@@ -163,21 +163,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|snp_detach
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|snoop
-operator|*
-name|snp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|snpdown
 name|__P
 argument_list|(

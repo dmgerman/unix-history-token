@@ -51,23 +51,11 @@ directive|include
 file|<sys/proc.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|TTYDEFCHARS
-end_define
-
 begin_include
 include|#
 directive|include
 file|<sys/tty.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|TTYDEFCHARS
-end_undef
 
 begin_include
 include|#
@@ -261,6 +249,22 @@ argument_list|(
 operator|(
 name|dev_t
 name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|snp_detach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|snoop
+operator|*
+name|snp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1635,6 +1639,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|snp_detach
 parameter_list|(
