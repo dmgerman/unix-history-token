@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	1.6 (Berkeley) %G%"
+literal|"@(#)tset.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2997,9 +2997,6 @@ if|if
 condition|(
 operator|!
 name|Dash_h
-operator|&&
-operator|!
-name|Mapped
 operator|&&
 name|TtyType
 operator|==
