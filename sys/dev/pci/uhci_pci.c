@@ -284,25 +284,11 @@ end_elif
 begin_define
 define|#
 directive|define
-name|PCI_INTERFACE_MASK
-value|0x0000ff00
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_INTERFACE_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCI_INTERFACE
 parameter_list|(
 name|d
 parameter_list|)
-value|(((d)>>8)&PCI_INTERFACE_MASK)
+value|(((d)>>8)&0xff)
 end_define
 
 begin_define
