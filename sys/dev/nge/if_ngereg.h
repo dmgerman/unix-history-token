@@ -3237,13 +3237,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NGE_MCLBYTES
-value|(NGE_JLEN - sizeof(u_int64_t))
-end_define
-
-begin_define
-define|#
-directive|define
 name|NGE_JPAGESZ
 value|PAGE_SIZE
 end_define

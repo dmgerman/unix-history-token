@@ -2795,13 +2795,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LGE_MCLBYTES
-value|(LGE_JLEN - sizeof(u_int64_t))
-end_define
-
-begin_define
-define|#
-directive|define
 name|LGE_JPAGESZ
 value|PAGE_SIZE
 end_define
