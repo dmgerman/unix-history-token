@@ -247,6 +247,12 @@ comment|/*                   * If the parent socket was blocking, make sure that
 if|if
 condition|(
 operator|(
+name|ret
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
 name|_thread_fd_table
 index|[
 name|fd
