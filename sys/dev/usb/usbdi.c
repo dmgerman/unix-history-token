@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.87 2001/11/21 15:37:41 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.88 2001/11/22 04:31:01 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -693,7 +693,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"intrxfer=%p, repeat=%d, interval=%d\n"
+literal|" intrxfer=%p, repeat=%d, interval=%d\n"
 argument_list|,
 name|pipe
 operator|->
