@@ -425,6 +425,11 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|umask
+argument_list|(
+literal|022
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|prefix
