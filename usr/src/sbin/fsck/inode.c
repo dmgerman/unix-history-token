@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.3 (Berkeley) %G%"
+literal|"@(#)inode.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,7 +836,6 @@ name|ilevel
 operator|==
 literal|0
 condition|)
-block|{
 name|n
 operator|=
 call|(
@@ -847,9 +846,7 @@ argument_list|(
 name|idesc
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|n
 operator|=
 name|iblock
@@ -861,11 +858,6 @@ argument_list|,
 name|isize
 argument_list|)
 expr_stmt|;
-name|isize
-operator|-=
-name|sizepb
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|n
@@ -887,6 +879,10 @@ operator|)
 return|;
 block|}
 block|}
+name|isize
+operator|-=
+name|sizepb
+expr_stmt|;
 block|}
 name|bp
 operator|->
