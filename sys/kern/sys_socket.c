@@ -684,6 +684,7 @@ return|;
 case|case
 name|FIONREAD
 case|:
+comment|/* Unlocked read. */
 operator|*
 operator|(
 name|int
@@ -797,6 +798,7 @@ return|;
 case|case
 name|SIOCATMARK
 case|:
+comment|/* Unlocked read. */
 operator|*
 operator|(
 name|int
@@ -1018,7 +1020,8 @@ name|st_mode
 operator|=
 name|S_IFSOCK
 expr_stmt|;
-comment|/* 	 * If SBS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 */
+comment|/* 	 * If SBS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 * 	 * XXXRW: perhaps should lock socket buffer so st_size result 	 * is consistent. 	 */
+comment|/* Unlocked read. */
 if|if
 condition|(
 operator|(
