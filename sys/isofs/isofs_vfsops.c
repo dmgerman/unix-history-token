@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_vfsops.c,v 1.4 1993/11/25 01:32:30 wollman Exp $  */
+comment|/*  *	$Id: isofs_vfsops.c,v 1.5 1993/12/19 00:51:07 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2597,7 +2597,7 @@ argument_list|(
 expr|struct
 name|iso_directory_record
 argument_list|)
-operator|>=
+operator|>
 name|imp
 operator|->
 name|im_bsize
@@ -2684,7 +2684,7 @@ name|dirp
 operator|->
 name|length
 argument_list|)
-operator|>=
+operator|>
 name|imp
 operator|->
 name|im_bsize
