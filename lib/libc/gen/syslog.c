@@ -19,7 +19,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* static char sccsid[] = "From: @(#)syslog.c	8.4 (Berkeley) 3/18/94"; */
+comment|/* static char sccsid[] = "@(#)syslog.c	8.5 (Berkeley) 4/29/95"; */
 end_comment
 
 begin_decl_stmt
@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: syslog.c,v 1.11 1997/02/22 14:58:18 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: disklabel.c,v 1.5 1997/02/22 14:58:01 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include

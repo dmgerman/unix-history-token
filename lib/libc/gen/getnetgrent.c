@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getnetgrent.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)getnetgrent.c	8.2 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1980,13 +1980,13 @@ argument_list|)
 condition|)
 continue|continue;
 block|}
-comment|/* Watch for null pointer dereferences, dammit! */
 if|if
 condition|(
 name|pos
-operator|!=
+operator|==
 name|NULL
 condition|)
+break|break;
 while|while
 condition|(
 operator|*
