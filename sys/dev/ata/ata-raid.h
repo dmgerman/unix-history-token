@@ -11,7 +11,10 @@ name|int
 name|lun
 decl_stmt|;
 name|int32_t
-name|magic
+name|magic_0
+decl_stmt|;
+name|int32_t
+name|magic_1
 decl_stmt|;
 name|int
 name|flags
@@ -184,6 +187,10 @@ define|#
 directive|define
 name|HPT_O_MIRROR
 value|0x01
+define|#
+directive|define
+name|HPT_O_STRIPE
+value|0x02
 define|#
 directive|define
 name|HPT_O_OK
