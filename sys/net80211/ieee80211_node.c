@@ -277,6 +277,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_80211_NODE
+argument_list|,
+literal|"node"
+argument_list|,
+literal|"802.11 node state"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|ieee80211_node_attach
@@ -2012,7 +2024,7 @@ expr|struct
 name|ieee80211_node
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_80211_NODE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2042,7 +2054,7 @@ name|free
 argument_list|(
 name|ni
 argument_list|,
-name|M_DEVBUF
+name|M_80211_NODE
 argument_list|)
 expr_stmt|;
 block|}
