@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arp.c	5.2 (Berkeley) %G%"
+literal|"@(#)arp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,11 +497,6 @@ argument_list|,
 name|arg
 index|[
 literal|3
-index|]
-argument_list|,
-name|arg
-index|[
-literal|4
 index|]
 argument_list|)
 expr_stmt|;
