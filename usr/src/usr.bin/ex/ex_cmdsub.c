@@ -1998,14 +1998,6 @@ argument_list|(
 name|MAGIC
 argument_list|)
 expr_stmt|;
-name|value
-argument_list|(
-name|MAGIC
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-comment|/* force nomagic mode for tags */
 if|if
 condition|(
 operator|!
@@ -2442,6 +2434,14 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 				 * BUG: if it isn't found (user edited header 				 * line) we get left in nomagic mode. 				 */
+name|value
+argument_list|(
+name|MAGIC
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 name|commands
 argument_list|(
 literal|1
@@ -2456,6 +2456,13 @@ expr_stmt|;
 name|globp
 operator|=
 name|oglobp
+expr_stmt|;
+name|value
+argument_list|(
+name|MAGIC
+argument_list|)
+operator|=
+name|omagic
 expr_stmt|;
 name|samef
 operator|=
@@ -2487,6 +2494,13 @@ name|markpr
 argument_list|(
 name|dot
 argument_list|)
+expr_stmt|;
+name|value
+argument_list|(
+name|MAGIC
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 name|commands
 argument_list|(
@@ -4382,7 +4396,7 @@ name|dest
 condition|)
 block|{
 comment|/* Make sure user doesn't screw himself */
-comment|/* 		 * Prevent head and tail recursion. We really should be 		 * checking to see if src is a prefix or suffix of dest 		 * but we are too lazy here, so we don't bother unless 		 * src is only 1 char long. 		 */
+comment|/* 		 * Prevent tail recursion. We really should be 		 * checking to see if src is a suffix of dest 		 * but we are too lazy here, so we don't bother unless 		 * src is only 1 char long. 		 */
 if|if
 condition|(
 name|src
@@ -4392,17 +4406,6 @@ index|]
 operator|==
 literal|0
 operator|&&
-operator|(
-name|src
-index|[
-literal|0
-index|]
-operator|==
-name|dest
-index|[
-literal|0
-index|]
-operator|||
 name|src
 index|[
 literal|0
@@ -4417,11 +4420,10 @@ argument_list|)
 operator|-
 literal|1
 index|]
-operator|)
 condition|)
 name|error
 argument_list|(
-literal|"No recursion"
+literal|"No tail recursion"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We don't let the user rob himself of ":", and making 		 * multi char words is a bad idea so we don't allow it. 		 * Note that if user sets mapinput and maps all of return, 		 * linefeed, and escape, he can screw himself. This is 		 * so weird I don't bother to check for it. 		 */

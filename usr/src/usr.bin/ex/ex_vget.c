@@ -233,15 +233,23 @@ name|vmacp
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|inopen
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* don't screw up undo for esc esc */
+name|vundkind
+operator|=
+name|VMANY
+expr_stmt|;
 name|inopen
 operator|=
 literal|1
 expr_stmt|;
 comment|/* restore old setting now that macro done */
-name|vundkind
-operator|=
-name|VMANY
-expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1530,6 +1538,8 @@ name|b
 index|[
 literal|1
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1572,6 +1582,8 @@ name|d
 index|]
 operator|.
 name|mapto
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|c
@@ -1634,6 +1646,8 @@ name|b
 index|[
 literal|1
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1645,13 +1659,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Push st onto the front of vmacp. This is tricky because we have to  * worry about where vmacp was previously pointing. We also have to  * check for overflow (which is typically from a recursive macro)  * Finally we have to set a flag so the whole thing can be undone.  */
+comment|/*  * Push st onto the front of vmacp. This is tricky because we have to  * worry about where vmacp was previously pointing. We also have to  * check for overflow (which is typically from a recursive macro)  * Finally we have to set a flag so the whole thing can be undone.  * canundo is 1 iff we want to be able to undo the macro.  This  * is false for, for example, pushing back lookahead from fastpeekkey(),  * since otherwise two fast escapes can clobber our undo.  */
 end_comment
 
 begin_macro
 name|macpush
 argument_list|(
 argument|st
+argument_list|,
+argument|canundo
 argument_list|)
 end_macro
 
@@ -1659,6 +1675,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|st
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|canundo
 decl_stmt|;
 end_decl_stmt
 
@@ -1723,6 +1745,7 @@ if|if
 condition|(
 name|vmacp
 condition|)
+block|{
 name|strcpy
 argument_list|(
 name|tmpbuf
@@ -1730,6 +1753,12 @@ argument_list|,
 name|vmacp
 argument_list|)
 expr_stmt|;
+name|canundo
+operator|=
+literal|0
+expr_stmt|;
+comment|/* can't undo inside a macro anyway */
+block|}
 name|strcpy
 argument_list|(
 name|vmacbuf
@@ -1753,6 +1782,11 @@ operator|=
 name|vmacbuf
 expr_stmt|;
 comment|/* arrange to be able to undo the whole macro */
+if|if
+condition|(
+name|canundo
+condition|)
+block|{
 name|inopen
 operator|=
 operator|-
@@ -1763,6 +1797,9 @@ name|otchng
 operator|=
 name|tchng
 expr_stmt|;
+name|vsave
+argument_list|()
+expr_stmt|;
 name|saveall
 argument_list|()
 expr_stmt|;
@@ -1770,6 +1807,7 @@ name|vundkind
 operator|=
 name|VMANY
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -1913,6 +1951,19 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|inopen
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* don't work inside macros! */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|signal
 argument_list|(
 name|SIGALRM

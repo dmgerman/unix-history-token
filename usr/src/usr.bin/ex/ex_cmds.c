@@ -912,9 +912,7 @@ expr_stmt|;
 name|noonl
 argument_list|()
 expr_stmt|;
-name|synctmp
-argument_list|()
-expr_stmt|;
+comment|/* 			synctmp(); */
 continue|continue;
 comment|/* global */
 case|case
@@ -2059,7 +2057,7 @@ expr_stmt|;
 comment|/* should use SCCS subst here */
 name|printf
 argument_list|(
-literal|"Version 3.1, November 11, 1979"
+literal|"Version 3.2, January 4, 1980"
 argument_list|)
 expr_stmt|;
 name|noonl

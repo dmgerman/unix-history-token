@@ -42,13 +42,13 @@ comment|/*  * Following remember where . was in the previous file for return  * 
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|altdot
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
+name|int
 name|oldadot
 decl_stmt|;
 end_decl_stmt
@@ -69,6 +69,12 @@ begin_comment
 comment|/* Count of characters on unit io */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
 begin_decl_stmt
 name|short
 name|cntln
@@ -78,6 +84,22 @@ end_decl_stmt
 begin_comment
 comment|/* Count of lines " */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|cntln
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|long
@@ -2187,9 +2209,7 @@ expr_stmt|;
 block|}
 name|cre
 label|:
-name|synctmp
-argument_list|()
-expr_stmt|;
+comment|/* 		synctmp(); */
 ifdef|#
 directive|ifdef
 name|V6
@@ -3143,11 +3163,16 @@ argument_list|(
 name|tfile
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VMUNIX
 name|close
 argument_list|(
 name|erfile
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|signal
 argument_list|(
 name|SIGHUP

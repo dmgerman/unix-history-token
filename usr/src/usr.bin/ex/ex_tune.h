@@ -21,22 +21,33 @@ begin_define
 define|#
 directive|define
 name|EXRECOVER
-value|libpath(ex3.1recover)
+value|libpath(ex3.2recover)
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXPRESERVE
-value|libpath(ex3.1preserve)
+value|libpath(ex3.2preserve)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|EXSTRINGS
-value|libpath(ex3.1strings)
+value|libpath(ex3.2strings)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -68,7 +79,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Maximums  *  * The definition of LBSIZE should be the same as BUFSIZ (512 usually).  * Most other defitions are quite generous.  */
+comment|/*  * Maximums  *  * The definition of LBSIZE should be the same as BUFSIZ (512 usually).  * Most other definitions are quite generous.  */
 end_comment
 
 begin_comment
@@ -85,6 +96,31 @@ end_define
 begin_comment
 comment|/* File name size */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LBSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESIZE
+value|512
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -107,6 +143,11 @@ end_define
 begin_comment
 comment|/* Size of compiled re */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -189,6 +230,12 @@ begin_comment
 comment|/* LBLKS is also defined in expreserve.c */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -199,6 +246,41 @@ end_define
 begin_comment
 comment|/* Line pointer blocks in temp file */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HBLKS
+value|1
+end_define
+
+begin_comment
+comment|/* struct header fits in BUFSIZ*HBLKS */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LBLKS
+value|900
+end_define
+
+begin_define
+define|#
+directive|define
+name|HBLKS
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -223,8 +305,14 @@ comment|/* Max entry size in termcap, see 					   also termlib and termcap */
 end_comment
 
 begin_comment
-comment|/*  * These are a ridiculously small due to the  * lousy arglist processing implementation which fixes core  * proportional to them.  Argv (and hence NARGS) is really unnecessary,  * and argument character space not needed except when  * arguments exist.  Argument lists should be saved before the "zero"  * of the incore line information and could then  * be reasonably large.  */
+comment|/*  * Except on VMUNIX, these are a ridiculously small due to the  * lousy arglist processing implementation which fixes core  * proportional to them.  Argv (and hence NARGS) is really unnecessary,  * and argument character space not needed except when  * arguments exist.  Argument lists should be saved before the "zero"  * of the incore line information and could then  * be reasonably large.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
 
 begin_define
 define|#
@@ -241,22 +329,52 @@ begin_define
 define|#
 directive|define
 name|NCARGS
-value|512
+value|LBSIZE
 end_define
 
 begin_comment
 comment|/* Maximum arglist chars in "next" */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NCARGS
+value|5120
+end_define
+
+begin_define
+define|#
+directive|define
+name|NARGS
+value|(NCARGS/6)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Note: because the routine "alloca" is not portable, TUBESIZE  * bytes are allocated on the stack each time you go into visual  * and then never freed by the system.  Thus if you have not terminals  * which are larger than 24 * 80 you may well want to make TUBESIZE  * smaller.  TUBECOLS should stay at 160 since this defines the maximum  * length of opening on hardcopies and allows two lines of open on  * terminals like adm3's (glass tty's) where it switches to pseudo  * hardcopy mode when a line gets longer than 80 characters.  */
+comment|/*  * Note: because the routine "alloca" is not portable, TUBESIZE  * bytes are allocated on the stack each time you go into visual  * and then never freed by the system.  Thus if you have no terminals  * which are larger than 24 * 80 you may well want to make TUBESIZE  * smaller.  TUBECOLS should stay at 160 since this defines the maximum  * length of opening on hardcopies and allows two lines of open on  * terminals like adm3's (glass tty's) where it switches to pseudo  * hardcopy mode when a line gets longer than 80 characters.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|TUBELINES
-value|36
+value|40
 end_define
 
 begin_comment
@@ -278,12 +396,47 @@ begin_define
 define|#
 directive|define
 name|TUBESIZE
-value|2880
+value|3400
 end_define
 
 begin_comment
 comment|/* Maximum screen size for visual */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TUBELINES
+value|66
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUBECOLS
+value|160
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUBESIZE
+value|6600
+end_define
+
+begin_comment
+comment|/* 66 * 100 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Output column (and line) are set to this value on cursor addressible  * terminals when we lose track of the cursor to force cursor  * addressing to occur.  */

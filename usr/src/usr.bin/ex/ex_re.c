@@ -1688,7 +1688,7 @@ name|ovflo
 label|:
 name|error
 argument_list|(
-literal|"Line overflow@in substitute - limit 512 chars"
+literal|"Line overflow@in substitute"
 argument_list|)
 expr_stmt|;
 block|}

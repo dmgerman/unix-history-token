@@ -531,7 +531,7 @@ comment|/* Last inserted text */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|Vlines
 decl_stmt|;
 end_decl_stmt
@@ -541,7 +541,7 @@ comment|/* Number of file lines "before" vi command */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|Xcnt
 decl_stmt|;
 end_decl_stmt
@@ -640,7 +640,7 @@ comment|/* Chars in last command */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|lastcnt
 decl_stmt|;
 end_decl_stmt
@@ -761,7 +761,7 @@ comment|/* Line is filthy (in hardcopy open), redraw! */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|vSCROLL
 decl_stmt|;
 end_decl_stmt

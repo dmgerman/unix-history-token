@@ -95,12 +95,17 @@ name|av
 index|[]
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|VMUNIX
 name|char
 modifier|*
 name|erpath
 init|=
 name|EXSTRINGS
 decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|char
 modifier|*
@@ -182,6 +187,9 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For debugging take files out of . if name is a.out. 	 * If a 'd' in our name, then set options for edit. 	 */
+ifndef|#
+directive|ifndef
+name|VMUNIX
 if|if
 condition|(
 name|av
@@ -201,6 +209,8 @@ argument_list|(
 name|erpath
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ivis
@@ -266,6 +276,9 @@ comment|/* 	 * Open the error message file. 	 */
 name|draino
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VMUNIX
 name|erfile
 operator|=
 name|open
@@ -294,6 +307,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|pstop
 argument_list|()
 expr_stmt|;

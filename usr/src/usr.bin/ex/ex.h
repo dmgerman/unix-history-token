@@ -73,12 +73,35 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|short
 name|line
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|int
+name|line
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -260,12 +283,35 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BUFSIZ
+value|1024
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|BUFSIZ
 value|512
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -371,7 +417,7 @@ comment|/* We have used '[a-z] */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|chng
 decl_stmt|;
 end_decl_stmt
@@ -398,7 +444,7 @@ comment|/* -w# change default window size */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|dirtcnt
 decl_stmt|;
 end_decl_stmt
@@ -438,6 +484,12 @@ begin_comment
 comment|/* Last cmd mode command ended with \n */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
 begin_decl_stmt
 name|short
 name|erfile
@@ -447,6 +499,11 @@ end_decl_stmt
 begin_comment
 comment|/* Error message file unit */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|line
@@ -695,7 +752,7 @@ comment|/* Mark registers a-z,' */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|notecnt
 decl_stmt|;
 end_decl_stmt
@@ -738,7 +795,7 @@ comment|/* Output speed (from gtty) */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|otchng
 decl_stmt|;
 end_decl_stmt
@@ -852,7 +909,7 @@ comment|/* Status returned from wait() */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|tchng
 decl_stmt|;
 end_decl_stmt
@@ -892,7 +949,7 @@ comment|/* For error throws to a visual catch */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|xchng
 decl_stmt|;
 end_decl_stmt

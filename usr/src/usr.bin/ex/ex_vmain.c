@@ -1621,6 +1621,13 @@ name|vmoving
 operator|=
 literal|0
 expr_stmt|;
+name|forbid
+argument_list|(
+name|inopen
+operator|<
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If previous delete was partial line, use an 			 * append or insert to put it back so as to 			 * use insert mode on intelligent terminals. 			 */
 if|if
 condition|(
@@ -1923,9 +1930,21 @@ name|oglobp
 operator|=
 name|globp
 expr_stmt|;
+if|if
+condition|(
+name|value
+argument_list|(
+name|AUTOWRITE
+argument_list|)
+condition|)
 name|globp
 operator|=
 literal|"e! #"
+expr_stmt|;
+else|else
+name|globp
+operator|=
+literal|"e #"
 expr_stmt|;
 goto|goto
 name|gogo
@@ -2584,6 +2603,11 @@ name|vmacp
 operator|=
 literal|0
 expr_stmt|;
+name|inopen
+operator|=
+literal|1
+expr_stmt|;
+comment|/* might have been -1 */
 continue|continue;
 block|}
 comment|/* 		 * Rest of commands are decoded by the operate 		 * routine. 		 */

@@ -79,14 +79,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAPINPUT
+name|MAGIC
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAGIC
+name|MAPINPUT
 value|12
 end_define
 

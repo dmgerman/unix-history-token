@@ -2406,7 +2406,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Vmaxrep determines the maximum repetitition factor  * allowed that will yield total line length less than  * 512 characters and also does hacks for the R command.  */
+comment|/*  * Vmaxrep determines the maximum repetitition factor  * allowed that will yield total line length less than  * LBSIZE characters and also does hacks for the R command.  */
 end_comment
 
 begin_macro

@@ -60,7 +60,7 @@ comment|/* Used with "More files to edit..." */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|firstln
 decl_stmt|;
 end_decl_stmt

@@ -4,8 +4,14 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*  * The editor uses a temporary file for files being edited, in a structure  * similar to that of ed.  The first block of the file is used for a header  * block which guides recovery after editor/system crashes.  * Lines are represented in core by a pointer into the temporary file which  * is packed into 16 bits.  15 of these bits index the temporary file,  * the 16'th is used by global commands.  The parameters below control  * how much the 15 bits are shifted left before they index the temp file.  * Larger shifts give more slop in the temp file but allow larger files  * to be edited.  *  * The editor does not garbage collect the temporary file.  When a new  * file is edited, the temporary file is rather discarded and a new one  * created for the new file.  Garbage collection would be rather complicated  * in ex because of the general undo, and in any case would require more  * work when throwing lines away because marks would have be carefully  * checked before reallocating temporary file space.  Said another way,  * each time you create a new line in the temporary file you get a unique  * number back, and this is a property used by marks.  *  * The following temp file parameters allow 256k bytes in the temporary  * file.  By changing to the numbers in comments you can get 512k.  * By typedefing line to long (32 bit) integers you could get much more  * space in the temp file with (then) no waste.  This would double core  * requirements and would probably require some editor debugging.  */
+comment|/*  * The editor uses a temporary file for files being edited, in a structure  * similar to that of ed.  The first block of the file is used for a header  * block which guides recovery after editor/system crashes.  * Lines are represented in core by a pointer into the temporary file which  * is packed into 16 bits (32 on VMUNIX).  All but the low bit index the temp  * file; the last is used by global commands.  The parameters below control  * how much the other bits are shifted left before they index the temp file.  * Larger shifts give more slop in the temp file but allow larger files  * to be edited.  *  * The editor does not garbage collect the temporary file.  When a new  * file is edited, the temporary file is rather discarded and a new one  * created for the new file.  Garbage collection would be rather complicated  * in ex because of the general undo, and in any case would require more  * work when throwing lines away because marks would have be carefully  * checked before reallocating temporary file space.  Said another way,  * each time you create a new line in the temporary file you get a unique  * number back, and this is a property used by marks.  *  * The following temp file parameters allow 256k bytes in the temporary  * file.  By changing to the numbers in comments you can get 512k.  * For VMUNIX you get more than you could ever want.  * VMUNIX uses long (32 bit) integers giving much more  * space in the temp file and no waste.  This doubles core  * requirements but allows files of essentially unlimited size to be edited.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
 
 begin_define
 define|#
@@ -95,8 +101,74 @@ begin_comment
 comment|/* 3 */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BLKMSK
+value|077777
+end_define
+
+begin_define
+define|#
+directive|define
+name|BNDRY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|INCRMT
+value|02000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBTMSK
+value|01776
+end_define
+
+begin_define
+define|#
+directive|define
+name|NMBLKS
+value|077770
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFBTS
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFMSK
+value|01777
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHFT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * The editor uses three buffers into the temporary file (ed uses two  * and is very similar).  These are two read buffers and one write buffer.  * Basically, the editor deals with the file as a sequence of 512 character  * blocks (BUFSIZ).  Each block contains some number of lines (and lines  * can run across block boundaries.  *  * New lines are written into the last block in the temporary file  * which is in core as obuf.  When a line is needed which isn't in obuf,  * then it is brought into an input buffer.  As there are two, the choice  * is to take the buffer into which the last read (of the two) didn't go.  * Thus this is a 2 buffer LRU replacement strategy.  Measurement  * shows that this saves roughly 25% of the buffer reads over a one  * input buffer strategy.  Since the editor (on our VAX over 1 week)  * spends (spent) roughly 30% of its time in the system read routine,  * this can be a big help.  */
+comment|/*  * The editor uses three buffers into the temporary file (ed uses two  * and is very similar).  These are two read buffers and one write buffer.  * Basically, the editor deals with the file as a sequence of BUFSIZ character  * blocks.  Each block contains some number of lines (and lines  * can run across block boundaries.  *  * New lines are written into the last block in the temporary file  * which is in core as obuf.  When a line is needed which isn't in obuf,  * then it is brought into an input buffer.  As there are two, the choice  * is to take the buffer into which the last read (of the two) didn't go.  * Thus this is a 2 buffer LRU replacement strategy.  Measurement  * shows that this saves roughly 25% of the buffer reads over a one  * input buffer strategy.  Since the editor (on our VAX over 1 week)  * spends (spent) roughly 30% of its time in the system read routine,  * this can be a big help.  */
 end_comment
 
 begin_decl_stmt
@@ -179,6 +251,12 @@ begin_comment
 comment|/* Temp file block number of obuff (or -1) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
 begin_decl_stmt
 name|short
 name|tline
@@ -188,6 +266,22 @@ end_decl_stmt
 begin_comment
 comment|/* Current temp file ptr */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|tline
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -235,10 +329,20 @@ comment|/* Time temp file last updated */
 name|short
 name|Uid
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VMUNIX
 name|short
 name|Flines
 decl_stmt|;
 comment|/* Number of lines in file */
+else|#
+directive|else
+name|int
+name|Flines
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|Savedfile
 index|[
