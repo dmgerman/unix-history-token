@@ -8242,18 +8242,6 @@ name|defobj_out
 operator|=
 name|defobj
 expr_stmt|;
-else|else
-name|_rtld_error
-argument_list|(
-literal|"%s: Undefined symbol \"%s\""
-argument_list|,
-name|refobj
-operator|->
-name|path
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 name|def
 return|;
