@@ -1457,6 +1457,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|struct
+name|trapframe
+modifier|*
+name|regs
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -1466,6 +1471,12 @@ operator|=
 name|td
 operator|->
 name|td_proc
+expr_stmt|;
+name|regs
+operator|=
+name|td
+operator|->
+name|td_frame
 expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
@@ -1496,6 +1507,18 @@ operator|->
 name|si_code
 operator|=
 name|code
+expr_stmt|;
+name|si
+operator|->
+name|si_addr
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|regs
+operator|->
+name|tf_addr
 expr_stmt|;
 comment|/* XXXKSE fill other fields */
 block|}
