@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.25 1998/06/09 14:02:03 dfr Exp $"
+literal|"$Id: main.c,v 1.26 1998/12/10 02:35:55 archie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|debugging
+operator|=
+literal|1
+expr_stmt|;
+comment|/* on by default */
 while|while
 condition|(
 operator|(
@@ -259,7 +264,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"gprn"
+literal|"gprns"
 argument_list|)
 operator|)
 operator|!=
@@ -274,8 +279,13 @@ block|{
 case|case
 literal|'g'
 case|:
-name|debugging
-operator|++
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Debugging is enabled by default, there is "
+literal|"no need to specify the -g option\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -306,6 +316,14 @@ name|FALSE
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|debugging
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -329,6 +347,24 @@ literal|1
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|debugging
+condition|)
+name|printf
+argument_list|(
+literal|"Building kernel with full debugging symbols.  Do\n"
+literal|"\"config -s %s\" "
+literal|"for historic partial symbolic support.\n"
+literal|"To install the debugging kernel, do "
+literal|"make install.debug\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
