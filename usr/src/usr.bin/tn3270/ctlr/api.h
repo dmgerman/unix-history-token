@@ -51,28 +51,28 @@ begin_define
 define|#
 directive|define
 name|GATE_SESSMGR
-value|1
+value|1234
 end_define
 
 begin_define
 define|#
 directive|define
 name|GATE_KEYBOARD
-value|2
+value|5678
 end_define
 
 begin_define
 define|#
 directive|define
 name|GATE_COPY
-value|3
+value|9101
 end_define
 
 begin_define
 define|#
 directive|define
 name|GATE_OIAM
-value|4
+value|1121
 end_define
 
 begin_comment
@@ -132,7 +132,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|QUERY_SESSION_PARMS
+name|QUERY_SESSION_PARAMETERS
 value|0x02
 end_define
 
@@ -291,6 +291,28 @@ block|}
 name|QuerySessionIdParms
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ID_OPTION_BY_NAME
+value|0x01
+end_define
+
+begin_comment
+comment|/* By short (or long) name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ID_OPTION_ALL
+value|0x00
+end_define
+
+begin_comment
+comment|/* All (of specified type */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -726,7 +748,7 @@ begin_define
 define|#
 directive|define
 name|API_OIA_ALL_GROUPS
-value|0xFF
+value|'\377'
 end_define
 
 begin_define
