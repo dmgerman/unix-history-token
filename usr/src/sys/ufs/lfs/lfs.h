@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -118,9 +118,19 @@ decl_stmt|;
 comment|/* SEGUSE last modified timestamp */
 define|#
 directive|define
-name|SEGUSE_DIRTY
+name|SEGUSE_ACTIVE
 value|0x1
-comment|/* XXX fill in comment */
+comment|/* segment is currently being written */
+define|#
+directive|define
+name|SEGUSE_DIRTY
+value|0x2
+comment|/* segment has data in it */
+define|#
+directive|define
+name|SEGUSE_SUPERBLOCK
+value|0x4
+comment|/* segment contains a superblock */
 name|u_long
 name|su_flags
 decl_stmt|;
@@ -258,7 +268,7 @@ comment|/* address of next segment to write */
 name|daddr_t
 name|lfs_curseg
 decl_stmt|;
-comment|/* Current segment being written */
+comment|/* current segment being written */
 name|daddr_t
 name|lfs_offset
 decl_stmt|;
