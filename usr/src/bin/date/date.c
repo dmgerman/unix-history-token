@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	5.4 (Berkeley) %G%"
+literal|"@(#)date.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,7 +256,7 @@ name|setenv
 argument_list|(
 literal|"TZ"
 argument_list|,
-literal|"GMT"
+literal|"GMT0"
 argument_list|,
 literal|1
 argument_list|)
