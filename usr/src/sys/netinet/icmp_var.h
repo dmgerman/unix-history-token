@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	icmp_var.h	6.1	83/07/29	*/
+comment|/*	icmp_var.h	6.2	83/09/19	*/
 end_comment
 
 begin_comment
@@ -33,6 +33,10 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* statistics related to input messages processed */
+name|int
+name|icps_badcode
+decl_stmt|;
+comment|/* icmp_code out of range */
 name|int
 name|icps_tooshort
 decl_stmt|;
