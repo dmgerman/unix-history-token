@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.37 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7960,17 +7960,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ctladdr
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|ctladdr
-operator|=
-operator|&
-name|e
-operator|->
-name|e_from
-expr_stmt|;
-else|else
 block|{
 comment|/* ignore setuid and setgid bits */
 name|mode
@@ -8065,6 +8057,10 @@ block|{
 if|if
 condition|(
 name|ctladdr
+operator|==
+name|NULL
+operator|||
+name|ctladdr
 operator|->
 name|q_uid
 operator|==
@@ -8130,6 +8126,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|ctladdr
+operator|==
+name|NULL
+operator|||
 name|ctladdr
 operator|->
 name|q_uid
@@ -8602,10 +8602,6 @@ specifier|register
 name|MCI
 modifier|*
 name|mci
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 comment|/* update the connection info for this host */
 name|mci
