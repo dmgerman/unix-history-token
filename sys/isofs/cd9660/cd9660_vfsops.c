@@ -1741,6 +1741,7 @@ literal|3
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|isonum_711
 argument_list|(
 name|sup
@@ -1749,6 +1750,17 @@ name|flags
 argument_list|)
 operator|&
 literal|1
+operator|)
+operator|&&
+operator|(
+name|argp
+operator|->
+name|flags
+operator|&
+name|ISOFSMNT_BROKENJOLIET
+operator|)
+operator|==
+literal|0
 condition|)
 name|joliet_level
 operator|=
