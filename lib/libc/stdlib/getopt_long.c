@@ -95,11 +95,21 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
+begin_define
+define|#
+directive|define
+name|GNU_COMPATIBLE
+end_define
+
+begin_comment
+comment|/* Be more compatible, configure's use us! */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GNU_COMPATIBLE
+end_ifndef
 
 begin_define
 define|#
@@ -404,6 +414,87 @@ literal|"option requires an argument -- %c"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* From P1003.2 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|illoptchar
+index|[]
+init|=
+literal|"illegal option -- %c"
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|gnuoptchar
+index|[]
+init|=
+literal|"invalid option -- %c"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|recargstring
+index|[]
+init|=
+literal|"option `--%s' requires an argument"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|ambig
+index|[]
+init|=
+literal|"option `--%.*s' is ambiguous"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|noarg
+index|[]
+init|=
+literal|"option `--%.*s' doesn't allow an argument"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|illoptstring
+index|[]
+init|=
+literal|"unrecognized option `--%s'"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -441,23 +532,17 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|illoptchar
-index|[]
-init|=
-literal|"unknown option -- %c"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
 name|illoptstring
 index|[]
 init|=
 literal|"unknown option -- %s"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Compute the greatest common divisor of a and b.  */
@@ -1227,12 +1312,8 @@ name|optchar
 decl_stmt|,
 name|short_too
 decl_stmt|;
-specifier|static
 name|int
 name|posixly_correct
-init|=
-operator|-
-literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -1247,13 +1328,6 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Disable GNU extensions if POSIXLY_CORRECT is set or options 	 * string begins with a '+'. 	 */
-if|if
-condition|(
-name|posixly_correct
-operator|==
-operator|-
-literal|1
-condition|)
 name|posixly_correct
 operator|=
 operator|(
@@ -1265,6 +1339,21 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+if|if
+condition|(
+operator|*
+name|options
+operator|==
+literal|'-'
+condition|)
+name|flags
+operator||=
+name|FLAG_ALLARGS
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|posixly_correct
@@ -1279,7 +1368,23 @@ operator|&=
 operator|~
 name|FLAG_PERMUTE
 expr_stmt|;
-comment|/* 	 * Code "else if (*options == '-')" was here. 	 * Try to be more GNU compatible, configure's use us! 	 */
+else|#
+directive|else
+if|if
+condition|(
+name|posixly_correct
+operator|||
+operator|*
+name|options
+operator|==
+literal|'+'
+condition|)
+name|flags
+operator|&=
+operator|~
+name|FLAG_PERMUTE
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|*
@@ -1291,6 +1396,8 @@ name|flags
 operator||=
 name|FLAG_ALLARGS
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -1817,6 +1924,26 @@ condition|)
 operator|++
 name|optind
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+if|if
+condition|(
+name|PRINT_ERROR
+condition|)
+name|warnx
+argument_list|(
+name|posixly_correct
+condition|?
+name|illoptchar
+else|:
+name|gnuoptchar
+argument_list|,
+name|optchar
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|PRINT_ERROR
@@ -1828,6 +1955,8 @@ argument_list|,
 name|optchar
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|optopt
 operator|=
 name|optchar
