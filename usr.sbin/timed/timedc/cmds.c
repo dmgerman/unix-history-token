@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|BU
-value|((unsigned long)2208988800)
+value|(2208988800UL)
 end_define
 
 begin_comment
