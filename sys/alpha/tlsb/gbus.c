@@ -8,7 +8,7 @@ comment|/* $NetBSD: gbus.c,v 1.8 1998/05/13 22:13:35 thorpej Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1997 by Matthew Jacob  * NASA AMES Research Center.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1997, 2000 by Matthew Jacob  * NASA AMES Research Center.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -141,7 +141,6 @@ block|,
 name|GBUS_DUART0_OFFSET
 block|}
 block|,
-comment|/* 	{ "zsc",	GBUS_DUART1_OFFSET },*/
 block|{
 literal|"mcclock"
 block|,
@@ -174,7 +173,6 @@ name|int
 name|gbus_probe
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -185,10 +183,8 @@ name|int
 name|gbus_print_child
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|device_t
-name|child
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -199,24 +195,16 @@ name|int
 name|gbus_read_ivar
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|,
 name|device_t
-name|child
 parameter_list|,
 name|int
-name|which
 parameter_list|,
 name|u_long
 modifier|*
-name|result
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_decl_stmt
 specifier|static
@@ -310,8 +298,6 @@ block|,
 name|gbus_methods
 block|,
 literal|1
-block|,
-comment|/* no softc */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -337,7 +323,7 @@ name|gbus_device
 modifier|*
 name|gdev
 decl_stmt|;
-comment|/* 	 * Make sure we're looking for a Gbus. 	 * Right now, only Gbus could be a 	 * child of a TLSB CPU Node. 	 */
+comment|/* 	 * Make sure we're looking for a Gbus. 	 * A Gbus can only be a child of a TLSB CPU Node. 	 */
 if|if
 condition|(
 operator|!
@@ -345,13 +331,18 @@ name|TLDEV_ISCPU
 argument_list|(
 name|tlsb_get_dtype
 argument_list|(
+name|device_get_parent
+argument_list|(
 name|dev
 argument_list|)
 argument_list|)
+argument_list|)
 condition|)
+block|{
 return|return
 name|ENXIO
 return|;
+block|}
 for|for
 control|(
 name|gdev
@@ -389,7 +380,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -511,7 +504,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|gbus
 argument_list|,
-name|tlsb
+name|tlsbcpu
 argument_list|,
 name|gbus_driver
 argument_list|,
