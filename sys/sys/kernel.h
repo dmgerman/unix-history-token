@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.50 1999/01/28 00:57:54 dillon Exp $  */
+comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.51 1999/01/28 17:30:51 dillon Exp $  */
 end_comment
 
 begin_ifndef
@@ -513,8 +513,41 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A system initialization call instance  *  * At the moment there is one instance of sysinit.  We probably do not  * want two which is why this code is if'd out, but we definitely want  * to discern SYSINIT's which take non-constant data pointers and  * SYSINIT's which take constant data pointers,  */
+comment|/*  * A system initialization call instance  *  * At the moment there is one instance of sysinit.  We probably do not  * want two which is why this code is if'd out, but we definitely want  * to discern SYSINIT's which take non-constant data pointers and  * SYSINIT's which take constant data pointers,  *  * The C_* macros take functions expecting const void * arguments   * while the non-C_* macros take functions expecting just void * arguments.  *  * With -Wcast-qual on, the compiler issues warnings:  *	- if we pass non-const data or functions taking non-const data  *	  to a C_* macro.  *  *	- if we pass const data to the normal macros  *  * However, no warning is issued if we pass a function taking const data  * through a normal non-const macro.  This is ok because the function is  * saying it won't modify the data so we don't care whether the data is  * modifiable or not.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*sysinit_nfunc_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*sysinit_cfunc_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -530,19 +563,11 @@ name|int
 name|order
 decl_stmt|;
 comment|/* init order within subsystem*/
-name|void
-argument_list|(
-argument|*func
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+name|sysinit_cfunc_t
+name|func
+decl_stmt|;
 comment|/* function		*/
+specifier|const
 name|void
 modifier|*
 name|udata
@@ -556,51 +581,14 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-unit|struct c_sysinit { 	unsigned int	subsystem;
-comment|/* subsystem identifier*/
-end_comment
-
-begin_comment
-unit|unsigned int	order;
-comment|/* init order within subsystem*/
-end_comment
-
-begin_comment
-unit|void		(*func) __P((const void *));
-comment|/* function 	*/
-end_comment
-
-begin_comment
-unit|const void	*udata;
-comment|/* multiplexer/argument */
-end_comment
-
-begin_comment
-unit|si_elem_t	type;
-comment|/* sysinit_elem_type*/
-end_comment
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Default: no special processing  *  * The C_ version of SYSINIT is for data pointers to const  * data ( and functions taking data pointers to const data ).  * At the moment it is no different from SYSINIT and thus  * still results in warnings.  *  */
+comment|/*  * Default: no special processing  *  * The C_ version of SYSINIT is for data pointers to const  * data ( and functions taking data pointers to const data ).  * At the moment it is no different from SYSINIT and thus  * still results in warnings.  *  * The casts are necessary to have the compiler produce the  * correct warnings when -Wcast-qual is used.  *  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SYSINIT
+name|C_SYSINIT
 parameter_list|(
 name|uniquifier
 parameter_list|,
@@ -619,7 +607,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|C_SYSINIT
+name|SYSINIT
 parameter_list|(
 name|uniquifier
 parameter_list|,
@@ -632,7 +620,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|SYSINIT(uniquifier, subsystem, order, func, ident)
+value|C_SYSINIT(uniquifier, subsystem, order, (sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
 end_define
 
 begin_comment
@@ -642,7 +630,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYSUNINIT
+name|C_SYSUNINIT
 parameter_list|(
 name|uniquifier
 parameter_list|,
@@ -661,7 +649,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|C_SYSUNINIT
+name|SYSUNINIT
 parameter_list|(
 name|uniquifier
 parameter_list|,
@@ -674,7 +662,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|SYSUNINIT(uniquifier, subsystem, order, func, ident)
+value|C_SYSUNINIT(uniquifier, subsystem, order, (sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
 end_define
 
 begin_comment
