@@ -1355,7 +1355,7 @@ parameter_list|(
 name|level
 parameter_list|)
 define|\
-value|do {								\ 	if (level<= AAC_DEBUG) printf(__func__ ": called\n");	\ 	} while (0)
+value|do {								\ 	if (level<= AAC_DEBUG) printf("%s: called\n", __func__);	\ 	} while (0)
 end_define
 
 begin_function_decl
