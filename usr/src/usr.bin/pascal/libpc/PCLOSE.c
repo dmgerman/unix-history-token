@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCLOSE.c 1.2 %G%"
+literal|"@(#)PCLOSE.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ name|fflush
 argument_list|(
 name|next
 operator|->
-name|fblk
+name|fbuf
 argument_list|)
 expr_stmt|;
 name|setbuf
