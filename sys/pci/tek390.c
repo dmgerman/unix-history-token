@@ -1091,7 +1091,7 @@ name|pci_device
 name|trmamd_device
 init|=
 block|{
-literal|"trmamd"
+literal|"amd"
 block|,
 name|trmamd_probe
 block|,
@@ -1143,7 +1143,7 @@ literal|0
 block|,
 endif|#
 directive|endif
-literal|"trmamd"
+literal|"amd"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1166,7 +1166,7 @@ comment|/* have no async handler */
 name|NULL
 block|,
 comment|/* Use default 'done' routine */
-literal|"trmamd"
+literal|"amd"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2299,7 +2299,15 @@ operator|(
 name|plink
 operator|->
 name|target
-operator|>=
+operator|>
+name|CurrentID
+operator|)
+operator|||
+operator|(
+name|plink
+operator|->
+name|target
+operator|==
 name|CurrentID
 operator|)
 operator|&&
@@ -6781,7 +6789,7 @@ name|PCI_DEVICE_ID_AMD53C974
 condition|)
 return|return
 operator|(
-literal|"Tekram DC390(T) Adapter Driver v1.01 Aug-20-1996"
+literal|"amd 53c974 scsi"
 operator|)
 return|;
 else|else
