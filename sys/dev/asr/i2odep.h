@@ -233,24 +233,21 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
 name|__FAR__
 argument_list|)
-operator|)
+if|)
 end_if
 
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|__BORLANDC__
 argument_list|)
-operator|)
 end_if
 
 begin_define
@@ -288,13 +285,11 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
 name|NULL
 argument_list|)
-operator|)
 end_if
 
 begin_define
@@ -312,7 +307,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|__SPARC__
@@ -322,7 +316,6 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
-operator|)
 end_if
 
 begin_typedef
