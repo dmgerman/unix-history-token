@@ -2897,6 +2897,7 @@ name|timing
 operator|=
 literal|0x006d0003
 expr_stmt|;
+break|break;
 case|case
 name|ATA_PIO1
 case|:
@@ -2904,6 +2905,7 @@ name|timing
 operator|=
 literal|0x00580002
 expr_stmt|;
+break|break;
 case|case
 name|ATA_PIO2
 case|:
@@ -2911,6 +2913,7 @@ name|timing
 operator|=
 literal|0x00440001
 expr_stmt|;
+break|break;
 case|case
 name|ATA_PIO3
 case|:
@@ -2918,6 +2921,7 @@ name|timing
 operator|=
 literal|0x00330001
 expr_stmt|;
+break|break;
 case|case
 name|ATA_PIO4
 case|:
@@ -2925,11 +2929,13 @@ name|timing
 operator|=
 literal|0x00310001
 expr_stmt|;
+break|break;
 default|default:
 name|timing
 operator|=
 literal|0x006d0003
 expr_stmt|;
+break|break;
 block|}
 name|pci_write_config
 argument_list|(
