@@ -223,84 +223,66 @@ comment|/*  * Interrupt handler chains.  intr_establish() inserts a handler into
 end_comment
 
 begin_endif
-unit|struct intrhand { 	int	(*ih_fun) __P((void *)); 	void	*ih_arg; 	u_long	ih_count; 	struct	intrhand *ih_next; 	int	ih_level; 	int	ih_irq; };
+unit|struct intrhand { 	int	(*ih_fun)(void *); 	void	*ih_arg; 	u_long	ih_count; 	struct	intrhand *ih_next; 	int	ih_level; 	int	ih_irq; };
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setsoftclock
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|clearsoftclock
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setsoftnet
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|clearsoftnet
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|do_pending_int
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 name|void
 name|softintr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

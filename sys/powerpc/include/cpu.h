@@ -163,21 +163,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|__syncicache
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */
@@ -287,19 +284,16 @@ parameter_list|)
 value|((td)->td_frame->fixreg[1])
 end_define
 
-begin_decl_stmt
+begin_expr_stmt
 unit|void
 name|savectx
-name|__P
 argument_list|(
-operator|(
 expr|struct
 name|pcb
 operator|*
-operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
