@@ -2178,6 +2178,8 @@ name|r
 operator|==
 literal|0
 operator|&&
+name|r_flag
+operator|&&
 name|S_ISREG
 argument_list|(
 name|sb
