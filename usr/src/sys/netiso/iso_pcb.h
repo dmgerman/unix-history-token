@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_pcb.h,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_pcb.h	7.3 (Berkeley) %G% */
+comment|/*	@(#)iso_pcb.h	7.4 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -103,14 +103,14 @@ modifier|*
 name|isop_clnpcache
 decl_stmt|;
 comment|/* CLNP cached hdr */
-name|u_int
-name|isop_chanmask
+name|caddr_t
+name|isop_chan
 decl_stmt|;
-comment|/* which ones used - max 32 supported */
-name|u_int
-name|isop_negchanmask
+comment|/* actually struct pklcb * */
+name|u_short
+name|isop_refcnt
 decl_stmt|;
-comment|/* which ones used - max 32 supported */
+comment|/* mult TP4 tpcb's -> here */
 name|u_short
 name|isop_lport
 decl_stmt|;
