@@ -15,6 +15,18 @@ directive|define
 name|_SYS_INTERRUPT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_comment
 comment|/*  * Describe a hardware interrupt handler.  *  * Multiple interrupt handlers for a specific vector can be chained  * together.  */
 end_comment
@@ -134,6 +146,10 @@ begin_struct
 struct|struct
 name|ithd
 block|{
+name|struct
+name|mtx
+name|it_lock
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
