@@ -5324,10 +5324,10 @@ argument_list|)
 expr_stmt|;
 name|log_Printf
 argument_list|(
-name|LogDEBUG
+name|LogWARN
 argument_list|,
-literal|"CHAP81: AuthenticatorResponse: (%s)"
-literal|" != ans: (%s)\n"
+literal|"CHAP81: AuthenticatorResponse: (%.42s)"
+literal|" != ans: (%.42s)\n"
 argument_list|,
 name|chap
 operator|->
