@@ -2826,17 +2826,6 @@ name|uint32_t
 name|sockbase
 decl_stmt|;
 comment|/* 		 * Generally, the BIOS will assign this memory for us. 		 * However, newer BIOSes do not because the MS design 		 * documents have mandated that this is for the OS 		 * to assign rather than the BIOS.  This driver shouldn't 		 * be doing this, but until the pci bus code (or acpi) 		 * does this, we allow CardBus bridges to work on more 		 * machines. 		 */
-name|sockbase
-operator|=
-name|pci_read_config
-argument_list|(
-name|brdev
-argument_list|,
-name|rid
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|brdev
