@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.83 1995/10/31 18:41:08 phk Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.84 1995/11/04 17:07:20 bde Exp $  */
 end_comment
 
 begin_include
@@ -1961,61 +1961,17 @@ case|case
 name|ED_TYPE_SMC8216C
 case|:
 comment|/* 8216 has 16K shared mem -- 8416 has 8K */
-operator|(
-name|unsigned
-name|int
-operator|)
-operator|*
-operator|(
-name|isa_dev
-operator|->
-name|id_maddr
-operator|+
-literal|8192
-operator|)
-operator|=
-operator|(
-name|unsigned
-name|int
-operator|)
-literal|0
-expr_stmt|;
+case|case
+name|ED_TYPE_SMC8216T
+case|:
 if|if
 condition|(
-operator|(
-name|unsigned
-name|int
-operator|)
-operator|*
-operator|(
-name|isa_dev
+name|sc
 operator|->
-name|id_maddr
-operator|+
-literal|8192
-operator|)
+name|type
+operator|=
+name|ED_TYPE_SMC8216C
 condition|)
-block|{
-name|sc
-operator|->
-name|type_str
-operator|=
-literal|"SMC8416C/SMC8416BT"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: SMC 8416C or 8416BT"
-expr_stmt|;
-name|memsize
-operator|=
-literal|8192
-expr_stmt|;
-block|}
-else|else
 block|{
 name|sc
 operator|->
@@ -2031,25 +1987,9 @@ name|kdc_description
 operator|=
 literal|"Ethernet adapter: SMC 8216 or 8216C"
 expr_stmt|;
-name|memsize
-operator|=
-literal|16384
-expr_stmt|;
 block|}
-name|isa16bit
-operator|=
-literal|1
-expr_stmt|;
-name|sc
-operator|->
-name|is790
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|ED_TYPE_SMC8216T
-case|:
+else|else
+block|{
 name|sc
 operator|->
 name|type_str
@@ -2064,6 +2004,7 @@ name|kdc_description
 operator|=
 literal|"Ethernet adapter: SMC 8216T"
 expr_stmt|;
+block|}
 name|outb
 argument_list|(
 name|sc
@@ -2125,6 +2066,33 @@ break|break;
 case|case
 name|ED_WD790_RAR_SZ8
 case|:
+comment|/* 8216 has 16K shared mem -- 8416 has 8K */
+if|if
+condition|(
+name|sc
+operator|->
+name|type
+operator|=
+name|ED_TYPE_SMC8216C
+condition|)
+block|{
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"SMC8416C/SMC8416BT"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: SMC 8416C or 8416BT"
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|type_str
@@ -2139,6 +2107,7 @@ name|kdc_description
 operator|=
 literal|"Ethernet adapter: SMC 8416T"
 expr_stmt|;
+block|}
 name|memsize
 operator|=
 literal|8192
