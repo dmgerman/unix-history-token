@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.20 1993/12/16 04:38:27 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.21 1994/01/02 10:17:29 ache Exp $  */
 end_comment
 
 begin_include
@@ -286,6 +286,28 @@ begin_comment
 comment|/* COM_MULTIPORT */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FIFO_TRIGGER
+end_ifndef
+
+begin_comment
+comment|/*  * This driver is fast enough to work with any value and for high values  * to be only slightly more efficient.  Low values may be better because  * they give lower latency.  * TODO: always use low values for low speeds.  Mouse movements are jerky  * if more than one packet arrives at once.  The low speeds used for  * serial mice help avoid this, but not if (large) fifos are enabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIFO_TRIGGER
+value|FIFO_TRIGGER_14
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -302,7 +324,7 @@ define|#
 directive|define
 name|schedsoftcom
 parameter_list|()
-value|(ipending |= 1<< 4)
+value|(ipending |= 1<< (16 + 4))
 end_define
 
 begin_comment
@@ -826,10 +848,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Also, most of the device switch functions are still declared old-style  * so they take a Dev_t arg and shorten it to a dev_t.  It would be simpler  * and faster if dev_t's were always promoted (to ints or whatever) as  * early as possible.  */
-end_comment
-
 begin_decl_stmt
 name|int
 name|sioread
@@ -1021,7 +1039,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|commctl
 name|__P
 argument_list|(
@@ -1592,13 +1610,13 @@ name|id_iobase
 expr_stmt|;
 name|result
 operator|=
-literal|1
+name|IO_COMSIZE
 expr_stmt|;
 comment|/* 	 * We don't want to get actual interrupts, just masked ones. 	 * Interrupts from this line should already be masked in the ICU, 	 * but mask them in the processor as well in case there are some 	 * (misconfigured) shared interrupts. 	 */
 name|disable_intr
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Enable output interrupts (only) and check the following: 	 *	o the CFCR, IER and MCR in UART hold the values written to them 	 *	  (the values happen to be all distinct - this is good for 	 *	  avoiding false positive tests from bus echoes). 	 *	o an output interrupt is generated and its vector is correct. 	 *	o the interrupt goes away when the IIR in the UART is read. 	 */
+comment|/* 	 * Initialize the speed so that any junk in the THR or output fifo will 	 * be transmitted in a known time.  (There may be lots of junk after a 	 * soft reboot, and output interrupts don't work right after a master 	 * reset, at least for 16550s.  (The speed is undefined after MR, but 	 * MR empties the THR and the TSR so it's not clear why this matters)). 	 * Enable output interrupts (only) and check the following: 	 *	o the CFCR, IER and MCR in UART hold the values written to them 	 *	  (the values happen to be all distinct - this is good for 	 *	  avoiding false positive tests from bus echoes). 	 *	o an output interrupt is generated and its vector is correct. 	 *	o the interrupt goes away when the IIR in the UART is read. 	 */
 name|outb
 argument_list|(
 name|iobase
@@ -1608,7 +1626,6 @@ argument_list|,
 name|CFCR_DLAB
 argument_list|)
 expr_stmt|;
-comment|/* DLAB = 1 */
 name|outb
 argument_list|(
 name|iobase
@@ -1623,14 +1640,12 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* 9600bps */
 name|outb
 argument_list|(
 name|iobase
 operator|+
 name|com_dlbh
 argument_list|,
-operator|(
 operator|(
 name|u_int
 operator|)
@@ -1640,9 +1655,6 @@ literal|9600
 argument_list|)
 operator|>>
 literal|8
-operator|)
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1674,7 +1686,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* ensure edge on next intr  */
+comment|/* ensure edge on next intr */
 name|outb
 argument_list|(
 name|iobase
@@ -1687,10 +1699,18 @@ expr_stmt|;
 comment|/* generate interrupt */
 name|DELAY
 argument_list|(
-literal|17000
+operator|(
+literal|16
+operator|+
+literal|1
+operator|)
+operator|*
+literal|9600
+operator|/
+literal|10
 argument_list|)
 expr_stmt|;
-comment|/* wait for fifo drain on 9600 */
+comment|/* enough to drain 16 bytes */
 if|if
 condition|(
 name|inb
@@ -2136,7 +2156,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"<8250>"
+literal|" 8250"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2164,9 +2184,9 @@ switch|switch
 condition|(
 name|inb
 argument_list|(
-name|iobase
-operator|+
-name|com_iir
+name|com
+operator|->
+name|int_id_port
 argument_list|)
 operator|&
 name|IIR_FIFO_MASK
@@ -2177,7 +2197,7 @@ name|FIFO_TRIGGER_1
 case|:
 name|printf
 argument_list|(
-literal|"<16450>"
+literal|" 16450"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2186,7 +2206,7 @@ name|FIFO_TRIGGER_4
 case|:
 name|printf
 argument_list|(
-literal|"<16450?>"
+literal|" 16450?"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2195,7 +2215,7 @@ name|FIFO_TRIGGER_8
 case|:
 name|printf
 argument_list|(
-literal|"<16550?>"
+literal|" 16550?"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2210,7 +2230,7 @@ name|TRUE
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<16550A>"
+literal|" 16550A"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2258,10 +2278,14 @@ comment|/* set the master's common-interrupt-enable reg., 		 * as appropriate. Y
 comment|/* enable only common interrupt for port */
 name|outb
 argument_list|(
-name|iobase
-operator|+
-name|com_mcr
+name|com
+operator|->
+name|modem_ctl_port
 argument_list|,
+name|com
+operator|->
+name|mcr_image
+operator|=
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2374,7 +2398,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Need to reset baud rate, etc. of next print so reset comconsinit. 	 * Also make sure console is always "hardwired" 	 */
+comment|/* 	 * Need to reset baud rate, etc. of next print so reset comconsinit. 	 */
 if|if
 condition|(
 name|unit
@@ -2457,6 +2481,15 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|COM_BIDIR
+name|bool_t
+name|callout
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* COM_BIDIR */
 name|struct
 name|com_s
 modifier|*
@@ -2480,26 +2513,14 @@ name|tp
 decl_stmt|;
 name|int
 name|unit
-init|=
+decl_stmt|;
+name|unit
+operator|=
 name|UNIT
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|COM_BIDIR
-name|bool_t
-name|callout
-init|=
-name|CALLOUT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* COM_BIDIR */
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2529,6 +2550,13 @@ ifdef|#
 directive|ifdef
 name|COM_BIDIR
 comment|/* if it's a callout device, and bidir not possible on that dev, die */
+name|callout
+operator|=
+name|CALLOUT
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|callout
@@ -2729,11 +2757,7 @@ block|}
 else|else
 block|{
 comment|/* put DTR& RTS up */
-comment|/* NOTE: cgd'sdriver used the ier register 				     * to enable/disable interrupts. This one 				     * uses both ier and IENABLE in the mcr. 				     */
 comment|/* XXX - bring up RTS earlier? */
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -2778,7 +2802,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* if not active, turn DTR off */
+comment|/* if not active, turn intrs and DTR off */
 if|if
 condition|(
 operator|!
@@ -2786,9 +2810,18 @@ name|com
 operator|->
 name|active
 condition|)
-operator|(
-name|void
-operator|)
+block|{
+name|outb
+argument_list|(
+name|com
+operator|->
+name|iobase
+operator|+
+name|com_ier
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|commctl
 argument_list|(
 name|com
@@ -2798,6 +2831,7 @@ argument_list|,
 name|DMBIC
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* if there was an error, take off. */
 if|if
 condition|(
@@ -2884,7 +2918,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * We no longer use the flags from<sys/ttydefaults.h> 			 * since those are only relevant for logins.  It's 			 * important to have echo off initially so that the 			 * line doesn't start blathering before the echo flag 			 * can be turned off.  It's useful to have clocal on 			 * initially so that "stty changed-defaults</dev/sioX" 			 * doesn't hang waiting for carrier. 			 * 			 * XXX: CLOCAL is dangerous with incoming ports: 			 * it cause getty hangs after first login+logout. 			 * use "stty com_speed -clocal< /dev/comxx" 			 * before do anything with incoming port... 			 *                                   Ache. 			 */
+comment|/* 			 * We no longer use the flags from<sys/ttydefaults.h> 			 * since those are only relevant for logins.  It's 			 * important to have echo off initially so that the 			 * line doesn't start blathering before the echo flag 			 * can be turned off. 			 */
 name|tp
 operator|->
 name|t_iflag
@@ -2918,7 +2952,7 @@ name|CREAD
 operator||
 name|CS8
 operator||
-name|CLOCAL
+name|HUPCL
 expr_stmt|;
 name|tp
 operator|->
@@ -2937,6 +2971,7 @@ operator|=
 name|comdefaultrate
 expr_stmt|;
 block|}
+comment|/* 		 * XXX the full state after a first open() needs to be 		 * programmable and separate for callin and callout. 		 */
 ifdef|#
 directive|ifdef
 name|COM_BIDIR
@@ -2965,18 +3000,9 @@ operator|&=
 operator|~
 name|CLOCAL
 expr_stmt|;
-name|tp
-operator|->
-name|t_cflag
-operator||=
-name|HUPCL
-expr_stmt|;
 block|}
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -3014,14 +3040,18 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX temporary fix for deadlock in ttywait(). 		 * 		 * If two processes wait for output to drain from the same 		 * tty, and the amount of output to drain is> 0 and 		 *<= tp->t_lowat, then the processes will take turns 		 * uselessly waking each other up until the output drains, 		 * with cpl higher than spltty() throughout. 		 * 		 * The sleep address and TS_ASLEEP flag ought to be different 		 * for the different events (output done) and (output almost 		 * done). 		 */
+name|tp
+operator|->
+name|t_lowat
+operator|=
+literal|0
+expr_stmt|;
 name|iobase
 operator|=
 name|com
 operator|->
 name|iobase
-expr_stmt|;
-name|disable_intr
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3029,6 +3059,7 @@ name|com
 operator|->
 name|hasfifo
 condition|)
+block|{
 comment|/* (re)enable and drain FIFO */
 name|outb
 argument_list|(
@@ -3038,12 +3069,21 @@ name|com_fifo
 argument_list|,
 name|FIFO_ENABLE
 operator||
-name|FIFO_TRIGGER_14
+name|FIFO_TRIGGER
 operator||
 name|FIFO_RCV_RST
 operator||
 name|FIFO_XMT_RST
 argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
+name|disable_intr
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -3458,7 +3498,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KGDB
-comment|/* do not disable interrupts if debugging */
+comment|/* do not disable interrupts or hang up if debugging */
 if|if
 condition|(
 name|kgdb_dev
@@ -3478,6 +3518,7 @@ argument_list|)
 condition|)
 endif|#
 directive|endif
+block|{
 name|outb
 argument_list|(
 name|iobase
@@ -3517,9 +3558,6 @@ name|TS_ISOPEN
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -3537,7 +3575,7 @@ name|dtr_wait
 operator|!=
 literal|0
 condition|)
-comment|/* uninterruptible since we want to wait a fixed time */
+comment|/* 				 * Uninterruptible sleep since we want to 				 * wait a fixed time. 				 * XXX - delay in open() (if necessary), 				 * not here (always). 				 */
 name|tsleep
 argument_list|(
 operator|(
@@ -3557,6 +3595,7 @@ operator|->
 name|dtr_wait
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -3781,38 +3820,35 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* COM_MULTIPORT */
-name|int
-name|i
-decl_stmt|;
 name|bool_t
-name|donesomething
+name|possibly_more_intrs
 decl_stmt|;
-comment|/* 	 * Loop until there is no activity on any port.  This is necessary 	 * to get an interrupt edge more than to avoid another interrupt. 	 * If the IRQ signal is just an OR of the IRQ signals from several 	 * devices, then the edge from one may be lost because another is 	 * on, or it may cause a stray interrupt because another was on a 	 * short time before. 	 * 	 * XXX getting the status from comintr1() is not best and may be 	 * incorrect.  It would be better to test the int_id's in a tight 	 * loop.  If each is off when it is tested, then they all must 	 * have been off at the start. 	 */
+comment|/* 	 * Loop until there is no activity on any port.  This is necessary 	 * to get an interrupt edge more than to avoid another interrupt. 	 * If the IRQ signal is just an OR of the IRQ signals from several 	 * devices, then the edge from one may be lost because another is 	 * on. 	 * 	 * XXX getting the status from comintr1() is not best and may be 	 * incorrect.  It would be better to test the int_id's in a tight 	 * loop.  If each is off when it is tested, then they all must 	 * have been off at the start. 	 */
 do|do
 block|{
-name|donesomething
+name|possibly_more_intrs
 operator|=
 name|FALSE
 expr_stmt|;
 for|for
 control|(
-name|i
+name|unit
 operator|=
 literal|0
 init|;
-name|i
+name|unit
 operator|<
 name|NSIO
 condition|;
-name|i
 operator|++
+name|unit
 control|)
 block|{
 name|com
 operator|=
 name|com_addr
 argument_list|(
-name|i
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -3822,8 +3858,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX call comintr1() instead of here from 				 * com_wakeup().  The interrupt edge problem 				 * only exists for real interrupts. 				 */
-name|donesomething
+comment|/* 				 * XXX call comintr1() instead of here from 				 * comwakeup().  The interrupt edge problem 				 * only exists for real interrupts. 				 */
+name|possibly_more_intrs
 operator||=
 name|comintr1
 argument_list|(
@@ -3835,7 +3871,7 @@ block|}
 block|}
 do|while
 condition|(
-name|donesomething
+name|possibly_more_intrs
 condition|)
 do|;
 return|return;
@@ -4006,6 +4042,12 @@ block|{
 operator|++
 name|com_events
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (com->iptr - com->ibuf == 8) 	schedsoftcom();
+endif|#
+directive|endif
 name|ioptr
 index|[
 literal|0
@@ -4468,28 +4510,6 @@ argument_list|,
 name|flag
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|>=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-name|iobase
-operator|=
-name|com
-operator|->
-name|iobase
-expr_stmt|;
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COM_BIDIR
@@ -4512,13 +4532,6 @@ name|cr_uid
 operator|!=
 literal|0
 condition|)
-block|{
-name|tp
-operator|->
-name|t_cflag
-operator||=
-name|HUPCL
-expr_stmt|;
 name|tp
 operator|->
 name|t_cflag
@@ -4526,9 +4539,39 @@ operator|&=
 operator|~
 name|CLOCAL
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|error
+operator|>=
+literal|0
+condition|)
+block|{
+name|tp
+operator|->
+name|t_lowat
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX part of ttywait() deadlock fix */
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+name|iobase
+operator|=
+name|com
+operator|->
+name|iobase
+expr_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -4572,9 +4615,6 @@ break|break;
 case|case
 name|TIOCSDTR
 case|:
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -4588,9 +4628,6 @@ break|break;
 case|case
 name|TIOCCDTR
 case|:
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -4604,9 +4641,6 @@ break|break;
 case|case
 name|TIOCMSET
 case|:
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -4628,9 +4662,6 @@ break|break;
 case|case
 name|TIOCMBIS
 case|:
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -4652,9 +4683,6 @@ break|break;
 case|case
 name|TIOCMBIC
 case|:
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
@@ -4743,7 +4771,7 @@ name|tiocm_xxx
 operator||=
 name|TIOCM_DSR
 expr_stmt|;
-comment|/* XXX - MSR_TERI is too volatile. */
+comment|/* 		 * XXX - MSR_RI is naturally volatile, and we make MSR_TERI 		 * more volatile by reading the modem status a lot.  Perhaps 		 * we should latch both bits until the status is read here. 		 */
 if|if
 condition|(
 name|msr
@@ -4775,22 +4803,39 @@ case|case
 name|TIOCMSBIDIR
 case|:
 comment|/* must be root to set bidir. capability */
-if|if
-condition|(
+name|error
+operator|=
+name|suser
+argument_list|(
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+operator|&
+name|p
 operator|->
-name|cr_uid
+name|p_acflag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* if it's the console, can't do it */
+block|}
+comment|/* if it's the console, can't do it (XXX why?) */
 if|if
 condition|(
 name|UNIT
@@ -4800,14 +4845,26 @@ argument_list|)
 operator|==
 name|comconsole
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOTTY
 operator|)
 return|;
-comment|/* can't do the next, for obvious reasons... 		 * but there are problems to be looked at... 		 */
+block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX - can't do the next, for obvious reasons... 		 * but there are problems to be looked at... 		 */
 comment|/* if the port is active, don't do it */
-comment|/* if (com->active) 			return(EBUSY); */
+block|if (com->active) { 			splx(s); 			return(EBUSY); 		}
+endif|#
+directive|endif
 name|com
 operator|->
 name|bidir
@@ -4841,22 +4898,39 @@ comment|/* COM_BIDIR */
 case|case
 name|TIOCMSDTRWAIT
 case|:
-comment|/* must be root (XXX why?) */
-if|if
-condition|(
+comment|/* must be root since the wait applies to following logins */
+name|error
+operator|=
+name|suser
+argument_list|(
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+operator|&
+name|p
 operator|->
-name|cr_uid
+name|p_acflag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPERM
 operator|)
 return|;
+block|}
 comment|/* if it's the console, can't do it (XXX why?) */
 if|if
 condition|(
@@ -4867,11 +4941,18 @@ argument_list|)
 operator|==
 name|comconsole
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOTTY
 operator|)
 return|;
+block|}
 name|com
 operator|->
 name|dtr_wait
@@ -5097,8 +5178,6 @@ block|{
 name|u_char
 modifier|*
 name|buf
-init|=
-literal|0
 decl_stmt|;
 name|u_char
 modifier|*
@@ -5132,6 +5211,11 @@ name|com
 operator|->
 name|tp
 expr_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* avoid compiler warning */
 comment|/* switch the role of the low-level input buffers */
 if|if
 condition|(
@@ -5984,16 +6068,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|t
+operator|->
+name|c_ispeed
+operator|==
+literal|0
+condition|)
+name|t
+operator|->
+name|c_ispeed
+operator|=
+name|t
+operator|->
+name|c_ospeed
+expr_stmt|;
+if|if
+condition|(
 name|divisor
 operator|<
 literal|0
 operator|||
-name|t
-operator|->
-name|c_ispeed
-operator|!=
-literal|0
-operator|&&
 name|t
 operator|->
 name|c_ispeed
@@ -6041,31 +6135,26 @@ name|divisor
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
 name|commctl
 argument_list|(
 name|com
 argument_list|,
-name|MCR_RTS
+name|MCR_DTR
 argument_list|,
-name|DMSET
+name|DMBIC
 argument_list|)
 expr_stmt|;
 comment|/* hang up line */
-name|splx
+else|else
+name|commctl
 argument_list|(
-name|s
+name|com
+argument_list|,
+name|MCR_DTR
+argument_list|,
+name|DMBIS
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|cflag
 operator|=
 name|t
@@ -6287,6 +6376,13 @@ condition|)
 goto|goto
 name|retry
 goto|;
+if|if
+condition|(
+name|divisor
+operator|!=
+literal|0
+condition|)
+block|{
 name|outb
 argument_list|(
 name|iobase
@@ -6323,6 +6419,7 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
+block|}
 name|outb
 argument_list|(
 name|iobase
@@ -6893,7 +6990,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|commctl
 parameter_list|(
 name|com
@@ -6914,34 +7011,6 @@ name|int
 name|how
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|COM_MULTIPORT
-if|if
-condition|(
-name|how
-operator|!=
-name|DMBIC
-operator|&&
-operator|!
-name|com
-operator|->
-name|multiport
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|how
-operator|!=
-name|DMBIC
-condition|)
-endif|#
-directive|endif
-name|bits
-operator||=
-name|MCR_IENABLE
-expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -6964,6 +7033,14 @@ operator|->
 name|mcr_image
 operator|=
 name|bits
+operator||
+operator|(
+name|com
+operator|->
+name|mcr_image
+operator|&
+name|MCR_IENABLE
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7006,11 +7083,6 @@ block|}
 name|enable_intr
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-name|bits
-operator|)
-return|;
 block|}
 end_function
 
@@ -7047,7 +7119,9 @@ name|caddr_t
 operator|)
 name|NULL
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 if|if
@@ -7128,7 +7202,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Following are all routines needed for COM to act as console  * XXX - not tested in this version  * XXX - check that the corresponding serial interrupts are never enabled  */
+comment|/*  * Following are all routines needed for SIO to act as console  * XXX - not tested in this version  * XXX - i386/cons.c only knows about the com driver (NCOM and not NSIO)  * XXX - check that the corresponding serial interrupts are never enabled  */
 end_comment
 
 begin_include
@@ -7181,7 +7255,10 @@ break|break;
 comment|/* XXX: ick */
 name|unit
 operator|=
+name|UNIT
+argument_list|(
 name|CONUNIT
+argument_list|)
 expr_stmt|;
 name|com_addr
 argument_list|(
@@ -7349,7 +7426,7 @@ name|outb
 argument_list|(
 name|iobase
 operator|+
-name|com_data
+name|com_dlbl
 argument_list|,
 name|rate
 operator|&
@@ -7360,7 +7437,7 @@ name|outb
 argument_list|(
 name|iobase
 operator|+
-name|com_ier
+name|com_dlbh
 argument_list|,
 name|rate
 operator|>>
@@ -7374,6 +7451,56 @@ operator|+
 name|com_cfcr
 argument_list|,
 name|CFCR_8BITS
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_fifo
+argument_list|,
+name|FIFO_ENABLE
+operator||
+name|FIFO_TRIGGER
+operator||
+name|FIFO_RCV_RST
+operator||
+name|FIFO_XMT_RST
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|com_lsr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|com_data
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|com_msr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX - fishy to enable interrupts and then poll. 	 * It shouldn't be necessary to ready the iir. 	 */
@@ -7390,21 +7517,6 @@ operator||
 name|IER_ERLS
 operator||
 name|IER_EMSC
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|iobase
-operator|+
-name|com_fifo
-argument_list|,
-name|FIFO_ENABLE
-operator||
-name|FIFO_RCV_RST
-operator||
-name|FIFO_XMT_RST
-operator||
-name|FIFO_TRIGGER_14
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7566,9 +7678,6 @@ operator|!
 name|comconsinit
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|cominit
 argument_list|(
 name|UNIT
@@ -7659,7 +7768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 10 Feb 93	Jordan K. Hubbard	Added select code  * 27 May 93	Rodney W. Grimes	Stole the select code from com.c.pl5  *  * XXX - the standard com.c never needed this, but we need it because  * ttselect() can't determine the tty struct because stuff is encoded in the  * high bit of the minor number.  */
+comment|/*  * XXX - sioselect() is almost a copy of ttselect().  It is required because  * ttselect() can't determine the tty struct because stuff is encoded in the  * high bit of the minor number.  */
 end_comment
 
 begin_function
