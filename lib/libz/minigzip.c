@@ -1502,7 +1502,7 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
-comment|/* Just for compatability with gzip */
+comment|/* Just for compatibility with gzip */
 elseif|else
 if|if
 condition|(
