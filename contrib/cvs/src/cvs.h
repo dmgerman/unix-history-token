@@ -3447,10 +3447,12 @@ name|WriteTemplate
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|dir
 operator|,
+specifier|const
 name|char
 operator|*
 name|update_dir
