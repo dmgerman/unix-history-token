@@ -1,24 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_VDISABLE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_POSIX_VDISABLE
-value|((unsigned char)'\377')
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -36,159 +18,6 @@ define|#
 directive|define
 name|_IOCTL_
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ttychars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ttydev.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ttychars.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ttydev.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_struct
-struct|struct
-name|tchars
-block|{
-name|char
-name|t_intrc
-decl_stmt|;
-comment|/* interrupt */
-name|char
-name|t_quitc
-decl_stmt|;
-comment|/* quit */
-name|char
-name|t_startc
-decl_stmt|;
-comment|/* start output */
-name|char
-name|t_stopc
-decl_stmt|;
-comment|/* stop output */
-name|char
-name|t_eofc
-decl_stmt|;
-comment|/* end-of-file */
-name|char
-name|t_brkc
-decl_stmt|;
-comment|/* input delimiter (like nl) */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ltchars
-block|{
-name|char
-name|t_suspc
-decl_stmt|;
-comment|/* stop process signal */
-name|char
-name|t_dsuspc
-decl_stmt|;
-comment|/* delayed stop process signal */
-name|char
-name|t_rprntc
-decl_stmt|;
-comment|/* reprint line */
-name|char
-name|t_flushc
-decl_stmt|;
-comment|/* flush output (toggles) */
-name|char
-name|t_werasc
-decl_stmt|;
-comment|/* word erase */
-name|char
-name|t_lnextc
-decl_stmt|;
-comment|/* literal next character */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Structure for TIOCGETP and TIOCSETP ioctls.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SGTTYB_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_SGTTYB_
-end_define
-
-begin_struct
-struct|struct
-name|sgttyb
-block|{
-name|char
-name|sg_ispeed
-decl_stmt|;
-comment|/* input speed */
-name|char
-name|sg_ospeed
-decl_stmt|;
-comment|/* output speed */
-name|char
-name|sg_erase
-decl_stmt|;
-comment|/* erase character */
-name|char
-name|sg_kill
-decl_stmt|;
-comment|/* kill character */
-name|short
-name|sg_flags
-decl_stmt|;
-comment|/* mode flags */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Window/terminal size structure.  * This information is stored by the kernel  * in order to provide a consistent interface,  * but is not used by the kernel.  *  * Type must be "unsigned short" so that types.h not required.  */
@@ -471,75 +300,8 @@ begin_comment
 comment|/*  * tty ioctl commands  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_OLD_TTY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TIOCGETD
-value|_IOR('t', 0, int)
-end_define
-
 begin_comment
-comment|/* get line discipline */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSETD
-value|_IOW('t', 1, int)
-end_define
-
-begin_comment
-comment|/* set line discipline */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TIOCGETDCOMPAT
-value|_IOR('t', 0, int)
-end_define
-
-begin_comment
-comment|/* get line discipline */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSETDCOMPAT
-value|_IOW('t', 1, int)
-end_define
-
-begin_comment
-comment|/* set line discipline */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|TIOCHPCL
-value|_IO('t', 2)
-end_define
-
-begin_comment
-comment|/* hang up on last close */
+comment|/* 0-2 compat */
 end_comment
 
 begin_define
@@ -677,37 +439,8 @@ begin_comment
 comment|/* data set ready */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCGETP
-value|_IOR('t', 8,struct sgttyb)
-end_define
-
 begin_comment
-comment|/* get parameters -- gtty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSETP
-value|_IOW('t', 9,struct sgttyb)
-end_define
-
-begin_comment
-comment|/* set parameters -- stty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSETN
-value|_IOW('t',10,struct sgttyb)
-end_define
-
-begin_comment
-comment|/* as above, but no flushtty*/
+comment|/* 8-10 compat */
 end_comment
 
 begin_define
@@ -732,6 +465,10 @@ begin_comment
 comment|/* reset exclusive use of tty */
 end_comment
 
+begin_comment
+comment|/* 15 unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -743,499 +480,8 @@ begin_comment
 comment|/* flush buffers */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCSETC
-value|_IOW('t',17,struct tchars)
-end_define
-
 begin_comment
-comment|/* set special characters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCGETC
-value|_IOR('t',18,struct tchars)
-end_define
-
-begin_comment
-comment|/* get special characters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TANDEM
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* send stopc on out q full */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBREAK
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* half-cooked mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCASE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* simulate lower case */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ECHO
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* echo input */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRMOD
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* map \r to \r\n on output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAW
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* no i/o processing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ODDP
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* get/send odd parity */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EVENP
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* get/send even parity */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ANYP
-value|0x000000c0
-end_define
-
-begin_comment
-comment|/* get any parity/send none */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NLDELAY
-value|0x00000300
-end_define
-
-begin_comment
-comment|/* \n delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NL0
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|NL1
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* tty 37 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NL2
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* vt05 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NL3
-value|0x00000300
-end_define
-
-begin_define
-define|#
-directive|define
-name|TBDELAY
-value|0x00000c00
-end_define
-
-begin_comment
-comment|/* horizontal tab delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TAB0
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TAB1
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* tty 37 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TAB2
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
-name|XTABS
-value|0x00000c00
-end_define
-
-begin_comment
-comment|/* expand tabs on output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRDELAY
-value|0x00003000
-end_define
-
-begin_comment
-comment|/* \r delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CR0
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CR1
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* tn 300 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CR2
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* tty 37 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CR3
-value|0x00003000
-end_define
-
-begin_comment
-comment|/* concept 100 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VTDELAY
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* vertical tab delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FF0
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|FF1
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* tty 37 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSDELAY
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* \b delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BS0
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BS1
-value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALLDELAY
-value|(NLDELAY|TBDELAY|CRDELAY|VTDELAY|BSDELAY)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CRTBS
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* do backspacing for crt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRTERA
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* \ ... / erase */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CRTERA
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* " \b " to wipe out char */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TILDE
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* hazeltine tilde kludge */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MDMBUF
-value|0x00100000
-end_define
-
-begin_comment
-comment|/*start/stop output on carrier*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LITOUT
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* literal output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TOSTOP
-value|0x00400000
-end_define
-
-begin_comment
-comment|/*SIGSTOP on background output*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLUSHO
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* flush output to terminal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOHANG
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* no SIGHUP on carrier drop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L001000
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CRTKIL
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* kill line with " \b " */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PASS8
-value|0x08000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTLECH
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* echo control chars as ^X */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PENDIN
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* tp->t_rawq needs reread */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DECCTQ
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* only ^Q starts after ^S */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOFLSH
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* no output flush on signal */
+comment|/* 17-18 compat */
 end_comment
 
 begin_define
@@ -1282,10 +528,14 @@ begin_comment
 comment|/* drn out, fls in, set */
 end_comment
 
+begin_comment
+comment|/*** THESE GO AWAY ***/
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TIOCSETAS
+name|JUNK_TIOCSETAS
 value|_IOW('t', 23, struct termios)
 end_define
 
@@ -1296,7 +546,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIOCSETAWS
+name|JUNK_TIOCSETAWS
 value|_IOW('t', 24, struct termios)
 end_define
 
@@ -1307,12 +557,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIOCSETAFS
+name|JUNK_TIOCSETAFS
 value|_IOW('t', 25, struct termios)
 end_define
 
 begin_comment
 comment|/* SETAF ign hdw state */
+end_comment
+
+begin_comment
+comment|/******************/
 end_comment
 
 begin_define
@@ -1343,12 +597,6 @@ name|TCSETAF
 value|TIOCSETAF
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_OLD_TTY
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -1371,163 +619,9 @@ begin_comment
 comment|/* set line discipline */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* locals, from 127 down */
+comment|/* 127-124 compat */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLBIS
-value|_IOW('t', 127, int)
-end_define
-
-begin_comment
-comment|/* bis local mode bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLBIC
-value|_IOW('t', 126, int)
-end_define
-
-begin_comment
-comment|/* bic local mode bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLSET
-value|_IOW('t', 125, int)
-end_define
-
-begin_comment
-comment|/* set entire local mode word */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLGET
-value|_IOR('t', 124, int)
-end_define
-
-begin_comment
-comment|/* get local modes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCRTBS
-value|(CRTBS>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LPRTERA
-value|(PRTERA>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LCRTERA
-value|(CRTERA>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LTILDE
-value|(TILDE>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LMDMBUF
-value|(MDMBUF>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLITOUT
-value|(LITOUT>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LTOSTOP
-value|(TOSTOP>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LFLUSHO
-value|(FLUSHO>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LNOHANG
-value|(NOHANG>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LCRTKIL
-value|(CRTKIL>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LPASS8
-value|(PASS8>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LCTLECH
-value|(CTLECH>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LPENDIN
-value|(PENDIN>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LDECCTQ
-value|(DECCTQ>>16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LNOFLSH
-value|(NOFLSH>>16)
-end_define
 
 begin_define
 define|#
@@ -1595,26 +689,8 @@ begin_comment
 comment|/* set pgrp of tty */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCSLTC
-value|_IOW('t',117,struct ltchars)
-end_define
-
 begin_comment
-comment|/* set local special chars*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCGLTC
-value|_IOR('t',116,struct ltchars)
-end_define
-
-begin_comment
-comment|/* get local special chars*/
+comment|/* 117-116 compat */
 end_comment
 
 begin_define
@@ -1913,7 +989,7 @@ begin_define
 define|#
 directive|define
 name|TIOCCONS
-value|_IO('t', 98)
+value|_IOW('t', 98, int)
 end_define
 
 begin_comment
@@ -1942,50 +1018,6 @@ begin_comment
 comment|/* termios tty line discipline */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_OLD_TTY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OTTYDISC
-value|0
-end_define
-
-begin_comment
-comment|/* COMPAT_43 (alias) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETLDISC
-value|1
-end_define
-
-begin_comment
-comment|/* line discip for berk net */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTTYDISC
-value|2
-end_define
-
-begin_comment
-comment|/* COMPAT_43 (alias) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2008,6 +1040,57 @@ begin_comment
 comment|/* serial IP discipline */
 end_comment
 
+begin_comment
+comment|/*  * Compatability with old terminal driver  *  * Source level -> #define USE_OLD_TTY  * Kernel level -> options COMPAT_43  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_OLD_TTY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ioctl_compat.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl_compat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2028,10 +1111,6 @@ end_define
 
 begin_comment
 comment|/* remove close on exec */
-end_comment
-
-begin_comment
-comment|/* another local */
 end_comment
 
 begin_define
