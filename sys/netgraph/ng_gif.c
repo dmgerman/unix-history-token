@@ -902,11 +902,6 @@ decl_stmt|;
 specifier|const
 name|priv_p
 name|priv
-init|=
-name|NG_NODE_PRIVATE
-argument_list|(
-name|node
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -916,6 +911,13 @@ name|NULL
 condition|)
 comment|/* no node (why not?), ignore */
 return|return;
+name|priv
+operator|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|NG_NODE_REALLY_DIE
 argument_list|(
 name|node
