@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|SSH_PROGRAM
-value|"/usrn1G/bin/ssh"
+value|"/usr/bin/ssh"
 end_define
 
 begin_comment
