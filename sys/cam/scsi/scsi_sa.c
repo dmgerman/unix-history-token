@@ -183,6 +183,24 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|SA_IO_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SA_IO_TIMEOUT
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SA_SPACE_TIMEOUT
 end_ifndef
 
@@ -233,6 +251,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SCSIOP_TIMEOUT
+value|(60 * 1000)
+end_define
+
+begin_comment
+comment|/* not an option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_TIMEOUT
+value|(SA_IO_TIMEOUT * 60 * 1000)
+end_define
 
 begin_define
 define|#
@@ -6977,11 +7013,7 @@ name|bio_bcount
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|120
-operator|*
-literal|60
-operator|*
-literal|1000
+name|IO_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|start_ccb
@@ -7643,11 +7675,7 @@ name|MSG_SIMPLE_Q_TAG
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5
-operator|*
-literal|60
-operator|*
-literal|1000
+name|IO_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -7702,11 +7730,7 @@ name|MSG_SIMPLE_Q_TAG
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5
-operator|*
-literal|60
-operator|*
-literal|1000
+name|IO_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -7826,11 +7850,7 @@ name|MSG_SIMPLE_Q_TAG
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5
-operator|*
-literal|60
-operator|*
-literal|1000
+name|IO_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -8124,11 +8144,7 @@ literal|8192
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|120
-operator|*
-literal|60
-operator|*
-literal|1000
+name|IO_TIMEOUT
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8247,7 +8263,7 @@ name|rblim
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5000
+name|SCSIOP_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -10756,7 +10772,7 @@ name|mode_buffer_len
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5000
+name|SCSIOP_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -10960,7 +10976,7 @@ name|mode_buffer_len
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5000
+name|SCSIOP_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -12065,7 +12081,7 @@ name|mode_buffer_len
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5000
+name|SCSIOP_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -12534,7 +12550,7 @@ name|action
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|100000
+name|SCSIOP_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|error
@@ -13202,7 +13218,7 @@ name|nmarks
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|180000
+name|IO_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|softc
@@ -13471,7 +13487,7 @@ name|loc
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5000
+name|SCSIOP_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|softc
@@ -13656,11 +13672,7 @@ name|blkptr
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|60
-operator|*
-literal|60
-operator|*
-literal|1000
+name|SPACE_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|softc
@@ -13998,7 +14010,7 @@ literal|0
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5000
+name|SCSIOP_TIMEOUT
 argument_list|,
 name|reserve
 argument_list|)
