@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_frag.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_frag.c	7.9 (Berkeley) %G% */
+comment|/*	@(#)clnp_frag.c	7.10 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -357,8 +357,6 @@ name|seg_part
 decl_stmt|;
 comment|/* segmentation header */
 name|int
-name|frag_size
-decl_stmt|,
 name|frag_base
 decl_stmt|;
 name|int
