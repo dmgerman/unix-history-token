@@ -300,6 +300,12 @@ begin_comment
 comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never chagnes   *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - either by curproc or a lock which prevents the lock from  *          going away, such as (d,e)  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *  * If the locking identifier is followed by a plus '+', then the specified  * member follows these special rules:  *      - It is only written to by the current process.  *      - It can be read by the current process and other processes.  * Thus, the locking rules for it are slightly different, and allow us to  * optimize the case where a process reads its own such value:  *	- Writes to this member are locked.  *	- Reads of this value by other processes are locked.  *	- Reads of this value by the current process need not be locked.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ithd
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|proc
@@ -1299,56 +1305,6 @@ modifier|*
 name|p_uidinfo
 decl_stmt|;
 comment|/* Per uid resource consumption. */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Describe an interrupt thread.  There is one of these per irq.  BSD/OS makes  * this a superset of struct proc, i.e. it_proc is the struct itself and not a  * pointer.  We point in both directions, because it feels good that way.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ithd
-block|{
-name|struct
-name|proc
-modifier|*
-name|it_proc
-decl_stmt|;
-comment|/* Interrupt process. */
-name|LIST_ENTRY
-argument_list|(
-argument|ithd
-argument_list|)
-name|it_list
-expr_stmt|;
-comment|/* All interrupt threads. */
-name|int
-name|it_need
-decl_stmt|;
-comment|/* Needs service. */
-name|int
-name|irq
-decl_stmt|;
-comment|/* Vector. */
-name|struct
-name|intrhand
-modifier|*
-name|it_ih
-decl_stmt|;
-comment|/* Interrupt handlers. */
-name|struct
-name|ithd
-modifier|*
-name|it_interrupted
-decl_stmt|;
-comment|/* Who we interrupted. */
-name|void
-modifier|*
-name|it_md
-decl_stmt|;
-comment|/* Hook for MD interrupt code. */
 block|}
 struct|;
 end_struct
