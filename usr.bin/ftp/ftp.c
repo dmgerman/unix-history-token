@@ -6301,7 +6301,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ld bytes %s in %.2g seconds (%.2g Kbytes/s)\n"
+literal|"%ld bytes %s in %.3g seconds (%.3g Kbytes/s)\n"
 argument_list|,
 name|bytes
 argument_list|,
