@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c	5.2 (Berkeley) %G%"
+literal|"@(#)symbols.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,13 +260,9 @@ name|language
 decl_stmt|;
 name|Symclass
 name|class
-range|:
-literal|8
 decl_stmt|;
 name|Integer
 name|level
-range|:
-literal|8
 decl_stmt|;
 name|Symbol
 name|type
