@@ -19,6 +19,16 @@ literal|"@(#)string.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -41,7 +51,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"string.h"
+file|"mystring.h"
 end_include
 
 begin_comment
@@ -448,7 +458,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|string
+name|mystring
 modifier|*
 name|s
 decl_stmt|;
@@ -456,7 +466,7 @@ name|s
 operator|=
 operator|(
 expr|struct
-name|string
+name|mystring
 operator|*
 operator|)
 name|malloc
@@ -552,7 +562,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|string
+name|mystring
 modifier|*
 name|s
 decl_stmt|;

@@ -19,6 +19,16 @@ literal|"@(#)var.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -43,7 +53,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"string.h"
+file|"mystring.h"
 end_include
 
 begin_function_decl

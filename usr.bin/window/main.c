@@ -43,6 +43,16 @@ literal|"@(#)main.c	8.2 (Berkeley) 4/2/94"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -89,7 +99,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"string.h"
+file|"mystring.h"
 end_include
 
 begin_comment
