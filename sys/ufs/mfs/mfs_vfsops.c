@@ -450,7 +450,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 *** 		 * Mounting root file system 		 *** 		 */
-comment|/* you loose */
+comment|/* you lose */
 name|panic
 argument_list|(
 literal|"mfs_mount: mount MFS as root: not configured!"
