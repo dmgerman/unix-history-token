@@ -3302,7 +3302,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|if ((regptr = ptrf(p, reg)) == NULL)				\ 		break;							\ 	(storage) = mod (*regptr);					\ 	if (copyout(&(storage), (caddr_t)va, sizeof (storage)) == 0)	\ 		signal = 0;						\ 	else								\ 		break;
+value|if ((regptr = ptrf(p, reg)) == NULL)				\ 		(storage) = 0;						\ 	else								\ 		(storage) = mod (*regptr);				\ 	if (copyout(&(storage), (caddr_t)va, sizeof (storage)) == 0)	\ 		signal = 0;						\ 	else								\ 		break;
 end_define
 
 begin_define
