@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/acpica/actables.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -501,6 +507,18 @@ literal|4
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|ACPI_FAILURE
+argument_list|(
+name|AcpiTbVerifyTableChecksum
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|table
+argument_list|)
+argument_list|)
 condition|)
 continue|continue;
 comment|/* Save the address of the processor interrupt block. */
@@ -846,6 +864,18 @@ literal|4
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|ACPI_FAILURE
+argument_list|(
+name|AcpiTbVerifyTableChecksum
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|table
+argument_list|)
+argument_list|)
 condition|)
 continue|continue;
 name|end
