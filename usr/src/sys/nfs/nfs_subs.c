@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3088,24 +3088,27 @@ begin_comment
 comment|/*  * Load the attribute cache (that lives in the nfsnode entry) with  * the values on the mbuf list and  * Iff vap not NULL  *    copy the attributes to *vaper  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|nfs_loadattrcache
 argument_list|(
-name|vp
+argument|vpp
 argument_list|,
-name|mdp
+argument|mdp
 argument_list|,
-name|dposp
+argument|dposp
 argument_list|,
-name|vaper
+argument|vaper
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|vnode
-operator|*
-name|vp
-expr_stmt|;
-end_expr_stmt
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -3135,6 +3138,15 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+operator|*
+name|vpp
+decl_stmt|;
+specifier|register
+name|struct
 name|vattr
 modifier|*
 name|vap
@@ -3150,13 +3162,14 @@ name|struct
 name|vnodeops
 name|spec_nfsv2nodeops
 decl_stmt|;
-name|nfsm_vars
-expr_stmt|;
+specifier|register
 name|struct
 name|nfsnode
 modifier|*
 name|np
 decl_stmt|;
+name|nfsm_vars
+expr_stmt|;
 name|enum
 name|vtype
 name|type
@@ -3406,13 +3419,14 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* 				 * Discard unneeded vnode 				 */
+comment|/* 				 * Discard unneeded vnode and update actual one 				 */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|vp
+operator|*
+name|vpp
 operator|=
 name|nvp
 expr_stmt|;
