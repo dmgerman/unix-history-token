@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)praliases.c	8.3 (Berkeley) 3/6/94"
+literal|"@(#)praliases.c	8.4 (Berkeley) 9/25/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ include|#
 directive|include
 file|<ndbm.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|NOT_SENDMAIL
+end_define
 
 begin_include
 include|#
@@ -108,6 +114,9 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NDBM
 name|DBM
 modifier|*
 name|dbp
@@ -117,6 +126,8 @@ name|content
 decl_stmt|,
 name|key
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|filename
@@ -374,10 +385,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NDBM
+ifdef|#
+directive|ifdef
+name|NEWDB
 else|else
 block|{
 endif|#
 directive|endif
+comment|/* NEWDB */
 if|if
 condition|(
 operator|(
@@ -567,6 +587,10 @@ name|NEWDB
 block|}
 endif|#
 directive|endif
+comment|/* NEWDB */
+endif|#
+directive|endif
+comment|/* NDBM */
 name|exit
 argument_list|(
 name|EX_OK

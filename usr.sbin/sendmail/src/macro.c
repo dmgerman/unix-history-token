@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.13 (Berkeley) 7/10/95"
+literal|"@(#)macro.c	8.17 (Berkeley) 5/13/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,10 @@ name|int
 name|i
 decl_stmt|;
 name|int
+name|skiplev
+decl_stmt|;
+comment|/* skipping nesting level */
+name|int
 name|iflev
 decl_stmt|;
 comment|/* if nesting level */
@@ -127,6 +131,12 @@ name|xbuf
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|;
+specifier|static
+name|int
+name|explevel
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -157,6 +167,10 @@ block|}
 name|skipping
 operator|=
 name|FALSE
+expr_stmt|;
+name|skiplev
+operator|=
+literal|0
 expr_stmt|;
 name|iflev
 operator|=
@@ -211,6 +225,9 @@ case|case
 name|CONDIF
 case|:
 comment|/* see if var set */
+name|iflev
+operator|++
+expr_stmt|;
 name|c
 operator|=
 operator|*
@@ -221,7 +238,7 @@ if|if
 condition|(
 name|skipping
 condition|)
-name|iflev
+name|skiplev
 operator|++
 expr_stmt|;
 else|else
@@ -247,6 +264,13 @@ name|iflev
 operator|==
 literal|0
 condition|)
+break|break;
+if|if
+condition|(
+name|skiplev
+operator|==
+literal|0
+condition|)
 name|skipping
 operator|=
 operator|!
@@ -263,6 +287,16 @@ name|iflev
 operator|==
 literal|0
 condition|)
+break|break;
+name|iflev
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|skiplev
+operator|==
+literal|0
+condition|)
 name|skipping
 operator|=
 name|FALSE
@@ -271,7 +305,7 @@ if|if
 condition|(
 name|skipping
 condition|)
-name|iflev
+name|skiplev
 operator|--
 expr_stmt|;
 continue|continue;
@@ -333,6 +367,8 @@ name|xbuf
 index|[
 sizeof|sizeof
 name|xbuf
+operator|-
+literal|1
 index|]
 condition|)
 continue|continue;
@@ -436,6 +472,16 @@ condition|(
 name|recurse
 condition|)
 block|{
+if|if
+condition|(
+name|explevel
+operator|<
+name|MaxMacroRecursion
+condition|)
+block|{
+name|explevel
+operator|++
+expr_stmt|;
 name|expand
 argument_list|(
 name|xbuf
@@ -447,7 +493,18 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|explevel
+operator|--
+expr_stmt|;
 return|return;
+block|}
+name|syserr
+argument_list|(
+literal|"expand: recursion too deep (%d max)"
+argument_list|,
+name|MaxMacroRecursion
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* copy results out */
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1986, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.54.1.2 (Berkeley) 9/16/96 (with name server)"
+literal|"@(#)domain.c	8.64 (Berkeley) 10/30/96 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.54.1.2 (Berkeley) 9/16/96 (without name server)"
+literal|"@(#)domain.c	8.64 (Berkeley) 10/30/96 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,38 @@ directive|include
 file|<resolv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_comment
+comment|/* **  The standard udp packet size PACKETSZ (512) is not sufficient for some **  nameserver answers containing very many resource records. The resolver **  may switch to tcp and retry if it detects udp packet overflow. **  Also note that the resolver routines res_query and res_search return **  the size of the *un*truncated answer in case the supplied answer buffer **  it not big enough to accommodate the entire answer. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPACKET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPACKET
+value|8192
+end_define
+
+begin_comment
+comment|/* max packet size used internally by BIND */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 union|union
@@ -88,7 +120,7 @@ decl_stmt|;
 name|u_char
 name|qb2
 index|[
-name|PACKETSZ
+name|MAXPACKET
 index|]
 decl_stmt|;
 block|}
@@ -96,14 +128,30 @@ name|querybuf
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MXHOSTBUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MXHOSTBUFSIZE
+value|(128 * MAXMXHOSTS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
 name|MXHostBuf
 index|[
-name|MAXMXHOSTS
-operator|*
-name|PACKETSZ
+name|MXHOSTBUFSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -340,12 +388,6 @@ name|fallbackMX
 init|=
 name|FallBackMX
 decl_stmt|;
-specifier|static
-name|bool
-name|firsttime
-init|=
-name|TRUE
-decl_stmt|;
 name|bool
 name|trycanon
 init|=
@@ -379,10 +421,16 @@ name|MAXMXHOSTS
 index|]
 decl_stmt|;
 specifier|extern
-name|bool
-name|getcanonname
-parameter_list|()
-function_decl|;
+name|int
+name|mxrand
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -406,45 +454,7 @@ condition|(
 name|fallbackMX
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|firsttime
 operator|&&
-name|res_query
-argument_list|(
-name|FallBackMX
-argument_list|,
-name|C_IN
-argument_list|,
-name|T_A
-argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|answer
-argument_list|,
-sizeof|sizeof
-name|answer
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-comment|/* this entry is bogus */
-name|fallbackMX
-operator|=
-name|FallBackMX
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|droplocalhost
 operator|&&
 name|wordinclass
@@ -459,11 +469,6 @@ comment|/* don't use fallback for this pass */
 name|fallbackMX
 operator|=
 name|NULL
-expr_stmt|;
-block|}
-name|firsttime
-operator|=
-name|FALSE
 expr_stmt|;
 block|}
 operator|*
@@ -676,6 +681,23 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* avoid problems after truncation in tcp packets */
+if|if
+condition|(
+name|n
+operator|>
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+condition|)
+name|n
+operator|=
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+expr_stmt|;
 comment|/* find first satisfactory answer */
 name|hp
 operator|=
@@ -1438,14 +1460,18 @@ literal|1
 index|]
 argument_list|)
 operator|!=
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
+block|{
+name|nmx
+operator|++
+expr_stmt|;
 operator|*
 name|p
 operator|=
 literal|']'
 expr_stmt|;
+block|}
 else|else
 block|{
 name|trycanon
@@ -1957,7 +1983,7 @@ name|nbuf
 index|[
 name|MAX
 argument_list|(
-name|PACKETSZ
+name|MAXPACKET
 argument_list|,
 name|MAXDNAME
 operator|*
@@ -2440,6 +2466,23 @@ condition|)
 name|printf
 argument_list|(
 literal|"\tYES\n"
+argument_list|)
+expr_stmt|;
+comment|/* avoid problems after truncation in tcp packets */
+if|if
+condition|(
+name|ret
+operator|>
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+condition|)
+name|ret
+operator|=
+sizeof|sizeof
+argument_list|(
+name|answer
 argument_list|)
 expr_stmt|;
 comment|/* 		**  Appear to have a match.  Confirm it by searching for A or 		**  CNAME records.  If we don't have a local domain 		**  wild card MX record, we will accept MX as well. 		*/
