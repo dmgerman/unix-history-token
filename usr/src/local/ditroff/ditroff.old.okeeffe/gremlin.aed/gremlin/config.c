@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* config.c -  *  * This file contains a few strings that define file locations for  * the current gremlin configuration.  */
+comment|/* @(#)config.c	1.2	%G%  *  * This file contains a few strings that define file locations for  * the current gremlin configuration.  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ name|char
 name|GMailCommand
 index|[]
 init|=
-literal|"mail n:barry"
+literal|"mail slatteng@ucbernie"
 decl_stmt|;
 end_decl_stmt
 
