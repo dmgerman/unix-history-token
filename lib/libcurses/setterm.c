@@ -446,9 +446,6 @@ name|struct
 name|winsize
 name|win
 decl_stmt|;
-name|long
-name|myspeed
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -716,14 +713,10 @@ index|]
 else|:
 literal|0
 expr_stmt|;
-name|myspeed
-operator|=
-name|baudrate
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
-name|myspeed
+name|baudrate
+argument_list|()
 condition|)
 block|{
 case|case
