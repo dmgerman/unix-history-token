@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c	4.6 (Berkeley) %G%"
+literal|"@(#)init.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -921,7 +921,7 @@ literal|"setenv"
 block|,
 name|dosetenv
 block|,
-literal|2
+literal|0
 block|,
 literal|2
 block|,
