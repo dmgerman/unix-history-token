@@ -145,6 +145,12 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<isa/isavar.h>
+end_include
+
 begin_comment
 comment|/* Function prototypes (these should all be static) */
 end_comment
@@ -674,6 +680,19 @@ name|val
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+comment|/* skip PnP probes */
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|rid
 operator|=
 literal|0
