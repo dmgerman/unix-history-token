@@ -195,20 +195,20 @@ modifier|*
 name|dynamic
 decl_stmt|;
 comment|/* Symbol table etc. */
-name|Elf_Off
+name|Elf_Hashelt
 name|nbuckets
 decl_stmt|;
 comment|/* DT_HASH info */
-name|Elf_Off
+name|Elf_Hashelt
 name|nchains
 decl_stmt|;
 specifier|const
-name|Elf_Off
+name|Elf_Hashelt
 modifier|*
 name|buckets
 decl_stmt|;
 specifier|const
-name|Elf_Off
+name|Elf_Hashelt
 modifier|*
 name|chains
 decl_stmt|;
@@ -1351,13 +1351,13 @@ case|:
 block|{
 comment|/* From src/libexec/rtld-elf/rtld.c */
 specifier|const
-name|Elf_Off
+name|Elf_Hashelt
 modifier|*
 name|hashtab
 init|=
 operator|(
 specifier|const
-name|Elf_Off
+name|Elf_Hashelt
 operator|*
 operator|)
 operator|(

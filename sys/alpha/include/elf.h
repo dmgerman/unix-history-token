@@ -115,6 +115,25 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Types of dynamic symbol hash table bucket and chain elements.  *  * This is inconsistent among 64 bit architectures, so a machine dependent  * typedef is required.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|Elf64_Off
+name|Elf64_Hashelt
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|__ElfType
+argument_list|(
+name|Hashelt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Values for a_type. */
 end_comment
 
