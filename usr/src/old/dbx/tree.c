@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.3 %G%"
+literal|"@(#)tree.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +394,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|O_DEBUG
+case|:
+case|case
 name|O_LCON
 case|:
 case|case
@@ -777,6 +780,49 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|debug_flag
+index|[
+literal|5
+index|]
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" built %s node %d with arg0 %d arg1 %d \n"
+argument_list|,
+name|showoperator
+argument_list|(
+name|p
+operator|->
+name|op
+argument_list|)
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|value
+operator|.
+name|arg
+index|[
+literal|0
+index|]
+argument_list|,
+name|p
+operator|->
+name|value
+operator|.
+name|arg
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|p
 return|;
