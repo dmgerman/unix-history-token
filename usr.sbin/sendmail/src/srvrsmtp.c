@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.146 (Berkeley) 6/11/97 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.154 (Berkeley) 8/2/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.146 (Berkeley) 6/11/97 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.154 (Berkeley) 8/2/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,6 +668,11 @@ name|lognullconnection
 init|=
 name|TRUE
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|q
+decl_stmt|;
 name|char
 name|inp
 index|[
@@ -1060,35 +1065,14 @@ condition|;
 control|)
 block|{
 comment|/* arrange for backout */
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|setjmp
 argument_list|(
 name|TopFrame
 argument_list|)
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* if() nesting is necessary for Cray UNICOS */
-if|if
-condition|(
-name|InChild
-condition|)
-block|{
-name|QuickAbort
-operator|=
-name|FALSE
 expr_stmt|;
-name|SuprErrs
-operator|=
-name|TRUE
-expr_stmt|;
-name|finis
-argument_list|()
-expr_stmt|;
-block|}
-block|}
 name|QuickAbort
 operator|=
 name|FALSE
@@ -1602,13 +1586,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-specifier|register
-name|char
-modifier|*
-name|q
-decl_stmt|;
 for|for
 control|(
 name|q
@@ -1677,37 +1654,14 @@ if|if
 condition|(
 operator|*
 name|q
-operator|!=
+operator|==
 literal|'\0'
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|AllowBogusHELO
-condition|)
-name|usrerr
-argument_list|(
-literal|"501 Invalid domain name"
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|message
-argument_list|(
-literal|"250 %s Invalid domain name, accepting anyway"
-argument_list|,
-name|MyHostName
-argument_list|)
-expr_stmt|;
-name|gothello
+name|q
 operator|=
-name|TRUE
+literal|"pleased to meet you"
 expr_stmt|;
-block|}
-break|break;
-block|}
-block|}
 name|sendinghost
 operator|=
 name|newstr
@@ -1715,10 +1669,33 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|AllowBogusHELO
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Invalid domain name"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+name|q
+operator|=
+literal|"accepting invalid domain name"
+expr_stmt|;
+block|}
 name|gothello
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* print HELO response message */
 if|if
 condition|(
 name|c
@@ -1728,28 +1705,31 @@ operator|!=
 name|CMDEHLO
 condition|)
 block|{
-comment|/* print old message and be done with it */
 name|message
 argument_list|(
-literal|"250 %s Hello %s, pleased to meet you"
+literal|"250 %s Hello %s, %s"
 argument_list|,
 name|MyHostName
 argument_list|,
 name|CurSmtpClient
+argument_list|,
+name|q
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* print extended message and brag */
 name|message
 argument_list|(
-literal|"250-%s Hello %s, pleased to meet you"
+literal|"250-%s Hello %s, %s"
 argument_list|,
 name|MyHostName
 argument_list|,
 name|CurSmtpClient
+argument_list|,
+name|q
 argument_list|)
 expr_stmt|;
+comment|/* print EHLO features list */
 if|if
 condition|(
 operator|!
@@ -1849,21 +1829,7 @@ if|if
 condition|(
 operator|!
 name|gothello
-condition|)
-block|{
-comment|/* set sending host to our known value */
-if|if
-condition|(
-name|sendinghost
-operator|==
-name|NULL
-condition|)
-name|sendinghost
-operator|=
-name|peerhostname
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|bitset
 argument_list|(
 name|PRIV_NEEDMAILHELO
@@ -1879,7 +1845,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
 if|if
 condition|(
 name|gotmail
@@ -1889,13 +1854,6 @@ name|usrerr
 argument_list|(
 literal|"503 Sender already specified"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|InChild
-condition|)
-name|finis
-argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -1919,6 +1877,17 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* make sure we know who the sending host is */
+if|if
+condition|(
+name|sendinghost
+operator|==
+name|NULL
+condition|)
+name|sendinghost
+operator|=
+name|peerhostname
+expr_stmt|;
 name|p
 operator|=
 name|skipword
@@ -1948,6 +1917,15 @@ operator|>
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 if|if
 condition|(
 operator|!
@@ -2046,6 +2024,15 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 name|nrcpts
 operator|=
 literal|0
@@ -2083,6 +2070,15 @@ literal|0
 condition|)
 block|{
 comment|/* this failed -- undo work */
+name|undo_subproc_no_pm
+label|:
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_PM_NOTIFY
+expr_stmt|;
 name|undo_subproc
 label|:
 if|if
@@ -2151,6 +2147,15 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 comment|/* do config file checking of the sender */
 if|if
 condition|(
@@ -2166,9 +2171,13 @@ name|e
 argument_list|)
 operator|!=
 name|EX_OK
+operator|||
+name|Errors
+operator|>
+literal|0
 condition|)
 goto|goto
-name|undo_subproc
+name|undo_subproc_no_pm
 goto|;
 comment|/* check for possible spoofing */
 if|if
@@ -2433,7 +2442,25 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 block|}
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 if|if
 condition|(
 name|MaxMessageSize
@@ -2454,7 +2481,9 @@ argument_list|,
 name|MaxMessageSize
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 block|}
 if|if
 condition|(
@@ -2472,8 +2501,19 @@ argument_list|(
 literal|"452 Insufficient disk space; try again later"
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 block|}
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc_no_pm
+goto|;
 name|message
 argument_list|(
 literal|"250 Sender ok"
@@ -2546,7 +2586,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"450 Too many recipients"
+literal|"452 Too many recipients"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2604,6 +2644,10 @@ condition|(
 name|a
 operator|==
 name|NULL
+operator|||
+name|Errors
+operator|>
+literal|0
 condition|)
 break|break;
 if|if
@@ -2638,6 +2682,10 @@ name|e
 argument_list|)
 operator|!=
 name|EX_OK
+operator|||
+name|Errors
+operator|>
+literal|0
 condition|)
 break|break;
 comment|/* now parse ESMTP arguments */
@@ -2845,7 +2893,21 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+break|break;
 block|}
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+break|break;
 comment|/* save in recipient list after ESMTP mods */
 name|a
 operator|=
@@ -2866,7 +2928,7 @@ expr_stmt|;
 if|if
 condition|(
 name|Errors
-operator|!=
+operator|>
 literal|0
 condition|)
 break|break;
@@ -3050,20 +3112,25 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+block|{
 name|flush_errors
 argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Errors
-operator|!=
-literal|0
-condition|)
+name|buffer_errors
+argument_list|()
+expr_stmt|;
 goto|goto
 name|abortmessage
 goto|;
+block|}
 comment|/* make sure we actually do delivery */
 name|e
 operator|->
@@ -3170,6 +3237,26 @@ operator|!=
 name|SM_DEFER
 condition|)
 block|{
+name|CurrentLA
+operator|=
+name|getla
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|shouldqueue
+argument_list|(
+name|e
+operator|->
+name|e_msgpriority
+argument_list|,
+name|e
+operator|->
+name|e_ctime
+argument_list|)
+condition|)
+block|{
 specifier|extern
 name|pid_t
 name|dowork
@@ -3194,6 +3281,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|abortmessage
 label|:
@@ -3445,6 +3533,15 @@ condition|)
 break|break;
 if|if
 condition|(
+name|Errors
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc
+goto|;
+if|if
+condition|(
 name|LogLevel
 operator|>
 literal|5
@@ -3469,6 +3566,18 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|TopFrame
+argument_list|)
+operator|>
+literal|0
+condition|)
+goto|goto
+name|undo_subproc
+goto|;
 name|vrfyqueue
 operator|=
 name|NULL
@@ -3542,19 +3651,12 @@ block|}
 if|if
 condition|(
 name|Errors
-operator|!=
+operator|>
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|InChild
-condition|)
-name|finis
-argument_list|()
-expr_stmt|;
-break|break;
-block|}
+goto|goto
+name|undo_subproc
+goto|;
 if|if
 condition|(
 name|vrfyqueue
@@ -3765,6 +3867,10 @@ expr_stmt|;
 if|if
 condition|(
 name|ok
+operator|&&
+name|Errors
+operator|==
+literal|0
 condition|)
 name|message
 argument_list|(
@@ -5518,6 +5624,13 @@ decl_stmt|;
 name|bool
 name|noinfo
 decl_stmt|;
+name|int
+name|sff
+init|=
+name|SFF_OPENASROOT
+operator||
+name|SFF_REGONLY
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -5529,6 +5642,14 @@ name|char
 name|Version
 index|[]
 decl_stmt|;
+if|if
+condition|(
+name|DontLockReadFiles
+condition|)
+name|sff
+operator||=
+name|SFF_NOLOCK
+expr_stmt|;
 if|if
 condition|(
 name|HelpFile
@@ -5546,11 +5667,7 @@ name|O_RDONLY
 argument_list|,
 literal|0444
 argument_list|,
-name|SFF_OPENASROOT
-operator||
-name|SFF_REGONLY
-operator||
-name|SFF_NOLOCK
+name|sff
 argument_list|)
 operator|)
 operator|==

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.236 (Berkeley) 6/5/97  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.242 (Berkeley) 8/2/97  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.236		6/5/97"
+literal|"@(#)sendmail.h	8.242		8/2/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,6 +321,76 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Following are "sort of" configuration constants, but they should **  be pretty solid on most architectures today.  They have to be **  defined after<arpa/nameser.h> because some versions of that **  file also define them.  In all cases, we can't use sizeof because **  some systems (e.g., Crays) always treat everything as being at **  least 64 bits. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INADDRSZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INADDRSZ
+value|4
+end_define
+
+begin_comment
+comment|/* size of an IPv4 address in bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT16SZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT16SZ
+value|2
+end_define
+
+begin_comment
+comment|/* size of a 16 bit integer in bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT32SZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT32SZ
+value|4
+end_define
+
+begin_comment
+comment|/* size of a 32 bit integer in bytes */
+end_comment
 
 begin_endif
 endif|#
@@ -2775,7 +2845,6 @@ argument_list|(
 operator|(
 name|ENVELOPE
 operator|*
-name|e
 operator|,
 name|bool
 operator|)
@@ -7614,6 +7683,18 @@ end_endif
 
 begin_decl_stmt
 name|EXTERN
+name|char
+modifier|*
+name|DeadLetterDrop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* path to dead letter office */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|bool
 name|DontProbeInterfaces
 decl_stmt|;
@@ -7676,6 +7757,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* force From: header to be one line */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|DontLockReadFiles
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't read lock support files */
 end_comment
 
 begin_decl_stmt
@@ -9733,6 +9825,35 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|drop_privileges
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fill_fd
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -10005,7 +10126,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)

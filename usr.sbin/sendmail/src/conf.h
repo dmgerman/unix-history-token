@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.313 (Berkeley) 6/11/97  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.328 (Berkeley) 8/3/97  */
 end_comment
 
 begin_comment
@@ -778,12 +778,23 @@ name|_PATH_UNIX
 value|"/stand/vmunix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/etc/mail/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -841,12 +852,23 @@ name|_PATH_UNIX
 value|"/hp-ux"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -896,6 +918,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|FDSET_CAST
+value|(int *)
+end_define
+
+begin_comment
+comment|/* cast for fd_set parameters to select */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -915,12 +948,6 @@ ifdef|#
 directive|ifdef
 name|_AIX4
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
 
 begin_define
 define|#
@@ -953,6 +980,28 @@ end_define
 
 begin_comment
 comment|/* use tzname[] vector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|size_t
+end_define
+
+begin_comment
+comment|/* e.g., arg#3 to accept, getsockname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|size_t
+end_define
+
+begin_comment
+comment|/* arg#5 to getsockopt */
 end_comment
 
 begin_if
@@ -1009,6 +1058,12 @@ end_include
 begin_comment
 comment|/* to get byte order */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
 
 begin_define
 define|#
@@ -2009,12 +2064,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/etc/mail/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -2301,6 +2367,12 @@ end_define
 begin_comment
 comment|/* use tm->tm_zone */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
 
 begin_include
 include|#
@@ -3070,6 +3142,17 @@ begin_comment
 comment|/* can check IP source routing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAS_ST_GEN
+value|1
+end_define
+
+begin_comment
+comment|/* has st_gen field in stat struct */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3110,12 +3193,23 @@ begin_comment
 comment|/* use<sys/mount.h> statfs() impl */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/var/adm/sendmail/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -3333,12 +3427,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/etc/sendmail/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -3352,6 +3457,41 @@ directive|define
 name|_PATH_SENDMAILPID
 value|"/etc/sendmail/sendmail.pid"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPWRAPPERS
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASUNSETENV
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|NEEDPUTENV
+end_undef
 
 begin_endif
 endif|#
@@ -3447,6 +3587,17 @@ end_define
 
 begin_comment
 comment|/* has strerror(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_ST_GEN
+value|1
+end_define
+
+begin_comment
+comment|/* has st_gen field in stat struct */
 end_comment
 
 begin_include
@@ -3622,6 +3773,17 @@ end_define
 
 begin_comment
 comment|/* has strerror(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_ST_GEN
+value|1
+end_define
+
+begin_comment
+comment|/* has st_gen field in stat struct */
 end_comment
 
 begin_include
@@ -3887,6 +4049,17 @@ end_define
 
 begin_comment
 comment|/* has strerror(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_ST_GEN
+value|1
+end_define
+
+begin_comment
+comment|/* has st_gen field in stat struct */
 end_comment
 
 begin_include
@@ -4307,12 +4480,23 @@ directive|undef
 name|WIFEXITED
 end_undef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -4644,12 +4828,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -4829,6 +5024,28 @@ directive|define
 name|_PATH_AVENRUN
 value|"/dev/table/avenrun"
 end_define
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|size_t
+end_define
+
+begin_comment
+comment|/* e.g., arg#3 to accept, getsockname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|size_t
+end_define
+
+begin_comment
+comment|/* arg#5 to getsockopt */
+end_comment
 
 begin_endif
 endif|#
@@ -5010,12 +5227,23 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -5258,12 +5486,23 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -5742,12 +5981,23 @@ begin_comment
 comment|/* use<sys/vfs.h> statfs() implementation */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -6134,6 +6384,56 @@ name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* added for RISC/os 4.01...which is dumber than 4.50 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RISCOS_4_0
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARBPTR_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ARBPTR_T
+value|char *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|HASFLOCK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RISCOS_4_0 */
+end_comment
 
 begin_include
 include|#
@@ -6666,12 +6966,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -7052,12 +7363,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -7193,12 +7515,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -7390,12 +7723,23 @@ name|TZ_TYPE
 value|TZ_TZNAME
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -7523,6 +7867,16 @@ begin_comment
 comment|/* has snprintf(3) and vsnprintf(3) */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|offsetof
+end_undef
+
+begin_comment
+comment|/* avoid stddefs.h, sys/sysmacros.h conflict */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -7630,12 +7984,23 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/ucblib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -7832,6 +8197,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIOCGIFNUM_IS_BROKEN
+value|1
+end_define
+
+begin_comment
+comment|/* SIOCGIFNUM has non-std interface */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SYSLOG_BUFSIZE
 value|1024
 end_define
@@ -7977,12 +8353,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -8234,12 +8621,23 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -8665,12 +9063,23 @@ name|_PATH_UNIX
 value|"/stand/unix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/etc/mail/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -8975,12 +9384,23 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -9222,12 +9642,23 @@ name|_PATH_UNIX
 value|"/stand/unix"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/usr/ucblib/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -9517,12 +9948,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
 value|"/etc/mail/sendmail.cf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -10636,6 +11078,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FDSET_CAST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FDSET_CAST
+end_define
+
+begin_comment
+comment|/* (empty) cast for fd_set arg to select */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* **  If no type for argument two of getgroups call is defined, assume **  it's an integer -- unfortunately, there seem to be several choices **  here. */
 end_comment
@@ -10741,6 +11204,42 @@ define|#
 directive|define
 name|ARGV_T
 value|char **
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOCKADDR_LEN_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOCKOPT_LEN_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|int
 end_define
 
 begin_endif
@@ -11210,68 +11709,6 @@ name|int
 name|h_errno
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* **  The size of an IP address -- can't use sizeof because of problems **  on Crays, where everything is 64 bits.  This will break if/when **  IP addresses are expanded to eight bytes. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INADDRSZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|INADDRSZ
-value|4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* **  The size of various known types -- for reading network protocols. **  Again, we can't use sizeof because of compiler randomness. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INT16SZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|INT16SZ
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INT32SZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|INT32SZ
-value|4
-end_define
 
 begin_endif
 endif|#
@@ -12018,9 +12455,29 @@ directive|if
 name|USE_SIGLONGJMP
 end_if
 
-begin_comment
-comment|/* Silly SCO /usr/include/setjmp.h file has #define setjmp(env) setjmp(env) */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|jmp_buf
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|jmp_buf
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|jmp_buf
+value|sigjmp_buf
+end_define
 
 begin_ifdef
 ifdef|#
@@ -12042,19 +12499,29 @@ end_endif
 begin_define
 define|#
 directive|define
-name|jmp_buf
-value|sigjmp_buf
-end_define
-
-begin_define
-define|#
-directive|define
 name|setjmp
 parameter_list|(
 name|env
 parameter_list|)
 value|sigsetjmp(env, 1)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|longjmp
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|longjmp
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.62 (Berkeley) 5/29/97"
+literal|"@(#)mci.c	8.66 (Berkeley) 8/2/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -1026,8 +1026,8 @@ else|else
 block|{
 comment|/* get peer host address for logging reasons only */
 comment|/* (this should really be in the mci struct) */
-name|int
-name|socksize
+name|SOCKADDR_LEN_T
+name|socklen
 init|=
 sizeof|sizeof
 name|CurHostAddr
@@ -1053,7 +1053,7 @@ operator|&
 name|CurHostAddr
 argument_list|,
 operator|&
-name|socksize
+name|socklen
 argument_list|)
 expr_stmt|;
 block|}
@@ -1989,8 +1989,6 @@ argument_list|(
 name|fname
 argument_list|,
 name|O_RDWR
-operator||
-name|O_CREAT
 argument_list|,
 name|FileMode
 argument_list|,
@@ -2394,8 +2392,6 @@ name|O_RDONLY
 argument_list|,
 name|FileMode
 argument_list|,
-name|SFF_NOLOCK
-operator||
 name|SFF_NOLINK
 operator||
 name|SFF_OPENASROOT
