@@ -3439,11 +3439,16 @@ name|pps_fetch_args
 modifier|*
 name|fapi
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
 name|struct
 name|pps_kcbind_args
 modifier|*
 name|kapi
 decl_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|cmd
