@@ -207,18 +207,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|LIBC_MAJOR
-operator|>=
-literal|6
-end_if
+begin_comment
+comment|/*  * We can't make this 'static' until 6.0-current due to binary  * compatibility concerns.  This also means we cannot change the  * sizeof(FILE) until that time either and must continue to use the  * __sFILEX stuff to add to FILE.  */
+end_comment
 
 begin_decl_stmt
-specifier|static
-endif|#
-directive|endif
 name|FILE
 name|__sF
 index|[
