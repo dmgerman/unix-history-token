@@ -1096,6 +1096,7 @@ name|SCSI_LOW_STATICS
 end_ifdef
 
 begin_struct
+specifier|static
 struct|struct
 name|scsi_low_statics
 block|{
