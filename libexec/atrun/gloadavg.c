@@ -6,6 +6,32 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
 end_ifndef
 
@@ -53,22 +79,20 @@ file|"gloadavg.h"
 end_include
 
 begin_comment
-comment|/* File scope variables */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id$"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Global functions */
 end_comment
+
+begin_function_decl
+name|void
+name|perr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|double
@@ -152,7 +176,7 @@ literal|1
 condition|)
 name|perr
 argument_list|(
-literal|"Error in getloadavg"
+literal|"error in getloadavg"
 argument_list|)
 expr_stmt|;
 endif|#

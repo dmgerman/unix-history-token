@@ -3,6 +3,32 @@ begin_comment
 comment|/*   *  atrun.c - run jobs queued by at; run with root privileges.  *  Copyright (C) 1993, 1994 Thomas Koenig  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/* System Headers */
 end_comment
@@ -52,19 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -100,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -107,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_include
@@ -269,24 +295,6 @@ begin_comment
 comment|/* File scope variables */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|namep
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: atrun.c,v 1.10 1997/04/12 01:04:50 davidn Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|debug
@@ -306,6 +314,19 @@ name|a
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Local functions */
@@ -494,7 +515,7 @@ condition|)
 block|{
 name|perr
 argument_list|(
-literal|"Cannot change file permissions"
+literal|"cannot change file permissions"
 argument_list|)
 expr_stmt|;
 block|}
@@ -513,7 +534,7 @@ literal|1
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot fork"
+literal|"cannot fork"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -621,7 +642,7 @@ name|NULL
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot open input file"
+literal|"cannot open input file"
 argument_list|)
 expr_stmt|;
 if|if
@@ -642,7 +663,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Error duplicating input file descriptor"
+literal|"error duplicating input file descriptor"
 argument_list|)
 expr_stmt|;
 if|if
@@ -660,7 +681,7 @@ literal|1
 condition|)
 name|perr
 argument_list|(
-literal|"Error in fstat of input file descriptor"
+literal|"error in fstat of input file descriptor"
 argument_list|)
 expr_stmt|;
 if|if
@@ -678,7 +699,7 @@ literal|1
 condition|)
 name|perr
 argument_list|(
-literal|"Error in fstat of input file"
+literal|"error in fstat of input file"
 argument_list|)
 expr_stmt|;
 if|if
@@ -816,7 +837,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Error in fcntl"
+literal|"error in fcntl"
 argument_list|)
 expr_stmt|;
 name|fcntl
@@ -979,7 +1000,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot chdir to "
+literal|"cannot chdir to "
 name|ATSPOOL_DIR
 argument_list|)
 expr_stmt|;
@@ -1009,7 +1030,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot create output file"
+literal|"cannot create output file"
 argument_list|)
 expr_stmt|;
 name|write_string
@@ -1075,7 +1096,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Error in fork"
+literal|"error in fork"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1119,7 +1140,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Error in lseek"
+literal|"error in lseek"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1133,7 +1154,7 @@ name|STDIN_FILENO
 condition|)
 name|perr
 argument_list|(
-literal|"Error in I/O redirection"
+literal|"error in I/O redirection"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1147,7 +1168,7 @@ name|STDOUT_FILENO
 condition|)
 name|perr
 argument_list|(
-literal|"Error in I/O redirection"
+literal|"error in I/O redirection"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,7 +1182,7 @@ name|STDERR_FILENO
 condition|)
 name|perr
 argument_list|(
-literal|"Error in I/O redirection"
+literal|"error in I/O redirection"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1185,7 +1206,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot chdir to "
+literal|"cannot chdir to "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -1220,7 +1241,7 @@ argument_list|)
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot delete saved userids"
+literal|"cannot delete saved userids"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1243,7 +1264,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot change group"
+literal|"cannot change group"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1257,7 +1278,7 @@ argument_list|)
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot set login name"
+literal|"cannot set login name"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1278,7 +1299,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot set user id"
+literal|"cannot set user id"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1316,7 +1337,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Exec failed for /bin/sh"
+literal|"exec failed for /bin/sh"
 argument_list|)
 expr_stmt|;
 name|PRIV_END
@@ -1367,7 +1388,7 @@ name|STDIN_FILENO
 condition|)
 name|perr
 argument_list|(
-literal|"Open of jobfile failed"
+literal|"open of jobfile failed"
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -1404,7 +1425,7 @@ argument_list|)
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot delete saved userids"
+literal|"cannot delete saved userids"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1427,7 +1448,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot change group"
+literal|"cannot change group"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1441,7 +1462,7 @@ argument_list|)
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot set login name"
+literal|"cannot set login name"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1462,7 +1483,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot set user id"
+literal|"cannot set user id"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1526,7 +1547,7 @@ endif|#
 directive|endif
 name|perr
 argument_list|(
-literal|"Exec failed for mail command"
+literal|"exec failed for mail command"
 argument_list|)
 expr_stmt|;
 name|PRIV_END
@@ -1562,8 +1583,10 @@ condition|(
 name|debug
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
@@ -1672,10 +1695,6 @@ name|opterr
 operator|=
 literal|0
 expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1743,28 +1762,12 @@ break|break;
 case|case
 literal|'?'
 case|:
-name|perr
-argument_list|(
-literal|"unknown option"
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
-name|perr
-argument_list|(
-literal|"idiotic option - aborted"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-break|break;
 block|}
 block|}
-name|namep
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -1776,7 +1779,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot change to "
+literal|"cannot change to "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -1796,7 +1799,7 @@ name|NULL
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot read "
+literal|"cannot read "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -1857,7 +1860,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot stat in "
+literal|"cannot stat in "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2059,6 +2062,39 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: atrun [-l load_avg] [-d]\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"usage: atrun [-l load_avg] [-d]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
