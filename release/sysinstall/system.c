@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.4 1995/05/31 22:09:20 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.5 1995/05/31 23:08:31 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -619,6 +619,13 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|default_lang
+init|=
+literal|"en_US.ISO8859-1"
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -645,7 +652,7 @@ name|NULL
 condition|)
 name|cp
 operator|=
-literal|"en_US.ISO8859-1"
+name|default_lang
 expr_stmt|;
 for|for
 control|(
@@ -732,9 +739,20 @@ condition|)
 return|return
 name|buf
 return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+name|default_lang
+argument_list|)
+condition|)
+break|break;
 name|cp
 operator|=
-literal|"en_US.ISO8859-1"
+name|default_lang
 expr_stmt|;
 block|}
 return|return
