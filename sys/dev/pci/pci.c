@@ -953,6 +953,51 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pci_do_powerstate
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.do_powerstate"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|pci_do_powerstate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|do_powerstate
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pci_do_powerstate
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable setting the power states of the PCI devices.  This means that we\n\ set devices into D0 before probe/attach, and D3 if they fail to attach.  It\n\ also means we set devices into D3 state before shutdown."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Find a device_t by bus/slot/function */
 end_comment
@@ -2408,6 +2453,21 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
+comment|/* 	 * Dx -> Dx is a nop always. 	 */
+if|if
+condition|(
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|state
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|cfg
@@ -3656,7 +3716,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For I/O registers, if bottom bit is set, and the next bit up 	 * isn't clear, we know we have a BAR that doesn't conform to the 	 * spec, so ignore it.  Also, sanity check the size of the data 	 * areas to the type of memory involved. 	 */
+comment|/* 	 * For I/O registers, if bottom bit is set, and the next bit up 	 * isn't clear, we know we have a BAR that doesn't conform to the 	 * spec, so ignore it.  Also, sanity check the size of the data 	 * areas to the type of memory involved.  Memory must be at least 	 * 32 bytes in size, while I/O ranges must be at least 4. 	 */
 if|if
 condition|(
 operator|(
@@ -3699,7 +3759,7 @@ name|SYS_RES_IOPORT
 operator|&&
 name|ln2size
 operator|<
-literal|3
+literal|2
 operator|)
 condition|)
 return|return
@@ -8492,7 +8552,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Only do header type 0 devices.  Type 1 devices are bridges, which 	 * we know need special treatment.  Type 2 devices are cardbus bridges 	 * which also require special treatment.  Other types are unknown, and 	 * we err on the side of safety by ignoring them. 	 */
+comment|/* 	 * Only do header type 0 devices.  Type 1 devices are bridges, 	 * which we know need special treatment.  Type 2 devices are 	 * cardbus bridges which also require special treatment. 	 * Other types are unknown, and we err on the side of safety 	 * by ignoring them. 	 */
 if|if
 condition|(
 name|dinfo
@@ -8504,19 +8564,24 @@ operator|!=
 literal|0
 condition|)
 return|return;
+comment|/* 	 * Restore the device to full power mode.  We must do this 	 * before we restore the registers because moving from D3 to 	 * D0 will cause the chip's BARs and some other registers to 	 * be reset to some unknown power on reset values.  Cut down 	 * the noise on boot by doing nothing if we are already in 	 * state D0. 	 */
 if|if
 condition|(
+name|pci_do_powerstate
+operator|&&
+operator|(
 name|pci_get_powerstate
 argument_list|(
 name|dev
 argument_list|)
 operator|!=
 name|PCI_POWERSTATE_D0
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: setting power state D0\n"
+literal|"pci%d:%d:%d: Transition from D%d to D0\n"
 argument_list|,
 name|dinfo
 operator|->
@@ -8535,6 +8600,11 @@ operator|->
 name|cfg
 operator|.
 name|func
+argument_list|,
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pci_set_powerstate
@@ -8730,6 +8800,9 @@ decl_stmt|;
 name|uint32_t
 name|cls
 decl_stmt|;
+name|int
+name|ps
+decl_stmt|;
 comment|/* 	 * Only do header type 0 devices.  Type 1 devices are bridges, which 	 * we know need special treatment.  Type 2 devices are cardbus bridges 	 * which also require special treatment.  Other types are unknown, and 	 * we err on the side of safety by ignoring them.  Powering down 	 * bridges should not be undertaken lightly. 	 */
 if|if
 condition|(
@@ -8902,7 +8975,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * don't set the state for display devices and for memory devices 	 * since bad things happen.  we should (a) have drivers that can easily 	 * detach and (b) use generic drivers for these devices so that some 	 * device actually attaches.  We need to make sure that when we 	 * implement (a) we don't power the device down on a reattach. 	 * 	 * John and Nate also tell me that we should be running the power up 	 * and power down hooks when we change power state for those nodes 	 * that have ACPI hooks in the tree. 	 */
+comment|/* 	 * don't set the state for display devices and for memory devices 	 * since bad things happen.  we should (a) have drivers that can easily 	 * detach and (b) use generic drivers for these devices so that some 	 * device actually attaches.  We need to make sure that when we 	 * implement (a) we don't power the device down on a reattach. 	 */
 name|cls
 operator|=
 name|pci_get_class
@@ -8912,6 +8985,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|pci_do_powerstate
+operator|&&
 name|setstate
 operator|&&
 name|cls
@@ -8923,6 +8998,58 @@ operator|!=
 name|PCIC_MEMORY
 condition|)
 block|{
+comment|/* 		 * PCI spec is clear that we can only go into D3 state from 		 * D0 state.  Transition from D[12] into D0 before going 		 * to D3 state. 		 */
+name|ps
+operator|=
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|!=
+name|PCI_POWERSTATE_D0
+operator|&&
+name|ps
+operator|!=
+name|PCI_POWERSTATE_D3
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pci%d:%d:%d: Transition from D%d to D0\n"
+argument_list|,
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|bus
+argument_list|,
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|slot
+argument_list|,
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|func
+argument_list|,
+name|ps
+argument_list|)
+expr_stmt|;
+name|pci_set_powerstate
+argument_list|(
+name|dev
+argument_list|,
+name|PCI_POWERSTATE_D0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pci_get_powerstate
@@ -8935,7 +9062,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: setting power state D3\n"
+literal|"pci%d:%d:%d: Transition from D0 to D3\n"
 argument_list|,
 name|dinfo
 operator|->
