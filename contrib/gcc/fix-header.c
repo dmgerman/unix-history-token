@@ -1860,6 +1860,19 @@ name|no_line_commands
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FIXPROTO_INIT
+comment|/* Some targets may assume special definitions (for example      OSF header files assume __LANGUAGE_C__).  These macros      are normally passed to cpplib by gcc - but we here invoke      cpplib directly, without going through gcc.      Handle these and other target-dependent initializations here. */
+name|FIXPROTO_INIT
+argument_list|(
+operator|&
+name|scan_in
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Actually (pre-)process the header file. */
 name|scan_decls
 argument_list|(
 operator|&

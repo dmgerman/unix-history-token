@@ -843,12 +843,15 @@ argument_list|,
 name|key
 argument_list|)
 condition|)
+block|{
 name|retval
 operator|=
 name|node
 operator|->
 name|value
 expr_stmt|;
+break|break;
+block|}
 else|else
 name|node
 operator|=

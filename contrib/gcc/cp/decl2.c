@@ -5215,7 +5215,7 @@ literal|0
 argument_list|,
 name|raises
 argument_list|,
-name|attrlist
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5733,6 +5733,25 @@ block|}
 comment|/* The corresponding pop_obstacks is in cp_finish_decl.  */
 name|push_obstacks_nochange
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|attrlist
+condition|)
+name|cplus_decl_attributes
+argument_list|(
+name|value
+argument_list|,
+name|TREE_PURPOSE
+argument_list|(
+name|attrlist
+argument_list|)
+argument_list|,
+name|TREE_VALUE
+argument_list|(
+name|attrlist
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -296,23 +296,6 @@ value|".size"
 end_define
 
 begin_comment
-comment|/* This is how we tell the assembler that a symbol is weak.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_WEAKEN_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while (0)
-end_define
-
-begin_comment
 comment|/* The following macro defines the format used to output the second    operand of the .type assembler directive.  Different svr4 assemblers    expect various different forms for this operand.  The one given here    is just a default.  You may need to override it in your machine-    specific tm.h file (depending upon the particulars of your assembler).  */
 end_comment
 
