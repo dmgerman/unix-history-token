@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket2.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket2.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1104,6 +1104,7 @@ operator||=
 name|SB_COLL
 expr_stmt|;
 else|else
+block|{
 name|sb
 operator|->
 name|sb_sel
@@ -1112,6 +1113,13 @@ name|u
 operator|.
 name|u_procp
 expr_stmt|;
+name|sb
+operator|->
+name|sb_flags
+operator||=
+name|SB_SEL
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1335,7 +1343,11 @@ operator|->
 name|sb_flags
 operator|&=
 operator|~
+operator|(
+name|SB_SEL
+operator||
 name|SB_COLL
+operator|)
 expr_stmt|;
 block|}
 if|if
