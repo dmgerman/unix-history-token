@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regfree.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regfree.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regfree.c	5.1 (Berkeley) %G%"
+literal|"@(#)regfree.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ file|"regex2.h"
 end_include
 
 begin_comment
-comment|/*  - regfree - free everything  */
+comment|/*  - regfree - free everything  = extern void regfree(regex_t *preg);  */
 end_comment
 
 begin_function
@@ -206,13 +206,18 @@ name|NULL
 condition|)
 name|free
 argument_list|(
+name|g
+operator|->
+name|must
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|g
-operator|->
-name|must
 argument_list|)
 expr_stmt|;
 block|}

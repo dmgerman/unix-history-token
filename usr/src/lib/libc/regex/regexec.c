@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regexec.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regexec.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regexec.c	5.3 (Berkeley) %G%"
+literal|"@(#)regexec.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,19 @@ include|#
 directive|include
 file|"regex2.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nope
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for use in asserts; shuts lint up */
+end_comment
 
 begin_comment
 comment|/* macros for manipulating states, small version */
@@ -252,7 +265,7 @@ name|o
 parameter_list|,
 name|n
 parameter_list|)
-value|((o) = 1<< (n))
+value|((o) = (unsigned)1<< (n))
 end_define
 
 begin_define
@@ -296,7 +309,7 @@ name|src
 parameter_list|,
 name|n
 parameter_list|)
-value|((dst) |= ((src)&(here))<< (n))
+value|((dst) |= ((unsigned)(src)&(here))<< (n))
 end_define
 
 begin_define
@@ -310,7 +323,7 @@ name|src
 parameter_list|,
 name|n
 parameter_list|)
-value|((dst) |= ((src)&(here))>> (n))
+value|((dst) |= ((unsigned)(src)&(here))>> (n))
 end_define
 
 begin_define
@@ -322,7 +335,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|((v)& (here>> (n)))
+value|((v)& ((unsigned)here>> (n)))
 end_define
 
 begin_comment
@@ -693,7 +706,7 @@ file|"engine.c"
 end_include
 
 begin_comment
-comment|/*  - regexec - interface for matching  *  * We put this here so we can exploit knowledge of the state representation  * when choosing which matcher to call.  Also, by this point the matchers  * have been prototyped.  */
+comment|/*  - regexec - interface for matching  = extern int regexec(const regex_t *preg, const char *string, size_t nmatch, \  =					regmatch_t pmatch[], int eflags);  = #define	REG_NOTBOL	00001  = #define	REG_NOTEOL	00002  = #define	REG_STARTEND	00004  = #define	REG_TRACE	00400	// tracing of execution  = #define	REG_LARGE	01000	// force large representation  = #define	REG_BACKR	02000	// force use of backref code  *  * We put this here so we can exploit knowledge of the state representation  * when choosing which matcher to call.  Also, by this point the matchers  * have been prototyped.  */
 end_comment
 
 begin_function
@@ -808,14 +821,20 @@ operator|(
 name|REG_BADPAT
 operator|)
 return|;
+if|if
+condition|(
 name|eflags
-operator|=
+operator|!=
 name|GOODFLAGS
 argument_list|(
 name|eflags
 argument_list|)
-expr_stmt|;
-comment|/* xxx should we complain? */
+condition|)
+return|return
+operator|(
+name|REG_INVARG
+operator|)
+return|;
 if|if
 condition|(
 name|g
@@ -843,7 +862,7 @@ argument_list|(
 name|g
 argument_list|,
 operator|(
-name|uchar
+name|char
 operator|*
 operator|)
 name|string
@@ -864,7 +883,7 @@ argument_list|(
 name|g
 argument_list|,
 operator|(
-name|uchar
+name|char
 operator|*
 operator|)
 name|string

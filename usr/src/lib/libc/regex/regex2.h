@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regex2.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regex2.h	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * First, the stuff that ends up in the outside-world include file  = typedef off_t regoff_t;  = typedef struct {  = 	int re_magic;  = 	size_t re_nsub;		// number of parenthesized subexpressions  =	const char *re_endp;	// end pointer for REG_PEND  = 	struct re_guts *re_g;	// none of your business :-)  = } regex_t;  = typedef struct {  = 	regoff_t rm_so;		// start of match  = 	regoff_t rm_eo;		// end of match  = } regmatch_t;  */
 end_comment
 
 begin_comment
@@ -55,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|OPSHIFT
-value|27
+value|((unsigned)27)
 end_define
 
 begin_define
@@ -296,6 +300,28 @@ begin_comment
 comment|/* end choice	back to OOR1		*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OBOW
+value|(19<<OPSHIFT)
+end_define
+
+begin_comment
+comment|/* begin word	-			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OEOW
+value|(20<<OPSHIFT)
+end_define
+
+begin_comment
+comment|/* end word	-			*/
+end_comment
+
 begin_comment
 comment|/*  * Structure for [] character-set representation.  Character sets are  * done as bit vectors, grouped 8 to a byte vector for compactness.  * The individual set therefore has both a pointer to the byte vector  * and a mask to pick out the relevant bit of each byte.  A hash code  * simplifies testing whether two sets could be identical.  *  * This will get trickier for multicharacter collating elements.  As  * preliminary hooks for dealing with such things, we also carry along  * a string of multi-character elements, and decide the size of the  * vectors at run time.  */
 end_comment
@@ -320,11 +346,11 @@ comment|/* hash code */
 name|size_t
 name|smultis
 decl_stmt|;
-name|uchar
+name|char
 modifier|*
 name|multis
 decl_stmt|;
-comment|/* -> uchar[smulti]  ab\0cd\0ef\0\0 */
+comment|/* -> char[smulti]  ab\0cd\0ef\0\0 */
 block|}
 name|cset
 typedef|;
@@ -343,7 +369,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(c)] |= (cs)->mask, (cs)->hash += (c))
+value|((cs)->ptr[(uchar)(c)] |= (cs)->mask, (cs)->hash += (c))
 end_define
 
 begin_define
@@ -355,7 +381,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(c)]&= ~(cs)->mask, (cs)->hash -= (c))
+value|((cs)->ptr[(uchar)(c)]&= ~(cs)->mask, (cs)->hash -= (c))
 end_define
 
 begin_define
@@ -367,7 +393,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(c)]& (cs)->mask)
+value|((cs)->ptr[(uchar)(c)]& (cs)->mask)
 end_define
 
 begin_define
@@ -379,7 +405,7 @@ name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-value|mcadd(p, cs, cp)
+value|mcadd(cs, cp)
 end_define
 
 begin_comment
@@ -395,7 +421,7 @@ name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-value|mcsub(p, cs, cp)
+value|mcsub(cs, cp)
 end_define
 
 begin_define
@@ -407,8 +433,20 @@ name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-value|mcin(p, cs, cp)
+value|mcin(cs, cp)
 end_define
+
+begin_comment
+comment|/* stuff for character categories */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|cat_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * main compiled-expression structure  */
@@ -484,14 +522,22 @@ name|BAD
 value|04
 comment|/* something wrong */
 name|int
+name|nbol
+decl_stmt|;
+comment|/* number of ^ used */
+name|int
+name|neol
+decl_stmt|;
+comment|/* number of $ used */
+name|int
 name|ncategories
 decl_stmt|;
 comment|/* how many character categories */
-name|uchar
+name|cat_t
 modifier|*
 name|categories
 decl_stmt|;
-comment|/* -> uchar[NUC] */
+comment|/* ->catspace[-CHAR_MIN] */
 name|char
 modifier|*
 name|must
@@ -513,9 +559,32 @@ name|sopno
 name|nplus
 decl_stmt|;
 comment|/* how deep does it nest +s? */
+comment|/* catspace must be last */
+name|cat_t
+name|catspace
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* actually [NC] */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* misc utilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUT
+value|(CHAR_MAX+1)
+end_define
+
+begin_comment
+comment|/* a non-character value */
+end_comment
 
 end_unit
 
