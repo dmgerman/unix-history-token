@@ -5617,29 +5617,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make the specified page pageable (or not).  Unneeded.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_pageable
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|sva
-parameter_list|,
-name|vm_offset_t
-name|eva
-parameter_list|,
-name|boolean_t
-name|pageable
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
 comment|/*  * Returns true if the pmap's pv is one of the first  * 16 pvs linked to from this page.  This count may  * be changed upwards or downwards in the future; it  * is only necessary that true be returned for a small  * subset of pmaps for proper page aging.  */
 end_comment
 

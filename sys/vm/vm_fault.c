@@ -2897,20 +2897,6 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-comment|/* 	 * Inform the physical mapping system that the range of addresses may 	 * not fault, so that page tables and such can be locked down as well. 	 */
-name|pmap_pageable
-argument_list|(
-name|map
-operator|->
-name|pmap
-argument_list|,
-name|start
-argument_list|,
-name|end
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We simulate a fault to get the page and enter it in the physical 	 * map.  For user wiring, we only ask for read access on currently 	 * read-only sections. 	 */
 for|for
 control|(
@@ -3095,18 +3081,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Inform the physical mapping system that the range of addresses may 	 * fault, so that page tables and such may be unwired themselves. 	 */
-name|pmap_pageable
-argument_list|(
-name|pmap
-argument_list|,
-name|start
-argument_list|,
-name|end
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 block|}

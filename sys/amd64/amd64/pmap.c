@@ -10700,36 +10700,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Routine:	pmap_pageable  *	Function:  *		Make the specified pages (by pmap, offset)  *		pageable (or not) as requested.  *  *		A page which is not pageable may not take  *		a fault; therefore, its page table entry  *		must remain valid for the duration.  *  *		This routine is merely advisory; pmap_enter  *		will specify that these pages are to be wired  *		down (or not) as appropriate.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_pageable
-parameter_list|(
-name|pmap
-parameter_list|,
-name|sva
-parameter_list|,
-name|eva
-parameter_list|,
-name|pageable
-parameter_list|)
-name|pmap_t
-name|pmap
-decl_stmt|;
-name|vm_offset_t
-name|sva
-decl_stmt|,
-name|eva
-decl_stmt|;
-name|boolean_t
-name|pageable
-decl_stmt|;
-block|{ }
-end_function
-
-begin_comment
 comment|/*  * Returns true if the pmap's pv is one of the first  * 16 pvs linked to from this page.  This count may  * be changed upwards or downwards in the future; it  * is only necessary that true be returned for a small  * subset of pmaps for proper page aging.  */
 end_comment
 
