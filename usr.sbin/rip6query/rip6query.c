@@ -492,11 +492,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|errx
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
-literal|"%s: %s"
+literal|"rip6query: %s: %s\n"
 argument_list|,
 name|argv
 index|[
@@ -507,6 +507,29 @@ name|gai_strerror
 argument_list|(
 name|error
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EAI_SYSTEM
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
