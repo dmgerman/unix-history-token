@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.3 1994/11/19 13:57:21 jkh Exp $"
+literal|"$Id: slstat.c,v 1.4 1995/05/30 03:52:30 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,6 +577,23 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|system
+operator|!=
+name|NULL
+operator|||
+name|kmemf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|kvm_h
 operator|=
 name|kvm_openfiles
