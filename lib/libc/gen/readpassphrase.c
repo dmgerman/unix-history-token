@@ -59,12 +59,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -120,12 +114,6 @@ begin_include
 include|#
 directive|include
 file|<readpassphrase.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
 end_include
 
 begin_decl_stmt
