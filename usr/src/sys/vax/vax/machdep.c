@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.27	81/03/17	*/
+comment|/*	machdep.c	4.28	81/03/21	*/
 end_comment
 
 begin_include
@@ -1773,6 +1773,20 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+if|#
+directive|if
+name|VAX730
+case|case
+name|VAX_730
+case|:
+name|M730_ENA
+argument_list|(
+name|mcr
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 block|}
 block|}
 if|if
@@ -1915,6 +1929,66 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|M750_INH
+argument_list|(
+name|mcr
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX730
+case|case
+name|VAX_730
+case|:
+if|if
+condition|(
+name|M730_ERR
+argument_list|(
+name|mcr
+argument_list|)
+condition|)
+block|{
+name|struct
+name|mcr
+name|amcr
+decl_stmt|;
+name|amcr
+operator|.
+name|mc_reg
+index|[
+literal|0
+index|]
+operator|=
+name|mcr
+operator|->
+name|mc_reg
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"mcr%d: soft ecc addr %x syn %x\n"
+argument_list|,
+name|m
+argument_list|,
+name|M730_ADDR
+argument_list|(
+operator|&
+name|amcr
+argument_list|)
+argument_list|,
+name|M730_SYN
+argument_list|(
+operator|&
+name|amcr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|M730_INH
 argument_list|(
 name|mcr
 argument_list|)
@@ -2159,12 +2233,20 @@ expr_stmt|;
 block|}
 if|#
 directive|if
+name|defined
+argument_list|(
 name|VAX750
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX730
+argument_list|)
 if|if
 condition|(
 name|cpu
-operator|==
-name|VAX_750
+operator|!=
+name|VAX_780
 condition|)
 block|{
 asm|asm("movl r11,r5");
@@ -2338,6 +2420,20 @@ begin_comment
 comment|/*  * Machine check error recovery code.  * Print out the machine check frame and then give up.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -2380,8 +2476,65 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|NMC730
+value|12
+end_define
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mc730
+index|[]
+init|=
+block|{
+literal|"tb par"
+block|,
+literal|"bad retry"
+block|,
+literal|"bad intr id"
+block|,
+literal|"cant write ptem"
+block|,
+literal|"unkn mcr err"
+block|,
+literal|"iib rd err"
+block|,
+literal|"nxm ref"
+block|,
+literal|"cp rds"
+block|,
+literal|"unalgn ioref"
+block|,
+literal|"nonlw ioref"
+block|,
+literal|"bad ioaddr"
+block|,
+literal|"unalgn ubaddr"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Frame for a 780  */
+comment|/*  * Frame for each cpu  */
 end_comment
 
 begin_struct
@@ -2391,7 +2544,7 @@ block|{
 name|int
 name|mc8_bcnt
 decl_stmt|;
-comment|/* byte count == 28 */
+comment|/* byte count == 0x28 */
 name|int
 name|mc8_summary
 decl_stmt|;
@@ -2451,7 +2604,7 @@ block|{
 name|int
 name|mc5_bcnt
 decl_stmt|;
-comment|/* byte count == 28 */
+comment|/* byte count == 0x28 */
 name|int
 name|mc5_summary
 decl_stmt|;
@@ -2503,6 +2656,37 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|mc730frame
+block|{
+name|int
+name|mc3_bcnt
+decl_stmt|;
+comment|/* byte count == 0xc */
+name|int
+name|mc3_summary
+decl_stmt|;
+comment|/* summary parameter */
+name|int
+name|mc3_parm
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* parameter 1 and 2 */
+name|int
+name|mc3_pc
+decl_stmt|;
+comment|/* trapped pc */
+name|int
+name|mc3_psl
+decl_stmt|;
+comment|/* trapped psl */
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|machinecheck
 argument_list|(
@@ -2519,7 +2703,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|u_int
 name|type
 init|=
 operator|(
@@ -2535,7 +2719,46 @@ name|mc8_summary
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"machine check %x: %s%s\n"
+literal|"machine check %x: "
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cpu
+condition|)
+block|{
+if|#
+directive|if
+name|VAX780
+case|case
+name|VAX_780
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX750
+case|case
+name|VAX_750
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+name|printf
+argument_list|(
+literal|"%s%s\n"
 argument_list|,
 name|type
 argument_list|,
@@ -2557,6 +2780,40 @@ else|:
 literal|" fault"
 argument_list|)
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX730
+case|case
+name|VAX_730
+case|:
+if|if
+condition|(
+name|type
+operator|<
+name|NMC730
+condition|)
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|mc730
+index|[
+name|type
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+block|}
 switch|switch
 condition|(
 name|cpu
@@ -2755,6 +3012,69 @@ argument_list|,
 name|mfpr
 argument_list|(
 name|MCSR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|MCESR
+argument_list|,
+literal|0xf
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX730
+case|case
+name|VAX_730
+case|:
+block|{
+specifier|register
+name|struct
+name|mc730frame
+modifier|*
+name|mcf
+init|=
+operator|(
+expr|struct
+name|mc730frame
+operator|*
+operator|)
+name|cmcf
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"params %x,%x pc %x psl %x mcesr %x\n"
+argument_list|,
+name|mcf
+operator|->
+name|mc3_parm
+index|[
+literal|0
+index|]
+argument_list|,
+name|mcf
+operator|->
+name|mc3_parm
+index|[
+literal|1
+index|]
+argument_list|,
+name|mcf
+operator|->
+name|mc3_pc
+argument_list|,
+name|mcf
+operator|->
+name|mc3_psl
+argument_list|,
+name|mfpr
+argument_list|(
+name|MCESR
 argument_list|)
 argument_list|)
 expr_stmt|;
