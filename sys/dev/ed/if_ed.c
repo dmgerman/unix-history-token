@@ -1313,6 +1313,17 @@ else|:
 literal|"(8 bit)"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ED_HPP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ED_3C503
+argument_list|)
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -1350,6 +1361,8 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -2121,6 +2134,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ED_3C503
 comment|/* 	 * If this is a 3Com board, the tranceiver must be software enabled 	 * (there is no settable hardware default). 	 */
 if|if
 condition|(
@@ -2163,6 +2179,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|ED_NO_MIIBUS
@@ -2589,6 +2607,9 @@ operator|->
 name|vendor
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ED_3C503
 comment|/* 				 * For 16bit 3Com boards (which have 16k of 				 * memory), we have the xmit buffers in a 				 * different page of memory ('page 0') - so 				 * change pages. 				 */
 case|case
 name|ED_VENDOR_3COM
@@ -2603,7 +2624,9 @@ name|ED_3COM_GACFR_RSEL
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 				 * Enable 16bit access to shared memory on 				 * WD/SMC boards. 				 */
+endif|#
+directive|endif
+comment|/* 				 * Enable 16bit access to shared memory on 				 * WD/SMC boards. 				 * 				 * XXX - same as ed_enable_16bit_access() 				 */
 case|case
 name|ED_VENDOR_WD_SMC
 case|:
@@ -2702,6 +2725,9 @@ operator|->
 name|vendor
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ED_3C503
 case|case
 name|ED_VENDOR_3COM
 case|:
@@ -2717,9 +2743,12 @@ name|ED_3COM_GACFR_MBS0
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|ED_VENDOR_WD_SMC
 case|:
+comment|/* XXX - same as ed_disable_16bit_access() */
 if|if
 condition|(
 name|sc
@@ -4117,7 +4146,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * An unfortunate hack to provide the (required) software 		 * control of the tranceiver for 3Com boards. The ALTPHYS flag 		 * disables the tranceiver if set. 		 */
+comment|/* 		 * An unfortunate hack to provide the (required) software 		 * control of the tranceiver for 3Com/HP boards. 		 * The ALTPHYS flag disables the tranceiver if set. 		 * 		 * XXX - should use ifmedia. 		 */
+ifdef|#
+directive|ifdef
+name|ED_3C503
 if|if
 condition|(
 name|sc
@@ -4159,10 +4191,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ED_HPP
-elseif|else
 if|if
 condition|(
 name|sc

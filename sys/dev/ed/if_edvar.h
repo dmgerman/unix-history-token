@@ -636,6 +636,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_3C503
+end_ifdef
+
 begin_function_decl
 name|int
 name|ed_probe_3Com
@@ -648,6 +654,17 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_SIC
+end_ifdef
 
 begin_function_decl
 name|int
@@ -662,6 +679,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|ed_probe_Novell
@@ -669,6 +691,17 @@ parameter_list|(
 name|device_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ed_probe_Novell_generic
+parameter_list|(
+name|device_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -686,6 +719,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_HPP
+end_ifdef
+
 begin_function_decl
 name|int
 name|ed_probe_HP_pclanp
@@ -698,6 +737,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -870,6 +914,12 @@ begin_comment
 comment|/* The following is unsatisfying XXX */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_HPP
+end_ifdef
+
 begin_function_decl
 name|void
 name|ed_hpp_set_physical_link
@@ -915,6 +965,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
