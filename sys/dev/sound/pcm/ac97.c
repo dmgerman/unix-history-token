@@ -729,6 +729,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x4352595b
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4205"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x43525961
 block|,
 literal|0
