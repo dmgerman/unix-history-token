@@ -364,7 +364,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Invalid argument to option d: %s"
+literal|"Invalid argument to option d: %s\n"
 argument_list|,
 name|optarg
 argument_list|)
@@ -384,9 +384,6 @@ expr_stmt|;
 break|break;
 case|case
 literal|'?'
-case|:
-case|case
-literal|'h'
 case|:
 default|default:
 name|usage
