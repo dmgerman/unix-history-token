@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5303,7 +5303,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * No rtt measurement yet - use the unsmoothed rtt. 		 * Set the variance to half the rtt (so our first 		 * retransmit happens at 2*rtt) 		 */
+comment|/*  		 * No rtt measurement yet - use the unsmoothed rtt. 		 * Set the variance to half the rtt (so our first 		 * retransmit happens at 3*rtt). 		 */
 name|tp
 operator|->
 name|t_srtt
@@ -5585,6 +5585,7 @@ name|rmx_rtt
 operator|)
 condition|)
 block|{
+comment|/* 		 * XXX the lock bit for MTU indicates that the value 		 * is also a minimum value; this is subject to time. 		 */
 if|if
 condition|(
 name|rt
@@ -5593,7 +5594,7 @@ name|rt_rmx
 operator|.
 name|rmx_locks
 operator|&
-name|RTV_MTU
+name|RTV_RTT
 condition|)
 name|tp
 operator|->
