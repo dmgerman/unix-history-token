@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fsdb.c,v 1.7 1997/03/13 12:44:51 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +197,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: %s [-d] -f<fsname>"
+literal|"usage: %s [-d] [-r] -f<fsname>"
 argument_list|,
 name|__progname
 argument_list|)
@@ -208,6 +208,14 @@ end_function
 begin_decl_stmt
 name|int
 name|returntosingle
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|nflag
 init|=
 literal|0
 decl_stmt|;
@@ -263,7 +271,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:d"
+literal|"f:dr"
 argument_list|)
 operator|)
 condition|)
@@ -287,6 +295,14 @@ case|:
 name|debug
 operator|++
 expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|nflag
+operator|++
+expr_stmt|;
+comment|/* "no" in fsck, readonly for us */
 break|break;
 default|default:
 name|usage
@@ -346,7 +362,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Editing file system `%s'\nLast Mounted on %s\n"
+literal|"%s file system `%s'\nLast Mounted on %s\n"
+argument_list|,
+name|nflag
+condition|?
+literal|"Examining"
+else|:
+literal|"Editing"
 argument_list|,
 name|fsys
 argument_list|,
@@ -360,6 +382,12 @@ operator|=
 name|cmdloop
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|nflag
+condition|)
+block|{
 name|sblock
 operator|.
 name|fs_clean
@@ -390,6 +418,7 @@ argument_list|(
 literal|"*** IF IT WAS MOUNTED, RE-MOUNT WITH -u -o reload\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|rval
@@ -730,6 +759,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|FL_RO
+block|,
 name|helpfn
 block|}
 block|,
@@ -741,6 +772,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|FL_RO
 block|,
 name|helpfn
 block|}
@@ -754,6 +787,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_RO
+block|,
 name|focus
 block|}
 block|,
@@ -765,6 +800,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|zapi
 block|}
@@ -778,6 +815,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_RO
+block|,
 name|focusname
 block|}
 block|,
@@ -789,6 +828,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_RO
 block|,
 name|focusname
 block|}
@@ -802,6 +843,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|FL_RO
+block|,
 name|back
 block|}
 block|,
@@ -813,6 +856,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|FL_RO
 block|,
 name|active
 block|}
@@ -826,6 +871,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|FL_RO
+block|,
 name|active
 block|}
 block|,
@@ -837,6 +884,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|FL_WR
 block|,
 name|uplink
 block|}
@@ -850,6 +899,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|FL_WR
+block|,
 name|downlink
 block|}
 block|,
@@ -861,6 +912,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|linkcount
 block|}
@@ -874,6 +927,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|FL_RO
+block|,
 name|ls
 block|}
 block|,
@@ -885,6 +940,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|rm
 block|}
@@ -898,6 +955,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_WR
+block|,
 name|rm
 block|}
 block|,
@@ -909,6 +968,8 @@ block|,
 literal|3
 block|,
 literal|3
+block|,
+name|FL_WR
 block|,
 name|ln
 block|}
@@ -922,6 +983,8 @@ literal|3
 block|,
 literal|3
 block|,
+name|FL_WR
+block|,
 name|chinum
 block|}
 block|,
@@ -933,6 +996,8 @@ block|,
 literal|3
 block|,
 literal|3
+block|,
+name|FL_WR
 block|,
 name|chname
 block|}
@@ -946,6 +1011,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_WR
+block|,
 name|newtype
 block|}
 block|,
@@ -957,6 +1024,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|chmode
 block|}
@@ -970,6 +1039,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_WR
+block|,
 name|chlen
 block|}
 block|,
@@ -981,6 +1052,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|chowner
 block|}
@@ -994,6 +1067,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_WR
+block|,
 name|chgroup
 block|}
 block|,
@@ -1005,6 +1080,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|chaflags
 block|}
@@ -1018,6 +1095,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_WR
+block|,
 name|chgen
 block|}
 block|,
@@ -1029,6 +1108,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|chmtime
 block|}
@@ -1042,6 +1123,8 @@ literal|2
 block|,
 literal|2
 block|,
+name|FL_WR
+block|,
 name|chctime
 block|}
 block|,
@@ -1053,6 +1136,8 @@ block|,
 literal|2
 block|,
 literal|2
+block|,
+name|FL_WR
 block|,
 name|chatime
 block|}
@@ -1066,6 +1151,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|FL_RO
+block|,
 name|quit
 block|}
 block|,
@@ -1078,6 +1165,8 @@ literal|1
 block|,
 literal|1
 block|,
+name|FL_RO
+block|,
 name|quit
 block|}
 block|,
@@ -1089,6 +1178,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|FL_RO
 block|,
 name|quit
 block|}
@@ -1455,6 +1546,35 @@ index|]
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|cmdp
+operator|->
+name|flags
+operator|&
+name|FL_WR
+operator|)
+operator|==
+name|FL_WR
+operator|&&
+name|nflag
+condition|)
+name|warnx
+argument_list|(
+literal|"`%s' requires write access"
+argument_list|,
+name|cmd_argv
+index|[
+literal|0
+index|]
+argument_list|)
+operator|,
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|cmd_argc
