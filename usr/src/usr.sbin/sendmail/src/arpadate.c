@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	5.3 (Berkeley) %G%"
+literal|"@(#)arpadate.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -775,41 +775,41 @@ block|{
 block|{
 literal|"EET"
 block|,
-literal|" -0200"
+literal|"+0200"
 block|}
 block|,
 comment|/* eastern europe */
 block|{
 literal|"MET"
 block|,
-literal|" -0100"
+literal|"+0100"
 block|}
 block|,
 comment|/* middle europe */
 block|{
 literal|"WET"
 block|,
-literal|" GMT"
+literal|"GMT"
 block|}
 block|,
 comment|/* western europe */
 block|{
 literal|"EET DST"
 block|,
-literal|" -0300"
+literal|"+0300"
 block|}
 block|,
 comment|/* daylight saving times */
 block|{
 literal|"MET DST"
 block|,
-literal|" -0200"
+literal|"+0200"
 block|}
 block|,
 block|{
 literal|"WET DST"
 block|,
-literal|" -0100"
+literal|"+0100"
 block|}
 block|,
 block|{
@@ -889,10 +889,18 @@ name|euptr
 operator|->
 name|f_to
 expr_stmt|;
+operator|*
+name|b
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
 while|while
 condition|(
 operator|*
 name|p
+operator|!=
+literal|'\0'
 condition|)
 operator|*
 name|b
