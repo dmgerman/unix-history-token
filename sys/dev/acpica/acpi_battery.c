@@ -187,7 +187,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|int
 name|acpi_battery_get_units
 parameter_list|(
@@ -203,7 +202,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|acpi_battery_get_battdesc
 parameter_list|(
@@ -300,7 +298,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|acpi_battery_get_battinfo
 parameter_list|(
