@@ -115,6 +115,14 @@ name|_interactiveHack
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|FixItMode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -1025,12 +1033,20 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|FixItMode
+operator|=
+literal|1
+expr_stmt|;
 name|systemCreateHoloshell
 argument_list|()
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 return|;
+name|FixItMode
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -1643,6 +1659,15 @@ condition|)
 name|create_termcap
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|OnVTY
+condition|)
+name|systemSuspendDialog
+argument_list|()
+expr_stmt|;
+comment|/* must be before the fork() */
 if|if
 condition|(
 operator|!
