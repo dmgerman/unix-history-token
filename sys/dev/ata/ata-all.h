@@ -1015,6 +1015,110 @@ name|ATA_OP_FINISHED
 value|1
 end_define
 
+begin_comment
+comment|/* ATAPI request sense structure */
+end_comment
+
+begin_struct
+struct|struct
+name|atapi_sense
+block|{
+name|u_int8_t
+name|error_code
+range|:
+literal|7
+decl_stmt|;
+comment|/* current or deferred errors */
+name|u_int8_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+comment|/* follows ATAPI spec */
+name|u_int8_t
+name|segment
+decl_stmt|;
+comment|/* Segment number */
+name|u_int8_t
+name|sense_key
+range|:
+literal|4
+decl_stmt|;
+comment|/* sense key */
+name|u_int8_t
+name|reserved2_4
+range|:
+literal|1
+decl_stmt|;
+comment|/* reserved */
+name|u_int8_t
+name|ili
+range|:
+literal|1
+decl_stmt|;
+comment|/* incorrect length indicator */
+name|u_int8_t
+name|eom
+range|:
+literal|1
+decl_stmt|;
+comment|/* end of medium */
+name|u_int8_t
+name|filemark
+range|:
+literal|1
+decl_stmt|;
+comment|/* filemark */
+name|u_int32_t
+name|cmd_info
+name|__packed
+decl_stmt|;
+comment|/* cmd information */
+name|u_int8_t
+name|sense_length
+decl_stmt|;
+comment|/* additional sense len (n-7) */
+name|u_int32_t
+name|cmd_specific_info
+name|__packed
+decl_stmt|;
+comment|/* additional cmd spec info */
+name|u_int8_t
+name|asc
+decl_stmt|;
+comment|/* additional sense code */
+name|u_int8_t
+name|ascq
+decl_stmt|;
+comment|/* additional sense code qual */
+name|u_int8_t
+name|replaceable_unit_code
+decl_stmt|;
+comment|/* replaceable unit code */
+name|u_int8_t
+name|sk_specific
+range|:
+literal|7
+decl_stmt|;
+comment|/* sense key specific */
+name|u_int8_t
+name|sksv
+range|:
+literal|1
+decl_stmt|;
+comment|/* sense key specific info OK */
+name|u_int8_t
+name|sk_specific1
+decl_stmt|;
+comment|/* sense key specific */
+name|u_int8_t
+name|sk_specific2
+decl_stmt|;
+comment|/* sense key specific */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|ata_request
@@ -1062,6 +1166,15 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* ATAPI command block */
+name|u_int8_t
+name|sense_key
+decl_stmt|;
+comment|/* ATAPI request sense key */
+name|struct
+name|atapi_sense
+name|sense_data
+decl_stmt|;
+comment|/* ATAPI request sense data */
 block|}
 name|atapi
 struct|;
@@ -1804,110 +1917,6 @@ modifier|*
 name|running
 decl_stmt|;
 comment|/* currently running request */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ATAPI request sense structure */
-end_comment
-
-begin_struct
-struct|struct
-name|atapi_sense
-block|{
-name|u_int8_t
-name|error_code
-range|:
-literal|7
-decl_stmt|;
-comment|/* current or deferred errors */
-name|u_int8_t
-name|valid
-range|:
-literal|1
-decl_stmt|;
-comment|/* follows ATAPI spec */
-name|u_int8_t
-name|segment
-decl_stmt|;
-comment|/* Segment number */
-name|u_int8_t
-name|sense_key
-range|:
-literal|4
-decl_stmt|;
-comment|/* sense key */
-name|u_int8_t
-name|reserved2_4
-range|:
-literal|1
-decl_stmt|;
-comment|/* reserved */
-name|u_int8_t
-name|ili
-range|:
-literal|1
-decl_stmt|;
-comment|/* incorrect length indicator */
-name|u_int8_t
-name|eom
-range|:
-literal|1
-decl_stmt|;
-comment|/* end of medium */
-name|u_int8_t
-name|filemark
-range|:
-literal|1
-decl_stmt|;
-comment|/* filemark */
-name|u_int32_t
-name|cmd_info
-name|__packed
-decl_stmt|;
-comment|/* cmd information */
-name|u_int8_t
-name|sense_length
-decl_stmt|;
-comment|/* additional sense len (n-7) */
-name|u_int32_t
-name|cmd_specific_info
-name|__packed
-decl_stmt|;
-comment|/* additional cmd spec info */
-name|u_int8_t
-name|asc
-decl_stmt|;
-comment|/* additional sense code */
-name|u_int8_t
-name|ascq
-decl_stmt|;
-comment|/* additional sense code qual */
-name|u_int8_t
-name|replaceable_unit_code
-decl_stmt|;
-comment|/* replaceable unit code */
-name|u_int8_t
-name|sk_specific
-range|:
-literal|7
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sksv
-range|:
-literal|1
-decl_stmt|;
-comment|/* sense key specific info OK */
-name|u_int8_t
-name|sk_specific1
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sk_specific2
-decl_stmt|;
-comment|/* sense key specific */
 block|}
 struct|;
 end_struct
