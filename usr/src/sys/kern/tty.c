@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.43	83/07/01	*/
+comment|/*	tty.c	4.44	83/07/06	*/
 end_comment
 
 begin_include
@@ -2307,6 +2307,10 @@ block|{
 name|tp
 operator|->
 name|t_flags
+operator||=
+name|PENDIN
+expr_stmt|;
+name|newflags
 operator||=
 name|PENDIN
 expr_stmt|;
