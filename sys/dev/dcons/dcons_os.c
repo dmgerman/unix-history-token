@@ -2423,11 +2423,16 @@ name|int
 name|stage
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 name|int
 name|addr
 decl_stmt|,
 name|size
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|drv_init
