@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* defun.c -- @defun and friends.    $Id: defun.c,v 1.3 2002/11/11 00:57:49 feloy Exp $     Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* defun.c -- @defun and friends.    $Id: defun.c,v 1.6 2003/05/09 23:51:10 karl Exp $     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1173,10 +1173,12 @@ modifier|*
 modifier|*
 name|scan_args
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|category
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|defined_name
 decl_stmt|,
@@ -1979,7 +1981,7 @@ name|deftypevr
 case|:
 name|execute_string
 argument_list|(
-literal|"%s"
+literal|"%s "
 argument_list|,
 name|type_name
 argument_list|)
@@ -2017,7 +2019,7 @@ name|deftypeivar
 case|:
 name|execute_string
 argument_list|(
-literal|"%s"
+literal|"%s "
 argument_list|,
 name|type_name2
 argument_list|)
@@ -2433,24 +2435,23 @@ name|void
 name|cm_defun
 parameter_list|()
 block|{
-name|int
-name|x_p
-decl_stmt|;
 name|enum
 name|insertion_type
 name|type
 decl_stmt|;
 name|char
 modifier|*
-name|temp
+name|base_command
 init|=
 name|xstrdup
 argument_list|(
 name|command
 argument_list|)
 decl_stmt|;
+comment|/* command with any `x' removed */
+name|int
 name|x_p
-operator|=
+init|=
 operator|(
 name|command
 index|[
@@ -2464,16 +2465,16 @@ index|]
 operator|==
 literal|'x'
 operator|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|x_p
 condition|)
-name|temp
+name|base_command
 index|[
 name|strlen
 argument_list|(
-name|temp
+name|base_command
 argument_list|)
 operator|-
 literal|1
@@ -2485,12 +2486,7 @@ name|type
 operator|=
 name|find_type_from_name
 argument_list|(
-name|temp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|temp
+name|base_command
 argument_list|)
 expr_stmt|;
 comment|/* If we are adding to an already existing insertion, then make sure      that we are already in an insertion of type TYPE. */
@@ -2514,10 +2510,10 @@ name|line_error
 argument_list|(
 name|_
 argument_list|(
-literal|"Must be in `%s' insertion to use `%sx'"
+literal|"Must be in `@%s' environment to use `@%s'"
 argument_list|)
 argument_list|,
-name|command
+name|base_command
 argument_list|,
 name|command
 argument_list|)
@@ -2529,11 +2525,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+else|else
 name|defun_internal
 argument_list|(
 name|type
 argument_list|,
 name|x_p
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|base_command
 argument_list|)
 expr_stmt|;
 block|}

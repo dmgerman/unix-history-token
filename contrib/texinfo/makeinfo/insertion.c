@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* insertion.c -- insertions for Texinfo.    $Id: insertion.c,v 1.14 2003/01/02 23:46:29 karl Exp $     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* insertion.c -- insertions for Texinfo.    $Id: insertion.c,v 1.21 2003/04/01 14:34:18 karl Exp $     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -443,6 +443,10 @@ name|char
 modifier|*
 name|item_function
 decl_stmt|;
+name|char
+modifier|*
+name|item_loc
+decl_stmt|;
 name|get_rest_of_line
 argument_list|(
 literal|0
@@ -451,6 +455,35 @@ operator|&
 name|item_function
 argument_list|)
 expr_stmt|;
+comment|/* If the document erroneously says        @itemize @bullet @item foobar      it's nicer to give an error up front than repeat `@bullet expected      braces' until we get a segmentation fault.  */
+name|item_loc
+operator|=
+name|strstr
+argument_list|(
+name|item_function
+argument_list|,
+literal|"@item"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|item_loc
+condition|)
+block|{
+name|line_error
+argument_list|(
+name|_
+argument_list|(
+literal|"@item not allowed in argument to @itemize"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|item_loc
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* If we hit the end of text in get_rest_of_line, backing up      input pointer will cause the last character of the last line      be pushed back onto the input, which is wrong.  */
 if|if
 condition|(
@@ -678,6 +711,7 @@ comment|/* Return a pointer to the print name of this     enumerated type. */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|insertion_type_pname
@@ -2295,10 +2329,27 @@ name|close_single_paragraph
 argument_list|()
 expr_stmt|;
 break|break;
-comment|/* Insertions that are no-ops in info, but do something in TeX. */
 case|case
 name|cartouche
 case|:
+if|if
+condition|(
+name|html
+condition|)
+name|add_word
+argument_list|(
+literal|"<table class=\"cartouche\" border=1><tr><td>\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|in_menu
+condition|)
+name|no_discard
+operator|++
+expr_stmt|;
+break|break;
+comment|/* Insertions that are no-ops in info, but do something in TeX. */
 case|case
 name|ifclear
 case|:
@@ -2887,6 +2938,9 @@ comment|/* No longer hacking menus. */
 if|if
 condition|(
 name|html
+operator|&&
+operator|!
+name|no_headers
 condition|)
 name|add_word
 argument_list|(
@@ -2950,10 +3004,23 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|group
-case|:
-case|case
 name|cartouche
+case|:
+if|if
+condition|(
+name|html
+condition|)
+name|add_word
+argument_list|(
+literal|"</td></tr></table>\n"
+argument_list|)
+expr_stmt|;
+name|close_insertion_paragraph
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|group
 case|:
 name|close_insertion_paragraph
 argument_list|()
@@ -3250,6 +3317,7 @@ condition|)
 break|break;
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|offender
@@ -5132,6 +5200,18 @@ condition|(
 operator|!
 name|itemx_flag
 operator|&&
+operator|(
+operator|(
+name|output_paragraph_offset
+operator|<
+sizeof|sizeof
+argument_list|(
+name|dl_tag
+argument_list|)
+operator|+
+literal|1
+operator|)
+operator|||
 name|strncmp
 argument_list|(
 operator|(
@@ -5160,6 +5240,7 @@ literal|1
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 name|add_word
 argument_list|(

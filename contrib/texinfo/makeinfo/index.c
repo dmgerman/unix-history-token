@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.4 2002/11/26 22:54:31 karl Exp $     Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.8 2003/05/16 23:52:40 karl Exp $     Copyright (C) 1998, 1999, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1251,6 +1251,15 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* undefindex sets all this to null in some cases.  */
+if|if
+condition|(
+name|name_index_alist
+index|[
+name|i
+index|]
+condition|)
+block|{
 name|free
 argument_list|(
 name|name_index_alist
@@ -1276,6 +1285,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Add the default indices. */
@@ -2108,7 +2118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Sort the index passed in INDEX, returning an array of    pointers to elements.  The array is terminated with a NULL    pointer.  We call qsort because it's supposed to be fast.    I think this looks bad. */
+comment|/* Sort the index passed in INDEX, returning an array of pointers to    elements.  The array is terminated with a NULL pointer.  */
 end_comment
 
 begin_function
@@ -2132,8 +2142,6 @@ decl_stmt|;
 name|INDEX_ELT
 modifier|*
 name|temp
-init|=
-name|index
 decl_stmt|;
 name|int
 name|count
@@ -2162,22 +2170,29 @@ name|html
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
 name|temp
-condition|)
-block|{
+operator|=
+name|index
+operator|,
 name|count
-operator|++
-expr_stmt|;
+operator|=
+literal|0
+init|;
+name|temp
+condition|;
 name|temp
 operator|=
 name|temp
 operator|->
 name|next
-expr_stmt|;
-block|}
-comment|/* We have the length.  Make an array. */
+operator|,
+name|count
+operator|++
+control|)
+empty_stmt|;
+comment|/* We have the length, now we can allocate an array. */
 name|array
 operator|=
 name|xmalloc
@@ -2195,26 +2210,76 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
-literal|0
-expr_stmt|;
+for|for
+control|(
 name|temp
 operator|=
 name|index
-expr_stmt|;
-while|while
-condition|(
+operator|,
+name|count
+operator|=
+literal|0
+init|;
 name|temp
-condition|)
+condition|;
+name|temp
+operator|=
+name|temp
+operator|->
+name|next
+operator|,
+name|count
+operator|++
+control|)
 block|{
+comment|/* Allocate new memory for the return array, since parts of the          original INDEX get freed.  Otherwise, if the document calls          @printindex twice on the same index, with duplicate entries,          we'll have garbage the second time.  There are cleaner ways to          deal, but this will suffice for now.  */
 name|array
 index|[
 name|count
-operator|++
 index|]
 operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|INDEX_ELT
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|array
+index|[
+name|count
+index|]
+operator|)
+operator|=
+operator|*
+operator|(
 name|temp
+operator|)
+expr_stmt|;
+comment|/* struct assignment, hope it's ok */
+comment|/* Adjust next pointers to use the new memory.  */
+if|if
+condition|(
+name|count
+operator|>
+literal|0
+condition|)
+name|array
+index|[
+name|count
+operator|-
+literal|1
+index|]
+operator|->
+name|next
+operator|=
+name|array
+index|[
+name|count
+index|]
 expr_stmt|;
 comment|/* Set line number and input filename to the source line for this          index entry, as this expansion finds any errors.  */
 name|line_number
@@ -2222,8 +2287,6 @@ operator|=
 name|array
 index|[
 name|count
-operator|-
-literal|1
 index|]
 operator|->
 name|defining_line
@@ -2233,18 +2296,14 @@ operator|=
 name|array
 index|[
 name|count
-operator|-
-literal|1
 index|]
 operator|->
 name|defining_file
 expr_stmt|;
-comment|/* If this particular entry should be printed as a "code" index,          then expand it as @code{entry}, i.e. as in fixed-width font.  */
+comment|/* If this particular entry should be printed as a "code" index,          then expand it as @code{entry}, i.e., as in fixed-width font.  */
 name|array
 index|[
 name|count
-operator|-
-literal|1
 index|]
 operator|->
 name|entry
@@ -2258,18 +2317,10 @@ argument_list|,
 name|array
 index|[
 name|count
-operator|-
-literal|1
 index|]
 operator|->
 name|code
 argument_list|)
-expr_stmt|;
-name|temp
-operator|=
-name|temp
-operator|->
-name|next
 expr_stmt|;
 block|}
 name|array
@@ -2356,12 +2407,25 @@ argument_list|,
 name|index_element_compare
 argument_list|)
 expr_stmt|;
+comment|/* Remove duplicate entries.  */
 name|make_index_entries_unique
 argument_list|(
 name|array
 argument_list|,
 name|count
 argument_list|)
+expr_stmt|;
+comment|/* Replace the original index with the sorted one, in case the      document wants to print it again.  If the index wasn't empty.  */
+if|if
+condition|(
+name|index
+condition|)
+operator|*
+name|index
+operator|=
+operator|*
+operator|*
+name|array
 expr_stmt|;
 return|return
 name|array
@@ -2630,6 +2694,7 @@ operator|++
 control|)
 block|{
 comment|/* A pathological document might have an index entry outside of any              node.  Don't crash; try using the section name instead.  */
+specifier|const
 name|char
 modifier|*
 name|index_node
@@ -2805,10 +2870,14 @@ name|node
 condition|)
 block|{
 comment|/* Make sure any non-macros in the node name are expanded.  */
+name|char
+modifier|*
+name|expanded_index
+decl_stmt|;
 name|in_fixed_width_font
 operator|++
 expr_stmt|;
-name|index_node
+name|expanded_index
 operator|=
 name|expansion
 argument_list|(
@@ -2822,7 +2891,7 @@ operator|--
 expr_stmt|;
 name|add_anchor_name
 argument_list|(
-name|index_node
+name|expanded_index
 argument_list|,
 literal|1
 argument_list|)
@@ -2831,12 +2900,12 @@ name|add_word_args
 argument_list|(
 literal|"\">%s</a>"
 argument_list|,
-name|index_node
+name|expanded_index
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|index_node
+name|expanded_index
 argument_list|)
 expr_stmt|;
 block|}
@@ -3202,11 +3271,6 @@ expr_stmt|;
 name|printing_index
 operator|=
 literal|0
-expr_stmt|;
-name|free
-argument_list|(
-name|array
-argument_list|)
 expr_stmt|;
 name|close_single_paragraph
 argument_list|()

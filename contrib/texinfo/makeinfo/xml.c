@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xml.c -- xml output.    $Id: xml.c,v 1.18 2002/12/17 16:34:22 karl Exp $     Copyright (C) 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Philippe Martin<feloy@free.fr>.  */
+comment|/* xml.c -- xml output.    $Id: xml.c,v 1.19 2003/05/13 16:37:54 karl Exp $     Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Philippe Martin<feloy@free.fr>.  */
 end_comment
 
 begin_include
@@ -5691,30 +5691,22 @@ begin_comment
 comment|/* was , */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|xml_insert_indexterm
-argument_list|(
-argument|indexterm
-argument_list|,
-argument|index
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|indexterm
+parameter_list|,
+name|index
+parameter_list|)
 name|char
 modifier|*
 name|indexterm
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|index
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -5904,7 +5896,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int

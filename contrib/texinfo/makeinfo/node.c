@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* node.c -- nodes for Texinfo.    $Id: node.c,v 1.6 2003/01/18 17:16:17 karl Exp $     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* node.c -- nodes for Texinfo.    $Id: node.c,v 1.12 2003/05/01 00:30:07 karl Exp $     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -3491,12 +3491,14 @@ argument_list|)
 expr_stmt|;
 name|add_word_args
 argument_list|(
-literal|"%s<a name=\""
+literal|"%s%s<a name=\""
 argument_list|,
 name|_
 argument_list|(
 literal|"Node:"
 argument_list|)
+argument_list|,
+literal|"&nbsp;"
 argument_list|)
 expr_stmt|;
 name|tem
@@ -3554,6 +3556,11 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
+literal|"&nbsp;"
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
 literal|"<a rel=\"next\" accesskey=\"n\" href=\""
 argument_list|)
 expr_stmt|;
@@ -3606,6 +3613,11 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
+literal|"&nbsp;"
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
 literal|"<a rel=\"previous\" accesskey=\"p\" href=\""
 argument_list|)
 expr_stmt|;
@@ -3654,6 +3666,11 @@ name|_
 argument_list|(
 literal|"Up:"
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"&nbsp;"
 argument_list|)
 expr_stmt|;
 name|add_word
@@ -3954,6 +3971,12 @@ operator|=
 name|get_xref_token
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Force all versions of "top" to be "Top". */
+name|normalize_node_name
+argument_list|(
+name|anchor
 argument_list|)
 expr_stmt|;
 comment|/* In HTML mode, need to actually produce some output.  */
@@ -4866,6 +4889,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|reftype_type_string
@@ -6108,7 +6132,7 @@ operator|.
 name|st_size
 operator|)
 operator|<
-name|SPLIT_SIZE_THRESHOLD
+name|size
 operator|)
 condition|)
 return|return;
@@ -6191,6 +6215,26 @@ modifier|*
 name|indirect_info
 init|=
 name|NULL
+decl_stmt|;
+comment|/* Maybe we want a Local Variables section.  */
+name|char
+modifier|*
+name|trailer
+init|=
+name|info_trailer
+argument_list|()
+decl_stmt|;
+name|int
+name|trailer_len
+init|=
+name|trailer
+condition|?
+name|strlen
+argument_list|(
+name|trailer
+argument_list|)
+else|:
+literal|0
 decl_stmt|;
 comment|/* Remember the `header' of this file.  The first tag in the file is        the bottom of the header; the top of the file is the start. */
 name|the_header
@@ -6712,11 +6756,24 @@ name|file_top
 operator|)
 operator|||
 operator|(
+name|trailer_len
+operator|&&
+name|write
+argument_list|(
+name|fd
+argument_list|,
+name|trailer
+argument_list|,
+name|trailer_len
+argument_list|)
+operator|!=
+name|trailer_len
+operator|)
+operator|||
 name|close
 argument_list|(
 name|fd
 argument_list|)
-operator|)
 operator|<
 literal|0
 condition|)
@@ -6858,9 +6915,27 @@ name|paragraph_is_open
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Write the indirect tag table.  */
 name|write_tag_table_indirect
 argument_list|()
 expr_stmt|;
+comment|/* preserve local variables in info output.  */
+if|if
+condition|(
+name|trailer
+condition|)
+block|{
+name|insert_string
+argument_list|(
+name|trailer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|trailer
+argument_list|)
+expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|output_stream

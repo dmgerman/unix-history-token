@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* macro.c -- user-defined macros for Texinfo.    $Id: macro.c,v 1.1 2002/08/25 23:38:38 karl Exp $     Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* macro.c -- user-defined macros for Texinfo.    $Id: macro.c,v 1.2 2003/06/01 23:41:23 karl Exp $     Copyright (C) 1998, 1999, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1242,8 +1242,6 @@ decl_stmt|;
 name|int
 name|param_start
 decl_stmt|,
-name|which
-decl_stmt|,
 name|len
 decl_stmt|;
 name|param_start
@@ -1312,7 +1310,42 @@ comment|/* move past \ */
 name|i
 operator|++
 expr_stmt|;
-comment|/* Now check against named parameters. */
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* \\ always means \, even if macro has no args.  */
+name|len
+operator|++
+expr_stmt|;
+name|text
+operator|=
+name|xmalloc
+argument_list|(
+literal|1
+operator|+
+name|len
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|text
+argument_list|,
+literal|"\\%s"
+argument_list|,
+name|param
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|int
+name|which
+decl_stmt|;
+comment|/* Check against named parameters. */
 for|for
 control|(
 name|which
@@ -1381,26 +1414,28 @@ argument_list|(
 name|text
 argument_list|)
 expr_stmt|;
+name|text
+operator|=
+name|xstrdup
+argument_list|(
+name|text
+argument_list|)
+expr_stmt|;
+comment|/* so we can free it */
 block|}
 else|else
 block|{
-comment|/* not a parameter, either it's \\ (if len==0) or an                  error.  In either case, restore one \ at least.  */
-if|if
-condition|(
-name|len
-condition|)
-block|{
+comment|/* not a parameter, so it's an error.  */
 name|warning
 argument_list|(
 name|_
 argument_list|(
-literal|"\\ in macro expansion followed by `%s' instead of \\ or parameter name"
+literal|"\\ in macro expansion followed by `%s' instead of parameter name"
 argument_list|)
 argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
-block|}
 name|len
 operator|++
 expr_stmt|;
@@ -1422,6 +1457,7 @@ argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1469,17 +1505,6 @@ name|new_body_index
 operator|+=
 name|len
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|named
-operator|||
-operator|!
-name|named
-index|[
-name|which
-index|]
-condition|)
 name|free
 argument_list|(
 name|text

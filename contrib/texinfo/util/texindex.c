@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* texindex -- sort TeX index dribble output into an actual index.    $Id: texindex.c,v 1.7 2003/01/19 18:47:15 karl Exp $     Copyright (C) 1987, 1991, 1992, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
+comment|/* texindex -- sort TeX index dribble output into an actual index.    $Id: texindex.c,v 1.9 2003/05/19 13:10:59 karl Exp $     Copyright (C) 1987, 1991, 1992, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
 end_comment
 
 begin_include
@@ -898,7 +898,6 @@ condition|(
 operator|!
 name|outfile
 condition|)
-block|{
 name|outfile
 operator|=
 name|concat
@@ -909,11 +908,8 @@ name|i
 index|]
 argument_list|,
 literal|"s"
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
-block|}
 name|need_initials
 operator|=
 literal|0
@@ -1446,8 +1442,6 @@ argument_list|(
 name|tempdir
 argument_list|,
 literal|"/"
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
 name|keep_tempfiles
@@ -1796,31 +1790,13 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-name|char
-modifier|*
-name|tmpdir
-init|=
-name|getenv
-argument_list|(
-literal|"TEMPDIR"
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|tmpdir
-condition|)
-name|tmpdir
-operator|=
-literal|"/tmp"
-expr_stmt|;
 name|tempbase
 operator|=
 name|concat
 argument_list|(
-name|tmpdir
+name|tempdir
 argument_list|,
-literal|"/txidxXXXXXX"
+literal|"txidxXXXXXX"
 argument_list|)
 expr_stmt|;
 name|fd
@@ -1855,8 +1831,6 @@ expr_stmt|;
 return|return
 name|concat
 argument_list|(
-name|tempdir
-argument_list|,
 name|tempbase
 argument_list|,
 name|tempsuffix
@@ -6871,30 +6845,17 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|strerror
+name|fprintf
 argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: "
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
-name|printf
+name|perror
 argument_list|(
-literal|"%s; for file `%s'.\n"
-argument_list|,
-name|s
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -6912,33 +6873,8 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|strerror
+name|perror_with_name
 argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|program_name
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"%s; for file `%s'.\n"
-argument_list|)
-argument_list|,
-name|s
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -6950,8 +6886,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/* Return a newly-allocated string whose contents concatenate those of    S1, S2, S3.  */
+comment|/* Return a newly-allocated string concatenating S1 and S2.  */
 end_comment
 
 begin_function
@@ -6962,8 +6901,6 @@ parameter_list|(
 name|s1
 parameter_list|,
 name|s2
-parameter_list|,
-name|s3
 parameter_list|)
 name|char
 modifier|*
@@ -6971,9 +6908,6 @@ name|s1
 decl_stmt|,
 decl|*
 name|s2
-decl_stmt|,
-modifier|*
-name|s3
 decl_stmt|;
 end_function
 
@@ -6993,13 +6927,6 @@ name|strlen
 argument_list|(
 name|s2
 argument_list|)
-decl_stmt|,
-name|len3
-init|=
-name|strlen
-argument_list|(
-name|s3
-argument_list|)
 decl_stmt|;
 name|char
 modifier|*
@@ -7014,8 +6941,6 @@ argument_list|(
 name|len1
 operator|+
 name|len2
-operator|+
-name|len3
 operator|+
 literal|1
 argument_list|)
@@ -7036,17 +6961,6 @@ argument_list|,
 name|s2
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|result
-operator|+
-name|len1
-operator|+
-name|len2
-argument_list|,
-name|s3
-argument_list|)
-expr_stmt|;
 operator|*
 operator|(
 name|result
@@ -7054,8 +6968,6 @@ operator|+
 name|len1
 operator|+
 name|len2
-operator|+
-name|len3
 operator|)
 operator|=
 literal|0
