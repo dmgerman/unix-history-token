@@ -1683,7 +1683,7 @@ name|n
 operator|>
 literal|0
 condition|?
-literal|'.'
+literal|':'
 else|:
 literal|' '
 argument_list|)
