@@ -1059,17 +1059,9 @@ modifier|*
 name|gp
 decl_stmt|;
 name|struct
-name|g_provider
-modifier|*
-name|pp
-decl_stmt|;
-name|struct
 name|g_aes_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|g_trace
 argument_list|(
