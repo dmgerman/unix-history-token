@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.27 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|connected
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|allbinary
 decl_stmt|;
 end_decl_stmt
 
@@ -924,7 +930,7 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
+while|while
 condition|(
 name|user
 operator|==
@@ -969,6 +975,10 @@ operator|->
 name|pw_name
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|myname
+condition|)
 name|printf
 argument_list|(
 literal|"Name (%s:%s): "
@@ -976,6 +986,14 @@ argument_list|,
 name|host
 argument_list|,
 name|myname
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Name (%s): "
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4112,6 +4130,16 @@ condition|(
 name|type
 operator|!=
 name|TYPE_A
+operator|&&
+operator|(
+name|allbinary
+operator|==
+literal|0
+operator|||
+name|type
+operator|!=
+name|TYPE_I
+operator|)
 condition|)
 block|{
 name|oldtype

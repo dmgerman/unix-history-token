@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.17 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ directive|include
 file|"ftp_var.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -165,6 +171,13 @@ name|rindex
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|allbinary
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -466,6 +479,10 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|allbinary
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|command
@@ -576,6 +593,10 @@ condition|)
 block|{
 name|setbinary
 argument_list|()
+expr_stmt|;
+name|allbinary
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3323,7 +3344,7 @@ name|strcpy
 argument_list|(
 name|temp
 argument_list|,
-literal|"/tmp/ftpXXXXXX"
+name|_PATH_TMP
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5738,7 +5759,7 @@ name|NULL
 condition|)
 name|shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 name|namep
 operator|=
