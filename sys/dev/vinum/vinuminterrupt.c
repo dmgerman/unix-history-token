@@ -627,12 +627,6 @@ operator|->
 name|b_bcount
 expr_stmt|;
 block|}
-name|rqg
-operator|->
-name|active
-operator|--
-expr_stmt|;
-comment|/* one less request active */
 if|if
 condition|(
 name|rqg
@@ -851,15 +845,21 @@ name|rqg
 operator|->
 name|active
 operator|==
-literal|0
+literal|1
 operator|)
 condition|)
-comment|/* and we've finished phase 1 */
+comment|/* and this is the last rq of phase 1 */
 name|complete_raid5_write
 argument_list|(
 name|rqe
 argument_list|)
 expr_stmt|;
+name|rqg
+operator|->
+name|active
+operator|--
+expr_stmt|;
+comment|/* one less request active */
 if|if
 condition|(
 name|rqg
