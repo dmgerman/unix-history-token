@@ -1815,6 +1815,13 @@ operator|.
 name|id
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 endif|#
