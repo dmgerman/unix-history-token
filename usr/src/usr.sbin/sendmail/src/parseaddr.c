@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.78
+literal|3.79
 operator|%
 name|G
 operator|%
@@ -126,6 +126,17 @@ name|prescan
 argument_list|(
 name|addr
 argument_list|,
+name|bitset
+argument_list|(
+name|EF_OLDSTYLE
+argument_list|,
+name|CurEnv
+operator|->
+name|e_flags
+argument_list|)
+condition|?
+literal|' '
+else|:
 literal|','
 argument_list|)
 expr_stmt|;
@@ -1021,6 +1032,22 @@ name|anglecnt
 operator|--
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|delim
+operator|==
+literal|' '
+operator|&&
+name|isspace
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|c
+operator|=
+literal|' '
+expr_stmt|;
 elseif|else
 if|if
 condition|(
