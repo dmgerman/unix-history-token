@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_subr.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_subr.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -455,11 +455,159 @@ return|;
 block|}
 end_block
 
+begin_expr_stmt
+name|strcat
+argument_list|(
+name|src
+argument_list|,
+name|append
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|src
+operator|,
+operator|*
+name|append
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+for|for
+control|(
+init|;
+operator|*
+name|src
+condition|;
+operator|++
+name|src
+control|)
+comment|/* void */
+empty_stmt|;
+while|while
+condition|(
+operator|*
+name|src
+operator|++
+operator|=
+operator|*
+name|append
+operator|++
+condition|)
+comment|/* void */
+empty_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|strcpy
+argument_list|(
+name|to
+argument_list|,
+name|from
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|to
+operator|,
+operator|*
+name|from
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+for|for
+control|(
+init|;
+operator|*
+name|from
+operator|=
+operator|*
+name|to
+condition|;
+operator|++
+name|from
+operator|,
+operator|++
+name|to
+control|)
+comment|/* void */
+empty_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|strncpy
+argument_list|(
+name|to
+argument_list|,
+name|from
+argument_list|,
+name|cnt
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|to
+operator|,
+operator|*
+name|from
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
+name|cnt
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+for|for
+control|(
+init|;
+name|cnt
+operator|&&
+operator|(
+operator|*
+name|to
+operator|=
+operator|*
+name|from
+operator|)
+condition|;
+operator|--
+name|cnt
+operator|,
+operator|++
+name|from
+operator|,
+operator|++
+name|to
+control|)
+comment|/* void */
+empty_stmt|;
+operator|*
+name|to
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+end_block
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|unused
+name|notdef
 end_ifdef
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_comment
 comment|/*  * Get next character written in by user from uio.  */
@@ -655,7 +803,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* unused */
+comment|/* notdef */
 end_comment
 
 end_unit
