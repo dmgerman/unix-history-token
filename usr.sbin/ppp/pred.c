@@ -24,7 +24,7 @@ file|"ccp.h"
 end_include
 
 begin_comment
-comment|/*  *  * $Id: pred.c,v 1.6 1996/05/11 20:48:41 phk Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
+comment|/*  *  * $Id: pred.c,v 1.7 1996/07/21 13:01:27 phk Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ name|IHASH
 parameter_list|(
 name|x
 parameter_list|)
-value|iHash = (iHash<< 4) ^ (x)
+value|do {iHash = (iHash<< 4) ^ (x);} while(0)
 end_define
 
 begin_define
@@ -48,7 +48,7 @@ name|OHASH
 parameter_list|(
 name|x
 parameter_list|)
-value|oHash = (oHash<< 4) ^ (x)
+value|do {oHash = (oHash<< 4) ^ (x);} while(0)
 end_define
 
 begin_decl_stmt
@@ -521,23 +521,17 @@ begin_function
 name|void
 name|Pred1Output
 parameter_list|(
-name|pri
-parameter_list|,
-name|proto
-parameter_list|,
-name|bp
-parameter_list|)
 name|int
 name|pri
-decl_stmt|;
+parameter_list|,
 name|u_short
 name|proto
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
