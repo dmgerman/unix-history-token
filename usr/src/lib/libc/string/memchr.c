@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memchr.c	5.4 (Berkeley) %G%"
+literal|"@(#)memchr.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,8 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stdc.h>
+end_include
+
 begin_function
-name|char
+name|void
 modifier|*
 name|memchr
 parameter_list|(
@@ -48,46 +60,77 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-specifier|register
-name|char
+specifier|const
+name|void
 modifier|*
 name|s
 decl_stmt|;
-function|register c
-operator|,
-function|n;
-end_function
-
-begin_block
-block|{
-while|while
-condition|(
-operator|--
+specifier|register
+name|unsigned
+name|char
+name|c
+decl_stmt|;
+specifier|register
+name|size_t
 name|n
-operator|>=
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|n
+operator|!=
 literal|0
 condition|)
+block|{
+specifier|register
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|p
+init|=
+name|s
+decl_stmt|;
+do|do
+block|{
 if|if
 condition|(
 operator|*
-name|s
+name|p
 operator|++
 operator|==
 name|c
 condition|)
 return|return
 operator|(
-operator|--
-name|s
-operator|)
-return|;
-return|return
 operator|(
-literal|0
+name|void
+operator|*
+operator|)
+operator|(
+name|p
+operator|-
+literal|1
+operator|)
 operator|)
 return|;
 block|}
-end_block
+do|while
+condition|(
+operator|--
+name|n
+operator|!=
+literal|0
+condition|)
+do|;
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
