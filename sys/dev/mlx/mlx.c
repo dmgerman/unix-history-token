@@ -333,6 +333,61 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|mlx_v5_tryqueue
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|mlx_command
+modifier|*
+name|mc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|mlx_v5_findcomplete
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|slot
+parameter_list|,
+name|u_int16_t
+modifier|*
+name|status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mlx_v5_intaction
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|action
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Status monitoring  */
 end_comment
@@ -1347,6 +1402,28 @@ operator|=
 name|mlx_v4_intaction
 expr_stmt|;
 break|break;
+case|case
+name|MLX_IFTYPE_5
+case|:
+name|sc
+operator|->
+name|mlx_tryqueue
+operator|=
+name|mlx_v5_tryqueue
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_findcomplete
+operator|=
+name|mlx_v5_findcomplete
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_intaction
+operator|=
+name|mlx_v5_intaction
+expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -1879,6 +1956,38 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|MLX_IFTYPE_5
+case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|mlx_fwminor
+operator|<
+literal|7
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mlx_dev
+argument_list|,
+literal|" *** WARNING *** This firmware revision is not recommended\n"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mlx_dev
+argument_list|,
+literal|" *** WARNING *** Use revision 5.07 or later\n"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -2328,92 +2437,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|debug
-argument_list|(
-literal|"called"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|mlx_state
-operator|&
-name|MLX_STATE_OPEN
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|mlx_shutdown
-argument_list|(
-name|dev
-argument_list|)
-operator|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-name|mlx_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/*      * Deregister the control device on last detach.      */
-if|if
-condition|(
-operator|--
-name|cdev_registered
-operator|==
-literal|0
-condition|)
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|mlx_cdevsw
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach, system shutdown, or before performing  * an operation which may add or delete system disks.  (Call mlx_startup to  * resume normal operation.)  *  * Note that we can assume that the bufq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
-end_comment
-
-begin_function
-name|int
-name|mlx_shutdown
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|mlx_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|mlxd_softc
 modifier|*
@@ -2431,22 +2454,26 @@ argument_list|(
 literal|"called"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* assume we're going to shut down */
+if|if
+condition|(
 name|sc
 operator|->
 name|mlx_state
-operator||=
-name|MLX_STATE_SHUTDOWN
-expr_stmt|;
+operator|&
+name|MLX_STATE_OPEN
+condition|)
+goto|goto
+name|out
+goto|;
 for|for
 control|(
 name|i
@@ -2498,14 +2525,7 @@ operator|&
 name|MLXD_OPEN
 condition|)
 block|{
-comment|/* drive is mounted, abort shutdown */
-name|sc
-operator|->
-name|mlx_state
-operator|&=
-operator|~
-name|MLX_STATE_SHUTDOWN
-expr_stmt|;
+comment|/* drive is mounted, abort detach */
 name|device_printf
 argument_list|(
 name|sc
@@ -2517,12 +2537,8 @@ index|]
 operator|.
 name|ms_disk
 argument_list|,
-literal|"still open, can't shutdown\n"
+literal|"still open, can't detach\n"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EBUSY
 expr_stmt|;
 goto|goto
 name|out
@@ -2530,6 +2546,116 @@ goto|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|mlx_shutdown
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+condition|)
+goto|goto
+name|out
+goto|;
+name|mlx_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/*      * Deregister the control device on last detach.      */
+if|if
+condition|(
+operator|--
+name|cdev_registered
+operator|==
+literal|0
+condition|)
+name|cdevsw_remove
+argument_list|(
+operator|&
+name|mlx_cdevsw
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|out
+label|:
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach, system shutdown, or before performing  * an operation which may add or delete system disks.  (Call mlx_startup to  * resume normal operation.)  *  * Note that we can assume that the bufq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
+end_comment
+
+begin_function
+name|int
+name|mlx_shutdown
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|s
+decl_stmt|,
+name|error
+decl_stmt|;
+name|debug
+argument_list|(
+literal|"called"
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_state
+operator||=
+name|MLX_STATE_SHUTDOWN
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_intaction
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_INTACTION_DISABLE
+argument_list|)
+expr_stmt|;
 comment|/* flush controller */
 name|device_printf
 argument_list|(
@@ -2631,13 +2757,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|bus_generic_detach
-argument_list|(
-name|sc
-operator|->
-name|mlx_dev
-argument_list|)
-expr_stmt|;
 name|out
 label|:
 name|splx
@@ -2816,36 +2935,13 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|int
-name|worked
-decl_stmt|;
 name|debug
 argument_list|(
 literal|"called"
 argument_list|)
 expr_stmt|;
-comment|/* spin collecting finished commands */
-name|worked
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
+comment|/* collect finished commands, queue anything waiting */
 name|mlx_done
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-name|worked
-operator|=
-literal|1
-expr_stmt|;
-comment|/* did we do anything? */
-if|if
-condition|(
-name|worked
-condition|)
-name|mlx_complete
 argument_list|(
 name|sc
 argument_list|)
@@ -3346,13 +3442,6 @@ operator|->
 name|ms_disk
 operator|=
 literal|0
-expr_stmt|;
-name|bus_generic_detach
-argument_list|(
-name|sc
-operator|->
-name|mlx_dev
-argument_list|)
 expr_stmt|;
 name|detach_out
 label|:
@@ -3920,36 +4009,6 @@ begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                                 Status Monitoring  ********************************************************************************  ********************************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MLX_PERIODIC_ISBUSY
-parameter_list|(
-name|sc
-parameter_list|)
-value|(sc->mlx_polling<= 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MLX_PERIODIC_BUSY
-parameter_list|(
-name|sc
-parameter_list|)
-value|atomic_add_int(&sc->mlx_polling, 1);
-end_define
-
-begin_define
-define|#
-directive|define
-name|MLX_PERIODIC_UNBUSY
-parameter_list|(
-name|sc
-parameter_list|)
-value|atomic_subtract_int(&sc->mlx_polling, 1);
-end_define
-
 begin_comment
 comment|/********************************************************************************  * Fire off commands to periodically check the status of connected drives.  */
 end_comment
@@ -4121,15 +4180,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|MLX_PERIODIC_ISBUSY
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-block|{
-comment|/* time to perform a periodic status poll? XXX tuneable interval? */
-if|if
-condition|(
 name|time_second
 operator|>
 operator|(
@@ -4147,42 +4197,7 @@ name|mlx_lastpoll
 operator|=
 name|time_second
 expr_stmt|;
-comment|/* for caution's sake */
-if|if
-condition|(
-name|sc
-operator|->
-name|mlx_polling
-operator|<
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mlx_dev
-argument_list|,
-literal|"mlx_polling< 0\n"
-argument_list|)
-expr_stmt|;
-name|atomic_set_int
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mlx_polling
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*  	     * Check controller status. 	     */
-name|MLX_PERIODIC_BUSY
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/*  	 * Check controller status. 	 * 	 * XXX Note that this may not actually launch a command in situations of high load. 	 */
 name|mlx_enquire
 argument_list|(
 name|sc
@@ -4198,12 +4213,7 @@ argument_list|,
 name|mlx_periodic_enquiry
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Check system drive status. 	     * 	     * XXX This might be better left to event-driven detection, eg. I/O to an offline 	     *     drive will detect it's offline, rebuilds etc. should detect the drive is back 	     *     online. 	     */
-name|MLX_PERIODIC_BUSY
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Check system drive status. 	 * 	 * XXX This might be better left to event-driven detection, eg. I/O to an offline 	 *     drive will detect it's offline, rebuilds etc. should detect the drive is back 	 *     online. 	 */
 name|mlx_enquire
 argument_list|(
 name|sc
@@ -4221,7 +4231,6 @@ argument_list|,
 name|mlx_periodic_enquiry
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*  	 * Get drive rebuild/check status 	 */
 if|if
 condition|(
@@ -4231,12 +4240,6 @@ name|mlx_rebuild
 operator|>=
 literal|0
 condition|)
-block|{
-name|MLX_PERIODIC_BUSY
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|mlx_enquire
 argument_list|(
 name|sc
@@ -4253,25 +4256,12 @@ name|mlx_periodic_rebuild
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-comment|/*  	 * If things are still running from the last poll, complain about it. 	 * 	 * XXX If this becomes an issue, we should have some way of telling what 	 *     has become stuck. 	 */
-name|device_printf
+comment|/* deal with possibly-missed interrupts and timed-out commands */
+name|mlx_done
 argument_list|(
 name|sc
-operator|->
-name|mlx_dev
-argument_list|,
-literal|"poll still busy (%d)\n"
-argument_list|,
-name|sc
-operator|->
-name|mlx_polling
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* XXX check for wedged/timed out commands? */
 comment|/* reschedule another poll next second or so */
 name|sc
 operator|->
@@ -4574,6 +4564,24 @@ block|}
 break|break;
 block|}
 default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mlx_dev
+argument_list|,
+literal|"%s: unknown command 0x%x"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|mc
+operator|->
+name|mc_mailbox
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|out
@@ -4590,12 +4598,6 @@ expr_stmt|;
 name|mlx_releasecmd
 argument_list|(
 name|mc
-argument_list|)
-expr_stmt|;
-comment|/* this event is done */
-name|MLX_PERIODIC_UNBUSY
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -4633,12 +4635,6 @@ decl_stmt|;
 name|debug
 argument_list|(
 literal|"called"
-argument_list|)
-expr_stmt|;
-comment|/* presume we are going to create another event */
-name|MLX_PERIODIC_BUSY
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 comment|/* get ourselves a command buffer */
@@ -4807,12 +4803,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* abort this event */
-name|MLX_PERIODIC_UNBUSY
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -4901,6 +4891,12 @@ argument_list|(
 literal|"called"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|mlx_lastevent
+operator|++
+expr_stmt|;
+comment|/* next message... */
 if|if
 condition|(
 name|mc
@@ -4910,12 +4906,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sc
-operator|->
-name|mlx_lastevent
-operator|++
-expr_stmt|;
-comment|/* got the message OK */
 comment|/* handle event log message */
 switch|switch
 condition|(
@@ -5214,12 +5204,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* this event is done */
-name|MLX_PERIODIC_UNBUSY
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5378,12 +5362,6 @@ expr_stmt|;
 name|mlx_releasecmd
 argument_list|(
 name|mc
-argument_list|)
-expr_stmt|;
-comment|/* this event is done */
-name|MLX_PERIODIC_UNBUSY
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6180,22 +6158,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* run the command in either polled or wait mode */
+comment|/* can't assume that interrupts are going to work here, so play it safe */
 if|if
 condition|(
-operator|(
-name|sc
-operator|->
-name|mlx_state
-operator|&
-name|MLX_STATE_INTEN
-operator|)
-condition|?
-name|mlx_wait_command
-argument_list|(
-name|mc
-argument_list|)
-else|:
 name|mlx_poll_command
 argument_list|(
 name|mc
@@ -6781,6 +6746,17 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+comment|/* avoid reentrancy */
+if|if
+condition|(
+name|mlx_lock_tas
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_LOCK_STARTING
+argument_list|)
+condition|)
+return|return;
 comment|/* spin until something prevents us from doing any work */
 name|s
 operator|=
@@ -6953,13 +6929,9 @@ name|mlxd
 operator|->
 name|mlxd_drive
 operator|-
-operator|&
 name|sc
 operator|->
 name|mlx_sysdrive
-index|[
-literal|0
-index|]
 expr_stmt|;
 name|blkcount
 operator|=
@@ -7098,6 +7070,13 @@ block|}
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|mlx_lock_clr
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_LOCK_STARTING
 argument_list|)
 expr_stmt|;
 block|}
@@ -8182,7 +8161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Try to deliver (mc) to the controller.  Take care of any completed commands  * that we encounter while doing so.  *  * Can be called at any interrupt level, with or without interrupts enabled.  */
+comment|/********************************************************************************  * Try to deliver (mc) to the controller.  *  * Can be called at any interrupt level, with or without interrupts enabled.  */
 end_comment
 
 begin_function
@@ -8211,8 +8190,6 @@ decl_stmt|,
 name|s
 decl_stmt|,
 name|done
-decl_stmt|,
-name|worked
 decl_stmt|;
 name|debug
 argument_list|(
@@ -8238,10 +8215,14 @@ name|mc_status
 operator|=
 name|MLX_STATUS_BUSY
 expr_stmt|;
-comment|/* assume we don't collect any completed commands */
-name|worked
+comment|/* set a default 60-second timeout  XXX tunable?  XXX not currently used */
+name|mc
+operator|->
+name|mc_timeout
 operator|=
-literal|0
+name|time_second
+operator|+
+literal|60
 expr_stmt|;
 comment|/* spin waiting for the mailbox */
 for|for
@@ -8307,29 +8288,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* check for command completion while we're at it */
-if|if
-condition|(
-name|mlx_done
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-name|worked
-operator|=
-literal|1
-expr_stmt|;
+comment|/* drop spl to allow completion interrupts */
 block|}
-comment|/* check to see if we picked up any completed commands */
-if|if
-condition|(
-name|worked
-condition|)
-name|mlx_complete
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* command is enqueued */
 if|if
 condition|(
@@ -8367,6 +8327,11 @@ name|mc_status
 operator|=
 name|MLX_STATUS_WEDGED
 expr_stmt|;
+name|mlx_complete
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -8376,7 +8341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Look at the controller (sc) and see if a command has been completed.  * If so, move the command buffer to the done queue for later collection  * and free the slot for immediate reuse.  *  * Returns nonzero if anything was added to the done queue.  */
+comment|/********************************************************************************  * Poll the controller (sc) for completed commands.  * Update command status and free slots for reuse.  If any slots were freed,  * new commands may be posted.  *  * Returns nonzero if one or more commands were completed.  */
 end_comment
 
 begin_function
@@ -8397,6 +8362,8 @@ name|mc
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|result
 decl_stmt|;
 name|u_int8_t
 name|slot
@@ -8409,20 +8376,23 @@ argument_list|(
 literal|"called"
 argument_list|)
 expr_stmt|;
-name|mc
-operator|=
-name|NULL
-expr_stmt|;
-name|slot
+name|result
 operator|=
 literal|0
 expr_stmt|;
-comment|/* poll for a completed command's identifier and status */
+comment|/* loop collecting completed commands */
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* poll for a completed command's identifier and status */
 if|if
 condition|(
 name|sc
@@ -8439,6 +8409,10 @@ name|status
 argument_list|)
 condition|)
 block|{
+name|result
+operator|=
+literal|1
+expr_stmt|;
 name|mc
 operator|=
 name|sc
@@ -8502,10 +8476,6 @@ argument_list|,
 name|slot
 argument_list|)
 expr_stmt|;
-name|mc
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -8523,40 +8493,37 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+else|else
+block|{
+break|break;
+block|}
+block|}
+comment|/* if we've completed any commands, try posting some more */
 if|if
 condition|(
-name|mc
-operator|!=
-name|NULL
+name|result
 condition|)
-block|{
-comment|/* unmap the command's data buffer */
-name|mlx_unmapcmd
+name|mlx_startio
 argument_list|(
-name|mc
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* handle completion and timeouts */
+name|mlx_complete
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
+name|result
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle completion for all commands on (sc)'s done queue.  */
+comment|/********************************************************************************  * Perform post-completion processing for commands on (sc).  */
 end_comment
 
 begin_function
@@ -8588,6 +8555,17 @@ argument_list|(
 literal|"called"
 argument_list|)
 expr_stmt|;
+comment|/* avoid reentrancy  XXX might want to signal and request a restart */
+if|if
+condition|(
+name|mlx_lock_tas
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_LOCK_COMPLETING
+argument_list|)
+condition|)
+return|return;
 name|s
 operator|=
 name|splbio
@@ -8597,7 +8575,7 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-comment|/* scan the list of done commands */
+comment|/* scan the list of busy/done commands */
 name|mc
 operator|=
 name|TAILQ_FIRST
@@ -8643,7 +8621,7 @@ argument_list|(
 literal|"mlx_work list corrupt!"
 argument_list|)
 expr_stmt|;
-comment|/* Skip commands that are still busy */
+comment|/* Command has been completed in some fashion */
 if|if
 condition|(
 name|mc
@@ -8653,7 +8631,13 @@ operator|!=
 name|MLX_STATUS_BUSY
 condition|)
 block|{
-comment|/* 	 * Does the command have a completion handler? 	 */
+comment|/* unmap the command's data buffer */
+name|mlx_unmapcmd
+argument_list|(
+name|mc
+argument_list|)
+expr_stmt|;
+comment|/* 	     * Does the command have a completion handler? 	     */
 if|if
 condition|(
 name|mc
@@ -8731,10 +8715,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* queue some more work if there is any */
-name|mlx_startio
+name|mlx_lock_clr
 argument_list|(
 name|sc
+argument_list|,
+name|MLX_LOCK_COMPLETING
 argument_list|)
 expr_stmt|;
 block|}
@@ -9515,6 +9500,252 @@ block|}
 end_function
 
 begin_comment
+comment|/********************************************************************************  ********************************************************************************                                                 Type 5 interface accessor methods  ********************************************************************************  ********************************************************************************/
+end_comment
+
+begin_comment
+comment|/********************************************************************************  * Try to give (mc) to the controller.  Returns 1 if successful, 0 on failure  * (the controller is not ready to take a command).  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|mlx_v5_tryqueue
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|mlx_command
+modifier|*
+name|mc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|debug
+argument_list|(
+literal|"called"
+argument_list|)
+expr_stmt|;
+comment|/* ready for our command? */
+if|if
+condition|(
+name|MLX_V5_GET_IDBR
+argument_list|(
+name|sc
+argument_list|)
+operator|&
+name|MLX_V5_IDB_EMPTY
+condition|)
+block|{
+comment|/* copy mailbox data to window */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|13
+condition|;
+name|i
+operator|++
+control|)
+name|MLX_V5_PUT_MAILBOX
+argument_list|(
+name|sc
+argument_list|,
+name|i
+argument_list|,
+name|mc
+operator|->
+name|mc_mailbox
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* post command */
+name|MLX_V5_PUT_IDBR
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_V5_IDB_HWMBOX_CMD
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/********************************************************************************  * See if a command has been completed, if so acknowledge its completion  * and recover the slot number and status code.  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|mlx_v5_findcomplete
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|slot
+parameter_list|,
+name|u_int16_t
+modifier|*
+name|status
+parameter_list|)
+block|{
+name|debug
+argument_list|(
+literal|"called"
+argument_list|)
+expr_stmt|;
+comment|/* status available? */
+if|if
+condition|(
+name|MLX_V5_GET_ODBR
+argument_list|(
+name|sc
+argument_list|)
+operator|&
+name|MLX_V5_ODB_HWSAVAIL
+condition|)
+block|{
+operator|*
+name|slot
+operator|=
+name|MLX_V5_GET_STATUS_IDENT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* get command identifier */
+operator|*
+name|status
+operator|=
+name|MLX_V5_GET_STATUS
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* get status */
+comment|/* acknowledge completion */
+name|MLX_V5_PUT_ODBR
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_V5_ODB_HWMBOX_ACK
+argument_list|)
+expr_stmt|;
+name|MLX_V5_PUT_IDBR
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_V5_IDB_SACK
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/********************************************************************************  * Enable/disable interrupts as requested.  *  * Must be called at splbio or in a fashion that prevents reentry.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|mlx_v5_intaction
+parameter_list|(
+name|struct
+name|mlx_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|action
+parameter_list|)
+block|{
+name|debug
+argument_list|(
+literal|"called"
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|action
+condition|)
+block|{
+case|case
+name|MLX_INTACTION_DISABLE
+case|:
+name|MLX_V5_PUT_IER
+argument_list|(
+name|sc
+argument_list|,
+name|MLX_V5_IER_DISINT
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_state
+operator|&=
+operator|~
+name|MLX_STATE_INTEN
+expr_stmt|;
+break|break;
+case|case
+name|MLX_INTACTION_ENABLE
+case|:
+name|MLX_V5_PUT_IER
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_state
+operator||=
+name|MLX_STATE_INTEN
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                                         Debugging  ********************************************************************************  ********************************************************************************/
 end_comment
 
@@ -9880,6 +10111,68 @@ begin_comment
 comment|/*******************************************************************************  * Return a string describing the controller (hwid)  */
 end_comment
 
+begin_struct
+specifier|static
+struct|struct
+block|{
+name|int
+name|hwid
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+name|mlx_controller_names
+index|[]
+init|=
+block|{
+block|{
+literal|0x01
+block|,
+literal|"960P/PD"
+block|}
+block|,
+block|{
+literal|0x02
+block|,
+literal|"960PL"
+block|}
+block|,
+block|{
+literal|0x10
+block|,
+literal|"960PG"
+block|}
+block|,
+block|{
+literal|0x11
+block|,
+literal|"960PJ"
+block|}
+block|,
+block|{
+literal|0x16
+block|,
+literal|"960PTL"
+block|}
+block|,
+block|{
+literal|0x20
+block|,
+literal|"1164P"
+block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|}
+block|}
+struct|;
+end_struct
+
 begin_function
 specifier|static
 name|char
@@ -9898,69 +10191,75 @@ literal|80
 index|]
 decl_stmt|;
 name|char
-name|smbuf
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|char
 modifier|*
-name|submodel
+name|model
 decl_stmt|;
 name|int
 name|nchn
+decl_stmt|,
+name|i
 decl_stmt|;
-switch|switch
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|model
+operator|=
+name|NULL
+init|;
+name|mlx_controller_names
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
 condition|(
+operator|(
 name|hwid
 operator|&
 literal|0xff
+operator|)
+operator|==
+name|mlx_controller_names
+index|[
+name|i
+index|]
+operator|.
+name|hwid
 condition|)
 block|{
-case|case
-literal|0x01
-case|:
-name|submodel
+name|model
 operator|=
-literal|"P/PD"
+name|mlx_controller_names
+index|[
+name|i
+index|]
+operator|.
+name|name
 expr_stmt|;
 break|break;
-case|case
-literal|0x02
-case|:
-name|submodel
-operator|=
-literal|"PL"
-expr_stmt|;
-break|break;
-case|case
-literal|0x10
-case|:
-name|submodel
-operator|=
-literal|"PG"
-expr_stmt|;
-break|break;
-case|case
-literal|0x11
-case|:
-name|submodel
-operator|=
-literal|"PJ"
-expr_stmt|;
-break|break;
-case|case
-literal|0x16
-case|:
-name|submodel
-operator|=
-literal|"PTL"
-expr_stmt|;
-break|break;
-default|default:
+block|}
+block|}
+if|if
+condition|(
+name|model
+operator|==
+name|NULL
+condition|)
+block|{
 name|sprintf
 argument_list|(
-name|smbuf
+name|buf
 argument_list|,
 literal|" model 0x%x"
 argument_list|,
@@ -9969,11 +10268,10 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|submodel
+name|model
 operator|=
-name|smbuf
+name|buf
 expr_stmt|;
-break|break;
 block|}
 name|nchn
 operator|=
@@ -9989,9 +10287,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"DAC960%s, %d channel%s"
+literal|"DAC%s, %d channel%s"
 argument_list|,
-name|submodel
+name|model
 argument_list|,
 name|nchn
 argument_list|,

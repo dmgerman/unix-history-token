@@ -1160,6 +1160,12 @@ operator|&
 name|mlxddisk_cdevsw
 argument_list|)
 expr_stmt|;
+name|dsk
+operator|->
+name|si_drv1
+operator|=
+name|sc
+expr_stmt|;
 name|disks_registered
 operator|++
 expr_stmt|;
@@ -1175,12 +1181,6 @@ operator|->
 name|mlx_maxiosize
 operator|*
 name|MLX_BLKSIZE
-expr_stmt|;
-name|dsk
-operator|->
-name|si_drv1
-operator|=
-name|sc
 expr_stmt|;
 return|return
 operator|(
