@@ -1264,13 +1264,6 @@ name|mflags
 operator||=
 name|M_ZERO
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|*
-name|mapp
-condition|)
-block|{
 name|newmap
 operator|=
 name|malloc
@@ -1340,7 +1333,6 @@ name|dmat
 operator|=
 name|dmat
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|dmat
@@ -2184,6 +2176,28 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|KASSERT
+argument_list|(
+name|dmat
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"dmatag is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|map
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"dmamap is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 name|map
 operator|->
 name|flags
