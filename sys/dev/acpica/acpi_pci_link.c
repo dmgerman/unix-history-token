@@ -2380,6 +2380,20 @@ operator|(
 name|FALSE
 operator|)
 return|;
+comment|/* 	 * Some systems have the initial irq set to the SCI but don't list 	 * it in the valid IRQs.  Add a special case to allow routing to the 	 * SCI if the system really wants to.  This is similar to how 	 * Windows often stacks all PCI IRQs on the SCI (and this is vital 	 * on some systems.) 	 */
+if|if
+condition|(
+name|irq
+operator|==
+name|AcpiGbl_FADT
+operator|->
+name|SciInt
+condition|)
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 for|for
 control|(
 name|i
