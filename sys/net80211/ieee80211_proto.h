@@ -24,22 +24,40 @@ enum|enum
 name|ieee80211_state
 block|{
 name|IEEE80211_S_INIT
+init|=
+literal|0
 block|,
 comment|/* default state */
 name|IEEE80211_S_SCAN
+init|=
+literal|1
 block|,
 comment|/* scanning */
 name|IEEE80211_S_AUTH
+init|=
+literal|2
 block|,
 comment|/* try to authenticate */
 name|IEEE80211_S_ASSOC
+init|=
+literal|3
 block|,
 comment|/* try to assoc */
 name|IEEE80211_S_RUN
+init|=
+literal|4
+block|,
 comment|/* associated */
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_S_MAX
+value|(IEEE80211_S_RUN+1)
+end_define
 
 begin_define
 define|#
@@ -234,6 +252,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|ieee80211_new_state
+parameter_list|(
+name|_ic
+parameter_list|,
+name|_nstate
+parameter_list|,
+name|_arg
+parameter_list|)
+define|\
+value|(((_ic)->ic_newstate)((_ic), (_nstate), (_arg)))
+end_define
+
 begin_function_decl
 specifier|extern
 name|u_int8_t
@@ -248,23 +281,6 @@ specifier|const
 name|struct
 name|ieee80211_rateset
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ieee80211_new_state
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -298,6 +314,18 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ieee80211_state_name
+index|[
+name|IEEE80211_S_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -2530,7 +2530,7 @@ literal|0
 condition|)
 name|ieee80211_new_state
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 name|IEEE80211_S_SCAN
 argument_list|,

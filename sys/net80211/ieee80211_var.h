@@ -518,11 +518,14 @@ modifier|*
 name|ic_newstate
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|ieee80211com
 modifier|*
 parameter_list|,
 name|enum
 name|ieee80211_state
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|void
