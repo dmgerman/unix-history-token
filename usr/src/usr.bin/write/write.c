@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.11 %G%"
+literal|"@(#)write.c	4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,6 +353,17 @@ block|{
 name|perror
 argument_list|(
 literal|"write: Can't open /etc/utmp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|histtya
+operator|==
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|10
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -772,8 +783,11 @@ name|nomat
 label|:
 empty_stmt|;
 block|}
-name|cont
-label|:
+name|fclose
+argument_list|(
+name|uf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|logcnt
@@ -785,9 +799,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"write: %s not logged in\n"
+literal|"write: %s not logged in%s\n"
 argument_list|,
 name|him
+argument_list|,
+name|histtya
+condition|?
+literal|" on that tty"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|exit
@@ -796,17 +816,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|uf
-operator|!=
-name|NULL
-condition|)
-name|fclose
-argument_list|(
-name|uf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|histtya
@@ -832,39 +841,8 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|logcnt
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-name|him
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|histtya
-condition|)
-name|printf
-argument_list|(
-literal|" not on that tty\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|" not logged in\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+name|cont
+label|:
 if|if
 condition|(
 name|access
