@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.18 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,6 +1202,17 @@ begin_comment
 comment|/* max depth of returning messages */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ERRORFUDGE
+value|100
+end_define
+
+begin_comment
+comment|/* nominal size of error message text */
+end_comment
+
 begin_macro
 name|returntosender
 argument_list|(
@@ -1493,6 +1504,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|ee
+operator|->
+name|e_msgsize
+operator|=
+name|e
+operator|->
+name|e_msgsize
+operator|+
+name|ERRORFUDGE
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|openxscript
 argument_list|(
 name|ee
@@ -1518,6 +1542,23 @@ operator|->
 name|q_next
 control|)
 block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+continue|continue;
+name|ee
+operator|->
+name|e_nrcpts
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
