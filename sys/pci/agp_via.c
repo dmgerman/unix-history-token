@@ -191,6 +191,14 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|0x03051106
+case|:
+return|return
+operator|(
+literal|"VIA 82C8363 (Apollo KT133A) host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x05011106
 case|:
 return|return
@@ -215,14 +223,6 @@ literal|"VIA 82C598 (Apollo MVP3) host to PCI bridge"
 operator|)
 return|;
 case|case
-literal|0x06911106
-case|:
-return|return
-operator|(
-literal|"VIA 82C691 (Apollo Pro) host to PCI bridge"
-operator|)
-return|;
-case|case
 literal|0x06051106
 case|:
 return|return
@@ -231,11 +231,11 @@ literal|"VIA 82C694X (Apollo Pro 133A) host to PCI bridge"
 operator|)
 return|;
 case|case
-literal|0x03051106
+literal|0x06911106
 case|:
 return|return
 operator|(
-literal|"VIA 82C8363 (Apollo KT133A) host to PCI bridge"
+literal|"VIA 82C691 (Apollo Pro) host to PCI bridge"
 operator|)
 return|;
 block|}
