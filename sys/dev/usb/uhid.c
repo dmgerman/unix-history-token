@@ -630,9 +630,7 @@ name|caddr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|struct
-name|thread
-modifier|*
+name|usb_proc_ptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1741,7 +1739,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -1752,10 +1750,8 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -1990,7 +1986,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -2001,10 +1997,8 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -2833,7 +2827,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|struct
 name|uhid_softc
@@ -2849,10 +2843,8 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -2935,7 +2927,7 @@ name|sc
 operator|->
 name|sc_async
 operator|=
-name|td
+name|p
 operator|->
 name|td_proc
 expr_stmt|;
@@ -2945,7 +2937,7 @@ argument_list|(
 operator|(
 literal|"uhid_do_ioctl: FIOASYNC %p\n"
 operator|,
-name|td
+name|p
 operator|->
 name|td_proc
 operator|)
@@ -3343,7 +3335,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -3357,10 +3349,8 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -3400,7 +3390,7 @@ name|addr
 argument_list|,
 name|flag
 argument_list|,
-name|td
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -3438,7 +3428,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -3446,10 +3436,8 @@ decl_stmt|;
 name|int
 name|events
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -3547,7 +3535,7 @@ expr_stmt|;
 else|else
 name|selrecord
 argument_list|(
-name|td
+name|p
 argument_list|,
 operator|&
 name|sc

@@ -1393,7 +1393,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -1404,10 +1404,8 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -1705,7 +1703,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -1716,10 +1714,8 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -2863,7 +2859,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -2871,10 +2867,8 @@ decl_stmt|;
 name|int
 name|events
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct

@@ -2761,7 +2761,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -2771,10 +2771,8 @@ name|flag
 decl_stmt|,
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -2901,7 +2899,7 @@ argument_list|)
 operator|&&
 name|suser_td
 argument_list|(
-name|td
+name|p
 argument_list|)
 condition|)
 return|return
@@ -3787,7 +3785,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -3797,10 +3795,8 @@ name|flag
 decl_stmt|,
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -4503,7 +4499,7 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -4517,10 +4513,8 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -4602,7 +4596,7 @@ name|data
 operator|,
 name|flag
 operator|,
-name|td
+name|p
 operator|)
 expr_stmt|;
 if|if
@@ -4639,7 +4633,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|td
+name|p
 argument_list|)
 expr_stmt|;
 elif|#

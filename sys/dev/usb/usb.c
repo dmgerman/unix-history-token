@@ -1483,7 +1483,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -1493,10 +1493,8 @@ name|flag
 decl_stmt|,
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -1753,7 +1751,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -1763,10 +1761,8 @@ name|flag
 decl_stmt|,
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -1813,7 +1809,7 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|devt
@@ -1827,10 +1823,8 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -1881,7 +1875,7 @@ name|data
 condition|)
 name|usb_async_proc
 operator|=
-name|td
+name|p
 operator|->
 name|td_proc
 expr_stmt|;
@@ -2192,7 +2186,7 @@ name|uio
 operator|.
 name|uio_td
 operator|=
-name|td
+name|p
 expr_stmt|;
 name|ptr
 operator|=
@@ -2448,7 +2442,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -2456,10 +2450,8 @@ decl_stmt|;
 name|int
 name|events
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -2544,7 +2536,7 @@ argument_list|)
 expr_stmt|;
 name|selrecord
 argument_list|(
-name|td
+name|p
 argument_list|,
 operator|&
 name|usb_selevent

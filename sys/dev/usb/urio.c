@@ -1374,7 +1374,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -1385,10 +1385,8 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 if|#
@@ -1588,7 +1586,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -1599,10 +1597,8 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 if|#
@@ -2452,7 +2448,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|td
+name|p
 parameter_list|)
 name|dev_t
 name|dev
@@ -2466,10 +2462,8 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
+name|usb_proc_ptr
+name|p
 decl_stmt|;
 block|{
 if|#
@@ -2836,7 +2830,7 @@ name|uio
 operator|.
 name|uio_td
 operator|=
-name|td
+name|p
 expr_stmt|;
 name|ptr
 operator|=
