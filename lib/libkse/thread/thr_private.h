@@ -241,7 +241,7 @@ name|PTHREAD_WAITQ_REMOVE
 parameter_list|(
 name|thrd
 parameter_list|)
-value|TAILQ_REMOVE(&_waitingq,thrd,pqe)
+value|do {					\ 	TAILQ_REMOVE(&_waitingq,thrd,pqe);				\ 	(thrd)->flags&= ~PTHREAD_FLAGS_IN_WAITQ;			\ } while (0)
 end_define
 
 begin_define
@@ -251,7 +251,7 @@ name|PTHREAD_WAITQ_INSERT
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {					\ 	if ((thrd)->wakeup_time.tv_sec == -1)				\ 		TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);			\ 	else {								\ 		pthread_t tid = TAILQ_FIRST(&_waitingq);		\ 		while ((tid != NULL)&& (tid->wakeup_time.tv_sec != -1)&& \ 		    ((tid->wakeup_time.tv_sec< (thrd)->wakeup_time.tv_sec) ||	\ 		    ((tid->wakeup_time.tv_sec == (thrd)->wakeup_time.tv_sec)&&	\ 		    (tid->wakeup_time.tv_nsec<= (thrd)->wakeup_time.tv_nsec)))) \ 			tid = TAILQ_NEXT(tid, pqe);			\ 		if (tid == NULL)					\ 			TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);		\ 		else							\ 			TAILQ_INSERT_BEFORE(tid,thrd,pqe);		\ 	}								\ } while (0)
+value|do {					\ 	if ((thrd)->wakeup_time.tv_sec == -1)				\ 		TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);			\ 	else {								\ 		pthread_t tid = TAILQ_FIRST(&_waitingq);		\ 		while ((tid != NULL)&& (tid->wakeup_time.tv_sec != -1)&& \ 		    ((tid->wakeup_time.tv_sec< (thrd)->wakeup_time.tv_sec) ||	\ 		    ((tid->wakeup_time.tv_sec == (thrd)->wakeup_time.tv_sec)&&	\ 		    (tid->wakeup_time.tv_nsec<= (thrd)->wakeup_time.tv_nsec)))) \ 			tid = TAILQ_NEXT(tid, pqe);			\ 		if (tid == NULL)					\ 			TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);		\ 		else							\ 			TAILQ_INSERT_BEFORE(tid,thrd,pqe);		\ 	}								\ 	(thrd)->flags | PTHREAD_FLAGS_IN_WAITQ;				\ } while (0)
 end_define
 
 begin_define
@@ -1174,6 +1174,24 @@ union|;
 end_union
 
 begin_comment
+comment|/*  * Define a continuation routine that can be used to perform a  * transfer of control:  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|thread_continuation_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * Thread structure.  */
 end_comment
 
@@ -1274,9 +1292,55 @@ comment|/*  	 * Saved jump buffer used in call to longjmp by _thread_kern_sched 
 name|jmp_buf
 name|saved_jmp_buf
 decl_stmt|;
+name|jmp_buf
+modifier|*
+name|sighandler_jmp_buf
+decl_stmt|;
+comment|/* 	 * Saved jump buffers for use when doing nested [sig|_]longjmp()s, as 	 * when doing signal delivery. 	 */
+union|union
+block|{
+name|jmp_buf
+name|jmp
+decl_stmt|;
+name|sigjmp_buf
+name|sigjmp
+decl_stmt|;
+block|}
+name|nested_jmp
+union|;
+name|int
+name|longjmp_val
+decl_stmt|;
+define|#
+directive|define
+name|JMPFLAGS_NONE
+value|0x00
+define|#
+directive|define
+name|JMPFLAGS_LONGJMP
+value|0x01
+define|#
+directive|define
+name|JMPFLAGS__LONGJMP
+value|0x02
+define|#
+directive|define
+name|JMPFLAGS_SIGLONGJMP
+value|0x04
+define|#
+directive|define
+name|JMPFLAGS_DEFERRED
+value|0x08
+name|int
+name|jmpflags
+decl_stmt|;
 comment|/* 	 * TRUE if the last state saved was a signal context. FALSE if the 	 * last state saved was a jump buffer. 	 */
 name|int
 name|sig_saved
+decl_stmt|;
+comment|/* 	 * Used for tracking delivery of nested signal handlers. 	 */
+name|int
+name|signal_nest_level
 decl_stmt|;
 comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
 define|#
@@ -1294,6 +1358,9 @@ value|0x0010
 name|int
 name|cancelflags
 decl_stmt|;
+name|thread_continuation_t
+name|continuation
+decl_stmt|;
 comment|/* 	 * Current signal mask and pending signals. 	 */
 name|sigset_t
 name|sigmask
@@ -1301,10 +1368,23 @@ decl_stmt|;
 name|sigset_t
 name|sigpend
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_NO_UNDISPATCH
+comment|/* Non-zero if there are undispatched signals for this thread. */
+name|int
+name|undispatched_signals
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Thread state: */
 name|enum
 name|pthread_state
 name|state
+decl_stmt|;
+name|enum
+name|pthread_state
+name|oldstate
 decl_stmt|;
 comment|/* Time that this thread was last made active. */
 name|struct
@@ -5083,6 +5163,12 @@ begin_comment
 comment|/* #include<sys/mman.h> */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_MMAN_H_
+end_ifdef
+
 begin_function_decl
 name|int
 name|_thread_sys_msync
@@ -5096,6 +5182,50 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #include<setjmp.h> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SETJMP_H_
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|__longjmp
+parameter_list|(
+name|jmp_buf
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|__siglongjmp
+parameter_list|(
+name|sigjmp_buf
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS

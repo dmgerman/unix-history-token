@@ -1066,6 +1066,18 @@ name|fds
 operator|=
 name|NULL
 expr_stmt|;
+name|new_thread
+operator|->
+name|jmpflags
+operator|=
+literal|0
+expr_stmt|;
+name|new_thread
+operator|->
+name|continuation
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 			 * Defer signals to protect the scheduling queues 			 * from access by the signal handler: 			 */
 name|_thread_kern_sig_defer
 argument_list|()

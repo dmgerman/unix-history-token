@@ -747,6 +747,28 @@ name|_sched_switch_hook
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Give this thread default attributes: */
+name|memcpy
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|_thread_initial
+operator|->
+name|attr
+argument_list|,
+operator|&
+name|pthread_attr_default
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pthread_attr
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Initialize the thread stack cache: */
 name|SLIST_INIT
 argument_list|(
@@ -787,6 +809,38 @@ name|PANIC
 argument_list|(
 literal|"Cannot allocate red zone for initial thread"
 argument_list|)
+expr_stmt|;
+comment|/* Set the main thread stack pointer. */
+name|_thread_initial
+operator|->
+name|stack
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|USRSTACK
+operator|-
+name|PTHREAD_STACK_INITIAL
+expr_stmt|;
+comment|/* Set the stack attributes: */
+name|_thread_initial
+operator|->
+name|attr
+operator|.
+name|stackaddr_attr
+operator|=
+name|_thread_initial
+operator|->
+name|stack
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|attr
+operator|.
+name|stacksize_attr
+operator|=
+name|PTHREAD_STACK_INITIAL
 expr_stmt|;
 comment|/* 		 * Write a magic value to the thread structure 		 * to help identify valid ones: 		 */
 name|_thread_initial
