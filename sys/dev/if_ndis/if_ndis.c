@@ -6271,7 +6271,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some drivers don't set this value. The NDIS spec says 	 * the default checkforhang timeout is approximately 2 	 * seconds. 	 */
+comment|/* 	 * Some drivers don't set this value. The NDIS spec says 	 * the default checkforhang timeout is "approximately 2 	 * seconds." We use 3 seconds, because it seems for some 	 * drivers, exactly 2 seconds is too fast. 	 */
 if|if
 condition|(
 name|sc
@@ -6288,7 +6288,7 @@ name|ndis_block
 operator|.
 name|nmb_checkforhangsecs
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 name|sc
 operator|->
