@@ -1704,12 +1704,6 @@ operator|.
 name|tqe
 argument_list|)
 expr_stmt|;
-name|c
-operator|->
-name|c_func
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -1719,6 +1713,12 @@ operator|&
 name|CALLOUT_LOCAL_ALLOC
 condition|)
 block|{
+name|c
+operator|->
+name|c_func
+operator|=
+name|NULL
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
