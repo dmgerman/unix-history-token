@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -61,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
 end_include
 
 begin_comment
@@ -470,7 +470,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -727,7 +729,9 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -1162,7 +1166,9 @@ name|savintr
 expr_stmt|;
 comment|/* reenable interrupts */
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -1251,7 +1257,9 @@ name|savintr
 expr_stmt|;
 comment|/* reenable interrupts */
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -1475,7 +1483,9 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -1531,7 +1541,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -1674,7 +1686,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -2095,7 +2109,9 @@ operator|==
 literal|'\0'
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 name|PCHAR
 argument_list|(
