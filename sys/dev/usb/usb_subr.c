@@ -4293,7 +4293,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* Some devices reject this command, so ignore a STALL. */
+comment|/* 		 * Some devices reject this command, so ignore a STALL. 		 * Some device just time out on this command, so ignore 		 * that too. 		 */
 if|if
 condition|(
 name|err
@@ -4301,11 +4301,16 @@ operator|&&
 name|err
 operator|!=
 name|USBD_STALLED
+operator|&&
+name|err
+operator|!=
+name|USBD_TIMEOUT
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usbd_setup_pipe: failed to start endpoint, %s\n"
+literal|"usbd_setup_pipe: failed to start "
+literal|"endpoint, %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
