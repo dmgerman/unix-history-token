@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: commands.c,v 1.5 1999/01/18 03:36:32 grog Exp grog $ */
+comment|/* $Id: commands.c,v 1.6 1999/03/23 03:40:07 grog Exp grog $ */
 end_comment
 
 begin_include
@@ -110,6 +110,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/wait.h>
 end_include
 
@@ -190,11 +202,22 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 comment|/* read config file in here */
+name|char
+name|commandline
+index|[
+name|BUFSIZE
+index|]
+decl_stmt|;
+comment|/* issue command from here */
 name|struct
 name|_ioctl_reply
 modifier|*
 name|reply
 decl_stmt|;
+name|int
+name|ioctltype
+decl_stmt|;
+comment|/* for ioctl call */
 if|if
 condition|(
 name|argc
@@ -271,7 +294,8 @@ name|superdev
 argument_list|,
 name|VINUM_STARTCONFIG
 argument_list|,
-name|NULL
+operator|&
+name|force
 argument_list|)
 condition|)
 block|{
@@ -356,14 +380,20 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+name|strcpy
+argument_list|(
+name|commandline
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+comment|/* make a copy */
 name|ioctl
 argument_list|(
 name|superdev
 argument_list|,
 name|VINUM_CREATE
 argument_list|,
-operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
@@ -377,6 +407,21 @@ literal|0
 condition|)
 block|{
 comment|/* error in config */
+if|if
+condition|(
+operator|!
+name|verbose
+condition|)
+comment|/* print this line anyway */
+name|printf
+argument_list|(
+literal|"%4d: %s"
+argument_list|,
+name|file_line
+argument_list|,
+name|commandline
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stdout
@@ -406,7 +451,8 @@ name|superdev
 argument_list|,
 name|VINUM_STARTCONFIG
 argument_list|,
-name|NULL
+operator|&
+name|force
 argument_list|)
 condition|)
 comment|/* can't get config? */
@@ -419,6 +465,11 @@ name|dfd
 argument_list|)
 expr_stmt|;
 comment|/* done with the config file */
+name|ioctltype
+operator|=
+literal|0
+expr_stmt|;
+comment|/* saveconfig after update */
 name|error
 operator|=
 name|ioctl
@@ -427,7 +478,8 @@ name|superdev
 argument_list|,
 name|VINUM_SAVECONFIG
 argument_list|,
-name|NULL
+operator|&
+name|ioctltype
 argument_list|)
 expr_stmt|;
 comment|/* save the config to disk */
@@ -566,7 +618,8 @@ name|superdev
 argument_list|,
 name|VINUM_STARTCONFIG
 argument_list|,
-name|NULL
+operator|&
+name|force
 argument_list|)
 condition|)
 block|{
@@ -1588,27 +1641,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|make_devices
+argument_list|()
+expr_stmt|;
+comment|/* recreate the /dev/vinum hierarchy */
 name|printf
 argument_list|(
 literal|"\b Vinum configuration obliterated\n"
-argument_list|)
-expr_stmt|;
-name|system
-argument_list|(
-literal|"rm -rf "
-name|VINUM_DIR
-literal|"/"
-literal|"*"
-argument_list|)
-expr_stmt|;
-comment|/* remove the old /dev/vinum */
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-operator||
-name|LOG_KERN
-argument_list|,
-literal|"configuration obliterated"
 argument_list|)
 expr_stmt|;
 name|start_daemon
@@ -2439,26 +2478,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|token
-index|[
-literal|0
-index|]
-operator|=
-literal|"read"
-expr_stmt|;
-comment|/* make a read command of this mess */
 name|tokens
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* so far, it's the only token */
+comment|/* no tokens yet */
+if|if
+condition|(
 name|getdevs
 argument_list|(
 operator|&
 name|statinfo
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+block|{
 comment|/* find out what devices we have */
+name|perror
+argument_list|(
+literal|"Can't get device list"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|namelist
 index|[
 literal|0
@@ -2678,6 +2721,288 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|int
+name|doit
+init|=
+literal|0
+decl_stmt|;
+comment|/* set to 1 if we pass our tests */
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|drive_object
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't start a drive: %s\n"
+argument_list|,
+name|argv
+index|[
+name|index
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|sd_object
+case|:
+if|if
+condition|(
+name|sd
+operator|.
+name|state
+operator|==
+name|sd_up
+condition|)
+comment|/* already up */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is already up\n"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|doit
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|plex_object
+case|:
+if|if
+condition|(
+name|plex
+operator|.
+name|state
+operator|==
+name|plex_up
+condition|)
+comment|/* already up */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is already up\n"
+argument_list|,
+name|plex
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|int
+name|sdno
+decl_stmt|;
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|plex
+operator|.
+name|subdisks
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+name|get_plex_sd_info
+argument_list|(
+operator|&
+name|sd
+argument_list|,
+name|object
+argument_list|,
+name|sdno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sd
+operator|.
+name|state
+operator|>=
+name|sd_empty
+operator|)
+operator|&&
+operator|(
+name|sd
+operator|.
+name|state
+operator|<=
+name|sd_stale
+operator|)
+condition|)
+block|{
+comment|/* candidate for init */
+name|message
+operator|->
+name|index
+operator|=
+name|sd
+operator|.
+name|sdno
+expr_stmt|;
+comment|/* pass object number */
+name|message
+operator|->
+name|type
+operator|=
+name|sd_object
+expr_stmt|;
+comment|/* it's a subdisk */
+name|message
+operator|->
+name|state
+operator|=
+name|object_up
+expr_stmt|;
+name|message
+operator|->
+name|force
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't force it, use a larger hammer */
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_SETSTATE
+argument_list|,
+name|message
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+operator|.
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|reply
+operator|.
+name|error
+operator|==
+name|EAGAIN
+condition|)
+comment|/* we're reviving */
+name|continue_revive
+argument_list|(
+name|sd
+operator|.
+name|sdno
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't start %s: %s (%d)\n"
+argument_list|,
+name|argv
+index|[
+name|index
+index|]
+argument_list|,
+name|reply
+operator|.
+name|msg
+index|[
+literal|0
+index|]
+condition|?
+name|reply
+operator|.
+name|msg
+else|:
+name|strerror
+argument_list|(
+name|reply
+operator|.
+name|error
+argument_list|)
+argument_list|,
+name|reply
+operator|.
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Verbose
+condition|)
+name|vinum_lsi
+argument_list|(
+name|sd
+operator|.
+name|sdno
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+break|break;
+case|case
+name|volume_object
+case|:
+if|if
+condition|(
+name|vol
+operator|.
+name|state
+operator|==
+name|volume_up
+condition|)
+comment|/* already up */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is already up\n"
+argument_list|,
+name|vol
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|doit
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+block|}
+if|if
+condition|(
+name|doit
+condition|)
+block|{
 name|message
 operator|->
 name|index
@@ -2796,6 +3121,7 @@ block|}
 block|}
 block|}
 block|}
+block|}
 end_function
 
 begin_function
@@ -2849,14 +3175,103 @@ name|argc
 operator|==
 literal|0
 condition|)
-comment|/* stop everything */
+block|{
+comment|/* stop vinum */
+name|int
+name|fileid
+init|=
+literal|0
+decl_stmt|;
+comment|/* ID of Vinum kld */
+name|close
+argument_list|(
+name|superdev
+argument_list|)
+expr_stmt|;
+comment|/* we can't stop if we have vinum open */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* wait for the daemon to let go */
+name|fileid
+operator|=
+name|kldfind
+argument_list|(
+name|VINUMMOD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fileid
+operator|<
+literal|0
+operator|)
+comment|/* no go */
+operator|||
+operator|(
+name|kldunload
+argument_list|(
+name|fileid
+argument_list|)
+operator|<
+literal|0
+operator|)
+condition|)
+name|perror
+argument_list|(
+literal|"Can't unload "
+name|VINUMMOD
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"stop must have an argument\n"
+name|VINUMMOD
+literal|" unloaded\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* If we got here, the stop failed.  Reopen the superdevice. */
+name|superdev
+operator|=
+name|open
+argument_list|(
+name|VINUM_SUPERDEV_NAME
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+comment|/* reopen vinum superdevice */
+if|if
+condition|(
+name|superdev
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Can't reopen Vinum superdevice"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 block|{
 comment|/* stop specified objects */
@@ -3565,6 +3980,16 @@ if|if
 condition|(
 name|recurse
 condition|)
+block|{
+name|get_sd_info
+argument_list|(
+operator|&
+name|sd
+argument_list|,
+name|sdno
+argument_list|)
+expr_stmt|;
+comment|/* get the info */
 name|reset_drive_stats
 argument_list|(
 name|sd
@@ -3572,6 +3997,8 @@ operator|.
 name|driveno
 argument_list|)
 expr_stmt|;
+comment|/* and clear the drive */
+block|}
 block|}
 end_function
 
@@ -5701,6 +6128,81 @@ literal|"Usage: \tsetdaemon [<bitmask>]\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Save config info */
+end_comment
+
+begin_function
+name|void
+name|vinum_saveconfig
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+block|{
+name|int
+name|ioctltype
+decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Usage: saveconfig\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ioctltype
+operator|=
+literal|1
+expr_stmt|;
+comment|/* user saveconfig */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_SAVECONFIG
+argument_list|,
+operator|&
+name|ioctltype
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't set daemon options: %s (%d)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

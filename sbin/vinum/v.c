@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: v.c,v 1.24 1999/01/17 02:53:38 grog Exp grog $ */
+comment|/* $Id: v.c,v 1.25 1999/03/21 01:18:23 grog Exp grog $ */
 end_comment
 
 begin_include
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -413,17 +419,18 @@ name|char
 modifier|*
 name|argv
 index|[]
+parameter_list|,
+name|char
+modifier|*
+name|envp
+index|[]
 parameter_list|)
 block|{
-define|#
-directive|define
-name|VINUMMOD
-value|"vinum"
-define|#
-directive|define
-name|WRONGMOD
-value|"Vinum"
-comment|/* don't want this one */
+if|#
+directive|if
+name|__FreeBSD__
+operator|>=
+literal|3
 if|if
 condition|(
 name|modfind
@@ -439,11 +446,30 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong module loaded: %s.  Please start %s.\n"
+literal|"Wrong module loaded: %s.  Starting %s.\n"
+argument_list|,
+name|VINUMMOD
 argument_list|,
 name|WRONGMOD
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|argv
+index|[
+literal|0
+index|]
+operator|=
 name|WRONGMOD
+expr_stmt|;
+name|execve
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|argv
+argument_list|,
+name|envp
 argument_list|)
 expr_stmt|;
 name|exit
@@ -482,7 +508,8 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"vinum kernel module not available"
+name|VINUMMOD
+literal|": Kernel module not available"
 argument_list|)
 expr_stmt|;
 return|return
@@ -490,6 +517,8 @@ literal|1
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 name|superdev
 operator|=
 name|open
@@ -499,7 +528,7 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
-comment|/* open it */
+comment|/* open vinum superdevice */
 if|if
 condition|(
 name|superdev
@@ -508,6 +537,85 @@ literal|0
 condition|)
 block|{
 comment|/* no go */
+if|if
+condition|(
+name|errno
+operator|==
+name|ENODEV
+condition|)
+block|{
+comment|/* not configured, */
+name|superdev
+operator|=
+name|open
+argument_list|(
+name|VINUM_WRONGSUPERDEV_NAME
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+comment|/* do we have a debug mismatch? */
+if|if
+condition|(
+name|superdev
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* yup! */
+if|#
+directive|if
+name|VINUMDEBUG
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"This program is compiled with debug support, but the kernel module does\n"
+literal|"not have debug support.  This program must be matched with the kernel\n"
+literal|"module.  Please alter /usr/src/sbin/"
+name|VINUMMOD
+literal|"/Makefile and remove\n"
+literal|"the option -DVINUMDEBUG from the CFLAGS definition, or alternatively\n"
+literal|"edit /usr/src/sys/modules/"
+name|VINUMMOD
+literal|"/Makefile and add the option\n"
+literal|"-DVINUMDEBUG to the CFLAGS definition.  Then rebuild the component\n"
+literal|"of your choice with 'make clean all install'.  If you rebuild the kernel\n"
+literal|"module, you must stop "
+name|VINUMMOD
+literal|" and restart it\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"This program is compiled without debug support, but the kernel module\n"
+literal|"includes debug support.  This program must be matched with the kernel\n"
+literal|"module.  Please alter /usr/src/sbin/"
+name|VINUMMOD
+literal|"/Makefile and add\n"
+literal|"the option -DVINUMDEBUG to the CFLAGS definition, or alternatively\n"
+literal|"edit /usr/src/sys/modules/"
+name|VINUMMOD
+literal|"/Makefile and remove the option\n"
+literal|"-DVINUMDEBUG from the CFLAGS definition.  Then rebuild the component\n"
+literal|"of your choice with 'make clean all install'.  If you rebuild the kernel\n"
+literal|"module, you must stop "
+name|VINUMMOD
+literal|" and restart it\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+literal|1
+return|;
+block|}
+block|}
+elseif|else
 if|if
 condition|(
 name|errno
@@ -591,17 +699,41 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
+name|int
+name|childstatus
+decl_stmt|;
+comment|/* from wait4 */
 name|setjmp
 argument_list|(
 name|command_fail
 argument_list|)
 expr_stmt|;
 comment|/* come back here on catastrophic failure */
+while|while
+condition|(
+name|wait4
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|childstatus
+argument_list|,
+name|WNOHANG
+argument_list|,
+name|NULL
+argument_list|)
+operator|>
+literal|0
+condition|)
+empty_stmt|;
+comment|/* wait for all dead children */
 name|c
 operator|=
 name|readline
 argument_list|(
-literal|"vinum -> "
+name|VINUMMOD
+literal|" -> "
 argument_list|)
 expr_stmt|;
 comment|/* get an input */
@@ -915,6 +1047,11 @@ block|,
 name|FUNKEY
 argument_list|(
 name|printconfig
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|saveconfig
 argument_list|)
 block|,
 name|FUNKEY
@@ -1653,6 +1790,45 @@ decl_stmt|;
 comment|/* for forming file names */
 if|if
 condition|(
+name|access
+argument_list|(
+literal|"/dev"
+argument_list|,
+name|W_OK
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* can't access /dev to write? */
+if|if
+condition|(
+name|errno
+operator|==
+name|EROFS
+condition|)
+comment|/* because it's read-only, */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|VINUMMOD
+literal|": /dev is mounted read-only, not rebuilding "
+name|VINUM_DIR
+literal|"\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|perror
+argument_list|(
+name|VINUMMOD
+literal|": Can't write to /dev"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|superdev
 operator|>=
 literal|0
@@ -1721,6 +1897,36 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|VINUM_WRONGSUPERDEV_NAME
+argument_list|,
+name|S_IRWXU
+operator||
+name|S_IFBLK
+argument_list|,
+comment|/* block device, user only */
+name|VINUM_WRONGSUPERDEV
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't create %s: %s\n"
+argument_list|,
+name|VINUM_WRONGSUPERDEV_NAME
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|superdev
 operator|=
 name|open
@@ -1731,6 +1937,37 @@ name|O_RDWR
 argument_list|)
 expr_stmt|;
 comment|/* open the super device */
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|VINUM_DAEMON_DEV_NAME
+argument_list|,
+comment|/* daemon super device */
+name|S_IRWXU
+operator||
+name|S_IFBLK
+argument_list|,
+comment|/* block device, user only */
+name|VINUM_DAEMON_DEV
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't create %s: %s\n"
+argument_list|,
+name|VINUM_DAEMON_DEV_NAME
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -2633,7 +2870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the object "name".  Return object type at type,  * and the index as the return value.  * If not found, return -1 and invalid_object.  */
+comment|/*  * Find the object "name".  Return object type at type,  * and the index as the return value.  * If not found, return -1 and invalid_object.  */
 end_comment
 
 begin_function
@@ -2978,7 +3215,7 @@ name|reply
 decl_stmt|;
 name|openlog
 argument_list|(
-literal|"vinum"
+name|VINUMMOD
 argument_list|,
 name|LOG_CONS
 operator||
@@ -3168,7 +3405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check if the daemon is running,  * start it if it isn't.  The check itself  * could take a while, so we do it as a separate  * process, which will become the daemon if one isn't  * running already */
+comment|/*  * Check if the daemon is running,  * start it if it isn't.  The check itself  * could take a while, so we do it as a separate  * process, which will become the daemon if one isn't  * running already  */
 end_comment
 
 begin_function
@@ -3203,6 +3440,42 @@ literal|0
 condition|)
 block|{
 comment|/* We're the child, do the work */
+comment|/* 	 * We have a problem when stopping the subsystem: 	 * The only way to know that we're idle is when 	 * all open superdevs close.  But we want the 	 * daemon to clean up for us, and since we can't 	 * count the opens, we need to have the main device 	 * closed when we stop.  We solve this conundrum 	 * by getting the daemon to open a separate device. 	 */
+name|close
+argument_list|(
+name|superdev
+argument_list|)
+expr_stmt|;
+comment|/* this is the wrong device */
+name|superdev
+operator|=
+name|open
+argument_list|(
+name|VINUM_DAEMON_DEV_NAME
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+comment|/* open deamon superdevice */
+if|if
+condition|(
+name|superdev
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Can't open "
+name|VINUM_DAEMON_DEV_NAME
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|daemon
@@ -3242,7 +3515,8 @@ expr_stmt|;
 block|}
 name|setproctitle
 argument_list|(
-literal|"Vinum daemon"
+name|VINUMMOD
+literal|" daemon"
 argument_list|)
 expr_stmt|;
 comment|/* show what we're doing */
