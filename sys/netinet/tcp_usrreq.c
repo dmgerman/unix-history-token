@@ -577,11 +577,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 name|tp
 operator|=
 name|intotcpcb
@@ -594,15 +589,6 @@ label|:
 name|TCPDEBUG2
 argument_list|(
 name|PRU_ATTACH
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-condition|)
-name|INP_UNLOCK
-argument_list|(
-name|inp
 argument_list|)
 expr_stmt|;
 name|INP_INFO_WUNLOCK
