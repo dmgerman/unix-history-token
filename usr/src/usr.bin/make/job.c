@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.19 (Berkeley) %G%"
+literal|"@(#)job.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8319,6 +8319,10 @@ modifier|*
 name|interrupt
 decl_stmt|;
 comment|/* the node describing the .INTERRUPT target */
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|aborting
 operator|=
 name|ABORT_INTERRUPT
@@ -8399,6 +8403,22 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|stat
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|&&
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
 name|unlink
 argument_list|(
 name|file
