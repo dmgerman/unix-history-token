@@ -4,7 +4,7 @@ comment|/*	$NetBSD: inet.c,v 1.35.2.1 1999/04/29 14:57:08 perry Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec.c,v 1.25 2001/03/12 09:04:39 itojun Exp $	*/
+comment|/*	$KAME: ipsec.c,v 1.33 2003/07/25 09:54:32 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -234,6 +234,28 @@ block|, }
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_RIPEMD160HMAC
+block|{
+name|SADB_X_AALG_RIPEMD160HMAC
+block|,
+literal|"hmac-ripemd160"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_AES_XCBC_MAC
+block|{
+name|SADB_X_AALG_AES_XCBC_MAC
+block|,
+literal|"aes-xcbc-mac"
+block|, }
+block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1
@@ -295,6 +317,17 @@ block|{
 name|SADB_X_EALG_RIJNDAELCBC
 block|,
 literal|"rijndael-cbc"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_AESCTR
+block|{
+name|SADB_X_EALG_AESCTR
+block|,
+literal|"aes-ctr"
 block|, }
 block|,
 endif|#
