@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *<fill in list here>  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id$  */
+comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *<fill in list here>  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: ahareg.h,v 1.1 1998/09/15 07:39:52 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -358,7 +358,7 @@ name|GEOMETRY_DISK0
 parameter_list|(
 name|g_reg
 parameter_list|)
-value|(greg& DISK0_GEOMETRY)
+value|(g_reg& DISK0_GEOMETRY)
 end_define
 
 begin_define
@@ -368,7 +368,7 @@ name|GEOMETRY_DISK1
 parameter_list|(
 name|g_reg
 parameter_list|)
-value|((greg& DISK1_GEOMETRY)>> 2)
+value|((g_reg& DISK1_GEOMETRY)>> 2)
 end_define
 
 begin_define
@@ -1493,15 +1493,7 @@ name|extended_trans
 range|:
 literal|1
 decl_stmt|,
-name|wide_bus
-range|:
-literal|1
-decl_stmt|,
 name|diff_bus
-range|:
-literal|1
-decl_stmt|,
-name|ultra_scsi
 range|:
 literal|1
 decl_stmt|,
@@ -1517,16 +1509,12 @@ name|tag_capable
 range|:
 literal|1
 decl_stmt|,
-name|wide_lun_ccb
-range|:
-literal|1
-decl_stmt|,
 name|resource_shortage
 range|:
 literal|1
 decl_stmt|,
 range|:
-literal|23
+literal|26
 decl_stmt|;
 name|u_int16_t
 name|tags_permitted
@@ -1539,12 +1527,6 @@ name|sync_permitted
 decl_stmt|;
 name|u_int16_t
 name|fast_permitted
-decl_stmt|;
-name|u_int16_t
-name|ultra_permitted
-decl_stmt|;
-name|u_int16_t
-name|wide_permitted
 decl_stmt|;
 name|u_int8_t
 name|init_level
@@ -1560,11 +1542,11 @@ decl_stmt|;
 name|u_int32_t
 name|bios_addr
 decl_stmt|;
-name|char
-name|firmware_ver
-index|[
-literal|6
-index|]
+name|u_int8_t
+name|fw_major
+decl_stmt|;
+name|u_int8_t
+name|fw_minor
 decl_stmt|;
 name|char
 name|model
