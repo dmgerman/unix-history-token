@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: quot.c,v 1.6.4.1 1995/11/01 00:06:41 jtc Exp $"
+literal|"$Id: quot.c,v 1.1.1.1 1995/11/03 15:06:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2988,17 +2988,11 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|strncmp
-argument_list|(
 name|mp
 operator|->
-name|f_fstypename
-argument_list|,
-name|MOUNT_FFS
-argument_list|,
-name|MFSNAMELEN
-argument_list|)
+name|f_type
+operator|==
+name|MOUNT_UFS
 condition|)
 block|{
 if|if
