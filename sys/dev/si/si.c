@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.51 1996/08/12 17:12:07 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.52 1996/09/06 23:08:03 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -2046,15 +2046,9 @@ expr_stmt|;
 comment|/* Try the acid test */
 name|ux
 operator|=
-operator|(
-name|BYTE
-operator|*
-operator|)
-operator|(
 name|maddr
 operator|+
 name|SIRAM
-operator|)
 expr_stmt|;
 for|for
 control|(
@@ -2086,15 +2080,9 @@ argument_list|)
 expr_stmt|;
 name|ux
 operator|=
-operator|(
-name|BYTE
-operator|*
-operator|)
-operator|(
 name|maddr
 operator|+
 name|SIRAM
-operator|)
 expr_stmt|;
 for|for
 control|(
@@ -2167,15 +2155,9 @@ block|}
 comment|/* clear out the RAM */
 name|ux
 operator|=
-operator|(
-name|BYTE
-operator|*
-operator|)
-operator|(
 name|maddr
 operator|+
 name|SIRAM
-operator|)
 expr_stmt|;
 for|for
 control|(
@@ -2198,15 +2180,9 @@ literal|0
 expr_stmt|;
 name|ux
 operator|=
-operator|(
-name|BYTE
-operator|*
-operator|)
-operator|(
 name|maddr
 operator|+
 name|SIRAM
-operator|)
 expr_stmt|;
 for|for
 control|(
@@ -3747,6 +3723,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|suser
@@ -3760,6 +3737,7 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -4816,6 +4794,7 @@ name|t_cflag
 operator|&
 name|HUPCL
 operator|||
+operator|(
 operator|!
 name|pp
 operator|->
@@ -4839,6 +4818,7 @@ operator|.
 name|c_cflag
 operator|&&
 name|CLOCAL
+operator|)
 operator|)
 operator|||
 operator|!
@@ -5268,6 +5248,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ttysleep
@@ -5289,6 +5270,7 @@ name|tp
 operator|->
 name|t_timeout
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -6582,7 +6564,7 @@ expr_stmt|;
 define|#
 directive|define
 name|SUCHECK
-value|if (error = suser(p->p_ucred,&p->p_acflag)) goto out
+value|if ((error = suser(p->p_ucred,&p->p_acflag))) goto out
 switch|switch
 condition|(
 name|cmd
@@ -9599,11 +9581,6 @@ name|clist
 modifier|*
 name|qp
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|dptr
-decl_stmt|;
 name|BYTE
 name|ipos
 decl_stmt|;
@@ -9765,17 +9742,6 @@ name|count
 operator|)
 argument_list|)
 expr_stmt|;
-name|dptr
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|ccbp
-operator|->
-name|hi_txbuf
-expr_stmt|;
-comment|/* data buffer */
 while|while
 condition|(
 operator|(
