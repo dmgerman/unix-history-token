@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.25 1998/02/09 23:59:51 eivind Exp $"
+literal|"$Id: mkmakefile.c,v 1.26 1998/02/18 04:15:04 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1304,8 +1304,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nUnknown option%s used (not in ../../conf/options "
-literal|"or ./options.%s)"
+literal|"\nUnknown option%s used (not in ../../conf/options or ./options.%s)"
 argument_list|,
 operator|(
 name|warn_make_clean
@@ -1327,8 +1326,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" - it is\nVERY important that you do "
-literal|"``make clean&& make depend'' before recompiling!\n\n"
+literal|" - it is\nVERY important that you do ``make clean&& make depend'' before recompiling!\n\n"
 argument_list|)
 expr_stmt|;
 block|}
