@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	2.4	%G%"
+literal|"@(#)deliver.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,6 +807,20 @@ argument_list|)
 expr_stmt|;
 comment|/* syserr fails because log is closed */
 comment|/* syserr("Cannot exec %s", m->m_mailer); */
+name|printf
+argument_list|(
+literal|"Cannot exec %s\n"
+argument_list|,
+name|m
+operator|->
+name|m_mailer
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|_exit
 argument_list|(
 name|EX_UNAVAILABLE
@@ -973,7 +987,7 @@ name|giveresponse
 argument_list|(
 name|i
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|,
 name|m
 argument_list|)
