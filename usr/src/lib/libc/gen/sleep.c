@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sleep.c	4.6 (Berkeley) %G%"
+literal|"@(#)sleep.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,16 +31,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<<((s)-1))
-end_define
 
 begin_define
 define|#
@@ -142,20 +132,6 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|setvec
-argument_list|(
-name|ovec
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-name|omask
-operator|=
-name|sigblock
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|itp
 operator|->
 name|it_value
@@ -254,6 +230,16 @@ operator|&
 name|ovec
 argument_list|)
 expr_stmt|;
+name|omask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGALRM
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ringring
 operator|=
 literal|0
@@ -285,7 +271,7 @@ argument_list|(
 name|omask
 operator|&
 operator|~
-name|mask
+name|sigmask
 argument_list|(
 name|SIGALRM
 argument_list|)
@@ -307,6 +293,14 @@ name|sigvec
 operator|*
 operator|)
 literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+name|omask
 argument_list|)
 expr_stmt|;
 operator|(
