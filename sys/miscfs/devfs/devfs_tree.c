@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.32 1996/10/28 11:36:02 phk Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.33 1996/11/21 07:18:57 julian Exp $  */
 end_comment
 
 begin_include
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -3222,6 +3228,14 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|vn_p
 operator|=
 name|dnp
@@ -3341,10 +3355,11 @@ name|vget
 argument_list|(
 name|vn_p
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
 operator|*
 name|vn_pp
 operator|=
@@ -3612,9 +3627,15 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vn_p
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}

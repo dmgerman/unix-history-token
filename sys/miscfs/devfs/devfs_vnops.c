@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.32 1996/10/28 11:36:06 phk Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.33 1996/11/21 07:18:59 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -432,6 +432,10 @@ comment|/* do a locking dance */
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -457,9 +461,15 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dir_vnode
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -492,6 +502,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -548,6 +562,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -559,9 +577,15 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dir_vnode
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -746,6 +770,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -881,10 +909,12 @@ condition|)
 block|{
 name|VOP_UNLOCK
 argument_list|(
-operator|(
 operator|*
 name|result_vnode
-operator|)
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -903,6 +933,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -984,6 +1018,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1003,6 +1041,10 @@ block|{
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* race to get the node */
@@ -1023,9 +1065,15 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dir_vnode
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1072,6 +1120,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dir_vnode
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -3464,6 +3516,15 @@ name|ap
 operator|->
 name|a_fcnp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|fcnp
+operator|->
+name|cn_proc
+decl_stmt|;
 name|dn_p
 name|fp
 decl_stmt|,
@@ -4214,9 +4275,15 @@ name|out
 label|:
 if|if
 condition|(
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 operator|==
 literal|0
@@ -5733,9 +5800,11 @@ name|v_data
 operator|)
 condition|)
 block|{
-name|vgoneall
+name|VOP_REVOKE
 argument_list|(
 name|vn_p
+argument_list|,
+name|REVOKEALL
 argument_list|)
 expr_stmt|;
 block|}
