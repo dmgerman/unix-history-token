@@ -1623,7 +1623,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: NULL pointer was passed.\n"
+literal|"ipsec4_getpolicybysock: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 comment|/* set spidx in pcb */
@@ -1684,7 +1684,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: pcbsp is NULL.\n"
+literal|"ipsec4_getpolicybysock: pcbsp is NULL."
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1715,7 +1715,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: illegal direction.\n"
+literal|"ipsec4_getpolicybysock: illegal direction."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1728,7 +1728,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: currsp is NULL.\n"
+literal|"ipsec4_getpolicybysock: currsp is NULL."
 argument_list|)
 expr_stmt|;
 comment|/* when privilieged socket */
@@ -2117,7 +2117,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: NULL pointer was passed.\n"
+literal|"ipsec4_getpolicybysock: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 return|return
@@ -2194,7 +2194,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybyaddr: NULL pointer was passed.\n"
+literal|"ipsec4_getpolicybyaddr: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 block|{
@@ -2427,7 +2427,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: NULL pointer was passed.\n"
+literal|"ipsec6_getpolicybysock: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2447,7 +2447,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: socket domain != inet6\n"
+literal|"ipsec6_getpolicybysock: socket domain != inet6"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2475,7 +2475,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: pcbsp is NULL.\n"
+literal|"ipsec6_getpolicybysock: pcbsp is NULL."
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2506,7 +2506,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: illegal direction.\n"
+literal|"ipsec6_getpolicybysock: illegal direction."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2519,7 +2519,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: currsp is NULL.\n"
+literal|"ipsec6_getpolicybysock: currsp is NULL."
 argument_list|)
 expr_stmt|;
 comment|/* when privilieged socket */
@@ -2907,7 +2907,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: NULL pointer was passed.\n"
+literal|"ipsec6_getpolicybysock: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 return|return
@@ -3002,7 +3002,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybyaddr: NULL pointer was passed.\n"
+literal|"ipsec6_getpolicybyaddr: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 block|{
@@ -3215,7 +3215,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_setspidx_mbuf: NULL pointer was passed.\n"
+literal|"ipsec_setspidx_mbuf: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3313,7 +3313,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_setspidx_inpcb: no PCB found.\n"
+literal|"ipsec4_setspidx_inpcb: no PCB found."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3326,7 +3326,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_setspidx_inpcb: no inp_sp found.\n"
+literal|"ipsec4_setspidx_inpcb: no inp_sp found."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3349,7 +3349,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_setspidx_inpcb: no sp_in/out found.\n"
+literal|"ipsec4_setspidx_inpcb: no sp_in/out found."
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3548,7 +3548,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_setspidx_in6pcb: no PCB found.\n"
+literal|"ipsec6_setspidx_in6pcb: no PCB found."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3561,7 +3561,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_setspidx_in6pcb: no in6p_sp found.\n"
+literal|"ipsec6_setspidx_in6pcb: no in6p_sp found."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3584,7 +3584,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_setspidx_in6pcb: no sp_in/out found.\n"
+literal|"ipsec6_setspidx_in6pcb: no sp_in/out found."
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3807,7 +3807,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_setspidx: m == 0 passed.\n"
+literal|"ipsec_setspidx: m == 0 passed."
 argument_list|)
 expr_stmt|;
 comment|/* 	 * validate m->m_pkthdr.len.  we see incorrect length if we 	 * mistakenly call this function with inconsistent mbuf chain 	 * (like 4.4BSD tcp/udp processing).  XXX should we panic here? 	 */
@@ -4163,7 +4163,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_get_ulp: NULL pointer was passed.\n"
+literal|"ipsec4_get_ulp: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -4181,7 +4181,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_get_ulp: too short\n"
+literal|"ipsec4_get_ulp: too short"
 argument_list|)
 expr_stmt|;
 comment|/* set default */
@@ -4840,7 +4840,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_get_ulp: NULL pointer was passed.\n"
+literal|"ipsec6_get_ulp: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|KEYDEBUG
@@ -5544,7 +5544,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_init_policy: NULL pointer was passed.\n"
+literal|"ipsec_init_policy: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|new
@@ -6668,7 +6668,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"policy in PCB is NULL\n"
+literal|"policy in PCB is NULL"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6779,7 +6779,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_delete_pcbpolicy: NULL pointer was passed.\n"
+literal|"ipsec4_delete_pcbpolicy: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -7092,7 +7092,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"policy in PCB is NULL\n"
+literal|"policy in PCB is NULL"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7199,7 +7199,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_delete_pcbpolicy: NULL pointer was passed.\n"
+literal|"ipsec6_delete_pcbpolicy: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -7340,7 +7340,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_get_reqlevel: NULL pointer is passed.\n"
+literal|"ipsec_get_reqlevel: NULL pointer is passed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -7383,7 +7383,7 @@ name|sa_family
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_get_reqlevel: family mismatched.\n"
+literal|"ipsec_get_reqlevel: family mismatched."
 argument_list|)
 expr_stmt|;
 comment|/* XXX note that we have ipseclog() expanded here - code sync issue */
@@ -7495,7 +7495,7 @@ comment|/* INET6 */
 default|default:
 name|panic
 argument_list|(
-literal|"key_get_reqlevel: Unknown family. %d\n"
+literal|"key_get_reqlevel: Unknown family. %d"
 argument_list|,
 operator|(
 operator|(
@@ -7598,7 +7598,7 @@ default|default:
 name|panic
 argument_list|(
 literal|"ipsec_get_reqlevel: "
-literal|"Illegal protocol defined %u\n"
+literal|"Illegal protocol defined %u"
 argument_list|,
 name|isr
 operator|->
@@ -7633,7 +7633,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec_get_reqlevel: Illegal IPsec level %u\n"
+literal|"ipsec_get_reqlevel: Illegal IPsec level %u"
 argument_list|,
 name|isr
 operator|->
@@ -7728,7 +7728,7 @@ case|:
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec_hdrsiz: Invalid policy found. %d\n"
+literal|"ipsec_hdrsiz: Invalid policy found. %d"
 argument_list|,
 name|sp
 operator|->
@@ -8346,7 +8346,7 @@ case|:
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec_hdrsiz: Invalid policy found. %d\n"
+literal|"ipsec_hdrsiz: Invalid policy found. %d"
 argument_list|,
 name|sp
 operator|->
@@ -10097,7 +10097,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_chkreplay: NULL pointer was passed.\n"
+literal|"ipsec_chkreplay: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|replay
@@ -10282,7 +10282,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_chkreplay: NULL pointer was passed.\n"
+literal|"ipsec_chkreplay: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|replay
@@ -11197,7 +11197,7 @@ name|sa_family
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec_logsastr: family mismatched.\n"
+literal|"ipsec_logsastr: family mismatched."
 argument_list|)
 expr_stmt|;
 name|p

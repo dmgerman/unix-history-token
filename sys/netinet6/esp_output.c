@@ -318,7 +318,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"esp_hdrsiz: NULL was passed.\n"
+literal|"esp_hdrsiz: NULL was passed."
 argument_list|)
 expr_stmt|;
 name|sav
