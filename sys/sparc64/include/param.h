@@ -487,6 +487,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCPU_PAGES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|KSTACK_GUARD
 end_define
 

@@ -390,6 +390,8 @@ begin_decl_stmt
 name|char
 name|pcpu0
 index|[
+name|PCPU_PAGES
+operator|*
 name|PAGE_SIZE
 index|]
 decl_stmt|;
@@ -569,7 +571,11 @@ name|pcpu
 argument_list|)
 operator|<=
 operator|(
+operator|(
+name|PCPU_PAGES
+operator|*
 name|PAGE_SIZE
+operator|)
 operator|/
 literal|2
 operator|)
@@ -1119,7 +1125,11 @@ operator|)
 operator|(
 name|pcpu0
 operator|+
+operator|(
+name|PCPU_PAGES
+operator|*
 name|PAGE_SIZE
+operator|)
 operator|)
 operator|-
 literal|1
