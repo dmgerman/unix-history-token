@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.h	4.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.h	4.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -76,35 +76,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|RING_IPTrailer
+name|RING_TRAILER
 value|2
 end_define
 
 begin_comment
-comment|/* really, 3 = 512 bytes */
-end_comment
-
-begin_comment
-comment|/*         4 = 1024 bytes */
-end_comment
-
-begin_comment
-comment|/*         5 = 1536 bytes */
-end_comment
-
-begin_comment
-comment|/* it's really very messed-up! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RING_IPNTrailer
-value|4
-end_define
-
-begin_comment
-comment|/* not a number, but a range */
+comment|/* offset now in vh_info only */
 end_comment
 
 begin_define
@@ -113,10 +90,6 @@ directive|define
 name|RING_ARP
 value|3
 end_define
-
-begin_comment
-comment|/* the next three conflict with trailers */
-end_comment
 
 begin_define
 define|#
