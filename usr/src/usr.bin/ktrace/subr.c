@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	5.3 (Berkeley) %G%"
+literal|"@(#)subr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,6 +141,22 @@ case|:
 name|facs
 operator||=
 name|KTRFAC_PSIG
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+name|facs
+operator||=
+name|KTRFAC_CSW
+expr_stmt|;
+break|break;
+case|case
+literal|'+'
+case|:
+name|facs
+operator||=
+name|DEF_POINTS
 expr_stmt|;
 break|break;
 default|default:
