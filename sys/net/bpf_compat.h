@@ -52,6 +52,13 @@ name|M_WAITOK
 value|M_TRYWAIT
 end_define
 
+begin_define
+define|#
+directive|define
+name|M_NOWAIT
+value|M_DONTWAIT
+end_define
+
 begin_comment
 comment|/* This mapping works for our purposes. */
 end_comment
