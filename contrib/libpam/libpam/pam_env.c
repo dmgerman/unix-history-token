@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pam_env.c  *  * Copyright (c) Andrew G. Morgan<morgan@parc.power.net> 1996,1997  * All rights reserved.  *  * This file was written from a "hint" provided by the people at SUN.  * and the X/Open XSSO draft of March 1997.  *  * $Id: pam_env.c,v 1.2 1997/02/15 15:56:48 morgan Exp morgan $  *  * $Log: pam_env.c,v $  * Revision 1.2  1997/02/15 15:56:48  morgan  * liberate pamh->env structure too!  *  * Revision 1.1  1996/12/01 03:14:13  morgan  * Initial revision  */
+comment|/*  * pam_env.c  *  * Copyright (c) Andrew G. Morgan<morgan@parc.power.net> 1996,1997  * All rights reserved.  *  * This file was written from a "hint" provided by the people at SUN.  * and the X/Open XSSO draft of March 1997.  *  * $Id: pam_env.c,v 1.2 2001/01/22 06:07:28 agmorgan Exp $  */
 end_comment
 
 begin_include
@@ -236,12 +236,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"_pam_make_env: out of memory"
@@ -285,12 +281,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"_pam_make_env: no memory for list"
@@ -642,12 +634,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_putenv: no variable indicated"
@@ -687,12 +675,8 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_putenv: bad variable"
@@ -720,12 +704,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_putenv: no env%s found"
@@ -840,12 +820,8 @@ name|NULL
 condition|)
 block|{
 comment|/* nothing has changed - old env intact */
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_putenv: cannot grow environment"
@@ -1077,12 +1053,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_putenv: delete non-existent entry; %s"
@@ -1272,12 +1244,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_getenv: no variable indicated"
@@ -1304,12 +1272,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_getenv: no env%s found"
@@ -1645,12 +1609,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_getenvlist: no env%s found"
@@ -1686,12 +1646,8 @@ operator|->
 name|entries
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_getenvlist: environment corruption"
@@ -1740,12 +1696,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|pamh
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_getenvlist: environment broken"

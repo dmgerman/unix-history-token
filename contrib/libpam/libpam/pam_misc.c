@@ -4,7 +4,7 @@ comment|/* pam_misc.c -- This is random stuff */
 end_comment
 
 begin_comment
-comment|/* $Id: pam_misc.c,v 1.9 1997/04/05 06:56:19 morgan Exp $  *  * $Log: pam_misc.c,v $  * Revision 1.9  1997/04/05 06:56:19  morgan  * enforce AUTHTOK restrictions  *  * Revision 1.8  1997/02/15 15:59:46  morgan  * modified ..strCMP comment  *  * Revision 1.7  1996/12/01 03:14:13  morgan  * use _pam_macros.h  *  * Revision 1.6  1996/11/10 20:05:52  morgan  * name convention _pam_ enforced. Also modified _pam_strdup()  *  * Revision 1.5  1996/07/07 23:57:14  morgan  * deleted debuggin function and replaced it with a static function  * defined in pam_private.h  *  * Revision 1.4  1996/06/02 08:00:56  morgan  * added StrTok function  *  * Revision 1.3  1996/05/21 04:36:58  morgan  * added debugging information  * replaced the _pam_log need for a local buffer with a call to vsyslog()  * [Al Longyear had some segfaulting problems related to this]  *  * Revision 1.2  1996/03/16 21:55:13  morgan  * changed pam_mkargv to _pam_mkargv  *  */
+comment|/*  * $Id: pam_misc.c,v 1.2 2001/01/22 06:07:29 agmorgan Exp $  */
 end_comment
 
 begin_include
@@ -425,12 +425,8 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"_pam_strdup: failed to get memory"
@@ -581,12 +577,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_mkargv: null returned by _pam_strdup"
@@ -642,12 +634,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"pam_mkargv: null returned by malloc"
@@ -822,7 +810,19 @@ modifier|*
 name|pamh
 parameter_list|)
 block|{
+name|int
+name|old_caller_is
+init|=
+name|pamh
+operator|->
+name|caller_is
+decl_stmt|;
 comment|/*      * this is for security. We reset the auth-tokens here.      */
+name|__PAM_TO_MODULE
+argument_list|(
+name|pamh
+argument_list|)
+expr_stmt|;
 name|pam_set_item
 argument_list|(
 name|pamh
@@ -840,6 +840,12 @@ name|PAM_OLDAUTHTOK
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|pamh
+operator|->
+name|caller_is
+operator|=
+name|old_caller_is
 expr_stmt|;
 block|}
 end_function
@@ -946,6 +952,9 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|tok
 argument_list|)
@@ -1034,6 +1043,9 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|tok
 argument_list|)
@@ -1069,6 +1081,9 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|tok
 argument_list|)
@@ -1101,9 +1116,13 @@ operator|=
 literal|0
 init|;
 name|act
-operator|<=
+operator|<
+operator|(
 operator|-
+operator|(
 name|_PAM_ACTION_UNDEF
+operator|)
+operator|)
 condition|;
 operator|++
 name|act
@@ -1160,6 +1179,9 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|tok
 argument_list|)
@@ -1201,6 +1223,9 @@ name|tok
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|tok
 argument_list|)
@@ -1255,12 +1280,8 @@ return|return;
 name|parse_error
 label|:
 comment|/* treat everything as bad */
-name|pam_system_log
+name|_pam_system_log
 argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"pam_parse: %s; [...%s]"

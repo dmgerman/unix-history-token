@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: help_env.c,v 1.2 1997/01/04 20:19:20 morgan Exp morgan $  *  * This file was written by Andrew G. Morgan<morgan@parc.power.net>  *  * $Log: help_env.c,v $  * Revision 1.2  1997/01/04 20:19:20  morgan  * added a prototype (no warning) and fixed paste function  *  * Revision 1.1  1996/12/01 03:25:37  morgan  * Initial revision  *  */
+comment|/*  * $Id: help_env.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  *  * This file was written by Andrew G. Morgan<morgan@parc.power.net>  *  */
 end_comment
 
 begin_include

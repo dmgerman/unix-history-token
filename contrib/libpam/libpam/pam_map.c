@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* pam_map.c - PAM mapping interface  *  * $Id$  *  * This is based on the X/Open XSSO specification of March 1997.  * It is not implemented as it is going to change... after 1997/9/25.  *  * $Log$  */
+comment|/* pam_map.c - PAM mapping interface  *  * $Id: pam_map.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  *  * This is based on the X/Open XSSO specification of March 1997.  * It is not implemented as it is going to change... after 1997/9/25.  *  */
 end_comment
 
 begin_include
