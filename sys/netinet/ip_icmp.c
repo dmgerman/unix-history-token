@@ -1552,7 +1552,7 @@ name|ICMP_UNREACH_PORT
 case|:
 name|code
 operator|=
-name|PRC_UNREACH_ADMIN_PROHIB
+name|PRC_UNREACH_PORT
 expr_stmt|;
 break|break;
 case|case

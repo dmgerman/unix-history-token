@@ -4823,9 +4823,15 @@ if|if
 condition|(
 name|icmp_may_rst
 operator|&&
+operator|(
 name|cmd
 operator|==
 name|PRC_UNREACH_ADMIN_PROHIB
+operator|||
+name|cmd
+operator|==
+name|PRC_UNREACH_PORT
+operator|)
 operator|&&
 name|ip
 condition|)
