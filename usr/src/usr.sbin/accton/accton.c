@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)accton.c	5.1 (Berkeley) %G%"
+literal|"@(#)accton.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,7 @@ name|argc
 condition|)
 block|{
 case|case
-literal|1
+literal|0
 case|:
 if|if
 condition|(
@@ -197,14 +197,13 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|2
+literal|1
 case|:
 if|if
 condition|(
 name|acct
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 condition|)
