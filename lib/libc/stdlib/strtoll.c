@@ -270,6 +270,8 @@ literal|8
 else|:
 literal|10
 expr_stmt|;
+name|acc
+operator|=
 name|any
 operator|=
 literal|0
@@ -320,9 +322,6 @@ name|base
 expr_stmt|;
 for|for
 control|(
-name|acc
-operator|=
-literal|0
 init|;
 condition|;
 name|c
