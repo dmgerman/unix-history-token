@@ -2444,6 +2444,10 @@ if|if
 condition|(
 name|tmp
 operator|&&
+name|tmp
+operator|->
+name|private
+operator|&&
 operator|!
 operator|(
 operator|(
