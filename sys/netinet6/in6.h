@@ -2914,7 +2914,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|inet6_option_alloc
 name|__P
@@ -2946,7 +2946,7 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|*
 operator|)
@@ -2966,7 +2966,7 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|*
 operator|,
@@ -3149,11 +3149,11 @@ name|socklen_t
 operator|,
 name|int
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|,
 name|socklen_t
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|,
 name|void
 operator|*
@@ -3216,7 +3216,7 @@ name|socklen_t
 operator|,
 name|int
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|,
 name|socklen_t
@@ -3244,7 +3244,7 @@ name|socklen_t
 operator|,
 name|int
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|,
 name|socklen_t
 operator|*

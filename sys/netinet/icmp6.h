@@ -81,12 +81,7 @@ block|}
 name|icmp6_dataun
 union|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -803,12 +798,7 @@ name|mld_addr
 decl_stmt|;
 comment|/* multicast address */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -930,12 +920,7 @@ name|nd_rs_hdr
 decl_stmt|;
 comment|/* could be followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -986,12 +971,7 @@ decl_stmt|;
 comment|/* retransmit timer */
 comment|/* could be followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1133,12 +1113,7 @@ decl_stmt|;
 comment|/*target address */
 comment|/* could be followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1186,12 +1161,7 @@ decl_stmt|;
 comment|/* target address */
 comment|/* could be followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1317,12 +1287,7 @@ decl_stmt|;
 comment|/* destination address */
 comment|/* could be followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1367,12 +1332,7 @@ name|nd_opt_len
 decl_stmt|;
 comment|/* followed by option specific data*/
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1453,12 +1413,7 @@ name|in6_addr
 name|nd_opt_pi_prefix
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1495,12 +1450,7 @@ name|nd_opt_rh_reserved2
 decl_stmt|;
 comment|/* followed by IP header and data */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1522,12 +1472,7 @@ name|u_int32_t
 name|nd_opt_mtu_mtu
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1553,12 +1498,7 @@ name|nd_opt_rti_lifetime
 decl_stmt|;
 comment|/* prefix follows */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1591,12 +1531,7 @@ endif|#
 directive|endif
 comment|/* could be followed by options */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1620,12 +1555,7 @@ index|]
 decl_stmt|;
 comment|/* could be followed by reply data */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2059,12 +1989,7 @@ index|]
 decl_stmt|;
 comment|/* XXX: alignment */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2094,12 +2019,7 @@ name|u_int32_t
 name|rr_reserved
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2197,12 +2117,7 @@ name|in6_addr
 name|rpm_prefix
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2265,12 +2180,7 @@ name|in6_addr
 name|rpu_prefix
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2359,12 +2269,7 @@ name|in6_addr
 name|rrr_prefix
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
