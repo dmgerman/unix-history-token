@@ -4,6 +4,10 @@ comment|/* Coherent tty locking support.  This file was contributed by Bob    He
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* The bottom part of this file is lock.c.  * This is a hacked lock.c. A full lock.c can be found in the libmisc sources   * under /usr/src/misc.tar.Z.  *  * These are for checking for the existence of locks:  * lockexist(resource)  * lockttyexist(ttyname)  */
 end_comment
 
@@ -45,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<access.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_comment
@@ -488,7 +498,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|strlen
 argument_list|(
@@ -501,7 +511,9 @@ argument_list|(
 operator|*
 name|pzenable
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|enable_device
 argument_list|)
@@ -853,7 +865,9 @@ name|sprintf
 argument_list|(
 name|filename
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|ttyn
 argument_list|)

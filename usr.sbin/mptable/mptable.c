@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1348,7 +1354,7 @@ name|pfd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/mem"
+name|_PATH_MEM
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -3505,7 +3511,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"/dev/mem seek"
+literal|"%s seek"
+argument_list|,
+name|_PATH_MEM
 argument_list|)
 expr_stmt|;
 block|}

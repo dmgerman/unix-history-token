@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -586,7 +592,9 @@ name|sprintf
 argument_list|(
 name|printer_name
 argument_list|,
-literal|"/dev/lpt%d"
+literal|"%slpt%d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|printer
 argument_list|)

@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Pager: Routines to create a "more" running out of a particular file  * descriptor.  *  * Copyright 1987, 1988 by MIT Student Information Processing Board  *  * For copyright information, see copyright.h.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -35,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -208,7 +218,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_WRONLY
 argument_list|,

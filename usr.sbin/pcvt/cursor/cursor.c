@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|id
 init|=
-literal|"@(#)cursor.c, 3.20, Last Edit-Date: [Tue Apr  4 12:27:54 1995]"
+literal|"@(#)cursor.c, 3.20, Last Edit-Date: [Tue Apr  4 12:27:54 1995]\n$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pcvt_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_define
@@ -421,7 +427,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       -d<device>   device to use (/dev/ttyvX), default current\n"
+literal|"       -d<device>   device to use (%svX), default current\n"
+argument_list|,
+name|_PATH_TTY
 argument_list|)
 expr_stmt|;
 name|fprintf

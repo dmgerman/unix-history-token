@@ -227,6 +227,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_comment
 comment|/* 4.2 systems don't define SIGUSR2.  This should work for them.  On    systems which are missing SIGUSR1, or SIGURG, you must find two    signals which you can safely use.  */
 end_comment
@@ -666,7 +672,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|strlen
 argument_list|(
@@ -678,7 +684,9 @@ name|sprintf
 argument_list|(
 name|zfree
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|zline
 argument_list|)
@@ -801,7 +809,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|strlen
 argument_list|(
@@ -813,7 +821,9 @@ name|sprintf
 argument_list|(
 name|zfree1
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|zline
 argument_list|)
@@ -836,7 +846,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|strlen
 argument_list|(
@@ -848,7 +858,9 @@ name|sprintf
 argument_list|(
 name|zfree2
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|zpline
 argument_list|)

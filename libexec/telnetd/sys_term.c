@@ -986,6 +986,12 @@ directive|include
 file|<libutil.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|cleanopen
@@ -2604,7 +2610,17 @@ name|strcpy
 argument_list|(
 name|line
 argument_list|,
-literal|"/dev/ptyXX"
+name|_PATH_DEV
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|line
+argument_list|,
+literal|"ptyXX"
 argument_list|)
 expr_stmt|;
 name|p1
@@ -2898,7 +2914,9 @@ name|sprintf
 argument_list|(
 name|myline
 argument_list|,
-literal|"/dev/pty/%03d"
+literal|"%spty/%03d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 operator|*
 name|ptynum
@@ -6139,7 +6157,7 @@ name|t
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -6490,7 +6508,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -7187,7 +7205,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -8422,7 +8440,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -9507,7 +9525,7 @@ name|line
 operator|+
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
@@ -9984,7 +10002,7 @@ name|line
 index|[
 name|strlen
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 index|]
 operator|=

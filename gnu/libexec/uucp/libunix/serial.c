@@ -72,6 +72,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -2280,7 +2286,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|clen
 argument_list|)
@@ -2291,10 +2297,10 @@ name|q
 operator|->
 name|zdevice
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|-
 literal|1
 argument_list|)
@@ -2306,7 +2312,7 @@ operator|->
 name|zdevice
 operator|+
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|-
 literal|1
 argument_list|,
@@ -2320,12 +2326,12 @@ operator|->
 name|zdevice
 index|[
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|clen
 operator|-
 literal|1
-expr|]
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -2400,7 +2406,7 @@ name|void
 operator|)
 name|chmod
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|S_IRUSR
 operator||
@@ -4360,10 +4366,10 @@ name|q
 operator|->
 name|zdevice
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|-
 literal|1
 argument_list|)
@@ -4377,7 +4383,7 @@ operator|->
 name|zdevice
 operator|+
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|-
 literal|1
 expr_stmt|;
@@ -7315,7 +7321,7 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"/dev/"
+name|_PATH_DEV
 operator|+
 name|strlen
 argument_list|(
@@ -7327,7 +7333,9 @@ name|sprintf
 argument_list|(
 name|zfree
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|z
 argument_list|)

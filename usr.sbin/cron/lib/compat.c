@@ -92,6 +92,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_comment
 comment|/* the code does not depend on any of vfork's  * side-effects; it just uses it as a quick  * fork-and-exec.  */
 end_comment
@@ -401,7 +407,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)
@@ -456,7 +462,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|0
 argument_list|)
@@ -474,7 +480,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|1
 argument_list|)
@@ -492,7 +498,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|2
 argument_list|)

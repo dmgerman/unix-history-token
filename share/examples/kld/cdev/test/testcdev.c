@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -146,9 +152,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Sent ioctl CDEV_IOCTL1 to device /dev/"
+literal|"Sent ioctl CDEV_IOCTL1 to device %s%s\n"
+argument_list|,
+name|_PATH_DEV
+argument_list|,
 name|CDEV_DEVICE
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lib.h"
 end_include
 
@@ -111,7 +117,7 @@ name|tty
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -131,7 +137,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"can't open /dev/tty!"
+literal|"can't open %s!"
+argument_list|,
+name|_PATH_TTY
 argument_list|)
 expr_stmt|;
 block|}

@@ -63,6 +63,12 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -612,7 +618,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -720,7 +726,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -738,7 +744,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDWR
 argument_list|)

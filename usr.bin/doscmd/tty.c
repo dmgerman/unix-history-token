@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -1458,7 +1464,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/console"
+name|_PATH_CONSOLE
 argument_list|,
 literal|2
 argument_list|)
@@ -1469,7 +1475,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/dev/console"
+name|_PATH_CONSOLE
 argument_list|)
 expr_stmt|;
 name|quit
@@ -10299,7 +10305,7 @@ index|]
 operator|=
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|0
 argument_list|)

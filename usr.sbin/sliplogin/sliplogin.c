@@ -44,6 +44,16 @@ literal|"@(#)sliplogin.c	8.2 (Berkeley) 2/1/94"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rscid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -133,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -1921,7 +1937,7 @@ index|[
 name|MAXPATHLEN
 index|]
 init|=
-literal|"/dev/tty"
+name|_PATH_TTY
 decl_stmt|;
 comment|/* Device name */
 if|if
@@ -2773,7 +2789,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"open /dev/null: %m"
+literal|"open %s: %m"
+argument_list|,
+name|_PATH_DEVNULL
 argument_list|)
 expr_stmt|;
 name|exit

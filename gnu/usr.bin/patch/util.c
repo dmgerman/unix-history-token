@@ -1,4 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -1361,7 +1371,7 @@ name|ttyfd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)
@@ -1984,9 +1994,12 @@ name|strnEQ
 argument_list|(
 name|at
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
-literal|9
+sizeof|sizeof
+name|_PATH_DEVNULL
+operator|-
+literal|1
 argument_list|)
 condition|)
 comment|/* so files can be created by diffing */

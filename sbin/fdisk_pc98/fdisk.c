@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1703,9 +1709,12 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|"/dev"
+name|_PATH_DEV
 argument_list|,
-literal|4
+sizeof|sizeof
+name|_PATH_DEV
+operator|-
+literal|2
 argument_list|)
 operator|==
 literal|0
@@ -1725,7 +1734,9 @@ name|realname
 argument_list|,
 literal|12
 argument_list|,
-literal|"/dev/%s"
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|argv
 index|[

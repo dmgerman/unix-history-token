@@ -9,6 +9,12 @@ directive|include
 file|<locale.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2401,7 +2407,9 @@ name|log
 argument_list|(
 name|LL_WRN
 argument_list|,
-literal|"ERROR, unknown message received from /dev/isdn (0x%x)"
+literal|"ERROR, unknown message received from %sisdn (0x%x)"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|msg_rd_buf
 index|[

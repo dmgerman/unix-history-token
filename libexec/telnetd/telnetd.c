@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utmp.h>
 end_include
 
@@ -3606,7 +3612,9 @@ name|sprintf
 argument_list|(
 name|tty_dev
 argument_list|,
-literal|"/dev/pty/%03d"
+literal|"%spty/%03d"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|ptynum
 argument_list|)
@@ -3634,7 +3642,9 @@ name|sprintf
 argument_list|(
 name|slave_dev
 argument_list|,
-literal|"/dev/ttyp%03d"
+literal|"%sp%03d"
+argument_list|,
+name|_PATH_TTY
 argument_list|,
 name|ptynum
 argument_list|)

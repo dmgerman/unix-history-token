@@ -8,6 +8,10 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * BOOTPGW is typically used to forward BOOTP client requests from  * one subnet to a BOOTP server on a different subnet.  */
 end_comment
 
@@ -138,6 +142,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -1531,7 +1541,7 @@ name|n
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDWR
 argument_list|)

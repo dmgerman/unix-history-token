@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -966,7 +972,7 @@ name|i
 operator|=
 name|open
 argument_list|(
-literal|"/dev/console"
+name|_PATH_CONSOLE
 argument_list|,
 literal|2
 argument_list|)
@@ -995,7 +1001,7 @@ name|i
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)
