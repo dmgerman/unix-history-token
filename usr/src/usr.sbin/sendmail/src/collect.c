@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.21 (Berkeley) %G%"
+literal|"@(#)collect.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +408,15 @@ operator|-
 literal|1
 expr_stmt|;
 else|else
+block|{
+name|e
+operator|->
+name|e_dfdev
+operator|=
+name|stbuf
+operator|.
+name|st_dev
+expr_stmt|;
 name|e
 operator|->
 name|e_dfino
@@ -416,6 +425,7 @@ name|stbuf
 operator|.
 name|st_ino
 expr_stmt|;
+block|}
 name|HasEightBits
 operator|=
 name|FALSE

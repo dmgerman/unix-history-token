@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.95 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.96 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8586,6 +8586,15 @@ operator|-
 literal|1
 expr_stmt|;
 else|else
+block|{
+name|e
+operator|->
+name|e_dfdev
+operator|=
+name|stbuf
+operator|.
+name|st_dev
+expr_stmt|;
 name|e
 operator|->
 name|e_dfino
@@ -8594,6 +8603,7 @@ name|stbuf
 operator|.
 name|st_ino
 expr_stmt|;
+block|}
 block|}
 name|rewind
 argument_list|(
@@ -8614,7 +8624,8 @@ name|mci_flags
 argument_list|)
 condition|)
 block|{
-comment|/* do 8 to 7 bit MIME conversion */
+comment|/* 		**  Do 8 to 7 bit MIME conversion. 		*/
+comment|/* make sure it looks like a MIME message */
 if|if
 condition|(
 name|hvalue
@@ -8635,6 +8646,28 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+comment|/* as recommended by RFC 1428 section 3... */
+if|if
+condition|(
+name|hvalue
+argument_list|(
+literal|"Content-Type"
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|putline
+argument_list|(
+literal|"Content-Type: text/plain; charset=unknown-8bit"
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+comment|/* now do the hard work */
 name|mime8to7
 argument_list|(
 name|mci
