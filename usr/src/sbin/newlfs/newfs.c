@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	5.6 (Berkeley) %G%"
+literal|"@(#)newfs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -940,7 +940,7 @@ name|optarg
 argument_list|)
 operator|)
 operator|<
-name|MINBSIZE
+name|LFS_MINBLOCKSIZE
 condition|)
 name|fatal
 argument_list|(
