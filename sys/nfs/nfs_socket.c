@@ -7589,11 +7589,6 @@ name|slptimeo
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|rep
-condition|)
-block|{
 name|p
 operator|=
 name|rep
@@ -7613,17 +7608,6 @@ condition|)
 name|slpflag
 operator|=
 name|PCATCH
-expr_stmt|;
-block|}
-else|else
-name|p
-operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -7701,10 +7685,6 @@ block|}
 comment|/* Always fail if our request has been cancelled. */
 if|if
 condition|(
-name|rep
-operator|!=
-name|NULL
-operator|&&
 operator|(
 name|rep
 operator|->
