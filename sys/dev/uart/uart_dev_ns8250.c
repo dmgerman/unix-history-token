@@ -2945,7 +2945,7 @@ name|sc
 operator|->
 name|sc_rxfifosz
 operator|=
-literal|1
+literal|16
 expr_stmt|;
 name|device_set_desc
 argument_list|(
