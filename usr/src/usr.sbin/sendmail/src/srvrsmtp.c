@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.30 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.31 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.30 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.31 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1508,6 +1508,19 @@ case|case
 name|CMDRCPT
 case|:
 comment|/* rcpt -- designate recipient */
+if|if
+condition|(
+operator|!
+name|gotmail
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"503 Need MAIL before RCPT"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|SmtpPhase
 operator|=
 literal|"RCPT"
