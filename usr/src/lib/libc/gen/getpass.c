@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpass.c	5.9 (Berkeley) %G%"
+literal|"@(#)getpass.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -59,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_function
@@ -125,7 +131,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"w+"
 argument_list|)
@@ -295,6 +301,9 @@ name|c_lflag
 operator||=
 name|ECHO
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcsetattr
 argument_list|(
 name|fileno
