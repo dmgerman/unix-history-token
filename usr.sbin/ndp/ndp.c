@@ -2317,6 +2317,9 @@ name|delete
 goto|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 name|delete
 label|:
 if|if
