@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)err.c	5.1	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)err.c	5.2	%G%  */
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*1 if formatted io,	0 if unformatted, -1 if list*/
+comment|/*1 if formatted io,	0 if unformatted, 				-1 if list directed, -2 if namelist */
 end_comment
 
 begin_decl_stmt
@@ -567,12 +567,20 @@ literal|"formatted"
 else|:
 operator|(
 name|formatted
-operator|<
+operator|==
 literal|0
+condition|?
+literal|"unformatted"
+else|:
+operator|(
+name|formatted
+operator|==
+name|LISTDIRECTED
 condition|?
 literal|"list"
 else|:
-literal|"unformatted"
+literal|"namelist"
+operator|)
 operator|)
 argument_list|,
 name|external
