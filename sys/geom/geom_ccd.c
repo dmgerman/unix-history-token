@@ -3806,14 +3806,30 @@ name|CCDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"ccdbuffer(%p, %p, %d, %p, %ld)\n"
+literal|"ccdbuffer(%p, %p, %lld, %p, %ld)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cs
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|bp
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bn
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 name|bcount
@@ -7434,7 +7450,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" itab[%d]: #dk %d sblk %d soff %d"
+literal|" itab[%d]: #dk %d sblk %lld soff %lld"
 argument_list|,
 name|ix
 argument_list|,
@@ -7442,10 +7458,18 @@ name|ii
 operator|->
 name|ii_ndisk
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ii
 operator|->
 name|ii_startblk
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ii
 operator|->
 name|ii_startoff
