@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -173,8 +173,18 @@ comment|/* Canada */
 end_comment
 
 begin_comment
-comment|/*  * Operations on timevals.  *  * NB: timercmp does not work for>= or<=.  */
+comment|/* Operations on timevals. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|timerclear
+parameter_list|(
+name|tvp
+parameter_list|)
+value|(tvp)->tv_sec = (tvp)->tv_usec = 0
+end_define
 
 begin_define
 define|#
@@ -198,17 +208,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((tvp)->tv_sec cmp (uvp)->tv_sec || \ 	 (tvp)->tv_sec == (uvp)->tv_sec&& (tvp)->tv_usec cmp (uvp)->tv_usec)
-end_define
-
-begin_define
-define|#
-directive|define
-name|timerclear
-parameter_list|(
-name|tvp
-parameter_list|)
-value|(tvp)->tv_sec = (tvp)->tv_usec = 0
+value|(((tvp)->tv_sec == (uvp)->tv_sec) ?				\ 	    ((tvp)->tv_usec cmp (uvp)->tv_usec) :			\ 	    ((tvp)->tv_sec cmp (uvp)->tv_sec))
 end_define
 
 begin_comment
