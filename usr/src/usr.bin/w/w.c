@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.6 (Berkeley) %G%"
+literal|"@(#)w.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/tty.h>
 end_include
 
 begin_define
@@ -429,6 +435,13 @@ name|aproc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|tty
+name|ttyent
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -447,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|TTYEQ
-value|(tty == pr[i].w_tty&& uid == pr[i].w_uid)
+value|(tty == pr[i].w_tty)
 end_define
 
 begin_define
@@ -1080,9 +1093,11 @@ name|firstchar
 operator|!=
 literal|'u'
 condition|)
+comment|/* if this program is not "uptime(1)" */
 name|readpr
 argument_list|()
 expr_stmt|;
+comment|/* then read in procs */
 name|ut
 operator|=
 name|fopen
@@ -1440,6 +1455,7 @@ name|firstchar
 operator|==
 literal|'u'
 condition|)
+comment|/* if this was uptime(1), finished */
 name|exit
 argument_list|(
 literal|0
@@ -2604,7 +2620,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * readpr finds and reads in the array pr, containing the interesting  * parts of the proc and user tables for each live process.  */
+comment|/*  * readpr finds and reads in the array pr, containing the interesting  * parts of the proc and user tables for each live process.  * We only accept procs whos controlling tty has a pgrp equal to the  * pgrp of the proc.  This accurately defines the notion of the current  * process(s), but because of time skew, we always read in the tty struct  * after reading the proc, even though the same tty struct may have been  * read earlier on.  */
 end_comment
 
 begin_macro
@@ -3006,6 +3022,12 @@ name|SZOMB
 operator|||
 name|mproc
 operator|.
+name|p_stat
+operator|==
+name|SSTOP
+operator|||
+name|mproc
+operator|.
 name|p_pgrp
 operator|==
 literal|0
@@ -3327,6 +3349,53 @@ operator|.
 name|u_ttyp
 operator|==
 name|NULL
+condition|)
+continue|continue;
+comment|/* only include a process whose tty has a pgrp which matchs its own */
+name|lseek
+argument_list|(
+name|kmem
+argument_list|,
+operator|(
+name|long
+operator|)
+name|up
+operator|.
+name|u_ttyp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|read
+argument_list|(
+name|kmem
+argument_list|,
+operator|&
+name|ttyent
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ttyent
+argument_list|)
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|ttyent
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|ttyent
+operator|.
+name|t_pgrp
+operator|!=
+name|mproc
+operator|.
+name|p_pgrp
 condition|)
 continue|continue;
 comment|/* save the interesting parts */
