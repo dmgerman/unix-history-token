@@ -2252,6 +2252,14 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
+specifier|extern
+name|u_char
+name|ip6_protox
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|in6_sin6_2_sin
 name|__P
