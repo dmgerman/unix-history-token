@@ -37087,6 +37087,11 @@ name|s_addr
 argument_list|,
 name|htonl
 argument_list|(
+operator|(
+name|u_short
+operator|)
+name|len
+operator|+
 name|m
 operator|->
 name|m_pkthdr
@@ -37094,13 +37099,6 @@ operator|.
 name|csum_data
 operator|+
 name|IPPROTO_TCP
-operator|+
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
