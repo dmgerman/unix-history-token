@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* @(#)doprnt.c	4.6 (Berkeley) %G% */
-end_comment
-
-begin_empty
-empty|# C library -- conversions
-end_empty
-
 begin_expr_stmt
+operator|.
+name|data
+name|_sccsid
+operator|:
+operator|.
+name|asciz
+literal|"@(#)doprnt.c	5.1 (Berkeley) %G%"
+operator|.
+name|text
+empty|# C library -- conversions
 operator|.
 name|globl
 name|__doprnt
