@@ -141,11 +141,19 @@ begin_comment
 comment|/* length of fs type name, including null */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
 
 begin_define
 define|#
