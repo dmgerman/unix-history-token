@@ -5466,6 +5466,12 @@ name|unit
 argument_list|,
 literal|"%lluMB (%llu sectors), %llu C, %u H, %u S, %u B\n"
 argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -5479,11 +5485,23 @@ operator|)
 operator|/
 name|DEV_BSIZE
 operator|)
+argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|adp
 operator|->
 name|total_secs
 argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -5497,6 +5515,7 @@ name|adp
 operator|->
 name|sectors
 operator|)
+argument_list|)
 argument_list|,
 name|adp
 operator|->
@@ -5631,6 +5650,12 @@ name|unit
 argument_list|,
 literal|"%lluMB<%.40s> [%lld/%d/%d] at ata%d-%s %s%s\n"
 argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -5644,11 +5669,18 @@ operator|)
 operator|/
 name|DEV_BSIZE
 operator|)
+argument_list|)
 argument_list|,
 name|AD_PARAM
 operator|->
 name|model
 argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
 name|adp
 operator|->
 name|total_secs
@@ -5662,6 +5694,7 @@ name|adp
 operator|->
 name|sectors
 operator|)
+argument_list|)
 argument_list|,
 name|adp
 operator|->
