@@ -418,8 +418,8 @@ comment|/* 	 * Opieverify is supposed to return -1 only if an error occurs. 	 * 
 end_comment
 
 begin_expr_stmt
-name|PAM_RETURN
-argument_list|(
+name|retval
+operator|=
 name|opieverify
 argument_list|(
 operator|&
@@ -433,6 +433,13 @@ condition|?
 name|PAM_SUCCESS
 else|:
 name|PAM_AUTH_ERR
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PAM_RETURN
+argument_list|(
+name|retval
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -468,7 +475,7 @@ argument_list|(
 operator|&
 name|options
 argument_list|,
-name|NULL
+name|other_options
 argument_list|,
 name|argc
 argument_list|,
