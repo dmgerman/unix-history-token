@@ -378,6 +378,15 @@ begin_comment
 comment|/*  * Unusual type definitions.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
 begin_typedef
 typedef|typedef
 name|__builtin_va_list
@@ -388,6 +397,32 @@ end_typedef
 begin_comment
 comment|/* internally known to gcc */
 end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_elif
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|__va_list
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* pretend */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

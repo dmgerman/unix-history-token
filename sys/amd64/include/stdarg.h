@@ -51,6 +51,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -113,6 +122,70 @@ parameter_list|)
 define|\
 value|__builtin_va_end(ap)
 end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Provide a fake implementation for lint's benefit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_size
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(((sizeof(type) + sizeof(long) - 1) / sizeof(long)) * sizeof(long))
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|ap
+parameter_list|,
+name|last
+parameter_list|)
+define|\
+value|((ap) = (va_list)&(last) + __va_size(last))
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_arg
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|(*(type *)((ap) += __va_size(type), (ap) - __va_size(type)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_end
+parameter_list|(
+name|ap
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
