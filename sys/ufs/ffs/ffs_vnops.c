@@ -1274,8 +1274,6 @@ return|;
 block|}
 endif|#
 directive|endif
-name|GIANT_REQUIRED
-expr_stmt|;
 name|seqcount
 operator|=
 name|ap
@@ -2039,8 +2037,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|GIANT_REQUIRED
-expr_stmt|;
 name|extended
 operator|=
 literal|0
@@ -2993,8 +2989,6 @@ decl_stmt|;
 name|int
 name|pcount
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|pcount
 operator|=
 name|round_page
@@ -3192,8 +3186,6 @@ name|error
 decl_stmt|,
 name|orig_resid
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|ip
 operator|=
 name|VTOI
@@ -3770,8 +3762,6 @@ name|size
 decl_stmt|,
 name|xfersize
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|ip
 operator|=
 name|VTOI
