@@ -947,11 +947,6 @@ name|uio
 modifier|*
 name|uio
 parameter_list|,
-name|struct
-name|vm_object
-modifier|*
-name|obj
-parameter_list|,
 name|int
 name|disposable
 parameter_list|)
@@ -985,12 +980,6 @@ operator|(
 name|so_zero_copy_receive
 operator|!=
 literal|0
-operator|)
-operator|&&
-operator|(
-name|obj
-operator|==
-name|NULL
 operator|)
 operator|&&
 operator|(
@@ -1158,11 +1147,6 @@ name|uio
 modifier|*
 name|uio
 parameter_list|,
-name|struct
-name|vm_object
-modifier|*
-name|obj
-parameter_list|,
 name|int
 name|disposable
 parameter_list|)
@@ -1301,8 +1285,6 @@ argument_list|,
 name|cnt
 argument_list|,
 name|uio
-argument_list|,
-name|obj
 argument_list|,
 name|disposable
 argument_list|)

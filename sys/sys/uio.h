@@ -366,11 +366,6 @@ name|uio
 modifier|*
 name|uio
 parameter_list|,
-name|struct
-name|vm_object
-modifier|*
-name|obj
-parameter_list|,
 name|int
 name|disposable
 parameter_list|)

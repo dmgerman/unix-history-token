@@ -4243,10 +4243,6 @@ argument_list|)
 argument_list|,
 name|uio
 argument_list|,
-name|pg
-operator|->
-name|object
-argument_list|,
 name|disposable
 argument_list|)
 expr_stmt|;
@@ -5928,10 +5924,6 @@ operator|)
 name|len
 argument_list|,
 name|uio
-argument_list|,
-name|pg
-operator|->
-name|object
 argument_list|,
 name|disposable
 argument_list|)
