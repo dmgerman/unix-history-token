@@ -523,7 +523,7 @@ value|0x04u
 end_define
 
 begin_comment
-comment|/* TI112X specific code */
+comment|/* TI12XX specific code */
 end_comment
 
 begin_define
