@@ -372,10 +372,6 @@ block|,
 literal|"19200"
 block|,
 literal|"38400"
-block|,
-literal|"57600"
-block|,
-literal|"115200"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1256,6 +1252,21 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ttyb
+operator|.
+name|sg_ospeed
+operator|>
+name|EXTB
+condition|)
+name|ttyb
+operator|.
+name|sg_ospeed
+operator|=
+name|EXTB
+expr_stmt|;
+comment|/* 38400 */
 operator|(
 name|void
 operator|)
