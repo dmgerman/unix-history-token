@@ -373,7 +373,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setfacl [-bdhknv] [-m entries] [-M file1] "
+literal|"usage: setfacl [-bdhkn] [-m entries] [-M file1] "
 literal|"[-x entries] [-X file2] [file ...]\n"
 argument_list|)
 expr_stmt|;
