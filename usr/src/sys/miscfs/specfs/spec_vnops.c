@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spec_vnops.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spec_vnops.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -65,40 +65,40 @@ end_include
 
 begin_decl_stmt
 name|int
-name|blk_lookup
+name|spec_lookup
 argument_list|()
 decl_stmt|,
-name|blk_open
+name|spec_open
 argument_list|()
 decl_stmt|,
-name|blk_read
+name|spec_read
 argument_list|()
 decl_stmt|,
-name|blk_write
+name|spec_write
 argument_list|()
 decl_stmt|,
-name|blk_strategy
+name|spec_strategy
 argument_list|()
 decl_stmt|,
-name|blk_ioctl
+name|spec_ioctl
 argument_list|()
 decl_stmt|,
-name|blk_select
+name|spec_select
 argument_list|()
 decl_stmt|,
-name|blk_lock
+name|spec_lock
 argument_list|()
 decl_stmt|,
-name|blk_unlock
+name|spec_unlock
 argument_list|()
 decl_stmt|,
-name|blk_close
+name|spec_close
 argument_list|()
 decl_stmt|,
-name|blk_badop
+name|spec_badop
 argument_list|()
 decl_stmt|,
-name|blk_nullop
+name|spec_nullop
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -106,68 +106,68 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|vnodeops
-name|blk_vnodeops
+name|spec_vnodeops
 init|=
 block|{
-name|blk_lookup
+name|spec_lookup
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_open
+name|spec_open
 block|,
-name|blk_close
+name|spec_close
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_read
+name|spec_read
 block|,
-name|blk_write
+name|spec_write
 block|,
-name|blk_ioctl
+name|spec_ioctl
 block|,
-name|blk_select
+name|spec_select
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_nullop
+name|spec_nullop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_nullop
+name|spec_nullop
 block|,
-name|blk_nullop
+name|spec_nullop
 block|,
-name|blk_lock
+name|spec_lock
 block|,
-name|blk_unlock
+name|spec_unlock
 block|,
-name|blk_badop
+name|spec_badop
 block|,
-name|blk_strategy
+name|spec_strategy
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -177,7 +177,7 @@ comment|/*  * Trivial lookup routine that always fails.  */
 end_comment
 
 begin_macro
-name|blk_lookup
+name|spec_lookup
 argument_list|(
 argument|vp
 argument_list|,
@@ -232,7 +232,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_expr_stmt
-name|blk_open
+name|spec_open
 argument_list|(
 name|vp
 argument_list|,
@@ -399,7 +399,7 @@ comment|/*  * Vnode op for read  */
 end_comment
 
 begin_expr_stmt
-name|blk_read
+name|spec_read
 argument_list|(
 name|vp
 argument_list|,
@@ -537,7 +537,7 @@ comment|/*  * Vnode op for write  */
 end_comment
 
 begin_expr_stmt
-name|blk_write
+name|spec_write
 argument_list|(
 name|vp
 argument_list|,
@@ -679,7 +679,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|blk_ioctl
+name|spec_ioctl
 argument_list|(
 argument|vp
 argument_list|,
@@ -803,7 +803,7 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"blk_ioctl"
+literal|"spec_ioctl"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -816,7 +816,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|blk_select
+name|spec_select
 argument_list|(
 argument|vp
 argument_list|,
@@ -905,7 +905,7 @@ comment|/*  * Just call the device strategy routine  */
 end_comment
 
 begin_expr_stmt
-name|blk_strategy
+name|spec_strategy
 argument_list|(
 name|bp
 argument_list|)
@@ -950,7 +950,7 @@ comment|/*  * At the moment we do not do any locking.  */
 end_comment
 
 begin_macro
-name|blk_lock
+name|spec_lock
 argument_list|(
 argument|vp
 argument_list|)
@@ -975,7 +975,7 @@ block|}
 end_block
 
 begin_macro
-name|blk_unlock
+name|spec_unlock
 argument_list|(
 argument|vp
 argument_list|)
@@ -1008,7 +1008,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_expr_stmt
-name|blk_close
+name|spec_close
 argument_list|(
 name|vp
 argument_list|,
@@ -1158,7 +1158,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"blk_close: not special"
+literal|"spec_close: not special"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1207,7 +1207,7 @@ comment|/*  * Block device bad operation  */
 end_comment
 
 begin_macro
-name|blk_badop
+name|spec_badop
 argument_list|()
 end_macro
 
@@ -1215,7 +1215,7 @@ begin_block
 block|{
 name|panic
 argument_list|(
-literal|"blk_badop called"
+literal|"spec_badop called"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -1227,7 +1227,7 @@ comment|/*  * Block device null operation  */
 end_comment
 
 begin_macro
-name|blk_nullop
+name|spec_nullop
 argument_list|()
 end_macro
 
