@@ -1708,8 +1708,10 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"uhub_explore: get port status failed, "
+literal|"uhub_explore: get port status failed, on port %d "
 literal|"error=%d(%s)\n"
+operator|,
+name|port
 operator|,
 name|r
 operator|,

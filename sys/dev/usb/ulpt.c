@@ -1375,7 +1375,10 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|USB_DEBUG
+argument_list|)
 operator|&&
 name|defined
 argument_list|(
@@ -1386,21 +1389,20 @@ if|if
 condition|(
 operator|(
 name|flags
-operator|^
+operator|&
+operator|~
 name|ULPT_NOPRIME
 operator|)
 operator|!=
 literal|0
 condition|)
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
-literal|"flags ignored: %b\n"
-operator|,
+literal|"ulptopen: flags ignored: %b\n"
+argument_list|,
 name|flags
-operator|,
+argument_list|,
 literal|"\20\3POS_INIT\4POS_ACK\6PRIME_OPEN\7AUTOLF\10BYPASS"
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#

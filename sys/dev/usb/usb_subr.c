@@ -4201,6 +4201,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+comment|/* XXX FreeBSD can't handle multiple intfaces 				 *     on 1 device yet */
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION

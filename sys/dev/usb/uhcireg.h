@@ -365,7 +365,7 @@ begin_define
 define|#
 directive|define
 name|UHCI_LEGSUP
-value|0xC0
+value|0xc0
 end_define
 
 begin_define
