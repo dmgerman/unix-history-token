@@ -224,10 +224,10 @@ name|__STDC__
 operator|)
 undef|#
 directive|undef
-name|__P
+name|__GNU_P
 define|#
 directive|define
-name|__P
+name|__GNU_P
 parameter_list|(
 name|args
 parameter_list|)
@@ -244,10 +244,10 @@ directive|else
 comment|/* Not C++ or ANSI C.  */
 undef|#
 directive|undef
-name|__P
+name|__GNU_P
 define|#
 directive|define
-name|__P
+name|__GNU_P
 parameter_list|(
 name|args
 parameter_list|)
@@ -305,7 +305,7 @@ comment|/* Allocate SIZE bytes of memory.  */
 specifier|extern
 name|__ptr_t
 name|malloc
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|size_t
@@ -317,7 +317,7 @@ comment|/* Re-allocate the previously allocated block    in __ptr_t, making the 
 specifier|extern
 name|__ptr_t
 name|realloc
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -332,7 +332,7 @@ comment|/* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
 specifier|extern
 name|__ptr_t
 name|calloc
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|size_t
@@ -347,7 +347,7 @@ comment|/* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 specifier|extern
 name|void
 name|free
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -359,7 +359,7 @@ comment|/* Allocate SIZE bytes allocated to ALIGNMENT bytes.  */
 specifier|extern
 name|__ptr_t
 name|memalign
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|size_t
@@ -374,7 +374,7 @@ comment|/* Allocate SIZE bytes on a page boundary.  */
 specifier|extern
 name|__ptr_t
 name|valloc
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|size_t
@@ -578,7 +578,7 @@ comment|/* Internal version of `free' used in `morecore' (malloc.c). */
 specifier|extern
 name|void
 name|_free_internal
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -592,7 +592,7 @@ comment|/* _MALLOC_INTERNAL.  */
 comment|/* Underlying allocation function; successive calls should    return contiguous pieces of memory.  */
 extern|extern __ptr_t (*__morecore
 block|)
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|ptrdiff_t
@@ -610,7 +610,7 @@ begin_decl_stmt
 specifier|extern
 name|__ptr_t
 name|__default_morecore
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|ptrdiff_t
@@ -630,7 +630,7 @@ end_extern
 
 begin_expr_stmt
 unit|)
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|void
@@ -660,7 +660,7 @@ end_extern
 
 begin_expr_stmt
 unit|)
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -676,7 +676,7 @@ end_extern
 
 begin_expr_stmt
 unit|)
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|size_t
@@ -692,7 +692,7 @@ end_extern
 
 begin_expr_stmt
 unit|)
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -713,14 +713,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|mcheck
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|void
 argument_list|(
 argument|*__func
 argument_list|)
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|void
@@ -739,7 +739,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|mtrace
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|void
@@ -789,7 +789,7 @@ specifier|extern
 name|struct
 name|mstats
 name|mstats
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|void
@@ -806,7 +806,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|memory_warnings
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -816,7 +816,7 @@ name|void
 argument_list|(
 argument|*__warnfun
 argument_list|)
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__const
@@ -841,7 +841,7 @@ begin_decl_stmt
 specifier|extern
 name|__ptr_t
 name|r_alloc
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -863,7 +863,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|r_alloc_free
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
@@ -882,7 +882,7 @@ begin_decl_stmt
 specifier|extern
 name|__ptr_t
 name|r_re_alloc
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 name|__ptr_t
