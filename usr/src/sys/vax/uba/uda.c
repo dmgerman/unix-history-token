@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.12 (Berkeley) %G%  *  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.13 (Berkeley) %G%  *  */
 end_comment
 
 begin_comment
@@ -668,10 +668,7 @@ name|daddr_t
 name|ra_dsize
 decl_stmt|;
 comment|/* size in sectors */
-name|u_long
-name|ra_type
-decl_stmt|;
-comment|/* drive type */
+comment|/*	u_long	ra_type;	/* drive type */
 define|#
 directive|define
 name|RA_TYPE_RX50
@@ -2148,6 +2145,35 @@ name|ui_dk
 operator|>=
 literal|0
 condition|)
+comment|/* 	 * Floppies cannot be brought on line unless there is 	 * a disk in the drive.  Since an ONLINE while cold 	 * takes ten seconds to fail, and (when notyet becomes now) 	 * no sensible person will swap to one, we just 	 * defer the ONLINE until someone tries to use the drive. 	 * 	 * THIS ASSUMES THAT DRIVE TYPES ?X? ARE FLOPPIES 	 */
+if|if
+condition|(
+name|MSCP_MID_ECH
+argument_list|(
+literal|1
+argument_list|,
+name|ra_info
+index|[
+name|unit
+index|]
+operator|.
+name|ra_mediaid
+argument_list|)
+operator|==
+literal|'X'
+operator|-
+literal|'@'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ra%d: floppy\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dk_mspw
 index|[
 name|ui
@@ -2520,6 +2546,13 @@ operator|->
 name|udasa
 argument_list|,
 name|udasr_bits
+argument_list|)
+expr_stmt|;
+name|udasaerror
+argument_list|(
+name|um
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3113,6 +3146,10 @@ block|}
 end_block
 
 begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
@@ -3324,12 +3361,6 @@ name|ui
 operator|->
 name|ui_ctlr
 index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|disklabel
-modifier|*
-name|lp
 decl_stmt|;
 specifier|register
 name|struct
@@ -3819,7 +3850,7 @@ name|mp
 operator|->
 name|mscp_guse
 operator|.
-name|guse_drivetype
+name|guse_mediaid
 condition|)
 block|{
 name|printf
@@ -3836,7 +3867,7 @@ name|mp
 operator|->
 name|mscp_guse
 operator|.
-name|guse_drivetype
+name|guse_mediaid
 argument_list|)
 expr_stmt|;
 name|ra
@@ -3847,16 +3878,7 @@ name|CLOSED
 expr_stmt|;
 comment|/* ??? */
 block|}
-name|ra
-operator|->
-name|ra_type
-operator|=
-name|mp
-operator|->
-name|mscp_guse
-operator|.
-name|guse_drivetype
-expr_stmt|;
+comment|/* ra->ra_type = mp->mscp_guse.guse_drivetype; */
 name|ra
 operator|->
 name|ra_mediaid
@@ -4706,6 +4728,8 @@ comment|/* ctlr fatal error */
 name|udasaerror
 argument_list|(
 name|um
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5339,14 +5363,272 @@ comment|/* another transfer done */
 block|}
 end_block
 
+begin_struct
+specifier|static
+struct|struct
+name|saerr
+block|{
+name|int
+name|code
+decl_stmt|;
+comment|/* error code (including UDA_ERR) */
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* what it means: Efoo => foo error */
+block|}
+name|saerr
+index|[]
+init|=
+block|{
+block|{
+literal|0100001
+block|,
+literal|"Eunibus packet read"
+block|}
+block|,
+block|{
+literal|0100002
+block|,
+literal|"Eunibus packet write"
+block|}
+block|,
+block|{
+literal|0100003
+block|,
+literal|"EUDA ROM and RAM parity"
+block|}
+block|,
+block|{
+literal|0100004
+block|,
+literal|"EUDA RAM parity"
+block|}
+block|,
+block|{
+literal|0100005
+block|,
+literal|"EUDA ROM parity"
+block|}
+block|,
+block|{
+literal|0100006
+block|,
+literal|"Eunibus ring read"
+block|}
+block|,
+block|{
+literal|0100007
+block|,
+literal|"Eunibus ring write"
+block|}
+block|,
+block|{
+literal|0100010
+block|,
+literal|" unibus interrupt master failure"
+block|}
+block|,
+block|{
+literal|0100011
+block|,
+literal|"Ehost access timeout"
+block|}
+block|,
+block|{
+literal|0100012
+block|,
+literal|" host exceeded command limit"
+block|}
+block|,
+block|{
+literal|0100013
+block|,
+literal|" unibus bus master failure"
+block|}
+block|,
+block|{
+literal|0100014
+block|,
+literal|" DM XFC fatal error"
+block|}
+block|,
+block|{
+literal|0100015
+block|,
+literal|" hardware timeout of instruction loop"
+block|}
+block|,
+block|{
+literal|0100016
+block|,
+literal|" invalid virtual circuit id"
+block|}
+block|,
+block|{
+literal|0100017
+block|,
+literal|"Eunibus interrupt write"
+block|}
+block|,
+block|{
+literal|0104000
+block|,
+literal|"Efatal sequence"
+block|}
+block|,
+block|{
+literal|0104040
+block|,
+literal|" D proc ALU"
+block|}
+block|,
+block|{
+literal|0104041
+block|,
+literal|"ED proc control ROM parity"
+block|}
+block|,
+block|{
+literal|0105102
+block|,
+literal|"ED proc w/no BD#2 or RAM parity"
+block|}
+block|,
+block|{
+literal|0105105
+block|,
+literal|"ED proc RAM buffer"
+block|}
+block|,
+block|{
+literal|0105152
+block|,
+literal|"ED proc SDI"
+block|}
+block|,
+block|{
+literal|0105153
+block|,
+literal|"ED proc write mode wrap serdes"
+block|}
+block|,
+block|{
+literal|0105154
+block|,
+literal|"ED proc read mode serdes, RSGEN& ECC"
+block|}
+block|,
+block|{
+literal|0106040
+block|,
+literal|"EU proc ALU"
+block|}
+block|,
+block|{
+literal|0106041
+block|,
+literal|"EU proc control reg"
+block|}
+block|,
+block|{
+literal|0106042
+block|,
+literal|" U proc DFAIL/cntl ROM parity/BD #1 test CNT"
+block|}
+block|,
+block|{
+literal|0106047
+block|,
+literal|" U proc const PROM err w/D proc running SDI test"
+block|}
+block|,
+block|{
+literal|0106055
+block|,
+literal|" unexpected trap"
+block|}
+block|,
+block|{
+literal|0106071
+block|,
+literal|"EU proc const PROM"
+block|}
+block|,
+block|{
+literal|0106072
+block|,
+literal|"EU proc control ROM parity"
+block|}
+block|,
+block|{
+literal|0106200
+block|,
+literal|"Estep 1 data"
+block|}
+block|,
+block|{
+literal|0107103
+block|,
+literal|"EU proc RAM parity"
+block|}
+block|,
+block|{
+literal|0107107
+block|,
+literal|"EU proc RAM buffer"
+block|}
+block|,
+block|{
+literal|0107115
+block|,
+literal|" test count wrong (BD 12)"
+block|}
+block|,
+block|{
+literal|0112300
+block|,
+literal|"Estep 2"
+block|}
+block|,
+block|{
+literal|0122240
+block|,
+literal|"ENPR"
+block|}
+block|,
+block|{
+literal|0122300
+block|,
+literal|"Estep 3"
+block|}
+block|,
+block|{
+literal|0142300
+block|,
+literal|"Estep 4"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|" unknown error code"
+block|}
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/*  * The error bit was set in the controller status register.  Gripe,  * reset the controller, requeue pending transfers.  */
+comment|/*  * If the error bit was set in the controller status register, gripe,  * then (optionally) reset the controller and requeue pending transfers.  */
 end_comment
 
 begin_expr_stmt
 name|udasaerror
 argument_list|(
 name|um
+argument_list|,
+name|doreset
 argument_list|)
 specifier|register
 expr|struct
@@ -5356,16 +5638,18 @@ name|um
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|doreset
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|printf
-argument_list|(
-literal|"uda%d: controller error, sa=%b\n"
-argument_list|,
-name|um
-operator|->
-name|um_ctlr
-argument_list|,
+specifier|register
+name|int
+name|code
+init|=
 operator|(
 operator|(
 expr|struct
@@ -5378,10 +5662,79 @@ name|um_addr
 operator|)
 operator|->
 name|udasa
+decl_stmt|;
+specifier|register
+name|struct
+name|saerr
+modifier|*
+name|e
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|code
+operator|&
+name|UDA_ERR
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+for|for
+control|(
+name|e
+operator|=
+name|saerr
+init|;
+name|e
+operator|->
+name|code
+condition|;
+name|e
+operator|++
+control|)
+if|if
+condition|(
+name|e
+operator|->
+name|code
+operator|==
+name|code
+condition|)
+break|break;
+name|printf
+argument_list|(
+literal|"uda%d: controller error, sa=0%o (%s%s)\n"
 argument_list|,
-name|udasr_bits
+name|um
+operator|->
+name|um_ctlr
+argument_list|,
+name|code
+argument_list|,
+name|e
+operator|->
+name|desc
+operator|+
+literal|1
+argument_list|,
+operator|*
+name|e
+operator|->
+name|desc
+operator|==
+literal|'E'
+condition|?
+literal|" error"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|doreset
+condition|)
+block|{
 name|mscp_requeue
 argument_list|(
 operator|&
@@ -5405,6 +5758,7 @@ operator|->
 name|um_ctlr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -5586,6 +5940,13 @@ operator|->
 name|udasa
 argument_list|,
 name|udasr_bits
+argument_list|)
+expr_stmt|;
+name|udasaerror
+argument_list|(
+name|um
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5950,6 +6311,8 @@ comment|/* ctlr fatal error */
 name|udasaerror
 argument_list|(
 name|um
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6078,141 +6441,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GENERIC_RAW
-end_ifndef
-
-begin_decl_stmt
-name|struct
-name|buf
-name|rudabuf
-index|[
-name|NRA
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Read and write.  */
-end_comment
-
-begin_macro
-name|udaread
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|physio
-argument_list|(
-name|udastrategy
-argument_list|,
-operator|&
-name|rudabuf
-index|[
-name|udaunit
-argument_list|(
-name|dev
-argument_list|)
-index|]
-argument_list|,
-name|dev
-argument_list|,
-name|B_READ
-argument_list|,
-name|minphys
-argument_list|,
-name|uio
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|udawrite
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|physio
-argument_list|(
-name|udastrategy
-argument_list|,
-operator|&
-name|rudabuf
-index|[
-name|udaunit
-argument_list|(
-name|dev
-argument_list|)
-index|]
-argument_list|,
-name|dev
-argument_list|,
-name|B_WRITE
-argument_list|,
-name|minphys
-argument_list|,
-name|uio
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GENERIC_RAW */
-end_comment
 
 begin_comment
 comment|/*  * Initialise the various data structures that control the UDA50.  */
@@ -6410,7 +6638,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Handle an error datagram.  All we do now is decode it.  */
+comment|/*  * Handle an error datagram.  */
 end_comment
 
 begin_macro
@@ -6453,6 +6681,38 @@ operator|->
 name|mi_ctlr
 argument_list|,
 name|mp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * SDI status information bytes 10 and 11 are the microprocessor 	 * error code and front panel code respectively.  These vary per 	 * drive type and are printed purely for field service information. 	 */
+if|if
+condition|(
+name|mp
+operator|->
+name|mscp_format
+operator|==
+name|M_FM_SDI
+condition|)
+name|printf
+argument_list|(
+literal|"\tsdi uproc error code 0x%x, front panel code 0x%x\n"
+argument_list|,
+name|mp
+operator|->
+name|mscp_erd
+operator|.
+name|erd_sdistat
+index|[
+literal|10
+index|]
+argument_list|,
+name|mp
+operator|->
+name|mscp_erd
+operator|.
+name|erd_sdistat
+index|[
+literal|11
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -7960,7 +8220,7 @@ name|cast
 parameter_list|,
 name|addr
 parameter_list|)
-value|((cast) ((int) addr& 0x7fffffff))
+value|((cast) ((int)addr& 0x7fffffff))
 name|ui
 operator|=
 name|phys
@@ -9123,200 +9383,6 @@ name|daddr_t
 name|blkoff
 decl_stmt|;
 block|}
-name|ra25_sizes
-index|[
-literal|8
-index|]
-init|=
-block|{
-literal|15884
-block|,
-literal|0
-block|,
-comment|/* A=blk 0 thru 15883 */
-literal|10032
-block|,
-literal|15884
-block|,
-comment|/* B=blk 15884 thru 49323 */
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-comment|/* C=blk 0 thru end */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* D=blk 340670 thru 356553 */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* E=blk 356554 thru 412489 */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* F=blk 412490 thru end */
-operator|-
-literal|1
-block|,
-literal|25916
-block|,
-comment|/* G=blk 49324 thru 131403 */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* H=blk 131404 thru end */
-block|}
-struct|,
-name|rx50_sizes
-index|[
-literal|8
-index|]
-init|=
-block|{
-literal|800
-block|,
-literal|0
-block|,
-comment|/* A=blk 0 thru 799 */
-literal|0
-block|,
-literal|0
-block|,
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-comment|/* C=blk 0 thru end */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-struct|,
-name|rd52_sizes
-index|[
-literal|8
-index|]
-init|=
-block|{
-literal|15884
-block|,
-literal|0
-block|,
-comment|/* A=blk 0 thru 15883 */
-literal|9766
-block|,
-literal|15884
-block|,
-comment|/* B=blk 15884 thru 25649 */
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-comment|/* C=blk 0 thru end */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* D=unused */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* E=unused */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* F=unused */
-operator|-
-literal|1
-block|,
-literal|25650
-block|,
-comment|/* G=blk 25650 thru end */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* H=unused */
-block|}
-struct|,
-name|rd53_sizes
-index|[
-literal|8
-index|]
-init|=
-block|{
-literal|15884
-block|,
-literal|0
-block|,
-comment|/* A=blk 0 thru 15883 */
-literal|33440
-block|,
-literal|15884
-block|,
-comment|/* B=blk 15884 thru 49323 */
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-comment|/* C=blk 0 thru end */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* D=unused */
-literal|33440
-block|,
-literal|0
-block|,
-comment|/* E=blk 0 thru 33439 */
-operator|-
-literal|1
-block|,
-literal|33440
-block|,
-comment|/* F=blk 33440 thru end */
-operator|-
-literal|1
-block|,
-literal|49324
-block|,
-comment|/* G=blk 49324 thru end */
-operator|-
-literal|1
-block|,
-literal|15884
-block|,
-comment|/* H=blk 15884 thru end */
-block|}
-struct|,
 name|ra60_sizes
 index|[
 literal|8
@@ -9363,6 +9429,57 @@ block|,
 literal|49324
 block|,
 comment|/* UCB H => H=sectors 49324 thru 242605 */
+block|}
+struct|,
+name|ra70_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 15883 */
+literal|33440
+block|,
+literal|15972
+block|,
+comment|/* B=blk 15972 thru 49323 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|15884
+block|,
+literal|341220
+block|,
+comment|/* D=blk 341220 thru 357103 */
+literal|55936
+block|,
+literal|357192
+block|,
+comment|/* E=blk 357192 thru 413127 */
+operator|-
+literal|1
+block|,
+literal|413457
+block|,
+comment|/* F=blk 413457 thru end */
+operator|-
+literal|1
+block|,
+literal|341220
+block|,
+comment|/* G=blk 341220 thru end */
+literal|291346
+block|,
+literal|49731
+block|,
+comment|/* H=blk 49731 thru 341076 */
 block|}
 struct|,
 name|ra80_sizes
@@ -9419,6 +9536,100 @@ literal|8
 index|]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|MARYLAND
+ifdef|#
+directive|ifdef
+name|ENEEVAX
+literal|30706
+block|,
+literal|0
+block|,
+comment|/* A=cyl    0 thru   42 + 2 sectors */
+literal|40696
+block|,
+literal|30706
+block|,
+comment|/* B=cyl   43 thru   99 - 2 sectors */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=cyl    0 thru 1247 */
+operator|-
+literal|1
+block|,
+literal|71400
+block|,
+comment|/* D=cyl  100 thru 1247 */
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* E=blk      0 thru  15883 */
+literal|33440
+block|,
+literal|15884
+block|,
+comment|/* F=blk  15884 thru  49323 */
+literal|82080
+block|,
+literal|49324
+block|,
+comment|/* G=blk  49324 thru 131403 */
+operator|-
+literal|1
+block|,
+literal|131404
+block|,
+comment|/* H=blk 131404 thru    end */
+else|#
+directive|else
+literal|67832
+block|,
+literal|0
+block|,
+comment|/* A=cyl    0 thru   94 + 2 sectors */
+literal|67828
+block|,
+literal|67832
+block|,
+comment|/* B=cyl   95 thru  189 - 2 sectors */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=cyl    0 thru 1247 */
+operator|-
+literal|1
+block|,
+literal|135660
+block|,
+comment|/* D=cyl  190 thru 1247 */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+endif|#
+directive|endif
+endif|ENEEVAX
+else|#
+directive|else
 comment|/*  * These are the new standard partition sizes for ra81's.  * An RA_COMPAT system is compiled with D, E, and F corresponding  * to the 4.2 partitions for G, H, and F respectively.  */
 ifndef|#
 directive|ifndef
@@ -9533,18 +9744,270 @@ comment|/* H=sectors 49324 thru 242605 */
 endif|#
 directive|endif
 endif|UCBRA
+endif|#
+directive|endif
+endif|MARYLAND
 block|}
+struct|,
+name|ra82_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 15883 */
+literal|66880
+block|,
+literal|16245
+block|,
+comment|/* B=blk 16245 thru 83124 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|15884
+block|,
+literal|375345
+block|,
+comment|/* D=blk 375345 thru 391228 */
+literal|307200
+block|,
+literal|391590
+block|,
+comment|/* E=blk 391590 thru 698789 */
+operator|-
+literal|1
+block|,
+literal|699390
+block|,
+comment|/* F=blk 699390 thru end */
+operator|-
+literal|1
+block|,
+literal|375345
+block|,
+comment|/* G=blk 375345 thru end */
+literal|291346
+block|,
+literal|83790
+block|,
+comment|/* H=blk 83790 thru 375135 */
+block|}
+struct|,
+name|rc25_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 15883 */
+literal|10032
+block|,
+literal|15884
+block|,
+comment|/* B=blk 15884 thru 49323 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* D=blk 340670 thru 356553 */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* E=blk 356554 thru 412489 */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* F=blk 412490 thru end */
+operator|-
+literal|1
+block|,
+literal|25916
+block|,
+comment|/* G=blk 49324 thru 131403 */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* H=blk 131404 thru end */
+block|}
+struct|,
+name|rd52_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 15883 */
+literal|9766
+block|,
+literal|15884
+block|,
+comment|/* B=blk 15884 thru 25649 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* D=unused */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* E=unused */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* F=unused */
+operator|-
+literal|1
+block|,
+literal|25650
+block|,
+comment|/* G=blk 25650 thru end */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* H=unused */
+block|}
+struct|,
+name|rd53_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 15883 */
+literal|33440
+block|,
+literal|15884
+block|,
+comment|/* B=blk 15884 thru 49323 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* D=unused */
+literal|33440
+block|,
+literal|0
+block|,
+comment|/* E=blk 0 thru 33439 */
+operator|-
+literal|1
+block|,
+literal|33440
+block|,
+comment|/* F=blk 33440 thru end */
+operator|-
+literal|1
+block|,
+literal|49324
+block|,
+comment|/* G=blk 49324 thru end */
+operator|-
+literal|1
+block|,
+literal|15884
+block|,
+comment|/* H=blk 15884 thru end */
+block|}
+struct|,
+name|rx50_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|800
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 799 */
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Drive type index decoding table.  `ut_name' is null iff the  * type is not known.  */
+comment|/*  * Media ID decoding table.  */
 end_comment
 
 begin_struct
 struct|struct
 name|udatypes
 block|{
+name|u_long
+name|ut_id
+decl_stmt|;
+comment|/* media drive ID */
 name|char
 modifier|*
 name|ut_name
@@ -9568,115 +10031,220 @@ name|udatypes
 index|[]
 init|=
 block|{
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|"ra80"
-block|,
-name|ra80_sizes
-block|,
-comment|/* 1 = ra80 */
-literal|31
-block|,
-literal|14
-block|,
-literal|559
-block|,
-literal|"rc25-removable"
-block|,
-name|ra25_sizes
-block|,
-comment|/* 2 = rc25-r */
-literal|42
-block|,
-literal|4
-block|,
-literal|302
-block|,
-literal|"rc25-fixed"
-block|,
-name|ra25_sizes
-block|,
-comment|/* 3 = rc25-f */
-literal|42
-block|,
-literal|4
-block|,
-literal|302
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'A'
+argument_list|,
+literal|60
+argument_list|)
 block|,
 literal|"ra60"
 block|,
 name|ra60_sizes
 block|,
-comment|/* 4 = ra60 */
 literal|42
 block|,
 literal|4
 block|,
 literal|2382
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'A'
+argument_list|,
+literal|70
+argument_list|)
+block|,
+literal|"ra70"
+block|,
+name|ra70_sizes
+block|,
+literal|33
+block|,
+literal|11
+block|,
+literal|1507
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'A'
+argument_list|,
+literal|80
+argument_list|)
+block|,
+literal|"ra80"
+block|,
+name|ra80_sizes
+block|,
+literal|31
+block|,
+literal|14
+block|,
+literal|559
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'A'
+argument_list|,
+literal|81
+argument_list|)
 block|,
 literal|"ra81"
 block|,
 name|ra81_sizes
 block|,
-comment|/* 5 = ra81 */
 literal|51
 block|,
 literal|14
 block|,
 literal|1248
+block|}
 block|,
-name|NULL
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'A'
+argument_list|,
+literal|82
+argument_list|)
 block|,
-name|NULL
+literal|"ra82"
 block|,
-comment|/* 6 = ? */
-literal|0
+name|ra82_sizes
 block|,
-literal|0
+literal|57
 block|,
-literal|0
+literal|14
 block|,
-literal|"rx50"
+literal|1423
+block|}
 block|,
-name|rx50_sizes
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'C'
+argument_list|,
+literal|25
+argument_list|)
 block|,
-comment|/* 7 = rx50 */
-literal|10
+literal|"rc25-removable"
 block|,
-literal|1
+name|rc25_sizes
 block|,
-literal|80
+literal|42
+block|,
+literal|4
+block|,
+literal|302
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE3
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'C'
+argument_list|,
+literal|'F'
+argument_list|,
+literal|25
+argument_list|)
+block|,
+literal|"rc25-fixed"
+block|,
+name|rc25_sizes
+block|,
+literal|42
+block|,
+literal|4
+block|,
+literal|302
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'D'
+argument_list|,
+literal|52
+argument_list|)
 block|,
 literal|"rd52"
 block|,
 name|rd52_sizes
 block|,
-comment|/* 8 = rd52 */
 literal|18
 block|,
 literal|7
 block|,
 literal|480
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'D'
+argument_list|,
+literal|53
+argument_list|)
 block|,
 literal|"rd53"
 block|,
 name|rd53_sizes
 block|,
-comment|/* 9 = rd53 */
 literal|18
 block|,
 literal|8
 block|,
 literal|963
-block|, }
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'X'
+argument_list|,
+literal|50
+argument_list|)
+block|,
+literal|"rx50"
+block|,
+name|rx50_sizes
+block|,
+literal|10
+block|,
+literal|1
+block|,
+literal|80
+block|}
+block|,
+literal|0
+block|}
 struct|;
 end_struct
 
@@ -9766,32 +10334,40 @@ name|ra
 operator|->
 name|ra_dsize
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|u_long
-operator|)
-name|ra
-operator|->
-name|ra_type
-operator|>=
-name|NTYPES
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ra%d: don't have a partition table for"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|mscp_printmedia
+name|i
+operator|=
+name|MSCP_MEDIA_DRIVE
 argument_list|(
 name|ra
 operator|->
 name|ra_mediaid
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|ut
+operator|=
+name|udatypes
+init|;
+name|ut
+operator|->
+name|ut_id
+condition|;
+name|ut
+operator|++
+control|)
+if|if
+condition|(
+name|ut
+operator|->
+name|ut_id
+operator|==
+name|i
+condition|)
+goto|goto
+name|found
+goto|;
+comment|/* not one we know; fake up a label for the whole drive */
 name|lp
 operator|->
 name|d_nsectors
@@ -9822,9 +10398,65 @@ name|ra_geom
 operator|.
 name|rg_ncyl
 expr_stmt|;
+name|i
+operator|=
+name|ra
+operator|->
+name|ra_mediaid
+expr_stmt|;
+comment|/* print the port type too */
 name|printf
 argument_list|(
-literal|";\nusing (t,s,c)=(%d,%d,%d)\n"
+literal|"ra%d: don't have a partition table for %c%c %c%c%c%d;\n\ using (s,t,c)=(%d,%d,%d)\n"
+argument_list|,
+name|unit
+argument_list|,
+name|MSCP_MID_CHAR
+argument_list|(
+literal|4
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|MSCP_MID_CHAR
+argument_list|(
+literal|3
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|MSCP_MID_CHAR
+argument_list|(
+literal|2
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|MSCP_MID_CHAR
+argument_list|(
+literal|1
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|MSCP_MID_CHAR
+argument_list|(
+literal|0
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|MSCP_MID_CHAR
+argument_list|(
+literal|0
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+name|MSCP_MID_NUM
+argument_list|(
+name|i
+argument_list|)
 argument_list|,
 name|lp
 operator|->
@@ -9931,17 +10563,8 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-name|ut
-operator|=
-operator|&
-name|udatypes
-index|[
-name|ra
-operator|->
-name|ra_type
-index|]
-expr_stmt|;
+name|found
+label|:
 name|p
 operator|=
 name|ut
