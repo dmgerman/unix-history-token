@@ -1212,7 +1212,7 @@ condition|)
 block|{
 name|rem
 operator|=
-name|get_krbrlm
+name|krb_get_lrealm
 argument_list|(
 name|krb_realm
 argument_list|,
@@ -1331,6 +1331,35 @@ name|use_kerberos
 operator|=
 literal|0
 expr_stmt|;
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"login"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"unknown service login/tcp\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|old_warning
 argument_list|(
 literal|"remote host doesn't support Kerberos"
