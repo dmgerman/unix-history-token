@@ -2018,6 +2018,83 @@ begin_comment
 comment|/* ATM over radio links */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFT_IMT
+value|0xbe
+end_define
+
+begin_comment
+comment|/* Inter-Machine Trunks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_MVL
+value|0xbf
+end_define
+
+begin_comment
+comment|/* Multiple Virtual Lines DSL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_REACHDSL
+value|0xc0
+end_define
+
+begin_comment
+comment|/* Long Reach DSL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_FRDLCIENDPT
+value|0xc1
+end_define
+
+begin_comment
+comment|/* Frame Relay DLCI End Point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_ATMVCIENDPT
+value|0xc2
+end_define
+
+begin_comment
+comment|/* ATM VCI End Point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_OPTICALCHANNEL
+value|0xc3
+end_define
+
+begin_comment
+comment|/* Optical Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_OPTICALTRANSPORT
+value|0xc4
+end_define
+
+begin_comment
+comment|/* Optical Transport */
+end_comment
+
 begin_comment
 comment|/* not based on IANA assignments */
 end_comment
