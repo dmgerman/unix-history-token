@@ -1111,6 +1111,15 @@ block|)
 function|;
 end_function
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_elif
+
 begin_else
 else|#
 directive|else
@@ -1196,6 +1205,15 @@ end_empty_stmt
 begin_asm
 asm|__asm("movl $1b,%0" : "=rm" (tmp_addr));
 end_asm
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_elif
 
 begin_else
 else|#
