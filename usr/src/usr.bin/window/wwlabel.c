@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwlabel.c	3.3 83/08/16"
+literal|"@(#)wwlabel.c	3.4 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,7 @@ name|f
 operator|->
 name|ww_buf
 index|[
-name|w
+name|f
 operator|->
 name|ww_scroll
 operator|+
