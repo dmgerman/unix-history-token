@@ -748,6 +748,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|long
 name|fd_mask
 typedef|;
