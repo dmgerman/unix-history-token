@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.76 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.77 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -480,7 +480,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|bwrite
+name|vn_bwrite
 block|}
 block|,
 block|{
@@ -859,7 +859,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|bwrite
+name|vn_bwrite
 block|}
 block|,
 block|{
@@ -1244,7 +1244,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|bwrite
+name|vn_bwrite
 block|}
 block|,
 block|{
