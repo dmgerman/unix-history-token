@@ -31,9 +31,9 @@ struct|struct
 name|g_stat
 block|{
 name|int
-name|updating
+name|seq0
 decl_stmt|;
-comment|/* 				 * If non-zero, the structure is being 				 * updated by the kernel and the contents 				 * should not be used. 				 */
+comment|/* 				 * Sequence number, used with seq1 to determine 				 * if snapshot is consistent. 				 */
 name|void
 modifier|*
 name|id
@@ -98,6 +98,10 @@ define|#
 directive|define
 name|G_STAT_IDX_DELETE
 value|2
+name|int
+name|seq1
+decl_stmt|;
+comment|/* See seq0 */
 block|}
 struct|;
 end_struct
