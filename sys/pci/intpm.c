@@ -3834,6 +3834,9 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|device_printf
 argument_list|(
 name|dev
@@ -3857,6 +3860,8 @@ operator|->
 name|smbsh
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NO_CHANGE_PCICONF
