@@ -161,8 +161,6 @@ operator|&
 operator|(
 name|MNT_UPDATE
 operator||
-name|MNT_NODEV
-operator||
 name|MNT_ROOTFS
 operator|)
 condition|)
