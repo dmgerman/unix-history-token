@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)des_rw.c	5.5 (Berkeley) %G%"
+literal|"@(#)des_rw.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -680,6 +694,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERBEROS&& CRYPT */
+end_comment
 
 end_unit
 

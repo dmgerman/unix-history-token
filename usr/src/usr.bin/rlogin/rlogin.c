@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.30 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,9 +721,17 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 case|case
 literal|'x'
 case|:
@@ -1053,6 +1061,9 @@ argument_list|(
 name|host
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|encrypt
@@ -1083,6 +1094,9 @@ name|schedule
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
+comment|/* CRYPT */
 name|rem
 operator|=
 name|krcmd
@@ -1175,6 +1189,9 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|encrypt
@@ -1196,6 +1213,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* CRYPT */
 name|rem
 operator|=
 name|rcmd
@@ -1245,6 +1265,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* KERBEROS */
 if|if
 condition|(
 name|rem
@@ -2191,9 +2212,17 @@ name|c
 operator|!=
 name|escapechar
 condition|)
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -2228,9 +2257,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -2670,9 +2707,17 @@ operator|.
 name|ws_ypixel
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -3401,9 +3446,17 @@ name|rcvstate
 operator|=
 name|READING
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -3937,6 +3990,9 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|KERBEROS
+ifdef|#
+directive|ifdef
+name|CRYPT
 literal|"8ELx"
 argument_list|,
 literal|" [-k realm] "
@@ -3946,11 +4002,32 @@ else|#
 directive|else
 literal|"8EL"
 operator|,
-literal|" "
+literal|" [-k realm] "
 block|)
 end_block
 
 begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+literal|"8EL"
+operator|,
+literal|" "
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
 empty_stmt|;
 end_empty_stmt
 
