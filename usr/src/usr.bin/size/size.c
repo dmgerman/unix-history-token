@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)size.c	4.3 (Berkeley) %G%"
+literal|"@(#)size.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,11 @@ name|int
 name|gorp
 decl_stmt|,
 name|i
+decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
 decl_stmt|;
 name|FILE
 modifier|*
@@ -117,6 +122,9 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+name|err
+operator|++
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -160,6 +168,9 @@ name|fclose
 argument_list|(
 name|f
 argument_list|)
+expr_stmt|;
+name|err
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
@@ -254,6 +265,11 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+name|exit
+argument_list|(
+name|err
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
