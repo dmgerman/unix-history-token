@@ -3772,7 +3772,12 @@ name|p
 argument_list|)
 operator|)
 condition|)
-block|{
+if|if
+condition|(
+name|error
+operator|!=
+name|EOPNOTSUPP
+condition|)
 name|printf
 argument_list|(
 literal|"ffs_unmount: ufs_extattr_stop returned %d\n"
@@ -3780,7 +3785,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
