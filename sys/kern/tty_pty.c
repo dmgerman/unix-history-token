@@ -298,13 +298,6 @@ name|ptcpoll
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR_S
-value|5
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -348,11 +341,6 @@ operator|=
 literal|"pts"
 block|,
 operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR_S
-block|,
-operator|.
 name|d_flags
 operator|=
 name|D_TTY
@@ -361,13 +349,6 @@ name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR_C
-value|6
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -415,11 +396,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ptc"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR_C
 block|,
 operator|.
 name|d_flags
@@ -3733,7 +3709,7 @@ argument|ptcdev
 argument_list|,
 argument|SI_SUB_DRIVERS
 argument_list|,
-argument|SI_ORDER_MIDDLE+CDEV_MAJOR_C
+argument|SI_ORDER_MIDDLE
 argument_list|,
 argument|ptc_drvinit
 argument_list|,

@@ -60,13 +60,6 @@ name|cttyopen
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|1
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -88,11 +81,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ctty"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags
@@ -286,7 +274,7 @@ argument|cttydev
 argument_list|,
 argument|SI_SUB_DRIVERS
 argument_list|,
-argument|SI_ORDER_MIDDLE+CDEV_MAJOR
+argument|SI_ORDER_MIDDLE
 argument_list|,
 argument|ctty_drvinit
 argument_list|,
