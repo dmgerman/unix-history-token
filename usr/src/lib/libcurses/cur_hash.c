@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cur_hash.c	5.1 (Berkeley) %G%"
+literal|"@(#)cur_hash.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_comment
 comment|/*  * __hash() is "hashpjw" from the Dragon Book, Aho, Sethi& Ullman, p.436.  */
 end_comment
@@ -37,10 +43,15 @@ name|u_int
 name|__hash
 parameter_list|(
 name|s
+parameter_list|,
+name|len
 parameter_list|)
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 specifier|register
@@ -48,15 +59,22 @@ name|u_int
 name|h
 decl_stmt|,
 name|g
+decl_stmt|,
+name|i
 decl_stmt|;
 name|h
 operator|=
 literal|0
 expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
-operator|*
-name|s
+name|i
+operator|<
+name|len
 condition|)
 block|{
 name|h
@@ -67,9 +85,10 @@ operator|<<
 literal|4
 operator|)
 operator|+
-operator|*
 name|s
-operator|++
+index|[
+name|i
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -97,6 +116,9 @@ operator|^
 name|g
 expr_stmt|;
 block|}
+name|i
+operator|++
+expr_stmt|;
 block|}
 return|return
 name|h
