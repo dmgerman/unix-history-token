@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.13 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3742,14 +3742,18 @@ comment|/* 18 M_SESSION */
 literal|"iov"
 block|,
 comment|/* 19 M_IOV */
-literal|0
+literal|"mount"
 block|,
-literal|0
+comment|/* 20 M_MOUNT */
+literal|"fhandle"
 block|,
-literal|0
+comment|/* 21 M_FHANDLE */
+literal|"NFS req"
 block|,
-literal|0
+comment|/* 22 M_NFSREQ */
+literal|"NFS mount"
 block|,
+comment|/* 23 M_NFSMNT */
 literal|0
 block|,
 literal|0
