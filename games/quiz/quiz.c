@@ -1489,6 +1489,9 @@ operator|(
 name|s
 operator|)
 return|;
+name|s
+operator|++
+expr_stmt|;
 block|}
 comment|/* NOTREACHED */
 block|}
