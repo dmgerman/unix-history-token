@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.21 1998/01/10 17:27:28 wosch Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.22 1998/02/15 22:31:40 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2276,8 +2276,8 @@ literal|"%s\n"
 argument_list|,
 name|line
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 name|error
 argument_list|(
@@ -2378,8 +2378,8 @@ name|pwd
 operator|.
 name|pw_shell
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 name|error
 argument_list|(
