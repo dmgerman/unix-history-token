@@ -184,6 +184,13 @@ name|CDRIOCSETBLOCKSIZE
 value|_IOW('c', 108, int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CDRIOCGETPROGRESS
+value|_IOR('c', 109, int)
+end_define
+
 begin_endif
 endif|#
 directive|endif
