@@ -12462,11 +12462,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* No more pending messages */
 name|ahc_clear_msg_state
 argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Although the driver does not care about the 		 * 'Selection in Progress' status bit, the busy 		 * LED does.  SELINGO is only cleared by a sucessful 		 * selection, so we must manually clear it to ensure 		 * the LED turns off just incase no future successful 		 * selections occur (e.g. no devices on the bus). 		 */
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRSINT0
+argument_list|,
+name|CLRSELINGO
+argument_list|)
+expr_stmt|;
+comment|/* Clear interrupt state */
 name|ahc_outb
 argument_list|(
 name|ahc
