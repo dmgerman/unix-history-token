@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.1	81/11/04	*/
+comment|/*	dn.c	4.2	81/11/18	*/
 end_comment
 
 begin_include
@@ -310,7 +310,7 @@ comment|/* largest phone # dialer can handle */
 end_comment
 
 begin_comment
-comment|/*  * There's no good way to determine the correct number of dialers attached  *  to a single device (especially when dialers such as Vadic-821 MACS  *  exist which can address four chassis, each with its own dialer), so  *  we take the "flags" value supplied by config as the number of devices  *  attached (see dnintr).  */
+comment|/*  * There's no good way to determine the correct number of dialers attached  * to a single device (especially when dialers such as Vadic-821 MACS  * exist which can address four chassis, each with its own dialer), so  * we take the "flags" value supplied by config as the number of devices  * attached (see dnintr).  */
 end_comment
 
 begin_macro
@@ -334,7 +334,7 @@ name|br
 decl_stmt|,
 name|cvec
 decl_stmt|;
-comment|/* value-result, must be r11, r10 */
+comment|/* value-result */
 specifier|register
 name|struct
 name|dndevice
@@ -348,7 +348,29 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
-comment|/* 	 * If there's at least one dialer out there it better be 	 *  at chassis 0. 	 */
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|dnintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * If there's at least one dialer out there it better be 	 * at chassis 0. 	 */
 name|dnaddr
 operator|->
 name|dn_reg
@@ -1033,7 +1055,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * NOTE that the flags from the config file define the number  *  of dialers attached to this controller.  */
+comment|/*  * NOTE that the flags from the config file define the number  * of dialers attached to this controller.  */
 end_comment
 
 begin_macro

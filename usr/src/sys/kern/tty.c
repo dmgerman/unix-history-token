@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.13	81/10/11	*/
+comment|/*	tty.c	4.14	81/11/18	*/
 end_comment
 
 begin_comment
@@ -2435,7 +2435,8 @@ operator|==
 operator|(
 name|caddr_t
 operator|)
-name|select
+operator|&
+name|selwait
 condition|)
 name|tp
 operator|->

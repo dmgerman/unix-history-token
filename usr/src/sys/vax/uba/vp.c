@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.9	81/04/02	*/
+comment|/*	vp.c	4.10	81/11/18	*/
 end_comment
 
 begin_include
@@ -413,6 +413,28 @@ operator|-
 literal|010
 operator|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|vpintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vpaddr
 operator|->
 name|prcsr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.19	81/07/09	*/
+comment|/*	ts.c	4.20	81/11/18	*/
 end_comment
 
 begin_include
@@ -491,13 +491,14 @@ name|br
 operator|=
 name|cvec
 expr_stmt|;
+name|tsintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/****************/
-comment|/*		*/
-comment|/*  K L U D G E */
-comment|/*		*/
-comment|/****************/
+comment|/* 	 * Too hard to make it interrupt; don't try. 	 */
 if|#
 directive|if
 name|NTM
@@ -514,7 +515,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* IT'S TOO HARD TO MAKE THIS THING INTERRUPT 	   JUST TO FIND ITS VECTOR */
 name|cvec
 operator|=
 literal|0224

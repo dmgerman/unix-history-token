@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	81/11/04	4.1	*/
+comment|/*	tu.c	81/11/18	4.2	*/
 end_comment
 
 begin_if
@@ -198,7 +198,7 @@ name|u_char
 name|pk_op
 decl_stmt|;
 comment|/* operation to perform (read, write, etc.) */
-name|u_char
+name|char
 name|pk_mod
 decl_stmt|;
 comment|/* modifier for op or returned status */
@@ -664,6 +664,10 @@ begin_comment
 comment|/*  * Open the TU58  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|tuopen
 argument_list|(
@@ -680,6 +684,17 @@ name|int
 name|tuwatch
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|lint
+name|turintr
+argument_list|()
+expr_stmt|;
+name|tuwintr
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|minor
@@ -1121,8 +1136,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|top
-label|:
 if|if
 condition|(
 operator|(
@@ -1222,11 +1235,17 @@ operator|&
 name|tucmd
 operator|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|tucmd
 operator|.
 name|pk_op
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tucmd
 operator|.
 name|pk_mcount
@@ -1462,7 +1481,7 @@ name|tudata
 operator|.
 name|pk_mcount
 operator|=
-name|min
+name|MIN
 argument_list|(
 literal|128
 argument_list|,
@@ -1487,10 +1506,16 @@ operator|&
 name|tudata
 operator|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|tu
 operator|.
 name|addr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tudata
 operator|.
 name|pk_mcount
@@ -1535,7 +1560,7 @@ name|pk_flag
 operator|==
 name|TUF_DATA
 condition|)
-comment|/* is it a data message? */
+comment|/* data message? */
 name|tu
 operator|.
 name|rbptr
@@ -1548,7 +1573,7 @@ name|tu
 operator|.
 name|addr
 expr_stmt|;
-comment|/* yes, put it in buffer */
+comment|/* yes put in buffer */
 name|tu
 operator|.
 name|rcnt
@@ -1610,6 +1635,10 @@ directive|ifdef
 name|notdef
 if|if
 condition|(
+name|tudata
+operator|.
+name|pk_chksum
+operator|!=
 name|tuchk
 argument_list|(
 operator|*
@@ -1637,14 +1666,13 @@ name|tudata
 operator|.
 name|pk_op
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tudata
 operator|.
 name|pk_mcount
 argument_list|)
-operator|!=
-name|tudata
-operator|.
-name|pk_chksum
 condition|)
 name|tu
 operator|.
@@ -1662,7 +1690,7 @@ operator|==
 name|TUF_DATA
 condition|)
 block|{
-comment|/* was it a data packet? */
+comment|/* data packet, advance to next */
 name|tu
 operator|.
 name|addr
@@ -1671,7 +1699,6 @@ name|tudata
 operator|.
 name|pk_mcount
 expr_stmt|;
-comment|/* update buf addr */
 name|tu
 operator|.
 name|count
@@ -1680,7 +1707,6 @@ name|tudata
 operator|.
 name|pk_mcount
 expr_stmt|;
-comment|/* and byte count */
 name|tu
 operator|.
 name|state
@@ -1707,7 +1733,6 @@ literal|2
 expr_stmt|;
 block|}
 elseif|else
-comment|/* was it an end packet? */
 if|if
 condition|(
 name|tudata
@@ -1723,13 +1748,13 @@ operator|==
 name|TUOP_END
 condition|)
 block|{
+comment|/* end packet, idle and reenable transmitter */
 name|tu
 operator|.
 name|state
 operator|=
 name|IDLE
 expr_stmt|;
-comment|/* all done reading */
 name|tu
 operator|.
 name|flag
@@ -1743,7 +1768,6 @@ argument_list|,
 name|IE
 argument_list|)
 expr_stmt|;
-comment|/* reenable transmitter */
 name|printd
 argument_list|(
 literal|"ON "
@@ -1909,7 +1933,6 @@ name|INIT1
 case|:
 break|break;
 default|default:
-comment|/* what are we doing here??? */
 if|if
 condition|(
 name|c
@@ -2033,7 +2056,7 @@ operator|.
 name|wcnt
 condition|)
 block|{
-comment|/* still stuff to send out? */
+comment|/* still stuff to send, send one byte */
 while|while
 condition|(
 operator|(
@@ -2059,13 +2082,11 @@ name|wbptr
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* yup, send another byte */
 name|tu
 operator|.
 name|wcnt
 operator|--
 expr_stmt|;
-comment|/* decrement count */
 return|return;
 block|}
 comment|/* 	 * Last message byte was sent out. 	 * Switch on state of transfer. 	 */
@@ -2127,6 +2148,9 @@ case|case
 name|INIT2
 case|:
 comment|/* inits sent, wait for continue */
+operator|(
+name|void
+operator|)
 name|mfpr
 argument_list|(
 name|CSRD
@@ -2423,6 +2447,10 @@ begin_comment
 comment|/*  * Compute checksum TU58 fashion  *  * *** WARNING ***  * This procedure is not in C because  * it has to be fast and it is hard to  * do add-carry in C.  Sorry.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|tuchk
 argument_list|(
@@ -2439,19 +2467,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* r11 */
+comment|/* known to be r11 */
 end_comment
 
 begin_decl_stmt
 specifier|register
-name|char
-modifier|*
+name|caddr_t
 name|wp
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* r10 */
+comment|/* known to be r10 */
 end_comment
 
 begin_decl_stmt
@@ -2462,7 +2489,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* r9 */
+comment|/* known to be r9 */
 end_comment
 
 begin_block
@@ -2485,6 +2512,16 @@ comment|/* and the carry */
 asm|asm("ok:");
 asm|asm("	movl	r11,r0");
 comment|/* return sum */
+ifdef|#
+directive|ifdef
+name|lint
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -2595,6 +2632,9 @@ argument_list|(
 name|TUIPL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mfpr
 argument_list|(
 name|CSRD

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.8	81/11/13	*/
+comment|/*	ut.c	4.9	81/11/18	*/
 end_comment
 
 begin_include
@@ -453,6 +453,10 @@ begin_comment
 comment|/* erased inter-record gap */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|utprobe
 argument_list|(
@@ -489,49 +493,18 @@ name|br
 operator|=
 name|cvec
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * It appears the controller won't interrupt unless the 	 * slave is off-line...this is as bad as the TS-11. 	 */
-ifdef|#
-directive|ifdef
-name|notdef
-operator|(
-operator|(
-expr|struct
-name|utdevice
-operator|*
-operator|)
-name|reg
-operator|)
-operator|->
-name|utcs1
-operator|=
-name|UT_IE
-operator||
-name|UT_NOP
-operator||
-name|UT_GO
-expr_stmt|;
-name|DELAY
+name|utintr
 argument_list|(
-literal|10000
+literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-operator|(
-expr|struct
-name|utdevice
-operator|*
-operator|)
-name|reg
-operator|)
-operator|->
-name|utcs1
-operator|=
-name|UT_CLEAR
-operator||
-name|UT_GO
-expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* 	 * It appears the controller won't interrupt unless the 	 * slave is off-line...this is as bad as the TS-11. 	 */
+block|((struct utdevice *) reg)->utcs1 = UT_IE|UT_NOP|UT_GO; 	DELAY(10000); 	((struct utdevice *) reg)->utcs1 = UT_CLEAR|UT_GO;
 else|#
 directive|else
 name|br
@@ -4261,16 +4234,13 @@ operator|->
 name|uh_physuba
 expr_stmt|;
 name|ubainit
-argument_list|()
+argument_list|(
+name|up
+argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000000
-argument_list|)
-expr_stmt|;
-name|utwait
-argument_list|(
-name|addr
 argument_list|)
 expr_stmt|;
 name|addr
@@ -4283,6 +4253,11 @@ operator|)
 name|ui
 operator|->
 name|ui_physaddr
+expr_stmt|;
+name|utwait
+argument_list|(
+name|addr
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Be sure to set the appropriate density here.  We use 	 * 6250, but maybe it should be done at 1600 to insure the 	 * tape can be read by most any other tape drive available. 	 */
 name|addr

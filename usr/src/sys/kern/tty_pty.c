@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.9	81/10/11	*/
+comment|/*	tty_pty.c	4.10	81/11/18	*/
 end_comment
 
 begin_comment
@@ -1029,7 +1029,8 @@ operator|==
 operator|(
 name|caddr_t
 operator|)
-name|select
+operator|&
+name|selwait
 condition|)
 name|pti
 operator|->
@@ -1281,10 +1282,6 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-specifier|register
-name|int
-name|tbd
 decl_stmt|;
 name|tp
 operator|=

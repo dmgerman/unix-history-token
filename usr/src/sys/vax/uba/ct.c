@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ct.c	4.6	81/07/05	*/
+comment|/*	ct.c	4.7	81/11/18	*/
 end_comment
 
 begin_include
@@ -244,6 +244,28 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|ctintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ctaddr
 operator|->
 name|ctcsr
@@ -617,22 +639,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|MH135A
-name|c
-operator||=
-operator|(
-name|c
-operator|&
-literal|01
-operator|)
-operator|<<
-literal|8
-expr_stmt|;
-comment|/* for dr11c bug */
-endif|#
-directive|endif
 name|ctaddr
 operator|->
 name|ctbuf

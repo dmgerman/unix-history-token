@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.39	81/11/08	*/
+comment|/*	dh.c	4.40	81/11/18	*/
 end_comment
 
 begin_include
@@ -930,6 +930,16 @@ name|br
 operator|=
 name|cvec
 expr_stmt|;
+name|dhrint
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|dhxint
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 ifndef|#
@@ -1139,6 +1149,9 @@ expr_stmt|;
 name|br
 operator|=
 name|vec
+expr_stmt|;
+name|dmintr
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
