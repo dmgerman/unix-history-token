@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.21 1998/02/24 14:13:13 ache Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.22 1998/02/26 06:45:44 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -956,6 +956,8 @@ operator|->
 name|de_fndcnt
 operator|=
 name|wincnt
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|found
