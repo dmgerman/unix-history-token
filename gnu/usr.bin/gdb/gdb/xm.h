@@ -40,5 +40,11 @@ directive|define
 name|SET_STACK_LIMIT_HUGE
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_TERMIOS
+end_define
+
 end_unit
 
