@@ -8003,7 +8003,10 @@ operator||
 name|PG_A
 argument_list|)
 expr_stmt|;
-comment|/*if (origpte)*/
+if|if
+condition|(
+name|origpte
+condition|)
 block|{
 name|pmap_invalidate_page
 argument_list|(
