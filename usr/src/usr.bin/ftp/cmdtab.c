@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.7 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1493,7 +1493,7 @@ name|reget
 block|}
 block|,
 block|{
-literal|"remotestatus"
+literal|"rstatus"
 block|,
 name|rmtstatushelp
 block|,
@@ -1507,7 +1507,7 @@ name|rmtstatus
 block|}
 block|,
 block|{
-literal|"remotehelp"
+literal|"rhelp"
 block|,
 name|remotehelp
 block|,

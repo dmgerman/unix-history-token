@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.13 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ftp_var.h"
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -89,19 +101,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
+file|"ftp_var.h"
 end_include
 
 begin_decl_stmt
@@ -462,7 +462,13 @@ comment|/*  * this ifdef is to keep someone form "porting" this to an incompatib
 name|overbose
 operator|=
 name|verbose
-operator|,
+expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|==
+literal|0
+condition|)
 name|verbose
 operator|=
 operator|-
@@ -2478,7 +2484,9 @@ operator|-
 literal|1
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -2558,7 +2566,9 @@ operator|-
 literal|1
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -2675,7 +2685,6 @@ name|loc
 operator|&&
 name|ntflag
 condition|)
-block|{
 name|argv
 index|[
 literal|2
@@ -2689,14 +2698,12 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|loc
 operator|&&
 name|mapflag
 condition|)
-block|{
 name|argv
 index|[
 literal|2
@@ -2710,7 +2717,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|restartit
@@ -2759,7 +2765,9 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|restart_point
@@ -2785,6 +2793,12 @@ name|overbose
 operator|=
 name|verbose
 expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|==
+literal|0
+condition|)
 name|verbose
 operator|=
 operator|-
@@ -2878,7 +2892,9 @@ operator|%
 literal|100
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 elseif|else
 if|if
@@ -2901,7 +2917,9 @@ operator|>
 name|mo
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 elseif|else
@@ -2923,7 +2941,9 @@ operator|>
 name|day
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 elseif|else
@@ -2945,7 +2965,9 @@ operator|>
 name|hour
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 elseif|else
@@ -2967,7 +2989,9 @@ operator|>
 name|min
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 elseif|else
@@ -2989,7 +3013,9 @@ operator|>
 name|sec
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -3007,7 +3033,9 @@ operator|=
 name|overbose
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -3035,7 +3063,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -5754,7 +5784,7 @@ index|[
 literal|1
 index|]
 operator|==
-literal|'n'
+literal|'l'
 condition|?
 literal|"NLST"
 else|:
@@ -9432,9 +9462,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"restarting at %ld. execute get, put or append to initiate transfer\n"
+literal|"restarting at %ld. %s\n"
 argument_list|,
 name|restart_point
+argument_list|,
+literal|"execute get, put or append to initiate transfer"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10043,6 +10075,12 @@ name|overbose
 operator|=
 name|verbose
 expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|==
+literal|0
+condition|)
 name|verbose
 operator|=
 operator|-
