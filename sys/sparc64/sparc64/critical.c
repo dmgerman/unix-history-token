@@ -153,11 +153,7 @@ name|curthread
 decl_stmt|;
 name|wrpr
 argument_list|(
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_savecrit
+name|pil
 argument_list|,
 name|td
 operator|->
