@@ -406,11 +406,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ufs_ihashins
 parameter_list|(
 name|struct
 name|inode
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
