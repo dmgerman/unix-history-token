@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.13 (Berkeley) %G%"
+literal|"@(#)trpt.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,38 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/pte.h>
+file|<sys/param.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
+end_if
+
+begin_define
+define|#
+directive|define
+name|NEWVM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
@@ -69,6 +94,11 @@ include|#
 directive|include
 file|<sys/vmmac.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -255,6 +285,9 @@ block|{
 literal|"_tcp_debx"
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|NEWVM
 define|#
 directive|define
 name|N_SYSMAP
@@ -271,12 +304,20 @@ block|{
 literal|"_Syssize"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|""
 block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -286,6 +327,11 @@ modifier|*
 name|Sysmap
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -398,9 +444,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -634,6 +677,23 @@ condition|(
 name|kflag
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NEWVM
+name|fputs
+argument_list|(
+literal|"trpt: can't do core files yet\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|off_t
 name|off
 decl_stmt|;
@@ -673,7 +733,7 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"arp: can't get memory for Sysmap.\n"
+literal|"trpt: can't get memory for Sysmap.\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -740,6 +800,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 operator|(
 name|void
@@ -2034,6 +2096,9 @@ name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
+ifndef|#
+directive|ifndef
+name|NEWVM
 if|if
 condition|(
 name|kflag
@@ -2067,6 +2132,8 @@ name|PGOFSET
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.8 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,31 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199103
+end_if
+
+begin_define
+define|#
+directive|define
+name|NEWVM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -70,11 +95,10 @@ directive|include
 file|<machine/pte.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -169,6 +193,9 @@ block|{
 literal|"_nfsstats"
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|NEWVM
 define|#
 directive|define
 name|N_SYSMAP
@@ -185,10 +212,18 @@ block|{
 literal|"_Syssize"
 block|}
 block|,
+endif|#
+directive|endif
 literal|""
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
 
 begin_decl_stmt
 name|struct
@@ -197,6 +232,11 @@ modifier|*
 name|Sysmap
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -472,6 +512,26 @@ condition|(
 name|kflag
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NEWVM
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"nfsstat: can't do core files yet\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|off_t
 name|off
 decl_stmt|;
@@ -586,6 +646,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1774,6 +1836,9 @@ name|off_t
 name|base
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 if|if
 condition|(
 name|kflag
@@ -1807,6 +1872,8 @@ name|PGOFSET
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|lseek
