@@ -622,7 +622,7 @@ name|msgmax
 argument_list|,
 name|M_MSG
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -652,7 +652,7 @@ name|msgseg
 argument_list|,
 name|M_MSG
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -682,7 +682,7 @@ name|msgtql
 argument_list|,
 name|M_MSG
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -712,7 +712,7 @@ name|msgmni
 argument_list|,
 name|M_MSG
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

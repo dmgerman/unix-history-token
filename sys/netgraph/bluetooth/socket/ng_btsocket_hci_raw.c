@@ -1016,7 +1016,7 @@ name|MGET
 argument_list|(
 name|nam
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)
@@ -1316,7 +1316,7 @@ name|cmd
 argument_list|,
 name|arglen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1439,7 +1439,7 @@ name|cmd
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2045,7 +2045,7 @@ name|m_dup
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2959,8 +2959,6 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH_BTSOCKET_HCI_RAW
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3956,7 +3954,7 @@ name|NGM_HCI_NODE_GET_NEIGHBOR_CACHE
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4248,7 +4246,7 @@ name|NGM_HCI_NODE_GET_CON_LIST
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5308,7 +5306,7 @@ name|MGET
 argument_list|(
 name|nam
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_SONAME
 argument_list|)

@@ -1526,8 +1526,6 @@ argument_list|)
 argument_list|,
 name|M_ALD
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1543,8 +1541,6 @@ name|size
 argument_list|,
 name|M_ALD
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1564,8 +1560,6 @@ name|count
 argument_list|,
 name|M_ALD
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

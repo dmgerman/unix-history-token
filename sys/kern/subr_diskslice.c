@@ -346,7 +346,7 @@ name|lp1
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1212,7 +1212,7 @@ name|ic
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|ic
@@ -1881,7 +1881,7 @@ name|lp
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2219,7 +2219,7 @@ name|lp
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2801,7 +2801,7 @@ name|sp
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|ssp

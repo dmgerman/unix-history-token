@@ -1749,7 +1749,7 @@ name|uma_zalloc
 argument_list|(
 name|namei_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the name from the mbuf list to ndp->ni_pnbuf 	 * and set the various ndp fields appropriately. 	 */
@@ -2031,7 +2031,7 @@ name|uma_zalloc
 argument_list|(
 name|namei_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|fromcp
@@ -2425,7 +2425,7 @@ name|uma_zalloc
 argument_list|(
 name|namei_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -5065,7 +5065,7 @@ name|MGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5074,7 +5074,7 @@ name|MCLGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|nmp

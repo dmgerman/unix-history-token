@@ -6523,7 +6523,7 @@ name|MGETHDR
 argument_list|(
 name|mb_copy
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

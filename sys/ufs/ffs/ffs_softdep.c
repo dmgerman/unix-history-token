@@ -381,7 +381,7 @@ begin_define
 define|#
 directive|define
 name|M_SOFTDEP_FLAGS
-value|(M_WAITOK | M_USE_RESERVE)
+value|(M_USE_RESERVE)
 end_define
 
 begin_define

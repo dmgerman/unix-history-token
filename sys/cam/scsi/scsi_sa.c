@@ -8142,7 +8142,7 @@ literal|8192
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10740,8 +10740,6 @@ name|mode_buffer_len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -11473,7 +11471,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Since it doesn't make sense to set the number of blocks, or 	 * write protection, we won't try to get the current value.  We 	 * always want to get the blocksize, so we can set it back to the 	 * proper value. 	 */
@@ -11572,8 +11570,6 @@ name|mode_buffer_len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -3106,8 +3106,6 @@ name|numports
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3144,8 +3142,6 @@ name|numports
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -6198,7 +6194,7 @@ literal|6
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -6291,7 +6287,7 @@ literal|10
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -6435,7 +6431,7 @@ name|size
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -6507,7 +6503,7 @@ name|size
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -6579,7 +6575,7 @@ name|size
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy

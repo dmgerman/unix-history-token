@@ -44,12 +44,11 @@ begin_comment
 comment|/*  * flags to malloc.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_WAITOK
-value|0x0000
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_NOWAIT
+end_ifndef
 
 begin_define
 define|#
@@ -60,6 +59,15 @@ end_define
 
 begin_comment
 comment|/* do not block */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* M_NOWAIT */
 end_comment
 
 begin_define

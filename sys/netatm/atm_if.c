@@ -1578,8 +1578,6 @@ name|cup
 operator|->
 name|cu_nif_zone
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

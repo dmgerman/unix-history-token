@@ -580,7 +580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_TRYWAIT/M_DONTWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
+comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of 0/M_NOWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
 end_comment
 
 begin_function
@@ -2326,7 +2326,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|n
 operator|->
@@ -3008,7 +3008,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3060,7 +3060,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3101,7 +3101,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3330,7 +3330,7 @@ name|n
 operator|=
 name|m_get_clrd
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -3452,7 +3452,7 @@ name|n
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->

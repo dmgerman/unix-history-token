@@ -1668,7 +1668,7 @@ argument_list|)
 argument_list|,
 name|M_ACL
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|len
@@ -7139,7 +7139,7 @@ argument_list|)
 argument_list|,
 name|M_ACL
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -7158,7 +7158,7 @@ argument_list|)
 argument_list|,
 name|M_ACL
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Retrieve default ACL from parent, if any. 		 */
@@ -8889,7 +8889,7 @@ name|count
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|aiov
@@ -9214,7 +9214,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -11497,7 +11497,7 @@ argument_list|)
 argument_list|,
 name|M_ACL
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Retrieve default ACL for parent, if any. 		 */

@@ -1822,7 +1822,7 @@ argument_list|)
 argument_list|,
 name|M_SUBPROC
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -4799,7 +4799,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4988,7 +4988,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

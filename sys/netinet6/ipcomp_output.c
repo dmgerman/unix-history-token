@@ -562,7 +562,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -590,7 +590,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1013,7 +1013,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

@@ -978,7 +978,7 @@ literal|128
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|)

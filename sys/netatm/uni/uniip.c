@@ -374,8 +374,6 @@ name|uma_zalloc
 argument_list|(
 name|uniip_zone
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

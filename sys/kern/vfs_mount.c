@@ -799,7 +799,7 @@ argument_list|)
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -834,7 +834,7 @@ argument_list|)
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|namelen
@@ -871,7 +871,7 @@ name|namelen
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|opt
@@ -961,7 +961,7 @@ name|optlen
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1205,7 +1205,7 @@ argument_list|)
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|new
@@ -1225,7 +1225,7 @@ literal|1
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1260,7 +1260,7 @@ name|len
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1428,7 +1428,7 @@ name|iovlen
 argument_list|,
 name|M_IOV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|needfree
@@ -1781,7 +1781,7 @@ name|iovlen
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -1795,7 +1795,7 @@ name|len
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|pos
@@ -2898,8 +2898,6 @@ argument_list|)
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3759,7 +3757,7 @@ name|MFSNAMELEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|fspath
@@ -3770,7 +3768,7 @@ name|MNAMELEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * vfs_mount() actually takes a kernel string for `type' and 	 * `path' now, so extract them. 	 */
@@ -4690,8 +4688,6 @@ argument_list|)
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -6589,8 +6585,6 @@ argument_list|)
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -7101,7 +7095,7 @@ name|MFSNAMELEN
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|path
@@ -7112,7 +7106,7 @@ name|MNAMELEN
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|vfsname

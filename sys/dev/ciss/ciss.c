@@ -7663,7 +7663,7 @@ name|buf_size
 argument_list|,
 name|CISS_MALLOC_CLASS
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -8496,8 +8496,6 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)

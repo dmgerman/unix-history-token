@@ -791,8 +791,6 @@ name|cls
 argument_list|,
 name|M_MIXER
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

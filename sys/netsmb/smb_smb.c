@@ -1480,7 +1480,7 @@ literal|1
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|encpass
@@ -1491,7 +1491,7 @@ literal|24
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1606,7 +1606,7 @@ name|uniplen
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1706,7 +1706,7 @@ name|uniplen
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|smb_strtouni
@@ -2528,7 +2528,7 @@ literal|1
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|encpass
@@ -2539,7 +2539,7 @@ literal|24
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We try w/o uppercasing first so Samba mixed case 		 * passwords work.  If that fails we come back and try 		 * uppercasing to satisfy OS/2 and Windows for Workgroups. 		 */

@@ -405,7 +405,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocates an item out of a zone  *  * Arguments:  *	zone  The zone we are allocating from  *	arg   This data is passed to the ctor function  *	flags See sys/malloc.h for available flags.  *  * Returns:  *	A non null pointer to an initialized element from the zone is  *	garanteed if the wait flag is M_WAITOK, otherwise a null pointer may be  *	returned if the zone is empty or the ctor failed.  */
+comment|/*  * Allocates an item out of a zone  *  * Arguments:  *	zone  The zone we are allocating from  *	arg   This data is passed to the ctor function  *	flags See sys/malloc.h for available flags.  *  * Returns:  *	A non null pointer to an initialized element from the zone is  *	garanteed if the wait flag is not M_NOWAIT, otherwise null may be  *	returned if the zone is empty or the ctor failed.  */
 end_comment
 
 begin_function_decl

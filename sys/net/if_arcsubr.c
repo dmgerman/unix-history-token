@@ -884,7 +884,7 @@ name|m
 argument_list|,
 name|ARC_HDRLEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1318,7 +1318,7 @@ name|m
 argument_list|,
 literal|504
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1345,7 +1345,7 @@ name|m
 argument_list|,
 name|ARC_HDRNEWLEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1458,7 +1458,7 @@ name|m
 argument_list|,
 name|ARC_HDRNEWLEN_EXC
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1532,7 +1532,7 @@ name|m
 argument_list|,
 name|ARC_HDRNEWLEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

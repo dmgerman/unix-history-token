@@ -5448,8 +5448,6 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)

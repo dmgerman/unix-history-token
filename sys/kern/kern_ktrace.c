@@ -647,7 +647,7 @@ argument_list|)
 argument_list|,
 name|M_KTRACE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|STAILQ_INSERT_HEAD
@@ -1021,7 +1021,7 @@ argument_list|)
 argument_list|,
 name|M_KTRACE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -1622,7 +1622,7 @@ name|buflen
 argument_list|,
 name|M_KTRACE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1853,7 +1853,7 @@ name|namelen
 argument_list|,
 name|M_KTRACE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2012,7 +2012,7 @@ name|datalen
 argument_list|,
 name|M_KTRACE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2983,7 +2983,7 @@ name|len
 argument_list|,
 name|M_KTRACE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error

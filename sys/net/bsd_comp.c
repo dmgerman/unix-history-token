@@ -2041,7 +2041,7 @@ name|PUTBYTE
 parameter_list|(
 name|v
 parameter_list|)
-value|{					\     ++olen;						\     if (wptr) {						\ 	*wptr++ = (v);					\ 	if (wptr>= cp_end) {				\ 	    m->m_len = wptr - mtod(m, u_char *);	\ 	    MGET(m->m_next, M_DONTWAIT, MT_DATA);	\ 	    m = m->m_next;				\ 	    if (m) {					\ 		m->m_len = 0;				\ 		if (maxolen - olen> MLEN)		\ 		    MCLGET(m, M_DONTWAIT);		\ 		wptr = mtod(m, u_char *);		\ 		cp_end = wptr + M_TRAILINGSPACE(m);	\ 	    } else					\ 		wptr = NULL;				\ 	}						\     }							\ }
+value|{					\     ++olen;						\     if (wptr) {						\ 	*wptr++ = (v);					\ 	if (wptr>= cp_end) {				\ 	    m->m_len = wptr - mtod(m, u_char *);	\ 	    MGET(m->m_next, M_NOWAIT, MT_DATA);	\ 	    m = m->m_next;				\ 	    if (m) {					\ 		m->m_len = 0;				\ 		if (maxolen - olen> MLEN)		\ 		    MCLGET(m, M_NOWAIT);		\ 		wptr = mtod(m, u_char *);		\ 		cp_end = wptr + M_TRAILINGSPACE(m);	\ 	    } else					\ 		wptr = NULL;				\ 	}						\     }							\ }
 define|#
 directive|define
 name|OUTPUT
@@ -2103,7 +2103,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2140,7 +2140,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m
@@ -3625,7 +3625,7 @@ name|MGETHDR
 argument_list|(
 name|dmp
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3659,7 +3659,7 @@ name|MCLGET
 argument_list|(
 name|dmp
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|dmp
@@ -4131,7 +4131,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4174,7 +4174,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|space

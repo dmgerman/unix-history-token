@@ -913,7 +913,7 @@ argument_list|)
 argument_list|,
 name|M_FTABLE
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1351,7 +1351,7 @@ argument_list|)
 argument_list|,
 name|M_FTABLE
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1958,7 +1958,7 @@ name|m
 argument_list|,
 name|offset
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==

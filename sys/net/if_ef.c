@@ -1976,7 +1976,7 @@ name|ETHER_HDR_LEN
 operator|+
 literal|3
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2084,7 +2084,7 @@ name|m
 argument_list|,
 literal|8
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2226,8 +2226,6 @@ argument_list|)
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2291,7 +2289,7 @@ name|ifnlen
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|eifp
@@ -2427,8 +2425,6 @@ argument_list|)
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

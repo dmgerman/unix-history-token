@@ -2558,7 +2558,7 @@ operator|)
 condition|?
 name|M_NOWAIT
 else|:
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==

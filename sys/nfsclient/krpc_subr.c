@@ -376,7 +376,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -937,7 +937,7 @@ name|mhead
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1143,7 +1143,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1767,7 +1767,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1783,7 +1783,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

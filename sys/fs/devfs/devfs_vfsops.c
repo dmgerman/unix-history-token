@@ -199,8 +199,6 @@ argument_list|)
 argument_list|,
 name|M_DEVFS
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -226,8 +224,6 @@ name|NDEVFSINO
 argument_list|,
 name|M_DEVFS
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -2354,7 +2354,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|nd
@@ -3802,7 +3802,7 @@ name|MAXPATHLEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -3925,7 +3925,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|elf_auxargs
@@ -4632,7 +4632,7 @@ name|hdrsize
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5312,7 +5312,7 @@ name|M_TEMP
 argument_list|,
 name|M_ZERO
 operator||
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|status

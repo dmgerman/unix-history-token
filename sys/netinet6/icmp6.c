@@ -1379,7 +1379,7 @@ name|m
 argument_list|,
 name|preplen
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2235,7 +2235,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|n0
 operator|->
@@ -2255,7 +2255,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2582,7 +2582,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -2834,7 +2834,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -2854,7 +2854,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2890,7 +2890,7 @@ name|n
 argument_list|,
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 condition|)
 block|{
@@ -3170,7 +3170,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -3255,7 +3255,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -3340,7 +3340,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -3425,7 +3425,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -3510,7 +3510,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -6059,7 +6059,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -6115,7 +6115,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6598,7 +6598,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6616,7 +6616,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11323,7 +11323,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -11340,7 +11340,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

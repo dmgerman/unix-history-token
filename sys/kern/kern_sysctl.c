@@ -745,7 +745,7 @@ argument_list|)
 argument_list|,
 name|M_SYSCTLOID
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|e
@@ -1356,8 +1356,6 @@ argument_list|)
 argument_list|,
 name|M_SYSCTLOID
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1405,7 +1403,7 @@ literal|1
 argument_list|,
 name|M_SYSCTLOID
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1473,7 +1471,7 @@ argument_list|)
 argument_list|,
 name|M_SYSCTLOID
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|SLIST_INIT
@@ -1531,7 +1529,7 @@ name|len
 argument_list|,
 name|M_SYSCTLOID
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2968,7 +2966,7 @@ literal|1
 argument_list|,
 name|M_SYSCTL
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -3556,7 +3554,7 @@ name|outlen
 argument_list|,
 name|M_SYSCTLTMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3742,7 +3740,7 @@ name|arg2
 argument_list|,
 name|M_SYSCTLTMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy

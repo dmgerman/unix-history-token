@@ -575,8 +575,6 @@ name|ut
 argument_list|,
 name|M_SUBPROC
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -444,7 +444,7 @@ name|cup
 operator|->
 name|cu_vcc_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

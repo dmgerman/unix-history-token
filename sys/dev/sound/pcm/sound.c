@@ -313,8 +313,6 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1537,8 +1535,6 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1560,7 +1556,7 @@ name|cls
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1868,8 +1864,6 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -365,7 +365,7 @@ operator|)
 argument_list|,
 name|M_LINKER
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -1624,7 +1624,7 @@ literal|4
 argument_list|,
 name|M_LINKER
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1823,7 +1823,7 @@ name|lc
 argument_list|,
 name|M_LINKER
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2386,8 +2386,6 @@ argument_list|)
 argument_list|,
 name|M_LINKER
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2791,8 +2789,6 @@ literal|1
 argument_list|,
 name|M_LINKER
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3276,7 +3272,7 @@ name|MAXPATHLEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3652,7 +3648,7 @@ name|MAXPATHLEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4525,7 +4521,7 @@ name|MAXPATHLEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6270,7 +6266,7 @@ name|reclen
 argument_list|,
 name|M_LINKER
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -6617,7 +6613,7 @@ name|reclen
 argument_list|,
 name|M_LINKER
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -6765,7 +6761,7 @@ name|va_size
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

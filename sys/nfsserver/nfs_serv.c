@@ -3176,7 +3176,7 @@ name|MGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3185,7 +3185,7 @@ name|MCLGET
 argument_list|(
 name|nmp
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|nmp
@@ -4521,7 +4521,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4530,7 +4530,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|m
@@ -4569,7 +4569,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|uiop
@@ -5762,7 +5762,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|uiop
@@ -7410,7 +7410,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|uiop
@@ -13653,7 +13653,7 @@ literal|1
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|iv
@@ -16265,7 +16265,7 @@ name|siz
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|again
@@ -17776,7 +17776,7 @@ name|siz
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|again

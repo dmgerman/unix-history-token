@@ -954,7 +954,7 @@ expr|struct
 name|g_mirror_softc
 argument_list|)
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc

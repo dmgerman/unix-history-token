@@ -201,7 +201,7 @@ name|intrsz
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -420,7 +420,7 @@ name|pintrsz
 argument_list|,
 name|M_OFWPROP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -613,7 +613,7 @@ name|isz
 argument_list|,
 name|M_OFWPROP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy

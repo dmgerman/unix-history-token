@@ -623,7 +623,7 @@ literal|4
 argument_list|,
 name|M_NWFSDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|pc

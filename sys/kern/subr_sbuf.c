@@ -130,7 +130,7 @@ name|SBMALLOC
 parameter_list|(
 name|size
 parameter_list|)
-value|malloc(size, M_SBUF, M_WAITOK)
+value|malloc(size, M_SBUF, 0)
 end_define
 
 begin_define

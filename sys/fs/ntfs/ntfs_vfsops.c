@@ -1082,8 +1082,6 @@ name|ntmp
 argument_list|,
 name|M_NTFSMNT
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1642,7 +1640,7 @@ argument_list|)
 argument_list|,
 name|M_NTFSMNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|ntmp
@@ -2430,7 +2428,7 @@ name|bmsize
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error

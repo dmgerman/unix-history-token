@@ -7038,7 +7038,7 @@ name|ifma
 operator|->
 name|ifma_protospec
 return|;
-comment|/* XXX - if_addmulti uses M_WAITOK.  Can this really be called 	   at interrupt time?  If so, need to fix if_addmulti. XXX */
+comment|/* XXX - if_addmulti does not use M_NOWAIT.  Can this really be called 	   at interrupt time?  If so, need to fix if_addmulti. XXX */
 name|in6m
 operator|=
 operator|(
@@ -9959,7 +9959,7 @@ name|sin6_p
 argument_list|,
 name|M_SONAME
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sin_p

@@ -1907,7 +1907,7 @@ name|sin6
 argument_list|,
 name|M_SONAME
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -2093,7 +2093,7 @@ name|sin6_p
 argument_list|,
 name|M_SONAME
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|in6_sin_2_v4mapsin6

@@ -1775,7 +1775,7 @@ argument_list|)
 argument_list|,
 name|M_GZIP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -4483,7 +4483,7 @@ name|GZ_WSIZE
 argument_list|,
 name|M_GZIP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#

@@ -106,7 +106,7 @@ modifier|*
 name|ent
 decl_stmt|;
 comment|/*          * Have to directly allocate memory here, since we start up before          * and shutdown after RAIDframe internal allocation system.          */
-comment|/* 	ent = (RF_ShutdownList_t *) malloc(sizeof(RF_ShutdownList_t),  		M_RAIDFRAME, M_WAITOK); */
+comment|/* 	ent = (RF_ShutdownList_t *) malloc(sizeof(RF_ShutdownList_t),  		M_RAIDFRAME, 0); */
 name|ent
 operator|=
 operator|(

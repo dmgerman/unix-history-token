@@ -31,7 +31,7 @@ parameter_list|,
 name|canwait
 parameter_list|)
 define|\
-value|bpf_alloc(size, (canwait& M_NOWAIT) ? M_DONTWAIT : M_TRYWAIT)
+value|bpf_alloc(size, (canwait& M_NOWAIT) ? M_NOWAIT : 0)
 end_define
 
 begin_define

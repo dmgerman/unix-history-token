@@ -9537,7 +9537,7 @@ name|mbsize
 argument_list|,
 name|M_BIOBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bp

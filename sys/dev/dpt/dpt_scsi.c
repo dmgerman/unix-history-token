@@ -8595,7 +8595,7 @@ comment|/* Data I/O is involved in this command.  Alocate buffer */
 end_comment
 
 begin_define
-unit|if (ccb->eata_ccb.cp_datalen> PAGE_SIZE) { 			data = contigmalloc(ccb->eata_ccb.cp_datalen, 					    M_TEMP, M_WAITOK, 0, ~0, 					    ccb->eata_ccb.cp_datalen, 					    0x10000); 		} else { 			data = malloc(ccb->eata_ccb.cp_datalen, M_TEMP, 				      M_WAITOK); 		}  		if (data == NULL) { 			printf("dpt%d: Cannot allocate %d bytes " 			       "for EATA command\n", dpt->unit, 			       ccb->eata_ccb.cp_datalen); 			return (EFAULT); 		}
+unit|if (ccb->eata_ccb.cp_datalen> PAGE_SIZE) { 			data = contigmalloc(ccb->eata_ccb.cp_datalen, 					    M_TEMP, 0, 0, ~0, 					    ccb->eata_ccb.cp_datalen, 					    0x10000); 		} else { 			data = malloc(ccb->eata_ccb.cp_datalen, M_TEMP, 				      0); 		}  		if (data == NULL) { 			printf("dpt%d: Cannot allocate %d bytes " 			       "for EATA command\n", dpt->unit, 			       ccb->eata_ccb.cp_datalen); 			return (EFAULT); 		}
 define|#
 directive|define
 name|usr_cmd_DMA

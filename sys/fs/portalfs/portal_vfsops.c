@@ -428,7 +428,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -447,7 +447,7 @@ argument_list|)
 argument_list|,
 name|M_PORTALFSMNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX */

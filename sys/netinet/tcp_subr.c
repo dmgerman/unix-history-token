@@ -1562,7 +1562,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -1927,7 +1927,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -4263,7 +4263,7 @@ name|inp_list
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -7325,7 +7325,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

@@ -3736,8 +3736,6 @@ argument_list|)
 argument_list|,
 name|M_SBP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 decl_stmt|;
@@ -4017,8 +4015,6 @@ argument_list|)
 argument_list|,
 name|M_SBP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -4039,7 +4035,7 @@ argument_list|)
 argument_list|,
 name|M_SBP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|SBP_DEBUG

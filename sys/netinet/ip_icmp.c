@@ -677,7 +677,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -3036,7 +3036,7 @@ name|opts
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

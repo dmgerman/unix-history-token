@@ -978,7 +978,7 @@ name|uma_zalloc
 argument_list|(
 name|ufsdirhash_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==

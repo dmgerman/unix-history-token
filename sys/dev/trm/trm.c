@@ -12583,7 +12583,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|trm_initDCB
@@ -14386,7 +14386,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Now tell the generic SCSI layer 	 * about our bus. 	 * If this is the xpt layer creating a sim, then it's OK 	 * to wait for an allocation. 	 * XXX Should we pass in a flag to indicate that wait is OK? 	 * 	 *                    SIM allocation 	 * 	 *                 SCSI Interface Modules 	 * The sim driver creates a sim for each controller.  The sim device 	 * queue is separately created in order to allow resource sharing betwee 	 * sims.  For instance, a driver may create one sim for each channel of 	 * a multi-channel controller and use the same queue for each channel. 	 * In this way, the queue resources are shared across all the channels 	 * of the multi-channel controller. 	 * trm_action     : sim_action_func 	 * trm_poll       : sim_poll_func 	 * "trm"        : sim_name ,if sim_name =  "xpt" ..M_DEVBUF,M_WAITOK 	 * pACB         : *softc    if sim_name<> "xpt" ..M_DEVBUF,M_NOWAIT 	 * pACB->unit   : unit 	 * 1            : max_dev_transactions 	 * MAX_TAGS     : max_tagged_dev_transactions 	 * 	 *  *******Construct our first channel SIM entry 	 */
+comment|/* 	 * Now tell the generic SCSI layer 	 * about our bus. 	 * If this is the xpt layer creating a sim, then it's OK 	 * to wait for an allocation. 	 * XXX Should we pass in a flag to indicate that wait is OK? 	 * 	 *                    SIM allocation 	 * 	 *                 SCSI Interface Modules 	 * The sim driver creates a sim for each controller.  The sim device 	 * queue is separately created in order to allow resource sharing betwee 	 * sims.  For instance, a driver may create one sim for each channel of 	 * a multi-channel controller and use the same queue for each channel. 	 * In this way, the queue resources are shared across all the channels 	 * of the multi-channel controller. 	 * trm_action     : sim_action_func 	 * trm_poll       : sim_poll_func 	 * "trm"        : sim_name ,if sim_name =  "xpt" ..M_DEVBUF,0 	 * pACB         : *softc    if sim_name<> "xpt" ..M_DEVBUF,M_NOWAIT 	 * pACB->unit   : unit 	 * 1            : max_dev_transactions 	 * MAX_TAGS     : max_tagged_dev_transactions 	 * 	 *  *******Construct our first channel SIM entry 	 */
 name|pACB
 operator|->
 name|psim

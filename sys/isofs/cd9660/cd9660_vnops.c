@@ -762,7 +762,7 @@ name|MAXPATHLEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|aiov
@@ -2129,7 +2129,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|idp
@@ -2216,7 +2216,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|idp
@@ -3152,7 +3152,7 @@ name|uma_zalloc
 argument_list|(
 name|namei_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ok, we just gathering a symbolic name in SL record. 	 */

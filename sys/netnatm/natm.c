@@ -496,7 +496,7 @@ name|npcb
 operator|=
 name|npcb_alloc
 argument_list|(
-name|M_WAITOK
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1318,7 +1318,7 @@ operator|*
 name|aph
 argument_list|)
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2174,7 +2174,7 @@ name|npcb
 operator|=
 name|npcb_alloc
 argument_list|(
-name|M_WAITOK
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2656,7 +2656,7 @@ operator|*
 name|aph
 argument_list|)
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

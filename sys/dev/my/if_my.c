@@ -5533,7 +5533,7 @@ name|MGETHDR
 argument_list|(
 name|m_new
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5569,7 +5569,7 @@ name|MCLGET
 argument_list|(
 name|m_new
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6748,7 +6748,7 @@ name|MGETHDR
 argument_list|(
 name|m_new
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6795,7 +6795,7 @@ name|MCLGET
 argument_list|(
 name|m_new
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

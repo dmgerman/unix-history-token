@@ -82,7 +82,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|do {                                                                      \     ptr = (cast)malloc((unsigned long) size, M_CODA, M_WAITOK);            \     if (ptr == 0) {                                                       \ 	panic("kernel malloc returns 0 at %s:%d\n", __FILE__, __LINE__);  \     }                                                                     \ } while (0)
+value|do {                                                                      \     ptr = (cast)malloc((unsigned long) size, M_CODA, 0);                   \     if (ptr == 0) {                                                       \ 	panic("kernel malloc returns 0 at %s:%d\n", __FILE__, __LINE__);  \     }                                                                     \ } while (0)
 end_define
 
 begin_define

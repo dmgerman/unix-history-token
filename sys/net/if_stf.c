@@ -615,8 +615,6 @@ argument_list|)
 argument_list|,
 name|M_STF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1831,7 +1829,7 @@ expr|struct
 name|ip
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

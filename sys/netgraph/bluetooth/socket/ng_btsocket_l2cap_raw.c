@@ -2173,8 +2173,6 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH_BTSOCKET_L2CAP_RAW
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3097,7 +3095,7 @@ name|NGM_L2CAP_NODE_GET_FLAGS
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3292,7 +3290,7 @@ name|NGM_L2CAP_NODE_GET_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3476,7 +3474,7 @@ argument_list|(
 name|ng_l2cap_node_debug_ep
 argument_list|)
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3605,7 +3603,7 @@ name|NGM_L2CAP_NODE_GET_CON_LIST
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3899,7 +3897,7 @@ name|NGM_L2CAP_NODE_GET_CHAN_LIST
 argument_list|,
 literal|0
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4237,7 +4235,7 @@ name|p
 operator|->
 name|echo_size
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4629,7 +4627,7 @@ name|p
 operator|->
 name|info_size
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

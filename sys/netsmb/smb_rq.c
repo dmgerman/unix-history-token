@@ -255,7 +255,7 @@ argument_list|)
 argument_list|,
 name|M_SMBRQ
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1881,7 +1881,7 @@ argument_list|)
 argument_list|,
 name|M_SMBRQ
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2143,7 +2143,7 @@ name|mtop
 argument_list|,
 name|offset
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

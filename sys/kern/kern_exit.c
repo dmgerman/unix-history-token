@@ -704,7 +704,7 @@ argument_list|)
 argument_list|,
 name|M_ZOMBIE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If parent is waiting for us to exit or exec, 	 * P_PPWAIT is set; we will wakeup the parent below. 	 */

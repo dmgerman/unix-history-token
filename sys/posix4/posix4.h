@@ -101,7 +101,7 @@ name|p31b_malloc
 parameter_list|(
 name|SIZE
 parameter_list|)
-value|malloc((SIZE), M_P31B, M_WAITOK)
+value|malloc((SIZE), M_P31B, 0)
 end_define
 
 begin_define

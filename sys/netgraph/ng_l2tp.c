@@ -3779,7 +3779,7 @@ name|m
 argument_list|,
 literal|2
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4286,7 +4286,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -4449,7 +4449,7 @@ literal|0
 operator|)
 operator|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5602,7 +5602,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -6184,7 +6184,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -6283,7 +6283,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6404,7 +6404,7 @@ name|m
 argument_list|,
 literal|12
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

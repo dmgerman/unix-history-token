@@ -1262,7 +1262,7 @@ expr|struct
 name|llc
 argument_list|)
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|llc
@@ -1407,7 +1407,7 @@ name|m
 argument_list|,
 literal|3
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|type
@@ -1685,7 +1685,7 @@ expr|struct
 name|ether_header
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2460,7 +2460,7 @@ name|m
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2571,7 +2571,7 @@ name|m_copypacket
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4123,7 +4123,7 @@ expr|struct
 name|ether_header
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 call|(
@@ -5066,8 +5066,6 @@ name|sdl
 argument_list|,
 name|M_IFMADDR
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -5207,8 +5205,6 @@ name|sdl
 argument_list|,
 name|M_IFMADDR
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -395,8 +395,6 @@ argument_list|)
 argument_list|,
 name|M_LOCKF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

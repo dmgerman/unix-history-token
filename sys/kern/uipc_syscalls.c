@@ -3032,7 +3032,7 @@ operator|*
 name|cm
 argument_list|)
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3132,7 +3132,7 @@ name|iovlen
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -3757,7 +3757,7 @@ name|msg_iovlen
 argument_list|,
 name|M_IOV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3994,7 +3994,7 @@ name|msg_iovlen
 argument_list|,
 name|M_IOV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4397,7 +4397,7 @@ name|iovlen
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -5461,7 +5461,7 @@ name|msg_iovlen
 argument_list|,
 name|M_IOV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5741,7 +5741,7 @@ name|msg_iovlen
 argument_list|,
 name|M_IOV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7263,7 +7263,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|type
 argument_list|)
@@ -7443,7 +7443,7 @@ name|len
 argument_list|,
 name|M_SONAME
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -8414,7 +8414,7 @@ name|so
 operator|->
 name|so_snd
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop through the pages in the file, starting with the requested 	 * offset. Get a file page (do I/O if necessary), map the file page 	 * into an sf_buf, attach an mbuf header to the sf_buf, and queue 	 * it on the socket. 	 */
@@ -8950,7 +8950,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)

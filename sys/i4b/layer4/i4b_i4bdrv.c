@@ -2499,7 +2499,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|prots2
@@ -2518,7 +2518,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2591,7 +2591,7 @@ name|bytecount
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|copyin
@@ -2853,7 +2853,7 @@ name|in_param_len
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2916,7 +2916,7 @@ name|out_param_len
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

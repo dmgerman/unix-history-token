@@ -1581,7 +1581,7 @@ name|len
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -2136,7 +2136,7 @@ name|size
 argument_list|,
 name|M_UFSMNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|copy_fs
@@ -2826,7 +2826,7 @@ argument_list|)
 argument_list|,
 name|M_UFSMNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|lockinit
@@ -3191,7 +3191,7 @@ argument_list|)
 argument_list|,
 name|M_UFSMNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|ip
@@ -5465,7 +5465,7 @@ name|fs_bsize
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -7184,7 +7184,7 @@ name|fs_bsize
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -10318,7 +10318,7 @@ argument_list|)
 argument_list|,
 name|M_UFSMNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|lockinit
@@ -10599,7 +10599,7 @@ argument_list|)
 argument_list|,
 name|M_UFSMNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|auio

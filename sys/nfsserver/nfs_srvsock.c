@@ -456,7 +456,7 @@ name|MGETHDR
 argument_list|(
 name|mreq
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -493,7 +493,7 @@ name|MCLGET
 argument_list|(
 name|mreq
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -895,7 +895,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -913,7 +913,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1736,7 +1736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Socket upcall routine for the nfsd sockets.  * The caddr_t arg is a pointer to the "struct nfssvc_sock".  * Essentially do as much as possible non-blocking, else punt and it will  * be called with M_TRYWAIT from an nfsd.  */
+comment|/*  * Socket upcall routine for the nfsd sockets.  * The caddr_t arg is a pointer to the "struct nfssvc_sock".  * Essentially do as much as possible non-blocking, else punt and it will  * be called without M_NOWAIT from an nfsd.  */
 end_comment
 
 begin_function
@@ -1813,7 +1813,7 @@ if|if
 condition|(
 name|waitflag
 operator|==
-name|M_DONTWAIT
+name|M_NOWAIT
 condition|)
 block|{
 name|slp
@@ -1856,7 +1856,7 @@ argument_list|)
 operator|&&
 name|waitflag
 operator|==
-name|M_DONTWAIT
+name|M_NOWAIT
 condition|)
 block|{
 name|slp
@@ -2214,7 +2214,7 @@ if|if
 condition|(
 name|waitflag
 operator|==
-name|M_DONTWAIT
+name|M_NOWAIT
 operator|&&
 operator|(
 name|STAILQ_FIRST
@@ -3082,7 +3082,7 @@ argument_list|)
 argument_list|,
 name|M_NFSRVDESC
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|nd

@@ -1505,7 +1505,7 @@ argument_list|(
 name|M_DRM
 argument_list|)
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|,
 literal|0
 argument_list|,

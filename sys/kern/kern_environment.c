@@ -488,7 +488,7 @@ name|KENV_MNAMELEN
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -668,7 +668,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -845,8 +845,6 @@ argument_list|)
 argument_list|,
 name|M_KENV
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -892,7 +890,7 @@ name|len
 argument_list|,
 name|M_KENV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1301,7 +1299,7 @@ name|len
 argument_list|,
 name|M_KENV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1504,7 +1502,7 @@ name|vallen
 argument_list|,
 name|M_KENV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sprintf

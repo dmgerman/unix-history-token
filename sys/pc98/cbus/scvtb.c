@@ -760,7 +760,7 @@ operator|(
 name|wait
 operator|)
 condition|?
-name|M_WAITOK
+literal|0
 else|:
 name|M_NOWAIT
 operator|)

@@ -317,7 +317,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -429,7 +429,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|copyin
@@ -487,7 +487,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -560,7 +560,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -210,8 +210,6 @@ name|pb
 argument_list|,
 name|M_PFSFILENO
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -465,8 +463,6 @@ name|pb
 argument_list|,
 name|M_PFSFILENO
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

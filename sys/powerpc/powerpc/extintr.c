@@ -1629,7 +1629,7 @@ name|cold
 condition|?
 name|M_NOWAIT
 else|:
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

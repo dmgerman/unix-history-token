@@ -345,7 +345,7 @@ argument_list|)
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|des_set_key
@@ -436,7 +436,7 @@ literal|21
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -627,7 +627,7 @@ argument_list|)
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * S21 = concat(MD4(U(apwd)), zeros(5)); 	 */
@@ -649,7 +649,7 @@ argument_list|)
 argument_list|,
 name|M_SMBTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|MD4Init

@@ -733,7 +733,7 @@ argument_list|)
 argument_list|,
 name|M_VLAN
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1007,8 +1007,6 @@ argument_list|)
 argument_list|,
 name|M_VLAN
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1362,7 +1360,7 @@ argument_list|(
 name|u_int
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 decl_stmt|;
 if|if
@@ -1417,7 +1415,7 @@ name|ifv
 operator|->
 name|ifv_encaplen
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -3011,7 +3011,7 @@ name|uma_zalloc
 argument_list|(
 name|ksegrp_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -3037,7 +3037,7 @@ name|uma_zalloc
 argument_list|(
 name|kse_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -3067,7 +3067,7 @@ name|uma_zalloc
 argument_list|(
 name|thread_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 return|;

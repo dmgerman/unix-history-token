@@ -1434,8 +1434,6 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -5371,7 +5369,7 @@ literal|"sr%d: sr_get_packet() rxstat=%02x, len=%d\n"
 argument|, 			       sc->unit, rxstat, len);
 endif|#
 directive|endif
-argument|MGETHDR(m, M_DONTWAIT, MT_DATA); 			if (m == NULL) {
+argument|MGETHDR(m, M_NOWAIT, MT_DATA); 			if (m == NULL) {
 comment|/* 				 * eat (flush) packet if get mbuf fail!! 				 */
 argument|sr_eat_packet(sc,
 literal|1
@@ -5387,7 +5385,7 @@ argument|m->m_pkthdr.rcvif = NULL;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
-argument|m->m_pkthdr.len = m->m_len = len; 			if (len> MHLEN) { 				MCLGET(m, M_DONTWAIT); 				if ((m->m_flags& M_EXT) ==
+argument|m->m_pkthdr.len = m->m_len = len; 			if (len> MHLEN) { 				MCLGET(m, M_NOWAIT); 				if ((m->m_flags& M_EXT) ==
 literal|0
 argument|) {
 comment|/* 					 * We couldn't get a big enough 					 * message packet, so we'll send the 					 * packet to /dev/null... 					 */

@@ -2090,7 +2090,7 @@ name|isize
 argument_list|,
 name|M_USBDEV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
@@ -2278,7 +2278,7 @@ name|UGEN_NISOFRAMES
 argument_list|,
 name|M_USBDEV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sce
@@ -5584,7 +5584,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -5672,7 +5672,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|err
@@ -7096,7 +7096,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

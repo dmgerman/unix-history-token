@@ -2244,7 +2244,7 @@ name|DEV_BSIZE
 argument_list|,
 name|M_SPKR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|spkr_active

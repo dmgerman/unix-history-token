@@ -386,7 +386,7 @@ name|tossize
 argument_list|,
 name|M_GPROF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for something else extending highpc while we slept. 	 */
@@ -894,8 +894,6 @@ name|tossize
 argument_list|,
 name|M_GPROF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

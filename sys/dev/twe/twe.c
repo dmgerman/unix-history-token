@@ -2025,7 +2025,7 @@ name|tr_length
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -2442,7 +2442,7 @@ name|tp_size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==

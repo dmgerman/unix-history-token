@@ -2028,7 +2028,7 @@ name|USCANNER_BUFFERSIZE
 argument_list|,
 name|M_USBDEV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2041,7 +2041,7 @@ name|USCANNER_BUFFERSIZE
 argument_list|,
 name|M_USBDEV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* No need to check buffers for NULL since we have WAITOK */

@@ -142,7 +142,7 @@ name|dcp
 argument_list|,
 name|M_ICONV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|dp

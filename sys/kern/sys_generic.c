@@ -1077,7 +1077,7 @@ name|iovlen
 argument_list|,
 name|M_IOV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|needfree
@@ -1230,7 +1230,7 @@ name|iovlen
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2253,7 +2253,7 @@ name|iovlen
 argument_list|,
 name|M_IOV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|needfree
@@ -2412,7 +2412,7 @@ name|iovlen
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2977,7 +2977,7 @@ name|size
 argument_list|,
 name|M_IOCTLOPS
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|data
@@ -3740,7 +3740,7 @@ name|nbufbytes
 argument_list|,
 name|M_SELECT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Assign pointers into the bit buffers and fetch the input bits. 	 * Put the output buffers together so that they can be bzeroed 	 * together. 	 */
@@ -4662,7 +4662,7 @@ name|ni
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 else|else

@@ -547,7 +547,7 @@ value|do { \
 comment|/* keep the reply buffer into our chain */
 value|\ 	if (n) {						\ 		n->m_len = zs.total_out - offset;		\ 		offset = zs.total_out;				\ 		*np = n;					\ 		np =&n->m_next;				\ 		n = NULL;					\ 	}							\ 								\
 comment|/* get a fresh reply buffer */
-value|\ 	MGET(n, M_DONTWAIT, MT_DATA);				\ 	if (n) {						\ 		MCLGET(n, M_DONTWAIT);				\ 	}							\ 	if (!n) {						\ 		error = ENOBUFS;				\ 		goto fail;					\ 	}							\ 	n->m_len = 0;						\ 	n->m_len = M_TRAILINGSPACE(n);				\ 	n->m_next = NULL;					\
+value|\ 	MGET(n, M_NOWAIT, MT_DATA);				\ 	if (n) {						\ 		MCLGET(n, M_NOWAIT);				\ 	}							\ 	if (!n) {						\ 		error = ENOBUFS;				\ 		goto fail;					\ 	}							\ 	n->m_len = 0;						\ 	n->m_len = M_TRAILINGSPACE(n);				\ 	n->m_next = NULL;					\
 comment|/* 							\ 	 * if this is the first reply buffer, reserve		\ 	 * region for ipcomp header.				\ 	 */
 value|\ 	if (*np == NULL) {					\ 		n->m_len -= sizeof(struct ipcomp);		\ 		n->m_data += sizeof(struct ipcomp);		\ 	}							\ 								\ 	zs.next_out = mtod(n, u_int8_t *);			\ 	zs.avail_out = n->m_len;				\ } while (0)
 for|for

@@ -3690,7 +3690,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3808,7 +3808,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3835,7 +3835,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3959,7 +3959,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3991,7 +3991,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4584,8 +4584,6 @@ index|]
 argument_list|,
 name|M_MN
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -6485,7 +6483,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6509,7 +6507,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7284,8 +7282,6 @@ name|sc
 argument_list|,
 name|M_MN
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

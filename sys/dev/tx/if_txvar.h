@@ -484,7 +484,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|{ MGETHDR((m),M_DONTWAIT,MT_DATA);				\ 	  if (m) {							\ 	    MCLGET((m),M_DONTWAIT);					\ 	    if( 0 == ((m)->m_flags& M_EXT) ) {				\ 	      m_freem(m);						\ 	      (m) = NULL;						\ 	    }								\ 	  }								\ 	}
+value|{ MGETHDR((m),M_NOWAIT,MT_DATA);				\ 	  if (m) {							\ 	    MCLGET((m),M_NOWAIT);					\ 	    if( 0 == ((m)->m_flags& M_EXT) ) {				\ 	      m_freem(m);						\ 	      (m) = NULL;						\ 	    }								\ 	  }								\ 	}
 end_define
 
 end_unit

@@ -1095,33 +1095,30 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags specifying how an allocation should be made.  * M_DONTWAIT means "don't block if nothing is available" whereas  * M_TRYWAIT means "block for mbuf_wait ticks at most if nothing is  * available."  */
+comment|/*  * Flags specifying how an allocation should be made.  * M_NOWAIT means "don't block if nothing is available" whereas  * 0 means "block for mbuf_wait ticks at most if nothing is  * available."  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_DONTWAIT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_TRYWAIT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_WAIT
-value|M_TRYWAIT
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_NOWAIT
+end_ifndef
 
 begin_comment
-comment|/* XXX: Deprecated. */
+comment|/* malloc.h also defines this. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOWAIT
+value|0x0001
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1408,7 +1405,7 @@ name|o
 parameter_list|,
 name|l
 parameter_list|)
-value|m_copym((m), (o), (l), M_DONTWAIT)
+value|m_copym((m), (o), (l), M_NOWAIT)
 end_define
 
 begin_decl_stmt

@@ -3480,8 +3480,6 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)
@@ -4671,8 +4669,6 @@ operator|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)
@@ -4761,8 +4757,6 @@ operator|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)
@@ -4951,8 +4945,6 @@ operator|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)
@@ -5041,8 +5033,6 @@ operator|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)
@@ -7292,7 +7282,7 @@ name|MessageSizeInBytes
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -7527,7 +7517,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -7815,7 +7805,7 @@ name|MessageSizeInBytes
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -9447,7 +9437,7 @@ name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|,
 literal|0ul
 argument_list|,
@@ -9616,8 +9606,6 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)
@@ -9692,7 +9680,7 @@ operator|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -12800,7 +12788,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -13404,8 +13392,6 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 operator|)
@@ -17242,7 +17228,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -17575,7 +17561,7 @@ name|MessageSizeInBytes
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -17662,7 +17648,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -17831,7 +17817,7 @@ operator|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -18214,7 +18200,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -18582,7 +18568,7 @@ name|MessageSizeInBytes
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 operator|)
 operator|==

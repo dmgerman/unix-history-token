@@ -887,7 +887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Store the value of a property of a package into newly allocated memory (using  * the M_OFWPROP malloc pool and M_WAITOK). elsz is the size of a single element,  * the number of elements is return in number.  */
+comment|/*  * Store the value of a property of a package into newly allocated memory (using  * the M_OFWPROP malloc pool and 0). elsz is the size of a single element,  * the number of elements is return in number.  */
 end_comment
 
 begin_function
@@ -955,7 +955,7 @@ name|len
 argument_list|,
 name|M_OFWPROP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

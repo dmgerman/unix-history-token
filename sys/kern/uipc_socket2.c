@@ -1243,7 +1243,7 @@ name|so
 operator|->
 name|so_upcallarg
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2438,7 +2438,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)
@@ -3495,7 +3495,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_CONTROL
 argument_list|)
@@ -3530,7 +3530,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3907,7 +3907,7 @@ name|M_SONAME
 argument_list|,
 name|canwait
 condition|?
-name|M_WAITOK
+literal|0
 else|:
 name|M_NOWAIT
 argument_list|)

@@ -705,7 +705,7 @@ name|ivlen
 argument_list|,
 name|M_XDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -1528,7 +1528,7 @@ operator|)
 condition|?
 name|M_NOWAIT
 else|:
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1554,7 +1554,7 @@ operator|)
 condition|?
 name|M_NOWAIT
 else|:
-name|M_WAITOK
+literal|0
 argument_list|,
 literal|0ul
 argument_list|,

@@ -2829,7 +2829,7 @@ argument_list|)
 argument_list|,
 name|M_SIGIO
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sigio
@@ -4486,7 +4486,7 @@ name|OFILESIZE
 argument_list|,
 name|M_FILEDESC
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -4959,8 +4959,6 @@ name|uma_zalloc
 argument_list|(
 name|file_zone
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -5288,8 +5286,6 @@ argument_list|)
 argument_list|,
 name|M_FILEDESC
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -5570,7 +5566,7 @@ argument_list|)
 argument_list|,
 name|M_FILEDESC
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
@@ -5789,7 +5785,7 @@ name|OFILESIZE
 argument_list|,
 name|M_FILEDESC
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK

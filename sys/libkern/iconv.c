@@ -731,7 +731,7 @@ name|csize
 argument_list|,
 name|M_ICONV
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1560,7 +1560,7 @@ name|ia_datalen
 argument_list|,
 name|M_ICONVDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error

@@ -1003,7 +1003,7 @@ name|uma_zalloc
 argument_list|(
 name|namei_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -1542,7 +1542,7 @@ name|DIRBLKSIZ
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|auio
@@ -2478,7 +2478,7 @@ argument_list|)
 argument_list|,
 name|M_UFS_EXTATTR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -2860,7 +2860,7 @@ argument_list|)
 operator|=
 name|lomac_alloc
 argument_list|(
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2939,8 +2939,6 @@ argument_list|,
 name|M_MACLOMAC
 argument_list|,
 name|M_ZERO
-operator||
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mtx_init

@@ -3505,7 +3505,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* Restore packet header fields to original values */
@@ -4076,7 +4076,7 @@ name|t
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_FTABLE
 argument_list|)
@@ -6949,7 +6949,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -7682,7 +7682,7 @@ name|MGET
 argument_list|(
 name|mcopy
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -7702,7 +7702,7 @@ name|mcopy
 argument_list|,
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 condition|)
 block|{

@@ -2790,7 +2790,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2838,7 +2838,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4126,7 +4126,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -5507,7 +5507,7 @@ operator|*
 name|wh
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6251,7 +6251,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6618,7 +6618,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_SEND_DATA_ONLY
@@ -6804,7 +6804,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_SEND_DATA_ONLY
@@ -6853,7 +6853,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_SEND_DATA_ONLY
@@ -6899,7 +6899,7 @@ name|neg
 operator|->
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|NG_SEND_DATA_ONLY

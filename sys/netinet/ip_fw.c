@@ -4415,7 +4415,7 @@ name|r
 argument_list|,
 name|M_IPFW
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -9602,7 +9602,7 @@ name|size
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

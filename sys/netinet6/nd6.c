@@ -693,7 +693,7 @@ name|n
 argument_list|,
 name|M_IP6NDP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero

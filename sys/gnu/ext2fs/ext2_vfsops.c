@@ -628,7 +628,7 @@ argument_list|)
 argument_list|,
 name|M_MOUNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -2504,7 +2504,7 @@ argument_list|)
 argument_list|,
 name|M_EXT2MNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* adjust logic_sb_block */
@@ -3609,7 +3609,7 @@ name|ump
 argument_list|,
 name|M_EXT2MNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3639,7 +3639,7 @@ argument_list|)
 argument_list|,
 name|M_EXT2MNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|ump
@@ -3658,7 +3658,7 @@ argument_list|)
 argument_list|,
 name|M_EXT2MNT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -5260,7 +5260,7 @@ argument_list|)
 argument_list|,
 name|M_EXT2NODE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a new vnode/inode. */

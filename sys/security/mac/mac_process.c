@@ -2605,8 +2605,6 @@ argument_list|,
 name|M_MACPIPELABEL
 argument_list|,
 name|M_ZERO
-operator||
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|pipe
@@ -4821,7 +4819,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -10708,7 +10706,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -10756,8 +10754,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -10778,7 +10774,7 @@ name|mac
 operator|.
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10917,7 +10913,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -11275,7 +11271,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -11318,7 +11314,7 @@ argument_list|(
 operator|&
 name|intlabel
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -11529,7 +11525,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -11577,8 +11573,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -11599,7 +11593,7 @@ name|mac
 operator|->
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11704,7 +11698,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -11752,8 +11746,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -11774,7 +11766,7 @@ name|mac
 operator|->
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -12226,7 +12218,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -12279,8 +12271,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -12301,7 +12291,7 @@ name|mac
 operator|.
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -12441,7 +12431,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -12489,8 +12479,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -12513,7 +12501,7 @@ name|mac
 operator|.
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -12662,7 +12650,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -12988,7 +12976,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -13036,8 +13024,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -13223,7 +13209,7 @@ name|mac
 operator|.
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|mac_destroy_vnode_label
@@ -13251,7 +13237,7 @@ name|mac
 operator|.
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|mac_destroy_pipe_label
@@ -13417,7 +13403,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -13465,8 +13451,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -13546,7 +13530,7 @@ name|mac
 operator|.
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|NDFREE
@@ -13712,7 +13696,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -13760,8 +13744,6 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -13841,7 +13823,7 @@ name|mac
 operator|.
 name|m_buflen
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|NDFREE
@@ -14020,7 +14002,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -14406,7 +14388,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -14695,7 +14677,7 @@ name|m_buflen
 argument_list|,
 name|M_MACTEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|error

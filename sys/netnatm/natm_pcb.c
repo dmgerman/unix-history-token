@@ -119,7 +119,7 @@ if|if
 condition|(
 name|wait
 operator|==
-name|M_WAITOK
+literal|0
 operator|&&
 name|npcb
 operator|==

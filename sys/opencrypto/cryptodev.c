@@ -952,7 +952,7 @@ literal|8
 argument_list|,
 name|M_XDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1059,7 +1059,7 @@ literal|8
 argument_list|,
 name|M_XDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1578,7 +1578,7 @@ name|len
 argument_list|,
 name|M_XDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -2565,7 +2565,7 @@ name|krp
 argument_list|,
 name|M_XDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2734,7 +2734,7 @@ name|size
 argument_list|,
 name|M_XDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3694,7 +3694,7 @@ argument_list|)
 argument_list|,
 name|M_XDATA
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT

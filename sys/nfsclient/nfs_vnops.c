@@ -2391,7 +2391,7 @@ name|NFS_DIRBLKSIZ
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|aiov
@@ -13349,7 +13349,7 @@ argument_list|)
 argument_list|,
 name|M_NFSREQ
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sp
@@ -13805,7 +13805,7 @@ name|fhlen
 argument_list|,
 name|M_NFSBIGFH
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy

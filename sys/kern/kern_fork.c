@@ -1173,7 +1173,7 @@ name|uma_zalloc
 argument_list|(
 name|proc_zone
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1641,7 +1641,7 @@ argument_list|)
 argument_list|,
 name|M_SUBPROC
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|newprocsig
@@ -1671,7 +1671,7 @@ argument_list|)
 argument_list|,
 name|M_SUBPROC
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -1843,8 +1843,6 @@ name|isomp
 argument_list|,
 name|M_ISOFSMNT
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3240,8 +3238,6 @@ argument_list|)
 argument_list|,
 name|M_ISOFSNODE
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -618,7 +618,7 @@ argument_list|)
 argument_list|,
 name|M_GIF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3220,7 +3220,7 @@ name|sa_len
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -3267,7 +3267,7 @@ name|sa_len
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy

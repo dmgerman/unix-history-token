@@ -1980,7 +1980,7 @@ argument_list|)
 argument_list|,
 name|M_SMBCONN
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|smb_co_init
@@ -3654,7 +3654,7 @@ argument_list|)
 argument_list|,
 name|M_SMBCONN
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|smb_co_init

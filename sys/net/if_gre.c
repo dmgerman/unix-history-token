@@ -603,7 +603,7 @@ argument_list|)
 argument_list|,
 name|M_GRE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1312,7 +1312,7 @@ name|MGETHDR
 argument_list|(
 name|m0
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -1635,7 +1635,7 @@ expr|struct
 name|greip
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}

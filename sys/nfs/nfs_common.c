@@ -809,7 +809,7 @@ name|MGET
 argument_list|(
 name|mp2
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1139,7 +1139,7 @@ name|MGET
 argument_list|(
 name|mb2
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)

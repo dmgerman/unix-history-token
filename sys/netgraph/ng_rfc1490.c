@@ -940,7 +940,7 @@ name|m
 argument_list|,
 literal|2
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* Prepend PPP NLPID */
@@ -1010,7 +1010,7 @@ name|m
 argument_list|,
 literal|2
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* Prepend IP NLPID */

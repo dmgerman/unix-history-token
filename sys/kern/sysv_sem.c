@@ -1238,7 +1238,7 @@ name|semmns
 argument_list|,
 name|M_SEM
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sema
@@ -1257,7 +1257,7 @@ name|semmni
 argument_list|,
 name|M_SEM
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|sema_mtx
@@ -1276,8 +1276,6 @@ name|semmni
 argument_list|,
 name|M_SEM
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1295,7 +1293,7 @@ name|semusz
 argument_list|,
 name|M_SEM
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -3634,7 +3632,7 @@ name|sem_nsems
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -4053,7 +4051,7 @@ name|count
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|copyin
@@ -5178,7 +5176,7 @@ argument_list|)
 argument_list|,
 name|M_SEM
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

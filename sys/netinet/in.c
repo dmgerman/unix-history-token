@@ -1195,8 +1195,6 @@ name|ia
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -4040,7 +4038,7 @@ operator|->
 name|ifma_protospec
 return|;
 block|}
-comment|/* XXX - if_addmulti uses M_WAITOK.  Can this really be called 	   at interrupt time?  If so, need to fix if_addmulti. XXX */
+comment|/* XXX - if_addmulti does not use N_NOWAIT.  Can this really be called 	   at interrupt time?  If so, need to fix if_addmulti. XXX */
 name|inm
 operator|=
 operator|(

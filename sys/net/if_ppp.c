@@ -671,8 +671,6 @@ argument_list|)
 argument_list|,
 name|M_PPP
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2654,7 +2652,7 @@ name|newcodelen
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3752,7 +3750,7 @@ name|m0
 argument_list|,
 name|PPP_HDRLEN
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6375,7 +6373,7 @@ name|MGETHDR
 argument_list|(
 name|mp
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6414,7 +6412,7 @@ name|MCLGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6723,7 +6721,7 @@ name|MGETHDR
 argument_list|(
 name|mp
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

@@ -824,7 +824,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -838,7 +838,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1371,8 +1371,6 @@ argument_list|)
 argument_list|,
 name|M_BPF
 argument_list|,
-name|M_WAITOK
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3497,7 +3495,7 @@ name|size
 argument_list|,
 name|M_BPF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4756,7 +4754,7 @@ name|bd_bufsize
 argument_list|,
 name|M_BPF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4787,7 +4785,7 @@ name|bd_bufsize
 argument_list|,
 name|M_BPF
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

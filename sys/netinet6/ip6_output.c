@@ -3944,7 +3944,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -4534,7 +4534,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4560,7 +4560,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4678,7 +4678,7 @@ name|MGET
 argument_list|(
 name|mopt
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4780,7 +4780,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4794,7 +4794,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5092,7 +5092,7 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5217,7 +5217,7 @@ name|MGET
 argument_list|(
 name|mfrg
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5846,9 +5846,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_TRYWAIT
+literal|0
 else|:
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -6264,7 +6264,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_TRYWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -6988,7 +6988,7 @@ argument_list|)
 argument_list|,
 name|M_IP6OPT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -7896,7 +7896,7 @@ argument_list|)
 argument_list|,
 name|M_IPMOPTS
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -8573,7 +8573,7 @@ argument_list|)
 argument_list|,
 name|M_IPMADDR
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -8977,7 +8977,7 @@ name|mp
 operator|=
 name|m_get
 argument_list|(
-name|M_TRYWAIT
+literal|0
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -9430,7 +9430,7 @@ argument_list|)
 argument_list|,
 name|M_IP6OPT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -9752,7 +9752,7 @@ argument_list|)
 argument_list|,
 name|M_IP6OPT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -9877,7 +9877,7 @@ name|hbhlen
 argument_list|,
 name|M_IP6OPT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -10015,7 +10015,7 @@ name|destlen
 argument_list|,
 name|M_IP6OPT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -10188,7 +10188,7 @@ name|rthlen
 argument_list|,
 name|M_IP6OPT
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -10470,7 +10470,7 @@ name|MGETHDR
 argument_list|(
 name|mh
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
