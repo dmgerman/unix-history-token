@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|_BSD_TIME_T_
-value|long
+value|int
 end_define
 
 begin_comment
