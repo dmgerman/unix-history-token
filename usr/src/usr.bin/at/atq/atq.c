@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c	5.3 (Berkeley) %G%"
+literal|"@(#)atq.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1140,11 +1140,8 @@ name|fscanf
 argument_list|(
 name|last
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 operator|&
 name|lasttime
 argument_list|)
