@@ -26,7 +26,7 @@ name|libId
 argument_list|(
 argument|fnmsId
 argument_list|,
-literal|"$Id: rcsfnms.c,v 1.4 1995/10/29 22:06:18 peter Exp $"
+literal|"$Id: rcsfnms.c,v 1.4.2.1 1997/08/19 11:24:17 peter Exp $"
 argument_list|)
 end_macro
 
@@ -3442,11 +3442,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|alen
-operator|>=
 name|namebuf
 operator|-
 name|c
+operator|>=
+name|alen
 condition|)
 block|{
 if|if

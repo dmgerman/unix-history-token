@@ -22,7 +22,7 @@ name|libId
 argument_list|(
 argument|utilId
 argument_list|,
-literal|"$Id: rcsutil.c,v 1.3 1995/10/28 21:49:57 peter Exp $"
+literal|"$Id: rcsutil.c,v 1.4 1995/10/29 22:06:32 peter Exp $"
 argument_list|)
 end_macro
 
@@ -4762,9 +4762,46 @@ modifier|*
 modifier|*
 name|pp
 decl_stmt|;
+name|char
+specifier|const
+modifier|*
+name|ev
+decl_stmt|;
 name|size_t
 name|n
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ev
+operator|=
+name|cgetenv
+argument_list|(
+literal|"RCSLOCALID"
+argument_list|)
+operator|)
+condition|)
+name|setRCSLocalId
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ev
+operator|=
+name|cgetenv
+argument_list|(
+literal|"RCSINCEXC"
+argument_list|)
+operator|)
+condition|)
+name|setIncExc
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -150,9 +150,6 @@ name|versionarg
 decl_stmt|,
 modifier|*
 name|zonearg
-decl_stmt|,
-modifier|*
-name|incexcarg
 decl_stmt|;
 end_decl_stmt
 
@@ -269,7 +266,7 @@ argument|coId
 argument_list|,
 literal|"co"
 argument_list|,
-literal|"$Id: co.c,v 1.5 1995/10/29 19:31:07 peter Exp $"
+literal|"$Id: co.c,v 1.6 1995/10/29 22:06:03 peter Exp $"
 argument_list|)
 end_macro
 
@@ -716,21 +713,6 @@ expr_stmt|;
 name|zone_set
 argument_list|(
 name|a
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'K'
-case|:
-comment|/*  set keyword inclusions/exclusions  */
-name|incexcarg
-operator|=
-operator|*
-name|argv
-expr_stmt|;
-name|setIncExc
-argument_list|(
-name|incexcarg
 argument_list|)
 expr_stmt|;
 break|break;
