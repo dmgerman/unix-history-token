@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.11 (Berkeley) %G%"
+literal|"@(#)su.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function
@@ -434,7 +440,7 @@ else|else
 block|{
 name|shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 name|iscsh
 operator|=
@@ -686,7 +692,7 @@ else|else
 block|{
 name|shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 name|iscsh
 operator|=
@@ -829,7 +835,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"PATH=:/usr/ucb:/bin:/usr/bin"
+name|_PATH_SEARCHPATH
 expr_stmt|;
 name|cleanenv
 index|[
