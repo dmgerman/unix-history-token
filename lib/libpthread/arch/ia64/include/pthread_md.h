@@ -22,7 +22,7 @@ name|THR_GETCONTEXT
 parameter_list|(
 name|ucp
 parameter_list|)
-value|getcontext(ucp)
+value|_ia64_save_context(&(ucp)->uc_mcontext)
 end_define
 
 begin_define
@@ -32,14 +32,14 @@ name|THR_SETCONTEXT
 parameter_list|(
 name|ucp
 parameter_list|)
-value|setcontext(ucp)
+value|_ia64_restore_context(&(ucp)->uc_mcontext, \ 				    0, NULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|THR_ALIGNBYTES
-value|15
+value|0
 end_define
 
 begin_define
@@ -49,7 +49,7 @@ name|THR_ALIGN
 parameter_list|(
 name|td
 parameter_list|)
-value|(((uintptr_t)(td) + THR_ALIGNBYTES)& ~THR_ALIGNBYTES)
+value|(td)
 end_define
 
 begin_comment
