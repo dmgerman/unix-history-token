@@ -1332,30 +1332,11 @@ argument_list|,
 name|va
 argument_list|)
 condition|)
-block|{
 name|rv
 operator|=
 name|KERN_FAILURE
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-operator|--
-name|p
-operator|->
-name|p_lock
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-goto|goto
-name|nogo
-goto|;
-block|}
+else|else
 comment|/* Fault in the user page: */
 name|rv
 operator|=
@@ -1411,9 +1392,6 @@ name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-name|nogo
-label|:
-empty_stmt|;
 comment|/* 		 * If this was a stack access we keep track of the 		 * maximum accessed stack size.  Also, if vm_fault 		 * gets a protection failure it is due to accessing 		 * the stack region outside the current limit and 		 * we need to reflect that as an access error. 		 */
 if|if
 condition|(
