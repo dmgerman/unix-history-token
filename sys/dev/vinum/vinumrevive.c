@@ -267,6 +267,32 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* offset from beginning of stripe */
+if|if
+condition|(
+name|stripeoffset
+operator|+
+operator|(
+name|size
+operator|>>
+name|DEV_BSHIFT
+operator|)
+operator|>
+name|plex
+operator|->
+name|stripesize
+condition|)
+name|size
+operator|=
+operator|(
+name|plex
+operator|->
+name|stripesize
+operator|-
+name|stripeoffset
+operator|)
+operator|<<
+name|DEV_BSHIFT
+expr_stmt|;
 name|plexblkno
 operator|=
 name|sd
@@ -287,13 +313,7 @@ operator|->
 name|subdisks
 comment|/* offset to beginning of stripe */
 operator|+
-name|sd
-operator|->
-name|revived
-operator|%
-name|plex
-operator|->
-name|stripesize
+name|stripeoffset
 expr_stmt|;
 comment|/* offset from beginning of stripe */
 break|break;
@@ -576,7 +596,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* it's part of a volume, */
-comment|/* 	       * First, read the data from the volume.  We 	       * don't care which plex, that's bre's job. 	     */
+comment|/* 	     * First, read the data from the volume.  We 	     * don't care which plex, that's bre's job. 	     */
 name|bp
 operator|->
 name|b_dev
