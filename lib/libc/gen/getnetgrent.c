@@ -122,7 +122,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|_use_only_yp
 decl_stmt|;
@@ -450,6 +449,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|YP
+comment|/* Presumed guilty until proven innocent. */
+name|_use_only_yp
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * IF /etc/netgroup doesn't exist or is empty, 		 * use NIS exclusively. 		 */
 if|if
 condition|(
@@ -542,7 +546,15 @@ name|_use_only_yp
 operator|&&
 name|_yp_innetgr
 condition|)
+block|{
+comment|/* dohw! */
+name|fclose
+argument_list|(
+name|netf
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 else|#
 directive|else
 if|if
