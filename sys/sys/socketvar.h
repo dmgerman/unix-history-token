@@ -1260,6 +1260,23 @@ end_comment
 
 begin_function_decl
 name|int
+name|do_getopt_accept_filter
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|sockopt
+modifier|*
+name|sopt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|do_setopt_accept_filter
 parameter_list|(
 name|struct
