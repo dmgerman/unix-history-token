@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996  *	Michael Smith.  All rights reserved.  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int21.c,v 2.2 1996/04/08 19:32:51 bostic Exp  *  * $Id: dos.c,v 1.2 1998/07/01 19:56:13 imp Exp $  */
+comment|/*  * Copyright (c) 1996  *	Michael Smith.  All rights reserved.  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int21.c,v 2.2 1996/04/08 19:32:51 bostic Exp  *  * $Id: dos.c,v 1.3 1998/07/02 05:12:52 imp Exp $  */
 end_comment
 
 begin_include
@@ -1304,6 +1304,38 @@ argument_list|(
 name|uname
 argument_list|,
 literal|"/dev/tty"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* XXX KLUDGE for EMS support w/o booting DOS */
+comment|/* Really need a better way to handle devices */
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|dname
+argument_list|,
+literal|"emmxxxx0"
+argument_list|)
+condition|)
+block|{
+operator|*
+name|drivep
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|uname
+argument_list|,
+literal|"/dev/null"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10237,6 +10269,24 @@ return|return;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|int67
+parameter_list|(
+name|regcontext_t
+modifier|*
+name|REGS
+parameter_list|)
+block|{
+name|ems_entry
+argument_list|(
+name|REGS
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|u_char
@@ -10337,6 +10387,27 @@ argument_list|)
 expr_stmt|;
 name|vec
 operator|=
+name|insert_softint_trampoline
+argument_list|()
+expr_stmt|;
+name|ivec
+index|[
+literal|0x67
+index|]
+operator|=
+name|vec
+expr_stmt|;
+name|register_callback
+argument_list|(
+name|vec
+argument_list|,
+name|int67
+argument_list|,
+literal|"int 67 (EMS)"
+argument_list|)
+expr_stmt|;
+name|vec
+operator|=
 name|insert_null_trampoline
 argument_list|()
 expr_stmt|;
@@ -10400,6 +10471,9 @@ name|int21_table
 argument_list|,
 name|int21_fastlookup
 argument_list|)
+expr_stmt|;
+name|ems_init
+argument_list|()
 expr_stmt|;
 block|}
 end_function
