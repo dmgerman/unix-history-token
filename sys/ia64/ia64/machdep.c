@@ -2954,6 +2954,7 @@ operator|+
 literal|1
 index|]
 condition|)
+block|{
 name|phys_avail
 index|[
 name|i
@@ -2961,6 +2962,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|phys_avail
+index|[
+name|i
+operator|+
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* warn if the message buffer had to be shrunk */
 if|if
 condition|(
