@@ -1917,6 +1917,17 @@ name|int
 name|unit
 parameter_list|)
 block|{
+name|struct
+name|psm_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|psm_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|int
 name|ioport
 init|=
