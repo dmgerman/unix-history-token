@@ -5993,6 +5993,13 @@ operator|*
 name|tl
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+goto|goto
+name|rpcmout
+goto|;
 block|}
 elseif|else
 if|if
