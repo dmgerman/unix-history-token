@@ -3717,14 +3717,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|usage
 argument_list|(
 name|GBDEMOD
 literal|": Kernel module not available\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|doopen
 operator|=
