@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.132 1994/05/29 00:00:00 amurai Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.19 1994/05/20 23:50:02 jkh Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Bulogic/Bustek 32 bit Addressing Mode SCSI driver  */
+comment|/*  * bt742a SCSI driver  */
 end_comment
 
 begin_include
@@ -565,7 +565,7 @@ comment|/* Adapter Setup Inquiry */
 end_comment
 
 begin_comment
-comment|/* The following command appeared at FirmWare 3.31 */
+comment|/* Follows command appeared at FirmWare 3.31 */
 end_comment
 
 begin_define
@@ -1437,7 +1437,8 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* make a sense with back-word compatibility*/
+comment|/*XXX */
+comment|/* doesn't make sense with 32bit addresses */
 struct|struct
 block|{
 name|u_char
@@ -1491,30 +1492,8 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|BT_INQUIRE_REV_THIRD
-value|0x84
-end_define
-
 begin_comment
-comment|/* Get Adapter FirmWare version #3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BT_INQUIRE_REV_FOURTH
-value|0x85
-end_define
-
-begin_comment
-comment|/* Get Adapter FirmWare version #4 */
-end_comment
-
-begin_comment
-comment|/*  * Determine 32bit address/Data firmware functionality from the bus type  * Note: bt742a/747[s|d]/757/946/445s will return 'E'  *       bt542b/545s/545d will return 'A'  *				94/05/18 amurai@spec.co.jp  */
+comment|/*  * Determin 32bit address/Data firmware functionality from Bus type  * Note: bt742a/747[s|d]/757/946/445s will return 'E'  *       bt542b/545s/545d will be return 'A'  *				94/05/18 amurai@spec.co.jp  */
 end_comment
 
 begin_define
@@ -1561,120 +1540,11 @@ comment|/* Host adapter bus type */
 name|u_char
 name|bios_addr
 decl_stmt|;
-comment|/* Bios Address-Not used */
+comment|/* Bios Address-Not use*/
 name|u_short
 name|max_seg
 decl_stmt|;
 comment|/* Max segment List */
-name|u_char
-name|num_mbx
-decl_stmt|;
-comment|/* Number of mailbox */
-name|int32
-name|mbx_base
-decl_stmt|;
-comment|/* mailbox base address */
-struct|struct
-block|{
-name|u_char
-name|resv1
-range|:
-literal|2
-decl_stmt|;
-comment|/* ??? */
-name|u_char
-name|maxsync
-range|:
-literal|1
-decl_stmt|;
-comment|/* ON: 10MB/s , OFF: 5MB/s */
-name|u_char
-name|resv2
-range|:
-literal|2
-decl_stmt|;
-comment|/* ??? */
-name|u_char
-name|sync
-range|:
-literal|1
-decl_stmt|;
-comment|/* ON: Sync,  OFF: async ONLY!! */
-name|u_char
-name|resv3
-range|:
-literal|2
-decl_stmt|;
-comment|/* ??? */
-block|}
-name|s
-struct|;
-name|u_char
-name|firmid
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* Firmware ver.& rev. w/o last char */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|BT_GET_BOARD_INFO
-value|0x8b
-end_define
-
-begin_comment
-comment|/* Get H/W ID and Revision */
-end_comment
-
-begin_struct
-struct|struct
-name|bt_board_info
-block|{
-name|u_char
-name|id
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* i.e bt742a -> '7','4','2','A'  */
-name|u_char
-name|ver
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* i.e Board Revision 'H' -> 'H', 0x00 */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|BT_GET_SYNC_VALUE
-value|0x8c
-end_define
-
-begin_comment
-comment|/* Get Synchronous Value */
-end_comment
-
-begin_struct
-struct|struct
-name|bt_sync_value
-block|{
-name|u_char
-name|value
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* Synchrnous value (value * 10 nsec) */
 block|}
 struct|;
 end_struct
@@ -4469,10 +4339,6 @@ name|struct
 name|bt_ext_info
 name|info
 decl_stmt|;
-name|struct
-name|bt_board_info
-name|binfo
-decl_stmt|;
 comment|/* 	 * reset board, If it doesn't respond, assume  	 * that it's not there.. good for the probe 	 */
 name|outb
 argument_list|(
@@ -4531,7 +4397,7 @@ directive|ifdef
 name|UTEST
 name|printf
 argument_list|(
-literal|"bt_init: No answer from board\n"
+literal|"bt_init: No answer from bt742a board\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4542,83 +4408,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*          * Displaying Board ID and Hardware Revision          *                                   94/05/18 amurai@spec.co.jp          */
-name|bt_cmd
-argument_list|(
-name|unit
-argument_list|,
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|binfo
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|binfo
-argument_list|,
-name|BT_GET_BOARD_INFO
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|binfo
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bt%d: Bt%c%c%c%c/%c%d-"
-argument_list|,
-name|unit
-argument_list|,
-name|binfo
-operator|.
-name|id
-index|[
-literal|0
-index|]
-argument_list|,
-name|binfo
-operator|.
-name|id
-index|[
-literal|1
-index|]
-argument_list|,
-name|binfo
-operator|.
-name|id
-index|[
-literal|2
-index|]
-argument_list|,
-name|binfo
-operator|.
-name|id
-index|[
-literal|3
-index|]
-argument_list|,
-name|binfo
-operator|.
-name|ver
-index|[
-literal|0
-index|]
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|binfo
-operator|.
-name|ver
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 comment|/*          * Make sure board has a capability of 32bit addressing.          *   and Firmware also need a capability of 32bit addressing pointer          *   in Extended mailbox and ccb structure.          *                                   94/05/18 amurai@spec.co.jp          */
 name|bt_cmd
 argument_list|(
@@ -4657,7 +4446,9 @@ case|:
 comment|/* PC/AT 24 bit address bus */
 name|printf
 argument_list|(
-literal|"ISA(24bit) bus\n"
+literal|"bt%d: bt54x-ISA(24bit) bus detected\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4667,7 +4458,9 @@ case|:
 comment|/* EISA/VLB/PCI 32 bit bus */
 name|printf
 argument_list|(
-literal|"PCI/EISA/VLB(32bit) bus\n"
+literal|"bt%d: PCI/EISA/VLB(32bit) bus detected\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4677,12 +4470,14 @@ case|:
 comment|/* forget it right now */
 name|printf
 argument_list|(
-literal|"MCA bus architecture..."
+literal|"bt%d: MCA bus architecture detected.."
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"giving up\n"
+literal|"[giving up]\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4694,12 +4489,14 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Unknown state..."
+literal|"bt%d: Unknown state detected..."
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"giving up\n"
+literal|"[giving up]\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4708,86 +4505,6 @@ name|ENXIO
 operator|)
 return|;
 break|break;
-block|}
-if|if
-condition|(
-name|binfo
-operator|.
-name|id
-index|[
-literal|0
-index|]
-operator|==
-literal|'5'
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bt%d: This driver is designed for using 32 bit addressing\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bt%d: mode firmware and EISA/PCI/VLB bus architecture bus\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bt%d: WITHOUT any software trick/overhead (i.e.bounce buffer).\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bt%d: If you have more than 16MBytes memory\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bt%d: your filesystem will get a serious damage.\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|info
-operator|.
-name|bus_type
-operator|==
-name|BT_BUS_TYPE_24bit
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bt%d: Your board should report a 32bit bus architecture type..\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bt%d: A firmware on your board may have a problem with over\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bt%d: 16MBytes memory handling with this driver.\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * Assume we have a board at this stage 	 * setup dma channel from jumpers and save int 	 * level 	 */
 name|printf
@@ -4957,7 +4674,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"busmastering, "
+literal|"eisa dma, "
 argument_list|)
 expr_stmt|;
 else|else
@@ -5233,9 +4950,6 @@ expr_stmt|;
 name|bt_inquire_setup_information
 argument_list|(
 name|unit
-argument_list|,
-operator|&
-name|info
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Note that we are going and return (to probe) 	 */
@@ -5249,14 +4963,11 @@ begin_function
 name|void
 name|bt_inquire_setup_information
 parameter_list|(
+name|unit
+parameter_list|)
 name|int
 name|unit
-parameter_list|,
-name|struct
-name|bt_ext_info
-modifier|*
-name|info
-parameter_list|)
+decl_stmt|;
 block|{
 name|struct
 name|bt_data
@@ -5272,20 +4983,10 @@ name|struct
 name|bt_setup
 name|setup
 decl_stmt|;
-name|struct
-name|bt_sync_value
-name|sync
-decl_stmt|;
 name|char
 name|dummy
 index|[
 literal|8
-index|]
-decl_stmt|;
-name|char
-name|sub_ver
-index|[
-literal|3
 index|]
 decl_stmt|;
 name|struct
@@ -5332,42 +5033,7 @@ argument_list|,
 name|BT_DEV_GET
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If board has a capbility of Syncrhonouse mode,          * Get a SCSI Synchronous value 	 */
-if|if
-condition|(
-name|info
-operator|->
-name|s
-operator|.
-name|sync
-condition|)
-block|{
-name|bt_cmd
-argument_list|(
-name|unit
-argument_list|,
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sync
-argument_list|)
-argument_list|,
-literal|100
-argument_list|,
-operator|&
-name|sync
-argument_list|,
-name|BT_GET_SYNC_VALUE
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sync
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Inquire Board ID to board for firmware version 	 */
+comment|/* Inquire Board ID to Bt742 for firmware version */
 name|bt_cmd
 argument_list|(
 name|unit
@@ -5387,91 +5053,9 @@ argument_list|,
 name|BT_INQUIRE
 argument_list|)
 expr_stmt|;
-name|bt_cmd
-argument_list|(
-name|unit
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|sub_ver
-index|[
-literal|0
-index|]
-argument_list|,
-name|BT_INQUIRE_REV_THIRD
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bID
-operator|.
-name|firm_revision
-operator|>=
-literal|'3'
-condition|)
-block|{
-name|sub_ver
-index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Below rev 3.XX firmware has a problem for issuing */
-name|bt_cmd
-argument_list|(
-name|unit
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|sub_ver
-index|[
-literal|1
-index|]
-argument_list|,
-name|BT_INQUIRE_REV_FOURTH
-argument_list|)
-expr_stmt|;
-block|}
-name|sub_ver
-index|[
-literal|2
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|sub_ver
-index|[
-literal|1
-index|]
-operator|==
-literal|' '
-condition|)
-name|sub_ver
-index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"bt%d: version %c.%c%s, "
+literal|"bt%d: version %c.%c, "
 argument_list|,
 name|unit
 argument_list|,
@@ -5482,11 +5066,9 @@ argument_list|,
 name|bID
 operator|.
 name|firm_version
-argument_list|,
-name|sub_ver
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Obtain setup information from board. 	 */
+comment|/* Obtain setup information from Bt742. */
 name|bt_cmd
 argument_list|(
 name|unit
@@ -5516,67 +5098,21 @@ condition|(
 name|setup
 operator|.
 name|sync_neg
-operator|&&
-name|info
-operator|->
-name|s
-operator|.
-name|sync
 condition|)
-block|{
-if|if
-condition|(
-name|info
-operator|->
-name|s
-operator|.
-name|maxsync
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"fast sync, "
-argument_list|)
-expr_stmt|;
-comment|/* Max 10MB/s */
-block|}
-else|else
 block|{
 name|printf
 argument_list|(
 literal|"sync, "
 argument_list|)
 expr_stmt|;
-comment|/* Max 5MB/s */
-block|}
 block|}
 else|else
-block|{
-if|if
-condition|(
-name|info
-operator|->
-name|s
-operator|.
-name|sync
-condition|)
 block|{
 name|printf
 argument_list|(
 literal|"async, "
 argument_list|)
 expr_stmt|;
-comment|/* Never try by board */
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"async only, "
-argument_list|)
-expr_stmt|;
-comment|/* Doesn't has a capability on board */
-block|}
 block|}
 if|if
 condition|(
@@ -5610,7 +5146,7 @@ argument_list|,
 name|BT_CCB_MAX
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Displayi SCSI negotiation value by each target.          *   						amurai@spec.co.jp           */
+comment|/* 	 * Displaying SCSI negotiation value by each target.          *   How can I determin FAST scsi value? XXX amurai@spec.co.jp           */
 for|for
 control|(
 name|i
@@ -5640,7 +5176,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|(
 operator|!
 name|setup
 operator|.
@@ -5660,16 +5195,7 @@ name|i
 index|]
 operator|.
 name|period
-operator|)
-operator|||
-operator|!
-name|info
-operator|->
-name|s
-operator|.
-name|sync
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"bt%d: targ %d async\n"
@@ -5679,54 +5205,14 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|printf
 argument_list|(
-literal|"bt%d: targ %d sync rate=%2d.%02dMB/s(%dns), offset=%02d\n"
+literal|"bt%d: targ %d offset=%02d, period=%dnsec\n"
 argument_list|,
 name|unit
 argument_list|,
 name|i
-argument_list|,
-literal|100
-operator|/
-name|sync
-operator|.
-name|value
-index|[
-name|i
-index|]
-argument_list|,
-operator|(
-literal|100
-operator|%
-name|sync
-operator|.
-name|value
-index|[
-name|i
-index|]
-operator|)
-operator|*
-literal|100
-operator|/
-name|sync
-operator|.
-name|value
-index|[
-name|i
-index|]
-argument_list|,
-name|sync
-operator|.
-name|value
-index|[
-name|i
-index|]
-operator|*
-literal|10
 argument_list|,
 name|setup
 operator|.
@@ -5736,18 +5222,30 @@ name|i
 index|]
 operator|.
 name|offset
+argument_list|,
+literal|200
+operator|+
+name|setup
+operator|.
+name|sync
+index|[
+name|i
+index|]
+operator|.
+name|period
+operator|*
+literal|50
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/*           * Enable round-robin scheme - appeared at firmware rev. 3.31 	 *   Below rev 3.XX firmware has a problem for issuing           *    BT_ROUND_ROBIN command  amurai@spec.co.jp 	 */
+comment|/*           * Enable round-robin scheme - appeared at firmware rev. 3.31 	 *   Below rev 2.XX firmware has a problem for issuing           *    BT_ROUND_ROBIN command  amurai@spec.co.jp 	 */
 if|if
 condition|(
 name|bID
 operator|.
 name|firm_revision
-operator|>=
-literal|'3'
+operator|!=
+literal|'2'
 condition|)
 block|{
 name|printf
