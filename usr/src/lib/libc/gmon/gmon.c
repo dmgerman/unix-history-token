@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.5 (Berkeley) %G%"
+literal|"@(#)gmon.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -59,6 +65,36 @@ include|#
 directive|include
 file|"gmon.h"
 end_include
+
+begin_extern
+extern|extern mcount(
+end_extern
+
+begin_asm
+unit|)
+asm|asm ("mcount");
+end_asm
+
+begin_extern
+extern|extern mcount2(
+end_extern
+
+begin_asm
+unit|)
+asm|asm ("mcount2");
+end_asm
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|minbrk
+name|asm
+argument_list|(
+literal|"minbrk"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*      *	froms is actually a bunch of unsigned shorts indexing tos      */
@@ -203,16 +239,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|buffer
-decl_stmt|;
-name|char
-modifier|*
-name|sbrk
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|minbrk
 decl_stmt|;
 comment|/* 	 *	round lowpc and highpc to multiples of the density we're using 	 *	so the rest of the scaling (here and in gprof) stays in ints. 	 */
 name|lowpc
@@ -729,77 +755,56 @@ block|}
 end_block
 
 begin_asm
-asm|asm(".text");
+asm|asm(".text; .globl mcount; mcount: pushl 16(fp); calls $1,mcount2; rsb");
 end_asm
 
-begin_asm
-asm|asm(".align 2");
-end_asm
+begin_expr_stmt
+name|mcount2
+argument_list|(
+name|frompcindex
+argument_list|,
+name|selfpc
+argument_list|)
+specifier|register
+name|unsigned
+name|short
+operator|*
+name|frompcindex
+expr_stmt|;
+end_expr_stmt
 
-begin_asm
-asm|asm("#the beginning of mcount()");
-end_asm
-
-begin_asm
-asm|asm(".data");
-end_asm
-
-begin_macro
-name|mcount
-argument_list|()
-end_macro
-
-begin_block
-block|{
+begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|selfpc
 decl_stmt|;
-comment|/* r11 => r5 */
-specifier|register
-name|unsigned
-name|short
-modifier|*
-name|frompcindex
-decl_stmt|;
-comment|/* r10 => r4 */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|tostruct
 modifier|*
 name|top
 decl_stmt|;
-comment|/* r9  => r3 */
 specifier|register
 name|struct
 name|tostruct
 modifier|*
 name|prevtop
 decl_stmt|;
-comment|/* r8  => r2 */
 specifier|register
 name|long
 name|toindex
 decl_stmt|;
-comment|/* r7  => r1 */
-comment|/* 	 *	find the return address for mcount, 	 *	and the return address for mcount's caller. 	 */
-asm|asm("	.text");
-comment|/* make sure we're in text space */
-asm|asm("	movl (sp), r11");
-comment|/* selfpc = ... (jsb frame) */
-asm|asm("	movl 16(fp), r10");
-comment|/* frompcindex =     (calls frame) */
 comment|/* 	 *	check that we are profiling 	 *	and that we aren't recursively invoked. 	 */
 if|if
 condition|(
 name|profiling
 condition|)
-block|{
-goto|goto
-name|out
-goto|;
-block|}
+return|return;
 name|profiling
 operator|++
 expr_stmt|;
@@ -1098,10 +1103,7 @@ label|:
 name|profiling
 operator|--
 expr_stmt|;
-comment|/* and fall through */
-name|out
-label|:
-asm|asm("	rsb");
+return|return;
 name|overflow
 label|:
 name|profiling
@@ -1126,23 +1128,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 end_block
-
-begin_asm
-asm|asm(".text");
-end_asm
-
-begin_asm
-asm|asm("#the end of mcount()");
-end_asm
-
-begin_asm
-asm|asm(".data");
-end_asm
 
 begin_comment
 comment|/*VARARGS1*/
@@ -1369,6 +1357,9 @@ expr|struct
 name|phdr
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|s_lowpc
 argument_list|,
 name|s_scale
