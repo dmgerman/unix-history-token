@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sep
 end_comment
 
 begin_comment
-comment|/*  * $Log:  * 23 May 93  Rodney W. Grimes        ADDED Pioneer DRM-600 cd changer  *  */
+comment|/* $Log: * */
 end_comment
 
 begin_include
@@ -582,24 +582,6 @@ block|,
 name|SC_ONE_LU
 block|}
 block|,
-block|{
-name|T_READONLY
-block|,
-name|T_REMOV
-block|,
-literal|"PIONEER "
-block|,
-literal|"CD-ROM DRM-600  "
-block|,
-literal|"any"
-block|,
-name|cdattach
-block|,
-literal|"cd"
-block|,
-name|SC_MORE_LUS
-block|}
-block|,
 endif|#
 directive|endif
 endif|NCD
@@ -798,7 +780,7 @@ else|SCSI_DELAY> 2
 define|#
 directive|define
 name|SCSI_DELAY
-value|15
+value|2
 endif|#
 directive|endif
 endif|SCSI_DELAY> 2
@@ -1500,32 +1482,55 @@ name|type
 operator|=
 name|inqbuf
 operator|.
-name|device_type
+name|device
+operator|&
+name|SID_TYPE
 expr_stmt|;
 name|qualifier
 operator|=
 name|inqbuf
 operator|.
-name|device_qualifier
+name|device
+operator|&
+name|SID_QUAL
 expr_stmt|;
 name|remov
 operator|=
 name|inqbuf
 operator|.
-name|removable
+name|dev_qual2
+operator|&
+name|SID_REMOVABLE
 expr_stmt|;
-comment|/* Check for a non-existent unit.  If the device is returning 	 * this much, then we must set the flag that has 	 * the searcher keep looking on other luns. 	 */
-if|if
+comment|/* Any device qualifier that has 	 * the top bit set (qualifier&4 != 0) is vendor specific and 	 * won't match in this switch. 	 */
+switch|switch
 condition|(
 name|qualifier
-operator|==
-literal|3
-operator|&&
-name|type
-operator|==
-name|T_NODEVICE
 condition|)
 block|{
+case|case
+name|SID_QUAL_LU_OK
+case|:
+name|qtype
+operator|=
+literal|""
+expr_stmt|;
+break|break;
+case|case
+name|SID_QUAL_LU_OFFLINE
+case|:
+name|qtype
+operator|=
+literal|", Unit not Connected!"
+expr_stmt|;
+break|break;
+case|case
+name|SID_QUAL_RSVD
+case|:
+name|qtype
+operator|=
+literal|", Reserved Peripheral Qualifier!"
+expr_stmt|;
 operator|*
 name|maybe_more
 operator|=
@@ -1539,45 +1544,28 @@ operator|*
 operator|)
 literal|0
 return|;
-block|}
-comment|/* Any device qualifier that has 	 * the top bit set (qualifier&4 != 0) is vendor specific and 	 * won't match in this switch. 	 */
-switch|switch
-condition|(
-name|qualifier
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|qtype
-operator|=
-literal|""
-expr_stmt|;
 break|break;
 case|case
-literal|1
+name|SID_QUAL_BAD_LU
 case|:
-name|qtype
-operator|=
-literal|", Unit not Connected!"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|qtype
-operator|=
-literal|", Reserved Peripheral Qualifier!"
-expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
+comment|/* 		 * Check for a non-existent unit.  If the device is returning 	 	 * this much, then we must set the flag that has 	 	 * the searcher keep looking on other luns. 	 	 */
 name|qtype
 operator|=
 literal|", The Target can't support this Unit!"
 expr_stmt|;
-break|break;
+operator|*
+name|maybe_more
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+expr|struct
+name|scsidevs
+operator|*
+operator|)
+literal|0
+return|;
 default|default:
 name|dtype
 operator|=
@@ -1600,6 +1588,7 @@ name|dtype
 operator|==
 literal|0
 condition|)
+block|{
 switch|switch
 condition|(
 name|type
@@ -1685,6 +1674,22 @@ operator|=
 literal|"communication"
 expr_stmt|;
 break|break;
+case|case
+name|T_NODEVICE
+case|:
+operator|*
+name|maybe_more
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+expr|struct
+name|scsidevs
+operator|*
+operator|)
+literal|0
+return|;
 default|default:
 name|dtype
 operator|=
@@ -1692,12 +1697,17 @@ literal|"unknown"
 expr_stmt|;
 break|break;
 block|}
+block|}
 comment|/***********************************************\ 	* Then if it's advanced enough, more detailed	* 	* information					* 	\***********************************************/
 if|if
 condition|(
+operator|(
 name|inqbuf
 operator|.
-name|ansii_version
+name|version
+operator|&
+name|SID_ANSII
+operator|)
 operator|>
 literal|0
 condition|)
@@ -1893,7 +1903,9 @@ name|version
 argument_list|,
 name|inqbuf
 operator|.
-name|ansii_version
+name|version
+operator|&
+name|SID_ANSII
 argument_list|)
 expr_stmt|;
 comment|/***********************************************\ 	* Try make as good a match as possible with	* 	* available sub drivers	 			* 	\***********************************************/
@@ -1916,6 +1928,10 @@ argument_list|,
 name|type
 argument_list|,
 name|remov
+condition|?
+name|T_REMOV
+else|:
+name|T_FIXED
 argument_list|,
 name|manu
 argument_list|,
@@ -2066,12 +2082,9 @@ name|knowndevs
 decl_stmt|;
 name|type
 operator||=
-operator|(
 name|qualifier
-operator|<<
-literal|5
-operator|)
 expr_stmt|;
+comment|/* why? */
 name|thisentry
 operator|--
 expr_stmt|;
@@ -2553,13 +2566,33 @@ case|:
 comment|/*******************************************************\ 		* Any sense value is illegal except UNIT ATTENTION	* 		* In which case we need to check again to get the	* 		* correct response.					* 		*( especially exabytes)					* 		\*******************************************************/
 if|if
 condition|(
+operator|(
+operator|(
 name|scsi_xfer
 operator|.
 name|sense
 operator|.
-name|error_class
+name|error_code
+operator|&
+name|SSD_ERRCODE
+operator|)
 operator|==
-literal|7
+literal|0x70
+operator|)
+operator|||
+operator|(
+operator|(
+name|scsi_xfer
+operator|.
+name|sense
+operator|.
+name|error_code
+operator|&
+name|SSD_ERRCODE
+operator|)
+operator|==
+literal|0x71
+operator|)
 condition|)
 block|{
 name|key
@@ -2572,7 +2605,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|sense_key
+name|flags
+operator|&
+name|SSD_KEY
 expr_stmt|;
 switch|switch
 condition|(
@@ -2941,15 +2976,20 @@ comment|/*******************************************************\ 		* Any sense 
 if|if
 condition|(
 operator|(
+operator|(
 name|scsi_xfer
 operator|.
 name|sense
 operator|.
-name|error_class
+name|error_code
+operator|&
+name|SSD_ERRCODE
+operator|)
 operator|==
-literal|7
+literal|0x70
 operator|)
 operator|&&
+operator|(
 operator|(
 name|scsi_xfer
 operator|.
@@ -2959,7 +2999,10 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|sense_key
+name|flags
+operator|&
+name|SSD_KEY
+operator|)
 operator|==
 literal|6
 operator|)

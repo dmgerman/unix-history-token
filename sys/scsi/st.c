@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
 end_comment
 
 begin_comment
@@ -845,7 +845,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Too many scsi tapes..(%d> %d) reconfigure kernel"
+literal|"Too many scsi tapes..(%d> %d) reconfigure kernel\n"
 argument_list|,
 operator|(
 name|unit
@@ -964,7 +964,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: tape present: %d blocks of %d bytes\n"
+literal|"\tst%d: tape present: %d blocks of %d bytes\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -982,7 +982,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"st%d: drive empty\n"
+literal|"\tst%d: drive empty\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -993,7 +993,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"st%d: drive offline\n"
+literal|"\tst%d: drive offline\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1225,7 +1225,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: couldn't get device type, using default\n"
+literal|"	st%d: couldn't get device type, using default\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1234,9 +1234,13 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|inqbuf
 operator|.
-name|ansii_version
+name|version
+operator|&
+name|SID_ANSII
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1432,7 +1436,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: %s is a known rogue\n"
+literal|"	st%d: %s is a known rogue\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3342,9 +3346,9 @@ condition|)
 block|{
 name|cmd
 operator|.
-name|fixed
-operator|=
-literal|1
+name|byte2
+operator||=
+name|SRWT_FIXED
 expr_stmt|;
 name|lto3b
 argument_list|(
@@ -3833,7 +3837,8 @@ operator|->
 name|datalen
 condition|)
 block|{
-comment|/***************************************\ 				* Here we have the tricky part..	* 				* We successfully read less data than	* 				* we requested. (but not 0)		* 				*------for variable blocksize tapes:----* 				* UNDER 386BSD:				* 				* We should legitimatly have the error	* 				* bit set, with the error value set to 	* 				* zero.. This is to indicate to the	* 				* physio code that while we didn't get	* 				* as much information as was requested,	* 				* we did reach the end of the record	* 				* and so physio should not call us	* 				* again for more data... we have it all	* 				* SO SET THE ERROR BIT!			* 				*					* 				* UNDER MACH:(CMU)			* 				* To indicate the same as above, we	* 				* need only have a non 0 resid that is	* 				* less than the b_bcount, but the	* 				* ERROR BIT MUST BE CLEAR! (sigh) 	* 				*					* 				* UNDER OSF1:				* 				* To indicate the same as above, we	* 				* need to have a non 0 resid that is	* 				* less than the b_bcount, but the	* 				* ERROR BIT MUST BE SET! (gasp)(sigh) 	* 				*					* 				*-------for fixed blocksize device------* 				* We could have read some successful	* 				* records before hitting		* 				* the EOF or EOT. These must be passed	* 				* to the user, before we report the 	* 				* EOx. Only if there is no data for the	* 				* user do we report it now. (via an EIO	* 				* for EOM and resid == count for EOF).	* 				* We will report the EOx NEXT time..	* 				\***************************************/
+comment|/***************************************\ 				* Here we have the tricky part..	* 				* We successfully read less data than	* 				* we requested. (but not 0)		* 				*------for variable blocksize tapes:----* 				* UNDER 386BSD:				* 				* We should legitimatly have the error	* 				* bit set, with the error value set to 	* 				* zero.. This is to indicate to the	* 				* physio code that while we didn't get	* 				* as much information as was requested,	* 				* we did reach the end of the record	* 				* and so physio should not call us	* 				* again for more data... we have it all	* 				* SO SET THE ERROR BIT!			* 				*					* 				* UNDER MACH (CMU) and NetBSD:		* 				* To indicate the same as above, we	* 				* need only have a non 0 resid that is	* 				* less than the b_bcount, but the	* 				* ERROR BIT MUST BE CLEAR! (sigh) 	* 				*					* 				* UNDER OSF1:				* 				* To indicate the same as above, we	* 				* need to have a non 0 resid that is	* 				* less than the b_bcount, but the	* 				* ERROR BIT MUST BE SET! (gasp)(sigh) 	* 				*					* 				*-------for fixed blocksize device------* 				* We could have read some successful	* 				* records before hitting		* 				* the EOF or EOT. These must be passed	* 				* to the user, before we report the 	* 				* EOx. Only if there is no data for the	* 				* user do we report it now. (via an EIO	* 				* for EOM and resid == count for EOF).	* 				* We will report the EOx NEXT time..	* 				\***************************************/
+comment|/* how do I distinguish NetBSD? at present it's wrong for NetBsd */
 ifdef|#
 directive|ifdef
 name|MACH
@@ -4244,8 +4249,6 @@ name|int
 name|number
 decl_stmt|,
 name|flags
-decl_stmt|,
-name|ret
 decl_stmt|;
 name|struct
 name|st_data
@@ -4377,10 +4380,6 @@ index|]
 operator|.
 name|density
 expr_stmt|;
-name|ret
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 block|}
 case|case
@@ -4439,8 +4438,9 @@ case|case
 name|MTWEOF
 case|:
 comment|/* write an end-of-file record */
-name|ret
-operator|=
+if|if
+condition|(
+operator|!
 name|st_write_filemarks
 argument_list|(
 name|unit
@@ -4449,6 +4449,10 @@ name|number
 argument_list|,
 name|flags
 argument_list|)
+condition|)
+name|errcode
+operator|=
+name|EIO
 expr_stmt|;
 name|st_data
 index|[
@@ -4465,8 +4469,9 @@ case|case
 name|MTFSF
 case|:
 comment|/* forward space file */
-name|ret
-operator|=
+if|if
+condition|(
+operator|!
 name|st_space
 argument_list|(
 name|unit
@@ -4477,14 +4482,19 @@ name|SP_FILEMARKS
 argument_list|,
 name|flags
 argument_list|)
+condition|)
+name|errcode
+operator|=
+name|EIO
 expr_stmt|;
 break|break;
 case|case
 name|MTBSF
 case|:
 comment|/* backward space file */
-name|ret
-operator|=
+if|if
+condition|(
+operator|!
 name|st_space
 argument_list|(
 name|unit
@@ -4496,14 +4506,19 @@ name|SP_FILEMARKS
 argument_list|,
 name|flags
 argument_list|)
+condition|)
+name|errcode
+operator|=
+name|EIO
 expr_stmt|;
 break|break;
 case|case
 name|MTFSR
 case|:
 comment|/* forward space record */
-name|ret
-operator|=
+if|if
+condition|(
+operator|!
 name|st_space
 argument_list|(
 name|unit
@@ -4514,14 +4529,19 @@ name|SP_BLKS
 argument_list|,
 name|flags
 argument_list|)
+condition|)
+name|errcode
+operator|=
+name|EIO
 expr_stmt|;
 break|break;
 case|case
 name|MTBSR
 case|:
 comment|/* backward space record */
-name|ret
-operator|=
+if|if
+condition|(
+operator|!
 name|st_space
 argument_list|(
 name|unit
@@ -4533,14 +4553,19 @@ name|SP_BLKS
 argument_list|,
 name|flags
 argument_list|)
+condition|)
+name|errcode
+operator|=
+name|EIO
 expr_stmt|;
 break|break;
 case|case
 name|MTREW
 case|:
 comment|/* rewind */
-name|ret
-operator|=
+if|if
+condition|(
+operator|!
 name|st_rewind
 argument_list|(
 name|unit
@@ -4549,6 +4574,10 @@ name|FALSE
 argument_list|,
 name|flags
 argument_list|)
+condition|)
+name|errcode
+operator|=
+name|EIO
 expr_stmt|;
 break|break;
 case|case
@@ -4557,9 +4586,6 @@ case|:
 comment|/* rewind and put the drive offline */
 if|if
 condition|(
-operator|(
-name|ret
-operator|=
 name|st_rewind
 argument_list|(
 name|unit
@@ -4568,7 +4594,6 @@ name|FALSE
 argument_list|,
 name|flags
 argument_list|)
-operator|)
 condition|)
 block|{
 name|st_prevent
@@ -4580,8 +4605,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
 name|st_load
 argument_list|(
 name|unit
@@ -4613,11 +4636,6 @@ case|case
 name|MTNOCACHE
 case|:
 comment|/* disable controller cache */
-name|ret
-operator|=
-name|TRUE
-expr_stmt|;
-empty_stmt|;
 break|break;
 case|case
 name|MTSETBSIZ
@@ -4636,9 +4654,9 @@ condition|)
 block|{
 comment|/* This doesn't make sense for a */
 comment|/* real fixed block device */
-name|ret
+name|errcode
 operator|=
-name|FALSE
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -4685,13 +4703,9 @@ operator|->
 name|blkmax
 condition|)
 block|{
-name|ret
+name|errcode
 operator|=
-name|FALSE
-expr_stmt|;
-name|ret
-operator|=
-name|FALSE
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -4707,10 +4721,6 @@ operator|->
 name|flags
 operator||=
 name|ST_FIXEDBLOCKS
-expr_stmt|;
-name|ret
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -4732,7 +4742,7 @@ operator|>
 name|SCSI_2_MAX_DENSITY_CODE
 condition|)
 block|{
-name|ret
+name|errcode
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -4749,10 +4759,6 @@ operator|.
 name|density
 operator|=
 name|number
-expr_stmt|;
-name|ret
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 break|break;
@@ -4771,7 +4777,7 @@ operator|>
 name|SCSI_2_MAX_DENSITY_CODE
 condition|)
 block|{
-name|ret
+name|errcode
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -4788,10 +4794,6 @@ operator|.
 name|density
 operator|=
 name|number
-expr_stmt|;
-name|ret
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 break|break;
@@ -4810,9 +4812,9 @@ operator|>
 name|SCSI_2_MAX_DENSITY_CODE
 condition|)
 block|{
-name|ret
+name|errcode
 operator|=
-name|FALSE
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -4828,16 +4830,13 @@ name|density
 operator|=
 name|number
 expr_stmt|;
-name|ret
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 break|break;
 default|default:
-return|return
+name|errcode
+operator|=
 name|EINVAL
-return|;
+expr_stmt|;
 block|}
 break|break;
 block|}
@@ -4847,20 +4846,15 @@ case|:
 case|case
 name|MTIOCEEOT
 case|:
-name|ret
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
+default|default:
+name|errcode
+operator|=
+name|EINVAL
+expr_stmt|;
 block|}
 return|return
-operator|(
-name|ret
-condition|?
-name|ESUCCESS
-else|:
-name|EIO
-operator|)
+name|errcode
 return|;
 block|}
 end_block
@@ -5318,7 +5312,7 @@ struct|struct
 name|scsi_sense
 block|{
 name|struct
-name|scsi_mode_header_tape
+name|scsi_mode_header
 name|header
 decl_stmt|;
 name|struct
@@ -5332,7 +5326,7 @@ struct|struct
 name|scsi_sense_page_0
 block|{
 name|struct
-name|scsi_mode_header_tape
+name|scsi_mode_header
 name|header
 decl_stmt|;
 name|struct
@@ -5593,6 +5587,7 @@ argument_list|,
 operator|(
 operator|(
 operator|(
+operator|(
 expr|struct
 name|scsi_sense
 operator|*
@@ -5602,7 +5597,10 @@ operator|)
 operator|->
 name|header
 operator|.
-name|write_protected
+name|dev_spec
+operator|&
+name|SMH_DSP_WRITE_PROT
+operator|)
 condition|?
 literal|"protected"
 else|:
@@ -5612,6 +5610,7 @@ argument_list|,
 operator|(
 operator|(
 operator|(
+operator|(
 expr|struct
 name|scsi_sense
 operator|*
@@ -5621,7 +5620,10 @@ operator|)
 operator|->
 name|header
 operator|.
-name|buf_mode
+name|dev_spec
+operator|&
+name|SMH_DSP_BUFF_MODE
+operator|)
 condition|?
 literal|""
 else|:
@@ -5722,7 +5724,7 @@ struct|struct
 name|dat
 block|{
 name|struct
-name|scsi_mode_header_tape
+name|scsi_mode_header
 name|header
 decl_stmt|;
 name|struct
@@ -5736,7 +5738,7 @@ struct|struct
 name|dat_page_0
 block|{
 name|struct
-name|scsi_mode_header_tape
+name|scsi_mode_header
 name|header
 decl_stmt|;
 name|struct
@@ -5869,9 +5871,9 @@ operator|)
 operator|->
 name|header
 operator|.
-name|buf_mode
-operator|=
-literal|1
+name|dev_spec
+operator||=
+name|SMH_DSP_BUFF_MODE_ON
 expr_stmt|;
 operator|(
 operator|(
@@ -6097,9 +6099,11 @@ name|SPACE
 expr_stmt|;
 name|scsi_cmd
 operator|.
-name|code
+name|byte2
 operator|=
 name|what
+operator|&
+name|SS_CODE
 expr_stmt|;
 name|lto3b
 argument_list|(
@@ -6377,7 +6381,7 @@ name|LOAD_UNLOAD
 expr_stmt|;
 name|scsi_cmd
 operator|.
-name|load
+name|how
 operator|=
 name|type
 expr_stmt|;
@@ -6388,22 +6392,7 @@ operator|==
 name|LD_LOAD
 condition|)
 block|{
-comment|/*scsi_cmd.reten=TRUE;*/
-name|scsi_cmd
-operator|.
-name|reten
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|scsi_cmd
-operator|.
-name|reten
-operator|=
-name|FALSE
-expr_stmt|;
+comment|/*scsi_cmd.how |= LD_RETEN;*/
 block|}
 if|if
 condition|(
@@ -6522,7 +6511,7 @@ name|PREVENT_ALLOW
 expr_stmt|;
 name|scsi_cmd
 operator|.
-name|prevent
+name|how
 operator|=
 name|type
 expr_stmt|;
@@ -6656,9 +6645,17 @@ name|REWIND
 expr_stmt|;
 name|scsi_cmd
 operator|.
-name|immed
+name|byte2
 operator|=
 name|immed
+condition|?
+name|SR_IMMED
+else|:
+literal|0
+condition|?
+name|SR_IMMED
+else|:
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -7363,19 +7360,23 @@ literal|0
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"code%x class%x valid%x\n"
+literal|"code%x valid%x\n"
 argument_list|,
 name|sense
 operator|->
 name|error_code
+operator|&
+name|SSD_ERRCODE
 argument_list|,
 name|sense
 operator|->
-name|error_class
-argument_list|,
-name|sense
-operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
+condition|?
+literal|1
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7396,7 +7397,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|sense_key
+name|flags
+operator|&
+name|SSD_KEY
 argument_list|,
 name|sense
 operator|->
@@ -7404,7 +7407,13 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|ili
+name|flags
+operator|&
+name|SSD_ILI
+condition|?
+literal|1
+else|:
+literal|0
 argument_list|,
 name|sense
 operator|->
@@ -7412,7 +7421,13 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|eom
+name|flags
+operator|&
+name|SSD_EOM
+condition|?
+literal|1
+else|:
+literal|0
 argument_list|,
 name|sense
 operator|->
@@ -7420,7 +7435,13 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|filemark
+name|flags
+operator|&
+name|SSD_FILEMARK
+condition|?
+literal|1
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7526,12 +7547,14 @@ switch|switch
 condition|(
 name|sense
 operator|->
-name|error_class
+name|error_code
+operator|&
+name|SSD_ERRCODE
 condition|)
 block|{
 comment|/***************************************************************\ 	* If it's class 7, use the extended stuff and interpret the key	* 	\***************************************************************/
 case|case
-literal|7
+literal|0x70
 case|:
 block|{
 if|if
@@ -7542,7 +7565,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|eom
+name|flags
+operator|&
+name|SSD_EOM
 condition|)
 block|{
 name|st_data
@@ -7563,7 +7588,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|filemark
+name|flags
+operator|&
+name|SSD_FILEMARK
 condition|)
 block|{
 name|st_data
@@ -7584,14 +7611,18 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|ili
+name|flags
+operator|&
+name|SSD_ILI
 condition|)
 block|{
 if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 comment|/*******************************\ 				* In all ili cases, note that	* 				* the resid is non-0 AND not 	* 				* unchanged.			* 				\*******************************/
@@ -7662,7 +7693,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|sense_key
+name|flags
+operator|&
+name|SSD_KEY
 expr_stmt|;
 switch|switch
 condition|(
@@ -7682,7 +7715,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|ili
+name|flags
+operator|&
+name|SSD_ILI
 operator|)
 condition|)
 name|xs
@@ -7717,7 +7752,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -7803,7 +7840,9 @@ name|ext
 operator|.
 name|extended
 operator|.
-name|ili
+name|flags
+operator|&
+name|SSD_ILI
 operator|)
 condition|)
 name|xs
@@ -7858,7 +7897,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -8061,7 +8102,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -8162,7 +8205,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -8323,7 +8368,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -8444,7 +8491,9 @@ if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 block|{
 name|printf
@@ -8549,27 +8598,7 @@ block|}
 break|break;
 block|}
 comment|/***************************************************************\ 	* If it's NOT class 7, just report it.				* 	\***************************************************************/
-case|case
-literal|0
-case|:
-case|case
-literal|1
-case|:
-case|case
-literal|2
-case|:
-case|case
-literal|3
-case|:
-case|case
-literal|4
-case|:
-case|case
-literal|5
-case|:
-case|case
-literal|6
-case|:
+default|default:
 block|{
 if|if
 condition|(
@@ -8578,24 +8607,24 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: error class %d code %d\n"
+literal|"st%d: error code %d\n"
 argument_list|,
 name|unit
 argument_list|,
 name|sense
 operator|->
-name|error_class
-argument_list|,
-name|sense
-operator|->
 name|error_code
+operator|&
+name|SSD_ERRCODE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|sense
 operator|->
-name|valid
+name|error_code
+operator|&
+name|SSD_ERRCODE_VALID
 condition|)
 if|if
 condition|(
