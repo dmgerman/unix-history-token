@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -1439,6 +1439,20 @@ block|{
 case|case
 name|MD_FREEZE
 case|:
+comment|/* this is critical to avoid forgeries of the frozen config */
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* freeze the configuration */
 name|freeze
 argument_list|(
 name|FreezeFile
