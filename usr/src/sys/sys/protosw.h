@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	6.3	84/08/21	*/
+comment|/*	protosw.h	6.4	85/03/07	*/
 end_comment
 
 begin_comment
@@ -790,6 +790,56 @@ literal|"TX-REASS"
 block|,
 literal|"PARAMPROB"
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The arguments to ctloutput are:  *	(*protosw[].pr_ctloutput)(req, so, level, optname, optval);  * req is one of the actions listed below, so is a (struct socket *),  * level is an indication of which protocol layer the option is intended.  * optname is a protocol dependent socket option request,  * optval is a pointer to a mbuf-chain pointer, for value-return results.  * The protocol is responsible for disposal of the mbuf chain *optval  * if supplied,  * the caller is responsible for any space held by *optval, when returned.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRCO_GETOPT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRCO_SETOPT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRCO_NCMDS
+value|2
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PRCOREQUESTS
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|prcorequests
+index|[]
+init|=
+block|{
+literal|"GETOPT"
+block|,
+literal|"SETOPT"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
