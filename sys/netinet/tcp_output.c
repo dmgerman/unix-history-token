@@ -1049,7 +1049,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sender silly window avoidance.   We transmit under the following 	 * conditions when len is non-zero: 	 * 	 *      - We have a full segment 	 *      - This is the last buffer in a write()/send() and we are 	 *        either idle or running NODELAY 	 *      - we've timed out (e.g. persist timer) 	 *      - we have more then 1/2 the maximum send window's worth of 	 *        data (receiver may be limited the window size) 	 *      - we need to retransmit 	 */
+comment|/* 	 * Sender silly window avoidance.   We transmit under the following 	 * conditions when len is non-zero: 	 * 	 *	- We have a full segment 	 *	- This is the last buffer in a write()/send() and we are 	 *	  either idle or running NODELAY 	 *	- we've timed out (e.g. persist timer) 	 *	- we have more then 1/2 the maximum send window's worth of 	 *	  data (receiver may be limited the window size) 	 *	- we need to retransmit 	 */
 if|if
 condition|(
 name|len
