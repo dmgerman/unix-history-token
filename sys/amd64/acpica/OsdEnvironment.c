@@ -33,7 +33,7 @@ end_include
 
 begin_decl_stmt
 name|u_long
-name|i386_acpi_root
+name|amd64_acpi_root
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|i386_acpi_root
+name|amd64_acpi_root
 argument_list|,
 literal|0
 argument_list|,
@@ -108,7 +108,7 @@ name|status
 decl_stmt|;
 if|if
 condition|(
-name|i386_acpi_root
+name|amd64_acpi_root
 operator|==
 literal|0
 condition|)
@@ -130,7 +130,7 @@ name|status
 operator|==
 name|AE_OK
 condition|)
-name|i386_acpi_root
+name|amd64_acpi_root
 operator|=
 name|ptr
 operator|.
@@ -156,7 +156,7 @@ name|Pointer
 operator|.
 name|Physical
 operator|=
-name|i386_acpi_root
+name|amd64_acpi_root
 expr_stmt|;
 return|return
 operator|(
