@@ -389,6 +389,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+name|struct
+name|nfs_iodesc
+name|nfs_root_node
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|fs_ops
 name|nfs_fsops
@@ -1627,11 +1635,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|static
-name|struct
-name|nfs_iodesc
-name|nfs_root_node
-decl_stmt|;
 name|struct
 name|iodesc
 modifier|*
@@ -2368,6 +2371,11 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|fp
+operator|!=
+operator|&
+name|nfs_root_node
+operator|&&
 name|fp
 condition|)
 name|free
