@@ -5036,7 +5036,14 @@ expr_stmt|;
 endif|#
 directive|endif
 name|tp
-operator|+=
+operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|tp
+operator|+
 name|phdr_len
 expr_stmt|;
 if|if

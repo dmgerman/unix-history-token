@@ -199,6 +199,11 @@ name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 name|num

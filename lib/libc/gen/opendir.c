@@ -335,7 +335,13 @@ operator|->
 name|dd_td
 operator|=
 operator|(
-name|void
+expr|struct
+name|_telldir
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
 operator|*
 operator|)
 name|dirp
@@ -344,6 +350,7 @@ sizeof|sizeof
 argument_list|(
 name|DIR
 argument_list|)
+operator|)
 expr_stmt|;
 name|LIST_INIT
 argument_list|(

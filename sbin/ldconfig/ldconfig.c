@@ -2835,6 +2835,10 @@ name|hints_bucket
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|addr
 operator|+
 name|hdr
@@ -2848,13 +2852,11 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|(
 name|addr
 operator|+
 name|hdr
 operator|->
 name|hh_strtab
-operator|)
 expr_stmt|;
 if|if
 condition|(
