@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -117,6 +123,13 @@ name|WAIT_THRESHHOLD
 value|((nbuf>> 1) - 10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LFS_BUFWAIT
+value|2
+end_define
+
 begin_function
 name|int
 name|lfs_bwrite
@@ -151,6 +164,8 @@ modifier|*
 name|ip
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|s
 decl_stmt|;
 comment|/* 	 * Set the delayed write flag and use reassignbuf to move the buffer 	 * from the clean list to the dirty one. 	 * 	 * Set the B_LOCKED flag and unlock the buffer, causing brelse to move 	 * the buffer onto the LOCKED free list.  This is necessary, otherwise 	 * getnewbuf() would try to reclaim the buffers using bawrite, which 	 * isn't going to work. 	 * 	 * XXX we don't let meta-data writes run out of space because they can 	 * come from the segment writer.  We need to make sure that there is 	 * enough space reserved so that there's room to write meta-data 	 * blocks. 	 */
@@ -179,7 +194,7 @@ argument_list|)
 operator|->
 name|um_lfs
 expr_stmt|;
-if|if
+while|while
 condition|(
 operator|!
 name|LFS_FITS
@@ -207,22 +222,45 @@ operator|>
 literal|0
 condition|)
 block|{
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
+comment|/* Out of space, need cleaner to run */
 name|wakeup
 argument_list|(
 operator|&
 name|lfs_allclean_wakeup
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|tsleep
+argument_list|(
+operator|&
+name|fs
+operator|->
+name|lfs_avail
+argument_list|,
+name|PCATCH
+operator||
+name|PUSER
+argument_list|,
+literal|"cleaner"
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|ENOSPC
+name|error
 operator|)
 return|;
+block|}
 block|}
 name|ip
 operator|=
@@ -462,6 +500,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|incore
@@ -485,7 +527,8 @@ condition|)
 name|lfs_flush
 argument_list|()
 expr_stmt|;
-if|if
+comment|/* If out of buffers, wait on writer */
+while|while
 condition|(
 name|locked_queue_count
 operator|>
@@ -496,7 +539,7 @@ operator|=
 name|tsleep
 argument_list|(
 operator|&
-name|lfs_allclean_wakeup
+name|locked_queue_count
 argument_list|,
 name|PCATCH
 operator||
@@ -504,7 +547,9 @@ name|PUSER
 argument_list|,
 literal|"buffers"
 argument_list|,
-name|NULL
+name|hz
+operator|*
+name|LFS_BUFWAIT
 argument_list|)
 expr_stmt|;
 return|return
