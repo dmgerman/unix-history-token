@@ -4588,7 +4588,7 @@ name|aep
 init|=
 operator|(
 expr|struct
-name|amr_passthrough
+name|amr_ext_passthrough
 operator|*
 operator|)
 name|ac
