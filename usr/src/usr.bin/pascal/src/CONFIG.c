@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)CONFIG.c	1.1 (Berkeley) 82/03/31"
+literal|"@(#)CONFIG.c	2.1 (Berkeley) 82/03/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"1.1 (VERSION %G%)"
+literal|"2.1 (VERSION %G%)"
 decl_stmt|;
 end_decl_stmt
 
