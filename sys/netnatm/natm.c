@@ -599,6 +599,11 @@ name|NPCB_DESTROY
 argument_list|)
 expr_stmt|;
 comment|/* drain */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -2168,6 +2173,11 @@ name|NPCB_DESTROY
 argument_list|)
 expr_stmt|;
 comment|/* drain */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb

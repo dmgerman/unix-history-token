@@ -8498,6 +8498,11 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -10641,6 +10646,11 @@ name|M_NETGRAPH_BTSOCKET_L2CAP
 argument_list|)
 expr_stmt|;
 name|soisdisconnected
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|SOCK_LOCK
 argument_list|(
 name|so
 argument_list|)

@@ -566,6 +566,11 @@ name|unp
 argument_list|)
 expr_stmt|;
 comment|/* NB: unlocks */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|sotryfree
 argument_list|(
 name|so

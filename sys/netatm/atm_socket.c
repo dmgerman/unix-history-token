@@ -418,6 +418,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Break links and free control blocks 	 */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb

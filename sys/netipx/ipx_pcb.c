@@ -1214,6 +1214,11 @@ name|ipxp
 operator|->
 name|ipxp_socket
 decl_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb

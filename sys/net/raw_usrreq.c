@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -442,17 +448,21 @@ argument_list|(
 name|rp
 argument_list|)
 expr_stmt|;
-name|sotryfree
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|soisdisconnected
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* XXX huh? called after the sofree()? */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|sotryfree
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

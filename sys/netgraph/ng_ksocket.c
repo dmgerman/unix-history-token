@@ -5355,6 +5355,11 @@ name|so_head
 operator|=
 name|NULL
 expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|soref
 argument_list|(
 name|so
@@ -5365,6 +5370,11 @@ operator|->
 name|so_state
 operator||=
 name|SS_NBIO
+expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()

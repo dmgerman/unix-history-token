@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -222,6 +234,11 @@ name|rp
 operator|->
 name|rcb_socket
 decl_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb
