@@ -1841,7 +1841,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search in the fstab for a file name.  * This file name can be either the special or the path file name.  *  * The entries in the fstab are the BLOCK special names, not the  * character special names.  * The caller of fstabsearch assures that the character device  * is dumped (that is much faster)  *  * The file name can omit the leading '/'.  */
+comment|/*  * Search in the fstab for a file name.  * This file name can be either the special or the path file name.  *  * The file name can omit the leading '/'.  */
 end_comment
 
 begin_function
