@@ -1,7 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.38	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.39	%G% */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_DEFINE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EXTERN
+end_define
+
+begin_else
+else|#
+directive|else
+else|_DEFINE
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXTERN
+value|extern
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|_DEFINE
+end_endif
 
 begin_include
 include|#
@@ -462,11 +493,15 @@ value|(M_NEEDDATE|M_NEEDFROM|M_MSGID)
 end_define
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|MAILER
 modifier|*
 name|Mailer
-index|[]
+index|[
+name|MAXMAILERS
+operator|+
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -545,7 +580,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|HDR
 modifier|*
 name|Header
@@ -1007,7 +1042,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|struct
 name|statistics
 name|Stat
@@ -1031,7 +1066,7 @@ comment|/* **  Global variables. */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|FromFlag
 decl_stmt|;
@@ -1042,7 +1077,7 @@ comment|/* if set, "From" person is explicit */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|MailBack
 decl_stmt|;
@@ -1053,7 +1088,7 @@ comment|/* mail back response on error */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|BerkNet
 decl_stmt|;
@@ -1064,7 +1099,7 @@ comment|/* called from BerkNet */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|WriteBack
 decl_stmt|;
@@ -1075,7 +1110,7 @@ comment|/* write back response on error */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|NoAlias
 decl_stmt|;
@@ -1086,7 +1121,7 @@ comment|/* if set, don't do any aliasing */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|ForceMail
 decl_stmt|;
@@ -1097,7 +1132,7 @@ comment|/* if set, mail even if already got a copy */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|MeToo
 decl_stmt|;
@@ -1108,7 +1143,7 @@ comment|/* send to the sender also */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|IgnrDot
 decl_stmt|;
@@ -1119,7 +1154,7 @@ comment|/* don't let dot end messages */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|SaveFrom
 decl_stmt|;
@@ -1130,7 +1165,7 @@ comment|/* save leading "From" lines */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|Verbose
 decl_stmt|;
@@ -1141,7 +1176,7 @@ comment|/* set if blow-by-blow desired */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|GrabTo
 decl_stmt|;
@@ -1152,7 +1187,7 @@ comment|/* if set, get recipients from msg */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|DontSend
 decl_stmt|;
@@ -1163,7 +1198,7 @@ comment|/* mark recipients as QDONTSEND */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|NoReturn
 decl_stmt|;
@@ -1174,7 +1209,7 @@ comment|/* don't return letter to sender */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|OldUmask
 decl_stmt|;
@@ -1185,7 +1220,7 @@ comment|/* umask when sendmail starts up */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|Debug
 decl_stmt|;
@@ -1196,7 +1231,7 @@ comment|/* debugging level */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|Errors
 decl_stmt|;
@@ -1207,7 +1242,7 @@ comment|/* set if errors */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|ExitStat
 decl_stmt|;
@@ -1218,7 +1253,7 @@ comment|/* exit status code */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|ArpaMode
 decl_stmt|;
@@ -1229,7 +1264,7 @@ comment|/* ARPANET handling mode */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|long
 name|MsgSize
 decl_stmt|;
@@ -1264,7 +1299,7 @@ comment|/* the transcript file name */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|FILE
 modifier|*
 name|TempFile
@@ -1276,7 +1311,7 @@ comment|/* mail temp file */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|ADDRESS
 name|From
 decl_stmt|;
@@ -1287,7 +1322,7 @@ comment|/* the person it is from */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
 modifier|*
 name|To
@@ -1299,7 +1334,7 @@ comment|/* the target person */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|HopCount
 decl_stmt|;
@@ -1310,7 +1345,7 @@ comment|/* hop count */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|long
 name|CurTime
 decl_stmt|;
@@ -1321,7 +1356,7 @@ comment|/* time of this message */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|AliasLevel
 decl_stmt|;
@@ -1329,6 +1364,40 @@ end_decl_stmt
 
 begin_comment
 comment|/* depth of aliasing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|OrigFrom
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the From: line read from the message */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|SuprErrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if we are suppressing errors */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|HasXscrpt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if we have a transcript */
 end_comment
 
 begin_include

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.21	%G%"
+literal|"@(#)collect.c	3.22	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,10 +631,7 @@ name|NULL
 condition|)
 name|xfrom
 operator|=
-name|hvalue
-argument_list|(
-literal|"original-from"
-argument_list|)
+name|OrigFrom
 expr_stmt|;
 if|if
 condition|(
@@ -688,6 +685,16 @@ name|hvalue
 argument_list|(
 literal|"original-from"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+name|OrigFrom
 expr_stmt|;
 name|q
 operator|=

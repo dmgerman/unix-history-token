@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.6	%G%"
+literal|"@(#)headers.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,18 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
-comment|/* hack, hack -- save the old From: address */
+comment|/* strip field value on front */
+if|if
+condition|(
+operator|*
+name|fvalue
+operator|==
+literal|' '
+condition|)
+name|fvalue
+operator|++
+expr_stmt|;
+comment|/* hack, hack -- save From: line specially */
 if|if
 condition|(
 operator|!
@@ -161,21 +172,20 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|fname
+block|{
+name|OrigFrom
 operator|=
-literal|"original-from"
-expr_stmt|;
-comment|/* strip field value on front */
-if|if
-condition|(
-operator|*
+name|newstr
+argument_list|(
 name|fvalue
-operator|==
-literal|' '
-condition|)
-name|fvalue
-operator|++
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* search header list for this header */
 for|for
 control|(

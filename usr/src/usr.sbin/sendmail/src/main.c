@@ -11,6 +11,12 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_DEFINE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -41,212 +47,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.34	%G%"
+literal|"@(#)main.c	3.35	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables defined in conf.c.  This **	file will be different from system to system, but the rest **	of the code will be the same.  This table could be read in, **	but it seemed nicer to have it compiled in, since deliver- **	mail will potentially be exercised a lot. ** **	Usage: **		/etc/sendmail [-f name] [-a] [-q] [-v] [-n] [-m] addr ... ** **	Positional Parameters: **		addr -- the address to deliver the mail to.  There **			can be several. ** **	Flags: **		-f name		The mail is from "name" -- used for **				the header in local mail, and to **				deliver reports of failures to. **		-r name		Same as -f; however, this flag is **				reserved to indicate special processing **				for remote mail delivery as needed **				in the future.  So, network servers **				should use -r. **		-Ffullname	Select what the full-name should be **				listed as. **		-a		This mail should be in ARPANET std **				format (obsolete version). **		-am		Called from an FTP "MAIL" command. **		-af		Called from an FTP "MLFL" command. **		-n		Don't do aliasing.  This might be used **				when delivering responses, for **				instance. **		-d		Run in debug mode. **		-em		Mail back a response if there was an **				error in processing.  This should be **				used when the origin of this message **				is another machine. **		-ew		Write back a response if the user is **				still logged in, otherwise, act like **				-em. **		-eq		Don't print any error message (just **				return exit status). **		-ep		(default)  Print error messages **				normally. **		-ee		Send BerkNet style errors.  This **				is equivalent to MailBack except **				that it has gives zero return code **				(unless there were errors during **				returning).  This used to be **				"EchoBack", but you know how the old **				software bounces. **		-m		In group expansion, send to the **				sender also (stands for the Mail metoo **				option. **		-i		Do not terminate mail on a line **				containing just dot. **		-s		Save UNIX-like "From" lines on the **				front of messages. **		-v		Give blow-by-blow description of **				everything that happens. **		-t		Read "to" addresses from message. **				Looks at To:, Cc:, and Bcc: lines. **		-I		Initialize the DBM alias files from **				the text format files. **		-Cfilename	Use alternate configuration file. **		-Afilename	Use alternate alias file. **		-DXvalue	Define macro X to have value. ** **	Return Codes: **		As defined in<sysexits.h>. ** **		These codes are actually returned from the auxiliary **		mailers; it is their responsibility to make them **		correct. ** **	Compilation Flags: **		LOG -- if set, everything is logged. ** **	Author: **		Eric Allman, UCB/INGRES */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ArpaMode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* specifies the ARPANET mode */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|FromFlag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from person is explicitly specified */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|MailBack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail back response on error */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|BerkNet
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* called from BerkNet */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|WriteBack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* write back response on error */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|HasXscrpt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if set, the transcript file exists */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|NoAlias
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't do aliasing */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|ForceMail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail even if already sent a copy */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|MeToo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* send to the sender also if in a group expansion */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|SaveFrom
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* save From lines on the front of messages */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|IgnrDot
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if set, ignore dot when collecting mail */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|SuprErrs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* supress errors if set */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|Verbose
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if blow-by-blow desired */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|GrabTo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if set, read recipient addresses from msg */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|DontSend
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mark recipients as QDONTSEND */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|NoReturn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't return content of letter to sender */
-end_comment
-
-begin_decl_stmt
-name|int
-name|OldUmask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* umask when called */
-end_comment
-
-begin_decl_stmt
-name|int
-name|Debug
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* debug level */
-end_comment
-
-begin_decl_stmt
-name|int
-name|Errors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* count of errors */
-end_comment
-
-begin_decl_stmt
-name|int
-name|AliasLevel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current depth of aliasing */
 end_comment
 
 begin_decl_stmt
@@ -268,68 +74,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ADDRESS
-name|From
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the from person */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|To
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the target person */
-end_comment
-
-begin_decl_stmt
-name|int
-name|HopCount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hop count */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ExitStat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the exit status byte */
-end_comment
-
-begin_decl_stmt
-name|HDR
-modifier|*
-name|Header
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* header list */
-end_comment
-
-begin_decl_stmt
-name|long
-name|CurTime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current time */
-end_comment
-
-begin_decl_stmt
 name|int
 name|NextMailer
 init|=
@@ -339,23 +83,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* "free" index into Mailer struct */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mailer
-modifier|*
-name|Mailer
-index|[
-name|MAXMAILERS
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* definition of mailers */
 end_comment
 
 begin_function
