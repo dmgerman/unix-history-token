@@ -873,7 +873,25 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * Frontier Labs NEX IA+ Digital Audio Player, rev 1.10/0.01 		 * PR: kern/70158 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"FL"
+block|,
+literal|"NexIA+*"
+block|,
+literal|"*"
 block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
