@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|Fix32_m_max
-value|((1<< 31) - 1)
+value|((long)((1<< 31) - 1))
 end_define
 
 begin_define

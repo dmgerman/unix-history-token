@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|_G_LIB_VERSION
-value|"2.3.90"
+value|"2.4"
 end_define
 
 begin_define

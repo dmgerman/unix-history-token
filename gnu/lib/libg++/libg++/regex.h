@@ -418,52 +418,11 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-comment|/* 4.2 bsd compatibility.  */
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__386BSD__
-argument_list|)
-specifier|extern
-name|char
-modifier|*
-name|re_comp
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
-name|re_exec
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-else|#
-directive|else
-specifier|extern
-name|char
-modifier|*
-name|re_comp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
-name|re_exec
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
+literal|0
+comment|/* 4.2 bsd compatibility.  */
+block|extern char *re_comp (char *); extern int re_exec (char *);
 endif|#
 directive|endif
 else|#
@@ -501,18 +460,13 @@ decl_stmt|,
 name|re_match_2
 argument_list|()
 decl_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* 4.2 bsd compatibility.  */
-specifier|extern
-name|char
-modifier|*
-name|re_comp
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|re_exec
-parameter_list|()
-function_decl|;
+block|extern char *re_comp (); extern int re_exec ();
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* __STDC__ */
