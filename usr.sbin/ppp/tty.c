@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: tty.c,v 1.7 1999/05/24 16:39:16 brian Exp $  */
+comment|/*-  * Copyright (c) 1999 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: tty.c,v 1.8 1999/05/27 08:42:49 brian Exp $  */
 end_comment
 
 begin_include
@@ -127,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -353,6 +359,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"main.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tty.h"
 end_include
 
@@ -402,6 +414,23 @@ name|d
 parameter_list|)
 value|((d)->type == TTY_DEVICE ? (struct ttydevice *)d : NULL)
 end_define
+
+begin_function
+name|int
+name|tty_DeviceSize
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ttydevice
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * tty_Timeout() watches the DCD signal and mentions it if it's status  * changes.  */
@@ -1504,9 +1533,9 @@ name|void
 name|tty_device2iov
 parameter_list|(
 name|struct
-name|physical
+name|device
 modifier|*
-name|p
+name|d
 parameter_list|,
 name|struct
 name|iovec
@@ -1529,16 +1558,16 @@ name|ttydevice
 modifier|*
 name|dev
 init|=
-name|p
-condition|?
 name|device2tty
 argument_list|(
-name|p
-operator|->
-name|handler
+name|d
 argument_list|)
-else|:
-name|NULL
+decl_stmt|;
+name|int
+name|sz
+init|=
+name|physical_MaxDeviceSize
+argument_list|()
 decl_stmt|;
 name|iov
 index|[
@@ -1548,21 +1577,41 @@ index|]
 operator|.
 name|iov_base
 operator|=
-name|p
-condition|?
-name|p
-operator|->
-name|handler
-else|:
-name|malloc
+name|realloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ttydevice
-argument_list|)
+name|d
+argument_list|,
+name|sz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|iov
+index|[
+operator|*
+name|niov
+index|]
+operator|.
+name|iov_base
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogALERT
+argument_list|,
+literal|"Failed to allocate memory: %d\n"
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
+name|AbortProgram
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 name|iov
 index|[
 operator|*
@@ -1571,11 +1620,7 @@ index|]
 operator|.
 name|iov_len
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ttydevice
-argument_list|)
+name|sz
 expr_stmt|;
 operator|(
 operator|*
@@ -1703,6 +1748,47 @@ index|]
 operator|.
 name|iov_base
 decl_stmt|;
+name|dev
+operator|=
+name|realloc
+argument_list|(
+name|dev
+argument_list|,
+sizeof|sizeof
+expr|*
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* Reduce to the correct size */
+if|if
+condition|(
+name|dev
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogALERT
+argument_list|,
+literal|"Failed to allocate memory: %d\n"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+sizeof|sizeof
+expr|*
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AbortProgram
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Refresh function pointers etc */
 name|memcpy
 argument_list|(
@@ -1752,6 +1838,16 @@ name|state
 operator|=
 name|TIMER_STOPPED
 expr_stmt|;
+name|p
+operator|->
+name|handler
+operator|=
+operator|&
+name|dev
+operator|->
+name|dev
+expr_stmt|;
+comment|/* For the benefit of StartTimer */
 name|tty_StartTimer
 argument_list|(
 name|p

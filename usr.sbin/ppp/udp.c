@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: udp.c,v 1.1 1999/05/12 09:49:09 brian Exp $  */
+comment|/*-  * Copyright (c) 1999 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: udp.c,v 1.2 1999/05/24 16:39:17 brian Exp $  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -174,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"main.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"udp.h"
 end_include
 
@@ -210,6 +222,23 @@ name|d
 parameter_list|)
 value|((d)->type == UDP_DEVICE ? (struct udpdevice *)d : NULL)
 end_define
+
+begin_function
+name|int
+name|udp_DeviceSize
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udpdevice
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -484,9 +513,9 @@ name|void
 name|udp_device2iov
 parameter_list|(
 name|struct
-name|physical
+name|device
 modifier|*
-name|p
+name|d
 parameter_list|,
 name|struct
 name|iovec
@@ -504,6 +533,12 @@ name|pid_t
 name|newpid
 parameter_list|)
 block|{
+name|int
+name|sz
+init|=
+name|physical_MaxDeviceSize
+argument_list|()
+decl_stmt|;
 name|iov
 index|[
 operator|*
@@ -512,21 +547,41 @@ index|]
 operator|.
 name|iov_base
 operator|=
-name|p
-condition|?
-name|p
-operator|->
-name|handler
-else|:
-name|malloc
+name|realloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|udpdevice
-argument_list|)
+name|d
+argument_list|,
+name|sz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|iov
+index|[
+operator|*
+name|niov
+index|]
+operator|.
+name|iov_base
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogALERT
+argument_list|,
+literal|"Failed to allocate memory: %d\n"
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
+name|AbortProgram
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 name|iov
 index|[
 operator|*
@@ -535,11 +590,7 @@ index|]
 operator|.
 name|iov_len
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|udpdevice
-argument_list|)
+name|sz
 expr_stmt|;
 operator|(
 operator|*
@@ -640,6 +691,47 @@ index|]
 operator|.
 name|iov_base
 decl_stmt|;
+name|dev
+operator|=
+name|realloc
+argument_list|(
+name|dev
+argument_list|,
+sizeof|sizeof
+expr|*
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* Reduce to the correct size */
+if|if
+condition|(
+name|dev
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogALERT
+argument_list|,
+literal|"Failed to allocate memory: %d\n"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+sizeof|sizeof
+expr|*
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AbortProgram
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Refresh function pointers etc */
 name|memcpy
 argument_list|(
