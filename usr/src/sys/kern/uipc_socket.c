@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	6.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	6.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2712,18 +2712,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|nextrecord
+operator|=
+name|m
+operator|->
+name|m_act
+expr_stmt|;
 name|MFREE
 argument_list|(
 name|m
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-name|nextrecord
-operator|=
-name|m
-operator|->
-name|m_act
 expr_stmt|;
 name|m
 operator|=
@@ -3165,11 +3165,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
+name|m
 operator|==
 literal|0
 condition|)
@@ -3181,7 +3177,14 @@ name|sb_mb
 operator|=
 name|nextrecord
 expr_stmt|;
-elseif|else
+else|else
+block|{
+name|m
+operator|->
+name|m_act
+operator|=
+name|nextrecord
+expr_stmt|;
 if|if
 condition|(
 name|pr
@@ -3201,6 +3204,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pr
