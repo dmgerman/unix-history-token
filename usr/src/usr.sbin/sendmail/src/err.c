@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	5.6 (Berkeley) %G%"
+literal|"@(#)err.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_comment
@@ -1196,6 +1202,28 @@ argument_list|,
 literal|"Connection refused by %s"
 argument_list|,
 name|CurHostName
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buf
+operator|)
+return|;
+case|case
+operator|(
+name|TRY_AGAIN
+operator|+
+name|MAX_ERRNO
+operator|)
+case|:
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Host Name Lookup Failure"
 argument_list|)
 expr_stmt|;
 return|return
