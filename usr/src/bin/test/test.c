@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	5.7 (Berkeley) %G%"
+literal|"@(#)test.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1674,6 +1674,33 @@ case|:
 name|i
 operator|=
 name|S_IFBLK
+expr_stmt|;
+goto|goto
+name|filetype
+goto|;
+case|case
+name|ISSYMLINK
+case|:
+name|i
+operator|=
+name|S_IFLNK
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|lstat
+argument_list|(
+name|sp
+operator|->
+name|u
+operator|.
+name|string
+argument_list|,
+operator|&
+name|fs
+operator|->
+name|stat
+argument_list|)
 expr_stmt|;
 goto|goto
 name|filetype

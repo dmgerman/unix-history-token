@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c	5.1 (Berkeley) %G%"
+literal|"@(#)operators.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,8 @@ block|,
 literal|"-f"
 block|,
 literal|"-g"
+block|,
+literal|"-h"
 block|,
 literal|"-k"
 block|,
@@ -169,6 +171,8 @@ literal|12
 block|,
 literal|12
 block|,
+literal|12
+block|,
 literal|1
 block|,
 literal|1
@@ -204,6 +208,8 @@ index|[]
 init|=
 block|{
 literal|0
+block|,
+name|OP_FILE
 block|,
 name|OP_FILE
 block|,

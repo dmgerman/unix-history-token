@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)operators.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)operators.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -55,162 +55,169 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISSTICKY
+name|ISSYMLINK
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|STRLEN
+name|ISSTICKY
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISFIFO
+name|STRLEN
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISREAD
+name|ISFIFO
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISSIZE
+name|ISREAD
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISTTY
+name|ISSIZE
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISSETUID
+name|ISTTY
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISWRITE
+name|ISSETUID
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISEXEC
+name|ISWRITE
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|NULSTR
+name|ISEXEC
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
+name|NULSTR
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|FIRST_BINARY_OP
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|OR1
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|OR2
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|AND1
+name|OR1
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|OR2
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|AND2
+name|AND1
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|STREQ
+name|AND2
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|STRNE
+name|STREQ
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|EQ
+name|STRNE
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|NE
+name|EQ
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|GT
+name|NE
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|LT
+name|GT
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|LE
+name|LT
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|GE
+name|LE
 value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|GE
+value|29
 end_define
 
 begin_define
