@@ -8705,12 +8705,12 @@ name|EF_INTERWORK
 condition|?
 name|_
 argument_list|(
-literal|"does not"
+literal|"does"
 argument_list|)
 else|:
 name|_
 argument_list|(
-literal|"does"
+literal|"does not"
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -9832,7 +9832,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The .comm and .lcomm pseudo-ops for XCOFF.  XCOFF puts common    symbols in the .bss segment as though they were local common    symbols, and uses a different smclas.  */
+comment|/* The .comm and .lcomm pseudo-ops for XCOFF.  XCOFF puts common    symbols in the .bss segment as though they were local common    symbols, and uses a different smclas.  The native Aix 4.3.3 assember    aligns .comm and .lcomm to 4 bytes.  */
 end_comment
 
 begin_function
@@ -9971,7 +9971,7 @@ literal|','
 condition|)
 name|align
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 else|else
 block|{
@@ -10000,7 +10000,7 @@ argument_list|)
 expr_stmt|;
 name|align
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 block|}
 block|}
@@ -10014,28 +10014,6 @@ decl_stmt|;
 name|char
 name|lcomm_endc
 decl_stmt|;
-if|if
-condition|(
-name|size
-operator|<=
-literal|1
-condition|)
-name|align
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|size
-operator|<=
-literal|2
-condition|)
-name|align
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|size

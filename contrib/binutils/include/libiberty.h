@@ -162,6 +162,20 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* A well-defined basename () that is always compiled in.  */
+specifier|extern
+name|char
+modifier|*
+name|lbasename
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Concatenate an arbitrary number of strings, up to (char *) NULL.    Allocates memory using xmalloc.  */
 specifier|extern
 name|char

@@ -18715,6 +18715,10 @@ name|region
 decl_stmt|;
 name|lang_memory_region_type
 modifier|*
+name|default_region
+decl_stmt|;
+name|lang_memory_region_type
+modifier|*
 name|lma_region
 decl_stmt|;
 name|struct
@@ -18727,6 +18731,13 @@ name|lang_nocrossref
 modifier|*
 name|nocrossref
 decl_stmt|;
+name|default_region
+operator|=
+name|lang_memory_region_lookup
+argument_list|(
+literal|"*default*"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|memspec
@@ -18805,12 +18816,14 @@ name|fill
 operator|=
 name|fill
 expr_stmt|;
+comment|/* Assign a region to the sections, if one has been specified. 	 Override the assignment of the default section, but not 	 other sections.  */
 if|if
 condition|(
 name|region
 operator|!=
 name|NULL
 operator|&&
+operator|(
 name|l
 operator|->
 name|os
@@ -18818,6 +18831,15 @@ operator|->
 name|region
 operator|==
 name|NULL
+operator|||
+name|l
+operator|->
+name|os
+operator|->
+name|region
+operator|==
+name|default_region
+operator|)
 condition|)
 name|l
 operator|->

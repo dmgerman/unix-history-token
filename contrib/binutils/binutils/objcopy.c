@@ -1344,6 +1344,16 @@ literal|'O'
 block|}
 block|,
 block|{
+literal|"output-file"
+block|,
+name|required_argument
+block|,
+literal|0
+block|,
+literal|'o'
+block|}
+block|,
+block|{
 literal|"preserve-dates"
 block|,
 name|no_argument
@@ -3841,6 +3851,21 @@ operator|&&
 operator|!
 name|convert_debugging
 operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bfd_get_section
+argument_list|(
+name|sym
+argument_list|)
+operator|->
+name|comdat
+condition|)
+comment|/* COMDAT sections store special information in local 	   symbols, so we cannot risk stripping any of them.  */
+name|keep
+operator|=
+literal|1
 expr_stmt|;
 else|else
 comment|/* Local symbol.  */
@@ -8653,7 +8678,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:i:I:j:K:N:s:O:d:F:L:G:R:SpgxXVvW:"
+literal|"I:O:F:K:N:R:o:sSpdgxXVv"
 argument_list|,
 name|strip_options
 argument_list|,
@@ -9167,7 +9192,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:i:I:j:K:N:s:O:d:F:L:R:SpgxXVvW:"
+literal|"b:i:I:j:K:N:s:O:d:F:L:G:R:SpgxXVvW:"
 argument_list|,
 name|copy_options
 argument_list|,
@@ -10627,7 +10652,6 @@ if|if
 condition|(
 name|preserve_dates
 condition|)
-block|{
 if|if
 condition|(
 name|stat
@@ -10655,7 +10679,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* If there is no destination file then create a temp and rename      the result into the input.  */
 if|if
 condition|(
