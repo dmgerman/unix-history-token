@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	t7.c	4.1	83/02/12	*/
+comment|/*	t7.c	4.2	83/02/12	*/
 end_comment
 
 begin_comment
@@ -379,6 +379,19 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+operator|!
+name|point
+argument_list|(
+name|s
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|s

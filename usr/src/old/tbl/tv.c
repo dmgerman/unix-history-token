@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tv.c	4.1	83/02/12	*/
+comment|/*	tv.c	4.2	83/02/12	*/
 end_comment
 
 begin_comment
@@ -875,6 +875,19 @@ condition|(
 name|s
 operator|==
 literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|point
+argument_list|(
+name|s
+argument_list|)
 condition|)
 return|return
 operator|(
