@@ -497,7 +497,7 @@ parameter_list|,
 name|time_limit
 parameter_list|)
 define|\
-value|{ \ 	  int flag, chn; \ 	  f.mode = WK_SLEEP; \ 	  q =&chn; \ 	  flag=tsleep((caddr_t)&chn, (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  if(flag == ERESTART) f.aborting = 1;\ 	  else f.aborting = 0;\ 	  f.mode&= ~WK_SLEEP; \ 	}
+value|{ \ 	  int flag; \ 	  f.mode = WK_SLEEP; \ 	  flag=tsleep((caddr_t)&q, (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  if(flag == ERESTART) f.aborting = 1;\ 	  else f.aborting = 0;\ 	  f.mode&= ~WK_SLEEP; \ 	}
 end_define
 
 begin_comment
@@ -513,7 +513,7 @@ name|q
 parameter_list|,
 name|f
 parameter_list|)
-value|{f.mode = WK_WAKEUP;wakeup((caddr_t) q);}
+value|{f.mode = WK_WAKEUP;wakeup((caddr_t)&q);}
 end_define
 
 begin_comment
