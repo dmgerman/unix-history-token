@@ -1024,6 +1024,10 @@ argument_list|(
 literal|"ext2_free_inode:"
 literal|"bit already cleared for inode %lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|inode
 operator|->
 name|i_number

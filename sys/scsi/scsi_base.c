@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.55 1998/04/16 11:15:23 peter Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.56 1998/04/17 22:37:08 des Exp $  */
 end_comment
 
 begin_include
@@ -2982,6 +2982,9 @@ argument_list|,
 operator|(
 literal|"sc_err1,err = 0x%lx \n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|xs
 operator|->
 name|error
@@ -3411,8 +3414,11 @@ case|:
 comment|/* BLANK CHECK */
 name|printf
 argument_list|(
-literal|" req sz: %ld (decimal)"
+literal|" req sz: %lu (decimal)"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -3440,6 +3446,9 @@ name|printf
 argument_list|(
 literal|" ILI (length mismatch): %ld"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -3450,6 +3459,9 @@ name|printf
 argument_list|(
 literal|" info:%#lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -3466,6 +3478,9 @@ name|printf
 argument_list|(
 literal|" info?:%#lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -5048,6 +5063,10 @@ name|printf
 argument_list|(
 literal|"xs(%p): "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|xs
 argument_list|)
 expr_stmt|;
@@ -5055,6 +5074,9 @@ name|printf
 argument_list|(
 literal|"flg(0x%lx)"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|xs
 operator|->
 name|flags
@@ -5064,6 +5086,10 @@ name|printf
 argument_list|(
 literal|"sc_link(%p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|xs
 operator|->
 name|sc_link
@@ -5082,6 +5108,9 @@ name|printf
 argument_list|(
 literal|"timo(0x%lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|xs
 operator|->
 name|timeout
@@ -5091,6 +5120,10 @@ name|printf
 argument_list|(
 literal|"cmd(%p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|xs
 operator|->
 name|cmd
@@ -5100,6 +5133,9 @@ name|printf
 argument_list|(
 literal|"len(0x%lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|xs
 operator|->
 name|cmdlen
@@ -5109,6 +5145,10 @@ name|printf
 argument_list|(
 literal|"data(%p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|xs
 operator|->
 name|data
@@ -5118,6 +5158,9 @@ name|printf
 argument_list|(
 literal|"len(0x%lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|xs
 operator|->
 name|datalen
@@ -5127,6 +5170,9 @@ name|printf
 argument_list|(
 literal|"res(0x%lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|xs
 operator|->
 name|resid
@@ -5136,6 +5182,9 @@ name|printf
 argument_list|(
 literal|"err(0x%lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|xs
 operator|->
 name|error
@@ -5145,6 +5194,10 @@ name|printf
 argument_list|(
 literal|"bp(%p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|xs
 operator|->
 name|bp
@@ -5243,6 +5296,9 @@ name|printf
 argument_list|(
 literal|"-[%ld bytes]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|xs
 operator|->
 name|datalen
@@ -5336,6 +5392,9 @@ name|printf
 argument_list|(
 literal|"\n%03ld: "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|y
 argument_list|)
 expr_stmt|;

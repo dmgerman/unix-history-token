@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.73 1998/06/10 13:46:46 dt Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.74 1998/07/04 20:45:36 julian Exp $ */
 end_comment
 
 begin_comment
@@ -8360,7 +8360,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_MSDOSFS, startcluster %d, dircluster %ld, diroffset %ld "
+literal|"tag VT_MSDOSFS, startcluster %lu, dircluster %lu, diroffset %lu "
 argument_list|,
 name|dep
 operator|->

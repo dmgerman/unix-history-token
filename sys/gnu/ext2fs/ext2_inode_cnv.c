@@ -198,16 +198,28 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"User: %5d Group: %5d  Size: %d\n"
+literal|"User: %5lu Group: %5lu  Size: %lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|di
 operator|->
 name|di_uid
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|di
 operator|->
 name|di_gid
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|di
 operator|->
 name|di_size

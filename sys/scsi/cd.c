@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.94 1998/06/17 14:13:13 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.95 1998/07/04 22:30:23 julian Exp $  */
 end_comment
 
 begin_include
@@ -1127,7 +1127,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd present [%ld x %ld byte records]"
+literal|"cd present [%lu x %lu byte records]"
 argument_list|,
 name|cd
 operator|->
@@ -1135,6 +1135,9 @@ name|params
 operator|.
 name|disksize
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|cd
 operator|->
 name|params
@@ -1422,12 +1425,21 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"cd_open: dev=0x%lx (unit %ld,partition %ld)\n"
+literal|"cd_open: dev=0x%lx (unit %lu,partition %lu)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|dev
 operator|,
+operator|(
+name|u_long
+operator|)
 name|unit
 operator|,
+operator|(
+name|u_long
+operator|)
 name|part
 operator|)
 argument_list|)
@@ -1678,8 +1690,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"partition %ld> %d\n"
+literal|"partition %lu> %u\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|part
 operator|,
 name|cd
@@ -1722,8 +1737,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"part %ld type UNUSED\n"
+literal|"part %lu type UNUSED\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|part
 operator|)
 argument_list|)
@@ -2277,8 +2295,11 @@ argument_list|,
 name|SDEV_DB2
 argument_list|,
 operator|(
-literal|"cdstart%ld "
+literal|"cdstart%lu "
 operator|,
+operator|(
+name|u_long
+operator|)
 name|unit
 operator|)
 argument_list|)
@@ -2581,8 +2602,11 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"cd%ld: oops not queued\n"
+literal|"cd%lu: oops not queued\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -2727,7 +2751,7 @@ argument_list|,
 name|SDEV_DB2
 argument_list|,
 operator|(
-literal|"cdioctl 0x%x "
+literal|"cdioctl 0x%lx "
 operator|,
 name|cmd
 operator|)
@@ -5838,12 +5862,18 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"cd%d: %ld %ld byte blocks\n"
+literal|"cd%d: %lu %lu byte blocks\n"
 operator|,
 name|unit
 operator|,
+operator|(
+name|u_long
+operator|)
 name|size
 operator|,
+operator|(
+name|u_long
+operator|)
 name|blksize
 operator|)
 argument_list|)

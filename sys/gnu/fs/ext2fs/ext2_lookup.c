@@ -2572,7 +2572,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"offset=%lu, inode=%lu, rec_len=%d, name_len=%d\n"
+literal|"offset=%d, inode=%lu, rec_len=%u, name_len=%u\n"
 argument_list|,
 name|entryoffsetinblock
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.131 1998/06/17 14:13:14 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.132 1998/07/04 22:30:24 julian Exp $  */
 end_comment
 
 begin_include
@@ -1313,8 +1313,12 @@ block|{
 comment|/* 		 * if we don't have actual parameters, assume 512 bytes/sec 		 * (could happen on removable media - MOD) 		 * -- this avoids the division below from falling over 	 	 */
 name|printf
 argument_list|(
-literal|"%ldMB (%ld %d byte sectors)"
+literal|"%luMB (%lu %u byte sectors)"
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dp
 operator|->
 name|disksize
@@ -1330,7 +1334,11 @@ name|dp
 operator|->
 name|secsiz
 operator|)
+argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|dp
 operator|->
 name|disksize
@@ -1980,10 +1988,16 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"sd_open: dev=0x%lx (unit %ld, partition %d)\n"
+literal|"sd_open: dev=0x%lx (unit %lu, partition %d)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|dev
 operator|,
+operator|(
+name|u_long
+operator|)
 name|unit
 operator|,
 name|PARTITION
@@ -2316,10 +2330,16 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"open %ld %ld\n"
+literal|"open %lu %lu\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sdstrats
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sdqueues
 operator|)
 argument_list|)
@@ -2770,12 +2790,15 @@ name|EINVAL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sd_strategy: Invalid b_bcount %d at block number: 0x%x\n"
+literal|"sd_strategy: Invalid b_bcount %ld at block number: 0x%lx\n"
 argument_list|,
 name|bp
 operator|->
 name|b_bcount
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -3369,8 +3392,11 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"sd%ld: oops not queued\n"
+literal|"sd%lu: oops not queued\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -3518,7 +3544,7 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"sdioctl (0x%x)"
+literal|"sdioctl (0x%lx)"
 operator|,
 name|cmd
 operator|)
@@ -4165,8 +4191,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"%ld cyls, %d heads, %d precomp, %d red_write, %d land_zone\n"
+literal|"%lu cyls, %d heads, %u precomp, %u red_write, %u land_zone\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|scsi_3btou
 argument_list|(
 operator|&
@@ -4397,8 +4426,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"sd%ld: Can't deal with %d bytes logical blocks\n"
+literal|"sd%lu: Can't deal with %u bytes logical blocks\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|,
 name|sd
@@ -5349,9 +5381,14 @@ name|printf
 argument_list|(
 literal|"%ld "
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|num
 operator|/
 literal|2048
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

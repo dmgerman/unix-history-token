@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.89 1998/06/17 14:13:14 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.90 1998/07/04 22:30:24 julian Exp $  */
 end_comment
 
 begin_comment
@@ -1316,6 +1316,9 @@ name|printf
 argument_list|(
 literal|"density code 0x%lx, "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|media_density
@@ -1345,8 +1348,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%ld-byte"
+literal|"%lu-byte"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|media_blksiz
@@ -2738,8 +2744,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%ld: Cannot set selected mode"
+literal|"st%lu: Cannot set selected mode"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -2973,8 +2982,11 @@ operator|)
 case|:
 name|printf
 argument_list|(
-literal|"st%ld: bad quirks\n"
+literal|"st%lu: bad quirks\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -3048,8 +3060,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"Quirks force fixed mode(%ld)\n"
+literal|"Quirks force fixed mode(%lu)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|blksiz
@@ -3129,8 +3144,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"blkmin == blkmax of %ld\n"
+literal|"blkmin == blkmax of %lu\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|blkmin
@@ -3342,8 +3360,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"Used media_blksiz of %ld\n"
+literal|"Used media_blksiz of %lu\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|media_blksiz
@@ -3613,10 +3634,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%ld: bad request, must be multiple of %ld\n"
+literal|"st%lu: bad request, must be multiple of %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|blksiz
@@ -3659,14 +3686,23 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%ld: bad request, must be between %ld and %ld\n"
+literal|"st%lu: bad request, must be between %lu and %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|blkmin
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|blkmax
@@ -3693,8 +3729,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%ld: bad request, must be less than %ld bytes\n"
+literal|"st%lu: bad request, must be less than %ld bytes\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|,
 name|bp
@@ -4251,8 +4290,11 @@ name|badnews
 label|:
 name|printf
 argument_list|(
-literal|"st%ld: oops not queued\n"
+literal|"st%lu: oops not queued\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -4612,6 +4654,9 @@ name|mt
 operator|->
 name|mt_op
 operator|,
+operator|(
+name|long
+operator|)
 name|mt
 operator|->
 name|mt_count
@@ -5102,8 +5147,11 @@ block|{
 comment|/* put back as it was */
 name|printf
 argument_list|(
-literal|"st%ld: Cannot set selected mode"
+literal|"st%lu: Cannot set selected mode"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -5616,12 +5664,18 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"(%ld<= blksiz<= %ld)\n"
+literal|"(%lu<= blksiz<= %lu)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|blkmin
 operator|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|blkmax
@@ -5929,12 +5983,18 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"density code 0x%lx, %ld-byte blocks, write-%s, "
+literal|"density code 0x%lx, %lu-byte blocks, write-%s, "
 operator|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|media_density
 operator|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|media_blksiz
@@ -6412,7 +6472,7 @@ name|noisy_st
 condition|)
 name|printf
 argument_list|(
-literal|"drive reports value of %d, setting %ld\n"
+literal|"drive reports value of %d, setting %lu\n"
 argument_list|,
 name|page
 operator|.
@@ -6422,6 +6482,9 @@ name|configuration
 operator|.
 name|data_compress_alg
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mode
 argument_list|)
 expr_stmt|;
@@ -6480,8 +6543,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"st%ld: bad value for compression mode\n"
+literal|"st%lu: bad value for compression mode\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -8067,11 +8133,16 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%ld: block wrong size"
-literal|", %ld blocks residual\n"
+literal|"st%lu: block wrong size, %ld blocks residual\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|,
+operator|(
+name|long
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -8256,16 +8327,23 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%ld: %ld-byte record "
-literal|"too big\n"
+literal|"st%lu: %ld-byte record too big\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|xs
 operator|->
 name|datalen
 operator|-
 name|info
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
