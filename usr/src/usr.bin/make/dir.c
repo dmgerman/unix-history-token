@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	8.1 (Berkeley) %G%"
+literal|"@(#)dir.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -2897,7 +2897,7 @@ decl_stmt|;
 comment|/* for reading directory */
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -3087,7 +3087,7 @@ operator|)
 operator|!=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|NULL
