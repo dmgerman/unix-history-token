@@ -3364,6 +3364,12 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
+name|b_iooffset
+operator|=
+name|offset
+expr_stmt|;
+name|bp
+operator|->
 name|b_blkno
 operator|=
 name|blkno

@@ -271,6 +271,14 @@ name|uio_offset
 expr_stmt|;
 name|bp
 operator|->
+name|b_iooffset
+operator|=
+name|uio
+operator|->
+name|uio_offset
+expr_stmt|;
+name|bp
+operator|->
 name|b_saveaddr
 operator|=
 name|sa
