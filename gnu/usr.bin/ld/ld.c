@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.7 1993/11/16 00:42:57 paul Exp $  */
+comment|/*  *	$Id: ld.c,v 1.8 1993/11/16 07:20:35 paul Exp $  */
 end_comment
 
 begin_comment
@@ -6668,6 +6668,22 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RELOC_PCREL_P
+argument_list|(
+name|reloc
+argument_list|)
+condition|)
+block|{
+name|sp
+operator|->
+name|aux
+operator|=
+name|RRS_FUNC
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if

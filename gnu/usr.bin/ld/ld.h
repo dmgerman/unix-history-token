@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ld.h,v 1.4 1993/11/01 16:26:16 pk Exp $	*/
+comment|/*	$Id: ld.h,v 1.2 1993/11/09 04:18:59 paul Exp $	*/
 end_comment
 
 begin_comment
@@ -966,6 +966,14 @@ comment|/* Size of symbol as determined by N_SIZE 'nlist's in object files */
 name|int
 name|size
 decl_stmt|;
+comment|/* Auxialiary info to put in the `nz_other' field of the 	 * RRS symbol table. Used by the run-time linker to resolve 	 * references to function addresses from within shared objects. 	 */
+name|int
+name|aux
+decl_stmt|;
+define|#
+directive|define
+name|RRS_FUNC
+value|2
 comment|/* 	 * Chain of external 'nlist's in shared objects for this symbol, both 	 * defs and refs. 	 */
 name|struct
 name|localsymbol
