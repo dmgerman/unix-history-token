@@ -1928,6 +1928,10 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ESRCH
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -2226,6 +2230,17 @@ name|NULL
 argument_list|,
 operator|(
 literal|"setpgid failed and newpgrp is null."
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|error
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"setpgid successfully failed?"
 operator|)
 argument_list|)
 expr_stmt|;
