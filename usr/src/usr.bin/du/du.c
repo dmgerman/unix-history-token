@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.6 (Berkeley) %G%"
+literal|"@(#)du.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -724,7 +724,33 @@ name|chdir
 argument_list|(
 name|endp
 argument_list|)
-operator|||
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"du: %s: %s\n"
+argument_list|,
+name|path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|total
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|!
 operator|(
 name|dir
@@ -753,6 +779,36 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|chdir
+argument_list|(
+literal|".."
+argument_list|)
+condition|)
+block|{
+comment|/* very unlikely */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"du: ..: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|total
