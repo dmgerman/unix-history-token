@@ -1584,6 +1584,9 @@ name|printf
 argument_list|(
 literal|"mem=%08lx = %08lx %08lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|vmaddr
 argument_list|,
 operator|(
