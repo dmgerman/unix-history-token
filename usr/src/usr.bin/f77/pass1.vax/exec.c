@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.3 (Berkeley) %G%"
+literal|"@(#)exec.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * exec.c  *  * Routines for handling the semantics of control structures.  * F77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *   * Revision 2.3  85/03/18  08:03:31  donn  * Hacks for conversions from type address to numeric type -- prevent addresses  * from being stored in shorts and prevent warnings about implicit conversions.  *   * Revision 2.2  84/09/03  23:18:30  donn  * When a DO loop had the same variable as its loop variable and its limit,  * the limit temporary was assigned to AFTER the original value of the variable  * was destroyed by assigning the initial value to the loop variable.  I  * swapped the operands of a comparison and changed the direction of the  * operator...  This only affected programs when optimizing.  (This may not  * be enough if something alters the order of evaluation of side effects  * later on... sigh.)  *   * Revision 2.1  84/07/19  12:02:53  donn  * Changed comment headers for UofU.  *   * Revision 1.3  84/07/12  18:35:12  donn  * Added change to enddo() to detect open 'if' blocks at the ends of loops.  *   * Revision 1.2  84/06/08  11:22:53  donn  * Fixed bug in exdo() -- if a loop parameter contained an instance of the loop  * variable and the optimizer was off, the loop variable got converted to  * register before the parameters were processed and so the loop parameters  * were initialized from garbage in the register instead of the memory version  * of the loop variable.  *   */
+comment|/*  * exec.c  *  * Routines for handling the semantics of control structures.  * F77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *   * $Log:	exec.c,v $  * Revision 5.2  85/08/10  04:07:36  donn  * Changed an error message to correct spelling and be more accurate.  * From Jerry Berkman.  *   * Revision 2.3  85/03/18  08:03:31  donn  * Hacks for conversions from type address to numeric type -- prevent addresses  * from being stored in shorts and prevent warnings about implicit conversions.  *   * Revision 2.2  84/09/03  23:18:30  donn  * When a DO loop had the same variable as its loop variable and its limit,  * the limit temporary was assigned to AFTER the original value of the variable  * was destroyed by assigning the initial value to the loop variable.  I  * swapped the operands of a comparison and changed the direction of the  * operator...  This only affected programs when optimizing.  (This may not  * be enough if something alters the order of evaluation of side effects  * later on... sigh.)  *   * Revision 2.1  84/07/19  12:02:53  donn  * Changed comment headers for UofU.  *   * Revision 1.3  84/07/12  18:35:12  donn  * Added change to enddo() to detect open 'if' blocks at the ends of loops.  *   * Revision 1.2  84/06/08  11:22:53  donn  * Fixed bug in exdo() -- if a loop parameter contained an instance of the loop  * variable and the optimizer was off, the loop variable got converted to  * register before the parameters were processed and so the loop parameters  * were initialized from garbage in the register instead of the memory version  * of the loop variable.  *   */
 end_comment
 
 begin_include
@@ -836,7 +836,7 @@ name|INEXEC
 condition|)
 name|err
 argument_list|(
-literal|"assignment to an undimensioned array"
+literal|"undimensioned array or statement function out of order"
 argument_list|)
 expr_stmt|;
 else|else
