@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -144,14 +144,6 @@ end_include
 begin_comment
 comment|/* patchable/settable parameters for tcp */
 end_comment
-
-begin_decl_stmt
-name|int
-name|tcp_ttl
-init|=
-name|TCP_TTL
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -936,7 +928,7 @@ operator|)
 operator|->
 name|ip_ttl
 operator|=
-name|tcp_ttl
+name|ip_defttl
 expr_stmt|;
 operator|(
 name|void
@@ -1143,7 +1135,7 @@ name|inp_ip
 operator|.
 name|ip_ttl
 operator|=
-name|tcp_ttl
+name|ip_defttl
 expr_stmt|;
 name|inp
 operator|->
