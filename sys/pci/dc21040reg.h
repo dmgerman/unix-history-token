@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: dc21040reg.h,v 1.13 1997/10/17 09:26:58 matt Exp $	*/
+comment|/*	$NetBSD: dc21040reg.h,v 1.14 1998/02/27 13:17:25 mycroft Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: dc21040reg.h,v 1.2 1997/10/18 18:17:45 peter Exp $ */
 end_comment
 
 begin_comment
@@ -3295,69 +3295,6 @@ define|#
 directive|define
 name|PHYCTL_FULL_DUPLEX
 value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_RD
-value|0x00040000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_WR
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_DIN
-value|0x00080000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_DOUT
-value|0x00020000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_DOUTON
-value|MII_DOUT
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_DOUTOFF
-value|MII_DOUT
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_CLK
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_CLKON
-value|MII_CLK
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_CLKOFF
-value|MII_CLK
 end_define
 
 begin_comment
