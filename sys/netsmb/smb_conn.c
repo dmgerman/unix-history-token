@@ -4433,6 +4433,13 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|smb_sm_lockvclist

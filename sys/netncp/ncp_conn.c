@@ -3305,6 +3305,13 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|ncp_conn_locklist
 argument_list|(
 name|LK_SHARED

@@ -4815,6 +4815,13 @@ name|error
 operator|)
 return|;
 block|}
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|sx_slock
 argument_list|(
 operator|&

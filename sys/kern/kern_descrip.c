@@ -9187,6 +9187,13 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|sx_slock
 argument_list|(
 operator|&

@@ -11286,6 +11286,13 @@ operator|)
 argument_list|)
 operator|)
 return|;
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

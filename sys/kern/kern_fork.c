@@ -686,6 +686,16 @@ name|error
 decl_stmt|,
 name|pid
 decl_stmt|;
+name|sysctl_wire_old_buffer
+argument_list|(
+name|req
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
