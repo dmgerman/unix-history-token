@@ -2746,7 +2746,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|!
@@ -2778,6 +2778,11 @@ argument_list|(
 literal|"ffs_reallocblks: unallocated block 3"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|prtrealloc
