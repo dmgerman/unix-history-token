@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.14 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,20 +139,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|BELL
-value|'\07'
-end_define
-
-begin_define
-define|#
-directive|define
-name|BANNER
-value|"\r\n\r\n4.3 BSD UNIX (%s)\r\n\r\r\n\r%s"
-end_define
 
 begin_define
 define|#
@@ -405,6 +391,20 @@ name|int
 name|not42
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|BANNER1
+index|[]
+init|=
+literal|"\r\n\r\n4.3 BSD UNIX ("
+decl_stmt|,
+name|BANNER2
+index|[]
+init|=
+literal|")\r\n\r\0\r\n\r\0"
 decl_stmt|;
 end_decl_stmt
 
@@ -1572,6 +1572,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|netip
+operator|=
+name|netibuf
+expr_stmt|;
 for|for
 control|(
 name|c
@@ -2369,7 +2373,7 @@ index|]
 operator|=
 name|OPT_ALWAYS_LOOK
 expr_stmt|;
-comment|/* 	 * Show banner that getty never gave. 	 */
+comment|/* 	 * Show banner that getty never gave. 	 * 	 * The banner includes some null's (for TELNET CR disambiguation), 	 * so we have to be somewhat complicated. 	 */
 name|gethostname
 argument_list|(
 name|hostname
@@ -2380,23 +2384,62 @@ name|hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|bcopy
 argument_list|(
+name|BANNER1
+argument_list|,
 name|nfrontp
 argument_list|,
-name|BANNER
-argument_list|,
+sizeof|sizeof
+name|BANNER1
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|nfrontp
+operator|+=
+sizeof|sizeof
+name|BANNER1
+operator|-
+literal|1
+expr_stmt|;
+name|bcopy
+argument_list|(
 name|hostname
 argument_list|,
-literal|""
+name|nfrontp
+argument_list|,
+name|strlen
+argument_list|(
+name|hostname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nfrontp
 operator|+=
 name|strlen
 argument_list|(
-name|nfrontp
+name|hostname
 argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|BANNER2
+argument_list|,
+name|nfrontp
+argument_list|,
+sizeof|sizeof
+name|BANNER2
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|nfrontp
+operator|+=
+sizeof|sizeof
+name|BANNER2
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 	 * Call telrcv() once to pick up anything received during 	 * terminal type negotiation. 	 */
 name|telrcv
