@@ -556,10 +556,10 @@ comment|/* close */
 name|ti_close
 block|,
 comment|/* read */
-name|NULL
+name|noread
 block|,
 comment|/* write */
-name|NULL
+name|nowrite
 block|,
 comment|/* ioctl */
 name|ti_ioctl2
