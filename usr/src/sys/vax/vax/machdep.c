@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.14	85/04/28	*/
+comment|/*	machdep.c	6.15	85/06/03	*/
 end_comment
 
 begin_include
@@ -1377,6 +1377,81 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Clear registers on exec  */
+end_comment
+
+begin_macro
+name|setregs
+argument_list|(
+argument|entry
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|u_long
+name|entry
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|notdef
+specifier|register
+name|int
+modifier|*
+name|rp
+decl_stmt|;
+comment|/* should pass args to init on the stack */
+comment|/* should also fix this code before using it, it's wrong */
+comment|/* wanna clear the scb? */
+for|for
+control|(
+name|rp
+operator|=
+operator|&
+name|u
+operator|.
+name|u_ar0
+index|[
+literal|0
+index|]
+init|;
+name|rp
+operator|<
+operator|&
+name|u
+operator|.
+name|u_ar0
+index|[
+literal|16
+index|]
+condition|;
+control|)
+operator|*
+name|rp
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+name|u
+operator|.
+name|u_ar0
+index|[
+name|PC
+index|]
+operator|=
+name|entry
+operator|+
+literal|2
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * in u. to call routine, followed by chmk  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, the frame   * pointer, and the argument pointer, it returns  * to the user specified pc, psl.  */
