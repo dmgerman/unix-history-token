@@ -49,7 +49,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"You need to define `pseudo-device sppp<N>' with options ISPPP"
+literal|"You need to define `device sppp<N>' with options ISPPP"
 end_error
 
 begin_endif
