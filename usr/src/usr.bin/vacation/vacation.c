@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.7 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -845,7 +845,6 @@ case|:
 comment|/* "Cc:" */
 if|if
 condition|(
-operator|!
 name|strncmp
 argument_list|(
 name|buf
