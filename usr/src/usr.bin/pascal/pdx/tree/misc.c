@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c 1.1 %G%"
+literal|"@(#)misc.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,6 +266,59 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Send some nasty mail to the current pdx support person.  */
+end_comment
+
+begin_macro
+name|gripe
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|char
+modifier|*
+name|maintainer
+init|=
+literal|"csvax:linton"
+decl_stmt|;
+name|puts
+argument_list|(
+literal|"Type control-D to end your message.  Be sure to include"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"your name and the name of the file you are debugging."
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|call
+argument_list|(
+literal|"Mail"
+argument_list|,
+name|stdin
+argument_list|,
+name|stdout
+argument_list|,
+name|maintainer
+argument_list|,
+name|NIL
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"Thank you."
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Give the user some help.  */
 end_comment
 
@@ -364,6 +417,11 @@ expr_stmt|;
 name|puts
 argument_list|(
 literal|"whatis<name>          - print the declaration of the name"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"gripe                  - send mail to the person in charge of pdx"
 argument_list|)
 expr_stmt|;
 name|puts
