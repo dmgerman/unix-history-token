@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_state.c,v 2.30.2.22 2000/10/26 10:41:29 darrenr Exp $"
+literal|"@(#)$Id: ip_state.c,v 2.30.2.23 2000/10/27 14:06:08 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6499,6 +6499,12 @@ operator|=
 name|hv
 operator|%
 name|fr_statesize
+expr_stmt|;
+name|is
+operator|->
+name|is_hv
+operator|=
+name|hvm
 expr_stmt|;
 name|isp
 operator|=

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 2.37.2.25 2000/10/25 10:38:47 darrenr Exp $"
+literal|"@(#)$Id: ip_nat.c,v 2.37.2.26 2000/10/27 14:06:48 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -751,14 +751,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|nat_wilds
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_32_t
 name|nat_masks
 init|=
@@ -1022,8 +1014,6 @@ argument_list|(
 operator|(
 name|nat_t
 operator|*
-operator|,
-name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5508,7 +5498,9 @@ name|nat_flags
 operator|&
 name|FI_WILDP
 condition|)
-name|nat_wilds
+name|nat_stats
+operator|.
+name|ns_wilds
 operator|--
 expr_stmt|;
 if|if
@@ -6228,7 +6220,9 @@ name|flags
 operator|&
 name|FI_WILDP
 condition|)
-name|nat_wilds
+name|nat_stats
+operator|.
+name|ns_wilds
 operator|++
 expr_stmt|;
 comment|/* 	 * Search the current table for a match. 	 */
@@ -9712,7 +9706,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|nat_wilds
+name|nat_stats
+operator|.
+name|ns_wilds
 operator|||
 operator|!
 operator|(
@@ -9865,22 +9861,9 @@ operator|)
 operator|)
 condition|)
 block|{
-name|hv
-operator|=
-name|NAT_HASH_FN
-argument_list|(
-name|dst
-argument_list|,
-name|dport
-argument_list|,
-name|ipf_nattable_sz
-argument_list|)
-expr_stmt|;
 name|nat_tabmove
 argument_list|(
 name|nat
-argument_list|,
-name|hv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9904,21 +9887,19 @@ name|void
 name|nat_tabmove
 parameter_list|(
 name|nat
-parameter_list|,
-name|hv
 parameter_list|)
 name|nat_t
 modifier|*
 name|nat
-decl_stmt|;
-name|u_int
-name|hv
 decl_stmt|;
 block|{
 name|nat_t
 modifier|*
 modifier|*
 name|natp
+decl_stmt|;
+name|u_int
+name|hv
 decl_stmt|;
 comment|/* 	 * Remove the NAT entry from the old location 	 */
 if|if
@@ -9977,7 +9958,7 @@ name|nat
 operator|->
 name|nat_hnext
 index|[
-literal|0
+literal|1
 index|]
 operator|->
 name|nat_phnext
@@ -10006,6 +9987,24 @@ name|nat_hnext
 index|[
 literal|1
 index|]
+expr_stmt|;
+comment|/* 	 * Add into the NAT table in the new position 	 */
+name|hv
+operator|=
+name|NAT_HASH_FN
+argument_list|(
+name|nat
+operator|->
+name|nat_inip
+operator|.
+name|s_addr
+argument_list|,
+name|nat
+operator|->
+name|nat_inport
+argument_list|,
+name|ipf_nattable_sz
+argument_list|)
 expr_stmt|;
 name|natp
 operator|=
@@ -10065,7 +10064,23 @@ name|natp
 operator|=
 name|nat
 expr_stmt|;
-comment|/* 	 * Add into the NAT table in the new position 	 */
+name|hv
+operator|=
+name|NAT_HASH_FN
+argument_list|(
+name|nat
+operator|->
+name|nat_outip
+operator|.
+name|s_addr
+argument_list|,
+name|nat
+operator|->
+name|nat_outport
+argument_list|,
+name|ipf_nattable_sz
+argument_list|)
+expr_stmt|;
 name|natp
 operator|=
 operator|&
@@ -10352,7 +10367,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|nat_wilds
+name|nat_stats
+operator|.
+name|ns_wilds
 operator|||
 operator|!
 operator|(
@@ -10509,22 +10526,9 @@ operator|)
 operator|)
 condition|)
 block|{
-name|hv
-operator|=
-name|NAT_HASH_FN
-argument_list|(
-name|srcip
-argument_list|,
-name|sport
-argument_list|,
-name|ipf_nattable_sz
-argument_list|)
-expr_stmt|;
 name|nat_tabmove
 argument_list|(
 name|nat
-argument_list|,
-name|hv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11376,7 +11380,9 @@ name|nat
 operator|->
 name|nat_flags
 expr_stmt|;
-name|nat_wilds
+name|nat_stats
+operator|.
+name|ns_wilds
 operator|--
 expr_stmt|;
 block|}
@@ -12625,7 +12631,9 @@ name|nat
 operator|->
 name|nat_flags
 expr_stmt|;
-name|nat_wilds
+name|nat_stats
+operator|.
+name|ns_wilds
 operator|--
 expr_stmt|;
 block|}

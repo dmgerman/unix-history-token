@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.7.2.17 2000/10/19 15:40:40 darrenr Exp $  */
+comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.7.2.18 2000/10/27 14:02:10 darrenr Exp $  */
 end_comment
 
 begin_if
@@ -1475,6 +1475,16 @@ literal|0
 expr_stmt|;
 name|fi
 operator|.
+name|fin_dlen
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tcp2
+argument_list|)
+expr_stmt|;
+name|fi
+operator|.
 name|fin_dp
 operator|=
 operator|(
@@ -2388,6 +2398,16 @@ operator|<<
 literal|8
 operator||
 name|a6
+expr_stmt|;
+name|fi
+operator|.
+name|fin_dlen
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tcp2
+argument_list|)
 expr_stmt|;
 name|tcp2
 operator|->
