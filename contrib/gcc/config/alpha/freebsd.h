@@ -8,8 +8,23 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* Provide a CPP_SPEC appropriate for FreeBSD/alpha.  Besides the dealing with    the GCC option `-posix', and PIC issues as on all FreeBSD platforms, we must    deal with the Alpha's FP issues.  */
+comment|/* Provide a FBSD_TARGET_CPU_CPP_BUILTINS and CPP_SPEC appropriate for    FreeBSD/alpha.  Besides the dealing with    the GCC option `-posix', and PIC issues as on all FreeBSD platforms, we must    deal with the Alpha's FP issues.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       if (flag_pic)				\ 	{					\ 	  builtin_define ("__PIC__");		\ 	  builtin_define ("__pic__");		\ 	}					\     }						\   while (0)
+end_define
 
 begin_undef
 undef|#
@@ -21,14 +36,8 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %(cpp_subtarget) -D__ELF__			\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}		\   %{posix:-D_POSIX_SOURCE}						\   %{mieee:-D_IEEE_FP}							\   %{mieee-with-inexact:-D_IEEE_FP -D_IEEE_FP_INEXACT}"
+value|"%(cpp_subtarget) %{posix:-D_POSIX_SOURCE}"
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
 
 begin_define
 define|#
@@ -72,19 +81,6 @@ undef|#
 directive|undef
 name|WCHAR_TYPE
 end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|0
-end_define
 
 begin_undef
 undef|#

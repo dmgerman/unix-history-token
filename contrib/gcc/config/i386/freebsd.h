@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\  %{p:%e`-p' not supported; use `-pg' and gprof(1)} \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker: -dynamic-linker /usr/libexec/ld-elf.so.1}} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
+value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker: -dynamic-linker /usr/libexec/ld-elf.so.1}} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
 end_define
 
 begin_comment
@@ -144,12 +144,6 @@ name|WCHAR_TYPE_SIZE
 value|(TARGET_64BIT ? 32 : BITS_PER_WORD)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -228,6 +222,18 @@ value|0
 end_define
 
 begin_comment
+comment|/* FreeBSD sets the rounding precision of the FPU to 53 bits.  Let the    compiler get the contents of<float.h> and std::numeric_limits correct.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_OVERRIDE_OPTIONS
+define|\
+value|do {							\     real_format_for_mode[XFmode - QFmode]		\       =&ieee_extended_intel_96_round_53_format;	\     real_format_for_mode[TFmode - QFmode]		\       =&ieee_extended_intel_96_round_53_format;	\   } while (0)
+end_define
+
+begin_comment
 comment|/* Tell final.c that we don't need a label passed to mcount.  */
 end_comment
 
@@ -245,20 +251,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|MCOUNT_NAME
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|do {									\     if (flag_pic)							\       fprintf ((FILE), "\tcall *.mcount@GOT(%%ebx)\n");			\     else								\       fprintf ((FILE), "\tcall .mcount\n");				\   } while (0)
+name|MCOUNT_NAME
+value|".mcount"
 end_define
 
 begin_comment
