@@ -24,6 +24,16 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
