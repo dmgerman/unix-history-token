@@ -2474,18 +2474,6 @@ return|;
 block|}
 end_function
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_kern.h>
-end_include
-
 begin_function
 specifier|static
 name|int
@@ -2501,7 +2489,6 @@ name|bio
 modifier|*
 name|bp
 parameter_list|)
-block|{
 block|{
 name|struct
 name|sf_buf
@@ -2535,7 +2522,7 @@ name|bp
 operator|->
 name|bio_data
 expr_stmt|;
-comment|/* 		 * offs is the ofset at whih to start operating on the 		 * next (ie, first) page.  lastp is the last page on 		 * which we're going to operate.  lastend is the ending 		 * position within that last page (ie, PAGE_SIZE if 		 * we're operating on complete aligned pages). 		 */
+comment|/* 	 * offs is the ofset at whih to start operating on the 	 * next (ie, first) page.  lastp is the last page on 	 * which we're going to operate.  lastend is the ending 	 * position within that last page (ie, PAGE_SIZE if 	 * we're operating on complete aligned pages). 	 */
 name|offs
 operator|=
 name|bp
@@ -2681,7 +2668,6 @@ name|valid
 operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
-block|{
 name|rv
 operator|=
 name|vm_pager_get_pages
@@ -2698,7 +2684,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 operator|(
@@ -2742,7 +2727,6 @@ name|valid
 operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
-block|{
 name|rv
 operator|=
 name|vm_pager_get_pages
@@ -2759,7 +2743,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|p
@@ -2789,7 +2772,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|} else if (bp->bio_cmd == BIO_DELETE) { 				if (len != PAGE_SIZE&& m->valid != 				    VM_PAGE_BITS_ALL) { 					rv = vm_pager_get_pages(sc->object,&m, 1, 0); 				} 				bzero((void *)(sf_buf_kva(sf) + offs), len); 				vm_page_dirty(m); 				m->valid = VM_PAGE_BITS_ALL;
+block|} else if (bp->bio_cmd == BIO_DELETE) { 			if (len != PAGE_SIZE&& m->valid != VM_PAGE_BITS_ALL) 				rv = vm_pager_get_pages(sc->object,&m, 1, 0); 			bzero((void *)(sf_buf_kva(sf) + offs), len); 			vm_page_dirty(m); 			m->valid = VM_PAGE_BITS_ALL;
 endif|#
 directive|endif
 block|}
@@ -2819,13 +2802,11 @@ name|bio_cmd
 operator|==
 name|BIO_WRITE
 condition|)
-block|{
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -2875,7 +2856,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 
