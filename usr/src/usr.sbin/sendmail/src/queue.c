@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.13 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.14 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.13 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.14 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4614,7 +4614,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|PRIV_RESTRMAILQ
+name|PRIV_RESTRICTMAILQ
 argument_list|,
 name|PrivacyFlags
 argument_list|)

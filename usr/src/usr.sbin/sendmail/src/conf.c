@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.24 (Berkeley) %G%"
+literal|"@(#)conf.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,7 +297,11 @@ name|PRIV_NOVRFY
 block|,
 literal|"restrictmailq"
 block|,
-name|PRIV_RESTRMAILQ
+name|PRIV_RESTRICTMAILQ
+block|,
+literal|"restrictqrun"
+block|,
+name|PRIV_RESTRICTQRUN
 block|,
 literal|"authwarnings"
 block|,

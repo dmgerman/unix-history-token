@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.24 (Berkeley) %G%"
+literal|"@(#)main.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2951,6 +2951,13 @@ operator|&&
 name|RealUid
 operator|!=
 literal|0
+operator|&&
+name|bitset
+argument_list|(
+name|PRIV_RESTRICTQRUN
+argument_list|,
+name|PrivacyFlags
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -2989,7 +2996,7 @@ block|{
 comment|/* nope, really a botch */
 name|usrerr
 argument_list|(
-literal|"Permission denied"
+literal|"You do not have permission to process the queue"
 argument_list|)
 expr_stmt|;
 name|exit
