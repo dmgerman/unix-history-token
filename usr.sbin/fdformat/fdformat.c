@@ -10,6 +10,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -22,31 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<strings.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -289,18 +289,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"\nfdformat: ioctl(FD_FORM)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl(FD_FORM)"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -358,7 +353,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"warning: ioctl(FD_GOPTS)"
 argument_list|)
@@ -429,20 +424,13 @@ condition|(
 operator|!
 name|buf
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\nfdformat: out of memory\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|lseek
@@ -619,99 +607,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Usage:\n\tfdformat [-q] [-n | -v] [-f #] [-c #] [-s #] [-h #]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t\t [-r #] [-g #] [-i #] [-S #] [-F #] [-t #] devname\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-q\tsupress any normal output, don't ask for confirmation\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-n\tdon't verify floppy after formatting\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-v\tdon't format, verify only\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-f #\tspecify desired floppy capacity, in kilobytes;\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t\tvalid choices are 360, 720, 800, 820, 1200, 1440, 1480, 1720\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tdevname\tthe full name of floppy device or in short form fd0, fd1\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Obscure options:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-c #\tspecify number of cylinders, 40 or 80\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-s #\tspecify number of sectors per track, 9, 10, 15 or 18\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-h #\tspecify number of floppy heads, 1 or 2\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-r #\tspecify data rate, 250, 300 or 500 kbps\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-g #\tspecify gap length\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-i #\tspecify interleave factor\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-S #\tspecify sector size, 0=128, 1=256, 2=512 bytes\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-F #\tspecify fill byte\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-t #\tnumber of steps per track\n"
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: fdformat [-q] [-n | -v] [-f #] [-c #] [-s #] [-h #]"
+argument_list|,
+literal|"                [-r #] [-g #] [-i #] [-S #] [-F #] [-t #] devname"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1169,18 +1073,13 @@ name|format
 condition|)
 block|{
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fdformat: bad floppy size: %dK\n"
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"bad floppy size: %dK"
+argument_list|,
+name|format
 argument_list|)
 expr_stmt|;
 case|case
@@ -1284,18 +1183,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ioctl
@@ -1310,22 +1206,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"fdformat: not a floppy disk: %s\n"
+literal|"not a floppy disk: %s"
 argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|rate
@@ -1367,18 +1256,13 @@ name|FDC_500KBPS
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fdformat: invalid transfer rate: %d\n"
-argument_list|,
-name|rate
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"invalid transfer rate: %d"
+argument_list|,
+name|rate
 argument_list|)
 expr_stmt|;
 block|}
@@ -1414,22 +1298,15 @@ name|sectrac
 operator|>
 name|FD_MAX_NSEC
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"fdformat: too many sectors per track, max value is %d\n"
+literal|"too many sectors per track, max value is %d"
 argument_list|,
 name|FD_MAX_NSEC
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|heads
