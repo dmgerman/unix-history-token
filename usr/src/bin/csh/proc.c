@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.8 (Berkeley) %G%"
+literal|"@(#)proc.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,10 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
+specifier|extern
+name|int
+name|insource
+decl_stmt|;
 name|loop
 label|:
 name|pid
@@ -117,10 +121,12 @@ operator|&
 name|w
 argument_list|,
 operator|(
-operator|(
 name|setintr
 operator|&&
+operator|(
 name|intty
+operator|||
+name|insource
 operator|)
 condition|?
 name|WNOHANG

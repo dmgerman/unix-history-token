@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.4 (Berkeley) %G%"
+literal|"@(#)csh.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1864,7 +1864,14 @@ begin_comment
 comment|/*  * Source to a unit.  If onlyown it must be our file or our group or  * we don't chance it.	This occurs on ".cshrc"s and the like.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|insource
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
+specifier|static
 name|srcunit
 argument_list|(
 name|unit
@@ -2037,6 +2044,10 @@ return|return;
 block|}
 block|}
 comment|/* 	 * There is a critical section here while we are pushing down the 	 * input stream since we have stuff in different structures. 	 * If we weren't careful an interrupt could corrupt SHIN's Bin 	 * structure and kill the shell. 	 * 	 * We could avoid the critical region by grouping all the stuff 	 * in a single structure and pointing at it to move it all at 	 * once.  This is less efficient globally on many variable references 	 * however. 	 */
+name|insource
+operator|=
+literal|1
+expr_stmt|;
 name|getexit
 argument_list|(
 name|oldexit
@@ -2344,6 +2355,10 @@ name|error
 argument_list|(
 name|NOSTR
 argument_list|)
+expr_stmt|;
+name|insource
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_block
