@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: kpasswd_locl.h,v 1.12 2001/08/22 20:30:26 assar Exp $ */
+comment|/* $Id: kpasswd_locl.h,v 1.13 2002/09/10 20:03:48 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -361,39 +361,21 @@ directive|include
 file|<getarg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_OPENSSL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/des.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<des.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<krb5.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto-headers.h"
+end_include
+
+begin_comment
+comment|/* for des_read_pw_string */
+end_comment
 
 begin_endif
 endif|#

@@ -62,7 +62,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: version4.c,v 1.25 2002/05/24 15:23:43 joda Exp $"
+literal|"$Id: version4.c,v 1.26 2002/09/10 15:20:46 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4026,7 +4026,7 @@ condition|)
 block|{
 name|make_you_loose_packet
 argument_list|(
-name|krb_err_base
+name|ERROR_TABLE_BASE_krb
 operator|+
 name|ret
 argument_list|,
@@ -4241,7 +4241,7 @@ condition|)
 block|{
 name|make_you_loose_packet
 argument_list|(
-name|krb_err_base
+name|ERROR_TABLE_BASE_krb
 operator|+
 name|ret
 argument_list|,

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: server.c,v 1.34 2002/05/24 15:23:42 joda Exp $"
+literal|"$Id: server.c,v 1.36 2002/09/10 19:23:28 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1275,6 +1275,47 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* n_key_data will be squeezed into an int16_t below. */
+if|if
+condition|(
+name|n_key_data
+operator|<
+literal|0
+operator|||
+name|n_key_data
+operator|>=
+literal|1
+operator|<<
+literal|16
+operator|||
+name|n_key_data
+operator|>
+name|UINT_MAX
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|key_data
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+name|ERANGE
+expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|,
+name|princ
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|key_data
 operator|=
 name|malloc
@@ -2233,6 +2274,7 @@ specifier|static
 name|krb5_boolean
 name|match_appl_version
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|data

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: prompter_posix.c,v 1.6 2001/05/11 20:26:49 assar Exp $"
+literal|"$Id: prompter_posix.c,v 1.7 2002/09/16 17:32:11 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -197,28 +197,14 @@ condition|)
 return|return
 literal|1
 return|;
-if|if
-condition|(
 name|s
 index|[
-name|strlen
+name|strcspn
 argument_list|(
 name|s
+argument_list|,
+literal|"\n"
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|'\n'
-condition|)
-name|s
-index|[
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-operator|-
-literal|1
 index|]
 operator|=
 literal|'\0'

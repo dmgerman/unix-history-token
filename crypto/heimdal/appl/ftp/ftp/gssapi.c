@@ -46,7 +46,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gssapi.c,v 1.19 2002/08/20 12:47:45 joda Exp $"
+literal|"$Id: gssapi.c,v 1.20 2002/09/04 22:00:50 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -202,6 +202,9 @@ name|d
 init|=
 name|app_data
 decl_stmt|;
+name|size_t
+name|ret_len
+decl_stmt|;
 name|input
 operator|.
 name|length
@@ -262,10 +265,23 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
-return|return
+name|ret_len
+operator|=
 name|output
 operator|.
 name|length
+expr_stmt|;
+name|gss_release_buffer
+argument_list|(
+operator|&
+name|min_stat
+argument_list|,
+operator|&
+name|output
+argument_list|)
+expr_stmt|;
+return|return
+name|ret_len
 return|;
 block|}
 end_function

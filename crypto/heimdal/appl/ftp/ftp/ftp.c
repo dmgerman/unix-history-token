@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.73 2002/08/28 16:10:39 joda Exp $"
+literal|"$Id: ftp.c,v 1.74 2002/09/04 22:00:12 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6123,10 +6123,6 @@ name|sendport
 condition|)
 block|{
 name|char
-modifier|*
-name|cmd
-decl_stmt|;
-name|char
 name|addr_str
 index|[
 literal|256
@@ -6209,26 +6205,6 @@ name|sa_family
 argument_list|)
 expr_stmt|;
 block|}
-name|asprintf
-argument_list|(
-operator|&
-name|cmd
-argument_list|,
-literal|"EPRT |%d|%s|%d|"
-argument_list|,
-name|inet_af
-argument_list|,
-name|addr_str
-argument_list|,
-name|ntohs
-argument_list|(
-name|socket_get_port
-argument_list|(
-name|data_addr
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|overbose
 operator|=
 name|verbose
@@ -6248,7 +6224,19 @@ name|result
 operator|=
 name|command
 argument_list|(
-name|cmd
+literal|"EPRT |%d|%s|%d|"
+argument_list|,
+name|inet_af
+argument_list|,
+name|addr_str
+argument_list|,
+name|ntohs
+argument_list|(
+name|socket_get_port
+argument_list|(
+name|data_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|verbose

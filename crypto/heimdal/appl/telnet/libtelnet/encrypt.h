@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: encrypt.h,v 1.7 2001/08/22 20:30:22 assar Exp $ */
+comment|/* $Id: encrypt.h,v 1.8 2002/09/10 20:03:47 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -221,17 +221,17 @@ begin_comment
 comment|/* Matched Kerberos v5 KEYTYPE_DES */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"crypto-headers.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_OPENSSL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/des.h>
-end_include
 
 begin_define
 define|#
@@ -239,17 +239,6 @@ directive|define
 name|des_new_random_key
 value|des_random_key
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<des.h>
-end_include
 
 begin_endif
 endif|#

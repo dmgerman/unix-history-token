@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kuserok.c,v 1.5 1999/12/02 17:05:11 joda Exp $"
+literal|"$Id: kuserok.c,v 1.6 2002/09/16 17:32:11 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -252,28 +252,14 @@ block|{
 name|krb5_principal
 name|tmp
 decl_stmt|;
-if|if
-condition|(
 name|buf
 index|[
-name|strlen
+name|strcspn
 argument_list|(
 name|buf
+argument_list|,
+literal|"\n"
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|'\n'
-condition|)
-name|buf
-index|[
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
 index|]
 operator|=
 literal|'\0'

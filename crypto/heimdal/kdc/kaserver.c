@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kaserver.c,v 1.19 2002/04/18 16:07:39 joda Exp $"
+literal|"$Id: kaserver.c,v 1.20 2002/09/09 14:03:02 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -921,6 +921,15 @@ name|ret
 condition|)
 return|return
 name|ret
+return|;
+if|if
+condition|(
+name|size
+operator|<
+literal|0
+condition|)
+return|return
+name|ERANGE
 return|;
 name|data
 operator|->

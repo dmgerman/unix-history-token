@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos5.c,v 1.50 2002/08/28 20:55:53 joda Exp $"
+literal|"$Id: kerberos5.c,v 1.51 2002/09/02 15:33:20 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -818,6 +818,10 @@ else|else
 name|ap_opts
 operator|=
 literal|0
+expr_stmt|;
+name|ap_opts
+operator||=
+name|AP_OPTS_USE_SUBKEY
 expr_stmt|;
 name|ret
 operator|=
