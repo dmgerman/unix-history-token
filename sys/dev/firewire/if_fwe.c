@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|FWEDEBUG
-value|if (fwedebug) printf
+value|if (fwedebug) if_printf
 end_define
 
 begin_define
@@ -1059,11 +1059,9 @@ endif|#
 directive|endif
 name|FWEDEBUG
 argument_list|(
-literal|"interface %s created.\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_xname
+argument_list|,
+literal|"interface created\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1439,11 +1437,9 @@ name|i
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"initializing %s\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_xname
+argument_list|,
+literal|"initializing\n"
 argument_list|)
 expr_stmt|;
 comment|/* XXX keep promiscoud mode */
@@ -2271,6 +2267,8 @@ expr_stmt|;
 comment|/* XXX error check */
 name|FWEDEBUG
 argument_list|(
+name|ifp
+argument_list|,
 literal|"resp = %d\n"
 argument_list|,
 name|xfer
@@ -2378,11 +2376,9 @@ name|s
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"%s starting\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_xname
+argument_list|,
+literal|"starting\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2403,11 +2399,9 @@ name|NULL
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"%s not ready.\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_xname
+argument_list|,
+literal|"not ready\n"
 argument_list|)
 expr_stmt|;
 name|s
@@ -3155,7 +3149,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|FWEDEBUG("%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n", 			 c[0], c[1], c[2], c[3], c[4], c[5], 			 c[6], c[7], c[8], c[9], c[10], c[11], 			 c[12], c[13], c[14], c[15], 			 c[16], c[17], c[18], c[19], 			 c[20], c[21], c[22], c[23], 			 c[20], c[21], c[22], c[23] 		 );
+block|FWEDEBUG(ifp, "%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n", 			 c[0], c[1], c[2], c[3], c[4], c[5], 			 c[6], c[7], c[8], c[9], c[10], c[11], 			 c[12], c[13], c[14], c[15], 			 c[16], c[17], c[18], c[19], 			 c[20], c[21], c[22], c[23], 			 c[20], c[21], c[22], c[23] 		 );
 endif|#
 directive|endif
 if|#
