@@ -544,10 +544,17 @@ condition|;
 name|i
 operator|++
 control|)
+operator|*
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|scrnmap
-index|[
+operator|+
 name|i
-index|]
+operator|)
 operator|=
 name|i
 expr_stmt|;
@@ -568,11 +575,6 @@ condition|)
 name|perror
 argument_list|(
 literal|"can't load default screenmap"
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 block|}
