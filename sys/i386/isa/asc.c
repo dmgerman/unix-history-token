@@ -4169,7 +4169,9 @@ name|sps
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|revents
+operator|)
 return|;
 block|}
 end_function
