@@ -15,6 +15,12 @@ directive|define
 name|FBSD_KGDB_POWERPC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"fbsd-kgdb.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif

@@ -15,6 +15,18 @@ directive|define
 name|FBSD_KGDB_SPARC64_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"sparc/tm-fbsd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fbsd-kgdb.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif

@@ -15,6 +15,18 @@ directive|define
 name|FBSD_KGDB_ALPHA_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"alpha/tm-fbsd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fbsd-kgdb.h"
+end_include
+
 begin_undef
 undef|#
 directive|undef
