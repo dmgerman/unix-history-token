@@ -805,8 +805,10 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|atpic_intsrc
+name|atintrs
+index|[
+literal|0
+index|]
 argument_list|)
 operator|==
 name|NUM_ISA_IRQS
@@ -2067,7 +2069,7 @@ break|break;
 block|}
 else|#
 directive|else
-comment|/* 	 * Look for an ELCR.  If we find one, update the trigger modes. 	 * If we don't find one, assume that IRQs 0, 1, 2, and 13 are 	 * edge triggered and that everything else is level triggered. 	 * We only use the trigger information to reprogram the ELCR if 	 * we have one and as an optimization to avoid masking edge 	 * triggered interrupts.  For the case that we don't have an ELCR, 	 * it doesn't hurt to mask an edge triggered interrupt, so we 	 * that is why we assume level trigger for any interrupt that we 	 * aren't sure is edge triggered. 	 */
+comment|/* 	 * Look for an ELCR.  If we find one, update the trigger modes. 	 * If we don't find one, assume that IRQs 0, 1, 2, and 13 are 	 * edge triggered and that everything else is level triggered. 	 * We only use the trigger information to reprogram the ELCR if 	 * we have one and as an optimization to avoid masking edge 	 * triggered interrupts.  For the case that we don't have an ELCR, 	 * it doesn't hurt to mask an edge triggered interrupt, so we 	 * assume level trigger for any interrupt that we aren't sure is 	 * edge triggered. 	 */
 if|if
 condition|(
 name|elcr_probe
