@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pcmciachip.h,v 1.3 1998/11/17 08:49:12 thorpej Exp $	*/
+comment|/*	$NetBSD: pcmciachip.h,v 1.4 1999/10/15 06:07:32 haya Exp $	*/
 end_comment
 
 begin_comment
@@ -332,6 +332,18 @@ name|pccard_chipset_handle_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* card detection */
+name|int
+argument_list|(
+argument|*card_detect
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|pcmcia_chipset_handle_t
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -568,6 +580,7 @@ name|char
 modifier|*
 name|paa_busname
 decl_stmt|;
+comment|/* Bus name */
 name|pccard_chipset_tag_t
 name|pct
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: i82365_isasubr.c,v 1.1 1998/06/07 18:28:31 sommerfe Exp $	*/
+comment|/*	$NetBSD: i82365_isasubr.c,v 1.3 1999/10/15 06:07:27 haya Exp $	*/
 end_comment
 
 begin_comment
@@ -747,6 +747,10 @@ define|#
 directive|define
 name|IST_PULSE
 value|2
+define|#
+directive|define
+name|IST_EDGE
+value|3
 name|struct
 name|pcic_handle
 modifier|*
@@ -759,11 +763,25 @@ operator|*
 operator|)
 name|pch
 decl_stmt|;
+name|struct
+name|pcic_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|pcic_softc
+operator|*
+operator|)
+operator|(
+name|h
+operator|->
+name|ph_parent
+operator|)
+decl_stmt|;
 name|isa_chipset_tag_t
 name|ic
 init|=
-name|h
-operator|->
 name|sc
 operator|->
 name|intr_est
@@ -812,7 +830,7 @@ expr_stmt|;
 else|else
 name|ist
 operator|=
-name|IST_LEVEL
+name|IST_EDGE
 expr_stmt|;
 if|#
 directive|if
@@ -880,7 +898,11 @@ expr_stmt|;
 name|reg
 operator|&=
 operator|~
+operator|(
 name|PCIC_INTR_IRQ_MASK
+operator||
+name|PCIC_INTR_ENABLE
+operator|)
 expr_stmt|;
 name|reg
 operator||=
@@ -944,11 +966,25 @@ operator|*
 operator|)
 name|pch
 decl_stmt|;
+name|struct
+name|pcic_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|pcic_softc
+operator|*
+operator|)
+operator|(
+name|h
+operator|->
+name|ph_parent
+operator|)
+decl_stmt|;
 name|isa_chipset_tag_t
 name|ic
 init|=
-name|h
-operator|->
 name|sc
 operator|->
 name|intr_est

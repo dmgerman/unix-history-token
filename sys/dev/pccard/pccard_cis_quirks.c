@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pcmcia_cis_quirks.c,v 1.3 1998/12/29 09:00:28 marc Exp $	*/
+comment|/*	$NetBSD: pcmcia_cis_quirks.c,v 1.5 1999/10/11 17:50:21 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -263,6 +263,152 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|pccard_function
+name|pccard_3ccfem556bi_func0
+init|=
+block|{
+literal|0
+block|,
+comment|/* function number */
+name|PCCARD_FUNCTION_NETWORK
+block|,
+literal|0x07
+block|,
+comment|/* last cfe number */
+literal|0x1000
+block|,
+comment|/* ccr_base */
+literal|0x267
+block|,
+comment|/* ccr_mask */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_config_entry
+name|pccard_3ccfem556bi_func0_cfe0
+init|=
+block|{
+literal|0x07
+block|,
+comment|/* cfe number */
+name|PCCARD_CFE_IO8
+operator||
+name|PCCARD_CFE_IO16
+operator||
+name|PCCARD_CFE_IRQLEVEL
+block|,
+name|PCCARD_IFTYPE_IO
+block|,
+literal|1
+block|,
+comment|/* num_iospace */
+literal|5
+block|,
+comment|/* iomask */
+block|{
+block|{
+literal|0x0020
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* iospace */
+literal|0xffff
+block|,
+comment|/* irqmask */
+literal|0
+block|,
+comment|/* num_memspace */
+block|{ }
+block|,
+comment|/* memspace */
+literal|0
+block|,
+comment|/* maxtwins */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_function
+name|pccard_3ccfem556bi_func1
+init|=
+block|{
+literal|1
+block|,
+comment|/* function number */
+name|PCCARD_FUNCTION_SERIAL
+block|,
+literal|0x27
+block|,
+comment|/* last cfe number */
+literal|0x1100
+block|,
+comment|/* ccr_base */
+literal|0x277
+block|,
+comment|/* ccr_mask */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_config_entry
+name|pccard_3ccfem556bi_func1_cfe0
+init|=
+block|{
+literal|0x27
+block|,
+comment|/* cfe number */
+name|PCCARD_CFE_IO8
+operator||
+name|PCCARD_CFE_IRQLEVEL
+block|,
+name|PCCARD_IFTYPE_IO
+block|,
+literal|1
+block|,
+comment|/* num_iospace */
+literal|3
+block|,
+comment|/* iomask */
+block|{
+block|{
+literal|0x0008
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* iospace */
+literal|0xffff
+block|,
+comment|/* irqmask */
+literal|0
+block|,
+comment|/* num_memspace */
+block|{ }
+block|,
+comment|/* memspace */
+literal|0
+block|,
+comment|/* maxtwins */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_function
 name|pccard_sveclancard_func0
 init|=
 block|{
@@ -371,6 +517,62 @@ name|pccard_3cxem556_func1
 block|,
 operator|&
 name|pccard_3cxem556_func1_cfe0
+block|}
+block|,
+block|{
+name|PCCARD_VENDOR_3COM
+block|,
+name|PCCARD_PRODUCT_3COM_3CXEM556INT
+block|,
+name|PCCARD_CIS_INVALID
+block|,
+operator|&
+name|pccard_3cxem556_func0
+block|,
+operator|&
+name|pccard_3cxem556_func0_cfe0
+block|}
+block|,
+block|{
+name|PCCARD_VENDOR_3COM
+block|,
+name|PCCARD_PRODUCT_3COM_3CXEM556INT
+block|,
+name|PCCARD_CIS_INVALID
+block|,
+operator|&
+name|pccard_3cxem556_func1
+block|,
+operator|&
+name|pccard_3cxem556_func1_cfe0
+block|}
+block|,
+block|{
+name|PCCARD_VENDOR_3COM
+block|,
+name|PCCARD_PRODUCT_3COM_3CCFEM556BI
+block|,
+name|PCCARD_CIS_INVALID
+block|,
+operator|&
+name|pccard_3ccfem556bi_func0
+block|,
+operator|&
+name|pccard_3ccfem556bi_func0_cfe0
+block|}
+block|,
+block|{
+name|PCCARD_VENDOR_3COM
+block|,
+name|PCCARD_PRODUCT_3COM_3CCFEM556BI
+block|,
+name|PCCARD_CIS_INVALID
+block|,
+operator|&
+name|pccard_3ccfem556bi_func1
+block|,
+operator|&
+name|pccard_3ccfem556bi_func1_cfe0
 block|}
 block|,
 block|{

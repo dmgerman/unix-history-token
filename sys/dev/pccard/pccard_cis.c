@@ -2306,9 +2306,10 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|printf
 argument_list|(
-literal|" %lx%s%lx"
+literal|" %lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2318,7 +2319,10 @@ name|i
 index|]
 operator|.
 name|start
-argument_list|,
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|cfe
 operator|->
 name|iospace
@@ -2327,10 +2331,10 @@ name|i
 index|]
 operator|.
 name|length
-condition|?
-literal|"-"
-else|:
-literal|""
+condition|)
+name|printf
+argument_list|(
+literal|"-%lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2353,6 +2357,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2381,9 +2386,10 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|printf
 argument_list|(
-literal|" %lx%s%lx%s%lx"
+literal|" %lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2393,7 +2399,10 @@ name|i
 index|]
 operator|.
 name|cardaddr
-argument_list|,
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|cfe
 operator|->
 name|memspace
@@ -2402,10 +2411,10 @@ name|i
 index|]
 operator|.
 name|length
-condition|?
-literal|"-"
-else|:
-literal|""
+condition|)
+name|printf
+argument_list|(
+literal|"-%lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2426,7 +2435,10 @@ operator|.
 name|length
 operator|-
 literal|1
-argument_list|,
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|cfe
 operator|->
 name|memspace
@@ -2435,10 +2447,10 @@ name|i
 index|]
 operator|.
 name|hostaddr
-condition|?
-literal|"@"
-else|:
-literal|""
+condition|)
+name|printf
+argument_list|(
+literal|"@%lx"
 argument_list|,
 name|cfe
 operator|->
@@ -2450,6 +2462,7 @@ operator|.
 name|hostaddr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4957,6 +4970,8 @@ operator|=
 name|reg
 operator|&
 name|PCCARD_TPCE_MS_COUNT
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(

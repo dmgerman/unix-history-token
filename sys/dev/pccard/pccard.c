@@ -389,7 +389,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pccard_card_attach
 parameter_list|(
@@ -776,7 +775,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pccard_card_detach
 parameter_list|(
@@ -929,7 +927,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pccard_card_deactivate
 parameter_list|(
@@ -1029,7 +1026,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pccard_card_gettype
 parameter_list|(
