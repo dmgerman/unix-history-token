@@ -148,12 +148,7 @@ name|unsigned
 name|sd_lobase
 range|:
 literal|24
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* segment base address (lsb) */
 name|unsigned
@@ -812,12 +807,7 @@ name|unsigned
 name|rd_base
 range|:
 literal|32
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 decl_stmt|;
 comment|/* base address  */
 block|}
