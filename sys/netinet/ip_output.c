@@ -153,23 +153,6 @@ directive|include
 file|"faith.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/mtpr.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
