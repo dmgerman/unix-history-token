@@ -145,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_POWER_CONTROL
+value|ACPI_POWER
 end_define
 
 begin_macro

@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_BUS_MANAGER
+value|ACPI_BUS
 end_define
 
 begin_macro
