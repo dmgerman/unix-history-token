@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -137,15 +137,19 @@ comment|/* vnode mountlist back */
 name|struct
 name|buf
 modifier|*
-name|v_blockh
+name|v_cleanblkhd
 decl_stmt|;
-comment|/* logical blocklist head */
+comment|/* clean blocklist head */
+name|struct
+name|buf
+modifier|*
+name|v_dirtyblkhd
+decl_stmt|;
+comment|/* dirty blocklist head */
 name|long
-name|v_spare0
+name|v_numoutput
 decl_stmt|;
-name|long
-name|v_spare1
-decl_stmt|;
+comment|/* num of writes in progress */
 name|enum
 name|vtype
 name|v_type
@@ -232,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|VROOT
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -243,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|VTEXT
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -254,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|VXLOCK
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -265,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|VXWANT
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -276,7 +280,7 @@ begin_define
 define|#
 directive|define
 name|VEXLOCK
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -287,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|VSHLOCK
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -298,7 +302,7 @@ begin_define
 define|#
 directive|define
 name|VLWAIT
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -309,11 +313,22 @@ begin_define
 define|#
 directive|define
 name|VALIASED
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* vnode has an alias */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VBWAIT
+value|0x0100
+end_define
+
+begin_comment
+comment|/* waiting for output to complete */
 end_comment
 
 begin_comment
