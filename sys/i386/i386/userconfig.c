@@ -13954,7 +13954,6 @@ operator|->
 name|id_flags
 argument_list|,
 comment|/* dt->id_scsiid, dt->id_alive, dt->id_ri_flags, */
-comment|/* dt->id_reconfig, */
 name|dt
 operator|->
 name|id_enabled

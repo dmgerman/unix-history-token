@@ -1547,31 +1547,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|reconfig_isadev
-parameter_list|(
-name|isdp
-parameter_list|,
-name|mp
-parameter_list|)
-name|struct
-name|isa_device
-modifier|*
-name|isdp
-decl_stmt|;
-name|u_int
-modifier|*
-name|mp
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"reconfig_isadev() called - FIXME!\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 end_unit
 

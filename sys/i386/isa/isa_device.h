@@ -132,10 +132,6 @@ name|id_ri_flags
 decl_stmt|;
 comment|/* flags for register_intr() */
 name|int
-name|id_reconfig
-decl_stmt|;
-comment|/* hot eject device support (such as PCMCIA) */
-name|int
 name|id_enabled
 decl_stmt|;
 comment|/* is device enabled */
@@ -229,25 +225,6 @@ name|dvp
 operator|,
 name|int
 name|iosize
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|reconfig_isadev
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|isdp
-operator|,
-name|u_int
-operator|*
-name|mp
 operator|)
 argument_list|)
 decl_stmt|;
