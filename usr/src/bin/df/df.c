@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.4 (Berkeley) %G%"
+literal|"@(#)df.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,7 +576,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: screwy /etc/fstab entry\n"
+literal|"%s: screwy fstab entry\n"
 argument_list|,
 name|file
 argument_list|)
@@ -1132,9 +1132,14 @@ name|strncmp
 argument_list|(
 name|f1
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
-literal|5
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -1149,9 +1154,14 @@ name|strncmp
 argument_list|(
 name|f2
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
-literal|5
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|==
 literal|0
