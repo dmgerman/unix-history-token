@@ -580,7 +580,7 @@ init|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mac
+name|oldmac
 argument_list|)
 decl_stmt|;
 end_decl_stmt
