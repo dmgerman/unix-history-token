@@ -5328,10 +5328,17 @@ if|if
 condition|(
 name|s2
 operator|&&
+operator|(
 operator|*
 name|s2
 operator|==
 literal|'s'
+operator|||
+operator|*
+name|s2
+operator|==
+literal|'p'
+operator|)
 condition|)
 block|{
 name|slice
