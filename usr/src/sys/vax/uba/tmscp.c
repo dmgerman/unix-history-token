@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.10 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.11 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_include
@@ -361,7 +367,6 @@ name|tms_format
 decl_stmt|;
 comment|/* the unit's current format (density) */
 name|caddr_t
-modifier|*
 name|tms_ctty
 decl_stmt|;
 comment|/* user's controlling tty (vnode) */
