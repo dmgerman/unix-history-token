@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.79 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.80 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1854,6 +1854,39 @@ operator|->
 name|um_devvp
 operator|=
 name|devvp
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ump
+operator|->
+name|um_nindir
+operator|=
+name|fs
+operator|->
+name|fs_nindir
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ump
+operator|->
+name|um_bptrtodb
+operator|=
+name|fs
+operator|->
+name|fs_fsbtodb
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ump
+operator|->
+name|um_seqinc
+operator|=
+name|fs
+operator|->
+name|fs_frag
 expr_stmt|;
 end_expr_stmt
 
