@@ -312,6 +312,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|makeobj
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* add 'make obj' rules to the makefile */
+end_comment
+
+begin_decl_stmt
+name|int
 name|list_mode
 decl_stmt|;
 end_decl_stmt
@@ -459,7 +471,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lh:m:c:e:fq"
+literal|"lh:m:c:e:foq"
 argument_list|)
 operator|)
 operator|!=
@@ -478,6 +490,14 @@ case|:
 name|readcache
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|makeobj
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -761,7 +781,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: crunchgen [-fq] [-m<makefile>] [-c<c file>]"
+literal|"usage: crunchgen [-foq] [-m<makefile>] [-c<c file>]"
 argument_list|,
 literal|"                 [-e<exec file>]<conffile>"
 argument_list|)
@@ -4408,13 +4428,37 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t(cd $(%s_SRCDIR)&& make obj&& \\\n"
-literal|"\t\tmake $(OPTS) $(%s_OPTS) depend&& \\\n"
-literal|"\t\tmake $(OPTS) $(%s_OPTS) $(%s_OBJS))\n"
+literal|"\t(cd $(%s_SRCDIR)&& "
 argument_list|,
 name|p
 operator|->
 name|ident
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|makeobj
+condition|)
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"make obj&& "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\\\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\t\tmake $(OPTS) $(%s_OPTS) depend&& \\\n"
+literal|"\t\tmake $(OPTS) $(%s_OPTS) $(%s_OBJS))\n"
 argument_list|,
 name|p
 operator|->
