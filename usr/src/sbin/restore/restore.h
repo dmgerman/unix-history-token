@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)restore.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)restore.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -832,6 +832,17 @@ name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Flags to setdirmodes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORCE
+value|0x0001
+end_define
 
 begin_comment
 comment|/*  * Useful macros  */
