@@ -1199,7 +1199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|pinger
 name|__P
 argument_list|(
@@ -5184,6 +5184,9 @@ name|preload
 operator|--
 condition|)
 comment|/* Fire off them quickies. */
+operator|(
+name|void
+operator|)
 name|pinger
 argument_list|()
 expr_stmt|;
@@ -5400,6 +5403,9 @@ operator|&
 name|F_FLOOD
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|pinger
 argument_list|()
 expr_stmt|;
@@ -5788,19 +5794,12 @@ name|itimer
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|npackets
-operator|||
-name|ntransmitted
-operator|<
-name|npackets
-condition|)
-block|{
 name|pinger
 argument_list|()
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 return|return;
-block|}
 comment|/* 	 * If we're not transmitting any more packets, change the timer 	 * to wait two round-trip times if we've received any packets or 	 * ten seconds if we haven't. 	 */
 define|#
 directive|define
@@ -5984,7 +5983,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|pinger
 parameter_list|()
 block|{
@@ -6013,6 +6012,21 @@ decl_stmt|;
 name|int
 name|seq
 decl_stmt|;
+if|if
+condition|(
+name|npackets
+operator|&&
+name|ntransmitted
+operator|>=
+name|npackets
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* no more transmission */
 name|icp
 operator|=
 operator|(
@@ -6644,6 +6658,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -13718,7 +13737,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ping6 [-dfHmnNqvwW"
+literal|"usage: ping6 [-dfH"
+ifdef|#
+directive|ifdef
+name|IPV6_USE_MIN_MTU
+literal|"m"
+endif|#
+directive|endif
+literal|"nNqtvwW"
 ifdef|#
 directive|ifdef
 name|IPV6_REACHCONF
