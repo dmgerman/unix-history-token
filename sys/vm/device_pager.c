@@ -380,6 +380,14 @@ decl_stmt|;
 name|vm_offset_t
 name|off
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make sure this device can be mapped. 	 */
 name|dev
 operator|=
@@ -743,8 +751,6 @@ name|dev
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|d_mmap_t
 modifier|*
@@ -753,6 +759,14 @@ decl_stmt|;
 name|int
 name|prot
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|dev
 operator|=
 name|object
@@ -882,11 +896,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|vm_page_insert
 argument_list|(
 name|page
@@ -894,11 +903,6 @@ argument_list|,
 name|object
 argument_list|,
 name|offset
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
