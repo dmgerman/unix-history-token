@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.17 89/10/01$  *  *	@(#)dcm.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.17 89/10/01$  *  *	@(#)dcm.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -185,6 +185,19 @@ name|NDCMLINE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mcndlast
+index|[
+name|NDCMLINE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX last modem status for line */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1104,8 +1117,10 @@ operator|->
 name|dcm_mdmmsk
 operator|=
 name|MI_CD
+operator||
+name|MI_CTS
 expr_stmt|;
-comment|/* enable modem carrier detect intr */
+comment|/* DCD (modem) and CTS (flow ctrl) */
 name|dcm
 operator|->
 name|dcm_ic
@@ -2170,7 +2185,7 @@ argument_list|,
 name|dcm
 argument_list|)
 expr_stmt|;
-comment|/* always port 0 */
+comment|/* XXX always port 0 */
 name|dis
 operator|=
 operator|&
@@ -3109,6 +3124,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+name|int
+name|delta
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -3120,11 +3138,16 @@ name|DDB_MODEM
 condition|)
 name|printf
 argument_list|(
-literal|"dcmmint: unit %x mcnd %x\n"
+literal|"dcmmint: unit %x mcnd %x mcndlast\n"
 argument_list|,
 name|unit
 argument_list|,
 name|mcnd
+argument_list|,
+name|mcndlast
+index|[
+name|unit
+index|]
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3137,8 +3160,30 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+name|delta
+operator|=
+name|mcnd
+operator|^
+name|mcndlast
+index|[
+name|unit
+index|]
+expr_stmt|;
+name|mcndlast
+index|[
+name|unit
+index|]
+operator|=
+name|mcnd
+expr_stmt|;
 if|if
 condition|(
+operator|(
+name|delta
+operator|&
+name|MI_CD
+operator|)
+operator|&&
 operator|(
 name|dcmsoftCAR
 index|[
@@ -3244,6 +3289,61 @@ argument_list|)
 expr_stmt|;
 comment|/* time to change lines */
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|delta
+operator|&
+name|MI_CTS
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|CRTSCTS
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|mcnd
+operator|&
+name|MI_CTS
+condition|)
+block|{
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|TS_TTSTOP
+expr_stmt|;
+name|ttstart
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_TTSTOP
+expr_stmt|;
+comment|/* inline dcmstop */
 block|}
 block|}
 end_block
@@ -4587,7 +4687,7 @@ goto|goto
 name|again
 goto|;
 block|}
-comment|/* 	 * Kick it one last time in case it finished while we were 	 * loading the last time. 	 */
+comment|/* 	 * Kick it one last time in case it finished while we were 	 * loading the last bunch. 	 */
 if|if
 condition|(
 name|bp
