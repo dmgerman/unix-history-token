@@ -171,7 +171,7 @@ argument_list|(
 literal|3
 argument_list|)
 block|,
-comment|/* TABLDISC */
+comment|/* loadable */
 name|NODISC
 argument_list|(
 literal|4
