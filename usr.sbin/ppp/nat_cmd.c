@@ -1798,7 +1798,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|strncasecmp
+name|strcasecmp
 argument_list|(
 name|arg
 operator|->
