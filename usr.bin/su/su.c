@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id: su.c,v 1.15 1997/01/13 06:39:19 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,6 +377,8 @@ name|user
 decl_stmt|,
 modifier|*
 name|shell
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|username
@@ -1656,16 +1658,13 @@ name|LOGIN_CAP
 comment|/* Set everything now except the environment& umask */
 name|setwhat
 operator|=
-name|LOGIN_SETALL
-operator|&
-operator|~
-operator|(
-name|LOGIN_SETPATH
+name|LOGIN_SETUSER
 operator||
-name|LOGIN_SETUMASK
+name|LOGIN_SETGROUP
 operator||
-name|LOGIN_SETENV
-operator|)
+name|LOGIN_SETRESOURCES
+operator||
+name|LOGIN_SETPRIORITY
 expr_stmt|;
 comment|/* 	 * Don't touch resource/priority settings if -m has been 	 * used or -l hasn't, and we're not su'ing to root. 	 */
 if|if
@@ -1687,7 +1686,6 @@ operator|~
 operator|(
 name|LOGIN_SETPRIORITY
 operator||
-operator|~
 name|LOGIN_SETRESOURCES
 operator|)
 expr_stmt|;
