@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.33	83/06/12	*/
+comment|/*	ioctl.h	4.34	83/06/13	*/
 end_comment
 
 begin_comment
@@ -58,12 +58,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOCOMPAT
-end_ifndef
 
 begin_include
 include|#
@@ -134,11 +128,6 @@ comment|/* literal next character */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -526,50 +515,6 @@ end_define
 
 begin_comment
 comment|/* get special characters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSET
-value|_IOW(t, 19, long)
-end_define
-
-begin_comment
-comment|/* set tty flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCBIS
-value|_IOW(t, 20, long)
-end_define
-
-begin_comment
-comment|/* bis tty flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCBIC
-value|_IOW(t, 21, long)
-end_define
-
-begin_comment
-comment|/* bic tty flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCGET
-value|_IOR(t, 22, long)
-end_define
-
-begin_comment
-comment|/* get all tty flags */
 end_comment
 
 begin_define
@@ -1045,37 +990,9 @@ begin_comment
 comment|/* no output flush on signal */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCCSET
-value|_IOW(t,23,struct ttychars)
-end_define
-
-begin_comment
-comment|/* set special characters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCCGET
-value|_IOR(t,24,struct ttychars)
-end_define
-
-begin_comment
-comment|/* get special characters */
-end_comment
-
 begin_comment
 comment|/* locals, from 127 down */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOCOMPAT
-end_ifndef
 
 begin_define
 define|#
@@ -1219,11 +1136,6 @@ name|LNOFLSH
 value|(NOFLSH>>16)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1310,6 +1222,17 @@ end_define
 
 begin_comment
 comment|/* get local special chars */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCOUTQ
+value|_IOR(t, 115, int)
+end_define
+
+begin_comment
+comment|/* output queue size */
 end_comment
 
 begin_define
