@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.57 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.58 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1354,7 +1354,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/vnode_if.h>
+file|<vnode_if.h>
 end_include
 
 begin_comment
@@ -1767,6 +1767,31 @@ name|fp
 operator|,
 name|int
 name|which
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vn_stat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+expr|struct
+name|stat
+operator|*
+name|sb
 operator|,
 expr|struct
 name|proc
