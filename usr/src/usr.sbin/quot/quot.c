@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.6 (Berkeley) 83/08/16"
+literal|"@(#)quot.c	4.7 (Berkeley) 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -847,12 +847,14 @@ name|nfiles
 condition|;
 name|j
 operator|++
+operator|,
+name|ino
+operator|++
 control|)
 block|{
 if|if
 condition|(
 name|ino
-operator|++
 operator|<
 name|ROOTINO
 condition|)
