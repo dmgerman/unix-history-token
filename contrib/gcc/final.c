@@ -12046,7 +12046,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|=
-name|plus_constant
+name|plus_constant_for_output
 argument_list|(
 name|XEXP
 argument_list|(
