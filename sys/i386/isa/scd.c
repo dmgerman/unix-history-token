@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.41 1999/01/12 01:29:45 eivind Exp $ */
+comment|/* $Id: scd.c,v 1.42 1999/04/28 10:52:51 dt Exp $ */
 end_comment
 
 begin_comment
@@ -1993,12 +1993,12 @@ name|partition
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
+name|int
 name|s
-operator|=
+init|=
 name|splbio
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|cd

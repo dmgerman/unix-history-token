@@ -924,13 +924,14 @@ begin_comment
 comment|/*  * i2c_write:  * Returns	0	Succesful completion.  * Returns	1	If transfer aborted or timeout occured.  *  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|i2c_print_err
-operator|=
+init|=
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
