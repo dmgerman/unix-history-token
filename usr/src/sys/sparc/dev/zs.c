@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)zs.c	8.1 (Berkeley) %G%  *  * from: $Header: zs.c,v 1.28 93/04/20 11:19:44 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)zs.c	7.5 (Berkeley) %G%  *  * from: $Header: zs.c,v 1.29 93/07/15 02:57:07 torek Exp $  */
 end_comment
 
 begin_comment
@@ -1245,26 +1245,8 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
-name|zs_reset
-argument_list|(
-operator|&
-name|addr
-operator|->
-name|zs_chan
-index|[
-name|CHAN_A
-index|]
-argument_list|,
-literal|0
-argument_list|,
-name|cs
-operator|->
-name|cs_speed
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1432,26 +1414,8 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
-name|zs_reset
-argument_list|(
-operator|&
-name|addr
-operator|->
-name|zs_chan
-index|[
-name|CHAN_B
-index|]
-argument_list|,
-literal|0
-argument_list|,
-name|cs
-operator|->
-name|cs_speed
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1793,6 +1757,17 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|zscnputc
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Must block output interrupts (i.e., raise to>= splzs) without 	 * lowering current ipl.  Need a better way. 	 */
 name|s
 operator|=
@@ -1953,7 +1928,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Rewire input and/or output.  Note that baud rate reflects 	 * input settings, not output settings, but we can do no better 	 * if the console is split across two ports. 	 */
+comment|/* 	 * Rewire input and/or output.  Note that baud rate reflects 	 * input settings, not output settings, but we can do no better 	 * if the console is split across two ports. 	 * 	 * XXX	split consoles don't work anyway -- this needs to be 	 *	thrown away and redone 	 */
 if|if
 condition|(
 name|i
@@ -2052,11 +2027,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|i
-condition|?
 name|tp
-else|:
-name|NULL
 operator|)
 return|;
 block|}
