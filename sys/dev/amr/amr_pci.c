@@ -697,6 +697,20 @@ name|amr_dev
 operator|=
 name|dev
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_io_lock
+argument_list|,
+literal|"AMR IO Lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* assume failure is 'not configured' */
 name|error
 operator|=
@@ -993,6 +1007,8 @@ argument_list|,
 name|INTR_TYPE_BIO
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|amr_pci_intr
 argument_list|,
@@ -1128,7 +1144,9 @@ comment|/* flags */
 name|busdma_lock_mutex
 argument_list|,
 operator|&
-name|Giant
+name|sc
+operator|->
+name|amr_io_lock
 argument_list|,
 comment|/* lockfunc, lockarg */
 operator|&
@@ -1603,9 +1621,25 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* collect finished commands, queue anything waiting */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_io_lock
+argument_list|)
+expr_stmt|;
 name|amr_done
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_io_lock
 argument_list|)
 expr_stmt|;
 block|}

@@ -14,13 +14,19 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
+file|<geom/geom_disk.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<geom/geom_disk.h>
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_endif
@@ -380,6 +386,10 @@ decl_stmt|;
 comment|/* map for s/g buffers */
 comment|/* controller limits and features */
 name|int
+name|amr_nextslot
+decl_stmt|;
+comment|/* Next slot to use for newly allocated commands */
+name|int
 name|amr_maxio
 decl_stmt|;
 comment|/* maximum number of I/O transactions */
@@ -599,18 +609,10 @@ name|callout_handle
 name|amr_timeout
 decl_stmt|;
 comment|/* periodic status check */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500005
 name|struct
-name|task
-name|amr_task_complete
+name|mtx
+name|amr_io_lock
 decl_stmt|;
-comment|/* deferred-completion task */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

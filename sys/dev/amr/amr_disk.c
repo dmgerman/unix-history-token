@@ -1015,7 +1015,7 @@ name|amrd_disk
 operator|->
 name|d_flags
 operator|=
-name|DISKFLAG_NEEDSGIANT
+literal|0
 expr_stmt|;
 name|disk_create
 argument_list|(
