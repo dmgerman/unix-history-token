@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	3.5	%G%	*/
+comment|/*	uba.c	3.6	%G%	*/
 end_comment
 
 begin_include
@@ -181,6 +181,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|panic
+argument_list|(
+literal|"ran out of uba map"
+argument_list|)
+expr_stmt|;
 name|umrwant
 operator|++
 expr_stmt|;
@@ -222,6 +227,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|panic
+argument_list|(
+literal|"ran out of bdp's"
+argument_list|)
+expr_stmt|;
 name|bdpwant
 operator|++
 expr_stmt|;
@@ -560,33 +570,24 @@ operator|)
 return|;
 end_return
 
-begin_decl_stmt
-unit|}  struct
-name|buf
-name|ubabuf
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
+unit|}
 comment|/*  * Non buffer unibus interface... set up a buffer and call ubasetup.  */
 end_comment
 
-begin_macro
-name|uballoc
-argument_list|(
-argument|addr
-argument_list|,
-argument|bcnt
-argument_list|,
-argument|bdpflg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|uballoc
+operator|(
+name|addr
+operator|,
+name|bcnt
+operator|,
+name|bdpflg
+operator|)
 name|caddr_t
 name|addr
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|unsigned
@@ -597,44 +598,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|a
-decl_stmt|,
-name|ubinfo
+name|struct
+name|buf
+name|ubabuf
 decl_stmt|;
-name|a
-operator|=
-name|spl6
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-name|ubabuf
-operator|.
-name|b_flags
-operator|&
-name|B_BUSY
-condition|)
-block|{
-name|ubabuf
-operator|.
-name|b_flags
-operator||=
-name|B_WANTED
-expr_stmt|;
-name|sleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ubabuf
-argument_list|,
-name|PRIUBA
-argument_list|)
-expr_stmt|;
-block|}
 name|ubabuf
 operator|.
 name|b_un
@@ -655,13 +622,9 @@ name|b_bcount
 operator|=
 name|bcnt
 expr_stmt|;
-name|splx
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-name|ubinfo
-operator|=
+comment|/* that's all the fields ubasetup() needs */
+return|return
+operator|(
 name|ubasetup
 argument_list|(
 operator|&
@@ -669,34 +632,6 @@ name|ubabuf
 argument_list|,
 name|bdpflg
 argument_list|)
-expr_stmt|;
-name|ubabuf
-operator|.
-name|b_flags
-operator|&=
-operator|~
-name|B_BUSY
-expr_stmt|;
-if|if
-condition|(
-name|ubabuf
-operator|.
-name|b_flags
-operator|&
-name|B_WANTED
-condition|)
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ubabuf
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ubinfo
 operator|)
 return|;
 block|}
