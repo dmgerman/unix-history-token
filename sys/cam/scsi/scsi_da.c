@@ -714,6 +714,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Maxtor 3000LE USB Drive 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"MAXTOR*"
+block|,
+literal|"K040H2*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
 block|{
 name|T_OPTICAL
 block|,
