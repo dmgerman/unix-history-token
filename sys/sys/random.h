@@ -25,6 +25,10 @@ begin_function_decl
 name|u_int
 name|read_random
 parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,

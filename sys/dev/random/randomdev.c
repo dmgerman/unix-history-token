@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/randomdev/hash.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/randomdev/yarrow.h>
 end_include
 
@@ -129,6 +135,13 @@ begin_decl_stmt
 specifier|static
 name|d_write_t
 name|random_write
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|random_ioctl
 decl_stmt|;
 end_decl_stmt
 
@@ -177,7 +190,7 @@ comment|/* write */
 name|random_write
 block|,
 comment|/* ioctl */
-name|noioctl
+name|random_ioctl
 block|,
 comment|/* poll */
 name|nopoll
@@ -227,6 +240,10 @@ name|dev_t
 name|urandom_dev
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX Temporary */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -512,6 +529,10 @@ name|ret
 operator|=
 name|read_random
 argument_list|(
+name|uio
+operator|->
+name|uio_procp
+argument_list|,
 name|random_buf
 argument_list|,
 name|c
@@ -646,6 +667,35 @@ end_function
 begin_function
 specifier|static
 name|int
+name|random_ioctl
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|caddr_t
+name|addr
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+name|ENOTTY
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|random_modevent
 parameter_list|(
 name|module_t
@@ -659,6 +709,9 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -667,6 +720,20 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|error
+operator|=
+name|random_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+name|error
+return|;
 if|if
 condition|(
 name|bootverbose
@@ -712,9 +779,7 @@ argument_list|,
 literal|"urandom"
 argument_list|)
 expr_stmt|;
-name|random_init
-argument_list|()
-expr_stmt|;
+comment|/* XXX Temporary */
 return|return
 literal|0
 return|;
@@ -734,6 +799,7 @@ argument_list|(
 name|urandom_dev
 argument_list|)
 expr_stmt|;
+comment|/* XXX Temporary */
 return|return
 literal|0
 return|;

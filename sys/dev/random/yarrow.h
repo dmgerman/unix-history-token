@@ -32,17 +32,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KEYSIZE
-value|32
-end_define
-
-begin_comment
-comment|/* 32 bytes == 256 bits */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|FAST
 value|0
 end_define
@@ -55,7 +44,7 @@ value|1
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|random_init
 parameter_list|(
 name|void
@@ -134,7 +123,8 @@ name|u_int64_t
 name|counter
 decl_stmt|;
 comment|/* C */
-name|BF_KEY
+name|struct
+name|yarrowkey
 name|key
 decl_stmt|;
 comment|/* K */
@@ -146,13 +136,6 @@ name|int
 name|bins
 decl_stmt|;
 comment|/* Pt/t */
-name|u_char
-name|ivec
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* Blowfish internal */
 name|int
 name|outputblocks
 decl_stmt|;
@@ -167,23 +150,6 @@ block|{
 struct|struct
 name|source
 block|{
-struct|struct
-name|entropy
-block|{
-name|struct
-name|timespec
-name|nanotime
-decl_stmt|;
-name|u_int64_t
-name|data
-decl_stmt|;
-block|}
-name|entropy
-index|[
-name|ENTROPYBIN
-index|]
-struct|;
-comment|/* entropy units - must each 					   	be<= KEYSIZE */
 name|u_int
 name|bits
 decl_stmt|;
@@ -192,10 +158,6 @@ name|u_int
 name|frac
 decl_stmt|;
 comment|/* fractional bits of entropy 					   (given as 1024/n) */
-name|u_int
-name|current
-decl_stmt|;
-comment|/* next insertion point */
 block|}
 name|source
 index|[
@@ -206,6 +168,11 @@ name|u_int
 name|thresh
 decl_stmt|;
 comment|/* pool reseed threshhold */
+name|struct
+name|yarrowhash
+name|hash
+decl_stmt|;
+comment|/* accumulated entropy */
 block|}
 name|pool
 index|[
