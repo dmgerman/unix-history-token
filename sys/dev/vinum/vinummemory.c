@@ -666,7 +666,7 @@ name|f
 argument_list|,
 name|malloced
 index|[
-name|lastfree
+name|i
 index|]
 operator|.
 name|file
@@ -686,7 +686,7 @@ argument_list|)
 expr_stmt|;
 name|malloced
 index|[
-name|lastfree
+name|i
 index|]
 operator|.
 name|file
