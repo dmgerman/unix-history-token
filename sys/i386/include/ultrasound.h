@@ -19,34 +19,6 @@ begin_comment
 comment|/*  *	ultrasound.h - Macros for programming the Gravis Ultrasound  *			These macros are extremely device dependent  *			and not portable.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<linux/soundcard.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<machine/soundcard.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  *	Private events for Gravis Ultrasound (GUS)  *  *	Format:  *		byte 0 		- SEQ_PRIVATE (0xfe)  *		byte 1 		- Synthesizer device number (0-N)  *		byte 2 		- Command (see below)  *		byte 3 		- Voice number (0-31)  *		bytes 4 and 5	- parameter P1 (unsigned short)  *		bytes 6 and 7	- parameter P2 (unsigned short)  *  *	Commands:  *		Each command affects one voice defined in byte 3.  *		Unused parameters (P1 and/or P2 *MUST* be initialized to zero).  *		_GUS_NUMVOICES	- Sets max. number of concurrent voices (P1=14-31, default 16)  *		_GUS_VOICESAMPLE- ************ OBSOLETE *************  *		_GUS_VOICEON	- Starts voice (P1=voice mode)  *		_GUS_VOICEOFF	- Stops voice (no parameters)  *		_GUS_VOICEFADE	- Stops the voice smoothly.  *		_GUS_VOICEMODE	- Alters the voice mode, don't start or stop voice (P1=voice mode)  *		_GUS_VOICEBALA	- Sets voice balence (P1, 0=left, 7=middle and 15=right, default 7)  *		_GUS_VOICEFREQ	- Sets voice (sample) playback frequency (P1=Hz)  *		_GUS_VOICEVOL	- Sets voice volume (P1=volume, 0xfff=max, 0xeff=half, 0x000=off)  *		_GUS_VOICEVOL2	- Sets voice volume (P1=volume, 0xfff=max, 0xeff=half, 0x000=off)  *				  (Like GUS_VOICEVOL but doesn't change the hw  *				  volume. It just updates volume in the voice table).  *  *		_GUS_RAMPRANGE	- Sets limits for volume ramping (P1=low volume, P2=high volume)  *		_GUS_RAMPRATE	- Sets the speed for volume ramping (P1=scale, P2=rate)  *		_GUS_RAMPMODE	- Sets the volume ramping mode (P1=ramping mode)  *		_GUS_RAMPON	- Starts volume ramping (no parameters)  *		_GUS_RAMPOFF	- Stops volume ramping (no parameters)  *		_GUS_VOLUME_SCALE - Changes the volume calculation constants  *				  for all voices.  */
 end_comment
@@ -165,6 +137,13 @@ define|#
 directive|define
 name|_GUS_VOICEVOL2
 value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|_GUS_VOICE_POS
+value|0x10
 end_define
 
 begin_comment
@@ -414,6 +393,20 @@ parameter_list|,
 name|p2
 parameter_list|)
 value|_GUS_CMD(chn, voice, _GUS_VOLUME_SCALE, (p1), (p2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GUS_VOICE_POS
+parameter_list|(
+name|chn
+parameter_list|,
+name|voice
+parameter_list|,
+name|p
+parameter_list|)
+value|_GUS_CMD(chn, voice, _GUS_VOICE_POS, \ 							(p)& 0xffff, ((p)>> 16)& 0xffff)
 end_define
 
 begin_endif

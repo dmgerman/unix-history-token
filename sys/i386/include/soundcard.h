@@ -17,14 +17,20 @@ comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in
 end_comment
 
 begin_comment
-comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * diversity in the world.   *   * Regards,   * Hannu Savolainen   * hsavolai@cs.helsinki.fi   */
+comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hsavolai@cs.helsinki.fi   */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SOUND_VERSION
-value|200
+value|203
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOXWARE
 end_define
 
 begin_include
@@ -72,6 +78,20 @@ name|SNDCARD_MPU401
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNDCARD_SB16
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_SB16MIDI
+value|7
+end_define
+
 begin_comment
 comment|/***********************************  * IOCTL Commands for /dev/sequencer  */
 end_comment
@@ -109,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|IOC_VOID
-value|0x20000000
+value|0x00000000
 end_define
 
 begin_comment
@@ -120,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|IOC_OUT
-value|0x40000000
+value|0x20000000
 end_define
 
 begin_comment
@@ -131,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|IOC_IN
-value|0x80000000
+value|0x40000000
 end_define
 
 begin_comment
@@ -534,7 +554,7 @@ decl_stmt|;
 name|char
 name|data
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
 comment|/* The waveform data starts here */
@@ -1140,9 +1160,12 @@ name|capabilities
 decl_stmt|;
 comment|/* To be defined later */
 name|int
+name|dev_type
+decl_stmt|;
+name|int
 name|dummies
 index|[
-literal|19
+literal|18
 index|]
 decl_stmt|;
 comment|/* Reserve space */
@@ -1224,6 +1247,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNDCTL_DSP_SUBDIVIDE
+value|_IOWR('P', 9, int)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOUND_PCM_READ_RATE
 value|_IOR ('P', 2, int)
 end_define
@@ -1286,6 +1316,13 @@ define|#
 directive|define
 name|SOUND_PCM_SYNC
 value|SNDCTL_DSP_SYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_SUBDIVIDE
+value|SNDCTL_DSP_SUBDIVIDE
 end_define
 
 begin_comment
