@@ -1114,21 +1114,10 @@ comment|/* move to this line at start of session*/
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|count_text
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* buffer for current position display	*/
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|char
-modifier|*
 name|count_text_default
+index|[]
 init|=
 literal|"==============================================================================="
 decl_stmt|;
@@ -1137,11 +1126,32 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|count_text_len
+init|=
+sizeof|sizeof
+argument_list|(
+name|count_text_default
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* length of the line above		*/
+comment|/* length of the line above	*/
+end_comment
+
+begin_decl_stmt
+name|char
+name|count_text
+index|[
+sizeof|sizeof
+argument_list|(
+name|count_text_default
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* buffer for current position display	*/
 end_comment
 
 begin_decl_stmt
@@ -4308,22 +4318,6 @@ argument_list|,
 name|edit_abort
 argument_list|)
 expr_stmt|;
-name|count_text_len
-operator|=
-name|strlen
-argument_list|(
-name|count_text_default
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
-name|count_text
-operator|=
-name|malloc
-argument_list|(
-name|count_text_len
-argument_list|)
-expr_stmt|;
 name|d_char
 operator|=
 name|malloc
@@ -4601,11 +4595,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|wclrtoeol
-argument_list|(
-name|count_win
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4628,16 +4617,19 @@ argument_list|(
 name|count_win
 argument_list|)
 expr_stmt|;
-name|wrefresh
+name|wnoutrefresh
 argument_list|(
 name|count_win
 argument_list|)
 expr_stmt|;
 block|}
-name|wrefresh
+name|wnoutrefresh
 argument_list|(
 name|text_win
 argument_list|)
+expr_stmt|;
+name|doupdate
+argument_list|()
 expr_stmt|;
 name|in
 operator|=
@@ -13403,6 +13395,10 @@ expr_stmt|;
 name|check_fp
 argument_list|()
 expr_stmt|;
+name|text_changes
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -16831,14 +16827,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|keypad
-argument_list|(
-name|count_win
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|idlok
+name|leaveok
 argument_list|(
 name|count_win
 argument_list|,
