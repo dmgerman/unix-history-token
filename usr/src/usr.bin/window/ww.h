@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.29 84/04/08	  */
+comment|/*  *	@(#)ww.h	3.30 84/04/09	  */
 end_comment
 
 begin_include
@@ -1062,14 +1062,6 @@ end_decl_stmt
 begin_comment
 comment|/* quicky macros */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|wwbell
-parameter_list|()
-value|write(1, "\7", 1)
-end_define
 
 begin_define
 define|#
