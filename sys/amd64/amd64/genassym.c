@@ -1177,16 +1177,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|B_READ
-argument_list|,
-name|B_READ
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
 name|ENOENT
 argument_list|,
 name|ENOENT

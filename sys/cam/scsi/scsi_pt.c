@@ -2138,9 +2138,9 @@ name|MSG_SIMPLE_Q_TAG
 argument_list|,
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 argument_list|,
 comment|/*byte2*/
 literal|0

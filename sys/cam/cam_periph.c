@@ -2451,7 +2451,7 @@ index|[
 name|i
 index|]
 operator|=
-name|B_WRITE
+name|BIO_WRITE
 expr_stmt|;
 if|if
 condition|(
@@ -2505,7 +2505,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 		 * XXX this check is really bogus, since B_WRITE currently 		 * is all 0's, and so it is "set" all the time. 		 */
 if|if
 condition|(
 name|dirs
@@ -2520,8 +2519,8 @@ name|flags
 index|[
 name|i
 index|]
-operator||=
-name|B_READ
+operator|=
+name|BIO_READ
 expr_stmt|;
 if|if
 condition|(
@@ -2670,12 +2669,22 @@ index|]
 operator|->
 name|b_flags
 operator|=
+name|B_PHYS
+expr_stmt|;
+comment|/* set the direction */
+name|mapinfo
+operator|->
+name|bp
+index|[
+name|i
+index|]
+operator|->
+name|b_iocmd
+operator|=
 name|flags
 index|[
 name|i
 index|]
-operator||
-name|B_PHYS
 expr_stmt|;
 comment|/* map the buffer into kernel memory */
 name|vmapbuf

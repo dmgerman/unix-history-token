@@ -4258,9 +4258,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 name|ctlr
@@ -4324,9 +4324,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 name|ctlr

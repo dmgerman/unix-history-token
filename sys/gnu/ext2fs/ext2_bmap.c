@@ -696,9 +696,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_READ
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 name|bp
 operator|->

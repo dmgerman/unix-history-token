@@ -1210,6 +1210,12 @@ name|bp
 operator|->
 name|b_flags
 operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_iocmd
+operator|=
 name|flag
 expr_stmt|;
 name|bp
@@ -3585,9 +3591,9 @@ name|B_INVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_WRITE
+name|b_iocmd
+operator|=
+name|BIO_WRITE
 expr_stmt|;
 comment|/*      * This should read:      *      *       vinumstrategy (bp);      *      * Negotiate with phk to get it fixed.      */
 name|BUF_STRATEGY

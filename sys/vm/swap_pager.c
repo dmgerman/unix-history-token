@@ -2152,14 +2152,14 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Deal with B_FREEBUF 	 */
+comment|/* 	 * Deal with BIO_DELETE 	 */
 if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 operator|&
-name|B_FREEBUF
+name|BIO_DELETE
 condition|)
 block|{
 comment|/* 		 * FREE PAGE(s) - destroy underlying swap that is no longer 		 *		  needed. 		 */
@@ -2224,12 +2224,10 @@ operator|&&
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
+name|b_iocmd
 operator|==
-literal|0
+name|BIO_WRITE
+operator|)
 condition|)
 block|{
 name|blk
@@ -2312,9 +2310,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 operator|++
@@ -2419,9 +2417,9 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 operator||
 name|B_ASYNC
@@ -2498,9 +2496,9 @@ if|if
 condition|(
 name|nbp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 operator|++
@@ -2922,11 +2920,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 operator|=
-name|B_READ
-operator||
-name|B_CALL
+name|BIO_READ
 expr_stmt|;
 name|bp
 operator|->
@@ -3599,12 +3595,6 @@ operator|&
 name|nsw_wcount_sync
 argument_list|)
 expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator|=
-name|B_CALL
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3620,8 +3610,6 @@ name|bp
 operator|->
 name|b_flags
 operator|=
-name|B_CALL
-operator||
 name|B_ASYNC
 expr_stmt|;
 block|}
@@ -4047,9 +4035,9 @@ operator|(
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 condition|?
 literal|"pagein"
@@ -4163,9 +4151,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* 				 * When reading, reqpage needs to stay 				 * locked for the parent, but all other 				 * pages can be freed.  We still want to 				 * wakeup the parent waiting on the page, 				 * though.  ( also: pg_reqpage can be -1 and  				 * not match anything ). 				 * 				 * We have to wake specifically requested pages 				 * up too because we cleared PG_SWAPINPROG and 				 * someone may be waiting for that. 				 * 				 * NOTE: for reads, m->dirty will probably 				 * be overriden by the original caller of 				 * getpages so don't play cute tricks here. 				 * 				 * XXX it may not be legal to free the page 				 * here as this messes with the object->memq's. 				 */
@@ -4230,9 +4218,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* 			 * For read success, clear dirty bits.  Nobody should 			 * have this page mapped but don't take any chances, 			 * make sure the pmap modify bits are also cleared. 			 * 			 * NOTE: for reads, m->dirty will probably be  			 * overriden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * clear PG_ZERO in page. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by  			 * vm_page_wakeup().  We do not set reqpage's 			 * valid bits here, it is up to the caller. 			 */
@@ -4347,9 +4335,9 @@ operator|(
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 condition|?
 operator|&

@@ -5600,15 +5600,11 @@ return|;
 if|if
 condition|(
 operator|(
-operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
+name|b_iocmd
 operator|==
-literal|0
+name|BIO_WRITE
 operator|)
 operator|&&
 operator|(
@@ -5763,9 +5759,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_FREEBUF
+name|b_iocmd
+operator|=
+name|BIO_DELETE
 expr_stmt|;
 name|bp
 operator|->
@@ -6524,11 +6520,9 @@ expr_stmt|;
 comment|/* Build a minimal buffer header. */
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 operator|=
-name|B_READ
-operator||
-name|B_CALL
+name|BIO_READ
 expr_stmt|;
 name|bp
 operator|->

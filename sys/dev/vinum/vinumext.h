@@ -58,7 +58,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|driveio (a, b, c, d, B_READ)
+value|driveio (a, b, c, d, BIO_READ)
 end_define
 
 begin_define
@@ -74,7 +74,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|driveio (a, b, c, d, B_WRITE)
+value|driveio (a, b, c, d, BIO_WRITE)
 end_define
 
 begin_define

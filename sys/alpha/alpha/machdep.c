@@ -8920,7 +8920,7 @@ literal|0
 block|bp->b_blkno + p->p_offset + sz> LABELSECTOR + labelsect&&
 endif|#
 directive|endif
-block|(bp->b_flags& B_READ) == 0&& wlabel == 0) {                 bp->b_error = EROFS;                 goto bad;         }
+block|(bp->b_iocmd == BIO_WRITE)&& wlabel == 0) {                 bp->b_error = EROFS;                 goto bad;         }
 if|#
 directive|if
 name|defined
@@ -8933,7 +8933,7 @@ argument_list|(
 name|notyet
 argument_list|)
 comment|/* overwriting master boot record? */
-block|if (bp->b_blkno + p->p_offset<= DOSBBSECTOR&&             (bp->b_flags& B_READ) == 0&& wlabel == 0) {                 bp->b_error = EROFS;                 goto bad;         }
+block|if (bp->b_blkno + p->p_offset<= DOSBBSECTOR&&             (bp->b_iocmd == BIO_WRITE)&& wlabel == 0) {                 bp->b_error = EROFS;                 goto bad;         }
 endif|#
 directive|endif
 comment|/* beyond partition? */

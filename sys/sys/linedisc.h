@@ -618,7 +618,8 @@ name|bp
 parameter_list|,
 name|dummy
 parameter_list|)
-value|(*devsw((bp)->b_dev)->d_strategy)(bp)
+define|\
+value|do {					\ 	if ((!(bp)->b_iocmd) || ((bp)->b_iocmd& ((bp)->b_iocmd - 1)))	\ 		Debugger("d_iocmd botch");	\ 	(*devsw((bp)->b_dev)->d_strategy)(bp);	\ 	} while (0)
 end_define
 
 begin_comment

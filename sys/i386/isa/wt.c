@@ -2776,9 +2776,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* Check read access and no previous write to this tape. */
@@ -2993,9 +2993,9 @@ name|t
 argument_list|,
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 name|ISADMA_READ
 else|:
@@ -3020,9 +3020,9 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 condition|?
 literal|"wtread"

@@ -465,15 +465,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
+name|b_iocmd
 operator|==
-literal|0
+name|BIO_WRITE
 condition|)
 block|{
 name|vp

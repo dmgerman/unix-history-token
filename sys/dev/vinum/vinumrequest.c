@@ -925,9 +925,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* 	 * This is a read request.  Decide 	 * which plex to read from. 	 * 	 * There's a potential race condition here, 	 * since we're not locked, and we could end 	 * up multiply incrementing the round-robin 	 * counter.  This doesn't have any serious 	 * effects, however. 	 */
@@ -1408,9 +1408,9 @@ name|rq
 operator|->
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read"
 else|:
@@ -1482,9 +1482,9 @@ name|rq
 operator|->
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read"
 else|:
@@ -1833,9 +1833,9 @@ name|rqe
 operator|->
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read"
 else|:
@@ -2336,9 +2336,9 @@ name|rq
 operator|->
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 comment|/* read request, */
 return|return
@@ -2715,9 +2715,9 @@ name|rq
 operator|->
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 comment|/* read request, */
 return|return
@@ -3519,16 +3519,14 @@ name|B_ORDERED
 operator||
 name|B_NOCACHE
 operator||
-name|B_READ
-operator||
 name|B_ASYNC
 operator|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_CALL
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 comment|/* inform us when it's done */
 name|BUF_LOCKINIT
@@ -3957,9 +3955,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 comment|/* reading, */
 name|set_sd_state
@@ -3973,7 +3971,16 @@ argument_list|,
 name|setstate_force
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|bp
+operator|->
+name|b_iocmd
+operator|==
+name|BIO_WRITE
+condition|)
+comment|/* writing, */
 name|set_sd_state
 argument_list|(
 name|sd
@@ -4099,10 +4106,7 @@ operator|=
 name|bp
 operator|->
 name|b_flags
-operator||
-name|B_CALL
 expr_stmt|;
-comment|/* inform us when it's done */
 name|sbp
 operator|->
 name|b
@@ -4325,9 +4329,9 @@ name|sbp
 operator|->
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read"
 else|:
@@ -4530,12 +4534,10 @@ operator|&&
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
+name|b_iocmd
 operator|==
-literal|0
+name|BIO_WRITE
+operator|)
 comment|/* and it's a write */
 operator|&&
 operator|(

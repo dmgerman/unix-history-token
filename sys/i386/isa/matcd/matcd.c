@@ -2861,9 +2861,9 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 condition|)
 block|{

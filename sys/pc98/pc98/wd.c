@@ -3573,9 +3573,9 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 condition|?
 literal|"read"
@@ -3629,17 +3629,15 @@ argument|)&
 literal|0xf
 argument|) | WDSD_LBA;  		} else { 			cylin = blknum / secpercyl; 			head = (blknum % secpercyl) / secpertrk; 			sector = blknum % secpertrk; 		}
 comment|/*  		 * XXX this looks like an attempt to skip bad sectors 		 * on write. 		 */
-argument|if (wdtab[ctrlr].b_errcnt&& (bp->b_flags& B_READ) ==
-literal|0
-argument|) 			du->dk_bc += DEV_BSIZE;  		count1 = howmany( du->dk_bc, DEV_BSIZE);  		du->dk_flags&= ~DKFL_MULTI;  		if (du->dk_flags& DKFL_SINGLE) { 			command = (bp->b_flags& B_READ) 				  ? WDCC_READ : WDCC_WRITE; 			count1 =
+argument|if (wdtab[ctrlr].b_errcnt&& (bp->b_iocmd == BIO_WRITE)) 			du->dk_bc += DEV_BSIZE;  		count1 = howmany( du->dk_bc, DEV_BSIZE);  		du->dk_flags&= ~DKFL_MULTI;  		if (du->dk_flags& DKFL_SINGLE) { 			command = (bp->b_iocmd == BIO_READ) 				  ? WDCC_READ : WDCC_WRITE; 			count1 =
 literal|1
 argument|; 			du->dk_currentiosize =
 literal|1
-argument|; 		} else { 			if((du->dk_flags& DKFL_USEDMA)&& 			   wddma[du->dk_interface].wdd_dmaverify(du->dk_dmacookie, 				(void *)((int)bp->b_data +  				     du->dk_skip * DEV_BSIZE), 				du->dk_bc, 				bp->b_flags& B_READ)) { 				du->dk_flags |= DKFL_DMA; 				if( bp->b_flags& B_READ) 					command = WDCC_READ_DMA; 				else 					command = WDCC_WRITE_DMA; 				du->dk_currentiosize = count1; 			} else if( (count1>
+argument|; 		} else { 			if((du->dk_flags& DKFL_USEDMA)&& 			   wddma[du->dk_interface].wdd_dmaverify(du->dk_dmacookie, 				(void *)((int)bp->b_data +  				     du->dk_skip * DEV_BSIZE), 				du->dk_bc, 				bp->b_iocmd == BIO_READ)) { 				du->dk_flags |= DKFL_DMA; 				if(bp->b_iocmd == BIO_READ) 					command = WDCC_READ_DMA; 				else 					command = WDCC_WRITE_DMA; 				du->dk_currentiosize = count1; 			} else if( (count1>
 literal|1
 argument|)&& (du->dk_multi>
 literal|1
-argument|)) { 				du->dk_flags |= DKFL_MULTI; 				if( bp->b_flags& B_READ) { 					command = WDCC_READ_MULTI; 				} else { 					command = WDCC_WRITE_MULTI; 				} 				du->dk_currentiosize = du->dk_multi; 				if( du->dk_currentiosize> count1) 					du->dk_currentiosize = count1; 			} else { 				if( bp->b_flags& B_READ) { 					command = WDCC_READ; 				} else { 					command = WDCC_WRITE; 				} 				du->dk_currentiosize =
+argument|)) { 				du->dk_flags |= DKFL_MULTI; 				if(bp->b_iocmd == BIO_READ) { 					command = WDCC_READ_MULTI; 				} else { 					command = WDCC_WRITE_MULTI; 				} 				du->dk_currentiosize = du->dk_multi; 				if( du->dk_currentiosize> count1) 					du->dk_currentiosize = count1; 			} else { 				if(bp->b_iocmd == BIO_READ) { 					command = WDCC_READ; 				} else { 					command = WDCC_WRITE; 				} 				du->dk_currentiosize =
 literal|1
 argument|; 			} 		}
 comment|/* 		 * XXX this loop may never terminate.  The code to handle 		 * counting down of retries and eventually failing the i/o 		 * is in wdintr() and we can't get there from here. 		 */
@@ -3651,7 +3649,7 @@ argument|) { 				wdtest =
 literal|100
 argument|; 				printf(
 literal|"dummy wdunwedge\n"
-argument|); 				wdunwedge(du); 			} 		}  		if ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) { 			wddma[du->dk_interface].wdd_dmaprep(du->dk_dmacookie, 					   (void *)((int)bp->b_data +  						    du->dk_skip * DEV_BSIZE), 					   du->dk_bc, 					   bp->b_flags& B_READ); 		} 		while (wdcommand(du, cylin, head, sector, count1, command) 		       !=
+argument|); 				wdunwedge(du); 			} 		}  		if ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) { 			wddma[du->dk_interface].wdd_dmaprep(du->dk_dmacookie, 					   (void *)((int)bp->b_data +  						    du->dk_skip * DEV_BSIZE), 					   du->dk_bc, 					   bp->b_iocmd == BIO_READ); 		} 		while (wdcommand(du, cylin, head, sector, count1, command) 		       !=
 literal|0
 argument|) { 			wderror(bp, du,
 literal|"wdstart: timeout waiting to give command"
@@ -3684,7 +3682,7 @@ argument|;
 comment|/* if this is a DMA op, start DMA and go away until it's done. */
 argument|if ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) { 		wddma[du->dk_interface].wdd_dmastart(du->dk_dmacookie); 		return; 	}
 comment|/* If this is a read operation, just go away until it's done. */
-argument|if (bp->b_flags& B_READ) 		return;
+argument|if (bp->b_iocmd == BIO_READ) 		return;
 comment|/* Ready to send data? */
 argument|if (wdwait(du, WDCS_READY | WDCS_SEEKCMPLT | WDCS_DRQ, TIMEOUT)<
 literal|0
@@ -3795,7 +3793,7 @@ argument|} 		} else if (du->dk_status& WDCS_ECCCOR) 			wderror(bp, du,
 literal|"soft ecc"
 argument|); 	}
 comment|/* 	 * If this was a successful read operation, fetch the data. 	 */
-argument|if (((bp->b_flags& (B_READ | B_ERROR)) == B_READ)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		u_int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
+argument|if (bp->b_iocmd == BIO_READ&& !(bp->b_flags& B_ERROR)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		u_int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
 literal|1
 argument|) / DEV_BSIZE)< du->dk_currentiosize) { 				du->dk_currentiosize = (chk + DEV_BSIZE -
 literal|1
@@ -3831,9 +3829,7 @@ argument|if (du->dk_bc>
 literal|0
 argument|&& (du->dk_flags& DKFL_ERROR) ==
 literal|0
-argument|) { 				if( (du->dk_flags& DKFL_SINGLE) || 					((bp->b_flags& B_READ) ==
-literal|0
-argument|)) { 					wdtab[unit].b_active =
+argument|) { 				if( (du->dk_flags& DKFL_SINGLE) || 					(bp->b_iocmd == BIO_WRITE)) { 					wdtab[unit].b_active =
 literal|0
 argument|; 					wdstart(unit); 				} else { 					du->dk_timeout =
 literal|1

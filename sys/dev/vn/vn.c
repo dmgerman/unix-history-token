@@ -214,7 +214,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/*  * cdevsw  *	D_DISK		we want to look like a disk  *	D_CANFREE	We support B_FREEBUF  */
+comment|/*  * cdevsw  *	D_DISK		we want to look like a disk  *	D_CANFREE	We support BIO_DELETE  */
 end_comment
 
 begin_decl_stmt
@@ -1071,8 +1071,9 @@ name|si_drv1
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|vn
+operator|==
+name|NULL
 condition|)
 name|vn
 operator|=
@@ -1363,9 +1364,9 @@ operator|&&
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_FREEBUF
+name|b_iocmd
+operator|==
+name|BIO_DELETE
 operator|)
 condition|)
 block|{
@@ -1439,9 +1440,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 name|auio
 operator|.
@@ -1505,9 +1506,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 name|error
 operator|=
@@ -1607,7 +1608,7 @@ operator|->
 name|sc_object
 condition|)
 block|{
-comment|/* 		 * OBJT_SWAP I/O 		 * 		 * ( handles read, write, freebuf ) 		 * 		 * Note: if we pre-reserved swap, B_FREEBUF is disabled 		 */
+comment|/* 		 * OBJT_SWAP I/O 		 * 		 * ( handles read, write, freebuf ) 		 * 		 * Note: if we pre-reserved swap, BIO_DELETE is disabled 		 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -1638,9 +1639,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_FREEBUF
+name|b_iocmd
+operator|==
+name|BIO_DELETE
 operator|)
 operator|&&
 name|TESTOPT

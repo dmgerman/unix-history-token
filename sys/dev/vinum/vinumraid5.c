@@ -699,9 +699,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* read operation */
@@ -1537,9 +1537,9 @@ name|rqe
 operator|->
 name|b
 operator|.
-name|b_flags
-operator||=
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 expr_stmt|;
 comment|/* we must read first */
 name|m
@@ -1797,9 +1797,9 @@ name|rqe
 operator|->
 name|b
 operator|.
-name|b_flags
-operator||=
-name|B_READ
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 comment|/* we must read first */
 comment|/* Now update pointers for the next block */
@@ -2066,9 +2066,9 @@ name|rqe
 operator|->
 name|b
 operator|.
-name|b_flags
-operator||=
-name|B_READ
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 comment|/* we must read first */
 block|}

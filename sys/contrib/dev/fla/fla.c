@@ -1001,9 +1001,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_FREEBUF
+name|b_iocmd
+operator|==
+name|BIO_DELETE
 condition|)
 name|what
 operator|=
@@ -1014,9 +1014,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 name|what
 operator|=

@@ -568,7 +568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mfs_freeblks() - hook to allow us to free physical memory.  *  *	We implement the B_FREEBUF strategy.  We can't just madvise()  *	here because we have to do it in the correct order vs other bio  *	requests, so we queue it.  *  *	Note: geteblk() sets B_INVAL.  We leave it set to guarentee buffer  *	throw-away on brelse()? XXX  */
+comment|/*  * mfs_freeblks() - hook to allow us to free physical memory.  *  *	We implement the BIO_DELETE strategy.  We can't just madvise()  *	here because we have to do it in the correct order vs other bio  *	requests, so we queue it.  *  *	Note: geteblk() sets B_INVAL.  We leave it set to guarentee buffer  *	throw-away on brelse()? XXX  */
 end_comment
 
 begin_function
@@ -636,9 +636,13 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_FREEBUF
-operator||
 name|B_ASYNC
+expr_stmt|;
+name|bp
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_DELETE
 expr_stmt|;
 name|bp
 operator|->
@@ -795,7 +799,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * mini-root.  Note: B_FREEBUF not supported at the moment, 		 * I'm not sure what kind of dataspace b_data is in. 		 */
+comment|/* 		 * mini-root.  Note: BIO_DELETE not supported at the moment, 		 * I'm not sure what kind of dataspace b_data is in. 		 */
 name|caddr_t
 name|base
 decl_stmt|;
@@ -817,18 +821,18 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_FREEBUF
+name|b_iocmd
+operator|==
+name|BIO_DELETE
 condition|)
 empty_stmt|;
 if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 name|bcopy
 argument_list|(
@@ -930,7 +934,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Memory file system I/O.  *  * Trivial on the HP since buffer has already been mapping into KVA space.  *  * Read and Write are handled with a simple copyin and copyout.      *  * We also partially support VOP_FREEBLKS() via B_FREEBUF.  We can't implement  * completely -- for example, on fragments or inode metadata, but we can  * implement it for page-aligned requests.  */
+comment|/*  * Memory file system I/O.  *  * Trivial on the HP since buffer has already been mapping into KVA space.  *  * Read and Write are handled with a simple copyin and copyout.      *  * We also partially support VOP_FREEBLKS() via BIO_DELETE.  We can't implement  * completely -- for example, on fragments or inode metadata, but we can  * implement it for page-aligned requests.  */
 end_comment
 
 begin_function
@@ -972,12 +976,12 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_FREEBUF
+name|b_iocmd
+operator|==
+name|BIO_DELETE
 condition|)
 block|{
-comment|/* 		 * Implement B_FREEBUF, which allows the filesystem to tell 		 * a block device when blocks are no longer needed (like when 		 * a file is deleted).  We use the hook to MADV_FREE the VM. 		 * This makes an MFS filesystem work as well or better then 		 * a sun-style swap-mounted filesystem. 		 */
+comment|/* 		 * Implement BIO_DELETE, which allows the filesystem to tell 		 * a block device when blocks are no longer needed (like when 		 * a file is deleted).  We use the hook to MADV_FREE the VM. 		 * This makes an MFS filesystem work as well or better then 		 * a sun-style swap-mounted filesystem. 		 */
 name|int
 name|bytes
 init|=
@@ -1092,9 +1096,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* 		 * Read data from our 'memory' disk 		 */

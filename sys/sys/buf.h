@@ -249,6 +249,10 @@ argument_list|)
 name|b_act
 expr_stmt|;
 comment|/* Device driver queue when active. *new* */
+name|u_int
+name|b_iocmd
+decl_stmt|;
+comment|/* BIO_READ, BIO_WRITE, BIO_DELETE */
 name|long
 name|b_flags
 decl_stmt|;
@@ -466,8 +470,29 @@ value|b_pager.pg_spc
 end_define
 
 begin_comment
-comment|/*  * These flags are kept in b_flags.  *  * Notes:  *  *	B_ASYNC		VOP calls on bp's are usually async whether or not  *			B_ASYNC is set, but some subsystems, such as NFS, like   *			to know what is best for the caller so they can  *			optimize the I/O.  *  *	B_PAGING	Indicates that bp is being used by the paging system or  *			some paging system and that the bp is not linked into  *			the b_vp's clean/dirty linked lists or ref counts.  *			Buffer vp reassignments are illegal in this case.  *  *	B_CACHE		This may only be set if the buffer is entirely valid.  *			The situation where B_DELWRI is set and B_CACHE is  *			clear MUST be committed to disk by getblk() so   *			B_DELWRI can also be cleared.  See the comments for  *			getblk() in kern/vfs_bio.c.  If B_CACHE is clear,  *			the caller is expected to clear B_ERROR|B_INVAL,  *			set B_READ, and initiate an I/O.  *  *			The 'entire buffer' is defined to be the range from  *			0 through b_bcount.  *  *	B_MALLOC	Request that the buffer be allocated from the malloc  *			pool, DEV_BSIZE aligned instead of PAGE_SIZE aligned.  *  *	B_CLUSTEROK	This flag is typically set for B_DELWRI buffers  *			by filesystems that allow clustering when the buffer  *			is fully dirty and indicates that it may be clustered  *			with other adjacent dirty buffers.  Note the clustering  *			may not be used with the stage 1 data write under NFS  *			but may be used for the commit rpc portion.  *  *	B_VMIO		Indicates that the buffer is tied into an VM object.  *			The buffer's data is always PAGE_SIZE aligned even  *			if b_bufsize and b_bcount are not.  ( b_bufsize is   *			always at least DEV_BSIZE aligned, though ).  *	  */
+comment|/*  * These flags are kept in b_flags.  *  * Notes:  *  *	B_ASYNC		VOP calls on bp's are usually async whether or not  *			B_ASYNC is set, but some subsystems, such as NFS, like   *			to know what is best for the caller so they can  *			optimize the I/O.  *  *	B_PAGING	Indicates that bp is being used by the paging system or  *			some paging system and that the bp is not linked into  *			the b_vp's clean/dirty linked lists or ref counts.  *			Buffer vp reassignments are illegal in this case.  *  *	B_CACHE		This may only be set if the buffer is entirely valid.  *			The situation where B_DELWRI is set and B_CACHE is  *			clear MUST be committed to disk by getblk() so   *			B_DELWRI can also be cleared.  See the comments for  *			getblk() in kern/vfs_bio.c.  If B_CACHE is clear,  *			the caller is expected to clear B_ERROR|B_INVAL,  *			set BIO_READ, and initiate an I/O.  *  *			The 'entire buffer' is defined to be the range from  *			0 through b_bcount.  *  *	B_MALLOC	Request that the buffer be allocated from the malloc  *			pool, DEV_BSIZE aligned instead of PAGE_SIZE aligned.  *  *	B_CLUSTEROK	This flag is typically set for B_DELWRI buffers  *			by filesystems that allow clustering when the buffer  *			is fully dirty and indicates that it may be clustered  *			with other adjacent dirty buffers.  Note the clustering  *			may not be used with the stage 1 data write under NFS  *			but may be used for the commit rpc portion.  *  *	B_VMIO		Indicates that the buffer is tied into an VM object.  *			The buffer's data is always PAGE_SIZE aligned even  *			if b_bufsize and b_bcount are not.  ( b_bufsize is   *			always at least DEV_BSIZE aligned, though ).  *	  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BIO_READ
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_WRITE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_DELETE
+value|4
+end_define
 
 begin_define
 define|#
@@ -538,12 +563,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_CALL
+name|B_UNUSED40
 value|0x00000040
 end_define
 
 begin_comment
-comment|/* Call b_iodone from biodone. */
+comment|/* Old B_CALL */
 end_comment
 
 begin_define
@@ -555,17 +580,6 @@ end_define
 
 begin_comment
 comment|/* Delay I/O until buffer reused. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_FREEBUF
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Instruct driver: free blocks */
 end_comment
 
 begin_define
@@ -692,17 +706,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_READ
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Read buffer. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|B_DIRTY
 value|0x00200000
 end_define
@@ -731,17 +734,6 @@ end_define
 
 begin_comment
 comment|/* Used by vm_pager.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_WRITE
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* Write buffer (pseudo flag). */
 end_comment
 
 begin_define

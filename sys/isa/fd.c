@@ -7334,8 +7334,8 @@ decl_stmt|;
 if|if
 condition|(
 name|flags
-operator|&
-name|B_READ
+operator|==
+name|BIO_READ
 condition|)
 block|{
 if|if
@@ -7674,9 +7674,9 @@ name|read
 operator|=
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 expr_stmt|;
 name|format
 operator|=
@@ -8606,7 +8606,7 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 argument_list|,
 name|bp
 operator|->
@@ -8752,7 +8752,7 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 argument_list|,
 name|bp
 operator|->
@@ -8902,7 +8902,7 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 argument_list|,
 name|bp
 operator|->
@@ -8976,7 +8976,7 @@ name|fdc
 argument_list|,
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 argument_list|,
 name|bp
 operator|->

@@ -1552,11 +1552,9 @@ expr_stmt|;
 comment|/* build a minimal buffer header */
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 operator|=
-name|B_READ
-operator||
-name|B_CALL
+name|BIO_READ
 expr_stmt|;
 name|bp
 operator|->
@@ -2949,11 +2947,9 @@ expr_stmt|;
 comment|/* build a minimal buffer header */
 name|bp
 operator|->
-name|b_flags
+name|b_iocmd
 operator|=
-name|B_READ
-operator||
-name|B_CALL
+name|BIO_READ
 expr_stmt|;
 name|bp
 operator|->

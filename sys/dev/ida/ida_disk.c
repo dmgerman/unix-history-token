@@ -606,12 +606,10 @@ operator|&&
 operator|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
+name|b_iocmd
 operator|==
-literal|0
+name|BIO_WRITE
+operator|)
 condition|)
 block|{
 name|bp

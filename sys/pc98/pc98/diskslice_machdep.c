@@ -1198,9 +1198,9 @@ name|d_secsize
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_READ
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2762,9 +2762,9 @@ name|d_secsize
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_READ
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 name|BUF_STRATEGY
 argument_list|(

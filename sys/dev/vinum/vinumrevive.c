@@ -638,7 +638,14 @@ name|bp
 operator|->
 name|b_flags
 operator|=
-name|B_READ
+literal|0
+expr_stmt|;
+comment|/* either way, read it */
+name|bp
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 comment|/* either way, read it */
 name|vinumstart
@@ -686,8 +693,13 @@ operator|->
 name|b_flags
 operator|=
 name|B_ORDERED
-operator||
-name|B_WRITE
+expr_stmt|;
+comment|/* and make this an ordered write */
+name|bp
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_WRITE
 expr_stmt|;
 comment|/* and make this an ordered write */
 name|BUF_LOCKINIT
@@ -874,8 +886,8 @@ operator|->
 name|bp
 operator|->
 name|b_flags
-operator|&
-name|B_READ
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read"
 else|:
@@ -1309,16 +1321,9 @@ block|{
 comment|/* rebuildparity */
 name|pbp
 operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_READ
-expr_stmt|;
-name|pbp
-operator|->
-name|b_flags
-operator||=
-name|B_WRITE
+name|b_iocmd
+operator|=
+name|BIO_WRITE
 expr_stmt|;
 name|pbp
 operator|->
@@ -1789,7 +1794,17 @@ index|]
 operator|->
 name|b_flags
 operator|=
-name|B_READ
+literal|0
+expr_stmt|;
+comment|/* either way, read it */
+name|bpp
+index|[
+name|sdno
+index|]
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 comment|/* either way, read it */
 name|bpp
@@ -2551,9 +2566,9 @@ expr_stmt|;
 comment|/* create the device number */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_READ
+name|b_iocmd
+operator|=
+name|BIO_READ
 expr_stmt|;
 comment|/* read it back */
 name|splx

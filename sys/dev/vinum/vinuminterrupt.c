@@ -274,9 +274,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 name|log
@@ -400,9 +400,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* read operation */
@@ -1286,9 +1286,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|)
 block|{
 comment|/* read operation */
@@ -2082,9 +2082,9 @@ name|rqe
 operator|->
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 operator|)
 comment|/* this was a read */
 operator|&&
@@ -2109,22 +2109,9 @@ operator|.
 name|b_flags
 operator|&=
 operator|~
-operator|(
-name|B_READ
-operator||
 name|B_DONE
-operator|)
 expr_stmt|;
 comment|/* we're writing now */
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_flags
-operator||=
-name|B_CALL
-expr_stmt|;
-comment|/* call us when you're done */
 name|rqe
 operator|->
 name|b
@@ -2133,7 +2120,7 @@ name|b_iodone
 operator|=
 name|complete_rqe
 expr_stmt|;
-comment|/* by calling us here */
+comment|/* call us here when done */
 name|rqe
 operator|->
 name|flags
@@ -2294,9 +2281,9 @@ name|rqe
 operator|->
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read"
 else|:
@@ -2410,22 +2397,9 @@ operator|.
 name|b_flags
 operator|&=
 operator|~
-operator|(
-name|B_READ
-operator||
 name|B_DONE
-operator|)
 expr_stmt|;
 comment|/* we're writing now */
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_flags
-operator||=
-name|B_CALL
-expr_stmt|;
-comment|/* call us when you're done */
 name|rqe
 operator|->
 name|b
@@ -2434,7 +2408,7 @@ name|b_iodone
 operator|=
 name|complete_rqe
 expr_stmt|;
-comment|/* by calling us here */
+comment|/* call us here when done */
 name|rqg
 operator|->
 name|flags
@@ -2565,9 +2539,9 @@ name|rqe
 operator|->
 name|b
 operator|.
-name|b_flags
-operator|&
-name|B_READ
+name|b_iocmd
+operator|==
+name|BIO_READ
 condition|?
 literal|"Read"
 else|:
