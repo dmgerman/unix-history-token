@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.15 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.16 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.15 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.16 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -824,20 +824,7 @@ name|EX_TEMPFAIL
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-name|h_errno
-operator|==
-name|NO_ADDRESS
-condition|)
-empty_stmt|;
-comment|/*look for mail forwarder records*/
-endif|#
-directive|endif
-endif|notdef
+comment|/* 			**  XXX Should look for mail forwarder record here 			**  XXX if (h_errno == NO_ADDRESS). 			*/
 return|return
 operator|(
 name|EX_NOHOST
