@@ -2063,7 +2063,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: Error, unit> IFPI_MAXUNIT!\n"
+literal|"ifpi2-%d: Error, unit> IFPI_MAXUNIT!\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2096,7 +2096,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: unknown device!?\n"
+literal|"ifpi2-%d: unknown device!?\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2176,7 +2176,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: couldn't map IO port\n"
+literal|"ifpi2-%d: couldn't map IO port\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2290,7 +2290,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: couldn't map interrupt\n"
+literal|"ifpi2-%d: couldn't map interrupt\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2367,7 +2367,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: couldn't set up irq\n"
+literal|"ifpi2-%d: couldn't set up irq\n"
 argument_list|,
 name|unit
 argument_list|)
