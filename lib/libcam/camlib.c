@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997, 1998, 1999, 2002 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -975,7 +975,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|dev_name
 argument_list|,
@@ -1002,7 +1002,7 @@ name|found
 operator|==
 literal|0
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|dev_name
 argument_list|,
@@ -1010,16 +1010,6 @@ name|tmpstr
 argument_list|,
 name|devnamelen
 argument_list|)
-expr_stmt|;
-comment|/* Make sure we pass back a null-terminated string */
-name|dev_name
-index|[
-name|devnamelen
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* Clean up allocated memory */
 name|free
@@ -1074,9 +1064,10 @@ name|path
 argument_list|,
 name|dev_name
 argument_list|,
-name|DEV_IDLEN
-operator|+
-literal|1
+sizeof|sizeof
+argument_list|(
+name|dev_name
+argument_list|)
 argument_list|,
 operator|&
 name|unit
@@ -1948,7 +1939,7 @@ operator|=
 name|XPT_GDEVLIST
 expr_stmt|;
 comment|/* These two are necessary for the GETPASSTHRU ioctl to work. */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ccb
 operator|.
@@ -1958,23 +1949,15 @@ name|periph_name
 argument_list|,
 name|dev_name
 argument_list|,
-name|DEV_IDLEN
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+sizeof|sizeof
+argument_list|(
 name|ccb
 operator|.
 name|cgdl
 operator|.
 name|periph_name
-index|[
-name|DEV_IDLEN
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ccb
 operator|.
@@ -2190,14 +2173,6 @@ name|given_unit_number
 parameter_list|)
 block|{
 name|char
-name|newpath
-index|[
-name|MAXPATHLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|char
 modifier|*
 name|func_name
 init|=
@@ -2290,7 +2265,7 @@ name|given_path
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|device
 operator|->
@@ -2298,9 +2273,12 @@ name|device_path
 argument_list|,
 name|given_path
 argument_list|,
-name|MAXPATHLEN
-operator|+
-literal|1
+sizeof|sizeof
+argument_list|(
+name|device
+operator|->
+name|device_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2320,7 +2298,7 @@ name|given_dev_name
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|device
 operator|->
@@ -2328,7 +2306,12 @@ name|given_dev_name
 argument_list|,
 name|given_dev_name
 argument_list|,
-name|DEV_IDLEN
+sizeof|sizeof
+argument_list|(
+name|device
+operator|->
+name|given_dev_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2489,7 +2472,7 @@ name|cgdl
 operator|.
 name|unit_number
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|device
 operator|->
@@ -2500,6 +2483,13 @@ operator|.
 name|cgdl
 operator|.
 name|periph_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+operator|->
+name|device_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|device
@@ -2577,7 +2567,7 @@ goto|goto
 name|crod_bailout
 goto|;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|device
 operator|->
@@ -2589,7 +2579,12 @@ name|cpi
 operator|.
 name|dev_name
 argument_list|,
-name|SIM_IDLEN
+sizeof|sizeof
+argument_list|(
+name|device
+operator|->
+name|sim_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|device
