@@ -871,6 +871,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"fwe"
+block|,
+literal|"FireWire Ethernet emulation"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"lp"
 block|,
 literal|"Parallel Port IP (PLIP) peer connection"
