@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	5.1 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,7 +540,7 @@ name|hp
 operator|->
 name|qdcount
 operator|=
-name|HTONS
+name|htons
 argument_list|(
 literal|1
 argument_list|)
@@ -656,7 +656,7 @@ name|hp
 operator|->
 name|arcount
 operator|=
-name|HTONS
+name|htons
 argument_list|(
 literal|1
 argument_list|)
@@ -768,7 +768,7 @@ name|hp
 operator|->
 name|ancount
 operator|=
-name|HTONS
+name|htons
 argument_list|(
 literal|1
 argument_list|)

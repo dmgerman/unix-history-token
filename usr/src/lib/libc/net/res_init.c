@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	5.1 (Berkeley) %G%"
+literal|"@(#)res_init.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +154,7 @@ name|nsaddr
 operator|.
 name|sin_port
 operator|=
-name|HTONS
+name|htons
 argument_list|(
 name|NAMESERVER_PORT
 argument_list|)
