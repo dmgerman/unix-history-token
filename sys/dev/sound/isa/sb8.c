@@ -435,12 +435,12 @@ block|,
 name|AFMT_STEREO
 operator||
 name|AFMT_U8
-comment|/* | AFMT_S16_LE */
+operator||
+name|AFMT_S16_LE
 block|,
 name|AFMT_STEREO
 operator||
-name|AFMT_U8
-comment|/* AFMT_S16_LE */
+name|AFMT_S16_LE
 block|}
 decl_stmt|;
 end_decl_stmt
