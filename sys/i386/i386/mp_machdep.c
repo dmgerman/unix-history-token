@@ -316,7 +316,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** COUNT_XINVLTLB_HITS, USE_COMLOCK */
+comment|/** COUNT_XINVLTLB_HITS */
 end_comment
 
 begin_include
@@ -571,28 +571,6 @@ name|int
 name|mcount_lock
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_COMLOCK
-end_ifdef
-
-begin_comment
-comment|/* locks com (tty) data/hardware accesses: a FASTINTR() */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|com_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/** XXX FIXME: where does this really belong, isa.h/isa.c perhaps? */
@@ -1405,23 +1383,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_COMLOCK
-name|mtx_init
-argument_list|(
-operator|&
-name|com_mtx
-argument_list|,
-literal|"com"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|mtx_init
 argument_list|(
 operator|&
