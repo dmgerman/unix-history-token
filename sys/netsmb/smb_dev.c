@@ -313,12 +313,7 @@ operator|.
 name|d_name
 operator|=
 name|NSMB_NAME
-block|,
-operator|.
-name|d_maj
-operator|=
-name|NSMB_MAJOR
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -54,13 +54,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NSMB_MAJOR
-value|144
-end_define
-
-begin_define
-define|#
-directive|define
 name|NSMB_VERMAJ
 value|1
 end_define
