@@ -581,7 +581,12 @@ name|BUCKET_ZONES
 value|((BUCKET_MAX>> BUCKET_SHIFT) + 1)
 end_define
 
+begin_comment
+comment|/*  * bucket_size[] maps requested bucket sizes to zones that allocate a bucket  * of approximately the right size.  */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|uint8_t
 name|bucket_size
 index|[
