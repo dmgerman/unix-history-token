@@ -1106,9 +1106,10 @@ argument_list|)
 expr_stmt|;
 name|disk_destroy
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|mlxd_dev_t
+name|mlxd_disk
 argument_list|)
 expr_stmt|;
 return|return

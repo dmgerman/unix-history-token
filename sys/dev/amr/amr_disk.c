@@ -1154,9 +1154,10 @@ else|#
 directive|else
 name|disk_destroy
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|amrd_dev_t
+name|amrd_disk
 argument_list|)
 expr_stmt|;
 endif|#

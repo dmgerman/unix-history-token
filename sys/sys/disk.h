@@ -278,8 +278,10 @@ begin_function_decl
 name|void
 name|disk_destroy
 parameter_list|(
-name|dev_t
-name|dev
+name|struct
+name|disk
+modifier|*
+name|disk
 parameter_list|)
 function_decl|;
 end_function_decl

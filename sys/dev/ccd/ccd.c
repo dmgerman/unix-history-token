@@ -4824,7 +4824,7 @@ name|disk_destroy
 argument_list|(
 name|cs
 operator|->
-name|sc_dev
+name|sc_disk
 argument_list|)
 expr_stmt|;
 name|free

@@ -3723,9 +3723,10 @@ condition|)
 block|{
 name|disk_destroy
 argument_list|(
+operator|&
 name|softc
 operator|->
-name|dev
+name|disk
 argument_list|)
 expr_stmt|;
 block|}

@@ -1739,9 +1739,10 @@ argument_list|)
 expr_stmt|;
 name|disk_destroy
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|ad_dev_t
+name|ad_disk
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -550,9 +550,10 @@ expr_stmt|;
 block|}
 name|disk_destroy
 argument_list|(
+operator|&
 name|fdp
 operator|->
-name|dev
+name|disk
 argument_list|)
 expr_stmt|;
 name|devstat_remove_entry

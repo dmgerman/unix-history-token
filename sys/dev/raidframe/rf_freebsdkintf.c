@@ -2275,12 +2275,10 @@ argument_list|)
 expr_stmt|;
 name|disk_destroy
 argument_list|(
-name|parent_sc
+operator|&
+name|sc
 operator|->
-name|sc_raiddevs
-index|[
-name|unit
-index|]
+name|sc_dkdev
 argument_list|)
 expr_stmt|;
 name|raidunlock

@@ -2258,9 +2258,10 @@ argument_list|)
 expr_stmt|;
 name|disk_destroy
 argument_list|(
+operator|&
 name|rdp
 operator|->
-name|dev
+name|disk
 argument_list|)
 expr_stmt|;
 name|free

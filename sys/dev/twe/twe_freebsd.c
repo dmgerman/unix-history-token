@@ -3084,9 +3084,10 @@ else|#
 directive|else
 name|disk_destroy
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|twed_dev_t
+name|twed_disk
 argument_list|)
 expr_stmt|;
 endif|#
