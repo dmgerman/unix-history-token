@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.3 (Berkeley) %G%"
+literal|"@(#)tty.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|OK
+name|ERR
 operator|)
 return|;
 name|GT
