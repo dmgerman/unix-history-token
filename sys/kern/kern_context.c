@@ -172,9 +172,7 @@ name|uc_sigmask
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sigmask
+name|td_sigmask
 expr_stmt|;
 name|ret
 operator|=
@@ -288,9 +286,7 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sigmask
+name|td_sigmask
 operator|=
 name|uc
 operator|.
@@ -368,9 +364,7 @@ name|uc_sigmask
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sigmask
+name|td_sigmask
 expr_stmt|;
 name|ret
 operator|=
@@ -449,9 +443,7 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sigmask
+name|td_sigmask
 operator|=
 name|uc
 operator|.

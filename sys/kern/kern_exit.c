@@ -643,6 +643,13 @@ operator|->
 name|p_siglist
 argument_list|)
 expr_stmt|;
+name|SIGEMPTYSET
+argument_list|(
+name|td
+operator|->
+name|td_siglist
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timevalisset

@@ -1143,9 +1143,9 @@ argument_list|)
 operator|||
 name|SIGISMEMBER
 argument_list|(
-name|p
+name|td
 operator|->
-name|p_sigmask
+name|td_sigmask
 argument_list|,
 name|SIGTTIN
 argument_list|)

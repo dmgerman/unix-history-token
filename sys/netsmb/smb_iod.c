@@ -1574,15 +1574,13 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|smb_proc_intr
+name|smb_td_intr
 argument_list|(
 name|rqp
 operator|->
 name|sr_cred
 operator|->
 name|scr_td
-operator|->
-name|td_proc
 argument_list|)
 condition|)
 block|{

@@ -423,10 +423,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|smb_proc_intr
+name|smb_td_intr
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;

@@ -2255,20 +2255,13 @@ name|td_flags
 operator|=
 name|TDF_UPCALLING
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_sflag
-operator|&
-name|PS_NEEDSIGCHK
-condition|)
-name|td
-operator|->
-name|td_flags
-operator||=
-name|TDF_ASTPENDING
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX This shouldn't be necessary */
+block|if (p->p_sflag& PS_NEEDSIGCHK) 		td->td_flags |= TDF_ASTPENDING;
+endif|#
+directive|endif
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -3277,9 +3270,7 @@ name|uc_sigmask
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sigmask
+name|td_sigmask
 expr_stmt|;
 block|}
 end_function
@@ -3352,9 +3343,7 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sigmask
+name|td_sigmask
 operator|=
 name|uc
 operator|->
@@ -5252,6 +5241,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX Shouldn't cpu_throw() here. */
 name|cpu_throw
 argument_list|()
 expr_stmt|;
@@ -6137,22 +6127,13 @@ name|td_flags
 operator|=
 name|TDF_UPCALLING
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_sflag
-operator|&
-name|PS_NEEDSIGCHK
-condition|)
-name|td2
-operator|->
-name|td_flags
-operator||=
-name|TDF_ASTPENDING
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX This shouldn't be necessary */
+block|if (td->td_proc->p_sflag& PS_NEEDSIGCHK) 		td2->td_flags |= TDF_ASTPENDING;
+endif|#
+directive|endif
 name|td2
 operator|->
 name|td_kse
@@ -6839,12 +6820,6 @@ operator|&=
 operator|~
 name|TDF_CAN_UNBIND
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|ku
 operator|=
 name|td
@@ -6854,11 +6829,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|p
+name|td
 operator|->
-name|p_sflag
+name|td_flags
 operator|&
-name|PS_NEEDSIGCHK
+name|TDF_NEEDSIGCHK
 operator|)
 operator|==
 literal|0
@@ -6894,6 +6869,12 @@ name|kg_nextupcall
 operator|)
 condition|)
 block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|thread_update_usr_ticks
 argument_list|(
 name|td
@@ -6949,6 +6930,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|thread_export_context

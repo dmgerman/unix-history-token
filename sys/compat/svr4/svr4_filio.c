@@ -580,9 +580,7 @@ literal|"sigmask = 0x%x\n"
 operator|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sigmask
+name|td_sigmask
 operator|)
 argument_list|)
 expr_stmt|;
@@ -619,9 +617,7 @@ literal|"siglist = 0x%x\n"
 operator|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_siglist
+name|td_siglist
 operator|)
 argument_list|)
 expr_stmt|;

@@ -5541,9 +5541,9 @@ name|SIGSETNAND
 argument_list|(
 name|tmpset
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_sigmask
+name|td_sigmask
 argument_list|)
 expr_stmt|;
 name|SIGSETNAND

@@ -3760,9 +3760,9 @@ argument_list|)
 expr_stmt|;
 name|sigmask
 operator|=
-name|p
+name|td
 operator|->
-name|p_sigmask
+name|td_sigmask
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(

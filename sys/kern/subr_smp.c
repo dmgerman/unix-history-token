@@ -522,7 +522,7 @@ block|{
 name|int
 name|id
 decl_stmt|;
-comment|/* 	 * signotify() has already set TDF_ASTPENDING and PS_NEEDSIGCHECK on 	 * this process, so all we need to do is poke it if it is currently 	 * executing so that it executes ast(). 	 */
+comment|/* 	 * signotify() has already set TDF_ASTPENDING and TDF_NEEDSIGCHECK on 	 * this thread, so all we need to do is poke it if it is currently 	 * executing so that it executes ast(). 	 */
 name|mtx_assert
 argument_list|(
 operator|&
