@@ -554,13 +554,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:kns:T:uWw"
+value|"0123456789aB:b:cd:f:h:kns:T:uWwD:"
 else|#
 directive|else
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:ns:T:uWw"
+value|"0123456789aB:b:cd:f:h:ns:T:uWwD:"
 endif|#
 directive|endif
 while|while
@@ -711,6 +711,14 @@ literal|'f'
 case|:
 comment|/* output file */
 name|tape
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|dumpdates
 operator|=
 name|optarg
 expr_stmt|;
@@ -2412,8 +2420,9 @@ name|KERBEROS
 literal|"k"
 endif|#
 directive|endif
-literal|"nu] [-B records] [-b blocksize] [-d density] [-f file]\n"
-literal|"            [-h level] [-s feet] [-T date] filesystem\n"
+literal|"nu] [-B records] [-b blocksize] [-D dumpdates]\n"
+literal|"            [-d density] [-f file ] [-h level] [-s feet] "
+literal|"[-T date] filesystem\n"
 literal|"       dump [-W | -w]\n"
 argument_list|)
 expr_stmt|;
@@ -2956,6 +2965,9 @@ literal|'d'
 case|:
 case|case
 literal|'f'
+case|:
+case|case
+literal|'D'
 case|:
 case|case
 literal|'h'
