@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980, 1982, 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1982, 1983 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc3.c	5.1 (Berkeley) %G%"
+literal|"@(#)pc3.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*      *	     Pc3 is a pass in the Berkeley Pascal compilation      *	process that is performed just prior to linking Pascal      *	object files.  Its purpose is to enforce the rules of      *	separate compilation for Berkeley Pascal.  Pc3 is called      *	with the same argument list of object files that is sent to      *	the loader.  These checks are performed by pc3 by examining      *	the symbol tables of the object files:      *	(1)  All .o files must be up to date with respect to the      *	     runtime libraries.      *	(2)  Each global Pascal symbol (label, constant, type,      *	     variable, procedure, or function name) must be uniquely      *	     declared, i.e. declared in only one included file or      *	     source file.      *	(3)  Each external function (or procedure) may be resolved      *	     at most once in a source file which included the      *	     external declaration of the function.      *	      *	     The symbol table of each object file is scanned and      *	each global Pascal symbol is placed in a hashed symbol      *	table.  The Pascal compiler has been modified to emit all      *	Pascal global symbols to the object file symbol table.  The      *	information stored in the symbol table for each such symbol      *	is:      *	      *	   - the name of the symbol;      *	   - a subtype descriptor;      *	   - the file which logically contains the declaration of      *	     the symbol or which caused the inclusion of an include file.      *	   - for included files:      *		- a checksum;      *	   - for symbols:      *	   	- the file which textually contains the declaration of      *	   	  the symbol (possibly an include file);      *	   	- the line number at which the symbol is declared;      *	   	- the file which contains the resolution of the symbol.      *	   	- the line number at which the symbol is resolved;      *	      *	     If a symbol has been previously entered into the symbol      *	table, a check is made that the current declaration is of      *	the same type and from the same include file as the previous      *	one.  Except for files and functions and procedures, it is      *	an error for a symbol declaration to be encountered more      *	than once, unless the re-declarations come from the same      *	included file as the original.      *	      *	     As an include file symbol is encountered in a source      *	file, the symbol table entry of each symbol declared in that      *	include file is modified to reflect its new logical      *	inclusion in the source file.  File symbols are also      *	encountered as an included file ends, signaling the      *	continuation of the enclosing file.      *	      *	     Functions and procedures which have been declared      *	external may be resolved by declarations from source files      *	which included the external declaration of the function.      *	Functions and procedures may be resolved at most once across      *	a set of object files.  The loader will complain if a      *	function is not resolved at least once.      */
