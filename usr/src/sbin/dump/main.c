@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -627,7 +627,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"need keyletter ``f'' and device ``host:tape''"
+literal|"need keyletter ``f'' and device ``host:tape''\n"
 argument_list|)
 expr_stmt|;
 name|exit
