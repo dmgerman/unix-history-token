@@ -3125,6 +3125,16 @@ name|rtval
 return|;
 if|if
 condition|(
+operator|(
+name|pv
+operator|->
+name|pv_pte
+operator|.
+name|pte_ig
+operator|&
+name|PTE_IG_MANAGED
+operator|)
+operator|&&
 name|m
 condition|)
 block|{
