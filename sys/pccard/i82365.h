@@ -105,8 +105,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_RF5C396
+name|PCIC_RF5C296
 value|9
+end_define
+
+begin_comment
+comment|/* Ricoh RF5C296 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_RF5C396
+value|10
 end_define
 
 begin_comment
@@ -117,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_IBM_KING
-value|10
+value|11
 end_define
 
 begin_comment
@@ -128,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_I82365SL_DF
-value|11
+value|12
 end_define
 
 begin_comment
@@ -377,12 +388,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_RICOH_MCR2
+value|0x2f
+end_define
+
+begin_comment
+comment|/* Ricoh: Mode Control Register 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_VMISC
 value|0x3a
 end_define
 
 begin_comment
 comment|/* Vadem: Misc control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_RICOH_ID
+value|0x3a
+end_define
+
+begin_comment
+comment|/* Ricoh: ID register */
 end_comment
 
 begin_define
@@ -1324,6 +1357,21 @@ comment|/* 3.3V */
 end_comment
 
 begin_comment
+comment|/* Ricoh: Misc Control Register 2 (PCIC_RICOH_MCR2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MCR2_VCC_33
+value|0x01
+end_define
+
+begin_comment
+comment|/* 3.3V */
+end_comment
+
+begin_comment
 comment|/* Vadem: misc register (PCIC_VMISC) */
 end_comment
 
@@ -1332,6 +1380,24 @@ define|#
 directive|define
 name|PCIC_VADEMREV
 value|0x40
+end_define
+
+begin_comment
+comment|/* Ricoh: ID register values (PCIC_RICOH_ID) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_RID_296
+value|0x32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_RID_396
+value|0xb2
 end_define
 
 begin_comment

@@ -221,9 +221,15 @@ name|PCIC_VG_POWER
 block|}
 block|,
 block|{
+literal|"Ricoh RF5C296"
+block|,
+name|PCIC_RICOH_POWER
+block|}
+block|,
+block|{
 literal|"Ricoh RF5C396"
 block|,
-name|PCIC_AB_POWER
+name|PCIC_RICOH_POWER
 block|}
 block|,
 block|{
@@ -875,7 +881,7 @@ name|PCIC_VADEMREV
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Check for RICOH RF5C396 PCMCIA Controller 			 */
+comment|/* 			 * Check for RICOH RF5C[23]96 PCMCIA Controller 			 */
 name|c
 operator|=
 name|sp
@@ -884,25 +890,36 @@ name|getb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x3a
+name|PCIC_RICOH_ID
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|c
 operator|==
-literal|0xb2
+name|PCIC_RID_396
 condition|)
-block|{
 name|sp
 operator|->
 name|controller
 operator|=
 name|PCIC_RF5C396
 expr_stmt|;
-block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+name|PCIC_RID_296
+condition|)
+name|sp
+operator|->
+name|controller
+operator|=
+name|PCIC_RF5C296
+expr_stmt|;
 break|break;
-comment|/* 		 *	Intel i82365D or maybe a vlsi 82c146 		 * we detected the vlsi case earlier, so if the controller 		 * isn't set, we know it is a i82365sl step D. 		 */
+comment|/* 		 *	Intel i82365sl-DF step or maybe a vlsi 82c146 		 * we detected the vlsi case earlier, so if the controller 		 * isn't set, we know it is a i82365sl step D. 		 */
 case|case
 name|PCIC_INTEL2
 case|:

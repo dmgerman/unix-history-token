@@ -117,6 +117,11 @@ directive|define
 name|PCIC_KING_POWER
 value|0x00000010
 comment|/* Uses IBM KING regs  */
+define|#
+directive|define
+name|PCIC_RICOH_POWER
+value|0x00000020
+comment|/* Uses the ricoh power regs */
 name|int
 name|iorid
 decl_stmt|;
