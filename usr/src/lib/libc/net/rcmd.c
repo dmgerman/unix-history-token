@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.25 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1452,6 +1452,20 @@ end_function
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|struct
+name|stat
+name|sbuf
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pwd
+decl_stmt|;
 name|FILE
 modifier|*
 name|hostf
@@ -1461,6 +1475,12 @@ name|uid
 decl_stmt|;
 name|int
 name|first
+decl_stmt|;
+name|char
+name|pbuf
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|first
 operator|=
@@ -1538,21 +1558,6 @@ name|superuser
 operator|)
 condition|)
 block|{
-name|struct
-name|stat
-name|sbuf
-decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pwd
-decl_stmt|;
-name|char
-name|pbuf
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 name|first
 operator|=
 literal|0
@@ -1644,6 +1649,10 @@ literal|1
 operator|)
 return|;
 comment|/* 		 * If not a regular file, or is owned by someone other than 		 * user or root or if writeable by anyone but the owner, quit. 		 */
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|lstat
@@ -1656,7 +1665,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|__rcmd_errstr
+name|cp
 operator|=
 literal|".rhosts lstat failed"
 expr_stmt|;
@@ -1673,7 +1682,7 @@ operator|)
 operator|!=
 name|S_IFREG
 condition|)
-name|__rcmd_errstr
+name|cp
 operator|=
 literal|".rhosts not regular file"
 expr_stmt|;
@@ -1693,7 +1702,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|__rcmd_errstr
+name|cp
 operator|=
 literal|".rhosts fstat failed"
 expr_stmt|;
@@ -1712,7 +1721,7 @@ name|pwd
 operator|->
 name|pw_uid
 condition|)
-name|__rcmd_errstr
+name|cp
 operator|=
 literal|"bad .rhosts owner"
 expr_stmt|;
@@ -1725,16 +1734,20 @@ name|st_mode
 operator|&
 literal|022
 condition|)
-name|__rcmd_errstr
+name|cp
 operator|=
 literal|"bad .rhosts permissions"
 expr_stmt|;
 comment|/* If there were any problems, quit. */
 if|if
 condition|(
-name|__rcmd_errstr
+name|cp
 condition|)
 block|{
+name|__rcmd_errstr
+operator|=
+name|cp
+expr_stmt|;
 operator|(
 name|void
 operator|)
