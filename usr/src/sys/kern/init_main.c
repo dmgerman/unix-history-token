@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -223,14 +223,6 @@ function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|initflags
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * System startup; initialize the world, create process 0,  * mount root filesystem, and fork to create init and pagedaemon.  * Most of the hard work is done in the lower-level initialization  * routines including startup(), which does memory initialization  * and autoconfiguration.  */
@@ -910,11 +902,20 @@ literal|1
 index|]
 condition|)
 block|{
+specifier|static
+name|char
+name|initflags
+index|[]
+init|=
+literal|"-sf"
+decl_stmt|;
 name|char
 modifier|*
 name|ip
 init|=
 name|initflags
+operator|+
+literal|1
 decl_stmt|;
 name|vm_offset_t
 name|addr
@@ -929,12 +930,6 @@ expr_stmt|;
 name|initproc
 operator|=
 name|p
-expr_stmt|;
-operator|*
-name|ip
-operator|++
-operator|=
-literal|'-'
 expr_stmt|;
 if|if
 condition|(
@@ -963,14 +958,14 @@ operator|++
 operator|=
 literal|'f'
 expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|ip
 operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|vm_allocate
@@ -988,12 +983,17 @@ argument_list|,
 name|round_page
 argument_list|(
 name|szicode
+operator|+
+sizeof|sizeof
+argument_list|(
+name|initflags
+argument_list|)
 argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
 operator|!=
-name|KERN_SUCCESS
+literal|0
 operator|||
 name|addr
 operator|!=
@@ -1070,6 +1070,24 @@ operator|(
 name|unsigned
 operator|)
 name|szicode
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|copyout
+argument_list|(
+name|initflags
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|szicode
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|initflags
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
