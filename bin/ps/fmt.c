@@ -205,7 +205,7 @@ operator|=
 name|malloc
 argument_list|(
 call|(
-name|u_int
+name|size_t
 call|)
 argument_list|(
 literal|4
@@ -219,11 +219,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc failed"
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 block|}
