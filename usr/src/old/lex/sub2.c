@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub2.c	4.2 (Berkeley) %G%"
+literal|"@(#)sub2.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5739,12 +5739,6 @@ block|}
 name|cfree
 argument_list|(
 name|fbarr
-argument_list|,
-literal|2
-operator|*
-name|NCH
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
