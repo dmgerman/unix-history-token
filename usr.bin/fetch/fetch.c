@@ -459,6 +459,10 @@ begin_comment
 comment|/* transfer buffer */
 end_comment
 
+begin_comment
+comment|/*  * Signal handler  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -535,6 +539,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Update the stats display  */
+end_comment
 
 begin_function
 specifier|static
@@ -663,6 +671,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialize the transfer statistics  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -761,6 +773,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Update the transfer statistics  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -790,6 +806,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Finalize the transfer statistics  */
+end_comment
 
 begin_function
 specifier|static
@@ -966,6 +986,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Ask the user for authentication details  */
+end_comment
 
 begin_function
 specifier|static
@@ -1244,6 +1268,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Fetch a file  */
+end_comment
 
 begin_function
 specifier|static
@@ -2877,23 +2905,29 @@ define|\
 value|static int						\ NAME(const char *s, TYPE *v)				\ {							\         *v = 0;						\ 	for (*v = 0; *s; s++)				\ 		if (isdigit(*s))			\ 			*v = *v * 10 + *s - '0';	\ 		else					\ 			return -1;			\ 	return 0;					\ }
 end_define
 
-begin_macro
+begin_expr_stmt
 name|PARSENUM
 argument_list|(
-argument|parseint
+name|parseint
 argument_list|,
-argument|u_int
+name|u_int
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|PARSENUM
 argument_list|(
-argument|parseoff
+name|parseoff
 argument_list|,
-argument|off_t
+name|off_t
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Entry point  */
+end_comment
 
 begin_function
 name|int
