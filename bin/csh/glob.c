@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: glob.c,v 1.8 1997/02/22 14:01:58 peter Exp $"
+literal|"$Id: glob.c,v 1.9 1997/08/07 21:42:09 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2909,30 +2909,34 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|rscan
-argument_list|(
+parameter_list|(
 name|t
-argument_list|,
+parameter_list|,
 name|f
-argument_list|)
+parameter_list|)
 name|Char
 modifier|*
 modifier|*
 name|t
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|void
+parameter_list|(
+function_decl|*f
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

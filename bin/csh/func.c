@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: func.c,v 1.7 1997/02/22 14:01:55 peter Exp $"
+literal|"$Id: func.c,v 1.8 1997/08/07 21:42:09 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5893,10 +5893,6 @@ block|{
 name|float
 name|f
 decl_stmt|;
-name|double
-name|atof
-parameter_list|()
-function_decl|;
 name|Char
 modifier|*
 name|cp
@@ -6731,12 +6727,16 @@ name|int
 name|ctpgrp
 decl_stmt|;
 name|void
-function_decl|(
-modifier|*
-name|old
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*old
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|loginsh

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: proc.c,v 1.4 1997/02/22 14:02:06 peter Exp $"
+literal|"$Id: proc.c,v 1.5 1997/08/07 21:42:15 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5940,20 +5940,20 @@ operator|)
 return|;
 name|stderror
 argument_list|(
-operator|(
 name|ERR_NAME
 operator||
+operator|(
 name|cp
 index|[
 literal|1
 index|]
-operator|)
 operator|==
 literal|'?'
 condition|?
 name|ERR_JOBPAT
 else|:
 name|ERR_NOSUCHJOB
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */

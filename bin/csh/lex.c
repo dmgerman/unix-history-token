@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lex.c,v 1.6 1997/02/22 14:02:01 peter Exp $"
+literal|"$Id: lex.c,v 1.7 1997/08/07 21:42:11 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7054,7 +7054,7 @@ name|c
 operator|>
 literal|0
 condition|)
-name|memcpy
+name|memmove
 argument_list|(
 name|fbuf
 index|[
