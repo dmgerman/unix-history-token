@@ -911,9 +911,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|M_ZERO
-operator||
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -956,9 +954,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|M_ZERO
-operator||
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
