@@ -33,6 +33,29 @@ directive|if
 name|STAT_STATFS2_BSIZE
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -48,6 +71,11 @@ include|#
 directive|include
 file|<sys/vfs.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
