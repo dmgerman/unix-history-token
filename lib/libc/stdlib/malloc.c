@@ -1,52 +1,44 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.14 1996/09/25 08:30:46 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.15 1996/09/25 16:29:15 sos Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * Defining EXTRA_SANITY will enable extra checks which are related  * to internal conditions and consistency in malloc.c. This has a  * noticeable runtime performance hit, and generally will not do you  * any good unless you fiddle with the internals of malloc or want  * to catch random pointer corruption as early as possible.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MALLOC_EXTRA_SANITY
+end_ifndef
+
 begin_undef
 undef|#
 directive|undef
-name|EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Defining MALLOC_STATS will enable you to call malloc_dump() and set  * the [dD] options in the MALLOC_OPTIONS environment variable.  * It has no run-time performance hit.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MALLOC_STATS
-end_define
+end_ifndef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|EXTRA_SANITY
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_undef
+undef|#
+directive|undef
 name|MALLOC_STATS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MALLOC_STATS
-end_define
-
-begin_comment
-comment|/* required for EXTRA_SANITY */
-end_comment
+end_undef
 
 begin_endif
 endif|#
@@ -69,7 +61,7 @@ comment|/* as in "Duh" :-) */
 end_comment
 
 begin_comment
-comment|/*  * If these weren't defined here, they would be calculated on the fly,  * with a noticeable performance hit.  */
+comment|/*  * The basic parameters you can tweak.  *  * malloc_pageshift	pagesize = 1<< malloc_pageshift  *			It's probably best if this is the native  *			page size, but it shouldn't have to be.  *  * malloc_minsize	minimum size of an allocation  *			If this is too small it's too much work  *			to manage them.  *  */
 end_comment
 
 begin_if
@@ -89,9 +81,43 @@ end_if
 begin_define
 define|#
 directive|define
-name|malloc_pagesize
-value|4096U
+name|malloc_pageshift
+value|12U
 end_define
+
+begin_define
+define|#
+directive|define
+name|malloc_minsize
+value|16U
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__&& __FreeBSD__ */
+end_comment
+
+begin_comment
+comment|/* Insert your combination here... */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FOOCPU__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__BAROS__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -105,13 +131,6 @@ define|#
 directive|define
 name|malloc_minsize
 value|16U
-end_define
-
-begin_define
-define|#
-directive|define
-name|malloc_maxsize
-value|((malloc_pagesize)>>1)
 end_define
 
 begin_endif
@@ -303,179 +322,123 @@ name|MALLOC_MAGIC
 value|((struct pginfo*) 4)
 end_define
 
-begin_comment
-comment|/*  * The i386 architecture has some very convenient instructions.  * We might as well use them.  There are C-language backups, but  * they are considerably slower.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|malloc_pageshift
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|malloc_pageshift
+value|12U
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|malloc_minsize
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|malloc_minsize
+value|16U
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|malloc_pageshift
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"malloc_pageshift undefined"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__GNUC__
+name|malloc_pagesize
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|ffs
-value|_ffs
+name|malloc_pagesize
+value|(1U<<malloc_pageshift)
 end_define
-
-begin_function
-specifier|static
-name|__inline__
-name|int
-name|_ffs
-parameter_list|(
-name|unsigned
-name|input
-parameter_list|)
-block|{
-name|int
-name|result
-decl_stmt|;
-asm|__asm__("bsfl %1, %0" : "=r" (result) : "r" (input));
-return|return
-name|result
-operator|+
-literal|1
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|fls
-value|_fls
-end_define
-
-begin_function
-specifier|static
-name|__inline__
-name|int
-name|_fls
-parameter_list|(
-name|unsigned
-name|input
-parameter_list|)
-block|{
-name|int
-name|result
-decl_stmt|;
-asm|__asm__("bsrl %1, %0" : "=r" (result) : "r" (input));
-return|return
-name|result
-operator|+
-literal|1
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|set_bit
-value|_set_bit
-end_define
-
-begin_function
-specifier|static
-name|__inline__
-name|void
-name|_set_bit
-parameter_list|(
-name|struct
-name|pginfo
-modifier|*
-name|pi
-parameter_list|,
-name|int
-name|bit
-parameter_list|)
-block|{
-asm|__asm__("btsl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|clr_bit
-value|_clr_bit
-end_define
-
-begin_function
-specifier|static
-name|__inline__
-name|void
-name|_clr_bit
-parameter_list|(
-name|struct
-name|pginfo
-modifier|*
-name|pi
-parameter_list|,
-name|int
-name|bit
-parameter_list|)
-block|{
-asm|__asm__("btcl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
-block|}
-end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* __i386__&& __GNUC__ */
-end_comment
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+literal|1
+operator|<<
+name|malloc_pageshift
+operator|)
+operator|!=
+name|malloc_pagesize
+operator|)
+end_if
 
-begin_comment
-comment|/*  * Set to one when malloc_init has been called  */
-end_comment
+begin_error
+error|#
+directive|error
+literal|"(1<<malloc_pageshift) != malloc_pagesize"
+end_error
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|initialized
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * The size of a page.  * Must be a integral multiplum of the granularity of mmap(2).  * Your toes will curl if it isn't a power of two  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|malloc_pagesize
+name|malloc_maxsize
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|malloc_pagesize
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|malloc_maxsize
+value|((malloc_pagesize)>>1)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* malloc_pagesize */
-end_comment
 
 begin_comment
 comment|/* A mask for the offset inside a page.  */
@@ -509,85 +472,18 @@ value|(((u_long)(foo)>> malloc_pageshift)-malloc_origo)
 end_define
 
 begin_comment
-comment|/* malloc_pagesize == 1<< malloc_pageshift */
+comment|/* Set when initialization has been done */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|malloc_pageshift
-end_ifndef
 
 begin_decl_stmt
 specifier|static
 name|unsigned
-name|malloc_pageshift
+name|malloc_started
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* malloc_pageshift */
-end_comment
-
-begin_comment
-comment|/*  * The smallest allocation we bother about.  * Must be power of two  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|malloc_minsize
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|malloc_minsize
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* malloc_minsize */
-end_comment
-
-begin_comment
-comment|/*  * The largest chunk we care about.  * Must be smaller than pagesize  * Must be power of two  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|malloc_maxsize
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|malloc_maxsize
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* malloc_maxsize */
-end_comment
-
-begin_comment
-comment|/* The minimum size (in pages) of the free page cache.  */
+comment|/* Number of free pages we cache */
 end_comment
 
 begin_decl_stmt
@@ -680,12 +576,6 @@ name|suicide
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_STATS
-end_ifdef
-
 begin_comment
 comment|/* dump statistics */
 end_comment
@@ -696,15 +586,6 @@ name|int
 name|malloc_stats
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MALLOC_STATS */
-end_comment
 
 begin_comment
 comment|/* always realloc ?  */
@@ -750,12 +631,6 @@ name|malloc_junk
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_comment
 comment|/* utrace ?  */
 end_comment
@@ -766,6 +641,12 @@ name|int
 name|malloc_utrace
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_struct
 struct|struct
@@ -861,6 +742,18 @@ begin_decl_stmt
 name|char
 modifier|*
 name|malloc_options
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Name of the current public function */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|malloc_func
 decl_stmt|;
 end_decl_stmt
 
@@ -1350,10 +1243,10 @@ comment|/* MALLOC_STATS */
 end_comment
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|char
 modifier|*
-name|malloc_func
+name|__progname
 decl_stmt|;
 end_decl_stmt
 
@@ -1371,7 +1264,7 @@ name|char
 modifier|*
 name|q
 init|=
-literal|"Malloc error: "
+literal|" error: "
 decl_stmt|;
 name|suicide
 operator|=
@@ -1381,11 +1274,11 @@ name|write
 argument_list|(
 literal|2
 argument_list|,
-name|q
+name|__progname
 argument_list|,
 name|strlen
 argument_list|(
-name|q
+name|__progname
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1398,6 +1291,18 @@ argument_list|,
 name|strlen
 argument_list|(
 name|malloc_func
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|q
+argument_list|,
+name|strlen
+argument_list|(
+name|q
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1448,7 +1353,7 @@ name|char
 modifier|*
 name|q
 init|=
-literal|"Malloc warning: "
+literal|" warning: "
 decl_stmt|;
 if|if
 condition|(
@@ -1463,11 +1368,11 @@ name|write
 argument_list|(
 literal|2
 argument_list|,
-name|q
+name|__progname
 argument_list|,
 name|strlen
 argument_list|(
-name|q
+name|__progname
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1480,6 +1385,18 @@ argument_list|,
 name|strlen
 argument_list|(
 name|malloc_func
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|q
+argument_list|,
+name|strlen
+argument_list|(
+name|q
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1501,7 +1418,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_STATS
 end_ifdef
 
 begin_function
@@ -1565,7 +1482,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_STATS */
 end_comment
 
 begin_comment
@@ -1675,14 +1592,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set a bit in the bitmap  */
+comment|/* Set a bit in the bitmap */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|set_bit
-end_ifndef
 
 begin_function
 specifier|static
@@ -1719,24 +1630,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* set_bit */
+comment|/* Clear a bit in the bitmap */
 end_comment
-
-begin_comment
-comment|/*  * Clear a bit in the bitmap  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|clr_bit
-end_ifndef
 
 begin_function
 specifier|static
@@ -1776,23 +1672,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* clr_bit */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tst_bit
-end_ifndef
-
-begin_comment
-comment|/*  * Test a bit in the bitmap  */
+comment|/* Test a bit in the bitmap */
 end_comment
 
 begin_function
@@ -1833,24 +1714,9 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* tst_bit */
+comment|/* Find last bit */
 end_comment
-
-begin_comment
-comment|/*  * Find last bit  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|fls
-end_ifndef
 
 begin_function
 specifier|static
@@ -1881,15 +1747,6 @@ name|i
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* fls */
-end_comment
 
 begin_comment
 comment|/*  * Extend page directory  */
@@ -2211,9 +2068,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|MALLOC_STATS
 case|case
 literal|'d'
 case|:
@@ -2230,9 +2084,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* MALLOC_STATS */
 case|case
 literal|'h'
 case|:
@@ -2281,9 +2132,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 case|case
 literal|'u'
 case|:
@@ -2300,9 +2148,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* !__FreeBSD__ */
 case|case
 literal|'z'
 case|:
@@ -2361,7 +2206,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_STATS
 if|if
 condition|(
 name|malloc_stats
@@ -2373,139 +2218,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
-ifndef|#
-directive|ifndef
-name|malloc_pagesize
-comment|/* determine our pagesize */
-name|malloc_pagesize
-operator|=
-name|getpagesize
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* malloc_pagesize */
-ifndef|#
-directive|ifndef
-name|malloc_maxsize
-name|malloc_maxsize
-operator|=
-name|malloc_pagesize
-operator|>>
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* malloc_maxsize */
-ifndef|#
-directive|ifndef
-name|malloc_pageshift
-block|{
-name|int
-name|i
-decl_stmt|;
-comment|/* determine how much we shift by to get there */
-for|for
-control|(
-name|i
-operator|=
-name|malloc_pagesize
-init|;
-name|i
-operator|>
-literal|1
-condition|;
-name|i
-operator|>>=
-literal|1
-control|)
-name|malloc_pageshift
-operator|++
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* malloc_pageshift */
-ifndef|#
-directive|ifndef
-name|malloc_minsize
-block|{
-name|int
-name|i
-decl_stmt|;
-comment|/*      * find the smallest size allocation we will bother about.      * this is determined as the smallest allocation that can hold      * it's own pginfo;      */
-name|i
-operator|=
-literal|2
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|int
-name|j
-decl_stmt|;
-comment|/* Figure out the size of the bits */
-name|j
-operator|=
-name|malloc_pagesize
-operator|/
-name|i
-expr_stmt|;
-name|j
-operator|/=
-literal|8
-expr_stmt|;
-if|if
-condition|(
-name|j
-operator|<
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
-condition|)
-name|j
-operator|=
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pginfo
-argument_list|)
-operator|+
-name|j
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
-operator|<=
-name|i
-condition|)
-break|break;
-name|i
-operator|+=
-name|i
-expr_stmt|;
-block|}
-name|malloc_minsize
-operator|=
-name|i
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* malloc_minsize */
+comment|/* MALLOC_STATS */
 comment|/* Allocate one page for the page directory */
 name|page_dir
 operator|=
@@ -2587,8 +2300,21 @@ expr|*
 name|page_dir
 expr_stmt|;
 comment|/* Been here, done that */
-name|initialized
+name|malloc_started
 operator|++
+expr_stmt|;
+comment|/* Recalculate the cache size in bytes, and make sure it's nonzero */
+if|if
+condition|(
+operator|!
+name|malloc_cache
+condition|)
+name|malloc_cache
+operator|++
+expr_stmt|;
+name|malloc_cache
+operator|<<=
+name|malloc_pageshift
 expr_stmt|;
 comment|/*      * This is a nice hack from Kaleb Keithly (kaleb@x.org).      * We can sbrk(2) further back when we keep this on a low address.      */
 name|px
@@ -2605,18 +2331,6 @@ expr|*
 name|px
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|malloc_cache
-condition|)
-name|malloc_cache
-operator|++
-expr_stmt|;
-name|malloc_cache
-operator|<<=
-name|malloc_pageshift
-expr_stmt|;
 block|}
 end_function
 
@@ -2625,6 +2339,7 @@ comment|/*  * Allocate a number of complete pages  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|malloc_pages
@@ -3143,9 +2858,16 @@ condition|(
 operator|!
 name|bp
 condition|)
+block|{
+name|ifree
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 name|bp
 operator|->
@@ -3181,33 +2903,7 @@ name|page
 operator|=
 name|pp
 expr_stmt|;
-name|page_dir
-index|[
-name|ptr2index
-argument_list|(
-name|pp
-argument_list|)
-index|]
-operator|=
-name|bp
-expr_stmt|;
-name|bp
-operator|->
-name|next
-operator|=
-name|page_dir
-index|[
-name|bits
-index|]
-expr_stmt|;
-name|page_dir
-index|[
-name|bits
-index|]
-operator|=
-name|bp
-expr_stmt|;
-comment|/* set all valid bits in the bits */
+comment|/* set all valid bits in the bitmap */
 name|k
 operator|=
 name|bp
@@ -3312,6 +3008,34 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+comment|/* MALLOC_LOCK */
+name|page_dir
+index|[
+name|ptr2index
+argument_list|(
+name|pp
+argument_list|)
+index|]
+operator|=
+name|bp
+expr_stmt|;
+name|bp
+operator|->
+name|next
+operator|=
+name|page_dir
+index|[
+name|bits
+index|]
+expr_stmt|;
+name|page_dir
+index|[
+name|bits
+index|]
+operator|=
+name|bp
+expr_stmt|;
+comment|/* MALLOC_UNLOCK */
 return|return
 literal|1
 return|;
@@ -3525,7 +3249,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|initialized
+name|malloc_started
 condition|)
 name|malloc_init
 argument_list|()
@@ -3635,7 +3359,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|initialized
+name|malloc_started
 condition|)
 block|{
 name|wrtwarning
@@ -4079,6 +3803,19 @@ operator|=
 name|i
 operator|<<
 name|malloc_pageshift
+expr_stmt|;
+if|if
+condition|(
+name|malloc_junk
+condition|)
+name|memset
+argument_list|(
+name|ptr
+argument_list|,
+name|SOME_JUNK
+argument_list|,
+name|l
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4635,6 +4372,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|malloc_junk
+condition|)
+name|memset
+argument_list|(
+name|ptr
+argument_list|,
+name|SOME_JUNK
+argument_list|,
+name|info
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
 name|set_bit
 argument_list|(
 name|info
@@ -4851,7 +4603,7 @@ return|return;
 if|if
 condition|(
 operator|!
-name|initialized
+name|malloc_started
 condition|)
 block|{
 name|wrtwarning
@@ -5030,7 +4782,7 @@ name|r
 decl_stmt|;
 name|malloc_func
 operator|=
-literal|"malloc():"
+literal|" in malloc():"
 expr_stmt|;
 name|THREAD_LOCK
 argument_list|()
@@ -5096,7 +4848,7 @@ parameter_list|)
 block|{
 name|malloc_func
 operator|=
-literal|"free():"
+literal|" in free():"
 expr_stmt|;
 name|THREAD_LOCK
 argument_list|()
@@ -5161,7 +4913,7 @@ name|r
 decl_stmt|;
 name|malloc_func
 operator|=
-literal|"realloc():"
+literal|" in realloc():"
 expr_stmt|;
 name|THREAD_LOCK
 argument_list|()
