@@ -84,7 +84,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the buffer pool itself */
+comment|/* buffer header pool */
 end_comment
 
 begin_decl_stmt
@@ -94,66 +94,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of buffer headers */
+comment|/* number of buffer headers calculated elsewhere */
 end_comment
-
-begin_decl_stmt
-name|int
-name|bufpages
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of memory pages in the buffer pool */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|swbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* swap I/O headers */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nswbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|BUFHSZ
-value|512
-end_define
-
-begin_decl_stmt
-name|int
-name|bufhash
-init|=
-name|BUFHSZ
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|struct
-name|buf
-modifier|*
-name|getnewbuf
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -189,129 +131,6 @@ name|to
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Definitions for the buffer hash lists.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUFHASH
-parameter_list|(
-name|dvp
-parameter_list|,
-name|lbn
-parameter_list|)
-define|\
-value|(&bufhashtbl[((int)(dvp) / sizeof(*(dvp)) + (int)(lbn))& bufhash])
-end_define
-
-begin_comment
-comment|/*  * Definitions for the buffer free lists.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQUEUES
-value|5
-end_define
-
-begin_comment
-comment|/* number of free buffer queues */
-end_comment
-
-begin_macro
-name|LIST_HEAD
-argument_list|(
-argument|bufhashhdr
-argument_list|,
-argument|buf
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|bufhashtbl
-index|[
-name|BUFHSZ
-index|]
-operator|,
-name|invalhash
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
-name|TAILQ_HEAD
-argument_list|(
-argument|bqueues
-argument_list|,
-argument|buf
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|bufqueues
-index|[
-name|BQUEUES
-index|]
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|BQ_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* on no queue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_LOCKED
-value|1
-end_define
-
-begin_comment
-comment|/* locked buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_LRU
-value|2
-end_define
-
-begin_comment
-comment|/* useful buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_AGE
-value|3
-end_define
-
-begin_comment
-comment|/* less useful buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_EMPTY
-value|4
-end_define
-
-begin_comment
-comment|/* empty buffer headers*/
-end_comment
 
 begin_decl_stmt
 name|int
@@ -390,7 +209,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|BQUEUES
+name|BUFFER_QUEUES
 condition|;
 name|i
 operator|++
@@ -471,7 +290,7 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|BQ_EMPTY
+name|QUEUE_EMPTY
 expr_stmt|;
 name|bp
 operator|->
@@ -500,7 +319,7 @@ argument_list|(
 operator|&
 name|bufqueues
 index|[
-name|BQ_EMPTY
+name|QUEUE_EMPTY
 index|]
 argument_list|,
 name|bp
@@ -548,7 +367,7 @@ name|bp
 operator|->
 name|b_qindex
 operator|!=
-name|BQ_NONE
+name|QUEUE_NONE
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -570,7 +389,7 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|BQ_NONE
+name|QUEUE_NONE
 expr_stmt|;
 block|}
 else|else
@@ -1606,7 +1425,7 @@ name|bp
 operator|->
 name|b_qindex
 operator|!=
-name|BQ_NONE
+name|QUEUE_NONE
 condition|)
 name|panic
 argument_list|(
@@ -1628,14 +1447,14 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|BQ_EMPTY
+name|QUEUE_EMPTY
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|bufqueues
 index|[
-name|BQ_EMPTY
+name|QUEUE_EMPTY
 index|]
 argument_list|,
 name|bp
@@ -1687,14 +1506,14 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|BQ_AGE
+name|QUEUE_AGE
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|bufqueues
 index|[
-name|BQ_AGE
+name|QUEUE_AGE
 index|]
 argument_list|,
 name|bp
@@ -1741,14 +1560,14 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|BQ_LOCKED
+name|QUEUE_LOCKED
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|bufqueues
 index|[
-name|BQ_LOCKED
+name|QUEUE_LOCKED
 index|]
 argument_list|,
 name|bp
@@ -1772,14 +1591,14 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|BQ_AGE
+name|QUEUE_AGE
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|bufqueues
 index|[
-name|BQ_AGE
+name|QUEUE_AGE
 index|]
 argument_list|,
 name|bp
@@ -1795,14 +1614,14 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|BQ_LRU
+name|QUEUE_LRU
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|bufqueues
 index|[
-name|BQ_LRU
+name|QUEUE_LRU
 index|]
 argument_list|,
 name|bp
@@ -1888,7 +1707,7 @@ name|bp
 operator|=
 name|bufqueues
 index|[
-name|BQ_EMPTY
+name|QUEUE_EMPTY
 index|]
 operator|.
 name|tqh_first
@@ -1900,7 +1719,7 @@ name|bp
 operator|->
 name|b_qindex
 operator|!=
-name|BQ_EMPTY
+name|QUEUE_EMPTY
 condition|)
 name|panic
 argument_list|(
@@ -1924,7 +1743,7 @@ name|bp
 operator|=
 name|bufqueues
 index|[
-name|BQ_AGE
+name|QUEUE_AGE
 index|]
 operator|.
 name|tqh_first
@@ -1936,7 +1755,7 @@ name|bp
 operator|->
 name|b_qindex
 operator|!=
-name|BQ_AGE
+name|QUEUE_AGE
 condition|)
 name|panic
 argument_list|(
@@ -1956,7 +1775,7 @@ name|bp
 operator|=
 name|bufqueues
 index|[
-name|BQ_LRU
+name|QUEUE_LRU
 index|]
 operator|.
 name|tqh_first
@@ -1968,7 +1787,7 @@ name|bp
 operator|->
 name|b_qindex
 operator|!=
-name|BQ_LRU
+name|QUEUE_LRU
 condition|)
 name|panic
 argument_list|(
@@ -2310,11 +2129,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bp
 operator|)
 return|;
+block|}
 name|bp
 operator|=
 name|bp
@@ -3095,7 +2921,7 @@ name|bp
 operator|=
 name|bufqueues
 index|[
-name|BQ_LOCKED
+name|QUEUE_LOCKED
 index|]
 operator|.
 name|tqh_first

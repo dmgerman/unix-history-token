@@ -630,6 +630,140 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*   * number of buffer hash entries  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUFHSZ
+value|512
+end_define
+
+begin_comment
+comment|/*  * buffer hash table calculation, originally by David Greenman  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUFHASH
+parameter_list|(
+name|vnp
+parameter_list|,
+name|bn
+parameter_list|)
+define|\
+value|(&bufhashtbl[(((int)(vnp) / sizeof(struct vnode))+(int)(bn)) % BUFHSZ])
+end_define
+
+begin_comment
+comment|/*  * Definitions for the buffer free lists.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUFFER_QUEUES
+value|5
+end_define
+
+begin_comment
+comment|/* number of free buffer queues */
+end_comment
+
+begin_macro
+name|LIST_HEAD
+argument_list|(
+argument|bufhashhdr
+argument_list|,
+argument|buf
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|bufhashtbl
+index|[
+name|BUFHSZ
+index|]
+operator|,
+name|invalhash
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|TAILQ_HEAD
+argument_list|(
+argument|bqueues
+argument_list|,
+argument|buf
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|bufqueues
+index|[
+name|BUFFER_QUEUES
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|QUEUE_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* on no queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_LOCKED
+value|1
+end_define
+
+begin_comment
+comment|/* locked buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_LRU
+value|2
+end_define
+
+begin_comment
+comment|/* useful buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_AGE
+value|3
+end_define
+
+begin_comment
+comment|/* less useful buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_EMPTY
+value|4
+end_define
+
+begin_comment
+comment|/* empty buffer headers*/
+end_comment
+
+begin_comment
 comment|/*  * Zero out the buffer's data area.  */
 end_comment
 
