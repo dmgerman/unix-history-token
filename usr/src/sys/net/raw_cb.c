@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)raw_cb.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)raw_cb.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -85,6 +85,22 @@ begin_comment
 comment|/*  * Routines to manage the raw protocol control blocks.   *  * TODO:  *	hash lookups by protocol family/protocol + address family  *	take care of unique address problems per AF?  *	redo address binding to allow wildcards  */
 end_comment
 
+begin_decl_stmt
+name|u_long
+name|raw_sendspace
+init|=
+name|RAWSNDQ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|raw_recvspace
+init|=
+name|RAWRCVQ
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Allocate a control block and a nominal amount  * of buffer space for the socket.  */
 end_comment
@@ -152,10 +168,7 @@ name|so
 operator|->
 name|so_snd
 argument_list|,
-operator|(
-name|u_long
-operator|)
-name|RAWSNDQ
+name|raw_sendspace
 argument_list|)
 operator|==
 literal|0
@@ -172,10 +185,7 @@ name|so
 operator|->
 name|so_rcv
 argument_list|,
-operator|(
-name|u_long
-operator|)
-name|RAWRCVQ
+name|raw_recvspace
 argument_list|)
 operator|==
 literal|0
