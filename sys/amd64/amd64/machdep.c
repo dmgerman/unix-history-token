@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/i386/machdep.c,v 1.5 1993/07/27 10:52:17 davidg Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/machdep.c,v 1.6 1993/08/09 06:16:41 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,27 @@ include|#
 directive|include
 file|"i386/isa/rtc.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"sys/shm.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSVSHM */
+end_comment
 
 begin_define
 define|#
