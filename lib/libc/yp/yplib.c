@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.9 1995/05/03 18:33:10 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.10 1995/05/30 05:42:15 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4206,7 +4206,7 @@ case|case
 name|YP_NODOM
 case|:
 return|return
-name|YPERR_NODOM
+name|YPERR_DOMAIN
 return|;
 case|case
 name|YP_NOKEY
