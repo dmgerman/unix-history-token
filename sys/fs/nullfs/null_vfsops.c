@@ -758,6 +758,8 @@ name|nullfs_root
 parameter_list|(
 name|mp
 parameter_list|,
+name|flags
+parameter_list|,
 name|vpp
 parameter_list|,
 name|td
@@ -766,6 +768,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 name|struct
 name|vnode

@@ -1258,6 +1258,8 @@ name|nwfs_root
 argument_list|(
 name|mp
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|vp
 argument_list|,
@@ -1533,6 +1535,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|vnode
