@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)xpipe	2.1"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"@(#)xpipe.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Interface to pipe(II) which handles all error conditions. 	Returns 0 on success, 	fatal() on failure. */
@@ -32,8 +33,9 @@ specifier|static
 name|char
 name|p
 index|[]
+init|=
 literal|"pipe"
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|pipe

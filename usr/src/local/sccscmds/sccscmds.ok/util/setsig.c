@@ -1,4 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)setsig.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -47,19 +57,6 @@ directive|include
 file|"../hdr/macros.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|setsig
-literal|2.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* 	General-purpose signal setting routine. 	All non-ignored, non-caught signals are caught. 	If a signal other than hangup, interrupt, or quit is caught, 	a "user-oriented" message is printed on file descriptor 2 with 	a number for help(I). 	If hangup, interrupt or quit is caught, that signal	 	is set to ignore. 	Termination is like that of "fatal", 	via "clean_up(sig)" (sig is the signal number) 	and "exit(userexit(1))".   	If the file "dump.core" exists in the current directory 	the function commits 	suicide to produce a core dump 	(after calling clean_up, but before calling userexit). */
 end_comment
@@ -71,53 +68,51 @@ name|Mesg
 index|[
 name|NSIG
 index|]
+init|=
 block|{
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 comment|/* Hangup */
 literal|0
-operator|,
+block|,
 comment|/* Interrupt */
 literal|0
-operator|,
+block|,
 comment|/* Quit */
 ifdef|#
 directive|ifdef
 name|PWB
 literal|"Illegal instruction"
-operator|,
+block|,
 literal|"Trace/BPT trap"
-operator|,
+block|,
 literal|"IOT trap"
-operator|,
+block|,
 literal|"EMT trap"
-operator|,
+block|,
 literal|"Floating exception"
-operator|,
+block|,
 literal|"Killed"
-operator|,
+block|,
 literal|"Bus error"
-operator|,
+block|,
 literal|"Memory fault"
-operator|,
+block|,
 literal|"Bad system call"
-operator|,
+block|,
 literal|"Broken pipe"
-operator|,
+block|,
 literal|"Alarm clock"
-operator|,
+block|,
 literal|"Terminated"
 endif|#
 directive|endif
 endif|PWB
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_macro
 name|setsig
@@ -171,23 +166,25 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|preface
 index|[]
+init|=
 literal|"SIGNAL: "
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|endmsg
 index|[]
+init|=
 literal|" (ut12)\n"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|setsig1

@@ -1,16 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)bal	2.1"
-expr_stmt|;
-end_expr_stmt
-
-begin_empty
-empty|#
-end_empty
+init|=
+literal|"@(#)bal.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Function to find the position, in str, of the first of the char- 	acters in end occurring outside a balanced string.  A balanced string 	contains matched occurrences of any character in open and the corres- 	ponding character in clos.  Balanced strings may be nested.  The null 	at the end of str is considered to belong to end.  Unmatched members 	of open or clos result in an error return. */
@@ -142,8 +139,7 @@ operator|=
 name|matching_clos
 expr_stmt|;
 name|s
-operator|=
-operator|+
+operator|+=
 name|balbrk
 argument_list|(
 name|s
