@@ -7647,9 +7647,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* kqueue */
 comment|/* Certain daemons might not have file descriptors. */
 name|fdp
 operator|=
