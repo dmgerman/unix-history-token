@@ -102,47 +102,6 @@ end_define
 
 begin_struct
 struct|struct
-name|udpcb
-block|{
-comment|/* XXX - these should be by reference so we can do options quickly */
-name|struct
-name|ip
-name|udb_ip
-decl_stmt|;
-name|struct
-name|udphdr
-name|udb_uh
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|udb_conn
-decl_stmt|;
-name|struct
-name|in_hostcache
-modifier|*
-name|udb_hc
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|udb_queue
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|inptoudpcb
-parameter_list|(
-name|inp
-parameter_list|)
-value|((struct udpdb *)(inp)->inp_ppcb)
-end_define
-
-begin_struct
-struct|struct
 name|udpstat
 block|{
 comment|/* input statistics: */
