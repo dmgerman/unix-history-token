@@ -87,9 +87,18 @@ index|[
 literal|1
 index|]
 operator|)
+operator|||
+operator|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
-comment|/* 		 * Don't allow silly programs to close the kernel pipe. 		 */
+comment|/* 		 * Don't allow silly programs to close the kernel pipe 		 * and non-active descriptors. 		 */
 name|errno
 operator|=
 name|EBADF
@@ -215,6 +224,21 @@ name|free
 argument_list|(
 name|entry
 argument_list|)
+expr_stmt|;
+comment|/* Drop stale pthread stdio descriptor flags. */
+if|if
+condition|(
+name|fd
+operator|<
+literal|3
+condition|)
+name|_pthread_stdio_flags
+index|[
+name|fd
+index|]
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 comment|/* Close the file descriptor: */
 name|ret
