@@ -2752,13 +2752,23 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|NG_NODE_IS_VALID
+argument_list|(
 name|node
-operator|->
-name|nd_ID
+argument_list|)
+operator|&&
+operator|(
+name|NG_NODE_ID
+argument_list|(
+name|node
+argument_list|)
 operator|==
 name|ID
+operator|)
 condition|)
+block|{
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -2797,9 +2807,10 @@ return|return
 operator|(
 name|node
 condition|?
+name|NG_NODE_ID
+argument_list|(
 name|node
-operator|->
-name|nd_ID
+argument_list|)
 else|:
 literal|0
 operator|)
@@ -3059,6 +3070,11 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|NG_NODE_IS_VALID
+argument_list|(
+name|node
+argument_list|)
+operator|&&
 name|NG_NODE_HAS_NAME
 argument_list|(
 name|node
@@ -3078,7 +3094,9 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -3139,17 +3157,22 @@ decl_stmt|;
 comment|/* Check for proper length, brackets, no leading junk */
 if|if
 condition|(
+operator|(
 name|len
 operator|<
 literal|3
+operator|)
 operator|||
+operator|(
 name|name
 index|[
 literal|0
 index|]
 operator|!=
 literal|'['
+operator|)
 operator|||
+operator|(
 name|name
 index|[
 name|len
@@ -3158,7 +3181,9 @@ literal|1
 index|]
 operator|!=
 literal|']'
+operator|)
 operator|||
+operator|(
 operator|!
 name|isxdigit
 argument_list|(
@@ -3167,12 +3192,18 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|)
 condition|)
+block|{
 return|return
 operator|(
+operator|(
+name|ng_ID_t
+operator|)
 literal|0
 operator|)
 return|;
+block|}
 comment|/* Decode number */
 name|val
 operator|=
@@ -3190,6 +3221,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|eptr
 operator|-
 name|name
@@ -3197,15 +3229,21 @@ operator|!=
 name|len
 operator|-
 literal|1
+operator|)
 operator|||
+operator|(
 name|val
 operator|==
 name|ULONG_MAX
+operator|)
 operator|||
+operator|(
 name|val
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
 return|return
 operator|(
 operator|(
@@ -3214,6 +3252,7 @@ operator|)
 literal|0
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|ng_ID_t
@@ -3743,6 +3782,12 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|NG_HOOK_IS_VALID
+argument_list|(
+name|hook
+argument_list|)
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|NG_HOOK_NAME
@@ -3754,7 +3799,9 @@ name|name
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
 return|return
 operator|(
 name|hook
@@ -3767,13 +3814,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Destroy a hook  *  * As hooks are always attached, this really destroys two hooks.  * The one given, and the one attached to it. Disconnect the hooks  * from each other first.  */
-end_comment
-
-begin_function
 name|void
 name|ng_destroy_hook
 parameter_list|(
@@ -3832,13 +3873,7 @@ name|hook
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Notify the node of the hook's demise. This may result in more actions  * (e.g. shutdown) but we don't do that ourselves and don't know what  * happens there. If there is no appropriate handler, then just remove it  * (and decrement the reference count of it's node which in turn might  * make something happen).  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ng_disconnect_hook
@@ -3897,13 +3932,7 @@ name|hook
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Take two hooks on a node and merge the connection so that the given node  * is effectively bypassed.  */
-end_comment
-
-begin_function
 name|int
 name|ng_bypass
 parameter_list|(
@@ -3981,13 +4010,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Install a new netgraph type  */
-end_comment
-
-begin_function
 name|int
 name|ng_newtype
 parameter_list|(
@@ -4100,13 +4123,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Look for a type of the name given  */
-end_comment
-
-begin_function
 name|struct
 name|ng_type
 modifier|*
@@ -4169,17 +4186,8 @@ name|type
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/************************************************************************ 			Composite routines ************************************************************************/
-end_comment
-
-begin_comment
 comment|/*  * Make a peer and connect. The order is arranged to minimise  * the work needed to back out in case of error.  */
-end_comment
-
-begin_function
 name|int
 name|ng_mkpeer
 parameter_list|(
@@ -4318,13 +4326,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Connect two nodes using the specified hooks  */
-end_comment
-
-begin_function
 name|int
 name|ng_con_nodes
 parameter_list|(
@@ -4414,17 +4416,8 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/************************************************************************ 		Utility routines to send self messages ************************************************************************/
-end_comment
-
-begin_comment
 comment|/*  * Static version of shutdown message. we don't want to need resources  * to shut down (we may be doing it to release resources because we ran out.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|ng_mesg
@@ -4458,9 +4451,6 @@ block|}
 comment|/* u_char[16] */
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|int
 name|ng_rmnode_self
 parameter_list|(
@@ -4558,13 +4548,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/***********************************************************************  * Parse and verify a string of the form:<NODE:><PATH>  *  * Such a string can refer to a specific node or a specific hook  * on a specific node, depending on how you look at it. In the  * latter case, the PATH component must not end in a dot.  *  * Both<NODE:> and<PATH> are optional. The<PATH> is a string  * of hook names separated by dots. This breaks out the original  * string, setting *nodep to "NODE" (or NULL if none) and *pathp  * to "PATH" (or NULL if degenerate). Also, *hookp will point to  * the final hook component of<PATH>, if any, otherwise NULL.  *  * This returns -1 if the path is malformed. The char ** are optional.  ***********************************************************************/
-end_comment
-
-begin_function
 name|int
 name|ng_path_parse
 parameter_list|(
@@ -4894,13 +4878,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Given a path, which may be absolute or relative, and a starting node,  * return the destination node.  */
-end_comment
-
-begin_function
 name|int
 name|ng_path2noderef
 parameter_list|(
@@ -5325,182 +5303,119 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/***************************************************************\ * Input queue handling. * All activities are submitted to the node via the input queue * which implements a multiple-reader/single-writer gate. * Items which cannot be handled immeditly are queued. * * read-write queue locking inline functions			* \***************************************************************/
-end_comment
-
-begin_function_decl
 specifier|static
 name|__inline
 name|item_p
 name|ng_dequeue
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|ng_queue
-modifier|*
+operator|*
 name|ngq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+decl_stmt|;
 specifier|static
 name|__inline
 name|item_p
 name|ng_acquire_read
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|ng_queue
-modifier|*
+operator|*
 name|ngq
-parameter_list|,
+argument_list|,
 name|item_p
 name|item
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+decl_stmt|;
 specifier|static
 name|__inline
 name|item_p
 name|ng_acquire_write
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|ng_queue
-modifier|*
+operator|*
 name|ngq
-parameter_list|,
+argument_list|,
 name|item_p
 name|item
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+decl_stmt|;
 specifier|static
 name|__inline
 name|void
 name|ng_leave_read
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|ng_queue
-modifier|*
+operator|*
 name|ngq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+decl_stmt|;
 specifier|static
 name|__inline
 name|void
 name|ng_leave_write
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|ng_queue
-modifier|*
+operator|*
 name|ngq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+decl_stmt|;
 specifier|static
 name|__inline
 name|void
 name|ng_queue_rw
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|ng_queue
-modifier|*
+operator|*
 name|ngq
-parameter_list|,
+argument_list|,
 name|item_p
 name|item
-parameter_list|,
+argument_list|,
 name|int
 name|rw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+decl_stmt|;
 comment|/*  * Definition of the bits fields in the ng_queue flag word.  * Defined here rather than in netgraph.h because no-one should fiddle  * with them.  *  * The ordering here is important! don't shuffle these. If you add  * READ_PENDING to the word when it has READ_PENDING already set, you  * generate a carry into the reader count, this you atomically add a reader,  * and remove the pending reader count! Similarly for the pending writer  * flag, adding WRITE_PENDING generates a carry and sets the WRITER_ACTIVE  * flag, while clearing WRITE_PENDING. When 'SINGLE_THREAD_ONLY' is set, then  * it is only permitted to do WRITER operations. Reader operations will  * result in errors.  * But that "hack" is unnecessary: "cpp" can do the math for us!  */
-end_comment
-
-begin_comment
 comment|/*-  Safety Barrier--------+ (adjustable to suit taste) (not used yet)                        |                        V +-------+-------+-------+-------+-------+-------+-------+-------+ | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |A|c|t|i|v|e| |R|e|a|d|e|r| |C|o|u|n|t| | | | | | | | | |R|A|W|S| | | | | | | | | | | | | | | | | | | | | | | | | | | | | |P|W|P|T| +-------+-------+-------+-------+-------+-------+-------+-------+ \_________________________ ____________________________/ | | | |                           V                              | | | |                 [active reader count]                    | | | |                                                          | | | |         Read Pending ------------------------------------+ | | |                                                            | | |         Active Writer -------------------------------------+ | |                                                              | |         Write Pending ---------------------------------------+ |                                                                |         Single Threading Only ---------------------------------+ */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SINGLE_THREAD_ONLY
 value|0x00000001
-end_define
-
-begin_comment
 comment|/* if set, even reads single thread */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|WRITE_PENDING
 value|0x00000002
-end_define
-
-begin_define
 define|#
 directive|define
 name|WRITER_ACTIVE
 value|0x00000004
-end_define
-
-begin_define
 define|#
 directive|define
 name|READ_PENDING
 value|0x00000008
-end_define
-
-begin_define
 define|#
 directive|define
 name|READER_INCREMENT
 value|0x00000010
-end_define
-
-begin_define
 define|#
 directive|define
 name|READER_MASK
 value|0xfffffff0
-end_define
-
-begin_comment
 comment|/* Not valid if WRITER_ACTIVE is set */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SAFETY_BARRIER
 value|0x00100000
-end_define
-
-begin_comment
 comment|/* 64K items queued should be enough */
-end_comment
-
-begin_comment
 comment|/*  * Taking into account the current state of the queue and node, possibly take  * the next entry off the queue and return it. Return NULL if there was  * nothing we could return, either because there really was nothing there, or  * because the node was in a state where it cannot yet process the next item  * on the queue.  *  * This MUST MUST MUST be called with the mutex held.  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|item_p
@@ -5683,27 +5598,15 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Queue a packet to be picked up by someone else.  * We really don't care who, but we can't or don't want to hang around  * to process it ourselves. We are probably an interrupt routine..  * 1 = writer, 0 = reader  * We should set something to indicate NETISR requested  * If it's the first item queued.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NGQRW_R
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|NGQRW_W
 value|1
-end_define
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -5795,13 +5698,7 @@ name|el_next
 operator|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This function 'cheats' in that it first tries to 'grab' the use of the  * node, without going through the mutex. We can do this becasue of the  * semantics of the lock. The semantics include a clause that says that the  * value of the readers count is invalid if the WRITER_ACTIVE flag is set. It  * also says that the WRITER_ACTIVE flag cannot be set if the readers count  * is not zero. Note that this talks about what is valid to SET the  * WRITER_ACTIVE flag, because from the moment it is set, the value if the  * reader count is immaterial, and not valid. The two 'pending' flags have a  * similar effect, in that If they are orthogonal to the two active fields in  * how they are set, but if either is set, the attempted 'grab' need to be  * backed out because there is earlier work, and we maintain ordering in the  * queue. The result of this is that the reader request can try obtain use of  * the node with only a single atomic addition, and without any of the mutex  * overhead. If this fails the operation degenerates to the same as for other  * cases.  *  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|item_p
@@ -5977,9 +5874,6 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|__inline
 name|item_p
@@ -6121,9 +6015,6 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -6146,9 +6037,6 @@ name|READER_INCREMENT
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -6171,9 +6059,6 @@ name|WRITER_ACTIVE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ng_flush_input_queue
@@ -6359,17 +6244,8 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*********************************************************************** * Externally visible method for sending or queueing messages or data. ***********************************************************************/
-end_comment
-
-begin_comment
 comment|/*  * MACRO WILL DO THE JOB OF CALLING ng_package_msg IN CALLER  * before we are called. The user code should have filled out the item  * correctly by this stage:  * Common:  *    reference to destination node.  *    Reference to destination rcv hook if relevant.  * Data:  *    pointer to mbuf  *    pointer to metadata  * Control_Message:  *    pointer to msg.  *    ID of original sender node. (return address)  *  * The nodes have several routines and macros to help with this task:  * ng_package_msg()  * ng_package_data() do much of the work.  * ng_retarget_msg  * ng_retarget_data  */
-end_comment
-
-begin_function
 name|int
 name|ng_snd_item
 parameter_list|(
@@ -7002,13 +6878,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * We have an item that was possibly queued somewhere.  * It should contain all the information needed  * to run it on the appropriate node/hook.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ng_apply_item
@@ -7377,13 +7247,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/***********************************************************************  * Implement the 'generic' control messages  ***********************************************************************/
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ng_generic_msg
@@ -8321,16 +8185,25 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|NG_NODE_IS_VALID
+argument_list|(
+name|node
+argument_list|)
+operator|&&
+operator|(
 name|unnamed
 operator|||
 name|NG_NODE_HAS_NAME
 argument_list|(
 name|node
 argument_list|)
+operator|)
 condition|)
+block|{
 name|num
 operator|++
 expr_stmt|;
+block|}
 block|}
 name|mtx_exit
 argument_list|(
@@ -8579,9 +8452,11 @@ argument|&ng_typelist
 argument_list|,
 argument|types
 argument_list|)
+block|{
 name|num
 operator|++
 expr_stmt|;
+block|}
 name|mtx_exit
 argument_list|(
 operator|&
@@ -8797,6 +8672,7 @@ expr|struct
 name|ng_mesg
 argument_list|)
 operator|||
+operator|(
 name|msg
 operator|->
 name|header
@@ -8814,6 +8690,7 @@ operator|->
 name|header
 operator|.
 name|arglen
+operator|)
 condition|)
 block|{
 name|TRAP_ERROR
@@ -9054,6 +8931,7 @@ name|argstype
 operator|==
 name|NULL
 condition|)
+block|{
 operator|*
 name|ascii
 operator|->
@@ -9061,6 +8939,7 @@ name|data
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -9184,6 +9063,7 @@ name|data
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|msg
 operator|->
 name|header
@@ -9197,7 +9077,9 @@ name|ascii
 argument_list|)
 operator|+
 literal|1
+operator|)
 operator|||
+operator|(
 name|ascii
 operator|->
 name|header
@@ -9205,7 +9087,9 @@ operator|.
 name|arglen
 operator|<
 literal|1
+operator|)
 operator|||
+operator|(
 name|msg
 operator|->
 name|header
@@ -9223,6 +9107,7 @@ operator|->
 name|header
 operator|.
 name|arglen
+operator|)
 condition|)
 block|{
 name|TRAP_ERROR
@@ -9464,10 +9349,12 @@ name|argstype
 operator|==
 name|NULL
 condition|)
+block|{
 name|bufSize
 operator|=
 literal|0
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -9633,13 +9520,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Copy a 'meta'.  *  * Returns new meta, or NULL if original meta is NULL or ENOMEM.  */
-end_comment
-
-begin_function
 name|meta_p
 name|ng_copy_meta
 parameter_list|(
@@ -9712,17 +9593,8 @@ name|meta2
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/************************************************************************ 			Module routines ************************************************************************/
-end_comment
-
-begin_comment
 comment|/*  * Handle the loading/unloading of a netgraph node type module  */
-end_comment
-
-begin_function
 name|int
 name|ng_mod_event
 parameter_list|(
@@ -9981,13 +9853,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Handle loading and unloading for this code.  * The only thing we need to link into is the NETISR strucure.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ngb_mod_event
@@ -10111,9 +9977,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|moduledata_t
 name|netgraph_mod
@@ -10128,9 +9991,6 @@ name|NULL
 operator|)
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
 name|netgraph
@@ -10142,37 +10002,19 @@ argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/************************************************************************ 			Queue element get/free routines ************************************************************************/
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|allocated
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of items malloc'd */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|maxalloc
 init|=
 literal|128
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* limit the damage of a leak */
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|int
@@ -10180,13 +10022,7 @@ name|ngqfreemax
 init|=
 literal|64
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* cache at most this many */
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|int
@@ -10194,31 +10030,16 @@ name|ngqfreelow
 init|=
 literal|4
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* try malloc if free< this */
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|volatile
 name|int
 name|ngqfreesize
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of cached entries */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
-end_ifdef
-
-begin_expr_stmt
 specifier|static
 name|TAILQ_HEAD
 argument_list|(
@@ -10232,18 +10053,9 @@ argument_list|(
 name|ng_itemlist
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Get a queue entry  * This is usually called when a packet first enters netgraph.  * By definition, this is usually from an interrupt, or from a user.  * Users are not so important, but try be quick for the times that it's  * an interrupt. Use atomic operations to cope with collisions  * with interrupts and other processors. Assumes MALLOC is SMP safe.  * XXX If reserve is low, we should try to get 2 from malloc as this  * would indicate it often fails.  */
-end_comment
-
-begin_function
 specifier|static
 name|item_p
 name|ng_getqblk
@@ -10402,13 +10214,7 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Release a queue entry  */
-end_comment
-
-begin_function
 name|void
 name|ng_free_item
 parameter_list|(
@@ -10613,15 +10419,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
-end_ifdef
-
-begin_function
 name|void
 name|dumphook
 parameter_list|(
@@ -10679,9 +10479,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|dumpnode
 parameter_list|(
@@ -10757,9 +10554,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|dumpitem
 parameter_list|(
@@ -10885,9 +10679,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ng_dumpitems
@@ -10931,9 +10722,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ng_dumpnodes
@@ -10977,9 +10765,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ng_dumphooks
@@ -11023,9 +10808,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|sysctl_debug_ng_dump_items
@@ -11094,9 +10876,6 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
 name|_debug
@@ -11120,30 +10899,12 @@ argument_list|,
 literal|"Number of allocated items"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* NETGRAPH_DEBUG */
-end_comment
-
-begin_comment
 comment|/*********************************************************************** * Worklist routines **********************************************************************/
-end_comment
-
-begin_comment
 comment|/* NETISR thread enters here */
-end_comment
-
-begin_comment
 comment|/*  * Pick a node off the list of nodes with work,  * try get an item to process off it.  * If there are no more, remove the node from the list.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ngintr
@@ -11318,9 +11079,6 @@ block|}
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ng_worklist_remove
@@ -11378,9 +11136,6 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ng_setisr
@@ -11447,47 +11202,23 @@ name|NETISR_NETGRAPH
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*********************************************************************** * Externally useable functions to set up a queue item ready for sending ***********************************************************************/
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|ITEM_DEBUG_CHECKS
 define|\
 value|do {								\ 		if (item->el_dest ) {					\ 			printf("item already has node");		\ 			Debugger("has node");				\ 			NG_NODE_UNREF(item->el_dest);			\ 			item->el_dest = NULL;				\ 		}							\ 		if (item->el_hook ) {					\ 			printf("item already has hook");		\ 			Debugger("has hook");				\ 			NG_HOOK_UNREF(item->el_hook);			\ 			item->el_hook = NULL;				\ 		}							\ 	} while (0)
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|ITEM_DEBUG_CHECKS
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Put elements into the item.  * Hook and node references will be removed when the item is dequeued.  * (or equivalent)  * (XXX) Unsafe because no reference held by peer on remote node.  * remote node might go away in this timescale.  * We know the hooks can't go away because that would require getting  * a writer item on both nodes and we must have at least a  reader  * here to eb able to do this.  * Note that the hook loaded is the REMOTE hook.  *  * This is possibly in the critical path for new data.  */
-end_comment
-
-begin_function
 name|item_p
 name|ng_package_data
 parameter_list|(
@@ -11565,13 +11296,7 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate a queue item and put items into it..  * Evaluate the address as this will be needed to queue it and  * to work out what some of the fields should be.  * Hook and node references will be removed when the item is dequeued.  * (or equivalent)  */
-end_comment
-
-begin_function
 name|item_p
 name|ng_package_msg
 parameter_list|(
@@ -11658,9 +11383,6 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|SET_RETADDR
@@ -11670,9 +11392,6 @@ comment|/* Data items don't have retaddrs */
 value|\ 		if ((item->el_flags& NGQF_D_M) == NGQF_MESG) {		\ 			if (retaddr) {					\ 				NGI_RETADDR(item) = retaddr;		\ 			} else {					\
 comment|/*					\ 				 * The old return address should be ok.	\ 				 * If there isn't one, use the address	\ 				 * here.				\ 				 */
 value|\ 				if (NGI_RETADDR(item) == 0) {		\ 					NGI_RETADDR(item)		\ 						= ng_node2ID(here);	\ 				}					\ 			}						\ 		}							\ 	} while (0)
-end_define
-
-begin_function
 name|int
 name|ng_address_hook
 parameter_list|(
@@ -11786,9 +11505,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|ng_address_path
 parameter_list|(
@@ -11883,9 +11599,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|ng_address_ID
 parameter_list|(
@@ -11968,13 +11681,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * special case to send a message to self (e.g. destroy node)  * Possibly indicate an arrival hook too.  * Useful for removing that hook :-)  */
-end_comment
-
-begin_function
 name|item_p
 name|ng_package_msg_self
 parameter_list|(
@@ -12095,13 +11802,7 @@ name|item
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Set the address, if none given, give the node here.  */
-end_comment
-
-begin_function
 name|void
 name|ng_replace_retaddr
 parameter_list|(
@@ -12143,35 +11844,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|TESTING
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|TESTING
-end_ifdef
-
-begin_comment
 comment|/* just test all the macros */
-end_comment
-
-begin_function_decl
 name|void
 name|ng_macro_test
-parameter_list|(
+argument_list|(
 name|item_p
 name|item
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
+argument_list|)
+decl_stmt|;
 name|void
 name|ng_macro_test
 parameter_list|(
