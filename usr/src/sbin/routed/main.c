@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,11 @@ name|argv0
 operator|=
 name|argv
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 name|openlog
 argument_list|(
 literal|"routed"
@@ -1008,6 +1013,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SO_BROADCAST
 if|if
 condition|(
 name|setsockopt
@@ -1049,6 +1057,11 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SO_RCVBUF
 name|on
 operator|=
 literal|48
@@ -1083,6 +1096,8 @@ argument_list|,
 literal|"setsockopt SO_RCVBUF: %m"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bind
