@@ -4010,7 +4010,7 @@ name|Buffer
 modifier|*
 name|buf
 decl_stmt|;
-comment|/*      * New nodes effectively take the place of the child, so place them      * after the child      */
+comment|/* 	 * New nodes effectively take the place of the child, so place them 	 * after the child 	 */
 name|prevLN
 operator|=
 name|Lst_Member
@@ -4023,7 +4023,7 @@ argument_list|,
 name|cgn
 argument_list|)
 expr_stmt|;
-comment|/*      * First do variable expansion -- this takes precedence over      * wildcard expansion. If the result contains wildcards, they'll be gotten      * to later since the resulting words are tacked on to the end of      * the children list.      */
+comment|/* 	 * First do variable expansion -- this takes precedence over 	 * wildcard expansion. If the result contains wildcards, they'll be 	 * gotten to later since the resulting words are tacked on to the 	 * end of the children list. 	 */
 if|if
 condition|(
 name|strchr
@@ -4106,7 +4106,7 @@ operator|&
 name|OP_ARCHV
 condition|)
 block|{
-comment|/* 		 * Node was an archive(member) target, so we want to call 		 * on the Arch module to find the nodes for us, expanding 		 * variables in the parent's context. 		 */
+comment|/* 				 * Node was an archive(member) target, so we 				 * want to call on the Arch module to find the 				 * nodes for us, expanding variables in the 				 * parent's context. 				 */
 name|char
 modifier|*
 name|sacrifice
@@ -4127,7 +4127,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Break the result into a vector of strings whose nodes 		 * we can find, then add those nodes to the members list. 		 * Unfortunately, we can't use brk_string b/c it 		 * doesn't understand about variable specifications with 		 * spaces in them... 		 */
+comment|/* 				 * Break the result into a vector of strings 				 * whose nodes we can find, then add those 				 * nodes to the members list. Unfortunately, 				 * we can't use brk_string b/c it doesn't 				 * understand about variable specifications with 				 * spaces in them... 				 */
 name|char
 modifier|*
 name|start
@@ -4187,7 +4187,7 @@ operator|==
 literal|'\t'
 condition|)
 block|{
-comment|/* 			 * White-space -- terminate element, find the node, 			 * add it, skip any further spaces. 			 */
+comment|/* 						 * White-space -- terminate 						 * element, find the node, 						 * add it, skip any further 						 * spaces. 						 */
 operator|*
 name|cp
 operator|++
@@ -4228,7 +4228,7 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Adjust cp for increment at start of loop, but 			 * set start to first non-space. 			 */
+comment|/* 						 * Adjust cp for increment at 						 * start of loop, but set start 						 * to first non-space. 						 */
 name|start
 operator|=
 name|cp
@@ -4244,7 +4244,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-comment|/* 			 * Start of a variable spec -- contact variable module 			 * to find the end so we can skip over it. 			 */
+comment|/* 						 * Start of a variable spec -- 						 * contact variable module 						 * to find the end so we can 						 * skip over it. 						 */
 name|char
 modifier|*
 name|junk
@@ -4314,7 +4314,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* 			 * Escaped something -- skip over it 			 */
+comment|/* 						 * Escaped something -- skip 						 * over it 						 */
 name|cp
 operator|++
 expr_stmt|;
@@ -4327,7 +4327,7 @@ operator|!=
 name|start
 condition|)
 block|{
-comment|/* 		     * Stuff left over -- add it to the list too 		     */
+comment|/* 					 * Stuff left over -- add it to the 					 * list too 					 */
 name|gn
 operator|=
 name|Targ_FindNode
@@ -4346,13 +4346,13 @@ name|gn
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Point cp back at the beginning again so the variable value 		 * can be freed. 		 */
+comment|/* 				 * Point cp back at the beginning again so the 				 * variable value can be freed. 				 */
 name|cp
 operator|=
 name|initcp
 expr_stmt|;
 block|}
-comment|/* 	     * Add all elements of the members list to the parent node. 	     */
+comment|/* 			 * Add all elements of the members list to 			 * the parent node. 			 */
 while|while
 condition|(
 operator|!
@@ -4435,14 +4435,14 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 	     * Free the result 	     */
+comment|/* 			 * Free the result 			 */
 name|free
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now the source is expanded, remove it from the list of children to 	 * keep it from being processed. 	 */
+comment|/* 		 * Now the source is expanded, remove it from the list 		 * of children to keep it from being processed. 		 */
 name|ln
 operator|=
 name|Lst_Member
@@ -4500,7 +4500,7 @@ modifier|*
 name|path
 decl_stmt|;
 comment|/* Search path along which to expand */
-comment|/* 	 * Find a path along which to expand the word. 	 * 	 * If the word has a known suffix, use that path. 	 * If it has no known suffix and we're allowed to use the null 	 *   suffix, use its path. 	 * Else use the default system search path. 	 */
+comment|/* 		 * Find a path along which to expand the word. 		 * 		 * If the word has a known suffix, use that path. 		 * If it has no known suffix and we're allowed to use the null 		 *   suffix, use its path. 		 * Else use the default system search path. 		 */
 name|cp
 operator|=
 name|cgn
@@ -4578,14 +4578,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * Use default search path 	     */
+comment|/* 			 * Use default search path 			 */
 name|path
 operator|=
 operator|&
 name|dirSearchPath
 expr_stmt|;
 block|}
-comment|/* 	 * Expand the word along the chosen path 	 */
+comment|/* 		 * Expand the word along the chosen path 		 */
 name|Lst_Init
 argument_list|(
 operator|&
@@ -4614,7 +4614,7 @@ name|exp
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * Fetch next expansion off the list and find its GNode 	     */
+comment|/* 			 * Fetch next expansion off the list and find its GNode 			 */
 name|cp
 operator|=
 name|Lst_DeQueue
@@ -4643,7 +4643,7 @@ argument_list|,
 name|TARG_CREATE
 argument_list|)
 expr_stmt|;
-comment|/* 	     * If gn isn't already a child of the parent, make it so and 	     * up the parent's count of unmade children. 	     */
+comment|/* 			 * If gn isn't already a child of the parent, make it 			 * so and up the parent's count of unmade children. 			 */
 if|if
 condition|(
 name|Lst_Member
@@ -4695,7 +4695,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Now the source is expanded, remove it from the list of children to 	 * keep it from being processed. 	 */
+comment|/* 		 * Now the source is expanded, remove it from the list of 		 * children to keep it from being processed. 		 */
 name|ln
 operator|=
 name|Lst_Member
