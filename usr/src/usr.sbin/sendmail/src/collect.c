@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -1057,6 +1057,15 @@ operator|->
 name|q_next
 control|)
 block|{
+if|if
+condition|(
+name|q
+operator|->
+name|q_alias
+operator|!=
+name|NULL
+condition|)
+continue|continue;
 ifdef|#
 directive|ifdef
 name|DEBUG
