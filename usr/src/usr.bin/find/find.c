@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.37 (Berkeley) %G%"
+literal|"@(#)find.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,6 +691,33 @@ name|errno
 argument_list|)
 expr_stmt|;
 continue|continue;
+case|case
+name|FTS_SL
+case|:
+if|if
+condition|(
+name|entry
+operator|->
+name|fts_level
+operator|==
+name|FTS_ROOTLEVEL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fts_set
+argument_list|(
+name|tree
+argument_list|,
+name|entry
+argument_list|,
+name|FTS_FOLLOW
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+break|break;
 block|}
 define|#
 directive|define
