@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.15 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,6 +461,9 @@ decl_stmt|;
 name|sig_t
 name|f
 decl_stmt|;
+name|char
+name|r
+decl_stmt|;
 name|pwrite
 argument_list|(
 name|FD
@@ -503,11 +506,16 @@ argument_list|)
 expr_stmt|;
 comment|/* Wait until read process stops */
 comment|/* 	 * finish command 	 */
+name|r
+operator|=
+literal|'\r'
+expr_stmt|;
 name|pwrite
 argument_list|(
 name|FD
 argument_list|,
-literal|"\r"
+operator|&
+name|r
 argument_list|,
 literal|1
 argument_list|)
