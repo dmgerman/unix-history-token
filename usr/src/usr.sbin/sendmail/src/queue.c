@@ -14,7 +14,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<ndir.h>
 end_include
 
 begin_include
@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -822,8 +822,11 @@ begin_expr_stmt
 unit|orderq
 operator|(
 operator|)
-block|{ 	struct
+block|{
+specifier|register
+expr|struct
 name|direct
+operator|*
 name|d
 block|;
 specifier|register
@@ -838,8 +841,7 @@ operator|*
 name|wp
 block|;
 comment|/* parent of w */
-specifier|register
-name|FILE
+name|DIR
 operator|*
 name|f
 block|;
@@ -917,11 +919,9 @@ block|}
 comment|/* open the queue directory */
 name|f
 operator|=
-name|fopen
+name|opendir
 argument_list|(
 name|QueueDir
-argument_list|,
-literal|"r"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -956,24 +956,16 @@ name|wn
 operator|<
 name|WLSIZE
 operator|&&
-name|fread
-argument_list|(
 operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|d
-argument_list|,
-sizeof|sizeof
-name|d
-argument_list|,
-literal|1
-argument_list|,
+operator|=
+name|readdir
+argument_list|(
 name|f
 argument_list|)
-operator|==
-literal|1
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
@@ -1001,13 +993,7 @@ comment|/* is this an interesting entry? */
 if|if
 condition|(
 name|d
-operator|.
-name|d_ino
-operator|==
-literal|0
-operator|||
-name|d
-operator|.
+operator|->
 name|d_name
 index|[
 literal|0
@@ -1042,23 +1028,14 @@ name|cbuf
 argument_list|)
 index|]
 expr_stmt|;
-name|strncpy
+name|strcpy
 argument_list|(
 name|p
 argument_list|,
 name|d
-operator|.
+operator|->
 name|d_name
-argument_list|,
-name|DIRSIZ
 argument_list|)
-expr_stmt|;
-name|p
-index|[
-name|DIRSIZ
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* open control file */
 name|cf
@@ -1176,7 +1153,7 @@ begin_expr_stmt
 operator|(
 name|void
 operator|)
-name|fclose
+name|closedir
 argument_list|(
 name|f
 argument_list|)
