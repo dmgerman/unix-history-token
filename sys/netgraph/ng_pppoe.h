@@ -407,7 +407,7 @@ begin_define
 define|#
 directive|define
 name|PTT_RELAY_SID
-value|(0x0106)
+value|(0x0110)
 end_define
 
 begin_define
@@ -526,7 +526,7 @@ begin_define
 define|#
 directive|define
 name|PTT_RELAY_SID
-value|(0x0601)
+value|(0x1001)
 end_define
 
 begin_define
