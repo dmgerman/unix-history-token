@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.22 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.23 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.22 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.23 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2031,11 +2031,14 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|char
 modifier|*
 name|bufp
-init|=
-name|SmtpReplyBuffer
+decl_stmt|;
+specifier|register
+name|int
+name|r
 decl_stmt|;
 name|char
 name|junkbuf
@@ -2078,6 +2081,9 @@ expr_stmt|;
 comment|/* 	**  Read the input line, being careful not to hang. 	*/
 for|for
 control|(
+name|bufp
+operator|=
+name|SmtpReplyBuffer
 init|;
 condition|;
 name|bufp
@@ -2085,10 +2091,6 @@ operator|=
 name|junkbuf
 control|)
 block|{
-specifier|register
-name|int
-name|r
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2320,7 +2322,7 @@ name|strchr
 argument_list|(
 literal|"45"
 argument_list|,
-name|SmtpReplyBuffer
+name|bufp
 index|[
 literal|0
 index|]
@@ -2332,7 +2334,7 @@ block|{
 comment|/* serious error -- log the previous command */
 if|if
 condition|(
-name|bufp
+name|SmtpMsgBuffer
 index|[
 literal|0
 index|]
@@ -2347,10 +2349,10 @@ name|e_xfp
 argument_list|,
 literal|">>> %s\n"
 argument_list|,
-name|bufp
+name|SmtpMsgBuffer
 argument_list|)
 expr_stmt|;
-name|bufp
+name|SmtpMsgBuffer
 index|[
 literal|0
 index|]
@@ -2391,7 +2393,11 @@ literal|3
 index|]
 operator|==
 literal|'-'
-operator|||
+condition|)
+continue|continue;
+comment|/* ignore improperly formated input */
+if|if
+condition|(
 operator|!
 operator|(
 name|isascii
@@ -2417,17 +2423,19 @@ name|r
 operator|=
 name|atoi
 argument_list|(
-name|SmtpReplyBuffer
+name|bufp
 argument_list|)
 expr_stmt|;
 comment|/* extra semantics: 0xx codes are "informational" */
 if|if
 condition|(
 name|r
-operator|<
+operator|>=
 literal|100
 condition|)
-continue|continue;
+break|break;
+block|}
+comment|/* 	**  Now look at SmtpReplyBuffer -- only care about the first 	**  line of the response from here on out. 	*/
 comment|/* save temporary failure messages for posterity */
 if|if
 condition|(
@@ -2491,7 +2499,6 @@ operator|(
 name|r
 operator|)
 return|;
-block|}
 block|}
 end_block
 
