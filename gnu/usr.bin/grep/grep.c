@@ -207,6 +207,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* If zero, output nulls after filenames.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|filename_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Short options.  */
 end_comment
 
@@ -217,29 +228,9 @@ specifier|const
 name|short_options
 index|[]
 init|=
-if|#
-directive|if
-name|HAVE_LIBZ
-operator|>
-literal|0
 literal|"0123456789A:B:C::EFGHUVX:abcd:e:f:hiLlnqrsuvwxyZz"
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-literal|"0123456789A:B:C::EFGHUVX:abcd:e:f:hiLlnqrsuvwxyZz"
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Long options equivalences. */
@@ -461,14 +452,24 @@ name|HAVE_LIBZ
 operator|>
 literal|0
 block|{
-literal|"null"
+literal|"decompress"
 block|,
 name|no_argument
 block|,
 name|NULL
 block|,
-comment|/*'Z'*/
-literal|1
+literal|'Z'
+block|}
+block|,
+block|{
+literal|"null"
+block|,
+name|no_argument
+block|,
+operator|&
+name|filename_mask
+block|,
+literal|0
 block|}
 block|,
 else|#
@@ -605,23 +606,6 @@ block|,
 literal|'w'
 block|}
 block|,
-if|#
-directive|if
-name|HAVE_LIBZ
-operator|>
-literal|0
-block|{
-literal|"decompress"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-literal|'Z'
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
@@ -637,10 +621,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Define flags declared in grep.h. */
-end_comment
-
-begin_comment
-comment|/* I do not know why we need this decl, while if you build GNU grep 2.4 by    hand you don't... */
 end_comment
 
 begin_decl_stmt
@@ -2592,17 +2572,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Assume the input is always text. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|filename_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* If zero, output nulls after filenames.  */
 end_comment
 
 begin_decl_stmt
