@@ -3803,7 +3803,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vnode_pager_putpages: attempt to write meta-data!!! -- 0x%lx(%x)\n"
+literal|"vnode_pager_putpages: attempt to write meta-data!!! -- 0x%lx(%lx)\n"
 argument_list|,
 operator|(
 name|long
@@ -3815,6 +3815,9 @@ index|]
 operator|->
 name|pindex
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|m
 index|[
 literal|0
