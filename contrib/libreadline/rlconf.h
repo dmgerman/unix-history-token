@@ -119,26 +119,11 @@ begin_comment
 comment|/* Define this if you want code that allows readline to be used in an    X `callback' style. */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|READLINE_CALLBACKS
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -90,12 +90,6 @@ end_include
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|GWINSZ_IN_SYS_IOCTL
@@ -114,7 +108,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !SHELL&& GWINSZ_IN_SYS_IOCTL */
+comment|/* GWINSZ_IN_SYS_IOCTL */
 end_comment
 
 begin_include
@@ -576,12 +570,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|TIOCGWINSZ
@@ -637,31 +625,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SHELL || !TIOCGWINSZ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|set_winsize
-parameter_list|(
-name|tty
-parameter_list|)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* SHELL || !TIOCGWINSZ */
+comment|/* TIOCGWINSZ */
 end_comment
 
 begin_if
