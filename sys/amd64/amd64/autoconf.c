@@ -422,9 +422,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|cninit_finish
 argument_list|()
 expr_stmt|;
@@ -442,6 +439,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_IO */
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+name|int
+name|i
+decl_stmt|;
 comment|/* 		 * Print out the BIOS's idea of the disk geometries. 		 */
 name|printf
 argument_list|(
@@ -552,6 +556,9 @@ operator|.
 name|bi_n_bios_used
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Device configuration finished.\n"
