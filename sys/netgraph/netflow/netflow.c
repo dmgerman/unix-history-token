@@ -3335,6 +3335,7 @@ name|finish
 goto|;
 if|if
 condition|(
+operator|(
 name|INACTIVE
 argument_list|(
 name|fle
@@ -3352,6 +3353,12 @@ operator|>
 name|CACHELOWAT
 operator|)
 operator|)
+operator|)
+operator|||
+name|AGED
+argument_list|(
+name|fle
+argument_list|)
 condition|)
 block|{
 comment|/* Detach flow entry from cache */
