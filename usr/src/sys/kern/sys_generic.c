@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.18	82/10/17	*/
+comment|/*	sys_generic.c	5.19	82/10/19	*/
 end_comment
 
 begin_include
@@ -128,6 +128,12 @@ begin_include
 include|#
 directive|include
 file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/cmap.h"
 end_include
 
 begin_comment
@@ -1181,13 +1187,11 @@ name|bn
 decl_stmt|;
 specifier|register
 name|int
+name|n
+decl_stmt|,
 name|on
 decl_stmt|,
 name|type
-decl_stmt|;
-specifier|register
-name|unsigned
-name|n
 decl_stmt|;
 name|int
 name|size

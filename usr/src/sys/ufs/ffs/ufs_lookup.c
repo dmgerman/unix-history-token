@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.27	82/10/17	*/
+comment|/*	ufs_lookup.c	4.28	82/10/19	*/
 end_comment
 
 begin_include
@@ -2259,6 +2259,9 @@ name|caddr_t
 operator|)
 name|ep
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|newentrysize
 argument_list|)
 expr_stmt|;
@@ -2489,7 +2492,7 @@ name|ip
 operator|->
 name|i_fs
 decl_stmt|;
-name|int
+name|daddr_t
 name|lbn
 init|=
 name|lblkno
@@ -2521,7 +2524,7 @@ argument_list|,
 name|lbn
 argument_list|)
 decl_stmt|;
-name|int
+name|daddr_t
 name|bn
 init|=
 name|fsbtodb

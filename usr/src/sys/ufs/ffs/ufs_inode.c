@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.28	82/10/17	*/
+comment|/*	ufs_inode.c	4.29	82/10/19	*/
 end_comment
 
 begin_include
@@ -1209,8 +1209,10 @@ name|IUPDAT
 argument_list|(
 name|ip
 argument_list|,
+operator|&
 name|time
 argument_list|,
+operator|&
 name|time
 argument_list|,
 literal|0
@@ -1554,9 +1556,6 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-name|dev_t
-name|dev
-decl_stmt|;
 name|daddr_t
 name|bn
 decl_stmt|;
@@ -1687,8 +1686,10 @@ argument_list|(
 operator|&
 name|itmp
 argument_list|,
+operator|&
 name|time
 argument_list|,
+operator|&
 name|time
 argument_list|,
 literal|1
@@ -1850,9 +1851,6 @@ name|i
 operator|--
 control|)
 block|{
-specifier|register
-name|size
-expr_stmt|;
 name|bn
 operator|=
 name|ip

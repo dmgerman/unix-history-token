@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.16	82/10/17	*/
+comment|/*	ffs_alloc.c	2.17	82/10/19	*/
 end_comment
 
 begin_include
@@ -5307,8 +5307,10 @@ name|iupdat
 argument_list|(
 name|ip
 argument_list|,
+operator|&
 name|time
 argument_list|,
+operator|&
 name|time
 argument_list|,
 literal|0

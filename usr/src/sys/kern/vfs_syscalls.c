@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	4.40	82/10/17	*/
+comment|/*	vfs_syscalls.c	4.41	82/10/19	*/
 end_comment
 
 begin_include
@@ -1054,8 +1054,10 @@ name|iupdat
 argument_list|(
 name|ip
 argument_list|,
+operator|&
 name|time
 argument_list|,
+operator|&
 name|time
 argument_list|,
 literal|1
@@ -2182,8 +2184,10 @@ name|IUPDAT
 argument_list|(
 name|ip
 argument_list|,
+operator|&
 name|time
 argument_list|,
+operator|&
 name|time
 argument_list|,
 literal|0
@@ -3505,9 +3509,7 @@ end_macro
 begin_block
 block|{
 name|update
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -4157,8 +4159,10 @@ name|iupdat
 argument_list|(
 name|ip
 argument_list|,
+operator|&
 name|time
 argument_list|,
+operator|&
 name|time
 argument_list|,
 literal|1
