@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.12 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1051,6 +1051,12 @@ block|}
 name|bp
 operator|+=
 operator|(
+sizeof|sizeof
+argument_list|(
+name|align
+argument_list|)
+operator|-
+operator|(
 operator|(
 name|u_long
 operator|)
@@ -1061,6 +1067,13 @@ argument_list|(
 name|align
 argument_list|)
 operator|)
+operator|)
+operator|&
+operator|~
+sizeof|sizeof
+argument_list|(
+name|align
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
