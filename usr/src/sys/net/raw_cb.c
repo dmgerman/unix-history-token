@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	6.4	85/05/04	*/
+comment|/*	raw_cb.c	6.5	85/06/02	*/
 end_comment
 
 begin_include
@@ -31,6 +31,18 @@ begin_include
 include|#
 directive|include
 file|"socketvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"domain.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"protosw.h"
 end_include
 
 begin_include
@@ -98,6 +110,8 @@ begin_expr_stmt
 name|raw_attach
 argument_list|(
 name|so
+argument_list|,
+name|proto
 argument_list|)
 specifier|register
 expr|struct
@@ -106,6 +120,12 @@ operator|*
 name|so
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|proto
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -191,14 +211,6 @@ name|rcb_socket
 operator|=
 name|so
 expr_stmt|;
-name|insque
-argument_list|(
-name|rp
-argument_list|,
-operator|&
-name|rawcb
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -213,6 +225,36 @@ operator|->
 name|rcb_pcb
 operator|=
 literal|0
+expr_stmt|;
+name|rp
+operator|->
+name|rcb_proto
+operator|.
+name|sp_family
+operator|=
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_domain
+operator|->
+name|dom_family
+expr_stmt|;
+name|rp
+operator|->
+name|rcb_proto
+operator|.
+name|sp_protocol
+operator|=
+name|proto
+expr_stmt|;
+name|insque
+argument_list|(
+name|rp
+argument_list|,
+operator|&
+name|rawcb
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

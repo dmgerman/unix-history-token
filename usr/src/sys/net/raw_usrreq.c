@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	6.6	85/05/30	*/
+comment|/*	raw_usrreq.c	6.7	85/06/02	*/
 end_comment
 
 begin_include
@@ -306,12 +306,6 @@ name|rp
 decl_stmt|;
 specifier|register
 name|struct
-name|protosw
-modifier|*
-name|lproto
-decl_stmt|;
-specifier|register
-name|struct
 name|raw_header
 modifier|*
 name|rh
@@ -383,21 +377,13 @@ operator|->
 name|rcb_next
 control|)
 block|{
-name|lproto
-operator|=
-name|rp
-operator|->
-name|rcb_socket
-operator|->
-name|so_proto
-expr_stmt|;
 if|if
 condition|(
-name|lproto
+name|rp
 operator|->
-name|pr_domain
-operator|->
-name|dom_family
+name|rcb_proto
+operator|.
+name|sp_family
 operator|!=
 name|rh
 operator|->
@@ -408,13 +394,17 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|lproto
+name|rp
 operator|->
-name|pr_protocol
+name|rcb_proto
+operator|.
+name|sp_protocol
 operator|&&
-name|lproto
+name|rp
 operator|->
-name|pr_protocol
+name|rcb_proto
+operator|.
+name|sp_protocol
 operator|!=
 name|rh
 operator|->
@@ -812,6 +802,11 @@ operator|=
 name|raw_attach
 argument_list|(
 name|so
+argument_list|,
+operator|(
+name|int
+operator|)
+name|nam
 argument_list|)
 expr_stmt|;
 break|break;
