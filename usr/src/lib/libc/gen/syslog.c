@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.18 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,6 +233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|char
 modifier|*
 name|fmt
@@ -247,6 +248,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 specifier|register
 name|int
 name|cnt
@@ -264,6 +269,8 @@ argument_list|()
 decl_stmt|;
 name|int
 name|pid
+decl_stmt|,
+name|saved_errno
 decl_stmt|;
 name|char
 name|tbuf
@@ -271,10 +278,19 @@ index|[
 literal|2048
 index|]
 decl_stmt|,
+name|fmt_cpy
+index|[
+literal|1024
+index|]
+decl_stmt|,
 modifier|*
 name|ctime
 argument_list|()
 decl_stmt|;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 comment|/* see if we should just throw out this message */
 if|if
 condition|(
@@ -462,6 +478,83 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+comment|/* substitute error message for %m */
+block|{
+specifier|register
+name|char
+name|ch
+decl_stmt|,
+modifier|*
+name|t1
+decl_stmt|,
+modifier|*
+name|t2
+decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
+for|for
+control|(
+name|t1
+operator|=
+name|fmt_cpy
+init|;
+name|ch
+operator|=
+operator|*
+name|fmt
+condition|;
+operator|++
+name|fmt
+control|)
+if|if
+condition|(
+name|ch
+operator|==
+literal|'%'
+operator|&&
+name|fmt
+index|[
+literal|1
+index|]
+operator|==
+literal|'m'
+condition|)
+block|{
+operator|++
+name|fmt
+expr_stmt|;
+for|for
+control|(
+name|t2
+operator|=
+name|strerror
+argument_list|(
+name|saved_errno
+argument_list|)
+init|;
+operator|*
+name|t1
+operator|=
+operator|*
+name|t2
+operator|++
+condition|;
+operator|++
+name|t1
+control|)
+empty_stmt|;
+block|}
+else|else
+operator|*
+name|t1
+operator|++
+operator|=
+name|ch
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -469,7 +562,7 @@ name|vsprintf
 argument_list|(
 name|p
 argument_list|,
-name|fmt
+name|fmt_cpy
 argument_list|,
 name|ap
 argument_list|)
