@@ -1246,11 +1246,12 @@ if|if
 condition|(
 name|prtactive
 operator|&&
+name|vrefcnt
+argument_list|(
 name|ap
 operator|->
 name|a_vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -1300,11 +1301,12 @@ block|{
 comment|/* 		 * We need a reference to keep the vnode from being 		 * recycled by getnewvnode while we do the I/O 		 * associated with discarding the buffers unless we 		 * are being forcibly unmounted in which case we already 		 * have our own reference. 		 */
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|ap
 operator|->
 name|a_vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|>
 literal|0
 condition|)
@@ -1486,9 +1488,10 @@ if|if
 condition|(
 name|prtactive
 operator|&&
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)

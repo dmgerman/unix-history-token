@@ -5560,9 +5560,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|mp_fixme
+name|ASSERT_VOP_LOCKED
 argument_list|(
-literal|"Accessing VV_TEXT without a lock."
+name|vp
+argument_list|,
+literal|"nfs_doio"
 argument_list|)
 expr_stmt|;
 if|if
