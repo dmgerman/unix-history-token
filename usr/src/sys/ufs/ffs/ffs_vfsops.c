@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1306,6 +1306,10 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
+name|struct
+name|partinfo
+name|dpart
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -1367,13 +1371,56 @@ expr_stmt|;
 comment|/* 	 * Step 2: re-read superblock from disk. 	 */
 if|if
 condition|(
+name|VOP_IOCTL
+argument_list|(
+name|devvp
+argument_list|,
+name|DIOCGPART
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|dpart
+argument_list|,
+name|FREAD
+argument_list|,
+name|NOCRED
+argument_list|,
+name|p
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|size
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
+else|else
+name|size
+operator|=
+name|dpart
+operator|.
+name|disklab
+operator|->
+name|d_secsize
+expr_stmt|;
+if|if
+condition|(
 name|error
 operator|=
 name|bread
 argument_list|(
 name|devvp
 argument_list|,
-name|SBLOCK
+call|(
+name|daddr_t
+call|)
+argument_list|(
+name|SBOFF
+operator|/
+name|size
+argument_list|)
 argument_list|,
 name|SBSIZE
 argument_list|,
@@ -1917,16 +1964,11 @@ decl_stmt|,
 name|space
 decl_stmt|;
 name|int
-name|havepart
-init|=
-literal|0
-decl_stmt|,
-name|blks
-decl_stmt|;
-name|int
 name|error
 decl_stmt|,
 name|i
+decl_stmt|,
+name|blks
 decl_stmt|,
 name|size
 decl_stmt|,
@@ -1947,6 +1989,10 @@ name|vnode
 modifier|*
 name|rootvp
 decl_stmt|;
+name|u_int64_t
+name|maxfilesize
+decl_stmt|;
+comment|/* XXX */
 name|dev
 operator|=
 name|devvp
@@ -2017,11 +2063,6 @@ operator|=
 name|DEV_BSIZE
 expr_stmt|;
 else|else
-block|{
-name|havepart
-operator|=
-literal|1
-expr_stmt|;
 name|size
 operator|=
 name|dpart
@@ -2030,7 +2071,6 @@ name|disklab
 operator|->
 name|d_secsize
 expr_stmt|;
-block|}
 name|bp
 operator|=
 name|NULL
@@ -2047,7 +2087,14 @@ name|bread
 argument_list|(
 name|devvp
 argument_list|,
-name|SBLOCK
+call|(
+name|daddr_t
+call|)
+argument_list|(
+name|SBOFF
+operator|/
+name|size
+argument_list|)
 argument_list|,
 name|SBSIZE
 argument_list|,
@@ -2793,6 +2840,26 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_expr_stmt
+name|maxfilesize
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+literal|0x40000000
+operator|*
+name|fs
+operator|->
+name|fs_bsize
+operator|-
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_if
 if|if
 condition|(
@@ -2800,24 +2867,14 @@ name|fs
 operator|->
 name|fs_maxfilesize
 operator|>
-operator|(
-name|quad_t
-operator|)
-literal|1
-operator|<<
-literal|39
+name|maxfilesize
 condition|)
 comment|/* XXX */
 name|fs
 operator|->
 name|fs_maxfilesize
 operator|=
-operator|(
-name|quad_t
-operator|)
-literal|1
-operator|<<
-literal|39
+name|maxfilesize
 expr_stmt|;
 end_if
 
