@@ -49,6 +49,12 @@ name|dev_t
 name|snp_target
 decl_stmt|;
 comment|/* major/minor number of device*/
+name|struct
+name|tty
+modifier|*
+name|snp_tty
+decl_stmt|;
+comment|/* tty device pointer	       */
 name|u_long
 name|snp_len
 decl_stmt|;
