@@ -4097,13 +4097,6 @@ name|arg_i
 operator|&
 name|PCM_ENABLE_INPUT
 condition|)
-block|{
-name|rdch
-operator|->
-name|flags
-operator||=
-name|CHN_F_TRIGGERED
-expr_stmt|;
 name|chn_start
 argument_list|(
 name|rdch
@@ -4111,7 +4104,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|rdch
 operator|->
@@ -4153,13 +4145,6 @@ name|arg_i
 operator|&
 name|PCM_ENABLE_OUTPUT
 condition|)
-block|{
-name|wrch
-operator|->
-name|flags
-operator||=
-name|CHN_F_TRIGGERED
-expr_stmt|;
 name|chn_start
 argument_list|(
 name|wrch
@@ -4167,7 +4152,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|wrch
 operator|->
