@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.16	83/06/14	*/
+comment|/*	protosw.h	4.17	83/07/20	*/
 end_comment
 
 begin_comment
@@ -481,6 +481,8 @@ block|,
 literal|"SENDOOB"
 block|,
 literal|"SOCKADDR"
+block|,
+literal|"CONNECT2"
 block|,
 literal|"FASTTIMO"
 block|,
