@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)syslogd.c	4.1 (Berkeley) %G%"
+literal|"@(#)syslogd.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -798,26 +798,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|domark
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|alarm
-argument_list|(
-name|MarkIntvl
-operator|*
-literal|60
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|funix
 operator|=
 name|socket
@@ -1117,6 +1097,26 @@ end_for
 begin_expr_stmt
 name|init
 argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|domark
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|alarm
+argument_list|(
+name|MarkIntvl
+operator|*
+literal|60
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -2708,7 +2708,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"\r\n\007Broadcast message from syslog@%s at %.24s ...\r\n%s\r"
+literal|"\r\n\007Message from syslogd@%s at %.24s ...\r\n%s\r"
 argument_list|,
 name|hbuf
 argument_list|,
@@ -3057,6 +3057,18 @@ name|f
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|f
+operator|->
+name|f_flags
+operator|&
+name|F_MARK
+operator|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|f
