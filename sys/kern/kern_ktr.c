@@ -1371,17 +1371,11 @@ end_macro
 begin_block
 block|{
 name|int
-name|lines
-decl_stmt|,
 name|quit
 decl_stmt|;
 name|quit
 operator|=
 literal|0
-expr_stmt|;
-name|lines
-operator|=
-name|NUM_LINES_PER_PAGE
 expr_stmt|;
 name|tstate
 operator|.
