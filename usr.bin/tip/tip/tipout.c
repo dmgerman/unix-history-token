@@ -611,6 +611,8 @@ name|cp
 operator|&=
 literal|0177
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 literal|1
@@ -618,6 +620,13 @@ argument_list|,
 name|buf
 argument_list|,
 name|cnt
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
