@@ -238,15 +238,12 @@ value|"/usr/X11R6/bin/xauth"
 end_define
 
 begin_comment
-comment|/*  * Define this to use pipes instead of socketpairs for communicating with the  * client program.  Socketpairs do not seem to work on all systems.  */
+comment|/*  * Define this to use pipes instead of socketpairs for communicating with the  * client program.  Socketpairs do not seem to work on all systems.  * Although pipes are bi-directional in FreeBSD, using pipes here will  * make<stdin> uni-directional !  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USE_PIPES
-value|1
-end_define
+begin_comment
+comment|/* #define USE_PIPES 1 */
+end_comment
 
 begin_endif
 endif|#
