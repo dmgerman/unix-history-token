@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.158 2002/03/17 18:02:53 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.159 2002/05/19 06:24:32 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -8071,15 +8071,6 @@ name|UHCI_STD_SIZE
 expr_stmt|;
 name|std
 operator|=
-operator|(
-name|uhci_soft_td_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|KERNADDR
 argument_list|(
 operator|&
@@ -8087,7 +8078,6 @@ name|dma
 argument_list|,
 name|offs
 argument_list|)
-operator|)
 expr_stmt|;
 name|std
 operator|->
@@ -8324,15 +8314,6 @@ name|UHCI_SQH_SIZE
 expr_stmt|;
 name|sqh
 operator|=
-operator|(
-name|uhci_soft_qh_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|KERNADDR
 argument_list|(
 operator|&
@@ -8340,7 +8321,6 @@ name|dma
 argument_list|,
 name|offs
 argument_list|)
-operator|)
 expr_stmt|;
 name|sqh
 operator|->

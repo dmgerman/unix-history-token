@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.121 2002/03/16 16:11:18 tsutsui Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.123 2002/05/19 06:24:31 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2106,15 +2106,6 @@ name|OHCI_SED_SIZE
 expr_stmt|;
 name|sed
 operator|=
-operator|(
-name|ohci_soft_ed_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|KERNADDR
 argument_list|(
 operator|&
@@ -2122,7 +2113,6 @@ name|dma
 argument_list|,
 name|offs
 argument_list|)
-operator|)
 expr_stmt|;
 name|sed
 operator|->
@@ -2326,15 +2316,6 @@ name|OHCI_STD_SIZE
 expr_stmt|;
 name|std
 operator|=
-operator|(
-name|ohci_soft_td_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|KERNADDR
 argument_list|(
 operator|&
@@ -2342,7 +2323,6 @@ name|dma
 argument_list|,
 name|offs
 argument_list|)
-operator|)
 expr_stmt|;
 name|std
 operator|->
@@ -3191,15 +3171,6 @@ name|OHCI_SITD_SIZE
 expr_stmt|;
 name|sitd
 operator|=
-operator|(
-name|ohci_soft_itd_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|KERNADDR
 argument_list|(
 operator|&
@@ -3207,7 +3178,6 @@ name|dma
 argument_list|,
 name|offs
 argument_list|)
-operator|)
 expr_stmt|;
 name|sitd
 operator|->
@@ -3624,11 +3594,6 @@ name|sc
 operator|->
 name|sc_hcca
 operator|=
-operator|(
-expr|struct
-name|ohci_hcca
-operator|*
-operator|)
 name|KERNADDR
 argument_list|(
 operator|&
