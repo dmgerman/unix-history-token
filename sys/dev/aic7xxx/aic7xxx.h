@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.40 1997/02/25 03:05:35 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.1 1998/09/15 07:24:16 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -76,6 +76,17 @@ end_define
 
 begin_comment
 comment|/* 				 * Up to 255 SCBs on some types of aic7xxx 				 * based boards.  The aic7870 have 16 internal 				 * SCBs, but external SRAM bumps this to 255. 				 * The aic7770 family have only 4, and the  				 * aic7850 has only 3. 				 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_TMODE_CMDS
+value|256
+end_define
+
+begin_comment
+comment|/* 				* Ring Buffer of incoming target commands. 				* We allocate 256 to simplify the logic 				* in the sequencer by using the natural 				* wrap point of an 8bit counter. 				*/
 end_comment
 
 begin_if
@@ -638,7 +649,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Connection desciptor for select-in requests in target mode.  * The first byte is the connecting target, followed by identify  * message and optional tag information, terminated by 0xFF.  The  * remainder is the command to execute.  */
+comment|/*  * Connection desciptor for select-in requests in target mode.  * The first byte is the connecting target, followed by identify  * message and optional tag information, terminated by 0xFF.  The  * remainder is the command to execute.  The cmd_valid byte is on  * an 8 byte boundary to simplify setting it on aic7880 hardware  * which only has limited direct access to the DMA FIFO.  */
 end_comment
 
 begin_struct
@@ -646,9 +657,8 @@ struct|struct
 name|target_cmd
 block|{
 name|u_int8_t
-name|icl
+name|initiator_channel
 decl_stmt|;
-comment|/* Really only holds Initiator ID */
 name|u_int8_t
 name|targ_id
 decl_stmt|;
@@ -660,7 +670,16 @@ comment|/* Identify message */
 name|u_int8_t
 name|bytes
 index|[
-literal|29
+literal|21
+index|]
+decl_stmt|;
+name|u_int8_t
+name|cmd_valid
+decl_stmt|;
+name|u_int8_t
+name|pad
+index|[
+literal|7
 index|]
 decl_stmt|;
 block|}
@@ -1211,17 +1230,14 @@ decl_stmt|;
 name|pcici_t
 name|pci_config_id
 decl_stmt|;
-comment|/* Hmmm. */
+comment|/* 	 * Target incoming command FIFO. 	 */
 name|struct
 name|target_cmd
 modifier|*
 name|targetcmds
 decl_stmt|;
-name|int
-name|next_targetcmd
-decl_stmt|;
-name|int
-name|num_targetcmds
+name|u_int8_t
+name|tqinfifonext
 decl_stmt|;
 comment|/* 	 * Incoming and outgoing message handling. 	 */
 name|ahc_msg_type
