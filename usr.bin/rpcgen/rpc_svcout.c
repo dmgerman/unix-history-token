@@ -13,13 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rpc_svcout.c 1.29 89/03/30 (C) 1987 SMI";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rpc_svcout.c 1.29 89/03/30 (C) 1987 SMI"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -3853,7 +3866,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\tsyslog(LOG_ERR, msg);\n"
+literal|"\t\tsyslog(LOG_ERR, \"%%s\", msg);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3881,7 +3894,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tsyslog(LOG_ERR, msg);\n"
+literal|"\tsyslog(LOG_ERR, \"%%s\", msg);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
