@@ -159,7 +159,7 @@ condition|)
 return|return
 name|y
 return|;
-comment|/* x=y, return x */
+comment|/* x=y, return y */
 if|if
 condition|(
 operator|(
