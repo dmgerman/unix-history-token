@@ -701,18 +701,18 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|wcwidth
+name|wctob
 parameter_list|(
-name|wchar_t
+name|wint_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|wctob
+name|wcwidth
 parameter_list|(
-name|wint_t
+name|wchar_t
 parameter_list|)
 function_decl|;
 end_function_decl
