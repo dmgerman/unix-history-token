@@ -305,6 +305,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIR_BARS
+value|PCIR_MAPS
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIR_BAR
+parameter_list|(
+name|x
+parameter_list|)
+value|(PCIR_BARS + (x) * 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_CARDBUSCIS
 value|0x28
 end_define
