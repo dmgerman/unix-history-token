@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.23 (Berkeley) %G%"
+literal|"@(#)hash.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3602,6 +3602,27 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+for|for
+control|(
+name|bp
+operator|=
+name|NULL
+init|;
+operator|!
+name|bp
+operator|||
+operator|!
+name|bp
+index|[
+literal|0
+index|]
+condition|;
+operator|++
+name|hashp
+operator|->
+name|cbucket
+control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -3804,6 +3825,21 @@ operator|->
 name|cndx
 operator|=
 literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|bp
+index|[
+literal|0
+index|]
+condition|)
+name|hashp
+operator|->
+name|cpage
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|ndx
