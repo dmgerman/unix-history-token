@@ -255,14 +255,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|astpending
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_offset_t
 name|vector_page
 decl_stmt|;
