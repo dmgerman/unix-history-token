@@ -1032,9 +1032,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|int
-name|port
-decl_stmt|;
 name|s
 operator|=
 name|spltty
@@ -1629,15 +1626,8 @@ name|tw_sc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|pp
-decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|i
 decl_stmt|;
 name|sc
 operator|=
@@ -3340,8 +3330,6 @@ decl_stmt|,
 name|new
 decl_stmt|,
 name|max
-decl_stmt|,
-name|cnt
 decl_stmt|;
 name|int
 name|port

@@ -76,7 +76,7 @@ file|<i386/isa/isa_device.h>
 end_include
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|u_char
 name|d_inb
 parameter_list|(
@@ -87,7 +87,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|d_outb
 parameter_list|(
@@ -355,6 +355,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|int
 name|bquprobe
 parameter_list|(
@@ -367,6 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bquattach
 parameter_list|(
@@ -458,6 +460,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|d_outb
 parameter_list|(
@@ -488,6 +491,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_char
 name|d_inb
 parameter_list|(
@@ -2037,6 +2041,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bquattach
 parameter_list|(
@@ -2068,6 +2073,7 @@ comment|/*  * int bquprobe  *  * Initializes the driver. It tries to detect the 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bquprobe
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.40 1995/08/23 23:02:27 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.41 1995/09/19 18:55:08 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1887,6 +1887,7 @@ value|0x08
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bt_debug
 init|=
@@ -1901,6 +1902,7 @@ name|KERNEL
 end_ifdef
 
 begin_function_decl
+specifier|static
 name|int
 name|btprobe
 parameter_list|()
@@ -1908,6 +1910,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|btattach
 parameter_list|()
@@ -1921,6 +1924,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int32
 name|bt_scsi_cmd
 parameter_list|()
@@ -1928,6 +1932,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bt_poll
 name|__P
@@ -1951,6 +1956,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|bt_timeout
 parameter_list|(
@@ -1961,6 +1967,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bt_init
 name|__P
@@ -1974,6 +1981,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|bt_inquire_setup_information
 parameter_list|()
@@ -1981,6 +1989,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bt_done
 parameter_list|()
@@ -1988,6 +1997,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|btminphys
 parameter_list|()
@@ -1995,6 +2005,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int32
 name|bt_adapter_info
 parameter_list|()
@@ -2002,6 +2013,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|bt_ccb
 modifier|*
@@ -2011,6 +2023,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|bt_ccb
 modifier|*
@@ -2053,6 +2066,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_adapter
 name|bt_switch
@@ -2084,6 +2098,7 @@ comment|/* the below structure is so we have a default dev struct for out link s
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|bt_dev
@@ -2315,6 +2330,7 @@ comment|/*  * bt_cmd(unit, icnt, ocnt, wait, retval, opcode, args)  *  * Activat
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bt_cmd
 parameter_list|(
@@ -2763,6 +2779,7 @@ comment|/*  * Check if the device can be found at the port given  * and if so, s
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|btprobe
 parameter_list|(
@@ -3063,6 +3080,7 @@ comment|/*  * Attach all the sub-devices we can find  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|btattach
 parameter_list|(
@@ -3196,6 +3214,7 @@ comment|/*  * Return some information to the caller about the adapter and its  *
 end_comment
 
 begin_function
+specifier|static
 name|u_int32
 name|bt_adapter_info
 parameter_list|(
@@ -3777,6 +3796,7 @@ comment|/*  * A ccb is put onto the free list.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bt_free_ccb
 parameter_list|(
@@ -3871,6 +3891,7 @@ comment|/*  * Get a free ccb  *  * If there are none, see if we can allocate a n
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|bt_ccb
 modifier|*
@@ -3905,17 +3926,6 @@ name|bt_ccb
 modifier|*
 name|ccbp
 decl_stmt|;
-name|struct
-name|bt_mbx
-modifier|*
-name|wmbx
-decl_stmt|;
-comment|/* Mail Box pointer specified unit */
-name|BT_MBO
-modifier|*
-name|wmbo
-decl_stmt|;
-comment|/* Out Mail Box pointer */
 name|int
 name|hashnum
 decl_stmt|;
@@ -4120,6 +4130,7 @@ comment|/*  * given a physical address, find the ccb that  * it corresponds to: 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|bt_ccb
 modifier|*
@@ -4190,6 +4201,7 @@ comment|/*  * Get a MBO and then Send it  */
 end_comment
 
 begin_function
+specifier|static
 name|BT_MBO
 modifier|*
 name|bt_send_mbo
@@ -4450,6 +4462,7 @@ comment|/*  * We have a ccb which has been processed by the  * adaptor, now we l
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bt_done
 parameter_list|(
@@ -4466,16 +4479,6 @@ modifier|*
 name|ccb
 decl_stmt|;
 block|{
-name|struct
-name|bt_data
-modifier|*
-name|bt
-init|=
-name|btdata
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|struct
 name|scsi_sense_data
 modifier|*
@@ -4724,6 +4727,7 @@ comment|/*  * Start the board, ready for normal operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bt_init
 parameter_list|(
@@ -5553,6 +5557,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bt_inquire_setup_information
 parameter_list|(
@@ -5565,16 +5570,6 @@ modifier|*
 name|info
 parameter_list|)
 block|{
-name|struct
-name|bt_data
-modifier|*
-name|bt
-init|=
-name|btdata
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|struct
 name|bt_setup
 name|setup
@@ -6177,6 +6172,7 @@ comment|/* min */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|btminphys
 parameter_list|(
@@ -6228,6 +6224,7 @@ comment|/*  * start a scsi operation given the command and the data address.  Al
 end_comment
 
 begin_function
+specifier|static
 name|int32
 name|bt_scsi_cmd
 parameter_list|(
@@ -6239,14 +6236,6 @@ modifier|*
 name|xs
 decl_stmt|;
 block|{
-name|struct
-name|scsi_sense_data
-modifier|*
-name|s1
-decl_stmt|,
-modifier|*
-name|s2
-decl_stmt|;
 name|struct
 name|bt_ccb
 modifier|*
@@ -6261,16 +6250,6 @@ name|int
 name|seg
 decl_stmt|;
 comment|/* scatter gather seg being worked on */
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|c
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|thiskv
 decl_stmt|;
@@ -6296,25 +6275,6 @@ decl_stmt|,
 name|datalen
 decl_stmt|,
 name|flags
-decl_stmt|;
-name|struct
-name|iovec
-modifier|*
-name|iovp
-decl_stmt|;
-name|struct
-name|bt_data
-modifier|*
-name|bt
-init|=
-name|btdata
-index|[
-name|unit
-index|]
-decl_stmt|;
-name|BT_MBO
-modifier|*
-name|mbo
 decl_stmt|;
 name|SC_DEBUG
 argument_list|(
@@ -7130,6 +7090,7 @@ comment|/*  * Poll a particular unit, looking for a particular xs  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bt_poll
 parameter_list|(
@@ -7162,11 +7123,6 @@ name|btdata
 index|[
 name|unit
 index|]
-decl_stmt|;
-name|int
-name|done
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|count
@@ -7336,6 +7292,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bt_timeout
 parameter_list|(
@@ -7546,6 +7503,7 @@ name|UTEST
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|bt_print_ccb
 parameter_list|(
@@ -7601,6 +7559,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bt_print_active_ccbs
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.36 1995/08/23 23:02:24 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.37 1995/09/19 18:55:06 bde Exp $  */
 end_comment
 
 begin_include
@@ -1214,6 +1214,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|int
 name|ahbprobe
 parameter_list|()
@@ -1221,6 +1222,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahbprobe1
 name|__P
@@ -1236,6 +1238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|ahb_attach
 parameter_list|()
@@ -1243,6 +1246,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahb_init
 name|__P
@@ -1262,6 +1266,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int32
 name|ahb_scsi_cmd
 parameter_list|()
@@ -1269,12 +1274,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|timeout_t
 name|ahb_timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|ahb_done
 parameter_list|()
@@ -1291,6 +1298,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|ahb_free_ecb
 parameter_list|()
@@ -1298,6 +1306,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ahbminphys
 parameter_list|()
@@ -1305,6 +1314,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|ecb
 modifier|*
@@ -1314,6 +1324,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int32
 name|ahb_adapter_info
 parameter_list|()
@@ -1331,27 +1342,30 @@ begin_comment
 comment|/* XXX This should go into a comon header */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|ahb_slot
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* slot last board was found in */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|ahb_unit
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahb_debug
 init|=
@@ -1430,6 +1444,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_adapter
 name|ahb_switch
@@ -1461,6 +1476,7 @@ comment|/* the below structure is so we have a default dev struct for our link s
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|ahb_dev
@@ -1674,6 +1690,7 @@ comment|/*  * Function to send a command out through a mailbox  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ahb_send_mbox
 parameter_list|(
@@ -1813,6 +1830,7 @@ comment|/*  * Function to poll for command completion when in poll mode  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahb_poll
 parameter_list|(
@@ -1958,6 +1976,7 @@ comment|/*  * Function to  send an immediate type command to the adapter  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ahb_send_immed
 parameter_list|(
@@ -2098,6 +2117,7 @@ comment|/*  * Check the slots looking for a board we recognise  * If we find one
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahbprobe
 parameter_list|(
@@ -2252,6 +2272,7 @@ comment|/*  * Check if the device can be found at the port given  * and if so, s
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahbprobe1
 parameter_list|(
@@ -2453,6 +2474,7 @@ comment|/*  * Attach all the sub-devices we can find  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahb_attach
 parameter_list|(
@@ -2573,6 +2595,7 @@ comment|/*  * Return some information to the caller about  * the adapter and it'
 end_comment
 
 begin_function
+specifier|static
 name|u_int32
 name|ahb_adapter_info
 parameter_list|(
@@ -2943,6 +2966,7 @@ comment|/*  * We have a ecb which has been processed by the  * adaptor, now we l
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ahb_done
 parameter_list|(
@@ -3279,6 +3303,7 @@ comment|/*  * A ecb (and hence a mbx-out is put onto the  * free list.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ahb_free_ecb
 parameter_list|(
@@ -3392,6 +3417,7 @@ comment|/*  * Get a free ecb  * If there are none, see if we can allocate a  * n
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ecb
 modifier|*
@@ -3649,6 +3675,7 @@ comment|/*  * given a physical address, find the ecb that  * it corresponds to: 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ecb
 modifier|*
@@ -3719,6 +3746,7 @@ comment|/*  * Start the board, ready for normal operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahb_init
 parameter_list|(
@@ -4133,6 +4161,7 @@ comment|/* min */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ahbminphys
 parameter_list|(
@@ -4184,6 +4213,7 @@ comment|/*  * start a scsi operation given the command and  * the data address. 
 end_comment
 
 begin_function
+specifier|static
 name|int32
 name|ahb_scsi_cmd
 parameter_list|(
@@ -5314,6 +5344,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahb_timeout
 parameter_list|(
@@ -5569,6 +5600,7 @@ name|AHBDEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|ahb_print_ecb
 parameter_list|(
@@ -5635,6 +5667,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahb_print_active_ecb
 parameter_list|(

@@ -861,9 +861,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|lnc_init
 argument_list|(
 name|unit
@@ -3262,12 +3259,12 @@ block|{
 name|int
 name|nports
 decl_stmt|;
-name|int
-name|vsw
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+name|int
+name|vsw
+decl_stmt|;
 name|vsw
 operator|=
 name|inw
@@ -4671,13 +4668,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|lnc_mem
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-init|=
-literal|0
 decl_stmt|;
 comment|/* Check that interface has valid address */
 if|if
@@ -6145,10 +6135,6 @@ name|int
 name|len
 decl_stmt|,
 name|chunk
-decl_stmt|;
-name|char
-modifier|*
-name|buffer
 decl_stmt|;
 name|int
 name|addr

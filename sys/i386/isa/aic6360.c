@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.10 1995/08/23 23:02:25 gibbs Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.11 1995/09/19 18:55:07 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -4313,13 +4313,6 @@ name|aux
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|i
-decl_stmt|,
-name|len
-decl_stmt|,
-name|ic
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -4712,10 +4705,6 @@ argument_list|)
 index|]
 decl_stmt|;
 comment|/* For chips that support it */
-name|char
-modifier|*
-name|start
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -5913,13 +5902,6 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|u_short
-name|iobase
-init|=
-name|aic
-operator|->
-name|iobase
-decl_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|sc
@@ -6682,11 +6664,6 @@ endif|#
 directive|endif
 block|{
 name|struct
-name|scsi_xfer
-modifier|*
-name|xs
-decl_stmt|;
-name|struct
 name|scsi_link
 modifier|*
 name|sc
@@ -6705,8 +6682,6 @@ name|iobase
 decl_stmt|;
 name|int
 name|t
-decl_stmt|,
-name|l
 decl_stmt|;
 name|u_char
 name|simode0
@@ -7015,18 +6990,6 @@ name|adapter_softc
 decl_stmt|;
 endif|#
 directive|endif
-name|u_short
-name|iobase
-init|=
-name|aic
-operator|->
-name|iobase
-decl_stmt|;
-name|struct
-name|acb
-modifier|*
-name|acb2
-decl_stmt|;
 name|AIC_TRACE
 argument_list|(
 operator|(
@@ -8909,11 +8872,6 @@ name|acb
 modifier|*
 name|acb
 decl_stmt|;
-name|u_char
-name|dmastat
-decl_stmt|,
-name|scsisig
-decl_stmt|;
 comment|/* First determine what to send. If we haven't seen a 	 * phasechange this is a retransmission request. 	 */
 name|outb
 argument_list|(
@@ -9482,15 +9440,6 @@ specifier|register
 name|u_char
 name|dmastat
 decl_stmt|;
-name|struct
-name|acb
-modifier|*
-name|acb
-init|=
-name|aic
-operator|->
-name|nexus
-decl_stmt|;
 name|int
 name|amount
 decl_stmt|,
@@ -10006,18 +9955,7 @@ specifier|register
 name|u_char
 name|dmastat
 decl_stmt|;
-name|struct
-name|acb
-modifier|*
-name|acb
-init|=
-name|aic
-operator|->
-name|nexus
-decl_stmt|;
 name|int
-name|amount
-decl_stmt|,
 name|olddleft
 init|=
 name|aic
@@ -10574,28 +10512,12 @@ name|aic_tinfo
 modifier|*
 name|ti
 decl_stmt|;
-name|int
-name|done
-decl_stmt|,
-name|amount
-decl_stmt|;
 name|u_char
 name|sstat0
 decl_stmt|,
 name|sstat1
 decl_stmt|,
-name|scsisig
-decl_stmt|,
-name|dmastat
-decl_stmt|,
 name|sstat2
-decl_stmt|;
-name|u_char
-name|scsiseq
-decl_stmt|,
-name|simode0
-decl_stmt|,
-name|simode1
 decl_stmt|,
 name|sxfrctl0
 decl_stmt|;

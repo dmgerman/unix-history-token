@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.15 1995/10/13 19:47:43 wollman Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.16 1995/10/26 20:29:34 julian Exp $  */
 end_comment
 
 begin_comment
@@ -947,9 +947,6 @@ name|sdl
 decl_stmt|;
 name|u_short
 name|base
-decl_stmt|;
-name|int
-name|t
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -3148,9 +3145,6 @@ name|mp
 decl_stmt|,
 modifier|*
 name|m
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|int
 name|off

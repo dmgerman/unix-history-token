@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12 1995/05/30 07:58:06 rgrimes Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.13 1995/07/16 10:11:30 bde Exp $  */
 end_comment
 
 begin_include
@@ -1059,8 +1059,6 @@ decl_stmt|,
 name|ebx
 decl_stmt|,
 name|ecx
-decl_stmt|,
-name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2904,17 +2902,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* MACH_KERNEL */
-name|struct
-name|apm_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|apm_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
 switch|switch
 condition|(
 name|apm_version
@@ -3214,9 +3201,6 @@ name|apm_softc
 index|[
 name|unit
 index|]
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|master_softc
 operator|=
@@ -3945,9 +3929,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|pl
 decl_stmt|;
 ifdef|#
 directive|ifdef

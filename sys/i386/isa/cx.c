@@ -3097,9 +3097,6 @@ name|c
 operator|->
 name|ttyp
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 operator|!

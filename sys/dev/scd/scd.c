@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.6 1995/09/08 11:07:55 bde Exp $ */
+comment|/* $Id: scd.c,v 1.7 1995/09/19 18:55:15 bde Exp $ */
 end_comment
 
 begin_comment
@@ -347,6 +347,7 @@ name|SCD_DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|scd_debuglevel
 init|=
@@ -425,6 +426,7 @@ struct|;
 end_struct
 
 begin_struct
+specifier|static
 struct|struct
 name|scd_data
 block|{
@@ -692,17 +694,6 @@ name|bits_set
 parameter_list|,
 name|int
 name|bits_clear
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|waitfor_attention
-parameter_list|(
-name|int
-name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -997,6 +988,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|scd_probe
 parameter_list|(
@@ -1009,6 +1001,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|scd_attach
 parameter_list|(
@@ -1181,9 +1174,6 @@ operator|+
 name|dev
 operator|->
 name|id_unit
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|cd
 operator|->
@@ -1547,15 +1537,6 @@ name|struct
 name|scd_data
 modifier|*
 name|cd
-decl_stmt|;
-name|int
-name|rlen
-decl_stmt|;
-name|char
-name|rdata
-index|[
-literal|10
-index|]
 decl_stmt|;
 name|unit
 operator|=
@@ -1988,9 +1969,6 @@ name|struct
 name|partition
 modifier|*
 name|p
-decl_stmt|;
-name|int
-name|part
 decl_stmt|;
 specifier|register
 name|s
@@ -2558,8 +2536,6 @@ name|end_track
 decl_stmt|;
 name|int
 name|rc
-decl_stmt|,
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -3285,13 +3261,6 @@ init|=
 name|scd_data
 operator|+
 name|unit
-decl_stmt|;
-name|int
-name|port
-init|=
-name|cd
-operator|->
-name|iobase
 decl_stmt|;
 name|cd
 operator|->
@@ -4189,22 +4158,12 @@ name|int
 name|reg
 decl_stmt|,
 name|i
-decl_stmt|,
-name|k
-decl_stmt|,
-name|c
 decl_stmt|;
 name|int
 name|blknum
 decl_stmt|;
 name|caddr_t
 name|addr
-decl_stmt|;
-name|char
-name|rdata
-index|[
-literal|10
-index|]
 decl_stmt|;
 specifier|static
 name|char
@@ -4349,8 +4308,6 @@ name|cd
 operator|->
 name|blksize
 expr_stmt|;
-name|firstblock
-label|:
 comment|/* for first block */
 name|mbx
 operator|->
@@ -5686,9 +5643,6 @@ name|int
 name|count
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 while|while
 condition|(
@@ -7059,10 +7013,6 @@ name|port
 operator|+
 name|IREG_RESULT
 decl_stmt|;
-name|unsigned
-name|char
-name|c
-decl_stmt|;
 name|int
 name|loop_index
 init|=
@@ -7383,8 +7333,6 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|rc
 operator|=
 name|waitfor_status_bits
@@ -7395,6 +7343,10 @@ name|SBIT_RESULT_READY
 argument_list|,
 name|SBIT_BUSY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
 condition|)
 return|return
 operator|-

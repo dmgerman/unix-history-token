@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.21 1995/10/13 19:47:52 wollman Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.22 1995/10/26 20:29:51 julian Exp $  */
 end_comment
 
 begin_include
@@ -1173,21 +1173,11 @@ index|]
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|x
-decl_stmt|,
-name|re_init_flag
 decl_stmt|;
 name|u_int
 name|memsize
 decl_stmt|;
 name|u_char
-name|iptr
-decl_stmt|,
-name|memwidth
-decl_stmt|,
-name|sum
-decl_stmt|,
 name|tmp
 decl_stmt|;
 name|int
@@ -2768,9 +2758,6 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
-name|u_char
-name|command
-decl_stmt|;
 name|pcic_power_on
 argument_list|(
 name|sc
@@ -3424,9 +3411,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|u_char
-name|laar_tmp
-decl_stmt|;
 name|outloop
 label|:
 comment|/* 	 * See if there is room to send more data (i.e. one or both of the 	 *	buffers is empty). 	 */
@@ -3684,8 +3668,6 @@ index|]
 decl_stmt|;
 name|u_char
 name|boundry
-decl_stmt|,
-name|current
 decl_stmt|;
 name|u_short
 name|len
@@ -4411,18 +4393,6 @@ operator|->
 name|if_unit
 index|]
 decl_stmt|;
-name|struct
-name|ifreq
-modifier|*
-name|ifr
-init|=
-operator|(
-expr|struct
-name|ifreq
-operator|*
-operator|)
-name|data
-decl_stmt|;
 name|int
 name|s
 decl_stmt|,
@@ -4954,27 +4924,6 @@ name|head
 init|=
 name|NULL
 decl_stmt|;
-name|u_short
-name|off
-decl_stmt|;
-name|int
-name|resid
-decl_stmt|;
-name|u_short
-name|etype
-decl_stmt|;
-struct|struct
-name|trailer_header
-block|{
-name|u_short
-name|trail_type
-decl_stmt|;
-name|u_short
-name|trail_residual
-decl_stmt|;
-block|}
-name|trailer_header
-struct|;
 comment|/* Allocate a header mbuf */
 name|MGETHDR
 argument_list|(

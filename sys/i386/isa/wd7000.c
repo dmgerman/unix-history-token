@@ -176,6 +176,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|wds_dev
@@ -812,6 +813,7 @@ value|8
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|wdsunit
 init|=
@@ -879,6 +881,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|int
 name|wdsprobe
 parameter_list|(
@@ -890,6 +893,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|wds_minphys
 parameter_list|(
@@ -901,6 +905,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|wds_req
 modifier|*
@@ -912,6 +917,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int32
 name|wds_scsi_cmd
 parameter_list|(
@@ -923,6 +929,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int32
 name|wds_adapter_info
 parameter_list|(
@@ -938,6 +945,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|wds_done
 parameter_list|(
@@ -953,6 +961,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|wdsattach
 parameter_list|(
@@ -964,6 +973,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|wds_init
 parameter_list|(
@@ -975,6 +985,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|wds_cmd
 parameter_list|(
@@ -989,6 +1000,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|wds_wait
 parameter_list|(
@@ -1017,6 +1029,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_adapter
 name|wds_switch
@@ -2579,6 +2592,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|wds_getvers
 parameter_list|(
