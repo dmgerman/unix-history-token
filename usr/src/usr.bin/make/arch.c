@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arch.c	8.1 (Berkeley) %G%"
+literal|"@(#)arch.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2206,8 +2206,11 @@ name|arh
 operator|.
 name|ar_date
 argument_list|,
-literal|"%-12d"
+literal|"%-12ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|now
 argument_list|)
 expr_stmt|;
@@ -2310,8 +2313,11 @@ name|arh
 operator|.
 name|ar_date
 argument_list|,
-literal|"%-12d"
+literal|"%-12ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|now
 argument_list|)
 expr_stmt|;
