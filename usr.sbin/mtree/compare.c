@@ -754,7 +754,10 @@ operator|->
 name|flags
 operator|&
 name|F_TIME
+operator|)
 operator|&&
+operator|(
+operator|(
 name|s
 operator|->
 name|st_mtimespec
@@ -784,6 +787,7 @@ operator|->
 name|st_mtimespec
 operator|.
 name|ts_nsec
+operator|)
 operator|)
 condition|)
 block|{
