@@ -1965,7 +1965,7 @@ name|namelen
 expr_stmt|;
 name|error
 operator|=
-name|accept
+name|oaccept
 argument_list|(
 name|td
 argument_list|,
@@ -2137,7 +2137,7 @@ name|namelen
 expr_stmt|;
 return|return
 operator|(
-name|getsockname
+name|ogetsockname
 argument_list|(
 name|td
 argument_list|,
@@ -2190,7 +2190,7 @@ name|linux_getpeername_args
 name|linux_args
 decl_stmt|;
 name|struct
-name|getpeername_args
+name|ogetpeername_args
 comment|/* { 		int fdes; 		caddr_t asa; 		int *alen; 	} */
 name|bsd_args
 decl_stmt|;
@@ -2250,7 +2250,7 @@ name|namelen
 expr_stmt|;
 return|return
 operator|(
-name|getpeername
+name|ogetpeername
 argument_list|(
 name|td
 argument_list|,
@@ -2440,8 +2440,8 @@ name|linux_send_args
 name|linux_args
 decl_stmt|;
 name|struct
-name|sendto_args
-comment|/* {                 int s; 		caddr_t buf; 		size_t len; 		int flags; 		caddr_t to; 		int tolen; 	} */
+name|osend_args
+comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2503,21 +2503,9 @@ name|linux_args
 operator|.
 name|flags
 expr_stmt|;
-name|bsd_args
-operator|.
-name|to
-operator|=
-name|NULL
-expr_stmt|;
-name|bsd_args
-operator|.
-name|tolen
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
-name|sendto
+name|osend
 argument_list|(
 name|td
 argument_list|,
@@ -2571,8 +2559,8 @@ name|linux_recv_args
 name|linux_args
 decl_stmt|;
 name|struct
-name|recvfrom_args
-comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 		caddr_t from; 		int fromlen; 	} */
+name|orecv_args
+comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -2634,21 +2622,9 @@ name|linux_args
 operator|.
 name|flags
 expr_stmt|;
-name|bsd_args
-operator|.
-name|from
-operator|=
-name|NULL
-expr_stmt|;
-name|bsd_args
-operator|.
-name|fromlenaddr
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
-name|recvfrom
+name|orecv
 argument_list|(
 name|td
 argument_list|,
@@ -2959,7 +2935,7 @@ name|fromlen
 expr_stmt|;
 return|return
 operator|(
-name|recvfrom
+name|orecvfrom
 argument_list|(
 name|td
 argument_list|,
