@@ -6599,7 +6599,7 @@ decl_stmt|;
 block|{
 ifndef|#
 directive|ifndef
-name|NO_PROFILE_DATA
+name|NO_PROFILE_COUNTERS
 name|int
 name|align
 init|=
@@ -6612,7 +6612,6 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* not NO_PROFILE_DATA */
 if|#
 directive|if
 name|defined
@@ -6660,7 +6659,7 @@ directive|endif
 comment|/* ASM_OUTPUT_REG_PUSH */
 ifndef|#
 directive|ifndef
-name|NO_PROFILE_DATA
+name|NO_PROFILE_COUNTERS
 name|data_section
 argument_list|()
 expr_stmt|;
@@ -6698,7 +6697,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not NO_PROFILE_DATA */
 name|function_section
 argument_list|(
 name|current_function_decl
@@ -12080,7 +12078,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|=
-name|plus_constant
+name|plus_constant_for_output
 argument_list|(
 name|XEXP
 argument_list|(

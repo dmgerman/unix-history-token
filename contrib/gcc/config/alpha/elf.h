@@ -128,6 +128,12 @@ begin_comment
 comment|/* Attach a special .ident directive to the end of the file to identify    the version of GCC which compiled this code.  The format of the    .ident string is patterned after the ones produced by native svr4    C compilers.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|IDENT_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -229,6 +235,12 @@ begin_comment
 comment|/* This is how to allocate empty space in some section.  The .zero    pseudo-op is used for this on most svr4 assemblers.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|SKIP_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -258,6 +270,12 @@ end_define
 begin_comment
 comment|/* Output the label which precedes a jumptable.  Note that for all svr4    systems where we actually generate jumptables (which is to say every    svr4 target except i386, where we use casesi instead) we put the jump-    tables into the .rodata section and since other stuff could have been    put into the .rodata section prior to any given jumptable, we have to    make sure that the location counter for the .rodata section gets pro-    perly re-aligned prior to the actual beginning of the jump table.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ALIGN_ASM_OP
+end_undef
 
 begin_define
 define|#
@@ -343,6 +361,12 @@ end_define
 begin_comment
 comment|/* This says how to output assembler code to declare an    uninitialized external linkage data object.  Under SVR4,    the linker seems to want the alignment of data objects    to depend on their types.  We do exactly that here.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|COMMON_ASM_OP
+end_undef
 
 begin_define
 define|#
@@ -458,6 +482,12 @@ name|USE_CONST_SECTION
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|CONST_SECTION_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -469,12 +499,24 @@ begin_comment
 comment|/* Define the pseudo-ops used to switch to the .ctors and .dtors sections.     Note that we want to give these sections the SHF_WRITE attribute    because these sections will actually contain data (i.e. tables of    addresses of functions in the current root executable or shared library    file) and, in the case of a shared library, the relocatable addresses    will have to be properly resolved/relocated (and then written into) by    the dynamic linker when it actually attaches the given shared library    to the executing process.  (Note that on SVR4, you may wish to use the    `-z text' option to the ELF linker, when building a shared library, as    an additional check that you are doing everything right.  But if you do    use the `-z text' option when building a shared library, you will get    errors unless the .ctors and .dtors sections are marked as writable    via the SHF_WRITE attribute.)  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|CTORS_SECTION_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
 name|CTORS_SECTION_ASM_OP
 value|".section\t.ctors,\"aw\""
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|DTORS_SECTION_ASM_OP
+end_undef
 
 begin_define
 define|#
@@ -512,12 +554,24 @@ begin_comment
 comment|/* On svr4, we *do* have support for the .init and .fini sections, and we    can put stuff in there to be executed before and after `main'.  We let    crtstuff.c and other files know this by defining the following symbols.    The definitions say how to change sections to the .init and .fini    sections.  This is the same for all known svr4 assemblers.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|INIT_SECTION_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
 name|INIT_SECTION_ASM_OP
 value|".section\t.init"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|FINI_SECTION_ASM_OP
+end_undef
 
 begin_define
 define|#
@@ -716,12 +770,24 @@ begin_comment
 comment|/* Define the strings used for the special svr4 .type and .size directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TYPE_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
 name|TYPE_ASM_OP
 value|".type"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SIZE_ASM_OP
+end_undef
 
 begin_define
 define|#
@@ -887,6 +953,12 @@ directive|define
 name|STRING_LIMIT
 value|((unsigned) 256)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|STRING_ASM_OP
+end_undef
 
 begin_define
 define|#
