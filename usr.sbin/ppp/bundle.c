@@ -1661,7 +1661,7 @@ argument_list|(
 name|dl
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+break|break;
 case|case
 name|CLOSE_STAYDOWN
 case|:
