@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.73 (Berkeley) %G%"
+literal|"@(#)main.c	8.74 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2811,18 +2811,10 @@ case|case
 literal|'e'
 case|:
 comment|/* error message disposition */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
 case|case
 literal|'M'
 case|:
 comment|/* define macro */
-endif|#
-directive|endif
 name|setoption
 argument_list|(
 name|j
