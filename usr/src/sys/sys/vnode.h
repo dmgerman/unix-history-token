@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -58,7 +58,25 @@ name|VT_NFS
 block|,
 name|VT_MFS
 block|,
+name|VT_PC
+block|,
 name|VT_LFS
+block|,
+name|VT_LOFS
+block|,
+name|VT_FDESC
+block|,
+name|VT_PORTAL
+block|,
+name|VT_NULL
+block|,
+name|VT_UMAP
+block|,
+name|VT_KERNFS
+block|,
+name|VT_PROCFS
+block|,
+name|VT_AFS
 block|}
 enum|;
 end_enum
