@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	5.6 (Berkeley) %G%"
+literal|"@(#)genassym.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,82 +28,58 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"sys/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"sys/vmmeter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vmmeter.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/vmparam.h"
+file|"sys/cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"sys/map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cmap.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"text.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"msgbuf.h"
+file|"sys/msgbuf.h"
 end_include
 
 begin_include
@@ -133,7 +109,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscall.h"
+file|"sys/syscall.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/vm_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/vm_map.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/pmap.h"
 end_include
 
 begin_function
@@ -192,15 +186,19 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-name|struct
-name|text
-modifier|*
-name|tp
+name|vm_map_t
+name|map
 init|=
 operator|(
-expr|struct
-name|text
-operator|*
+name|vm_map_t
+operator|)
+literal|0
+decl_stmt|;
+name|pmap_t
+name|pmap
+init|=
+operator|(
+name|pmap_t
 operator|)
 literal|0
 decl_stmt|;
@@ -220,11 +218,6 @@ specifier|register
 name|unsigned
 name|i
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"#ifdef LOCORE\n"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"#define\tI386_CR3PAT %d\n"
@@ -275,12 +268,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_XLINK %d\n"
+literal|"#define\tP_MAP %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_xlink
+name|p_map
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPMAP %d\n"
+argument_list|,
+operator|&
+name|map
+operator|->
+name|pmap
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPM_STCHG %d\n"
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_pdchanged
 argument_list|)
 expr_stmt|;
 name|printf
@@ -321,56 +334,6 @@ operator|&
 name|p
 operator|->
 name|p_wchan
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_TSIZE %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_tsize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_SSIZE %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_ssize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_P0BR %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_p0br
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_SZPT %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_szpt
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_TEXTP %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_textp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -459,23 +422,42 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP1PAGES %d\n"
+literal|"#define\tV_PDMA %d\n"
 argument_list|,
-name|P1PAGES
+operator|&
+name|vm
+operator|->
+name|v_pdma
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tNBPG %d\n"
+literal|"#define\tV_FAULTS %d\n"
 argument_list|,
-name|NBPG
+operator|&
+name|vm
+operator|->
+name|v_faults
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPGSHIFT %d\n"
+literal|"#define\tV_PGREC %d\n"
 argument_list|,
-name|PGSHIFT
+operator|&
+name|vm
+operator|->
+name|v_pgrec
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tV_FASTPGREC %d\n"
+argument_list|,
+operator|&
+name|vm
+operator|->
+name|v_fastpgrec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -487,6 +469,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tHIGHPAGES %d\n"
+argument_list|,
+name|HIGHPAGES
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP1PAGES %d\n"
+argument_list|,
+name|P1PAGES
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tCLSIZE %d\n"
 argument_list|,
 name|CLSIZE
@@ -494,9 +490,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tMAXPHYS %d\n"
+literal|"#define\tNBPG %d\n"
 argument_list|,
-name|MAXPHYS
+name|NBPG
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tNPTEPG %d\n"
+argument_list|,
+name|NPTEPG
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPGSHIFT %d\n"
+argument_list|,
+name|PGSHIFT
 argument_list|)
 expr_stmt|;
 name|printf
@@ -518,6 +528,25 @@ argument_list|(
 literal|"#define\tUSRIOSIZE %d\n"
 argument_list|,
 name|USRIOSIZE
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+name|printf
+argument_list|(
+literal|"#define\tSHMMAXPGS %d\n"
+argument_list|,
+name|SHMMAXPGS
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"#define\tUSRSTACK %d\n"
+argument_list|,
+name|USRSTACK
 argument_list|)
 expr_stmt|;
 name|printf
@@ -862,6 +891,65 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tNKMEMCLUSTERS %d\n"
+argument_list|,
+name|NKMEMCLUSTERS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tU_PROCP %d\n"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|u_procp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tU_RU %d\n"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|u_ru
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tU_PROF %d\n"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|u_prof
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tU_PROFSCALE %d\n"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|u_prof
+operator|.
+name|pr_scale
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tRU_MINFLT %d\n"
+argument_list|,
+operator|&
+name|rup
+operator|->
+name|ru_minflt
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tPCB_FLAGS %d\n"
 argument_list|,
 operator|&
@@ -920,56 +1008,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_P0BR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p0br
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_P1BR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p1br
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_P0LR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p0lr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_P1LR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p1lr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_SZPT %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_szpt
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tPCB_CMAP2 %d\n"
 argument_list|,
 operator|&
@@ -1009,7 +1047,30 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#endif\n"
+literal|"#define\tB_READ %d\n"
+argument_list|,
+name|B_READ
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tENOENT %d\n"
+argument_list|,
+name|ENOENT
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tEFAULT %d\n"
+argument_list|,
+name|EFAULT
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tENAMETOOLONG %d\n"
+argument_list|,
+name|ENAMETOOLONG
 argument_list|)
 expr_stmt|;
 name|exit
