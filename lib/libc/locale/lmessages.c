@@ -18,8 +18,16 @@ end_include
 begin_define
 define|#
 directive|define
-name|LCMESSAGES_SIZE
+name|LCMESSAGES_SIZE_FULL
 value|(sizeof(struct lc_messages_T) / sizeof(char *))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCMESSAGES_SIZE_MIN
+define|\
+value|(offsetof(struct lc_messages_T, yesstr) / sizeof(char *))
 end_define
 
 begin_decl_stmt
@@ -103,7 +111,7 @@ name|messages_locale_buf
 argument_list|,
 literal|"LC_MESSAGES"
 argument_list|,
-name|LCMESSAGES_SIZE
+name|LCMESSAGES_SIZE_FULL
 argument_list|,
 operator|(
 specifier|const
@@ -117,10 +125,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ret
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 comment|/* Assume that we have incomplete locale file (without 		 * "yesstr" and "nostr" declared. Try it also. 		 */
@@ -137,9 +143,7 @@ name|messages_locale_buf
 argument_list|,
 literal|"LC_MESSAGES"
 argument_list|,
-name|LCMESSAGES_SIZE
-operator|/
-literal|2
+name|LCMESSAGES_SIZE_MIN
 argument_list|,
 operator|(
 specifier|const
@@ -153,10 +157,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ret
-operator|!=
-operator|-
-literal|1
 condition|)
 block|{
 name|_messages_locale
