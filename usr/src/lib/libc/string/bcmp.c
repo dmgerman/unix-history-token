@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcmp.c	5.4 (Berkeley) %G%"
+literal|"@(#)bcmp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ argument_list|,
 name|length
 argument_list|)
 specifier|register
-name|char
+name|void
 operator|*
 name|b1
 operator|,

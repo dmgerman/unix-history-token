@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bzero.c	5.5 (Berkeley) %G%"
+literal|"@(#)bzero.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ parameter_list|,
 name|length
 parameter_list|)
 specifier|register
-name|char
+name|void
 modifier|*
 name|b
 decl_stmt|;
