@@ -47,44 +47,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|<varargs.h>
+file|<stdarg.h>
 end_include
 
-begin_comment
-comment|/*VARARGS2*/
-end_comment
-
-begin_macro
+begin_function
+name|void
 name|wwprintf
-argument_list|(
-argument|w
-argument_list|,
-argument|fmt
-argument_list|,
-argument|va_alist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|struct
 name|ww
 modifier|*
 name|w
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|fmt
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_block
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -98,6 +78,8 @@ decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
+argument_list|,
+name|fmt
 argument_list|)
 expr_stmt|;
 comment|/* buffer can overflow */
@@ -126,7 +108,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
