@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	6.3	84/10/31	*/
+comment|/*	tcp_timer.c	6.4	84/11/01	*/
 end_comment
 
 begin_include
@@ -295,14 +295,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|ip
 operator|!=
 operator|&
 name|tcb
-condition|)
+condition|;
+name|ip
+operator|=
+name|ipnxt
+control|)
 block|{
+name|ipnxt
+operator|=
+name|ip
+operator|->
+name|inp_next
+expr_stmt|;
 name|tp
 operator|=
 name|intotcpcb
@@ -317,12 +328,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|ipnxt
-operator|=
-name|ip
-operator|->
-name|inp_next
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -423,10 +428,7 @@ operator|++
 expr_stmt|;
 name|tpgone
 label|:
-name|ip
-operator|=
-name|ipnxt
-expr_stmt|;
+empty_stmt|;
 block|}
 name|tcp_iss
 operator|+=
