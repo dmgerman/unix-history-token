@@ -23,6 +23,16 @@ directive|include
 file|<rune.h>
 end_include
 
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|setinvalidrune
+argument_list|,
+literal|"warning: setinvalidrune() is deprecated. See setinvalidrune(3)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|setinvalidrune
