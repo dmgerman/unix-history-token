@@ -814,13 +814,11 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -834,13 +832,11 @@ name|td_ucred
 operator|->
 name|cr_prison
 condition|)
-block|{
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|tp
