@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.8	%G%	*/
+comment|/*	machdep.c	3.9	%G%	*/
 end_comment
 
 begin_include
@@ -75,12 +75,18 @@ directive|include
 file|"../h/psl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/uba.h"
+end_include
+
 begin_decl_stmt
 name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.8) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.9) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,6 +429,47 @@ operator|-
 name|oicr
 operator|)
 return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRACE
+end_ifdef
+
+begin_comment
+comment|/*  * Put the current time into the trace,  * in fractional seconds (i.e. 12345 means the  * current time is ``n.12345'' for some n.  */
+end_comment
+
+begin_macro
+name|ttime
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|trace
+argument_list|(
+literal|"%d "
+argument_list|,
+operator|(
+name|lbolt
+operator|*
+literal|16667
+operator|+
+name|mfpr
+argument_list|(
+name|ICR
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1209,6 +1256,69 @@ directive|endif
 name|addr
 operator|+=
 name|NBPG
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_decl_stmt
+name|int
+name|hangcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|unhang
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|uba_regs
+modifier|*
+name|up
+init|=
+operator|(
+expr|struct
+name|uba_regs
+operator|*
+operator|)
+name|UBA0
+decl_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|uba_sr
+operator|==
+literal|0
+condition|)
+return|return;
+name|hangcnt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|hangcnt
+operator|>
+literal|5
+operator|*
+name|HZ
+condition|)
+block|{
+name|hangcnt
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"HANG "
+argument_list|)
+expr_stmt|;
+name|ubareset
+argument_list|()
 expr_stmt|;
 block|}
 block|}
