@@ -982,23 +982,7 @@ goto|;
 block|}
 if|#
 directive|if
-literal|1
-define|#
-directive|define
-name|DVSEC
-value|100
-define|#
-directive|define
-name|DVFRAC
-value|2997
-comment|/* NTSC: 29.97 Hz (2997 = 29.97 * 100) */
-define|#
-directive|define
-name|DVDIFF
-value|203
-comment|/* 203 = (8000/250 - 29.97) * 100 */
-else|#
-directive|else
+name|DV_PAL
 define|#
 directive|define
 name|DVSEC
@@ -1013,6 +997,22 @@ directive|define
 name|DVDIFF
 value|5
 comment|/* 125 = (8000/300 - 25) * 3 */
+else|#
+directive|else
+define|#
+directive|define
+name|DVSEC
+value|100
+define|#
+directive|define
+name|DVFRAC
+value|2997
+comment|/* NTSC: 29.97 Hz (2997 = 29.97 * 100) */
+define|#
+directive|define
+name|DVDIFF
+value|203
+comment|/* 203 = (8000/250 - 29.97) * 100 */
 endif|#
 directive|endif
 define|#

@@ -87,6 +87,12 @@ directive|include
 file|<dev/firewire/fwmem.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/firewire/iec68113.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3453,11 +3459,21 @@ name|ENOMEM
 expr_stmt|;
 break|break;
 block|}
+if|#
+directive|if
+name|DV_PAL
+define|#
+directive|define
+name|FWDVPACKET
+value|300
+else|#
+directive|else
 define|#
 directive|define
 name|FWDVPACKET
 value|250
-comment|/* NTSC (300 for PAL) */
+endif|#
+directive|endif
 define|#
 directive|define
 name|FWDVPMAX
@@ -3500,8 +3516,11 @@ name|tx
 operator|.
 name|npacket
 operator|=
-literal|300
+name|FWDVPACKET
+operator|+
+literal|30
 expr_stmt|;
+comment|/*> 320 or 267 */
 name|ibufreq
 operator|->
 name|tx

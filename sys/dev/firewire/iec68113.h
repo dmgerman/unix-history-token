@@ -196,5 +196,12 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|DV_PAL
+value|0
+end_define
+
 end_unit
 
