@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netisr.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netisr.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -113,6 +113,91 @@ name|anisr
 parameter_list|)
 value|{ netisr |= 1<<(anisr); setsoftnet(); }
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|i386
+end_ifdef
+
+begin_comment
+comment|/* XXX Temporary -- soon to vanish - wfj */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_SCLK
+value|11
+end_define
+
+begin_comment
+comment|/* softclock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_AST
+value|12
+end_define
+
+begin_comment
+comment|/* ast -- resched */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|schednetisr
+end_undef
+
+begin_define
+define|#
+directive|define
+name|schednetisr
+parameter_list|(
+name|anisr
+parameter_list|)
+value|{\ 	if(netisr == 0) { \ 		softem++; \ 	} \ 	netisr |= 1<<(anisr); \ }
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|softem
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* i386 */
+end_comment
 
 begin_ifndef
 ifndef|#
