@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.7 (Berkeley) %G%"
+literal|"@(#)verify.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,7 +189,7 @@ operator|!
 operator|(
 name|t
 operator|=
-name|ftsopen
+name|fts_open
 argument_list|(
 name|argv
 argument_list|,
@@ -214,7 +214,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mtree: ftsopen: %s.\n"
+literal|"mtree: fts_open: %s.\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -236,7 +236,7 @@ while|while
 condition|(
 name|p
 operator|=
-name|ftsread
+name|fts_read
 argument_list|(
 name|t
 argument_list|)
@@ -464,7 +464,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|ftsset
+name|fts_set
 argument_list|(
 name|t
 argument_list|,
@@ -592,7 +592,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|ftsset
+name|fts_set
 argument_list|(
 name|t
 argument_list|,
@@ -605,7 +605,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|ftsclose
+name|fts_close
 argument_list|(
 name|t
 argument_list|)

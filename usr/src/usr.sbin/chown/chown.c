@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.16 (Berkeley) %G%"
+literal|"@(#)chown.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,7 +365,7 @@ operator|!
 operator|(
 name|fts
 operator|=
-name|ftsopen
+name|fts_open
 argument_list|(
 operator|++
 name|argv
@@ -406,7 +406,7 @@ while|while
 condition|(
 name|p
 operator|=
-name|ftsread
+name|fts_read
 argument_list|(
 name|fts
 argument_list|)
