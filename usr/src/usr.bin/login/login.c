@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980,1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.18 (Berkeley) %G%"
+literal|"@(#)login.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * login [ name ]  * login -r hostname (for rlogind)  * login -h hostname (for telnetd, etc.)  */
+comment|/*  * login [ name ]  * login -r hostname	(for rlogind)  * login -h hostname	(for telnetd, etc.)  * login -f name	(for pre-authenticated login: datakit, xterm, etc.)  */
 end_comment
 
 begin_include
@@ -584,6 +584,10 @@ name|hflag
 init|=
 literal|0
 decl_stmt|,
+name|fflag
+init|=
+literal|0
+decl_stmt|,
 name|t
 decl_stmt|,
 name|f
@@ -674,7 +678,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * -p is used by getty to tell login not to destroy the environment 	 * -r is used by rlogind to cause the autologin protocol; 	 * -h is used by other servers to pass the name of the 	 * remote host to login so that it may be placed in utmp and wtmp 	 */
+comment|/* 	 * -p is used by getty to tell login not to destroy the environment 	 * -r is used by rlogind to cause the autologin protocol;  	 * -f is used to skip a second login authentication  	 * -h is used by other servers to pass the name of the 	 * remote host to login so that it may be placed in utmp and wtmp 	 */
 operator|(
 name|void
 operator|)
@@ -724,11 +728,13 @@ condition|(
 name|rflag
 operator|||
 name|hflag
+operator|||
+name|fflag
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Only one of -r and -h allowed\n"
+literal|"Other options not allowed with -r\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -816,7 +822,10 @@ literal|"-h"
 argument_list|)
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|getuid
 argument_list|()
 operator|==
@@ -880,6 +889,68 @@ argument_list|(
 name|utmp
 operator|.
 name|ut_host
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|argc
+operator|-=
+literal|2
+expr_stmt|;
+name|argv
+operator|+=
+literal|2
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-f"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|argc
+operator|>
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+name|rflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Only one of -r and -f allowed\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|fflag
+operator|=
+literal|1
+expr_stmt|;
+name|SCPYN
+argument_list|(
+name|utmp
+operator|.
+name|ut_name
 argument_list|,
 name|argv
 index|[
@@ -1131,6 +1202,12 @@ operator|&
 name|ldisc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fflag
+operator|==
+literal|0
+condition|)
 name|SCPYN
 argument_list|(
 name|utmp
@@ -1221,6 +1298,47 @@ name|ldisc
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fflag
+condition|)
+block|{
+name|int
+name|uid
+init|=
+name|getuid
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|uid
+operator|!=
+literal|0
+operator|&&
+name|uid
+operator|!=
+name|pwd
+operator|->
+name|pw_uid
+condition|)
+name|fflag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 			 * Disallow automatic login for root. 			 */
+if|if
+condition|(
+name|pwd
+operator|->
+name|pw_uid
+operator|==
+literal|0
+condition|)
+name|fflag
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 		 * If no remote login authentication and 		 * a password exists for this user, prompt 		 * for one and verify it. 		 */
 if|if
 condition|(
@@ -1228,6 +1346,10 @@ name|usererr
 operator|==
 operator|-
 literal|1
+operator|&&
+name|fflag
+operator|==
+literal|0
 operator|&&
 operator|*
 name|pwd
@@ -1438,7 +1560,7 @@ index|]
 condition|)
 name|syslog
 argument_list|(
-name|LOG_CRIT
+name|LOG_ERR
 argument_list|,
 literal|"REPEATED LOGIN FAILURES ON %s FROM %.*s, %.*s"
 argument_list|,
@@ -1460,7 +1582,7 @@ expr_stmt|;
 else|else
 name|syslog
 argument_list|(
-name|LOG_CRIT
+name|LOG_ERR
 argument_list|,
 literal|"REPEATED LOGIN FAILURES ON %s, %.*s"
 argument_list|,
