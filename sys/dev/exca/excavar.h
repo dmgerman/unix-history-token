@@ -29,6 +29,40 @@ name|exca_softc
 struct_decl|;
 end_struct_decl
 
+begin_typedef
+typedef|typedef
+name|uint8_t
+function_decl|(
+name|exca_getb_fn
+function_decl|)
+parameter_list|(
+name|struct
+name|exca_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|exca_putb_fn
+function_decl|)
+parameter_list|(
+name|struct
+name|exca_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|exca_softc
@@ -75,6 +109,91 @@ name|EXCA_HAS_MEMREG_WIN
 value|0x00000002
 name|uint32_t
 name|offset
+decl_stmt|;
+name|int
+name|chipset
+decl_stmt|;
+define|#
+directive|define
+name|EXCA_CARDBUS
+value|0
+define|#
+directive|define
+name|EXCA_I82365
+value|1
+comment|/* Intel i82365SL-A/B or clone */
+define|#
+directive|define
+name|EXCA_I82365SL_DF
+value|2
+comment|/* Intel i82365sl-DF step */
+define|#
+directive|define
+name|EXCA_VLSI
+value|3
+comment|/* VLSI chip */
+define|#
+directive|define
+name|EXCA_PD6710
+value|4
+comment|/* Cirrus logic PD6710 */
+define|#
+directive|define
+name|EXCA_PD6722
+value|5
+comment|/* Cirrus logic PD6722 */
+define|#
+directive|define
+name|EXCA_PD6729
+value|6
+comment|/* Cirrus Logic PD6729 */
+define|#
+directive|define
+name|EXCA_VG365
+value|7
+comment|/* Vadem 365 */
+define|#
+directive|define
+name|EXCA_VG465
+value|8
+comment|/* Vadem 465 */
+define|#
+directive|define
+name|EXCA_VG468
+value|9
+comment|/* Vadem 468 */
+define|#
+directive|define
+name|EXCA_VG469
+value|10
+comment|/* Vadem 469 */
+define|#
+directive|define
+name|EXCA_RF5C296
+value|11
+comment|/* Ricoh RF5C296 */
+define|#
+directive|define
+name|EXCA_RF5C396
+value|12
+comment|/* Ricoh RF5C396 */
+define|#
+directive|define
+name|EXCA_IBM
+value|13
+comment|/* IBM clone */
+define|#
+directive|define
+name|EXCA_IBM_KING
+value|14
+comment|/* IBM KING PCMCIA Controller */
+name|exca_getb_fn
+modifier|*
+name|getb
+decl_stmt|;
+name|exca_putb_fn
+modifier|*
+name|putb
 decl_stmt|;
 block|}
 struct|;
@@ -241,6 +360,13 @@ parameter_list|,
 name|struct
 name|exca_softc
 modifier|*
+name|exca
+parameter_list|,
+name|bus_space_tag_t
+name|iot
+parameter_list|,
+name|bus_space_handle_t
+name|ioh
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -263,7 +389,7 @@ begin_function
 specifier|static
 name|__inline
 name|uint8_t
-name|exca_read
+name|exca_getb
 parameter_list|(
 name|struct
 name|exca_softc
@@ -276,20 +402,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|bus_space_read_1
+name|sc
+operator|->
+name|getb
 argument_list|(
 name|sc
-operator|->
-name|bst
 argument_list|,
-name|sc
-operator|->
-name|bsh
-argument_list|,
-name|sc
-operator|->
-name|offset
-operator|+
 name|reg
 argument_list|)
 operator|)
@@ -301,7 +419,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|exca_write
+name|exca_putb
 parameter_list|(
 name|struct
 name|exca_softc
@@ -315,20 +433,12 @@ name|uint8_t
 name|val
 parameter_list|)
 block|{
-name|bus_space_write_1
+name|sc
+operator|->
+name|putb
 argument_list|(
 name|sc
-operator|->
-name|bst
 argument_list|,
-name|sc
-operator|->
-name|bsh
-argument_list|,
-name|sc
-operator|->
-name|offset
-operator|+
 name|reg
 argument_list|,
 name|val
@@ -355,13 +465,13 @@ name|uint8_t
 name|mask
 parameter_list|)
 block|{
-name|exca_write
+name|exca_putb
 argument_list|(
 name|sc
 argument_list|,
 name|reg
 argument_list|,
-name|exca_read
+name|exca_getb
 argument_list|(
 name|sc
 argument_list|,
@@ -392,13 +502,13 @@ name|uint8_t
 name|mask
 parameter_list|)
 block|{
-name|exca_write
+name|exca_putb
 argument_list|(
 name|sc
 argument_list|,
 name|reg
 argument_list|,
-name|exca_read
+name|exca_getb
 argument_list|(
 name|sc
 argument_list|,
