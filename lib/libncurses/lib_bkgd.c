@@ -75,7 +75,6 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
 name|win
 operator|->
 name|_line
@@ -87,7 +86,6 @@ name|x
 index|]
 operator|&
 name|A_CHARTEXT
-operator|)
 operator|==
 literal|' '
 condition|)
