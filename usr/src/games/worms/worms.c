@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worms.c	5.5 (Berkeley) %G%"
+literal|"@(#)worms.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1059,7 +1059,6 @@ value|tputs(tgoto(CM, c, r), 1, fputchar)
 end_define
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|TE
@@ -1067,7 +1066,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
 name|int
 name|fputchar
 parameter_list|()
@@ -1092,6 +1090,10 @@ block|,
 literal|'%'
 block|,
 literal|'0'
+block|,
+literal|'@'
+block|,
+literal|'~'
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1167,10 +1169,8 @@ modifier|*
 name|ypos
 decl_stmt|;
 block|}
+modifier|*
 name|worm
-index|[
-literal|40
-index|]
 struct|;
 end_struct
 
@@ -1258,10 +1258,11 @@ decl_stmt|,
 name|trail
 decl_stmt|,
 name|Wrap
-decl_stmt|,
-name|onsig
-argument_list|()
 decl_stmt|;
+name|int
+name|onsig
+parameter_list|()
+function_decl|;
 name|short
 modifier|*
 modifier|*
@@ -1297,7 +1298,8 @@ name|SR
 decl_stmt|,
 modifier|*
 name|tcp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|field
 decl_stmt|,
@@ -1379,9 +1381,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -1414,14 +1413,14 @@ operator|>
 literal|1024
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: invalid length; range %d - %d.\n"
-argument_list|,
-operator|*
-name|argv
+literal|"worms: invalid length (%d - %d).\n"
 argument_list|,
 literal|2
 argument_list|,
@@ -1450,24 +1449,16 @@ argument_list|)
 operator|)
 operator|<
 literal|1
-operator|||
-name|number
-operator|>
-literal|40
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: invalid number of worms; range %d - %d.\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|,
-literal|1
-argument_list|,
-literal|40
+literal|"worms: invalid number of worms.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1489,14 +1480,14 @@ case|case
 literal|'?'
 case|:
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-ft] [-length #] [-number #]\n"
-argument_list|,
-operator|*
-name|argv
+literal|"usage: worms [-ft] [-length #] [-number #]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1518,14 +1509,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: TERM: parameter not set\n"
-argument_list|,
-operator|*
-name|argv
+literal|"worms: no TERM environment variable.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1536,6 +1527,30 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|worm
+operator|=
+operator|(
+expr|struct
+name|worm
+operator|*
+operator|)
+name|malloc
+argument_list|(
+operator|(
+name|u_int
+operator|)
+name|number
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|worm
+argument_list|)
+argument_list|)
+operator|)
+operator|||
 operator|!
 operator|(
 name|mp
@@ -1549,23 +1564,9 @@ literal|1024
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: out of space.\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|tgetent
@@ -1578,14 +1579,14 @@ operator|<=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s: unknown terminal type\n"
-argument_list|,
-operator|*
-name|argv
+literal|"worms: %s: unknown terminal type.\n"
 argument_list|,
 name|term
 argument_list|)
@@ -1616,14 +1617,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: terminal not capable of cursor motion\n"
-argument_list|,
-operator|*
-name|argv
+literal|"worms: terminal incapable of cursor motion.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1866,23 +1867,9 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: out of memory\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1911,23 +1898,9 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: out of memory\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|n
@@ -2054,23 +2027,9 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: out of memory\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|w
 operator|->
 name|xpos
@@ -2122,23 +2081,9 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: out of memory\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|w
 operator|->
 name|ypos
@@ -3016,10 +2961,12 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|onsig
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|tputs
 argument_list|(
@@ -3029,27 +2976,58 @@ literal|1
 argument_list|,
 name|fputchar
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
-block|; }
-specifier|static
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|fputchar
 argument_list|(
 argument|c
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 name|c
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
 name|putchar
 argument_list|(
 name|c
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|nomem
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"worms: not enough memory.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
