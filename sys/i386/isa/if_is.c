@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.28 1994/10/19 01:59:02 wollman Exp $  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.29 1994/10/23 21:27:21 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -420,6 +420,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISDEBUG
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -439,6 +445,42 @@ name|xmit_print
 parameter_list|(
 name|int
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+endif|ISDEBUG
+end_endif
+
+begin_function_decl
+specifier|static
+name|int
+name|ne2100_probe
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|bicc_probe
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|lance_probe
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
@@ -733,9 +775,6 @@ decl_stmt|;
 name|int
 name|nports
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|is_softc
 index|[
 name|unit
@@ -804,28 +843,32 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG*/
-if|if
-condition|(
 name|nports
 operator|=
 name|bicc_probe
 argument_list|(
 name|unit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nports
 condition|)
 return|return
 operator|(
 name|nports
 operator|)
 return|;
-if|if
-condition|(
 name|nports
 operator|=
 name|ne2100_probe
 argument_list|(
 name|unit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nports
 condition|)
 return|return
 operator|(
@@ -884,8 +927,6 @@ name|iobase
 operator|+
 name|NE2100_RDP
 expr_stmt|;
-if|if
-condition|(
 name|is
 operator|->
 name|ic_type
@@ -894,6 +935,12 @@ name|lance_probe
 argument_list|(
 name|unit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|ic_type
 condition|)
 block|{
 name|is
@@ -993,8 +1040,6 @@ name|iobase
 operator|+
 name|BICC_RDP
 expr_stmt|;
-if|if
-condition|(
 name|is
 operator|->
 name|ic_type
@@ -1003,6 +1048,12 @@ name|lance_probe
 argument_list|(
 name|unit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|ic_type
 condition|)
 block|{
 name|is
@@ -1174,20 +1225,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|struct
-name|is_softc
-modifier|*
-name|is
-init|=
-operator|&
-name|is_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|unit
@@ -1387,6 +1424,10 @@ condition|)
 name|printf
 argument_list|(
 literal|"is%d: memory allocated not quadword aligned\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 comment|/* Set up DMA */
@@ -2333,9 +2374,6 @@ name|buffer
 decl_stmt|;
 name|u_short
 name|len
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|mds
@@ -3732,12 +3770,6 @@ name|off
 decl_stmt|,
 name|resid
 decl_stmt|;
-specifier|register
-name|struct
-name|ifqueue
-modifier|*
-name|inq
-decl_stmt|;
 comment|/*          * Deal with trailer protocol: if type is trailer type          * get true type from first 16-bit word past data.          * Remember that type was trailer by setting off.          */
 name|eh
 operator|=
@@ -4067,9 +4099,6 @@ name|mp
 decl_stmt|,
 modifier|*
 name|m
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|int
 name|off
@@ -4432,17 +4461,6 @@ init|=
 name|ifp
 operator|->
 name|if_unit
-decl_stmt|;
-name|struct
-name|is_softc
-modifier|*
-name|is
-init|=
-operator|&
-name|is_softc
-index|[
-name|unit
-index|]
 decl_stmt|;
 name|struct
 name|ifreq
@@ -4879,6 +4897,7 @@ name|ISDEBUG
 end_ifdef
 
 begin_function
+name|staic
 name|void
 name|recv_print
 parameter_list|(
@@ -5025,6 +5044,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|xmit_print
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman,  *	by William F. Jolitz, by the University of California,  *	Berkeley, by Larwence Berkeley Laboratory, by Charles M. Hannum,  *	and their contributors.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.16 1994/10/19 01:59:00 wollman Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman,  *	by William F. Jolitz, by the University of California,  *	Berkeley, by Larwence Berkeley Laboratory, by Charles M. Hannum,  *	and their contributors.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.17 1994/10/23 21:27:20 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -1829,7 +1829,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: kernel configured maddr %x doesn't match board configured maddr %x\n"
+literal|"ie%d: kernel configured maddr %lx doesn't match board configured maddr %x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2017,17 +2017,6 @@ name|int
 name|boardtype
 decl_stmt|,
 name|c
-decl_stmt|;
-name|struct
-name|ie_softc
-modifier|*
-name|ie
-init|=
-operator|&
-name|ie_softc
-index|[
-name|unit
-index|]
 decl_stmt|;
 name|ie_softc
 index|[
@@ -7145,6 +7134,8 @@ block|{
 name|printf
 argument_list|(
 literal|"ie%d: TDR returned unknown status %x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|result
 argument_list|)
