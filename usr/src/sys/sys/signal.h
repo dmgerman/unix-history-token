@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.h	6.5	85/03/11	*/
+comment|/*	signal.h	6.6	85/05/22	*/
 end_comment
 
 begin_ifndef
@@ -469,6 +469,28 @@ end_define
 
 begin_comment
 comment|/* window size changes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGUSR1
+value|30
+end_define
+
+begin_comment
+comment|/* user defined signal 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGUSR2
+value|31
+end_define
+
+begin_comment
+comment|/* user defined signal 2 */
 end_comment
 
 begin_ifndef
