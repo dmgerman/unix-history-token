@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n7.c	4.2 %G%"
+literal|"@(#)n7.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2741,6 +2741,12 @@ if|if
 condition|(
 name|opn
 operator|==
+name|pto
+operator|||
+name|v
+operator|.
+name|pn
+operator|>
 name|pto
 condition|)
 block|{
