@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: bindresvport.c,v 1.4 1996/06/10 00:49:15 jraynard Exp $"
+literal|"$Id: bindresvport.c,v 1.5 1996/08/12 14:09:46 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,22 +149,14 @@ name|sin
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sin
-argument_list|)
+name|sinlen
 argument_list|)
 expr_stmt|;
 name|sin
 operator|->
 name|sin_len
 operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sin
-argument_list|)
+name|sinlen
 expr_stmt|;
 name|sin
 operator|->
@@ -287,11 +279,7 @@ operator|*
 operator|)
 name|sin
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sin
-argument_list|)
+name|sinlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -352,15 +340,6 @@ operator|&
 name|myaddr
 condition|)
 block|{
-name|int
-name|sinlen
-init|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sin
-argument_list|)
-decl_stmt|;
 comment|/* Hmm, what did the kernel assign... */
 if|if
 condition|(
