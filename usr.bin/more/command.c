@@ -2016,6 +2016,10 @@ case|:
 comment|/* help */
 if|if
 condition|(
+name|ac
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
