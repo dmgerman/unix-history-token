@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.29 (Berkeley) %G%"
+literal|"@(#)trees.c	4.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2437,28 +2437,9 @@ directive|else
 argument|if (t1 == DOUBLE || t1 == FLOAT || t2 == DOUBLE || t2 == FLOAT) 		t = DOUBLE;
 endif|#
 directive|endif
-argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;
-ifdef|#
-directive|ifdef
-name|tahoe
-argument|if( asgop(o) )
-else|#
-directive|else
-argument|if( o == ASSIGN || o == CAST || o == RETURN )
-endif|#
-directive|endif
-argument|{ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
+argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( o == ASSIGN || o == CAST || o == RETURN ) 	{ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
 comment|/* because expressions have values that are at least as wide 	   as INT or UNSIGNED, the only conversions needed 	   are those involving FLOAT/DOUBLE, and those 	   from LONG to INT and ULONG to UNSIGNED */
-ifdef|#
-directive|ifdef
-name|tahoe
-argument|if( t != t1 )
-else|#
-directive|else
-argument|if( t != t1&& ! asgop(o) )
-endif|#
-directive|endif
-argument|p->in.left = makety( p->in.left, tu,
+argument|if( t != t1&& ! asgop(o) ) 		p->in.left = makety( p->in.left, tu,
 literal|0
 argument|, (int)tu );  	if( t != t2 || o==CAST) 		if ( tu == ENUMTY ) {
 comment|/* always asgop */
