@@ -1538,6 +1538,17 @@ begin_comment
 comment|/* Lines of trailing context. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|count_matches
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print a count of matching lines */
+end_comment
+
 begin_comment
 comment|/* Internal variables to keep track of byte count, context, etc. */
 end_comment
@@ -2647,6 +2658,21 @@ argument_list|(
 name|lim
 argument_list|)
 expr_stmt|;
+comment|/* optimization */
+if|if
+condition|(
+name|nlines
+operator|&&
+name|out_quiet
+operator|&&
+operator|!
+name|count_matches
+condition|)
+return|return
+operator|(
+name|nlines
+operator|)
+return|;
 block|}
 name|i
 operator|=
@@ -2938,8 +2964,6 @@ name|keyalloc
 decl_stmt|;
 name|int
 name|keyfound
-decl_stmt|,
-name|count_matches
 decl_stmt|,
 name|no_filenames
 decl_stmt|,
