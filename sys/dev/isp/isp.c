@@ -7321,6 +7321,12 @@ name|ISP2100_FABRIC
 comment|/* 	 * Now log in any fabric devices 	 */
 for|for
 control|(
+name|lim
+operator|=
+name|FC_SNS_ID
+operator|+
+literal|1
+operator|,
 name|lp
 operator|=
 operator|&
@@ -7347,6 +7353,9 @@ name|lp
 operator|++
 control|)
 block|{
+name|u_int32_t
+name|portid
+decl_stmt|;
 name|mbreg_t
 name|mbs
 decl_stmt|;
@@ -7363,28 +7372,27 @@ continue|continue;
 comment|/* 		 * Don't try to log into yourself. 		 */
 if|if
 condition|(
+operator|(
+name|portid
+operator|=
 name|lp
 operator|->
 name|portid
+operator|)
 operator|==
 name|fcp
 operator|->
 name|isp_portid
 condition|)
 continue|continue;
-comment|/* 		 * Force a logout. 		 */
+comment|/* 		 * Force a logout if we were logged in. 		 */
+if|if
+condition|(
 name|lp
 operator|->
-name|loopid
-operator|=
-name|loopid
-operator|=
-name|lp
-operator|-
-name|fcp
-operator|->
-name|portdb
-expr_stmt|;
+name|valid
+condition|)
+block|{
 name|mbs
 operator|.
 name|param
@@ -7433,7 +7441,34 @@ operator|&
 name|mbs
 argument_list|)
 expr_stmt|;
+name|lp
+operator|->
+name|valid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 		 * And log in.... 		 */
+name|loopid
+operator|=
+name|lp
+operator|-
+name|fcp
+operator|->
+name|portdb
+expr_stmt|;
+name|lp
+operator|->
+name|loopid
+operator|=
+literal|0
+expr_stmt|;
+name|lim
+operator|=
+literal|0
+expr_stmt|;
+do|do
+block|{
 name|mbs
 operator|.
 name|param
@@ -7450,12 +7485,29 @@ index|[
 literal|1
 index|]
 operator|=
-name|lp
-operator|->
 name|loopid
 operator|<<
 literal|8
 expr_stmt|;
+if|if
+condition|(
+name|IS_2200
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+comment|/* only issue a PLOGI if not logged in */
+name|mbs
+operator|.
+name|param
+index|[
+literal|1
+index|]
+operator||=
+literal|0x1
+expr_stmt|;
+block|}
 name|mbs
 operator|.
 name|param
@@ -7463,8 +7515,6 @@ index|[
 literal|2
 index|]
 operator|=
-name|lp
-operator|->
 name|portid
 operator|>>
 literal|16
@@ -7476,8 +7526,6 @@ index|[
 literal|3
 index|]
 operator|=
-name|lp
-operator|->
 name|portid
 operator|&
 literal|0xffff
@@ -7501,107 +7549,105 @@ index|]
 condition|)
 block|{
 case|case
-name|MBOX_COMMAND_COMPLETE
+name|MBOX_LOOP_ID_USED
 case|:
+comment|/* 				 * Try the next available loop id. 				 */
+name|loopid
+operator|++
+expr_stmt|;
 break|break;
 case|case
-name|MBOX_COMMAND_ERROR
+name|MBOX_PORT_ID_USED
 case|:
-switch|switch
+comment|/* 				 * This port is already logged in. 				 * Snaffle the loop id it's using. 				 */
+if|if
 condition|(
+operator|(
+name|loopid
+operator|=
 name|mbs
 operator|.
 name|param
 index|[
 literal|1
 index|]
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-case|case
+name|lim
+operator|=
+operator|-
 literal|1
+expr_stmt|;
+block|}
+comment|/* FALLTHROUGH */
+case|case
+name|MBOX_COMMAND_COMPLETE
 case|:
-name|PRINTF
-argument_list|(
-literal|"%s: no loop\n"
-argument_list|,
-name|isp
+name|lp
 operator|->
-name|isp_name
-argument_list|)
+name|loopid
+operator|=
+name|loopid
+expr_stmt|;
+name|lim
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|MBOX_COMMAND_ERROR
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: IOCB buffer could not be alloced\n"
+literal|"%s: command error in PLOGI (0x%x)\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 case|case
-literal|3
+name|MBOX_ALL_IDS_USED
 case|:
-name|PRINTF
-argument_list|(
-literal|"%s: could not alloc xchange resource\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|4
-case|:
-name|PRINTF
-argument_list|(
-literal|"%s: ELS timeout\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|5
-case|:
-name|PRINTF
-argument_list|(
-literal|"%s: no fabric port\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|6
-case|:
-name|PRINTF
-argument_list|(
-literal|"%s: remote device cannot be a target\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-break|break;
+comment|/* We're outta IDs */
 default|default:
+name|lim
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 break|break;
 block|}
-continue|continue;
-default|default:
-continue|continue;
 block|}
+do|while
+condition|(
+name|lim
+operator|==
+literal|0
+operator|&&
+name|loopid
+operator|<
+name|MAX_FC_TARG
+condition|)
+do|;
+if|if
+condition|(
+name|lim
+operator|<
+literal|0
+condition|)
+continue|continue;
 name|lp
 operator|->
 name|valid
@@ -7620,6 +7666,8 @@ name|isp_getpdb
 argument_list|(
 name|isp
 argument_list|,
+name|lp
+operator|->
 name|loopid
 argument_list|,
 operator|&
@@ -7723,12 +7771,6 @@ name|pdb
 operator|.
 name|pdb_portid_bits
 argument_list|)
-expr_stmt|;
-name|lp
-operator|->
-name|loopid
-operator|=
-name|loopid
 expr_stmt|;
 name|lp
 operator|->
@@ -8002,6 +8044,14 @@ operator|->
 name|port_wwn
 condition|)
 block|{
+name|loopid
+operator|=
+name|lp
+operator|-
+name|fcp
+operator|->
+name|portdb
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -8400,6 +8450,26 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
+name|IDPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"%s: SNS failed (0x%x)\n"
+operator|,
+name|isp
+operator|->
+name|isp_name
+operator|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|0
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -9772,6 +9842,15 @@ index|]
 operator|=
 name|MBOX_BUS_RESET
 expr_stmt|;
+name|mbs
+operator|.
+name|param
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|IS_SCSI
@@ -9830,6 +9909,13 @@ operator|)
 name|arg
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|IS_DUALBUS
+argument_list|(
+name|isp
+argument_list|)
+condition|)
 name|mbs
 operator|.
 name|param
@@ -9850,15 +9936,6 @@ literal|1
 index|]
 operator|=
 literal|10
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|2
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|bus
 operator|=
@@ -10222,7 +10299,7 @@ name|mbs
 operator|.
 name|param
 index|[
-literal|2
+literal|3
 index|]
 operator|=
 name|handle
@@ -10233,7 +10310,7 @@ name|mbs
 operator|.
 name|param
 index|[
-literal|3
+literal|2
 index|]
 operator|=
 name|handle
@@ -13148,13 +13225,23 @@ argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"%s: Selection Timeout for target %d\n"
+literal|"%s: Selection Timeout for %d.%d.%d\n"
 operator|,
 name|isp
 operator|->
 name|isp_name
 operator|,
 name|XS_TGT
+argument_list|(
+name|xs
+argument_list|)
+operator|,
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+operator|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -13172,12 +13259,16 @@ return|return;
 block|}
 name|PRINTF
 argument_list|(
-literal|"%s: command incomplete for target %d lun %d, state "
-literal|"0x%x\n"
+literal|"%s: command incomplete for %d.%d.%d, state 0x%x\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13200,11 +13291,16 @@ name|RQCS_DMA_ERROR
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: DMA error for command on target %d, lun %d\n"
+literal|"%s: DMA error for command on %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13223,11 +13319,26 @@ name|RQCS_TRANSPORT_ERROR
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: transport error\n"
+literal|"%s: transport error for %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_TGT
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|isp_prtstst
@@ -13241,11 +13352,10 @@ name|RQCS_RESET_OCCURRED
 case|:
 name|IDPRINTF
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 operator|(
-literal|"%s: bus %d reset destroyed command for target %d "
-literal|"lun %d\n"
+literal|"%s: bus reset destroyed command for %d.%d.%d\n"
 operator|,
 name|isp
 operator|->
@@ -13268,12 +13378,18 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Get port number for bus 		 */
 name|isp
 operator|->
 name|isp_sendmarker
-operator|=
-literal|3
+operator||=
+operator|(
+literal|1
+operator|<<
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+operator|)
 expr_stmt|;
 name|XS_SETERR
 argument_list|(
@@ -13288,11 +13404,16 @@ name|RQCS_ABORTED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: command aborted for target %d lun %d\n"
+literal|"%s: command aborted for %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13305,12 +13426,18 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Get port number for bus 		 */
 name|isp
 operator|->
 name|isp_sendmarker
-operator|=
-literal|3
+operator||=
+operator|(
+literal|1
+operator|<<
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+operator|)
 expr_stmt|;
 name|XS_SETERR
 argument_list|(
@@ -13328,11 +13455,16 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"%s: command timed out for target %d lun %d\n"
+literal|"%s: command timed out for %d.%d.%d\n"
 operator|,
 name|isp
 operator|->
 name|isp_name
+operator|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 operator|,
 name|XS_TGT
 argument_list|(
@@ -13376,6 +13508,30 @@ name|req_resid
 expr_stmt|;
 break|break;
 block|}
+name|PRINTF
+argument_list|(
+literal|"%s: data overrun for command on %d.%d.%d\n"
+argument_list|,
+name|isp
+operator|->
+name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_TGT
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -13389,11 +13545,16 @@ name|RQCS_COMMAND_OVERRUN
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: command overrun for command on target %d, lun %d\n"
+literal|"%s: command overrun for command on %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13412,11 +13573,16 @@ name|RQCS_STATUS_OVERRUN
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: status overrun for command on target %d, lun %d\n"
+literal|"%s: status overrun for command on %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13435,12 +13601,16 @@ name|RQCS_BAD_MESSAGE
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: message not COMMAND COMPLETE after status on "
-literal|"target %d, lun %d\n"
+literal|"%s: msg not COMMAND COMPLETE after status %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13459,12 +13629,16 @@ name|RQCS_NO_MESSAGE_OUT
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: No MESSAGE OUT phase after selection on "
-literal|"target %d, lun %d\n"
+literal|"%s: No MESSAGE OUT phase after selection on %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13483,11 +13657,16 @@ name|RQCS_EXT_ID_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: EXTENDED IDENTIFY failed on target %d, lun %d\n"
+literal|"%s: EXTENDED IDENTIFY failed %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13506,12 +13685,16 @@ name|RQCS_IDE_MSG_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d rejected INITIATOR DETECTED "
-literal|"ERROR message\n"
+literal|"%s: INITIATOR DETECTED ERROR rejected by %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13530,11 +13713,16 @@ name|RQCS_ABORT_MSG_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d rejected ABORT message\n"
+literal|"%s: ABORT OPERATION rejected by %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13553,11 +13741,16 @@ name|RQCS_REJECT_MSG_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d rejected MESSAGE REJECT message\n"
+literal|"%s: MESSAGE REJECT rejected by %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13576,11 +13769,16 @@ name|RQCS_NOP_MSG_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d rejected NOP message\n"
+literal|"%s: NOP rejected by %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13599,12 +13797,16 @@ name|RQCS_PARITY_ERROR_MSG_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d rejected MESSAGE PARITY ERROR "
-literal|"message\n"
+literal|"%s: MESSAGE PARITY ERROR rejected by %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13623,12 +13825,16 @@ name|RQCS_DEVICE_RESET_MSG_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d rejected BUS DEVICE RESET "
-literal|"message\n"
+literal|"%s: BUS DEVICE RESET rejected by %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13647,12 +13853,16 @@ name|RQCS_ID_MSG_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d rejected IDENTIFY "
-literal|"message\n"
+literal|"%s: IDENTIFY rejected by %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13671,11 +13881,16 @@ name|RQCS_UNEXP_BUS_FREE
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: target %d lun %d had an unexpected bus free\n"
+literal|"%s: %d.%d.%d had an unexpected bus free\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13709,7 +13924,6 @@ name|sp
 operator|->
 name|req_resid
 expr_stmt|;
-comment|/* an UNDERRUN is not a botch ??? */
 block|}
 name|XS_SETERR
 argument_list|(
@@ -13725,11 +13939,16 @@ case|:
 name|PRINTF
 argument_list|(
 literal|"%s: HBA attempted queued transaction with disconnect "
-literal|"not set for target %d lun %d\n"
+literal|"not set for %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13749,7 +13968,7 @@ case|:
 name|PRINTF
 argument_list|(
 literal|"%s: HBA attempted queued transaction to target "
-literal|"routine %d on target %d\n"
+literal|"routine %d on target %d, bus %d\n"
 argument_list|,
 name|isp
 operator|->
@@ -13761,6 +13980,11 @@ name|xs
 argument_list|)
 argument_list|,
 name|XS_TGT
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -13773,7 +13997,7 @@ case|:
 name|PRINTF
 argument_list|(
 literal|"%s: HBA attempted queued transaction for target %d lun "
-literal|"%d when queueing disabled\n"
+literal|"%d on bus %d when queueing disabled\n"
 argument_list|,
 name|isp
 operator|->
@@ -13785,6 +14009,11 @@ name|xs
 argument_list|)
 argument_list|,
 name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -13813,7 +14042,7 @@ literal|3
 argument_list|,
 operator|(
 literal|"%s: internal queues full for target %d lun %d "
-literal|"status 0x%x\n"
+literal|"bus %d, status 0x%x\n"
 operator|,
 name|isp
 operator|->
@@ -13825,6 +14054,11 @@ name|xs
 argument_list|)
 operator|,
 name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+operator|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -13863,7 +14097,7 @@ case|:
 name|PRINTF
 argument_list|(
 literal|"%s: SCSI phase skipped (e.g., COMMAND COMPLETE w/o "
-literal|"STATUS phase) for target %d lun %d\n"
+literal|"STATUS phase) for target %d lun %d bus %d\n"
 argument_list|,
 name|isp
 operator|->
@@ -13875,6 +14109,11 @@ name|xs
 argument_list|)
 argument_list|,
 name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -13886,7 +14125,7 @@ name|RQCS_ARQS_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: Auto Request Sense failed for target %d lun %d\n"
+literal|"%s: Auto Request Sense failed for %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
@@ -13901,13 +14140,11 @@ name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|XS_SETERR
+argument_list|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
-argument_list|,
-name|HBA_ARQFAIL
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13916,7 +14153,7 @@ name|RQCS_WIDE_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: Wide Negotiation failed for target %d lun %d\n"
+literal|"%s: Wide Negotiation failed for %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
@@ -13928,6 +14165,11 @@ name|xs
 argument_list|)
 argument_list|,
 name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -13988,13 +14230,15 @@ expr_stmt|;
 name|isp
 operator|->
 name|isp_update
-operator|=
+operator||=
+operator|(
+literal|1
+operator|<<
 name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
-operator|+
-literal|1
+operator|)
 expr_stmt|;
 block|}
 name|XS_SETERR
@@ -14010,7 +14254,7 @@ name|RQCS_SYNCXFER_FAILED
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: SDTR Message failed for target %d lun %d\n"
+literal|"%s: SDTR Message failed for target %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
@@ -14022,6 +14266,11 @@ name|xs
 argument_list|)
 argument_list|,
 name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -14082,13 +14331,15 @@ expr_stmt|;
 name|isp
 operator|->
 name|isp_update
-operator|=
+operator||=
+operator|(
+literal|1
+operator|<<
 name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
-operator|+
-literal|1
+operator|)
 expr_stmt|;
 block|}
 break|break;
@@ -14097,8 +14348,7 @@ name|RQCS_LVD_BUSERR
 case|:
 name|PRINTF
 argument_list|(
-literal|"%s: Bad LVD Bus condition while talking to target %d "
-literal|"lun %d\n"
+literal|"%s: Bad LVD condition while talking to %d.%d.%d\n"
 argument_list|,
 name|isp
 operator|->
@@ -14110,6 +14360,11 @@ name|xs
 argument_list|)
 argument_list|,
 name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -14193,7 +14448,14 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_SELTIMEOUT
+argument_list|)
+expr_stmt|;
+return|return;
 case|case
 name|RQCS_PORT_BUSY
 case|:
@@ -14222,7 +14484,7 @@ return|return;
 default|default:
 name|PRINTF
 argument_list|(
-literal|"%s: comp status %x\n"
+literal|"%s: completion status 0x%x\n"
 argument_list|,
 name|isp
 operator|->
@@ -16843,6 +17105,16 @@ name|opcode
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|MBOX_LOOP_ID_USED
+case|:
+case|case
+name|MBOX_PORT_ID_USED
+case|:
+case|case
+name|MBOX_ALL_IDS_USED
+case|:
 break|break;
 comment|/* 	 * Be silent about these... 	 */
 case|case
