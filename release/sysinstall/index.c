@@ -2767,17 +2767,25 @@ argument_list|)
 condition|)
 name|msgNotify
 argument_list|(
-literal|"Error extracting package %s.."
+literal|"Unable to get package %s from %s.."
 argument_list|,
-name|target
+name|tmp
+operator|->
+name|name
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Error extracting package %s.."
+literal|"Unable to get package %s from %s.."
 argument_list|,
-name|target
+name|tmp
+operator|->
+name|name
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
