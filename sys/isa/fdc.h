@@ -21,6 +21,41 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|fdc_states
+block|{
+name|DEVIDLE
+block|,
+name|FINDWORK
+block|,
+name|DOSEEK
+block|,
+name|SEEKCOMPLETE
+block|,
+name|IOCOMPLETE
+block|,
+name|RECALCOMPLETE
+block|,
+name|STARTRECAL
+block|,
+name|RESETCTLR
+block|,
+name|SEEKWAIT
+block|,
+name|RECALWAIT
+block|,
+name|MOTORWAIT
+block|,
+name|IOTIMEDOUT
+block|,
+name|RESETCOMPLETE
+block|,
+name|PIOREAD
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/***********************************************************************\ * Per controller structure.						* \***********************************************************************/
 end_comment
@@ -76,7 +111,8 @@ name|int
 name|fdu
 decl_stmt|;
 comment|/* the active drive	*/
-name|int
+name|enum
+name|fdc_states
 name|state
 decl_stmt|;
 name|int
