@@ -116,7 +116,7 @@ file|<powerpc/powermac/maciovar.h>
 end_include
 
 begin_comment
-comment|/*   * Offset to control registers from base */
+comment|/*  * Offset to control registers from base  */
 end_comment
 
 begin_define
@@ -332,13 +332,24 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|ch
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ata_channel
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|rid
 operator|=
 literal|0
 expr_stmt|;
 name|mem
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -346,13 +357,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|1
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -478,6 +482,11 @@ operator|.
 name|setmode
 operator|=
 name|ata_macio_setmode
+expr_stmt|;
+name|ata_generic_hw
+argument_list|(
+name|ch
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
