@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyname.c	5.9 (Berkeley) %G%"
+literal|"@(#)ttyname.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +130,17 @@ name|data
 decl_stmt|,
 name|key
 decl_stmt|;
+struct|struct
+block|{
+name|mode_t
+name|type
+decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
+block|}
+name|bkey
+struct|;
 specifier|static
 name|char
 modifier|*
@@ -196,18 +207,26 @@ name|NULL
 argument_list|)
 condition|)
 block|{
+name|bkey
+operator|.
+name|type
+operator|=
+name|S_IFCHR
+expr_stmt|;
+name|bkey
+operator|.
+name|dev
+operator|=
+name|sb
+operator|.
+name|st_rdev
+expr_stmt|;
 name|key
 operator|.
 name|data
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 operator|&
-name|sb
-operator|.
-name|st_rdev
+name|bkey
 expr_stmt|;
 name|key
 operator|.
@@ -215,9 +234,7 @@ name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|sb
-operator|.
-name|st_rdev
+name|bkey
 argument_list|)
 expr_stmt|;
 if|if
