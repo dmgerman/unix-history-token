@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1204,20 +1204,6 @@ name|false
 return|;
 if|if
 condition|(
-name|ELF_ST_VISIBILITY
-argument_list|(
-name|h
-operator|->
-name|other
-argument_list|)
-operator|!=
-name|STV_DEFAULT
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
 name|h
 operator|->
 name|root
@@ -1237,6 +1223,45 @@ condition|)
 return|return
 name|true
 return|;
+switch|switch
+condition|(
+name|ELF_ST_VISIBILITY
+argument_list|(
+name|h
+operator|->
+name|other
+argument_list|)
+condition|)
+block|{
+case|case
+name|STV_DEFAULT
+case|:
+break|break;
+case|case
+name|STV_HIDDEN
+case|:
+case|case
+name|STV_INTERNAL
+case|:
+return|return
+name|false
+return|;
+case|case
+name|STV_PROTECTED
+case|:
+if|if
+condition|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_HASH_DEF_REGULAR
+condition|)
+return|return
+name|false
+return|;
+break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -2194,7 +2219,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2237,7 +2262,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2280,7 +2305,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2953,6 +2978,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -2961,9 +2987,11 @@ decl_stmt|;
 name|asymbol
 modifier|*
 name|sym
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -2977,6 +3005,7 @@ name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -3023,6 +3052,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -3031,9 +3061,11 @@ decl_stmt|;
 name|asymbol
 modifier|*
 name|sym
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -3047,6 +3079,7 @@ name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -3328,6 +3361,7 @@ decl_stmt|;
 name|asymbol
 modifier|*
 name|sym
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|data
@@ -3654,6 +3688,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_reloc_code_real_type
 name|code
@@ -3740,6 +3775,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -7335,10 +7371,12 @@ name|char
 modifier|*
 modifier|*
 name|namep
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|flagword
 modifier|*
 name|flagsp
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -7467,6 +7505,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|asection
@@ -8488,6 +8527,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -11437,6 +11477,7 @@ name|hi
 decl_stmt|;
 name|PTR
 name|dummy
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -11878,13 +11919,10 @@ name|n
 decl_stmt|;
 name|n
 operator|=
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|symtab_hdr
-operator|->
-name|sh_size
-operator|/
-name|symtab_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 operator|-
 name|symtab_hdr
 operator|->
@@ -12250,13 +12288,10 @@ name|symtab_hdr
 expr_stmt|;
 name|n
 operator|=
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|symtab_hdr
-operator|->
-name|sh_size
-operator|/
-name|symtab_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 operator|-
 name|symtab_hdr
 operator|->
