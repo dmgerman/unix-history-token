@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.19 (Berkeley) 84/04/06"
+literal|"@(#)docmd.c	4.20 (Berkeley) 84/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,12 +47,12 @@ begin_decl_stmt
 name|struct
 name|subcmd
 modifier|*
-name|special
+name|subcmds
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* list of special commands */
+comment|/* list of sub-commands for current cmd */
 end_comment
 
 begin_decl_stmt
@@ -205,12 +205,8 @@ name|c
 operator|->
 name|c_label
 argument_list|,
-operator|(
 operator|*
 name|cpp
-operator|)
-operator|+
-literal|1
 argument_list|)
 operator|==
 literal|0
@@ -438,16 +434,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-operator|!
-name|mkexceptlist
-argument_list|(
-name|cmds
-argument_list|)
-condition|)
-return|return;
-name|special
+name|subcmds
 operator|=
 name|cmds
 expr_stmt|;
@@ -1430,15 +1417,6 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
-name|mkexceptlist
-argument_list|(
-name|cmds
-argument_list|)
-condition|)
-return|return;
-if|if
-condition|(
 name|stat
 argument_list|(
 name|stamp
@@ -1478,6 +1456,10 @@ name|stb
 operator|.
 name|st_mtime
 argument_list|)
+expr_stmt|;
+name|subcmds
+operator|=
+name|cmds
 expr_stmt|;
 name|lastmod
 operator|=
@@ -1745,10 +1727,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inlist
-argument_list|(
 name|except
-argument_list|,
+argument_list|(
 name|name
 argument_list|)
 condition|)
@@ -2535,18 +2515,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
-name|struct
-name|namelist
-modifier|*
-name|except
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of files to exclude */
-end_comment
-
 begin_comment
 comment|/*  * Return true if name is in the list.  */
 end_comment
@@ -2625,21 +2593,20 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Build the exception list from the EXCEPT commands.  */
+comment|/*  * Return TRUE if file is in the exception list.  */
 end_comment
 
 begin_macro
-name|mkexceptlist
+name|except
 argument_list|(
-argument|cmds
+argument|file
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|subcmd
+name|char
 modifier|*
-name|cmds
+name|file
 decl_stmt|;
 end_decl_stmt
 
@@ -2655,9 +2622,6 @@ specifier|register
 name|struct
 name|namelist
 modifier|*
-name|el
-decl_stmt|,
-modifier|*
 name|nl
 decl_stmt|;
 if|if
@@ -2666,20 +2630,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"mkexceptlist()\n"
+literal|"except(%s)\n"
+argument_list|,
+name|file
 argument_list|)
-expr_stmt|;
-name|except
-operator|=
-name|el
-operator|=
-name|NULL
 expr_stmt|;
 for|for
 control|(
 name|sc
 operator|=
-name|cmds
+name|subcmds
 init|;
 name|sc
 operator|!=
@@ -2699,6 +2659,12 @@ operator|->
 name|sc_type
 operator|!=
 name|EXCEPT
+operator|&&
+name|sc
+operator|->
+name|sc_type
+operator|!=
+name|PATTERN
 condition|)
 continue|continue;
 for|for
@@ -2722,62 +2688,58 @@ control|)
 block|{
 if|if
 condition|(
-name|el
+name|sc
+operator|->
+name|sc_type
 operator|==
-name|NULL
+name|EXCEPT
 condition|)
-name|except
-operator|=
-name|el
-operator|=
-name|makenl
-argument_list|(
-name|nl
-operator|->
-name|n_name
-argument_list|)
-expr_stmt|;
-else|else
 block|{
-name|el
-operator|->
-name|n_next
-operator|=
-name|makenl
-argument_list|(
-name|nl
-operator|->
-name|n_name
-argument_list|)
-expr_stmt|;
-name|el
-operator|=
-name|el
-operator|->
-name|n_next
-expr_stmt|;
-block|}
-block|}
-block|}
 if|if
 condition|(
-name|debug
+operator|!
+name|strcmp
+argument_list|(
+name|file
+argument_list|,
+name|nl
+operator|->
+name|n_name
+argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"except = "
-argument_list|)
-expr_stmt|;
-name|prnames
-argument_list|(
-name|except
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1
+operator|)
+return|;
+continue|continue;
+block|}
+name|re_comp
+argument_list|(
+name|nl
+operator|->
+name|n_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|re_exec
+argument_list|(
+name|file
+argument_list|)
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

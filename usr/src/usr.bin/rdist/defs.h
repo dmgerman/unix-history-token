@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.12	84/04/06	*/
+comment|/*	defs.h	4.13	84/05/03	*/
 end_comment
 
 begin_include
@@ -178,15 +178,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SPECIAL
+name|PATTERN
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION
+name|SPECIAL
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION
+value|15
 end_define
 
 begin_comment
@@ -572,19 +579,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* host name of master copy */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|namelist
-modifier|*
-name|except
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of files to exclude */
 end_comment
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.16 (Berkeley) 84/03/14"
+literal|"@(#)server.c	4.17 (Berkeley) 84/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,7 +1005,7 @@ specifier|extern
 name|struct
 name|subcmd
 modifier|*
-name|special
+name|subcmds
 decl_stmt|;
 if|if
 condition|(
@@ -1022,10 +1022,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inlist
-argument_list|(
 name|except
-argument_list|,
+argument_list|(
 name|target
 argument_list|)
 condition|)
@@ -1563,7 +1561,7 @@ for|for
 control|(
 name|sc
 operator|=
-name|special
+name|subcmds
 init|;
 name|sc
 operator|!=
@@ -4728,10 +4726,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|inlist
-argument_list|(
 name|except
-argument_list|,
+argument_list|(
 name|target
 argument_list|)
 condition|)
