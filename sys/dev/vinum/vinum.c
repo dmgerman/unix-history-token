@@ -251,13 +251,6 @@ name|dqend
 operator|=
 name|NULL
 expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|vinum_cdevsw
-argument_list|)
-expr_stmt|;
-comment|/* add the cdevsw entry */
 name|vinum_daemon_dev
 operator|=
 name|make_dev
@@ -1178,12 +1171,6 @@ comment|/* daemon device */
 name|destroy_dev
 argument_list|(
 name|vinum_super_dev
-argument_list|)
-expr_stmt|;
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|vinum_cdevsw
 argument_list|)
 expr_stmt|;
 name|log
