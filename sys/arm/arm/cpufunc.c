@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -7719,12 +7731,16 @@ name|CPU_CONTROL_BEND_ENABLE
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|if (vector_page == ARM_VECTORS_HIGH) 		cpuctrl |= CPU_CONTROL_VECRELOC;
-endif|#
-directive|endif
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
 comment|/* Clear out the cache */
 name|cpu_idcache_wbinv_all
 argument_list|()
@@ -8010,12 +8026,16 @@ name|CPU_CONTROL_BEND_ENABLE
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|if (vector_page == ARM_VECTORS_HIGH) 		cpuctrl |= CPU_CONTROL_VECRELOC;
-endif|#
-directive|endif
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
 comment|/* Clear out the cache */
 name|cpu_idcache_wbinv_all
 argument_list|()
