@@ -971,7 +971,7 @@ name|char
 modifier|*
 name|envargv
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 operator|(
