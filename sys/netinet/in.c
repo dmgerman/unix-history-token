@@ -2107,7 +2107,7 @@ name|ifp
 operator|->
 name|if_index
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
