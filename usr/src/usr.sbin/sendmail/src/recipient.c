@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.25 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1156,6 +1156,24 @@ operator||
 name|O_CREAT
 argument_list|,
 literal|0666
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RcptLogFd
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|RcptLogFd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
