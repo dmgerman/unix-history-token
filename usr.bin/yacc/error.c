@@ -51,6 +51,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/* routines for printing error messages  */
 end_comment
@@ -89,7 +95,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"f - %s"
+literal|"%s: f - %s"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|msg
 argument_list|)
@@ -109,7 +118,10 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
-literal|"f - out of space"
+literal|"%s: f - out of space"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|done
@@ -134,7 +146,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"f - cannot open \"%s\""
+literal|"%s: f - cannot open \"%s\""
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|filename
 argument_list|)
@@ -154,7 +169,10 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", unexpected end-of-file"
+literal|"%s: e - line %d of \"%s\", unexpected end-of-file"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -328,7 +346,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", syntax error"
+literal|"%s: e - line %d of \"%s\", syntax error"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|st_lineno
 argument_list|,
@@ -374,7 +395,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", unmatched /*"
+literal|"%s: e - line %d of \"%s\", unmatched /*"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|c_lineno
 argument_list|,
@@ -420,7 +444,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", unterminated string"
+literal|"%s: e - line %d of \"%s\", unterminated string"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|s_lineno
 argument_list|,
@@ -466,7 +493,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", unmatched %%{"
+literal|"%s: e - line %d of \"%s\", unmatched %%{"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|t_lineno
 argument_list|,
@@ -512,7 +542,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", unterminated %%union declaration"
+literal|"%s: e - line %d of \"%s\", unterminated %%union declaration"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|u_lineno
 argument_list|,
@@ -547,7 +580,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", too many %%union declarations"
+literal|"%s: e - line %d of \"%s\", too many %%union declarations"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -593,7 +629,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", illegal tag"
+literal|"%s: e - line %d of \"%s\", illegal tag"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|t_lineno
 argument_list|,
@@ -628,7 +667,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", illegal character"
+literal|"%s: e - line %d of \"%s\", illegal character"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -663,7 +705,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", illegal use of reserved symbol %s"
+literal|"%s: e - line %d of \"%s\", illegal use of reserved symbol %s"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -693,7 +738,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", the start symbol %s cannot be \ declared to be a token"
+literal|"%s: e - line %d of \"%s\", the start symbol %s cannot be \ declared to be a token"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -723,7 +771,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"w - line %d of \"%s\", the type of %s has been redeclared"
+literal|"%s: w - line %d of \"%s\", the type of %s has been redeclared"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -748,7 +799,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"w - line %d of \"%s\", the precedence of %s has been redeclared"
+literal|"%s: w - line %d of \"%s\", the precedence of %s has been redeclared"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -773,7 +827,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"w - line %d of \"%s\", the value of %s has been redeclared"
+literal|"%s: w - line %d of \"%s\", the value of %s has been redeclared"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -798,7 +855,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", the start symbol %s is a token"
+literal|"%s: e - line %d of \"%s\", the start symbol %s is a token"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -822,7 +882,10 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
-literal|"w - line %d of \"%s\", the start symbol has been redeclared"
+literal|"%s: w - line %d of \"%s\", the start symbol has been redeclared"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -839,7 +902,10 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", no grammar has been specified"
+literal|"%s: e - line %d of \"%s\", no grammar has been specified"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -866,7 +932,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", a token appears on the lhs of a production"
+literal|"%s: e - line %d of \"%s\", a token appears on the lhs of a production"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|s_lineno
 argument_list|,
@@ -888,7 +957,10 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
-literal|"w - line %d of  \"%s\", conflicting %%prec specifiers"
+literal|"%s: w - line %d of  \"%s\", conflicting %%prec specifiers"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -922,7 +994,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", unterminated action"
+literal|"%s: e - line %d of \"%s\", unterminated action"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|a_lineno
 argument_list|,
@@ -961,7 +1036,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"w - line %d of \"%s\", $%d references beyond the \ end of the current rule"
+literal|"%s: w - line %d of \"%s\", $%d references beyond the \ end of the current rule"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|a_lineno
 argument_list|,
@@ -997,7 +1075,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", illegal $-name"
+literal|"%s: e - line %d of \"%s\", illegal $-name"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|a_lineno
 argument_list|,
@@ -1026,7 +1107,10 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", $$ is untyped"
+literal|"%s: e - line %d of \"%s\", $$ is untyped"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -1059,7 +1143,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", $%d (%s) is untyped"
+literal|"%s: e - line %d of \"%s\", $%d (%s) is untyped"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -1090,7 +1177,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - line %d of \"%s\", $%d is untyped"
+literal|"%s: e - line %d of \"%s\", $%d is untyped"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -1114,7 +1204,10 @@ parameter_list|()
 block|{
 name|warnx
 argument_list|(
-literal|"w - line %d of \"%s\", the default action assigns an \ undefined value to $$"
+literal|"%s: w - line %d of \"%s\", the default action assigns an \ undefined value to $$"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|lineno
 argument_list|,
@@ -1137,7 +1230,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"e - the start symbol %s is undefined"
+literal|"%s: e - the start symbol %s is undefined"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|s
 argument_list|)
@@ -1163,7 +1259,10 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"w - the symbol %s is undefined"
+literal|"%s: w - the symbol %s is undefined"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|s
 argument_list|)
