@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.13 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,7 +491,7 @@ argument_list|(
 name|p_cpu
 argument_list|)
 block|,
-name|UCHAR
+name|ULONG
 block|,
 literal|"d"
 block|}
@@ -1883,7 +1883,7 @@ argument_list|(
 name|p_cpu
 argument_list|)
 block|,
-name|UCHAR
+name|ULONG
 block|,
 literal|"d"
 block|}
