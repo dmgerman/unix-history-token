@@ -2058,6 +2058,12 @@ name|unit
 operator|=
 name|unit
 expr_stmt|;
+name|isp
+operator|->
+name|isp_role
+operator|=
+name|ISP_DEFAULT_ROLES
+expr_stmt|;
 comment|/* 	 * Try and find firmware for this device. 	 */
 if|if
 condition|(
