@@ -135,12 +135,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sio.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sc.h"
 end_include
 
