@@ -3853,7 +3853,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\tsyslog(LOG_ERR, msg);\n"
+literal|"\t\tsyslog(LOG_ERR, \"%%s\", msg);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3881,7 +3881,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tsyslog(LOG_ERR, msg);\n"
+literal|"\tsyslog(LOG_ERR, \"%%s\", msg);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
