@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -139,6 +139,11 @@ endif|DEBUG
 comment|/* heuristic to determine old versus new style addresses */
 if|if
 condition|(
+name|ctladdr
+operator|==
+name|NULL
+operator|&&
+operator|(
 name|index
 argument_list|(
 name|list
@@ -174,6 +179,7 @@ literal|'('
 argument_list|)
 operator|!=
 name|NULL
+operator|)
 condition|)
 name|CurEnv
 operator|->
