@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.15 (Berkeley) %G%"
+literal|"@(#)tip.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -971,17 +971,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|setregid
+name|seteuid
 argument_list|(
-name|egid
-argument_list|,
-name|gid
-argument_list|)
-expr_stmt|;
-name|setreuid
-argument_list|(
-name|euid
-argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
@@ -1005,18 +996,9 @@ condition|(
 name|uidswapped
 condition|)
 block|{
-name|setreuid
+name|seteuid
 argument_list|(
-name|uid
-argument_list|,
 name|euid
-argument_list|)
-expr_stmt|;
-name|setregid
-argument_list|(
-name|gid
-argument_list|,
-name|egid
 argument_list|)
 expr_stmt|;
 name|uidswapped
@@ -1034,18 +1016,9 @@ end_macro
 
 begin_block
 block|{
-name|setreuid
+name|seteuid
 argument_list|(
 name|uid
-argument_list|,
-name|uid
-argument_list|)
-expr_stmt|;
-name|setregid
-argument_list|(
-name|gid
-argument_list|,
-name|gid
 argument_list|)
 expr_stmt|;
 block|}
