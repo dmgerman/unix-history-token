@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bad144.c,v 1.13 1997/09/04 11:40:51 charnier Exp $"
+literal|"$Id: bad144.c,v 1.14 1997/12/11 07:12:10 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -650,15 +650,29 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|f
 argument_list|,
-name|curr_sec
-operator|*
+operator|(
+name|off_t
+operator|)
 name|ss
+operator|*
+name|curr_sec
 argument_list|,
-name|L_SET
+name|SEEK_SET
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|4
+argument_list|,
+literal|"lseek"
 argument_list|)
 expr_stmt|;
 if|if
