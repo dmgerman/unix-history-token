@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.14 (Berkeley) %G%"
+literal|"@(#)cron.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,19 +29,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -98,6 +86,24 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -111,42 +117,6 @@ directive|define
 name|MAXLIN
 value|BUFSIZ
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CRONTAB
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CRONTAB
-value|"/usr/lib/crontab"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CRONTABLOC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CRONTABLOC
-value|"/usr/lib/crontab.local"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -188,7 +158,7 @@ name|char
 name|crontab
 index|[]
 init|=
-name|CRONTAB
+name|_PATH_CRON
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +167,7 @@ name|char
 name|loc_crontab
 index|[]
 init|=
-name|CRONTABLOC
+name|_PATH_LCRON
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,7 +1235,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
@@ -1280,7 +1250,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cannot exec /bin/sh: %m"
+literal|"cannot exec %s: %m"
 argument_list|)
 expr_stmt|;
 name|dprintf
@@ -1938,7 +1908,7 @@ name|i
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDWR
 argument_list|)
