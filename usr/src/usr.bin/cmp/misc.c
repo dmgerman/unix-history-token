@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.1 (Berkeley) %G%"
+literal|"@(#)misc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,7 +129,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s %s differ: char %ld, line %ld\n"
+literal|"%s %s differ: char %qd, line %qd\n"
 argument_list|,
 name|file1
 argument_list|,

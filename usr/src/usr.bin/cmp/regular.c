@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regular.c	5.2 (Berkeley) %G%"
+literal|"@(#)regular.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,6 +210,9 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|int
+operator|)
 name|length
 argument_list|,
 name|PROT_READ
@@ -254,6 +257,9 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|int
+operator|)
 name|length
 argument_list|,
 name|PROT_READ
@@ -336,7 +342,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6ld %3o %3o\n"
+literal|"%6qd %3o %3o\n"
 argument_list|,
 name|byte
 argument_list|,
