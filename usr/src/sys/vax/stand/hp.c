@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.11	83/02/16	*/
+comment|/*	hp.c	4.12	83/02/17	*/
 end_comment
 
 begin_comment
@@ -875,20 +875,6 @@ argument_list|)
 expr_stmt|;
 name|found
 label|:
-name|hp_type
-index|[
-name|unit
-index|]
-operator|=
-name|hpmaptype
-argument_list|(
-name|hpaddr
-argument_list|,
-name|i
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|hpaddr
 operator|->
 name|hpcs1
@@ -916,6 +902,20 @@ operator|->
 name|hpof
 operator|=
 name|HPOF_FMT22
+expr_stmt|;
+name|hp_type
+index|[
+name|unit
+index|]
+operator|=
+name|hpmaptype
+argument_list|(
+name|hpaddr
+argument_list|,
+name|i
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Read in the bad sector table: 		 *	copy the contents of the io structure 		 *	to tio for use during the bb pointer 		 *	read operation. 		 */
 name|st
@@ -1312,6 +1312,17 @@ operator|->
 name|hphr
 operator|=
 name|HPHR_MAXSECT
+expr_stmt|;
+name|ntracks
+operator|=
+name|MASKREG
+argument_list|(
+name|hpaddr
+operator|->
+name|hphr
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
