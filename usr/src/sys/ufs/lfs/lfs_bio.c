@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -164,7 +164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX  * This routine flushes buffers out of the B_LOCKED queue when LFS has too  * many locked down.  Eventually the pageout daemon will simply call LFS  * when pages need to be reclaimed.  */
+comment|/*  * XXX  * This routine flushes buffers out of the B_LOCKED queue when LFS has too  * many locked down.  Eventually the pageout daemon will simply call LFS  * when pages need to be reclaimed.  Note, we have one static count of locked  * buffers, so we can't have more than a single file system.  To make this  * work for multiple file systems, put the count into the mount structure.  */
 end_comment
 
 begin_function
@@ -183,12 +183,12 @@ name|mount
 operator|*
 expr|omp
 expr_stmt|;
-comment|/* 800K in a 4K file system. */
+comment|/* 1M in a 4K file system. */
 if|if
 condition|(
 name|locked_queue_count
 operator|<
-literal|200
+literal|256
 condition|)
 return|return;
 name|mp
@@ -251,6 +251,11 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(omp)
 expr_stmt|;
+comment|/* Not exact, but it doesn't matter. */
+name|locked_queue_count
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 name|mp
@@ -267,11 +272,6 @@ operator|!=
 name|rootfs
 condition|)
 do|;
-comment|/* Not exact, but it doesn't matter. */
-name|locked_queue_count
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
