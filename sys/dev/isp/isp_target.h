@@ -132,6 +132,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LUN_DISAD
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* bit25 Disable autodisconnect */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LUN_DM
 value|0x40000000
 end_define
@@ -390,6 +401,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IN_REJECT
+value|0x0D
+end_define
+
+begin_comment
+comment|/* Message Reject message received */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN_RESET
 value|0x0E
 end_define
@@ -484,6 +506,17 @@ end_define
 
 begin_comment
 comment|/* all ports logged out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_NO_NEXUS
+value|0x3B
+end_define
+
+begin_comment
+comment|/* Nexus not established */
 end_comment
 
 begin_comment
@@ -688,6 +721,28 @@ end_define
 
 begin_comment
 comment|/* Clear an async event notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NA_OK
+value|0x01
+end_define
+
+begin_comment
+comment|/* Notify Acknowledge Succeeded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NA_INVALID
+value|0x06
+end_define
+
+begin_comment
+comment|/* Invalid Notify Acknowledge */
 end_comment
 
 begin_define
@@ -1258,6 +1313,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CT_INISYNCWIDE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* bit 14, Do Sync/Wide Negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CT_NODISC
 value|0x00008000
 end_define
@@ -1405,6 +1471,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CT_PARITY
+value|0x0F
+end_define
+
+begin_comment
+comment|/* Uncorrectable Parity Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CT_PANIC
+value|0x13
+end_define
+
+begin_comment
+comment|/* Unrecoverable Error */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CT_PHASE_ERROR
 value|0x14
 end_define
@@ -1466,6 +1554,17 @@ end_define
 
 begin_comment
 comment|/* port changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CT_IDE
+value|0x33
+end_define
+
+begin_comment
+comment|/* Initiator Detected Error */
 end_comment
 
 begin_define
@@ -2185,7 +2284,6 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
-name|isp
 operator|,
 name|int
 operator|,
@@ -2236,7 +2334,6 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
-name|isp
 operator|,
 name|int
 operator|,
@@ -2265,7 +2362,6 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
-name|isp
 operator|,
 name|void
 operator|*

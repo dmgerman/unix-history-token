@@ -504,6 +504,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_GET_RESOURCE_COUNT
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_EXEC_COMMAND_IOCB_A64
 value|0x54
 end_define
@@ -2606,7 +2613,7 @@ name|BITS2WORD
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)[0]<< 16 | (x)[3]<< 8 | (x)[2]
+value|((x)[0]<< 16 | (x)[3]<< 8 | (x)[2])
 name|u_int8_t
 name|pdb_hardaddr_bits
 index|[
