@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ /*	From: NetBSD: stat.c,v 1.2 1997/10/22 00:56:39 fvdl Exp */
+comment|/* $Id: netbsd_stat.c,v 1.1 1998/03/09 07:07:21 jb Exp $ /*	From: NetBSD: stat.c,v 1.2 1997/10/22 00:56:39 fvdl Exp */
 end_comment
 
 begin_comment
@@ -505,12 +505,25 @@ end_function
 
 begin_function
 name|int
-name|fstat
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+name|_thread_sys_fstat
 parameter_list|(
 name|f
 parameter_list|,
 name|ost
 parameter_list|)
+else|#
+directive|else
+function|fstat
+parameter_list|(
+name|f
+parameter_list|,
+name|ost
+parameter_list|)
+endif|#
+directive|endif
 name|int
 name|f
 decl_stmt|;
