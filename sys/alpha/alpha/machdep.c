@@ -4188,6 +4188,52 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 	 * Catch case of boot_verbose set in environment. 	 */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"boot_verbose"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"yes"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"YES"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|boothowto
+operator||=
+name|RB_VERBOSE
+expr_stmt|;
+name|bootverbose
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
 directive|ifdef
@@ -4614,7 +4660,7 @@ operator|<=
 name|n
 condition|)
 block|{
-comment|/* 		 * Get the next CPU cycle count; 		 */
+comment|/* 		 * Get the next CPU cycle count. The assumption here 		 * is that we can't have wrapped twice past 32 bits worth 		 * of CPU cycles since we last checked. 		 */
 name|pcc1
 operator|=
 name|alpha_rpcc
