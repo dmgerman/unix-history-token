@@ -76,6 +76,17 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|long
+name|__key_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* IPC key (for Sys V IPC) */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|__uint16_t
 name|__mode_t
 typedef|;

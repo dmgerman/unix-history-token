@@ -499,9 +499,15 @@ begin_comment
 comment|/* inode number */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KEY_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
-name|long
+name|__key_t
 name|key_t
 typedef|;
 end_typedef
@@ -509,6 +515,17 @@ end_typedef
 begin_comment
 comment|/* IPC key (for Sys V IPC) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_KEY_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
