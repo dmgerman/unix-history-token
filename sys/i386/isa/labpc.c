@@ -91,11 +91,22 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOUTB
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/clock.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1767,8 +1778,9 @@ name|dev
 parameter_list|)
 block|{
 specifier|static
+name|int
 name|unit
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|ctlr
 name|scratch
@@ -4738,13 +4750,14 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|labpc_devsw_installed
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
