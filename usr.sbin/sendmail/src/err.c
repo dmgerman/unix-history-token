@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.41 (Berkeley) 10/8/95"
+literal|"@(#)err.c	8.42 (Berkeley) 11/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1159,7 +1159,7 @@ name|msg
 index|[
 literal|0
 index|]
-operator|==
+operator|=
 literal|'0'
 expr_stmt|;
 comment|/* output to channel if appropriate */
