@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -737,11 +737,6 @@ comment|/*  	 *  Send INTERRUPT packet. 	 */
 case|case
 name|PRU_SENDOOB
 case|:
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lcp
@@ -796,6 +791,11 @@ argument_list|(
 name|lcp
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|panic
@@ -815,17 +815,6 @@ condition|)
 name|m_freem
 argument_list|(
 name|control
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -1263,6 +1252,14 @@ operator|.
 name|pk_state
 operator|=
 name|DTE_WAITING
+expr_stmt|;
+name|ia
+operator|->
+name|ia_pkcb
+operator|.
+name|pk_start
+operator|=
+name|pk_start
 expr_stmt|;
 name|pkcbhead
 operator|=
