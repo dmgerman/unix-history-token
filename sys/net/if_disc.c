@@ -736,7 +736,9 @@ name|EINVAL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
