@@ -8161,7 +8161,6 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
-block|{
 if|if
 condition|(
 name|next_hop
@@ -8245,7 +8244,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
