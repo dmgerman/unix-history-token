@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c 1.1 %G%"
+literal|"@(#)readdir.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,7 +77,7 @@ name|dirp
 operator|->
 name|dd_buf
 argument_list|,
-name|DIRSIZ
+name|MAXDIRSIZ
 argument_list|)
 expr_stmt|;
 if|if
@@ -118,6 +118,7 @@ expr|struct
 name|direct
 operator|*
 operator|)
+operator|(
 name|dirp
 operator|->
 name|dd_buf
@@ -125,6 +126,7 @@ operator|+
 name|dirp
 operator|->
 name|dd_loc
+operator|)
 expr_stmt|;
 name|dirp
 operator|->
