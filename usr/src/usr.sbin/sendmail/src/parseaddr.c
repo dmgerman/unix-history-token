@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.55 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2103,6 +2103,22 @@ name|usrerr
 argument_list|(
 literal|"553 Address too long"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|addr
+argument_list|)
+operator|>
+name|MAXNAME
+condition|)
+name|addr
+index|[
+name|MAXNAME
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|returnnull
 label|:
