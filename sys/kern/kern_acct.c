@@ -402,9 +402,12 @@ expr_stmt|;
 comment|/* 	 * If accounting is to be started to a file, open that file for 	 * appending and make sure it's a 'normal'. 	 */
 if|if
 condition|(
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|path
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -420,9 +423,12 @@ name|NOFOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|path
+argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -663,9 +669,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|path
+argument_list|)
 operator|==
 name|NULL
 condition|)

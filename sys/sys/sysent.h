@@ -68,6 +68,26 @@ name|SYF_MPSAFE
 value|0x00010000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCARG
+parameter_list|(
+name|p
+parameter_list|,
+name|k
+parameter_list|)
+value|((p)->k)
+end_define
+
+begin_comment
+comment|/* get arg from args pointer */
+end_comment
+
+begin_comment
+comment|/* placeholder till we integrate rest of lite2 syscallargs changes XXX */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|image_params
