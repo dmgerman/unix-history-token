@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbcdc.h,v 1.6 2000/04/27 15:26:50 augustss Exp $	*/
+comment|/*	$NetBSD: usbcdc.h,v 1.9 2004/10/23 13:24:24 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -125,6 +125,55 @@ begin_comment
 comment|/* USB Terminal */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_NCT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_PUF
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_EUF
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_MCMF
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_CCMF
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_ENF
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_ANF
+value|16
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -142,6 +191,7 @@ name|uWord
 name|bcdCDC
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_cdc_header_descriptor_t
 typedef|;
 end_typedef
@@ -174,6 +224,7 @@ name|uByte
 name|bDataInterface
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_cdc_cm_descriptor_t
 typedef|;
 end_typedef
@@ -211,6 +262,7 @@ directive|define
 name|USB_CDC_ACM_HAS_NETWORK_CONN
 value|0x08
 block|}
+name|UPACKED
 name|usb_cdc_acm_descriptor_t
 typedef|;
 end_typedef
@@ -238,7 +290,42 @@ literal|1
 index|]
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_cdc_union_descriptor_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uByte
+name|bDescriptorSubtype
+decl_stmt|;
+name|uByte
+name|iMacAddress
+decl_stmt|;
+name|uDWord
+name|bmEthernetStatistics
+decl_stmt|;
+name|uWord
+name|wMaxSegmentSize
+decl_stmt|;
+name|uWord
+name|wNumberMCFikters
+decl_stmt|;
+name|uByte
+name|bNumberPowerFilters
+decl_stmt|;
+block|}
+name|UPACKED
+name|usb_cdc_ethernet_descriptor_t
 typedef|;
 end_typedef
 
@@ -363,6 +450,7 @@ directive|define
 name|UCDC_DATA_MULTIPLEXED
 value|0x0002
 block|}
+name|UPACKED
 name|usb_cdc_abstract_state_t
 typedef|;
 end_typedef
@@ -423,6 +511,7 @@ name|uByte
 name|bDataBits
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_cdc_line_state_t
 typedef|;
 end_typedef
@@ -496,6 +585,7 @@ literal|16
 index|]
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_cdc_notification_t
 typedef|;
 end_typedef
