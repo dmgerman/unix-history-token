@@ -198,16 +198,16 @@ argument_list|)
 operator|&&
 operator|(
 name|__GNUC__
-operator|>
-literal|2
-operator|||
-name|__GNUC__
 operator|==
 literal|2
 operator|&&
 name|__GNUC_MINOR__
 operator|>
 literal|95
+operator|||
+name|__GNUC__
+operator|>=
+literal|3
 operator|)
 end_if
 
