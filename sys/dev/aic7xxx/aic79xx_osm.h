@@ -811,12 +811,42 @@ begin_comment
 comment|/***************************** Timer Facilities *******************************/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_define
+define|#
+directive|define
+name|ahd_timer_init
+parameter_list|(
+name|timer
+parameter_list|)
+value|callout_init(timer,
+comment|/*mpsafe*/
+value|0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|ahd_timer_init
 value|callout_init
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
