@@ -212,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|WHATIS
-value|"whatis"
+value|"whatis.db"
 end_define
 
 begin_decl_stmt
