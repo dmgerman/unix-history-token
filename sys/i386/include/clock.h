@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.13 1996/05/01 08:38:50 bde Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.14 1996/06/14 11:00:56 asami Exp $  */
 end_comment
 
 begin_ifndef
@@ -92,6 +92,20 @@ end_endif
 begin_define
 define|#
 directive|define
+name|I586_CTR_COMULTIPLIER_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|I586_CTR_MULTIPLIER_SHIFT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|I586_CTR_RATE_SHIFT
 value|8
 end_define
@@ -171,8 +185,22 @@ end_if
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
+name|u_int
+name|i586_ctr_comultiplier
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|i586_ctr_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|i586_ctr_multiplier
 decl_stmt|;
 end_decl_stmt
 
