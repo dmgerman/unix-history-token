@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.15 1997/12/13 02:37:24 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.16 1998/01/05 01:35:19 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_define
@@ -105,7 +105,7 @@ name|in_addr
 name|his_ipaddr
 decl_stmt|;
 comment|/* IP address he is willing to use */
-name|u_long
+name|u_int32_t
 name|his_compproto
 decl_stmt|;
 name|struct
@@ -113,14 +113,14 @@ name|in_addr
 name|want_ipaddr
 decl_stmt|;
 comment|/* IP address I'm willing to use */
-name|u_long
+name|u_int32_t
 name|want_compproto
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|his_reject
 decl_stmt|;
 comment|/* Request codes rejected by peer */
-name|u_long
+name|u_int32_t
 name|my_reject
 decl_stmt|;
 comment|/* Request codes I have rejected */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.50 1997/12/07 23:55:27 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.51 1997/12/24 09:29:05 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -711,13 +711,16 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|" his side: MRU %ld, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d, MAGIC %08lx,\n"
-literal|"           REJECT %04lx\n"
+literal|" his side: MRU %d, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d,\n"
+literal|"           MAGIC %08lx, REJECT %04x\n"
 argument_list|,
 name|lcp
 operator|->
 name|his_mru
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lcp
 operator|->
 name|his_accmap
@@ -730,6 +733,9 @@ name|lcp
 operator|->
 name|his_acfcomp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lcp
 operator|->
 name|his_magic
@@ -743,13 +749,16 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|" my  side: MRU %ld, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d, MAGIC %08lx,\n"
-literal|"           REJECT %04lx\n"
+literal|" my  side: MRU %d, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d,\n"
+literal|"           MAGIC %08lx, REJECT %04x\n"
 argument_list|,
 name|lcp
 operator|->
 name|want_mru
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lcp
 operator|->
 name|want_accmap
@@ -762,6 +771,9 @@ name|lcp
 operator|->
 name|want_acfcomp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lcp
 operator|->
 name|want_magic
@@ -775,10 +787,13 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|"\nDefaults:   MRU = %ld, ACCMAP = %08x\t"
+literal|"\nDefaults:   MRU = %d, ACCMAP = %08lx\t"
 argument_list|,
 name|VarMRU
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|VarAccmap
 argument_list|)
 expr_stmt|;
@@ -811,7 +826,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_long
+name|u_int32_t
 name|GenerateMagic
 parameter_list|(
 name|void
@@ -1150,14 +1165,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|PUTHEXL
+name|PUTHEX32
 parameter_list|(
 name|ty
 parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|do {								\   o.id = ty;							\   o.len = 6;							\   *(u_long *)o.data = htonl(arg);				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "0x%08x", (u_int)arg);\ } while (0)
+value|do {								\   o.id = ty;							\   o.len = 6;							\   *(u_long *)o.data = htonl(arg);				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "0x%08lx", (u_long)arg);\ } while (0)
 end_define
 
 begin_define
@@ -1167,7 +1182,7 @@ name|PUTACCMAP
 parameter_list|(
 name|arg
 parameter_list|)
-value|PUTHEXL(TY_ACCMAP, arg)
+value|PUTHEX32(TY_ACCMAP, arg)
 end_define
 
 begin_define
@@ -1177,7 +1192,7 @@ name|PUTMAGIC
 parameter_list|(
 name|arg
 parameter_list|)
-value|PUTHEXL(TY_MAGICNUM, arg)
+value|PUTHEX32(TY_MAGICNUM, arg)
 end_define
 
 begin_define
@@ -1188,7 +1203,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|do {								\   o.id = TY_MRU;						\   o.len = 4;							\   *(u_short *)o.data = htons(arg);				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "%lu", arg);	\ } while (0)
+value|do {								\   o.id = TY_MRU;						\   o.len = 4;							\   *(u_short *)o.data = htons(arg);				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "%u", arg);	\ } while (0)
 end_define
 
 begin_define
@@ -1199,7 +1214,7 @@ parameter_list|(
 name|period
 parameter_list|)
 define|\
-value|do {								\   o.id = TY_QUALPROTO;						\   o.len = 8;							\   *(u_short *)o.data = htons(PROTO_LQR);			\   *(u_long *)(o.data+2) = htonl(period);			\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "period %ld", period);\ } while (0)
+value|do {								\   o.id = TY_QUALPROTO;						\   o.len = 8;							\   *(u_short *)o.data = htons(PROTO_LQR);			\   *(u_long *)(o.data+2) = htonl(period);			\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id],		\                    "period %ld", (u_long)period);		\ } while (0)
 end_define
 
 begin_define
@@ -1893,15 +1908,11 @@ name|type
 decl_stmt|,
 name|length
 decl_stmt|,
-name|mru
-decl_stmt|,
-name|mtu
-decl_stmt|,
 name|sz
 decl_stmt|,
 name|pos
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|lp
 decl_stmt|,
@@ -1910,6 +1921,10 @@ decl_stmt|,
 name|accmap
 decl_stmt|;
 name|u_short
+name|mtu
+decl_stmt|,
+name|mru
+decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|,
@@ -2193,7 +2208,7 @@ case|:
 name|lp
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -2214,10 +2229,13 @@ name|LogPrintf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"%s 0x%08x\n"
+literal|"%s 0x%08lx\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|accmap
 argument_list|)
 expr_stmt|;
@@ -2925,7 +2943,7 @@ case|:
 name|lp
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -2946,10 +2964,13 @@ name|LogPrintf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"%s 0x%08x\n"
+literal|"%s 0x%08lx\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|magic
 argument_list|)
 expr_stmt|;
@@ -2982,8 +3003,11 @@ name|LogPrintf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"Magic is same (%08x) - %d times\n"
+literal|"Magic is same (%08lx) - %d times\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|magic
 argument_list|,
 operator|++
@@ -3082,8 +3106,11 @@ name|LogPrintf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|" Magic 0x%08x is NAKed!\n"
+literal|" Magic 0x%08lx is NAKed!\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|magic
 argument_list|)
 expr_stmt|;
