@@ -1975,10 +1975,17 @@ if|if
 condition|(
 name|cp
 operator|->
-name|biocount
-operator|>
-literal|0
+name|stat
+operator|.
+name|nop
+operator|!=
+name|cp
+operator|->
+name|stat
+operator|.
+name|nend
 condition|)
+comment|/* XXX ? */
 return|return;
 name|dev
 operator|=

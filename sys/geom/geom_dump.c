@@ -117,7 +117,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"z%p [label=\"r%dw%de%d\\nbio #%d\"];\n"
+literal|"z%p [label=\"r%dw%de%d\"];\n"
 argument_list|,
 name|cp
 argument_list|,
@@ -132,10 +132,6 @@ argument_list|,
 name|cp
 operator|->
 name|ace
-argument_list|,
-name|cp
-operator|->
-name|biocount
 argument_list|)
 expr_stmt|;
 if|if

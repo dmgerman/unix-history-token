@@ -44,6 +44,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|g_collectstats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|g_debugflags
 decl_stmt|;
 end_decl_stmt

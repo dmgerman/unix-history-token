@@ -660,6 +660,14 @@ name|geom
 operator|=
 name|gp
 expr_stmt|;
+name|cp
+operator|->
+name|stat
+operator|.
+name|id
+operator|=
+name|cp
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -925,6 +933,14 @@ operator|->
 name|geom
 operator|=
 name|gp
+expr_stmt|;
+name|pp
+operator|->
+name|stat
+operator|.
+name|id
+operator|=
+name|pp
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -1584,12 +1600,18 @@ name|KASSERT
 argument_list|(
 name|cp
 operator|->
-name|biocount
+name|stat
+operator|.
+name|nop
 operator|==
-literal|0
+name|cp
+operator|->
+name|stat
+operator|.
+name|nend
 argument_list|,
 operator|(
-literal|"detach but nonzero biocount"
+literal|"detach with active requests"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2485,17 +2507,18 @@ argument_list|)
 expr_stmt|;
 name|bp2
 operator|->
-name|bio_children
-operator|--
+name|bio_inbed
+operator|++
 expr_stmt|;
-comment|/* XXX: atomic ? */
 if|if
 condition|(
 name|bp2
 operator|->
 name|bio_children
 operator|==
-literal|0
+name|bp2
+operator|->
+name|bio_inbed
 condition|)
 name|g_io_deliver
 argument_list|(

@@ -145,6 +145,10 @@ name|u_int
 name|bio_children
 decl_stmt|;
 comment|/* Number of spawned bios */
+name|u_int
+name|bio_inbed
+decl_stmt|;
+comment|/* Children safely home by now */
 name|struct
 name|bio
 modifier|*
