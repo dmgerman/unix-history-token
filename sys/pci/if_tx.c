@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $ */
+comment|/*	$Id: if_tx.c,v 1.16 1998/11/01 07:44:33 semenu Exp $ */
 end_comment
 
 begin_comment
@@ -449,12 +449,37 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_define
+define|#
+directive|define
+name|EPIC_IFIOCTL_CMD_TYPE
+value|u_long
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|EPIC_IFIOCTL_CMD_TYPE
 value|int
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
