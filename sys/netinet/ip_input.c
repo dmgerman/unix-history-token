@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.46 1996/08/21 21:37:00 sos Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.47 1996/09/08 13:45:49 davidg Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_IP_VHL
+end_define
 
 begin_include
 include|#
@@ -145,6 +151,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_icmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
 end_include
 
 begin_include
@@ -483,6 +495,55 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|COMPAT_IPFW
+argument_list|)
+operator|||
+name|COMPAT_IPFW
+operator|==
+literal|1
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|COMPAT_IPFW
+end_undef
+
+begin_define
+define|#
+directive|define
+name|COMPAT_IPFW
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|COMPAT_IPFW
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_IPFW
+end_ifdef
+
 begin_comment
 comment|/* Firewall hooks */
 end_comment
@@ -518,6 +579,11 @@ modifier|*
 name|ip_nat_ctl_ptr
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
@@ -972,7 +1038,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ipintr no HDR"
+literal|"ip_input no HDR"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -992,6 +1058,45 @@ operator|.
 name|ips_total
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+condition|)
+goto|goto
+name|tooshort
+goto|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"ipintr mbuf too short"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|m
@@ -1042,9 +1147,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|IP_VHL_V
+argument_list|(
 name|ip
 operator|->
-name|ip_v
+name|ip_vhl
+argument_list|)
 operator|!=
 name|IPVERSION
 condition|)
@@ -1060,9 +1168,12 @@ goto|;
 block|}
 name|hlen
 operator|=
+name|IP_VHL_HL
+argument_list|(
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<<
 literal|2
 expr_stmt|;
@@ -1131,6 +1242,29 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hlen
+operator|==
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+condition|)
+block|{
+name|ip
+operator|->
+name|ip_sum
+operator|=
+name|in_cksum_hdr
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ip
 operator|->
 name|ip_sum
@@ -1142,6 +1276,7 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ip
@@ -1212,6 +1347,8 @@ operator|->
 name|ip_len
 condition|)
 block|{
+name|tooshort
+label|:
 name|ipstat
 operator|.
 name|ips_tooshort
@@ -1284,6 +1421,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * IpHack's section. 	 * Right now when no processing on packet has done 	 * and it is still fresh out of network we do our black 	 * deals with it. 	 * - Firewall: deny/allow/divert 	 * - Xlate: translate packet's addr/port (NAT). 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.>  	 */
+ifdef|#
+directive|ifdef
+name|COMPAT_IPFW
 if|if
 condition|(
 name|ip_fw_chk_ptr
@@ -1402,6 +1542,8 @@ name|IP_NAT_IN
 argument_list|)
 condition|)
 return|return;
+endif|#
+directive|endif
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */
 name|ip_nhops
 operator|=
@@ -1496,12 +1638,6 @@ operator|&
 name|IFF_BROADCAST
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|u_long t;
-endif|#
-directive|endif
 if|if
 condition|(
 name|satosin
@@ -1542,15 +1678,6 @@ condition|)
 goto|goto
 name|ours
 goto|;
-if|#
-directive|if
-literal|0
-comment|/* XXX - this should go away */
-comment|/* 			 * Look for all-0's host part (old broadcast addr), 			 * either for subnet or net. 			 */
-block|t = ntohl(ip->ip_dst.s_addr); 			if (t == ia->ia_subnet) 				goto ours; 			if (t == ia->ia_net) 				goto ours;
-endif|#
-directive|endif
-comment|/* compatibility cruft */
 block|}
 block|}
 if|if
@@ -3357,9 +3484,12 @@ expr_stmt|;
 name|cnt
 operator|=
 operator|(
+name|IP_VHL_HL
+argument_list|(
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<<
 literal|2
 operator|)
@@ -4285,9 +4415,12 @@ name|ip
 operator|->
 name|ip_len
 operator|-=
+name|IP_VHL_HL
+argument_list|(
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<<
 literal|2
 expr_stmt|;
@@ -4929,9 +5062,12 @@ decl_stmt|;
 name|olen
 operator|=
 operator|(
+name|IP_VHL_HL
+argument_list|(
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<<
 literal|2
 operator|)
@@ -5007,8 +5143,12 @@ name|olen
 expr_stmt|;
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
 operator|=
+name|IP_MAKE_VHL
+argument_list|(
+name|IPVERSION
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5016,6 +5156,7 @@ name|ip
 argument_list|)
 operator|>>
 literal|2
+argument_list|)
 expr_stmt|;
 block|}
 end_function
