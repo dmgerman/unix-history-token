@@ -771,6 +771,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
 if|if
 condition|(
 operator|(
@@ -808,6 +811,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|fs
 operator|.
 name|lookup_still_valid

@@ -1661,6 +1661,9 @@ name|flags
 operator|=
 name|B_SYNC
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
 if|if
 condition|(
 name|object
@@ -1700,6 +1703,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|error

@@ -1369,6 +1369,9 @@ operator|&=
 operator|~
 name|VTEXT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
 name|vm_object_clear_flag
 argument_list|(
 name|object
@@ -1376,6 +1379,8 @@ argument_list|,
 name|OBJ_OPT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * vrele may need a vop lock 	 */
 name|vrele
@@ -1675,6 +1680,9 @@ operator|->
 name|shadow_count
 operator|--
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
 if|if
 condition|(
 name|temp
@@ -1690,6 +1698,8 @@ argument_list|,
 name|OBJ_OPT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|temp
 operator|->
 name|generation
@@ -1791,6 +1801,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
 comment|/* 		 * Freeze optimized copies. 		 */
 name|vm_freeze_copyopts
 argument_list|(
@@ -1803,6 +1816,8 @@ operator|->
 name|size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Clean pages and flush buffers. 		 */
 name|vm_object_page_clean
 argument_list|(
@@ -5739,8 +5754,14 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
+end_ifdef
+
 begin_comment
-comment|/*  * Performs the copy_on_write operations necessary to allow the virtual copies  * into user space to work.  This has to be called for write(2) system calls  * from other processes, file unlinking, and file size shrinkage.  */
+comment|/*  * Experimental support for zero-copy I/O  *  * Performs the copy_on_write operations necessary to allow the virtual copies  * into user space to work.  This has to be called for write(2) system calls  * from other processes, file unlinking, and file size shrinkage.  */
 end_comment
 
 begin_function
@@ -6074,6 +6095,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

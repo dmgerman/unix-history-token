@@ -1015,6 +1015,9 @@ operator|.
 name|vnp_size
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
 name|vm_freeze_copyopts
 argument_list|(
 name|object
@@ -1029,6 +1032,8 @@ operator|->
 name|size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|nobjsize
