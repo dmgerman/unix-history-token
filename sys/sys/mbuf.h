@@ -509,6 +509,17 @@ begin_comment
 comment|/* protocol-specific */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_FREELIST
+value|0x4000
+end_define
+
+begin_comment
+comment|/* mbuf is on the free list */
+end_comment
+
 begin_comment
 comment|/*  * mbuf pkthdr flags (also stored in m_flags).  */
 end_comment
