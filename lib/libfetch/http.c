@@ -423,6 +423,11 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
+if|if
+condition|(
+name|fetchDebug
+condition|)
+block|{
 name|c
 operator|->
 name|total
@@ -472,6 +477,7 @@ operator|->
 name|total
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
