@@ -4441,6 +4441,20 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we're using memory mapped register mode, pause briefly 	 * after issuing the reset command before trying to access any 	 * other registers. With my 3c575C cardbus card, failing to do 	 * this results in the system locking up while trying to poll 	 * the command busy bit in the status register. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|xl_flags
+operator|&
+name|XL_FLAG_USE_MMIO
+condition|)
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
