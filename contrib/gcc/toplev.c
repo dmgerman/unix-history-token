@@ -3041,6 +3041,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Like align_functions_log above, but used by front-ends to force the    minimum function alignment.  Zero means no alignment is forced.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|force_align_functions_log
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Table of supported debugging formats.  */
 end_comment
 
@@ -11070,17 +11080,6 @@ argument_list|,
 name|LOOP_TREE
 argument_list|)
 expr_stmt|;
-comment|/* Estimate using heuristics if no profiling info is available.  */
-if|if
-condition|(
-name|flag_guess_branch_prob
-condition|)
-name|estimate_probability
-argument_list|(
-operator|&
-name|loops
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rtl_dump_file
@@ -11095,6 +11094,17 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Estimate using heuristics if no profiling info is available.  */
+if|if
+condition|(
+name|flag_guess_branch_prob
+condition|)
+name|estimate_probability
+argument_list|(
+operator|&
+name|loops
 argument_list|)
 expr_stmt|;
 name|flow_loops_free
