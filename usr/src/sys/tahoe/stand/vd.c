@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	7.6	87/02/18	*/
+comment|/*	vd.c	7.7	87/04/06	*/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buf.h"
 end_include
 
 begin_include
@@ -246,6 +252,9 @@ name|struct
 name|disklabel
 modifier|*
 name|lp
+decl_stmt|,
+modifier|*
+name|dlp
 decl_stmt|;
 name|int
 name|error
@@ -418,10 +427,8 @@ name|EIO
 operator|)
 return|;
 block|}
-operator|*
-name|lp
+name|dlp
 operator|=
-operator|*
 operator|(
 expr|struct
 name|disklabel
@@ -435,28 +442,19 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|lp
+name|dlp
 operator|->
 name|d_magic
 operator|!=
 name|DISKMAGIC
 operator|||
-name|lp
+name|dlp
 operator|->
 name|d_magic2
 operator|!=
 name|DISKMAGIC
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"dk%d: unlabeled\n"
-argument_list|,
-name|io
-operator|->
-name|i_unit
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COMPAT_42
@@ -476,6 +474,15 @@ operator|)
 return|;
 else|#
 directive|else
+name|printf
+argument_list|(
+literal|"dk%d: unlabeled\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -484,6 +491,13 @@ return|;
 endif|#
 directive|endif
 block|}
+else|else
+operator|*
+name|lp
+operator|=
+operator|*
+name|dlp
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -539,7 +553,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dk bad minor"
+literal|"dk%d: bad minor\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -997,6 +1015,7 @@ name|trailcnt
 operator|=
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|treset
 argument_list|)
 operator|/
@@ -1630,6 +1649,7 @@ name|trailcnt
 operator|=
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|trrw
 argument_list|)
 operator|/
@@ -1646,6 +1666,9 @@ name|rwtrail
 operator|.
 name|memadr
 operator|=
+operator|(
+name|u_long
+operator|)
 name|io
 operator|->
 name|i_ma
@@ -2417,6 +2440,7 @@ name|trailcnt
 operator|=
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|trrw
 argument_list|)
 operator|/
@@ -2433,6 +2457,9 @@ name|rwtrail
 operator|.
 name|memadr
 operator|=
+operator|(
+name|u_long
+operator|)
 name|lbuf
 expr_stmt|;
 name|dcb
@@ -2443,10 +2470,7 @@ name|rwtrail
 operator|.
 name|wcount
 operator|=
-sizeof|sizeof
-argument_list|(
-name|lbuf
-argument_list|)
+literal|512
 operator|/
 sizeof|sizeof
 argument_list|(
