@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.26 1998/05/25 03:34:52 steve Exp $"
+literal|"$Id: su.c,v 1.27 1998/05/26 06:39:08 danny Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,12 +570,6 @@ literal|"root"
 expr_stmt|;
 while|while
 condition|(
-name|optind
-operator|<
-name|argc
-condition|)
-if|if
-condition|(
 operator|(
 name|ch
 operator|=
@@ -669,8 +663,12 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-else|else
-block|{
+if|if
+condition|(
+name|optind
+operator|<
+name|argc
+condition|)
 name|user
 operator|=
 name|argv
@@ -679,8 +677,6 @@ name|optind
 operator|++
 index|]
 expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 name|strlen
