@@ -178,6 +178,14 @@ operator|++
 condition|)
 block|{
 case|case
+literal|'a'
+case|:
+name|c
+operator|=
+literal|'\a'
+expr_stmt|;
+break|break;
+case|case
 literal|'b'
 case|:
 name|c
@@ -192,6 +200,14 @@ return|return
 literal|0
 return|;
 comment|/* exit */
+case|case
+literal|'e'
+case|:
+name|c
+operator|=
+literal|'\e'
+expr_stmt|;
+break|break;
 case|case
 literal|'f'
 case|:
