@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	1.2 83/03/18"
+literal|"@(#)pl_1.c	1.3 83/03/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -4945,6 +4945,13 @@ case|case
 literal|'u'
 case|:
 name|unfoulplayer
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|version
 argument_list|()
 expr_stmt|;
 break|break;
