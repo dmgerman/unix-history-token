@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.11 (Berkeley) %G%"
+literal|"@(#)fio.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1939,15 +1939,16 @@ block|{
 name|char
 name|xname
 index|[
-name|BUFSIZ
+name|PATHSIZE
 index|]
 decl_stmt|;
 name|char
 name|cmdbuf
 index|[
-name|BUFSIZ
+name|PATHSIZE
 index|]
 decl_stmt|;
+comment|/* also used for file names */
 specifier|register
 name|int
 name|pid
@@ -1985,9 +1986,6 @@ block|{
 case|case
 literal|'%'
 case|:
-return|return
-name|savestr
-argument_list|(
 name|findmail
 argument_list|(
 name|name
@@ -2000,7 +1998,14 @@ operator|+
 literal|1
 else|:
 name|myname
+argument_list|,
+name|xname
 argument_list|)
+expr_stmt|;
+return|return
+name|savestr
+argument_list|(
+name|xname
 argument_list|)
 return|;
 case|case

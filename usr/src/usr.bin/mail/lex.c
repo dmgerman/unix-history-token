@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.14 (Berkeley) %G%"
+literal|"@(#)lex.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,11 +569,6 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sourcing
-condition|)
 name|sreset
 argument_list|()
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.7 (Berkeley) %G%"
+literal|"@(#)strings.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,20 +175,11 @@ name|sp
 operator|->
 name|s_topFree
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|calloc
+name|malloc
 argument_list|(
 name|STRINGSIZE
 operator|<<
 name|index
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -339,6 +330,53 @@ name|index
 operator|++
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * Make the string area permanent.  * Meant to be called in main, after initialization.  */
+end_comment
+
+begin_macro
+name|spreserve
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|strings
+modifier|*
+name|sp
+decl_stmt|;
+for|for
+control|(
+name|sp
+operator|=
+operator|&
+name|stringdope
+index|[
+literal|0
+index|]
+init|;
+name|sp
+operator|<
+operator|&
+name|stringdope
+index|[
+name|NSPACE
+index|]
+condition|;
+name|sp
+operator|++
+control|)
+name|sp
+operator|->
+name|s_topFree
+operator|=
+name|NOSTR
+expr_stmt|;
 block|}
 end_block
 

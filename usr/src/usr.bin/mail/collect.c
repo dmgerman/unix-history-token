@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.11 (Berkeley) %G%"
+literal|"@(#)collect.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1410,8 +1410,7 @@ name|omask
 argument_list|)
 expr_stmt|;
 name|noreset
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 return|return
 name|collf

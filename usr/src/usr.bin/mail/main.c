@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.16 (Berkeley) %G%"
+literal|"@(#)main.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,11 @@ name|char
 modifier|*
 name|ef
 decl_stmt|;
+name|char
+name|nosrc
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|hdrstop
 argument_list|()
@@ -138,11 +143,6 @@ modifier|*
 name|optarg
 decl_stmt|;
 comment|/* 	 * Set up a reasonable environment. 	 * Figure out whether we are being run interactively, set up 	 * all the temporary files, buffer standard output, and so forth. 	 */
-name|mypid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isatty
@@ -255,12 +255,9 @@ case|case
 literal|'u'
 case|:
 comment|/* 			 * Next argument is person to pretend to be. 			 */
-name|strcpy
-argument_list|(
 name|myname
-argument_list|,
+operator|=
 name|optarg
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -573,6 +570,9 @@ name|rcvmode
 operator|=
 operator|!
 name|to
+expr_stmt|;
+name|spreserve
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getname.c	5.5 (Berkeley) %G%"
+literal|"@(#)getname.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,23 +48,13 @@ begin_comment
 comment|/*  * Search the passwd file for a uid.  Return name through ref parameter  * if found, indicating success with 0 return.  Return -1 on error.  */
 end_comment
 
-begin_macro
-name|getname
-argument_list|(
-argument|uid
-argument_list|,
-argument|namebuf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
 name|char
-name|namebuf
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+modifier|*
+name|getname
+parameter_list|(
+name|uid
+parameter_list|)
 block|{
 name|struct
 name|passwd
@@ -85,23 +75,15 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|-
-literal|1
+name|NOSTR
 return|;
-name|strcpy
-argument_list|(
-name|namebuf
-argument_list|,
+return|return
 name|pw
 operator|->
 name|pw_name
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Convert the passed name to a user id and return it.  Return -1  * on error.  */

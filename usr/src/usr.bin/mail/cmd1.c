@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.12 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,9 +237,6 @@ name|printhead
 argument_list|(
 name|mesg
 argument_list|)
-expr_stmt|;
-name|sreset
-argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -704,17 +701,12 @@ condition|;
 name|ip
 operator|++
 control|)
-block|{
 name|printhead
 argument_list|(
 operator|*
 name|ip
 argument_list|)
 expr_stmt|;
-name|sreset
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|--
