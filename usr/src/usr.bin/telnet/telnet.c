@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.55 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
