@@ -328,21 +328,6 @@ operator|-
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|typep
-index|[
-literal|0
-index|]
-operator|>
-literal|255
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 comment|/* 	 * If this is the first option, allocate space for the 	 * first 2 bytes(for next header and length fields) of 	 * the option header. 	 */
 if|if
 condition|(
