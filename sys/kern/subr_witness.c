@@ -2015,7 +2015,7 @@ expr_stmt|;
 name|witness_levelall
 argument_list|()
 expr_stmt|;
-comment|/* 	 * First, handle sleep mutexes which have been acquired at least 	 * once. 	 */
+comment|/* 	 * First, handle sleep locks which have been acquired at least 	 * once. 	 */
 name|prnt
 argument_list|(
 literal|"Sleep locks:\n"
@@ -2029,7 +2029,7 @@ operator|&
 name|w_sleep
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now do spin mutexes which have been acquired at least once. 	 */
+comment|/* 	 * Now do spin locks which have been acquired at least once. 	 */
 name|prnt
 argument_list|(
 literal|"\nSpin locks:\n"
@@ -2043,7 +2043,7 @@ operator|&
 name|w_spin
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finally, any mutexes which have not been acquired yet. 	 */
+comment|/* 	 * Finally, any locks which have not been acquired yet. 	 */
 name|prnt
 argument_list|(
 literal|"\nLocks which were never acquired:\n"
@@ -5597,7 +5597,7 @@ end_ifdef
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
-argument|mutexes
+argument|locks
 argument_list|,
 argument|db_witness_list
 argument_list|)
