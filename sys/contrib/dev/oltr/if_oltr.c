@@ -298,18 +298,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MIN
-parameter_list|(
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|(((A)< (B)) ? (A) : (B))
-end_define
-
-begin_define
-define|#
-directive|define
 name|MIN3
 parameter_list|(
 name|A

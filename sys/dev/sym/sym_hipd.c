@@ -1441,33 +1441,6 @@ value|SYM_CONF_MAX_QUEUE
 end_define
 
 begin_comment
-comment|/*  *  These ones should have been already defined.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)< (b)) ? (a) : (b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  *  Active debugging tags and verbosity.  */
 end_comment
 

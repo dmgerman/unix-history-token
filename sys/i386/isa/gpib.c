@@ -87,18 +87,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)< (b)) ? (a) : (b))
-end_define
-
-begin_define
-define|#
-directive|define
 name|GPIBPRI
 value|(PZERO + 8) | PCATCH
 end_define

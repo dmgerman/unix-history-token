@@ -5393,15 +5393,6 @@ operator|&
 name|dummy_period
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)< (b)) ? (a) : (b))
 operator|*
 name|offset
 operator|=

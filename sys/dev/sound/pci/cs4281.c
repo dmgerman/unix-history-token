@@ -84,30 +84,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIN
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(x)< (y) ? (x) : (y)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(x)> (y) ? (x) : (y)
-end_define
-
-begin_define
-define|#
-directive|define
 name|inline
 value|__inline
 end_define

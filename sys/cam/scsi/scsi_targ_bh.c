@@ -178,18 +178,6 @@ begin_comment
 comment|/* Max inquiry/sense/mode page transfer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a> b) ? b : a)
-end_define
-
 begin_comment
 comment|/* Offsets into our private CCB area for storing accept information */
 end_comment

@@ -9607,18 +9607,6 @@ begin_comment
 comment|/* DEBUG_ZLIB */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a>= b ? a : b)
-end_define
-
 begin_comment
 comment|/* the arguments must not have side effects */
 end_comment

@@ -836,15 +836,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
 name|struct
 name|nd_ifinfo
 modifier|*

@@ -105,29 +105,6 @@ parameter_list|)
 value|(REV> 0x43&& REV< 0x56)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)> (b) ? (a) : (b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* MailBox Management functions */
 end_comment

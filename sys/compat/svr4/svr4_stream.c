@@ -1895,20 +1895,6 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-ifndef|#
-directive|ifndef
-name|MIN
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)>(b)?(b):(a))
-endif|#
-directive|endif
 comment|/* save sa_len before it is destroyed by MSG_COMPAT */
 name|len
 operator|=
