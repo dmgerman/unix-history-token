@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.21 1996/09/10 19:49:41 jkh Exp $ */
+comment|/* $Id: main.c,v 1.22 1996/09/19 17:31:34 peter Exp $ */
 end_comment
 
 begin_include
@@ -156,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|HTTP_TIMEOUT
-value|60
+value|300
 end_define
 
 begin_comment
@@ -1185,6 +1185,9 @@ decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
+name|time_t
+name|tout
+decl_stmt|;
 name|struct
 name|itimerval
 name|timer
@@ -1568,17 +1571,7 @@ if|if
 condition|(
 name|timeout_ival
 condition|)
-name|timer
-operator|.
-name|it_interval
-operator|.
-name|tv_sec
-operator|=
-name|timer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
+name|tout
 operator|=
 name|timeout_ival
 expr_stmt|;
@@ -1596,17 +1589,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|timer
-operator|.
-name|it_interval
-operator|.
-name|tv_sec
-operator|=
-name|timer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
+name|tout
 operator|=
 name|atoi
 argument_list|(
@@ -1614,17 +1597,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 else|else
-name|timer
-operator|.
-name|it_interval
-operator|.
-name|tv_sec
-operator|=
-name|timer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
+name|tout
 operator|=
 name|FTP_TIMEOUT
 expr_stmt|;
@@ -1632,8 +1605,28 @@ name|timer
 operator|.
 name|it_interval
 operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Reload value */
+name|timer
+operator|.
+name|it_interval
+operator|.
 name|tv_usec
 operator|=
+literal|0
+expr_stmt|;
+name|timer
+operator|.
+name|it_value
+operator|.
+name|tv_sec
+operator|=
+name|tout
+expr_stmt|;
+comment|/* One-Shot value */
 name|timer
 operator|.
 name|it_value
@@ -1641,16 +1634,6 @@ operator|.
 name|tv_usec
 operator|=
 literal|0
-expr_stmt|;
-name|setitimer
-argument_list|(
-name|ITIMER_REAL
-argument_list|,
-operator|&
-name|timer
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 name|display
 argument_list|(
@@ -1664,6 +1647,17 @@ condition|(
 literal|1
 condition|)
 block|{
+name|setitimer
+argument_list|(
+name|ITIMER_REAL
+argument_list|,
+operator|&
+name|timer
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* reset timeout */
 name|n
 operator|=
 name|status
@@ -1713,26 +1707,15 @@ operator|!=
 name|n
 condition|)
 break|break;
-name|timer
-operator|.
-name|it_interval
-operator|.
-name|tv_sec
-operator|=
+block|}
 name|timer
 operator|.
 name|it_value
 operator|.
 name|tv_sec
 operator|=
-name|FTP_TIMEOUT
+literal|0
 expr_stmt|;
-name|timer
-operator|.
-name|it_interval
-operator|.
-name|tv_usec
-operator|=
 name|timer
 operator|.
 name|it_value
@@ -1751,7 +1734,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* disable timeout */
 if|if
 condition|(
 name|status
@@ -2630,6 +2613,9 @@ index|]
 decl_stmt|;
 name|struct
 name|timeval
+name|tv
+decl_stmt|;
+name|time_t
 name|tout
 decl_stmt|;
 name|fd_set
@@ -2707,6 +2693,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|timeout_ival
+condition|)
+name|tout
+operator|=
+name|timeout_ival
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|cp
 operator|=
@@ -2719,8 +2714,6 @@ operator|!=
 name|NULL
 condition|)
 name|tout
-operator|.
-name|tv_sec
 operator|=
 name|atoi
 argument_list|(
@@ -2729,16 +2722,8 @@ argument_list|)
 expr_stmt|;
 else|else
 name|tout
-operator|.
-name|tv_sec
 operator|=
 name|HTTP_TIMEOUT
-expr_stmt|;
-name|tout
-operator|.
-name|tv_usec
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2790,6 +2775,18 @@ condition|(
 literal|1
 condition|)
 block|{
+name|tv
+operator|.
+name|tv_sec
+operator|=
+name|tout
+expr_stmt|;
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 name|i
 operator|=
 name|select
@@ -2806,7 +2803,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|tout
+name|tv
 argument_list|)
 expr_stmt|;
 switch|switch
