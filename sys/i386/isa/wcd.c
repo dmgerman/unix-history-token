@@ -4293,17 +4293,6 @@ condition|(
 name|te
 operator|->
 name|data_len
-operator|>
-sizeof|sizeof
-argument_list|(
-name|toc
-operator|->
-name|tab
-argument_list|)
-operator|||
-name|te
-operator|->
-name|data_len
 operator|<
 sizeof|sizeof
 argument_list|(
