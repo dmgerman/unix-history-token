@@ -2431,6 +2431,9 @@ argument_list|(
 name|dialog
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 goto|goto
 name|draw
 goto|;
