@@ -452,7 +452,7 @@ name|MAXGLOBARGS
 expr_stmt|;
 name|flags
 operator||=
-name|GLOB_MAXPATH
+name|GLOB_LIMIT
 expr_stmt|;
 if|if
 condition|(

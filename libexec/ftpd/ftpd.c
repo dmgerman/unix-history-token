@@ -13010,7 +13010,7 @@ name|MAXGLOBARGS
 expr_stmt|;
 name|flags
 operator||=
-name|GLOB_MAXPATH
+name|GLOB_LIMIT
 expr_stmt|;
 name|freeglob
 operator|=
