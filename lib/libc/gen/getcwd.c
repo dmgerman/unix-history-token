@@ -1052,6 +1052,10 @@ expr_stmt|;
 comment|/* FALLTHROUGH */
 name|err
 label|:
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|ptsize
@@ -1077,6 +1081,10 @@ name|free
 argument_list|(
 name|up
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 return|return
 operator|(
