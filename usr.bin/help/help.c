@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -39,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -165,6 +153,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|err
 argument_list|(
 literal|1
@@ -172,6 +161,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|key
 index|[
 name|len
@@ -221,12 +211,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|rv
 operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * Return 0 if at least one help() worked.  Return 1 else; 	 */
+block|}
+comment|/* 	 * Return 0 if at least one help() worked.  Return 1 else. 	 */
 return|return
 name|rv
 condition|?
