@@ -153,6 +153,13 @@ name|SHOW_ORIGIN
 value|0x2000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHOW_CKSUM
+value|0x4000
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int

@@ -1029,6 +1029,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|Flags
+operator|&
+name|SHOW_CKSUM
+operator|)
+operator|&&
+name|installed
+condition|)
+name|show_cksum
+argument_list|(
+literal|"Mismatched Checksums:\n"
+argument_list|,
+operator|&
+name|plist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|Flags
 operator|&
 name|SHOW_ORIGIN
