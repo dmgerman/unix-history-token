@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_inode.c	6.9	84/07/20	*/
+comment|/*	ffs_inode.c	6.10	84/08/03	*/
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|INOHSZ
-value|64
+value|512
 end_define
 
 begin_if
