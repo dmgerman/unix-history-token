@@ -48,6 +48,7 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +68,7 @@ operator|,
 name|_BSD_VA_LIST_
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +88,7 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +108,7 @@ operator|,
 name|_BSD_VA_LIST_
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
