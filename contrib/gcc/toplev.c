@@ -4678,7 +4678,7 @@ literal|"Warn if frame uses greater than<N> bytes."
 block|}
 block|,
 block|{
-literal|"-Wlarglist-size-<N>"
+literal|"-Warglist-size-<N>"
 block|,
 literal|"Warn if function argument list uses greater than<N> bytes."
 block|}
@@ -17342,6 +17342,28 @@ argument_list|(
 name|lang_option
 argument_list|,
 literal|' '
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|len
+operator|=
+name|space
+operator|-
+name|lang_option
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|space
+operator|=
+name|strchr
+argument_list|(
+name|lang_option
+argument_list|,
+literal|'<'
 argument_list|)
 operator|)
 operator|!=
