@@ -4459,11 +4459,13 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|DEB
 argument_list|(
-literal|"- drop"
+argument|printf(
+literal|"dummynet: - drop"
+argument|);
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 return|return
 literal|1
 return|;
@@ -4578,7 +4580,7 @@ expr_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"- red drop"
+literal|"dummynet: - red drop"
 argument|);
 argument_list|)
 comment|/* after a drop we calculate a new random value */
