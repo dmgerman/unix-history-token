@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	5.9 (Berkeley) %G%"
+literal|"@(#)res_init.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -539,7 +539,7 @@ condition|(
 name|_res
 operator|.
 name|options
-operator|&&
+operator|&
 name|RES_DEBUG
 condition|)
 name|printf
@@ -588,7 +588,7 @@ condition|(
 name|_res
 operator|.
 name|options
-operator|&&
+operator|&
 name|RES_DEBUG
 condition|)
 name|printf
