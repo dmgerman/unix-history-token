@@ -2955,6 +2955,7 @@ decl_stmt|;
 name|ohci_physaddr_t
 name|done
 decl_stmt|;
+comment|/* if attach is failed we get a NULL pointer here 	 * XXX should be removed when pci_unmap_int is implemented 	 */
 if|if
 condition|(
 operator|(
