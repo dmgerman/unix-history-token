@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.21	81/03/06	*/
+comment|/*	autoconf.c	4.22	81/03/06	*/
 end_comment
 
 begin_comment
@@ -1544,7 +1544,7 @@ literal|" slave %d"
 argument_list|,
 name|ni
 operator|->
-name|ni_slave
+name|mi_slave
 argument_list|)
 expr_stmt|;
 name|printf
