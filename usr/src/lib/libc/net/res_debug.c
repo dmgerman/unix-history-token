@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.15 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,11 @@ literal|"UPDATEA"
 block|,
 literal|"UPDATED"
 block|,
+literal|"UPDATEDA"
+block|,
 literal|"UPDATEM"
+block|,
+literal|"UPDATEMA"
 block|,
 literal|"ZONEINIT"
 block|,
