@@ -599,22 +599,10 @@ name|TRUE
 expr_stmt|;
 block|}
 else|else
-block|{
-if|#
-directive|if
-literal|0
-comment|/* WHY? */
-block|DEBUGF(MAKE, ("source %smade...", gn->childMade ? "" : "not ")); 	oodate = gn->childMade;
-else|#
-directive|else
 name|oodate
 operator|=
 name|FALSE
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 0 */
-block|}
 comment|/*      * If the target isn't out-of-date, the parents need to know its      * modification time. Note that targets that appear to be out-of-date      * but aren't, because they have no commands and aren't of type OP_NOP,      * have their mtime stay below their children's mtime to keep parents from      * thinking they're out-of-date.      */
 if|if
 condition|(
