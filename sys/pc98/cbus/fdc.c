@@ -4859,12 +4859,17 @@ name|fdc_dev
 operator|=
 name|dev
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|fdc
 operator|->
 name|fdctl_wr
 operator|=
 name|fdctl_wr_pcmcia
 expr_stmt|;
+endif|#
+directive|endif
 name|fdc
 operator|->
 name|flags
@@ -4888,6 +4893,9 @@ condition|)
 goto|goto
 name|out
 goto|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* First - lets reset the floppy controller */
 name|fdout_wr
 argument_list|(
@@ -4908,6 +4916,8 @@ argument_list|,
 name|FDO_FRST
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* see if it can handle a command */
 if|if
 condition|(
