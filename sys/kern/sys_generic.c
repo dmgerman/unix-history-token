@@ -714,9 +714,10 @@ name|struct
 name|iovec
 name|aiov
 decl_stmt|;
-name|long
+name|ssize_t
 name|cnt
-decl_stmt|,
+decl_stmt|;
+name|long
 name|error
 init|=
 literal|0
@@ -1664,9 +1665,10 @@ name|struct
 name|iovec
 name|aiov
 decl_stmt|;
-name|long
+name|ssize_t
 name|cnt
-decl_stmt|,
+decl_stmt|;
+name|long
 name|error
 init|=
 literal|0
