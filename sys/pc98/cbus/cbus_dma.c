@@ -157,12 +157,6 @@ begin_comment
 comment|/* **  Register definitions for DMA controller 1 (channels 0..3): */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -175,6 +169,17 @@ end_define
 
 begin_comment
 comment|/* addr reg for channel c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA1_STATUS
+value|(IO_DMA + 0x10)
+end_define
+
+begin_comment
+comment|/* status register */
 end_comment
 
 begin_define
@@ -210,63 +215,6 @@ begin_comment
 comment|/* clear first/last FF */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DMA1_CHN
-parameter_list|(
-name|c
-parameter_list|)
-value|(IO_DMA1 + 1*(2*(c)))
-end_define
-
-begin_comment
-comment|/* addr reg for channel c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_SMSK
-value|(IO_DMA1 + 1*10)
-end_define
-
-begin_comment
-comment|/* single mask register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_MODE
-value|(IO_DMA1 + 1*11)
-end_define
-
-begin_comment
-comment|/* mode register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA1_FFC
-value|(IO_DMA1 + 1*12)
-end_define
-
-begin_comment
-comment|/* clear first/last FF */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* **  Register definitions for DMA controller 2 (channels 4..7): */
 end_comment
@@ -283,6 +231,17 @@ end_define
 
 begin_comment
 comment|/* addr reg for channel c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA2_STATUS
+value|(IO_DMA2 + 2*8)
+end_define
+
+begin_comment
+comment|/* status register */
 end_comment
 
 begin_define
@@ -2317,6 +2276,35 @@ expr_stmt|;
 return|return
 operator|(
 name|cnt
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reached terminal count yet ?  */
+end_comment
+
+begin_function
+name|int
+name|isa_dmatc
+parameter_list|(
+name|int
+name|chan
+parameter_list|)
+block|{
+return|return
+operator|(
+name|inb
+argument_list|(
+name|DMA1_STATUS
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+name|chan
+operator|)
 operator|)
 return|;
 block|}
