@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	5.1 (Berkeley) %G%"
+literal|"@(#)makemap.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,11 @@ name|verbose
 init|=
 name|FALSE
 decl_stmt|;
+name|bool
+name|foldcase
+init|=
+name|FALSE
+decl_stmt|;
 name|int
 name|exitstat
 decl_stmt|;
@@ -321,7 +326,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Norv"
+literal|"Nforv"
 argument_list|)
 operator|)
 operator|!=
@@ -337,6 +342,14 @@ case|case
 literal|'N'
 case|:
 name|inclnull
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|foldcase
 operator|=
 name|TRUE
 expr_stmt|;
@@ -809,7 +822,27 @@ condition|;
 name|p
 operator|++
 control|)
-continue|continue;
+block|{
+if|if
+condition|(
+name|foldcase
+operator|&&
+name|isupper
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+name|tolower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 name|key
 operator|.
 name|xx
