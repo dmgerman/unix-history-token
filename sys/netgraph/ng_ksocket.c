@@ -156,6 +156,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -168,6 +171,21 @@ modifier|*
 name|priv_p
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Flags for priv_p */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSF_SENDING
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Sending on socket */
+end_comment
 
 begin_comment
 comment|/* Netgraph node methods */
@@ -3581,6 +3599,33 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* Avoid reentrantly sending on the socket */
+if|if
+condition|(
+operator|(
+name|priv
+operator|->
+name|flags
+operator|&
+name|KSF_SENDING
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|NG_FREE_DATA
+argument_list|(
+name|m
+argument_list|,
+name|meta
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EDEADLK
+operator|)
+return|;
+block|}
 comment|/* If any meta info, look for peer socket address */
 if|if
 condition|(
@@ -3670,6 +3715,12 @@ break|break;
 block|}
 block|}
 comment|/* Send packet */
+name|priv
+operator|->
+name|flags
+operator||=
+name|KSF_SENDING
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -3697,6 +3748,13 @@ literal|0
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|flags
+operator|&=
+operator|~
+name|KSF_SENDING
 expr_stmt|;
 comment|/* Clean up and exit */
 name|NG_FREE_META
