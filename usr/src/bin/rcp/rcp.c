@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.5 83/06/10"
+literal|"@(#)rcp.c	4.6 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,6 +504,17 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|targ
+operator|==
+literal|0
+condition|)
+name|targ
+operator|=
+literal|"."
+expr_stmt|;
 name|tuser
 operator|=
 name|rindex
@@ -586,6 +597,18 @@ name|src
 operator|++
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|src
+operator|==
+literal|0
+condition|)
+operator|*
+name|src
+operator|=
+literal|"."
 expr_stmt|;
 name|suser
 operator|=
@@ -870,6 +893,17 @@ name|src
 operator|++
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|src
+operator|==
+literal|0
+condition|)
+name|src
+operator|=
+literal|"."
 expr_stmt|;
 name|suser
 operator|=
@@ -1676,7 +1710,7 @@ end_block
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_macro
@@ -2405,10 +2439,14 @@ argument_list|(
 literal|2
 argument_list|,
 name|cmdbuf
+operator|+
+literal|1
 argument_list|,
 name|strlen
 argument_list|(
 name|cmdbuf
+operator|+
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
