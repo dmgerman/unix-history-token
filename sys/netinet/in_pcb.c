@@ -3514,7 +3514,7 @@ name|so
 operator|->
 name|so_pcb
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sotryfree
 argument_list|(
