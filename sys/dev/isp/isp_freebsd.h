@@ -563,36 +563,12 @@ directive|ifdef
 name|ISP_TARGET_MODE
 define|#
 directive|define
-name|TM_WANTED
-value|0x80
-define|#
-directive|define
-name|TM_BUSY
-value|0x40
-define|#
-directive|define
 name|TM_WILDCARD_ENABLED
 value|0x02
 define|#
 directive|define
 name|TM_TMODE_ENABLED
 value|0x01
-name|struct
-name|cv
-name|tgtcv0
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* two busses */
-name|struct
-name|cv
-name|tgtcv1
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* two busses */
 name|u_int8_t
 name|tmflags
 index|[
@@ -600,15 +576,17 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* two busses */
-name|u_int8_t
-name|rstatus
+define|#
+directive|define
+name|NLEACT
+value|4
+name|union
+name|ccb
+modifier|*
+name|leact
 index|[
-literal|2
+name|NLEACT
 index|]
-decl_stmt|;
-comment|/* two bussed */
-name|u_int16_t
-name|rollinfo
 decl_stmt|;
 name|tstate_t
 name|tsdflt
