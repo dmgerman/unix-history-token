@@ -162,7 +162,7 @@ literal|1000
 expr_stmt|;
 name|time_to_sleep
 operator|.
-name|tsvsec
+name|tv_sec
 operator|=
 name|useconds
 operator|/
