@@ -1011,14 +1011,8 @@ condition|(
 name|ok
 condition|)
 block|{
-name|hw_config
-operator|->
-name|irq
-operator|=
-name|sb_config
-operator|->
-name|irq
-expr_stmt|;
+comment|/* cause conflicts */
+comment|/*    hw_config->irq = sb_config->irq; */
 return|return
 literal|2
 return|;

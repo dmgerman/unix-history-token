@@ -2146,22 +2146,9 @@ return|return
 literal|0
 return|;
 comment|/* Not a SB16 */
-name|hw_config
-operator|->
-name|io_base
-operator|=
-name|sb_config
-operator|->
-name|io_base
-expr_stmt|;
-name|hw_config
-operator|->
-name|irq
-operator|=
-name|sb_config
-operator|->
-name|irq
-expr_stmt|;
+comment|/* cause conflicts */
+comment|/*  hw_config->io_base = sb_config->io_base; */
+comment|/*  hw_config->irq = sb_config->irq; */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2296,8 +2283,10 @@ name|sb16_dsp_ok
 operator|=
 literal|1
 expr_stmt|;
+comment|/*  return 0x10; */
 return|return
-literal|0x10
+operator|-
+literal|1
 return|;
 block|}
 end_function
