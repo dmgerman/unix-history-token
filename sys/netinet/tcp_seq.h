@@ -215,6 +215,12 @@ begin_comment
 comment|/* global connection count */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
+end_ifdef
+
 begin_comment
 comment|/*  * Increment for tcp_iss each second.  * This is designed to increment at the standard 250 KB/s,  * but with a random component averaging 128 KB.  * We also increment tcp_iss by a quarter of this amount  * each time we use the value for a new connection.  * If defined, the tcp_random18() macro should produce a  * number in the range [0-0x3ffff] that is hard to predict.  */
 end_comment
@@ -254,6 +260,15 @@ end_decl_stmt
 
 begin_comment
 comment|/* tcp initial send seq # */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TCP_COMPAT_42 */
 end_comment
 
 begin_else
