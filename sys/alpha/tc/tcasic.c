@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tcasic.c,v 1.2 1999/04/16 21:21:41 peter Exp $ */
+comment|/* $Id: tcasic.c,v 1.3 1999/05/08 21:58:49 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -295,27 +295,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|tcasic_softc
-modifier|*
-name|sc
-init|=
-name|TCASIC_SOFTC
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|device_t
-name|parent
-init|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|regs
-decl_stmt|;
 name|tcasic0
 operator|=
 name|dev
