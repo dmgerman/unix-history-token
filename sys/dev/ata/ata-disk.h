@@ -83,12 +83,6 @@ name|int
 name|serv
 decl_stmt|;
 comment|/* request had service */
-name|struct
-name|ata_dmaentry
-modifier|*
-name|dmatab
-decl_stmt|;
-comment|/* DMA transfer table */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ad_request

@@ -1103,12 +1103,6 @@ modifier|*
 name|callback
 decl_stmt|;
 comment|/* ptr to callback func */
-name|struct
-name|ata_dmaentry
-modifier|*
-name|dmatab
-decl_stmt|;
-comment|/* DMA transfer table */
 name|void
 modifier|*
 name|driver
