@@ -238,6 +238,9 @@ modifier|*
 name|mc_private
 decl_stmt|;
 comment|/* submitter-private data or wait channel */
+name|int
+name|mc_command
+decl_stmt|;
 block|}
 struct|;
 end_struct
