@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.9 (Berkeley) %G%"
+literal|"@(#)cico.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -984,7 +984,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*We have no controlling terminal */
+comment|/* We have no controlling terminal */
 name|setpgrp
 argument_list|(
 literal|0
@@ -1222,6 +1222,11 @@ operator|=
 literal|1
 expr_stmt|;
 name|fixmode
+argument_list|(
+name|Ifn
+argument_list|)
+expr_stmt|;
+name|getbaud
 argument_list|(
 name|Ifn
 argument_list|)
