@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -414,6 +414,47 @@ directive|define
 name|DEFFILEMODE
 value|(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
 end_define
+
+begin_comment
+comment|/*  * Definitions of flags stored in file flags word.  *  * Low 16-bits owner setable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NODUMP
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* do not dump file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMMUTABLE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* file may not be changed */
+end_comment
+
+begin_comment
+comment|/*  * High 16-bits only super-user setable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVED
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* file is archived */
+end_comment
 
 begin_endif
 endif|#
