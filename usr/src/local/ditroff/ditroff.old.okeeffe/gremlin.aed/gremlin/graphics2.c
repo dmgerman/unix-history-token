@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* graphics2.c  *  * Copyright -C- 1982 Barry S. Roitblat  *  * This file contains more routines for implementing the graphics primitives  * for the gremlin picture editor  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
+comment|/* @(#)graphics2.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  * This file contains more routines for implementing the graphics primitives  * for the gremlin picture editor  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
 end_comment
 
 begin_include
@@ -200,9 +197,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_expr_stmt
 specifier|static
 name|RelativeVector
@@ -273,9 +267,6 @@ end_block
 begin_comment
 comment|/* end RelativeVector */
 end_comment
-
-begin_escape
-end_escape
 
 begin_define
 define|#
@@ -637,9 +628,6 @@ end_comment
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_escape
-end_escape
 
 begin_define
 define|#
@@ -1613,9 +1601,6 @@ begin_comment
 comment|/* end PeriodicSpline */
 end_comment
 
-begin_escape
-end_escape
-
 begin_expr_stmt
 specifier|static
 name|NaturalEndSpline
@@ -2167,9 +2152,6 @@ begin_comment
 comment|/* end NaturalEndSpline */
 end_comment
 
-begin_escape
-end_escape
-
 begin_define
 define|#
 directive|define
@@ -2641,9 +2623,6 @@ begin_comment
 comment|/* end GRCurve */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|GRPutText
 argument_list|(
@@ -3109,9 +3088,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_escape
-end_escape
-
 begin_macro
 name|GRClear
 argument_list|(
@@ -3370,9 +3346,6 @@ end_block
 begin_comment
 comment|/* end DisplayPoint */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|GRErasePoint

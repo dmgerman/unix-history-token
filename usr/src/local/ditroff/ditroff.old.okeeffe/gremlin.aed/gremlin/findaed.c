@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* findaed.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  * This file contains a single routine which will find the correct  * AED display to use from the current terminal.    *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
+comment|/* @(#)findaed.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  * This file contains a single routine which will find the correct  * AED display to use from the current terminal.    *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
 end_comment
 
 begin_include
@@ -45,9 +42,6 @@ name|GDisplays
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_function
 name|char

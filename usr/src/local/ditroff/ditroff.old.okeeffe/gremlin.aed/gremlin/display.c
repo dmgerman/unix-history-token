@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* display.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines to implement the higher level display  * driver routines  */
+comment|/* @(#)display.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines to implement the higher level display  * driver routines  */
 end_comment
 
 begin_include
@@ -293,9 +290,6 @@ begin_comment
 comment|/* end ScreenAdd */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|DISScreenErase
 argument_list|(
@@ -513,9 +507,6 @@ end_block
 begin_comment
 comment|/* end ScreenErase */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|DISDisplaySet

@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* graphics3.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains additional routines for implementing graphics  * primitives for the gremlin picture editor  */
+comment|/* @(#)graphics3.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains additional routines for implementing graphics  * primitives for the gremlin picture editor  */
 end_comment
 
 begin_include
@@ -161,9 +158,6 @@ literal|1
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_define
 define|#
@@ -443,9 +437,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_macro
 name|GRSetGrid
@@ -838,9 +829,6 @@ end_block
 begin_comment
 comment|/* end SetRead */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|GRDisplayGrid
