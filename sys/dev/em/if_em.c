@@ -44,7 +44,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"1.0.6"
+literal|"1.0.7"
 decl_stmt|;
 end_decl_stmt
 
@@ -4828,31 +4828,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|Adapter
-operator|->
-name|PciCommandWord
-operator|&
-operator|(
-name|PCIM_CMD_BUSMASTEREN
-operator||
-name|PCIM_CMD_MEMEN
-operator|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"em%d: Memory Access or Bus Master bits were not set!"
-argument_list|,
-name|Adapter
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
 name|Adapter
 operator|->
 name|PciCommandWord
@@ -4876,7 +4851,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Save off the information about this board */
 name|Adapter
 operator|->

@@ -1274,7 +1274,7 @@ operator|(
 operator|(
 name|HashReg
 operator|&
-literal|0x0E
+literal|0x1
 operator|)
 operator|==
 literal|1
@@ -1488,7 +1488,7 @@ operator|(
 operator|(
 name|Offset
 operator|&
-literal|0x0E
+literal|0x1
 operator|)
 operator|==
 literal|1
