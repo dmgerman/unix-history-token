@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.8.2.1 1999/05/08 23:05:14 n_hibma Exp $ */
+comment|/*	FreeBSD $FreeBSD$ */
 end_comment
 
 begin_comment

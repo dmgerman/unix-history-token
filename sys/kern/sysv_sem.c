@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.21 1998/03/30 09:50:41 phk Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: btxv86.h,v 1.3 1998/10/02 16:22:54 msmith Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

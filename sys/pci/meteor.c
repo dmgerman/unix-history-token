@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserv
 end_comment
 
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.83 1999/05/31 11:28:53 phk Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

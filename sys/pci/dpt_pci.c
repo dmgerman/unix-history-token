@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  PCI Bus Attachment for DPT SCSI HBAs  */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.10 1998/12/07 21:58:46 archie Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_include

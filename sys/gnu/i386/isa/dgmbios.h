@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id$  *  * This file is an ascii copy of the file sxbios.bin included in the  * Digiboard PC/Xem driver for Linux.  It is copyright 1992, DIGI   * International. All Rights Reserved.  */
+comment|/*  * $FreeBSD$  *  * This file is an ascii copy of the file sxbios.bin included in the  * Digiboard PC/Xem driver for Linux.  It is copyright 1992, DIGI   * International. All Rights Reserved.  */
 end_comment
 
 begin_decl_stmt

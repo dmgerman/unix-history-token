@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Exported interface to downloadable microcode for AdvanSys SCSI Adapters  *  *	$Id: advmcode.h,v 1.4 1998/09/15 07:03:34 gibbs Exp $  *  * Obtained from:  *  * Copyright (c) 1995-1998 Advanced System Products, Inc.  * All Rights Reserved.  *     * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  */
+comment|/*  * Exported interface to downloadable microcode for AdvanSys SCSI Adapters  *  * $FreeBSD$  *  * Obtained from:  *  * Copyright (c) 1995-1998 Advanced System Products, Inc.  * All Rights Reserved.  *     * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  */
 end_comment
 
 begin_ifndef

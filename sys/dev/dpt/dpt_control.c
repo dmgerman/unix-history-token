@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.10.2.1 1999/05/11 11:04:12 jkh Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_include

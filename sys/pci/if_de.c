@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.93.2.1 1999/03/01 17:03:24 luigi Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

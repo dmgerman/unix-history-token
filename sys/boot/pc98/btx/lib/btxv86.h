@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: sliceio.h,v 1.1 1998/04/19 23:32:43 julian Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
