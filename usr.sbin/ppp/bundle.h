@@ -72,15 +72,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPT_IDCHECK
+name|OPT_FORCE_SCRIPTS
 value|0x0002
+end_define
+
+begin_comment
+comment|/* force chat scripts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPT_IDCHECK
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_IFACEALIAS
-value|0x0004
+value|0x0008
 end_define
 
 begin_ifndef
@@ -93,14 +104,14 @@ begin_define
 define|#
 directive|define
 name|OPT_IPCP
-value|0x0008
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_IPV6CP
-value|0x0010
+value|0x0020
 end_define
 
 begin_endif
@@ -112,63 +123,63 @@ begin_define
 define|#
 directive|define
 name|OPT_KEEPSESSION
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPT_LOOPBACK
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PASSWDAUTH
+name|OPT_LOOPBACK
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXY
+name|OPT_PASSWDAUTH
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXYALL
+name|OPT_PROXY
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_SROUTES
+name|OPT_PROXYALL
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_TCPMSSFIXUP
+name|OPT_SROUTES
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_THROUGHPUT
+name|OPT_TCPMSSFIXUP
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_UTMP
+name|OPT_THROUGHPUT
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_UTMP
+value|0x4000
 end_define
 
 begin_define
