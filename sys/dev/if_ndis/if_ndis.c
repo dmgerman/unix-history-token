@@ -4818,6 +4818,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LINK_STATE_UP
 name|sc
 operator|->
 name|arpcom
@@ -4840,6 +4843,9 @@ name|ac_if
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* LINK_STATE_UP */
 block|}
 if|if
 condition|(
@@ -4869,6 +4875,9 @@ name|ndis_link
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LINK_STATE_DOWN
 name|sc
 operator|->
 name|arpcom
@@ -4891,6 +4900,9 @@ name|ac_if
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* LINK_STATE_DOWN */
 block|}
 name|NDIS_UNLOCK
 argument_list|(
