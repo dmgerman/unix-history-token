@@ -1561,68 +1561,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Entries EAI_ADDRFAMILY (1) and EAI_NODATA (7) are obsoleted, but left */
-end_comment
-
-begin_comment
-comment|/* for backward compatibility with userland code prior to 2553bis-02 */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|ai_errlist
-index|[]
-init|=
-block|{
-literal|"Success"
-block|,
-comment|/* 0 */
-literal|"Address family for hostname not supported"
-block|,
-comment|/* 1 */
-literal|"Temporary failure in name resolution"
-block|,
-comment|/* EAI_AGAIN */
-literal|"Invalid value for ai_flags"
-block|,
-comment|/* EAI_BADFLAGS */
-literal|"Non-recoverable failure in name resolution"
-block|,
-comment|/* EAI_FAIL */
-literal|"ai_family not supported"
-block|,
-comment|/* EAI_FAMILY */
-literal|"Memory allocation failure"
-block|,
-comment|/* EAI_MEMORY */
-literal|"No address associated with hostname"
-block|,
-comment|/* 7 */
-literal|"hostname nor servname provided, or not known"
-block|,
-comment|/* EAI_NONAME */
-literal|"servname not supported for ai_socktype"
-block|,
-comment|/* EAI_SERVICE */
-literal|"ai_socktype not supported"
-block|,
-comment|/* EAI_SOCKTYPE */
-literal|"System error returned in errno"
-block|,
-comment|/* EAI_SYSTEM */
-literal|"Invalid value for hints"
-block|,
-comment|/* EAI_BADHINTS */
-literal|"Resolved protocol is unknown"
-comment|/* EAI_PROTOCOL */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * XXX: Many dependencies are not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call them.  */
 end_comment
 
@@ -1759,38 +1697,6 @@ value|((x) == (y) || (
 comment|/*CONSTCOND*/
 value|(w)&& ((x) == ANY || (y) == ANY)))
 end_define
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|gai_strerror
-parameter_list|(
-name|int
-name|ecode
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ecode
-operator|>=
-literal|0
-operator|&&
-name|ecode
-operator|<
-name|EAI_MAX
-condition|)
-return|return
-name|ai_errlist
-index|[
-name|ecode
-index|]
-return|;
-return|return
-literal|"Unknown error"
-return|;
-block|}
-end_function
 
 begin_function
 name|void
