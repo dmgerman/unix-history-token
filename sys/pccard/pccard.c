@@ -1515,6 +1515,15 @@ name|pccard_dev
 modifier|*
 name|dp
 decl_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|state
+operator|==
+name|filled
+condition|)
+block|{
 for|for
 control|(
 name|dp
@@ -1543,6 +1552,7 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+block|}
 name|sp
 operator|->
 name|ctrl
@@ -1697,6 +1707,15 @@ operator|->
 name|irq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|state
+operator|==
+name|filled
+condition|)
+block|{
 for|for
 control|(
 name|dp
@@ -1727,6 +1746,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
