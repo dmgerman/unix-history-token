@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.9 1996/03/26 02:29:11 asami Exp $ */
+comment|/* $Id: ccd.c,v 1.10 1996/04/24 09:42:22 asami Exp $ */
 end_comment
 
 begin_comment
@@ -860,6 +860,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Number of blocks to untouched in front of a component partition.  * This is to avoid violating its disklabel area when it starts at the  * beginning of the slice.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCD_OFFSET
+value|16
+end_define
+
+begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
 end_comment
 
@@ -1650,6 +1661,8 @@ operator|.
 name|part
 operator|->
 name|p_size
+operator|-
+name|CCD_OFFSET
 expr_stmt|;
 block|}
 else|else
@@ -4060,6 +4073,8 @@ operator|=
 name|cbn
 operator|+
 name|cboff
+operator|+
+name|CCD_OFFSET
 expr_stmt|;
 name|cbp
 operator|->
