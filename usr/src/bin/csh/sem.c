@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.17 (Berkeley) %G%"
+literal|"@(#)sem.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2042,6 +2042,9 @@ specifier|register
 name|Char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|dp
 decl_stmt|;
 specifier|register
 name|int
@@ -2126,6 +2129,8 @@ name|cp
 operator|=
 name|globone
 argument_list|(
+name|dp
+operator|=
 name|Dfix1
 argument_list|(
 name|cp
@@ -2162,6 +2167,14 @@ operator|(
 name|ptr_t
 operator|)
 name|cp
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|dp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2339,6 +2352,8 @@ name|cp
 operator|=
 name|globone
 argument_list|(
+name|dp
+operator|=
 name|Dfix1
 argument_list|(
 name|cp
@@ -2375,6 +2390,14 @@ operator|(
 name|ptr_t
 operator|)
 name|cp
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|dp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * so> /dev/std{out,err} work 	 */
