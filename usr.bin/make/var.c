@@ -4216,7 +4216,7 @@ name|v
 parameter_list|,
 name|Boolean
 modifier|*
-name|freePtr
+name|freeResult
 parameter_list|)
 block|{
 name|char
@@ -4236,7 +4236,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -5576,7 +5576,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|freePtr
+name|freeResult
 condition|)
 block|{
 name|free
@@ -5597,7 +5597,7 @@ name|var_Error
 condition|)
 block|{
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -5605,7 +5605,7 @@ block|}
 else|else
 block|{
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -5638,7 +5638,7 @@ name|buf
 parameter_list|,
 name|Boolean
 modifier|*
-name|freePtr
+name|freeResult
 parameter_list|)
 block|{
 specifier|const
@@ -5701,7 +5701,7 @@ name|startc
 argument_list|,
 name|v
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 expr_stmt|;
 if|if
@@ -5836,7 +5836,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -5968,7 +5968,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -6001,13 +6001,13 @@ name|startc
 argument_list|,
 name|v
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|*
-name|freePtr
+name|freeResult
 condition|)
 block|{
 name|free
@@ -6024,7 +6024,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -6135,7 +6135,7 @@ name|startc
 argument_list|,
 name|v
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 expr_stmt|;
 return|return
@@ -6167,13 +6167,13 @@ name|startc
 argument_list|,
 name|v
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|*
-name|freePtr
+name|freeResult
 condition|)
 block|{
 name|free
@@ -6190,7 +6190,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -6225,7 +6225,7 @@ name|buf
 parameter_list|,
 name|Boolean
 modifier|*
-name|freePtr
+name|freeResult
 parameter_list|)
 block|{
 specifier|const
@@ -6305,7 +6305,7 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -6426,7 +6426,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -6558,7 +6558,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -6570,7 +6570,7 @@ return|;
 block|}
 block|}
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -6728,7 +6728,7 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -6740,7 +6740,7 @@ return|;
 block|}
 block|}
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -6775,7 +6775,7 @@ name|vp
 parameter_list|,
 name|Boolean
 modifier|*
-name|freePtr
+name|freeResult
 parameter_list|)
 block|{
 name|Buffer
@@ -6790,7 +6790,7 @@ name|endc
 decl_stmt|;
 name|char
 modifier|*
-name|result
+name|value
 decl_stmt|;
 name|buf
 operator|=
@@ -6847,7 +6847,7 @@ operator|==
 name|endc
 condition|)
 block|{
-name|result
+name|value
 operator|=
 name|ParseRestEnd
 argument_list|(
@@ -6855,7 +6855,7 @@ name|vp
 argument_list|,
 name|buf
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 expr_stmt|;
 name|vp
@@ -6873,7 +6873,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|value
 operator|)
 return|;
 block|}
@@ -6888,7 +6888,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-name|result
+name|value
 operator|=
 name|ParseRestModifier
 argument_list|(
@@ -6898,7 +6898,7 @@ name|startc
 argument_list|,
 name|buf
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 expr_stmt|;
 name|vp
@@ -6916,7 +6916,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|value
 operator|)
 return|;
 block|}
@@ -7035,7 +7035,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
