@@ -1533,6 +1533,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|OsdSleep
+parameter_list|(
+name|UINT32
+parameter_list|,
+name|UINT32
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|OsdSleepUsec
+parameter_list|(
+name|UINT32
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

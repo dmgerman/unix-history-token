@@ -73,6 +73,28 @@ begin_comment
 comment|/* no debugger in kernel */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AML_STALL
+parameter_list|(
+name|micro
+parameter_list|)
+value|DELAY(micro)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_SLEEP
+parameter_list|(
+name|sec
+parameter_list|,
+name|milli
+parameter_list|)
+value|OsdSleep(sec, milli)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -126,6 +148,34 @@ name|y
 parameter_list|)
 value|aml_dbgr(x, y)
 end_define
+
+begin_define
+define|#
+directive|define
+name|AML_STALL
+parameter_list|(
+name|micro
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* not required in userland */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_SLEEP
+parameter_list|(
+name|sec
+parameter_list|,
+name|milli
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* not required in userland */
+end_comment
 
 begin_endif
 endif|#

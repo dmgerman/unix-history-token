@@ -913,6 +913,18 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|acpi_disable_events
+parameter_list|(
+name|acpi_softc_t
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|acpi_clear_ignore_events
 parameter_list|(
 name|void
@@ -1142,6 +1154,21 @@ modifier|...
 parameter_list|)
 value|do { if (acpi_debug) ACPI_DEVPRINTF(args);} while(0)
 end_define
+
+begin_comment
+comment|/*  * System service interface  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_sleep
+parameter_list|(
+name|u_int32_t
+name|micro
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
