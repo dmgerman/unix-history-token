@@ -1722,9 +1722,10 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] src target"
+literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] source_file target_file"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] src1 ... srcN directory"
+literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] source_file ... "
+literal|"target_directory"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -403,7 +403,7 @@ name|char
 name|usage
 index|[]
 init|=
-literal|"usage: %s [-] [-sx] [-p string] [name]\n"
+literal|"usage: %s [-] [-sx] [-p string] [file]\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,10 +564,11 @@ name|stderr
 argument_list|,
 name|usage
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|red
+condition|?
+literal|"red"
+else|:
+literal|"ed"
 argument_list|)
 expr_stmt|;
 name|exit

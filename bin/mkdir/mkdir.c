@@ -825,7 +825,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkdir [-pv] [-m mode] directory ...\n"
+literal|"usage: mkdir [-pv] [-m mode] directory_name ...\n"
 argument_list|)
 expr_stmt|;
 name|exit

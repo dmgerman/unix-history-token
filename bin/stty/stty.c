@@ -661,7 +661,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: stty [-a|-e|-g] [-f file] [options]\n"
+literal|"usage: stty [-a | -e | -g] [-f file] [arguments]\n"
 argument_list|)
 expr_stmt|;
 name|exit

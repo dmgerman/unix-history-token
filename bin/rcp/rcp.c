@@ -4400,9 +4400,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: rcp [-46p] f1 f2"
+literal|"usage: rcp [-46p] file1 file2"
 argument_list|,
-literal|"       rcp [-46pr] f1 ... fn directory"
+literal|"       rcp [-46pr] file ... directory"
 argument_list|)
 expr_stmt|;
 name|exit

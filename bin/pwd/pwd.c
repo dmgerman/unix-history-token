@@ -286,7 +286,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pwd [-LP]\n"
+literal|"usage: pwd [-L | -P]\n"
 argument_list|)
 expr_stmt|;
 name|exit

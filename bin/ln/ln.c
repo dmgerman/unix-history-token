@@ -1040,11 +1040,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ln [-fhinsv] file1 file2"
+literal|"usage: ln [-fhinsv] source_file [target_file]"
 argument_list|,
-literal|"       ln [-fhinsv] file ... directory"
+literal|"       ln [-fhinsv] source_file ... target_dir"
 argument_list|,
-literal|"       link file1 file2"
+literal|"       link source_file target_file"
 argument_list|)
 expr_stmt|;
 name|exit
