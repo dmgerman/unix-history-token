@@ -5293,25 +5293,15 @@ operator|*
 name|flow_id
 condition|)
 block|{
-comment|/* Accept if passed first test */
+comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. 		 */
 if|if
 condition|(
 name|fw_one_pass
 condition|)
+comment|/* just accept if fw_one_pass is set */
 return|return
 literal|0
 return|;
-comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. 		 */
-name|chain
-operator|=
-name|LIST_NEXT
-argument_list|(
-operator|*
-name|flow_id
-argument_list|,
-name|next
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6791,20 +6781,16 @@ case|case
 name|IP_FW_F_SKIPTO
 case|:
 comment|/* XXX check */
-if|if
-condition|(
-operator|(
 name|chain
 operator|=
 name|f
 operator|->
 name|next_rule_ptr
-operator|)
-operator|==
-name|NULL
-condition|)
-name|chain
-operator|=
+condition|?
+name|f
+operator|->
+name|next_rule_ptr
+else|:
 name|lookup_next_rule
 argument_list|(
 name|chain
