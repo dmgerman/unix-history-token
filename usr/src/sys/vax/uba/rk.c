@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.19	%G%	*/
+comment|/*	rk.c	4.20	%G%	*/
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  */
+comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Why do we lose an interrupt sometime when spinning drives down?  */
 end_comment
 
 begin_define
@@ -1172,6 +1172,19 @@ argument_list|(
 name|rkaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|=
+name|dp
+operator|->
+name|b_actf
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|rkaddr
 operator|->
 name|rkcs1
@@ -1187,21 +1200,12 @@ argument_list|(
 name|rkaddr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+return|return
 operator|(
-name|bp
-operator|=
-name|dp
-operator|->
-name|b_actf
+literal|0
 operator|)
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|out
-goto|;
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1232,6 +1236,21 @@ name|rkaddr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|b_active
+condition|)
+goto|goto
+name|done
+goto|;
+name|dp
+operator|->
+name|b_active
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2641,37 +2660,6 @@ name|RK_CDT
 operator||
 name|RK_IE
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rkaddr
-operator|->
-name|rkcs1
-operator|&
-name|RK_IE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cs1 %o not ie\n"
-argument_list|,
-name|rkaddr
-operator|->
-name|rkcs1
-argument_list|)
-expr_stmt|;
-name|rkaddr
-operator|->
-name|rkcs1
-operator||=
-name|RK_CDT
-operator||
-name|RK_IE
-expr_stmt|;
-block|}
 block|}
 end_block
 
