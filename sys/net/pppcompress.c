@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -58,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/slcompress.h>
+file|<net/pppcompress.h>
 end_include
 
 begin_ifndef

@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -101,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -202,7 +214,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<net/slcompress.h>
+file|<net/pppcompress.h>
 end_include
 
 begin_define
@@ -246,7 +258,7 @@ file|<machine/cpu.h>
 end_include
 
 begin_comment
-comment|/* This is a NetBSD-current kernel. */
+comment|/* This is a FreeBSD-2.x kernel. */
 end_comment
 
 begin_define
@@ -411,17 +423,18 @@ operator|(
 expr|struct
 name|ifnet
 operator|*
-name|ifp
 operator|,
 expr|struct
 name|mbuf
 operator|*
-name|m0
 operator|,
 expr|struct
 name|sockaddr
 operator|*
-name|dst
+operator|,
+expr|struct
+name|rtentry
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -997,22 +1010,17 @@ begin_comment
 comment|/*  * Deallocate a ppp unit.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pppdealloc
-argument_list|(
-argument|sc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sc
+parameter_list|)
 name|struct
 name|ppp_softc
 modifier|*
 name|sc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|mbuf
@@ -1111,7 +1119,7 @@ name|IFF_RUNNING
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Line specific open routine for async tty devices.  * Attach the given tty to the first available ppp unit.  */
@@ -2137,6 +2145,13 @@ name|m0
 argument_list|,
 operator|&
 name|dst
+argument_list|,
+operator|(
+expr|struct
+name|rtentry
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -3338,6 +3353,8 @@ parameter_list|,
 name|m0
 parameter_list|,
 name|dst
+parameter_list|,
+name|rt
 parameter_list|)
 name|struct
 name|ifnet
@@ -3353,6 +3370,11 @@ name|struct
 name|sockaddr
 modifier|*
 name|dst
+decl_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|rt
 decl_stmt|;
 block|{
 specifier|register
@@ -4319,21 +4341,19 @@ begin_comment
 comment|/*  * This gets called from pppoutput when a new packet is  * put on a queue.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|pppasyncstart
-argument_list|(
+parameter_list|(
 name|sc
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ppp_softc
-operator|*
+modifier|*
 name|sc
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -4355,8 +4375,11 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Start output on async tty interface.  Get another datagram  * to send from the interface queue and start sending it.  */
@@ -7105,36 +7128,28 @@ begin_comment
 comment|/*  * Process an ioctl request to interface.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|pppioctl
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|cmd
-argument_list|,
+parameter_list|,
 name|data
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -7324,7 +7339,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -7760,6 +7775,16 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|pseudo_set
+argument_list|,
+name|pppattach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

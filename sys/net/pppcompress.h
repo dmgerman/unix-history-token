@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SLCOMPRESS_H_
+name|_NET_PPPCOMPRESS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SLCOMPRESS_H_
+name|_NET_PPPCOMPRESS_H_
 end_define
 
 begin_define
@@ -230,6 +230,13 @@ begin_comment
 comment|/*  * all the state data for one serial line (we need one of these  * per line).  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|slcompress
+value|pppcompress
+end_define
+
 begin_struct
 struct|struct
 name|slcompress
@@ -322,6 +329,41 @@ end_define
 begin_comment
 comment|/* tossing rcvd frames because of input err */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|sl_compress_init
+value|ppp_compress_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|sl_compress_setup
+value|ppp_compress_setup
+end_define
+
+begin_define
+define|#
+directive|define
+name|sl_compress_tcp
+value|ppp_compress_tcp
+end_define
+
+begin_define
+define|#
+directive|define
+name|sl_uncompress_tcp
+value|ppp_uncompress_tcp
+end_define
+
+begin_define
+define|#
+directive|define
+name|sl_uncompress_tcp_part
+value|ppp_uncompress_tcp_part
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -445,7 +487,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SLCOMPRESS_H_ */
+comment|/* _NET_PPPCOMPRESS_H_ */
 end_comment
 
 end_unit
