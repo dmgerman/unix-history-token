@@ -1,19 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)assert.h	4.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)assert.h	5.1 (Berkeley) %G%  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ASSERT_H_
-end_ifndef
+begin_comment
+comment|/*  * Unlike other ANSI header files,<assert.h> may usefully be included  * multiple times, with and without NDEBUG defined.  */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|_ASSERT_H_
-end_define
+begin_undef
+undef|#
+directive|undef
+name|assert
+end_undef
 
 begin_ifdef
 ifdef|#
@@ -25,12 +23,10 @@ begin_define
 define|#
 directive|define
 name|assert
-end_define
-
-begin_define
-define|#
-directive|define
-name|_assert
+parameter_list|(
+name|e
+parameter_list|)
+value|((void)0)
 end_define
 
 begin_else
@@ -38,24 +34,39 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|assert
 parameter_list|(
-name|expression
+name|e
 parameter_list|)
-value|{ \ 	if (!(expression)) { \ 		(void)fprintf(stderr, \ 		    "assertion \"%s\" failed: file \"%s\", line %d\n", \ 		    "expression", __FILE__, __LINE__); \ 		exit(2); \ 	} \ }
+value|((e) ? (void)0 : __assert(__FILE__, __LINE__, #e))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* PCC */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|_assert
+name|assert
 parameter_list|(
-name|expression
+name|e
 parameter_list|)
-value|assert(expression)
+value|((e) ? (void)0 : __assert(__FILE__, __LINE__, "e"))
 end_define
 
 begin_endif
@@ -68,9 +79,36 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !_ASSERT_H_ */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|void
+name|__assert
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 end_unit
 
