@@ -789,6 +789,7 @@ name|PC98
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ispc98
 init|=
@@ -802,6 +803,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ispc98
 init|=
