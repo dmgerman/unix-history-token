@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_physio.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -68,6 +62,40 @@ include|#
 directive|include
 file|"specdev.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HPUXCOMPAT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"user.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|static
+name|struct
+name|buf
+modifier|*
+name|getswbuf
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|static
+name|freeswbuf
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Raw I/O. The arguments are  *	The strategy routine for the device  *	A buffer, which will either be a special buffer header owned  *	    exclusively by the device for this purpose, or NULL,  *	    indicating that we should use a swap buffer  *	The device number  *	Read/write flag  * Essentially all the work is computing physical addresses and  * validating them.  * If the user has the proper access privilidges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the above pages  * are unlocked.  */
@@ -176,12 +204,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|getswbuf
-parameter_list|()
-function_decl|;
 ifdef|#
 directive|ifdef
 name|SECSIZE
