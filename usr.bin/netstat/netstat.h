@@ -81,6 +81,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show size of listen queues */
+end_comment
+
+begin_decl_stmt
+name|int
 name|mflag
 decl_stmt|;
 end_decl_stmt
