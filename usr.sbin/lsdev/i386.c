@@ -112,11 +112,15 @@ name|MDDT_CPU
 case|:
 name|printf
 argument_list|(
-literal|"CPU on %s"
+literal|"CPU %s%d"
 argument_list|,
 name|dc
 operator|->
-name|dc_parent
+name|dc_name
+argument_list|,
+name|dc
+operator|->
+name|dc_unit
 argument_list|)
 expr_stmt|;
 break|break;
@@ -144,7 +148,7 @@ name|printit
 label|:
 name|printf
 argument_list|(
-literal|"%s%d on %s"
+literal|"%s%d at %s"
 argument_list|,
 name|dc
 operator|->
@@ -273,7 +277,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d (#%d) on %s"
+literal|"%s%d (#%d) at %s"
 argument_list|,
 name|dc
 operator|->
@@ -297,7 +301,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s%d (%s) on %s"
+literal|"%s%d (%s) at %s"
 argument_list|,
 name|dc
 operator|->
@@ -685,7 +689,7 @@ decl_stmt|;
 comment|/* 	 * Unfortunately, the `pci_device' struct is completely 	 * useless.  We will have to develop a unique structure 	 * for this task eventually, unless the existing one can 	 * be made to serve. 	 */
 name|printf
 argument_list|(
-literal|"%s%d on %s"
+literal|"%s%d %s"
 argument_list|,
 name|dc
 operator|->
@@ -730,7 +734,7 @@ name|dc_data
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d on SCSI bus %d:%d:%d"
+literal|"%s%d at SCSI bus %d:%d:%d"
 argument_list|,
 name|dc
 operator|->
@@ -826,7 +830,7 @@ name|dc_data
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d on %s drive %d"
+literal|"%s%d at %s drive %d"
 argument_list|,
 name|dc
 operator|->
