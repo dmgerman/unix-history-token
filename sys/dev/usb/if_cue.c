@@ -1729,7 +1729,9 @@ name|h
 operator|=
 name|cue_crc
 argument_list|(
-name|etherbroadcastaddr
+name|ifp
+operator|->
+name|if_broadcastaddr
 argument_list|)
 expr_stmt|;
 name|sc

@@ -5215,8 +5215,9 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|etherbroadcastaddr
+name|ifp
+operator|->
+name|if_broadcastaddr
 argument_list|)
 expr_stmt|;
 name|sp
@@ -6279,8 +6280,9 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|etherbroadcastaddr
+name|ifp
+operator|->
+name|if_broadcastaddr
 argument_list|)
 expr_stmt|;
 name|sp

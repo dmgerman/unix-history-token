@@ -311,16 +311,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|etherbroadcastaddr
-index|[
-literal|6
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

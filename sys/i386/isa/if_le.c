@@ -2389,7 +2389,11 @@ name|le_multi_op
 argument_list|(
 name|sc
 argument_list|,
-name|etherbroadcastaddr
+name|sc
+operator|->
+name|le_if
+operator|.
+name|if_broadcastaddr
 argument_list|,
 name|TRUE
 argument_list|)

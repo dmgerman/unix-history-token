@@ -16103,7 +16103,11 @@ name|hash
 operator|=
 name|tulip_mchash
 argument_list|(
-name|etherbroadcastaddr
+name|sc
+operator|->
+name|tulip_if
+operator|.
+name|if_broadcastaddr
 argument_list|)
 expr_stmt|;
 if|#
