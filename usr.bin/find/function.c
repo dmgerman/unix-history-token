@@ -3951,16 +3951,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
 begin_function
 name|PLAN
 modifier|*
@@ -4132,15 +4122,6 @@ name|new
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ */
-end_comment
 
 begin_comment
 comment|/*  * -group gname functions --  *  *	True if the file belongs to the group gname.  If gname is numeric and  *	an equivalent of the getgrnam() function does not return a valid group  *	name, gname is taken as a group ID.  */
