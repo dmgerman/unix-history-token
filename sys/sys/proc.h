@@ -462,6 +462,12 @@ modifier|*
 name|td_turnstile
 decl_stmt|;
 comment|/* (k) Associated turnstile. */
+name|struct
+name|umtx_q
+modifier|*
+name|td_umtxq
+decl_stmt|;
+comment|/* (c?) Link for when we're blocked. */
 name|lwpid_t
 name|td_tid
 decl_stmt|;
@@ -602,12 +608,6 @@ name|sigset_t
 name|td_siglist
 decl_stmt|;
 comment|/* (c) Sigs arrived, not delivered. */
-name|struct
-name|umtx_q
-modifier|*
-name|td_umtxq
-decl_stmt|;
-comment|/* (c?) Link for when we're blocked. */
 specifier|volatile
 name|u_int
 name|td_generation

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/umtx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1020,6 +1026,13 @@ argument_list|()
 expr_stmt|;
 name|td
 operator|->
+name|td_umtxq
+operator|=
+name|umtxq_alloc
+argument_list|()
+expr_stmt|;
+name|td
+operator|->
 name|td_sched
 operator|=
 operator|(
@@ -1102,6 +1115,13 @@ argument_list|(
 name|td
 operator|->
 name|td_sleepqueue
+argument_list|)
+expr_stmt|;
+name|umtxq_free
+argument_list|(
+name|td
+operator|->
+name|td_umtxq
 argument_list|)
 expr_stmt|;
 name|vm_thread_dispose
