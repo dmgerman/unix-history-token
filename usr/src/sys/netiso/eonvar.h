@@ -4,7 +4,7 @@ comment|/*********************************************************** 		Copyright
 end_comment
 
 begin_comment
-comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  *	@(#)eonvar.h	7.2 (Berkeley) %G%  */
+comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  *	@(#)eonvar.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -278,6 +278,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|eon_iphdr
+block|{
+name|struct
+name|ip
+name|ei_ip
+decl_stmt|;
+name|struct
+name|eon_hdr
+name|ei_eh
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -386,6 +402,54 @@ typedef|*
 name|queue_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|eon_llinfo
+block|{
+name|struct
+name|qhdr
+name|el_qhdr
+decl_stmt|;
+comment|/* keep all in a list */
+name|int
+name|el_flags
+decl_stmt|;
+comment|/* cache valid ? */
+name|struct
+name|rtentry
+modifier|*
+name|el_rt
+decl_stmt|;
+comment|/* back pointer to parent route */
+name|struct
+name|eon_iphdr
+name|el_ei
+decl_stmt|;
+comment|/* precomputed portion of hdr */
+name|struct
+name|route
+name|el_iproute
+decl_stmt|;
+comment|/* if direct route cache IP info */
+comment|/* if gateway, cache secondary route */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|el_iphdr
+value|el_ei.ei_ip
+end_define
+
+begin_define
+define|#
+directive|define
+name|el_eonhdr
+value|el_ei.ei_eh
+end_define
 
 end_unit
 
