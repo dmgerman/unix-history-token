@@ -300,6 +300,34 @@ block|,
 block|{
 literal|0x1028
 block|,
+literal|0x0003
+block|,
+literal|0x1028
+block|,
+literal|0x0003
+block|,
+name|AAC_HWIF_I960RX
+block|,
+literal|"Dell PERC 3/Si"
+block|}
+block|,
+block|{
+literal|0x1028
+block|,
+literal|0x0004
+block|,
+literal|0x1028
+block|,
+literal|0x00d0
+block|,
+name|AAC_HWIF_I960RX
+block|,
+literal|"Dell PERC 3/Si"
+block|}
+block|,
+block|{
+literal|0x1028
+block|,
 literal|0x0002
 block|,
 literal|0x1028
@@ -314,15 +342,29 @@ block|,
 block|{
 literal|0x1028
 block|,
-literal|0x0003
+literal|0x0002
 block|,
 literal|0x1028
 block|,
-literal|0x0003
+literal|0x00d9
 block|,
 name|AAC_HWIF_I960RX
 block|,
-literal|"Dell PERC 3/Si"
+literal|"Dell PERC 3/Di"
+block|}
+block|,
+block|{
+literal|0x1028
+block|,
+literal|0x0008
+block|,
+literal|0x1028
+block|,
+literal|0x00cf
+block|,
+name|AAC_HWIF_I960RX
+block|,
+literal|"Dell PERC 3/Di"
 block|}
 block|,
 block|{
