@@ -3,14 +3,9 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|version_string
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Dummy file for trimmed down sort */
+end_comment
 
 end_unit
 
