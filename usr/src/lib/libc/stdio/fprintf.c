@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fprintf.c	4.2 (Berkeley) %G% */
+comment|/* @(#)fprintf.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -106,6 +106,12 @@ operator|->
 name|_bufsiz
 operator|=
 name|NULL
+expr_stmt|;
+name|iop
+operator|->
+name|_cnt
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
