@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: popen.c,v 1.26 2001/04/25 01:46:26 lukem Exp $	*/
+comment|/*	$NetBSD: popen.c,v 1.27 2001/12/01 10:25:30 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|type
+name|ptype
 parameter_list|,
 name|int
 name|stderrfd
@@ -119,17 +119,17 @@ if|if
 condition|(
 operator|(
 operator|*
-name|type
+name|ptype
 operator|!=
 literal|'r'
 operator|&&
 operator|*
-name|type
+name|ptype
 operator|!=
 literal|'w'
 operator|)
 operator|||
-name|type
+name|ptype
 index|[
 literal|1
 index|]
@@ -504,7 +504,7 @@ comment|/* child */
 if|if
 condition|(
 operator|*
-name|type
+name|ptype
 operator|==
 literal|'r'
 condition|)
@@ -692,7 +692,7 @@ comment|/* parent; assume fdopen can't fail...  */
 if|if
 condition|(
 operator|*
-name|type
+name|ptype
 operator|==
 literal|'r'
 condition|)
@@ -706,7 +706,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|type
+name|ptype
 argument_list|)
 expr_stmt|;
 operator|(
@@ -732,7 +732,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|type
+name|ptype
 argument_list|)
 expr_stmt|;
 operator|(

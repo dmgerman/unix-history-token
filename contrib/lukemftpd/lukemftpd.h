@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lukemftpd.h,v 1.16 2001/05/09 02:04:53 lukem Exp $ */
+comment|/* $Id: lukemftpd.h,v 1.18 2002/03/14 06:02:24 lukem Exp $ */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FTPD_VERSION
-value|"lukemftpd 1.1"
+value|"lukemftpd 1.2 beta 1"
 end_define
 
 begin_include
