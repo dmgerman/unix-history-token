@@ -318,7 +318,7 @@ operator|&&
 operator|(
 name|command
 operator|&
-name|PCI_COMMAND_IO_ENABLE
+name|PCIM_CMD_PORTEN
 operator|)
 operator|!=
 literal|0
