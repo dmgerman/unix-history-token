@@ -1585,65 +1585,6 @@ begin_comment
 comment|/* the table of atapi controllers */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ATAPI_STATIC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|atapi_start
-value|(*atapi_start_ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atapi_intr
-value|(*atapi_intr_ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atapi_debug
-value|(*atapi_debug_ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atapi_request_wait
-value|(*atapi_request_wait_ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atapi_request_callback
-value|(*atapi_request_callback_ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atapi_request_immediate
-value|(*atapi_request_immediate_ptr)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ATAPI_MODULE
-end_ifndef
-
 begin_function_decl
 name|int
 name|atapi_attach
@@ -1660,17 +1601,7 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * These "functions" are declared with archaic `extern's because they are  * actually pointers in the !ATAPI_STATIC case.  */
-end_comment
-
 begin_function_decl
-specifier|extern
 name|int
 name|atapi_start
 parameter_list|(
@@ -1681,7 +1612,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|atapi_intr
 parameter_list|(
@@ -1692,7 +1622,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|atapi_debug
 parameter_list|(
@@ -1708,7 +1637,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|atapires
 name|atapi_request_wait
@@ -1780,7 +1708,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|atapi_request_callback
 parameter_list|(
@@ -1863,7 +1790,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|atapires
 name|atapi_request_immediate

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.190 1999/03/23 10:22:19 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.191 1999/04/02 13:58:24 phk Exp $  */
 end_comment
 
 begin_comment
@@ -47,12 +47,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"opt_atapi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_devfs.h"
 end_include
 
@@ -66,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|"opt_ide_delay.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_wd.h"
 end_include
 
 begin_include
@@ -221,43 +209,17 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ATAPI
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<i386/isa/atapi.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CMD640
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<i386/isa/wdc_p.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*CMD640*/
-end_comment
 
 begin_function_decl
 specifier|extern
@@ -512,15 +474,10 @@ name|int
 name|dk_ctrlr
 decl_stmt|;
 comment|/* physical controller number */
-ifdef|#
-directive|ifdef
-name|CMD640
 name|int
 name|dk_ctrlr_cmd640
 decl_stmt|;
 comment|/* controller number for CMD640 quirk */
-endif|#
-directive|endif
 name|u_int32_t
 name|dk_unit
 decl_stmt|;
@@ -1174,12 +1131,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CMD640
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1194,20 +1145,9 @@ name|eide_quirks
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  *  Here we use the pci-subsystem to find out, whether there is  *  a cmd640b-chip attached on this pci-bus. This public routine  *  will be called by wdc_p.c .  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CMD640
-end_ifdef
 
 begin_function
 name|void
@@ -1223,11 +1163,6 @@ name|quirks
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Probe for controller.  */
@@ -1444,9 +1379,6 @@ literal|0xff
 condition|)
 block|{
 comment|/* XXX too weak */
-ifdef|#
-directive|ifdef
-name|ATAPI
 comment|/* There is no master, try the ATAPI slave. */
 name|du
 operator|->
@@ -1491,8 +1423,6 @@ argument_list|)
 operator|==
 literal|0xff
 condition|)
-endif|#
-directive|endif
 goto|goto
 name|nodevice
 goto|;
@@ -1509,9 +1439,6 @@ condition|)
 goto|goto
 name|reset_ok
 goto|;
-ifdef|#
-directive|ifdef
-name|ATAPI
 comment|/* test for ATAPI signature */
 name|outb
 argument_list|(
@@ -1599,8 +1526,6 @@ condition|)
 goto|goto
 name|reset_ok
 goto|;
-endif|#
-directive|endif
 name|DELAY
 argument_list|(
 name|RECOVERYTIME
@@ -1880,9 +1805,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|eide_quirks
@@ -1931,23 +1853,6 @@ operator|.
 name|controller_queue
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|bufq_init
-argument_list|(
-operator|&
-name|wdtab
-index|[
-name|dvp
-operator|->
-name|id_unit
-index|]
-operator|.
-name|controller_queue
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|wdup
@@ -2061,9 +1966,6 @@ name|dvp
 operator|->
 name|id_unit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|eide_quirks
@@ -2089,8 +1991,6 @@ operator|->
 name|dk_ctrlr
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|du
 operator|->
 name|dk_unit
@@ -2503,9 +2403,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|ATAPI
 comment|/* 	 * Probe all free IDE units, searching for ATAPI drives. 	 */
 for|for
 control|(
@@ -2564,9 +2461,6 @@ condition|)
 goto|goto
 name|next
 goto|;
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|atapi_attach
@@ -2588,33 +2482,11 @@ name|dvp
 operator|->
 name|id_unit
 expr_stmt|;
-else|#
-directive|else
-name|atapi_attach
-argument_list|(
-name|dvp
-operator|->
-name|id_unit
-argument_list|,
-name|unit
-argument_list|,
-name|dvp
-operator|->
-name|id_iobase
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|next
 label|:
 empty_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Discard any interrupts generated by wdgetctlr().  wdflushirq() 	 * doesn't work now because the ambient ipl is too high. 	 */
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|eide_quirks
@@ -2646,21 +2518,6 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|wdtab
-index|[
-name|dvp
-operator|->
-name|id_unit
-index|]
-operator|.
-name|b_active
-operator|=
-literal|2
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -3035,9 +2892,6 @@ name|du
 argument_list|)
 expr_stmt|;
 comment|/* start drive */
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|wdtab
@@ -3051,23 +2905,6 @@ name|b_active
 operator|==
 literal|0
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|wdtab
-index|[
-name|du
-operator|->
-name|dk_ctrlr
-index|]
-operator|.
-name|b_active
-operator|==
-literal|0
-condition|)
-endif|#
-directive|endif
 name|wdstart
 argument_list|(
 name|du
@@ -3144,9 +2981,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CMD640
 name|int
 name|ctrlr
 init|=
@@ -3154,17 +2988,6 @@ name|du
 operator|->
 name|dk_ctrlr_cmd640
 decl_stmt|;
-else|#
-directive|else
-name|int
-name|ctrlr
-init|=
-name|du
-operator|->
-name|dk_ctrlr
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* unit already active? */
 if|if
 condition|(
@@ -3294,9 +3117,6 @@ decl_stmt|;
 name|u_int
 name|count
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CMD640
 name|int
 name|ctrlr_atapi
 decl_stmt|;
@@ -3323,11 +3143,6 @@ operator|=
 name|ctrlr
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ATAPI
 if|if
 condition|(
 name|wdtab
@@ -3358,8 +3173,6 @@ operator|.
 name|b_active
 condition|)
 return|return;
-endif|#
-directive|endif
 comment|/* is there a drive for the controller to do a transfer with? */
 name|bp
 operator|=
@@ -3381,12 +3194,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATAPI
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|atapi_start
@@ -3394,26 +3201,6 @@ operator|&&
 name|atapi_start
 argument_list|(
 name|ctrlr_atapi
-argument_list|)
-condition|)
-name|wdtab
-index|[
-name|ctrlr
-index|]
-operator|.
-name|b_active
-operator|=
-literal|3
-expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|atapi_start
-operator|&&
-name|atapi_start
-argument_list|(
-name|ctrlr
 argument_list|)
 condition|)
 comment|/* mark controller active in ATAPI mode */
@@ -3426,10 +3213,6 @@ name|b_active
 operator|=
 literal|3
 expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 return|return;
 block|}
 comment|/* obtain controller and drive information */
@@ -4566,9 +4349,6 @@ name|int
 operator|)
 name|unitnum
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CMD640
 name|int
 name|ctrlr_atapi
 decl_stmt|;
@@ -4595,8 +4375,6 @@ operator|=
 name|unit
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|wdtab
@@ -4636,9 +4414,6 @@ endif|#
 directive|endif
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|ATAPI
 if|if
 condition|(
 name|wdtab
@@ -4652,9 +4427,6 @@ literal|3
 condition|)
 block|{
 comment|/* process an ATAPI interrupt */
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|atapi_intr
@@ -4664,19 +4436,6 @@ argument_list|(
 name|ctrlr_atapi
 argument_list|)
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|atapi_intr
-operator|&&
-name|atapi_intr
-argument_list|(
-name|unit
-argument_list|)
-condition|)
-endif|#
-directive|endif
 comment|/* ATAPI op continues */
 return|return;
 comment|/* controller is free, start new op */
@@ -4696,8 +4455,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 name|bp
 operator|=
 name|bufq_first
@@ -5887,27 +5644,6 @@ name|du
 argument_list|)
 expr_stmt|;
 comment|/* anything more for controller to do? */
-ifndef|#
-directive|ifndef
-name|ATAPI
-comment|/* This is not valid in ATAPI mode. */
-if|if
-condition|(
-name|bufq_first
-argument_list|(
-operator|&
-name|wdtab
-index|[
-name|unit
-index|]
-operator|.
-name|controller_queue
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-endif|#
-directive|endif
 name|wdstart
 argument_list|(
 name|unit
@@ -5997,9 +5733,6 @@ name|ENXIO
 operator|)
 return|;
 comment|/* Finish flushing IRQs left over from wdattach(). */
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|wdtab
@@ -6024,34 +5757,6 @@ name|b_active
 operator|=
 literal|0
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|wdtab
-index|[
-name|du
-operator|->
-name|dk_ctrlr
-index|]
-operator|.
-name|b_active
-operator|==
-literal|2
-condition|)
-name|wdtab
-index|[
-name|du
-operator|->
-name|dk_ctrlr
-index|]
-operator|.
-name|b_active
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|du
 operator|->
 name|dk_flags
@@ -6728,25 +6433,12 @@ name|b_dev
 argument_list|)
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CMD640
 name|ctrlr
 operator|=
 name|du
 operator|->
 name|dk_ctrlr_cmd640
 expr_stmt|;
-else|#
-directive|else
-name|ctrlr
-operator|=
-name|du
-operator|->
-name|dk_ctrlr
-expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|du
@@ -7629,9 +7321,6 @@ condition|(
 name|error
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CMD640
 name|wdtab
 index|[
 name|du
@@ -7643,21 +7332,6 @@ name|b_errcnt
 operator|+=
 name|RETRIES
 expr_stmt|;
-else|#
-directive|else
-name|wdtab
-index|[
-name|du
-operator|->
-name|dk_ctrlr
-index|]
-operator|.
-name|b_errcnt
-operator|+=
-name|RETRIES
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -10704,9 +10378,6 @@ name|int
 name|old_ipl
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CMD640
 name|wdtab
 index|[
 name|du
@@ -10740,43 +10411,6 @@ name|b_active
 operator|=
 literal|0
 expr_stmt|;
-else|#
-directive|else
-name|wdtab
-index|[
-name|du
-operator|->
-name|dk_ctrlr
-index|]
-operator|.
-name|b_active
-operator|=
-literal|2
-expr_stmt|;
-name|splx
-argument_list|(
-name|old_ipl
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splbio
-argument_list|()
-expr_stmt|;
-name|wdtab
-index|[
-name|du
-operator|->
-name|dk_ctrlr
-index|]
-operator|.
-name|b_active
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -10888,9 +10522,6 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATAPI
 if|if
 condition|(
 name|wdwait
@@ -10935,41 +10566,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* the drive is incompatible */
-else|#
-directive|else
-if|if
-condition|(
-name|wdwait
-argument_list|(
-name|du
-argument_list|,
-name|WDCS_READY
-operator||
-name|WDCS_SEEKCMPLT
-argument_list|,
-name|TIMEOUT
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"wdreset: error1: 0x%x\n"
-argument_list|,
-name|du
-operator|->
-name|dk_error
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
 name|outb
 argument_list|(
 name|du
@@ -11010,9 +10606,6 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CMD640
 if|if
 condition|(
 name|eide_quirks
@@ -11023,8 +10616,6 @@ name|ctrlr
 operator|=
 name|PRIMARY
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|wdtab
@@ -11511,9 +11102,6 @@ operator|+
 name|wd_status
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATAPI
 comment|/* 		 * Atapi drives have a very interesting feature, when attached 		 * as a slave on the IDE bus, and there is no master. 		 * They release the bus after getting the command. 		 * We should reselect the drive here to get the status. 		 */
 if|if
 condition|(
@@ -11551,8 +11139,6 @@ name|wd_status
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
