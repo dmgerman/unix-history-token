@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|DEFROOTSIZE
-value|16
+value|18
 end_define
 
 begin_define

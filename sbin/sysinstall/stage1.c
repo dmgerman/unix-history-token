@@ -224,17 +224,25 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Forward decls */
+end_comment
+
 begin_function_decl
 name|void
 name|exit_sysinstall
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|exit_prompt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -245,6 +253,24 @@ modifier|*
 name|part_type
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Fdisk
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|DiskLabel
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

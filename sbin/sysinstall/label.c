@@ -89,6 +89,31 @@ directive|include
 file|"sysinstall.h"
 end_include
 
+begin_comment
+comment|/* Forward decls */
+end_comment
+
+begin_function_decl
+name|int
+name|disk_size
+parameter_list|(
+name|struct
+name|disklabel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getfstype
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|sectstoMb
@@ -192,6 +217,31 @@ name|EDITABLES
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|void
+name|yelp
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|dialog_msgbox
+argument_list|(
+literal|"Validation Error"
+argument_list|,
+name|str
+argument_list|,
+literal|6
+argument_list|,
+literal|75
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -750,7 +800,7 @@ literal|20
 argument_list|,
 literal|10
 argument_list|,
-literal|"Allocated %5luMb, Unalloacted %5lu Mb"
+literal|"Allocated %5luMb, Unallocated %5lu Mb"
 argument_list|,
 name|used
 argument_list|,
@@ -2998,7 +3048,7 @@ name|prompt
 argument_list|,
 name|buf
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -3150,6 +3200,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|free_space
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|DiskLabel
@@ -3216,7 +3272,7 @@ literal|"Enter number of disk to Disklabel "
 argument_list|,
 name|buf
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3299,6 +3355,17 @@ operator|=
 name|lbl
 operator|->
 name|d_secperunit
+expr_stmt|;
+name|free_space
+operator|=
+name|lbl
+operator|->
+name|d_partitions
+index|[
+name|OURPART
+index|]
+operator|.
+name|p_size
 expr_stmt|;
 while|while
 condition|(
@@ -3507,7 +3574,8 @@ argument_list|(
 literal|"<Entire Disk>"
 argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|Fmount
@@ -3535,7 +3603,30 @@ index|]
 index|]
 argument_list|)
 expr_stmt|;
+name|free_space
+operator|-=
+name|lbl
+operator|->
+name|d_partitions
+index|[
+name|i
+index|]
+operator|.
+name|p_size
+expr_stmt|;
 block|}
+block|}
+name|mvprintw
+argument_list|(
+literal|19
+argument_list|,
+literal|0
+argument_list|,
+literal|"Free space: %d blocks."
+argument_list|,
+name|free_space
+argument_list|)
+expr_stmt|;
 name|mvprintw
 argument_list|(
 literal|21
@@ -3583,7 +3674,7 @@ name|j
 operator|=
 name|AskWhichPartition
 argument_list|(
-literal|"Delete which partition ? "
+literal|"Delete which partition? "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3592,7 +3683,14 @@ name|j
 operator|<
 literal|0
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Invalid partition"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|CleanMount
 argument_list|(
 name|diskno
@@ -3644,7 +3742,7 @@ name|j
 operator|=
 name|AskWhichPartition
 argument_list|(
-literal|"Change size of which partition ? "
+literal|"Change size of which partition? "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3653,7 +3751,14 @@ name|j
 operator|<
 literal|0
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Invalid partition"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|lbl
@@ -3689,7 +3794,14 @@ name|p_fstype
 operator|!=
 name|FS_SWAP
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Invalid partition type"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|lbl
@@ -3703,7 +3815,14 @@ name|p_size
 operator|==
 literal|0
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"No FreeBSD partition defined?"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|l1
 operator|=
 name|lbl
@@ -3908,7 +4027,14 @@ operator|-
 name|l1
 operator|)
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Oh god, I'm so confused!"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|sprintf
 argument_list|(
 name|buf
@@ -3957,7 +4083,14 @@ condition|(
 operator|!
 name|l3
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Invalid size given"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|l3
@@ -4079,7 +4212,14 @@ name|j
 operator|<
 literal|0
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Invalid partition"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|k
 operator|=
 name|lbl
@@ -4105,7 +4245,14 @@ name|k
 operator|!=
 name|FS_SWAP
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Invalid partition type"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|!
@@ -4118,7 +4265,14 @@ index|]
 operator|.
 name|p_size
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Zero partition size"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|k
@@ -4198,7 +4352,14 @@ name|i
 operator|!=
 literal|'\r'
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Invalid directory name"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 name|CleanMount
 argument_list|(
@@ -4235,7 +4396,14 @@ name|k
 operator|>=
 name|MAX_NO_FS
 condition|)
+block|{
+name|yelp
+argument_list|(
+literal|"Maximum number of filesystems exceeded"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|Fmount
 index|[
 name|k
@@ -4581,6 +4749,18 @@ name|Fatal
 argument_list|(
 literal|"Couldn't disable writing of labels"
 argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+literal|24
+argument_list|,
+literal|0
+argument_list|,
+literal|"Label written successfully."
+argument_list|)
+expr_stmt|;
+name|beep
+argument_list|()
 expr_stmt|;
 break|break;
 case|case

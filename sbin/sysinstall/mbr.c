@@ -147,7 +147,7 @@ name|int
 name|next_type
 operator|=
 literal|0
-block|; 	struct
+block|;     struct
 name|part_type
 operator|*
 name|ptr
@@ -1070,7 +1070,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-comment|/* 	 * If installing to the whole disk 	 * then clobber any existing bootcode. 	 */
+comment|/*      * If installing to the whole disk      * then clobber any existing bootcode.      */
 name|sprintf
 argument_list|(
 name|scratch
@@ -1665,7 +1665,7 @@ literal|"Enter number of disk to Fdisk "
 argument_list|,
 name|buf
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1870,7 +1870,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printw("[%02x %02x %02x %02x %02x %02x %02x %02x %08lx %08lx]\n", 		dp[i].dp_flag, dp[i].dp_shd, dp[i].dp_ssect, dp[i].dp_scyl, 		dp[i].dp_typ, dp[i].dp_ehd, dp[i].dp_esect, dp[i].dp_ecyl, 		dp[i].dp_start, dp[i].dp_size);
+block|printw("[%02x %02x %02x %02x %02x %02x %02x %02x %08lx %08lx]\n", 		   dp[i].dp_flag, dp[i].dp_shd, dp[i].dp_ssect, dp[i].dp_scyl, 		   dp[i].dp_typ, dp[i].dp_ehd, dp[i].dp_esect, dp[i].dp_ecyl, 		   dp[i].dp_start, dp[i].dp_size);
 endif|#
 directive|endif
 if|if
@@ -2181,7 +2181,7 @@ literal|"Edit which Slice ? "
 argument_list|,
 name|buf
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -2928,7 +2928,7 @@ literal|"Delete which Slice ? "
 argument_list|,
 name|buf
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -3009,7 +3009,7 @@ literal|"Confirm write "
 argument_list|,
 name|buf
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
