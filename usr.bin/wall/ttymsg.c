@@ -107,11 +107,18 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ttymsg.h"
+end_include
+
 begin_comment
 comment|/*  * Display the contents of a uio structure on a terminal.  Used by wall(1),  * syslogd(8), and talkd(8).  Forks and finishes in child if write would block,  * waiting up to tmout seconds.  Returns pointer to error string on unexpected  * error; string is not newline-terminated.  Various "normal" errors are  * ignored (exclusive-use, lack of permission, etc.).  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ttymsg
@@ -140,14 +147,15 @@ index|[
 literal|7
 index|]
 decl_stmt|;
+name|ssize_t
+name|left
+decl_stmt|,
+name|wret
+decl_stmt|;
 name|int
 name|cnt
 decl_stmt|,
 name|fd
-decl_stmt|,
-name|left
-decl_stmt|,
-name|wret
 decl_stmt|;
 specifier|static
 name|char
@@ -176,6 +184,10 @@ if|if
 condition|(
 name|iovcnt
 operator|>
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|localiov
@@ -187,6 +199,7 @@ name|localiov
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -322,6 +335,8 @@ for|for
 control|(
 name|cnt
 operator|=
+literal|0
+operator|,
 name|left
 operator|=
 literal|0
@@ -410,6 +425,9 @@ name|cnt
 operator|=
 literal|0
 init|;
+operator|(
+name|size_t
+operator|)
 name|wret
 operator|>=
 name|iov
