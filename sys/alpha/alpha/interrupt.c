@@ -1082,6 +1082,10 @@ block|}
 name|alpha_mb
 argument_list|()
 expr_stmt|;
+name|alpha_mb
+argument_list|()
+expr_stmt|;
+comment|/* magic for ev5 2100A& maybe more */
 comment|/* Make sure we took the machine check, if we caused one. */
 name|alpha_pal_draina
 argument_list|()
