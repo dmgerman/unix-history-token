@@ -109,7 +109,7 @@ name|long
 name|ks_inuse
 decl_stmt|;
 comment|/* # of packets of this type currently in use */
-name|long
+name|int64_t
 name|ks_calls
 decl_stmt|;
 comment|/* total packets of this type ever allocated */
@@ -263,6 +263,10 @@ name|caddr_t
 name|kb_last
 decl_stmt|;
 comment|/* last free block */
+name|int64_t
+name|kb_calls
+decl_stmt|;
+comment|/* total calls to allocate this size */
 name|long
 name|kb_total
 decl_stmt|;
@@ -275,10 +279,6 @@ name|long
 name|kb_totalfree
 decl_stmt|;
 comment|/* # of free elements in this bucket */
-name|long
-name|kb_calls
-decl_stmt|;
-comment|/* total calls to allocate this size */
 name|long
 name|kb_highwat
 decl_stmt|;
