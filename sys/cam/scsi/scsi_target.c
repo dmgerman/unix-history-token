@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/event.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -48,25 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/selinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -96,19 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/cam_queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/cam_xpt_periph.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/cam_debug.h>
 end_include
 
 begin_include
