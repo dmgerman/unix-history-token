@@ -2888,11 +2888,9 @@ begin_comment
 comment|/* Use OpenSSL? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OPENSSL
-end_define
+begin_comment
+comment|/* #undef OPENSSL */
+end_comment
 
 begin_comment
 comment|/* Should we open the broadcast socket? */
