@@ -3187,7 +3187,7 @@ block|,
 operator|(
 name|macop_t
 operator|)
-name|mac_none_init_label
+name|mac_none_init_label_waitcheck
 block|}
 block|,
 block|{
@@ -3196,7 +3196,7 @@ block|,
 operator|(
 name|macop_t
 operator|)
-name|mac_none_init_label
+name|mac_none_init_label_waitcheck
 block|}
 block|,
 block|{

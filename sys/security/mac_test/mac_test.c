@@ -1409,13 +1409,16 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mac_test_init_socket_label
 parameter_list|(
 name|struct
 name|label
 modifier|*
 name|label
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 block|{
 name|SLOT
@@ -1433,18 +1436,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mac_test_init_socket_peer_label
 parameter_list|(
 name|struct
 name|label
 modifier|*
 name|label
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 block|{
 name|SLOT
@@ -1462,6 +1473,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

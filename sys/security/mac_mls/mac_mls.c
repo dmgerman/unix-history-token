@@ -8462,7 +8462,7 @@ block|,
 operator|(
 name|macop_t
 operator|)
-name|mac_mls_init_label
+name|mac_mls_init_label_waitcheck
 block|}
 block|,
 block|{
@@ -8471,7 +8471,7 @@ block|,
 operator|(
 name|macop_t
 operator|)
-name|mac_mls_init_label
+name|mac_mls_init_label_waitcheck
 block|}
 block|,
 block|{
