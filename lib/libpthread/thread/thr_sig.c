@@ -592,6 +592,24 @@ case|:
 case|case
 name|PS_SELECT_WAIT
 case|:
+if|if
+condition|(
+name|sig
+operator|!=
+name|SIGCHLD
+operator|||
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_handler
+operator|!=
+name|SIG_DFL
+condition|)
+block|{
 comment|/* Flag the operation as interrupted: */
 name|pthread
 operator|->
@@ -614,6 +632,7 @@ name|signo
 operator|=
 name|sig
 expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
