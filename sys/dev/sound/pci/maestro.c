@@ -113,8 +113,12 @@ begin_define
 define|#
 directive|define
 name|AGG_BUFSIZ
-value|4096
+value|0x4000
 end_define
+
+begin_comment
+comment|/* 0x1000, but gets underflows */
+end_comment
 
 begin_comment
 comment|/* -----------------------------  * Data structures.  */
