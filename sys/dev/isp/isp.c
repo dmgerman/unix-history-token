@@ -20593,8 +20593,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"states=>"
 argument_list|)
@@ -20616,8 +20614,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s GOT_BUS"
 argument_list|,
@@ -20642,8 +20638,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s GOT_TGT"
 argument_list|,
@@ -20668,8 +20662,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s SENT_CDB"
 argument_list|,
@@ -20694,8 +20686,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s XFRD_DATA"
 argument_list|,
@@ -20720,8 +20710,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s GOT_STS"
 argument_list|,
@@ -20746,8 +20734,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s GOT_SNS"
 argument_list|,
@@ -20772,8 +20758,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s XFR_CMPLT"
 argument_list|,
@@ -20789,8 +20773,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s\nstatus=>"
 argument_list|,
@@ -20814,8 +20796,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Disconnect"
 argument_list|,
@@ -20840,8 +20820,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Sync_xfr"
 argument_list|,
@@ -20866,8 +20844,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Parity"
 argument_list|,
@@ -20892,8 +20868,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Bus_Reset"
 argument_list|,
@@ -20918,8 +20892,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Device_Reset"
 argument_list|,
@@ -20944,8 +20916,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Aborted"
 argument_list|,
@@ -20970,8 +20940,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Timeout"
 argument_list|,
@@ -20996,8 +20964,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%s Negotiation"
 argument_list|,
