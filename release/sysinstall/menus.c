@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.4 1995/09/18 17:00:22 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.5 1995/09/22 23:22:22 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ comment|/* prompt */
 literal|"Press F1 for usage instructions"
 block|,
 comment|/* help line */
-literal|"usage.hlp"
+literal|"usage"
 block|,
 comment|/* help file */
 block|{
@@ -45,7 +45,7 @@ block|,
 comment|/* U */
 name|DMENU_DISPLAY_FILE
 block|,
-literal|"usage.hlp"
+literal|"usage"
 block|,
 literal|0
 block|,
@@ -171,7 +171,7 @@ literal|"If you are at all unsure about the configuration of your hardware\n\ or
 block|,
 literal|"Confused?  Press F1 for help."
 block|,
-literal|"usage.hlp"
+literal|"usage"
 block|,
 block|{
 block|{
@@ -195,7 +195,7 @@ literal|"The FreeBSD survival guide for PC hardware."
 block|,
 name|DMENU_DISPLAY_FILE
 block|,
-literal|"hardware.hlp"
+literal|"hardware"
 block|,
 literal|0
 block|,
@@ -209,7 +209,7 @@ literal|"A step-by-step guide to installing FreeBSD."
 block|,
 name|DMENU_DISPLAY_FILE
 block|,
-literal|"install.hlp"
+literal|"install"
 block|,
 literal|0
 block|,
@@ -281,7 +281,7 @@ literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ Fr
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install.hlp"
+literal|"install"
 block|,
 block|{
 block|{
@@ -333,7 +333,7 @@ literal|"FreeBSD can be installed directly from a DOS partition\n\ assuming, of 
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install.hlp"
+literal|"install"
 block|,
 block|{
 block|{
@@ -359,7 +359,7 @@ literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n
 block|,
 literal|"Select a site that's close!"
 block|,
-literal|"install.hlp"
+literal|"install"
 block|,
 block|{
 block|{
@@ -833,7 +833,7 @@ literal|"FreeBSD can be installed from tape drive, though this installation\n\ m
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install.hlp"
+literal|"install"
 block|,
 block|{
 block|{
@@ -859,7 +859,7 @@ literal|"FreeBSD can be installed directly over a network, using NFS or FTP.\n I
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
-literal|"network_device.hlp"
+literal|"network_device"
 block|,
 block|{
 block|{
@@ -889,7 +889,7 @@ literal|"FreeBSD can be installed from a variety of different installation\n\ me
 block|,
 literal|"Press F1 for more information on the various media types"
 block|,
-literal|"media.hlp"
+literal|"media"
 block|,
 block|{
 block|{
@@ -1031,7 +1031,7 @@ literal|"As a convenience, we provide several \"canned\" installation types.\n\ 
 block|,
 literal|"Press F1 for more information on these options."
 block|,
-literal|"distributions.hlp"
+literal|"distributions"
 block|,
 block|{
 block|{
@@ -1121,7 +1121,7 @@ block|,
 block|{
 literal|"Everything"
 block|,
-literal|"All sources, binaries and XFree86 binaries [203MB]"
+literal|"All sources, binaries and XFree86 binaries [700MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1909,7 +1909,7 @@ literal|"Please select the components you need from the XFree86 3.1.1u1\n\ distr
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
-literal|"XF86.hlp"
+literal|"XF86"
 block|,
 block|{
 block|{
@@ -2010,7 +2010,7 @@ literal|"Please check off the basic XFree86 components you wish to install."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
-literal|"XF86.hlp"
+literal|"XF86"
 block|,
 block|{
 block|{
@@ -2206,7 +2206,7 @@ literal|"Please check off the individual font distributions you wish to\n\ insta
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
-literal|"XF86.hlp"
+literal|"XF86"
 block|,
 block|{
 block|{
@@ -2317,7 +2317,7 @@ literal|"Please check off the types of X servers you wish to install.\n\ If you 
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
-literal|"XF86.hlp"
+literal|"XF86"
 block|,
 block|{
 block|{
@@ -2547,7 +2547,7 @@ literal|"Please select the drive, or drives, on which you wish to install\n\ Fre
 block|,
 literal|"Press F1 for important information regarding geometry!"
 block|,
-literal|"drives.hlp"
+literal|"drives"
 block|,
 block|{
 block|{
@@ -2716,7 +2716,7 @@ literal|"The following options control how this utility will deal\n\ with variou
 block|,
 literal|"Press F1 for more help on these options"
 block|,
-literal|"options.hlp"
+literal|"options"
 block|,
 block|{
 block|{
@@ -2933,7 +2933,7 @@ literal|"This is the custom installation menu. You may use this menu to specify\
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install.hlp"
+literal|"install"
 block|,
 block|{
 block|{
@@ -3094,7 +3094,7 @@ literal|"FreeBSD comes with a boot selector that allows you to easily\n\ select 
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install.hlp"
+literal|"install"
 block|,
 block|{
 block|{
@@ -3174,7 +3174,7 @@ literal|"If you've already installed FreeBSD, you may use this menu to\n\ custom
 block|,
 literal|"Press F1 for more information on these options"
 block|,
-literal|"configure.hlp"
+literal|"configure"
 block|,
 block|{
 block|{
