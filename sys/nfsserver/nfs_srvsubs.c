@@ -1579,6 +1579,8 @@ operator|.
 name|sy_narg
 operator|=
 literal|2
+operator||
+name|SYF_MPSAFE
 expr_stmt|;
 name|nfs_prev_nfssvc_sy_call
 operator|=
