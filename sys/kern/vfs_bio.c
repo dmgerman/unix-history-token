@@ -13696,6 +13696,20 @@ argument_list|(
 literal|"vmapbuf"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bufsize
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 for|for
 control|(
 name|addr
@@ -13780,11 +13794,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"vmapbuf: warning, bad user address during I/O\n"
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
