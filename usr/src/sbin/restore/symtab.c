@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.13	(Berkeley)	83/07/01"
+literal|"@(#)symtab.c	3.14	(Berkeley)	83/07/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -860,6 +860,17 @@ argument_list|(
 expr|struct
 name|entry
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|==
+name|NIL
+condition|)
+name|panic
+argument_list|(
+literal|"no memory to extend symbol table\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.13	(Berkeley)	83/07/01"
+literal|"@(#)dirs.c	3.14	(Berkeley)	83/07/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -2943,6 +2943,7 @@ name|basefp
 operator|==
 name|NULL
 condition|)
+block|{
 name|basefp
 operator|=
 operator|(
@@ -2964,6 +2965,27 @@ name|afile
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|basefp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ls: out of memory\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
+block|}
+block|}
 name|fp
 operator|=
 operator|*
@@ -3786,6 +3808,17 @@ argument_list|(
 expr|struct
 name|inotab
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|itp
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"no memory directory table\n"
 argument_list|)
 expr_stmt|;
 name|itp
