@@ -648,6 +648,8 @@ argument_list|)
 argument_list|,
 name|M_CCD
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -922,7 +924,7 @@ argument_list|)
 argument_list|,
 name|M_CCD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Verify that each component piece exists and record 	 * relevant information about it. 	 */
@@ -942,7 +944,7 @@ name|MAXPATHLEN
 argument_list|,
 name|M_CCD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for
@@ -1029,7 +1031,7 @@ name|ci_pathlen
 argument_list|,
 name|M_CCD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1625,6 +1627,8 @@ name|size
 argument_list|,
 name|M_CCD
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1678,7 +1682,7 @@ argument_list|)
 argument_list|,
 name|M_CCD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|ii
@@ -1775,7 +1779,7 @@ operator|)
 argument_list|,
 name|M_CCD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Locate the smallest of the remaining components 		 */
@@ -4293,7 +4297,7 @@ argument_list|)
 argument_list|,
 name|M_CCD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|vpp
@@ -4313,7 +4317,7 @@ argument_list|)
 argument_list|,
 name|M_CCD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error
@@ -4625,6 +4629,8 @@ argument_list|,
 name|M_CCD
 argument_list|,
 name|M_ZERO
+operator||
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|cs

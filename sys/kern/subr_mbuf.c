@@ -2112,7 +2112,7 @@ argument_list|(
 operator|&
 name|mb_list_mbuf
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|pcpu_cnt
 argument_list|)
@@ -2164,7 +2164,7 @@ argument_list|(
 operator|&
 name|mb_list_clust
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|pcpu_cnt
 argument_list|)
@@ -2271,9 +2271,9 @@ name|M_MBUF
 argument_list|,
 name|how
 operator|==
-literal|0
+name|M_TRYWAIT
 condition|?
-literal|0
+name|M_WAITOK
 else|:
 name|M_NOWAIT
 argument_list|)
@@ -2304,9 +2304,9 @@ name|PAGE_SIZE
 argument_list|,
 name|how
 operator|==
-literal|0
+name|M_TRYWAIT
 condition|?
-literal|0
+name|M_WAITOK
 else|:
 name|M_NOWAIT
 argument_list|)
@@ -2329,7 +2329,7 @@ if|if
 condition|(
 name|how
 operator|==
-literal|0
+name|M_TRYWAIT
 condition|)
 name|mb_list
 operator|->
@@ -2469,7 +2469,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an mbuf-subsystem type object.  * The general case is very easy.  Complications only arise if our PCPU  * container is empty.  Things get worse if the PCPU container is empty,  * the general container is empty, and we've run out of address space  * in our map; then we try to block if we're willing to wait.  */
+comment|/*  * Allocate an mbuf-subsystem type object.  * The general case is very easy.  Complications only arise if our PCPU  * container is empty.  Things get worse if the PCPU container is empty,  * the general container is empty, and we've run out of address space  * in our map; then we try to block if we're willing to (M_TRYWAIT).  */
 end_comment
 
 begin_function
@@ -2921,7 +2921,7 @@ if|if
 condition|(
 name|how
 operator|==
-literal|0
+name|M_TRYWAIT
 condition|)
 block|{
 comment|/* 				 	 * Absolute worst-case scenario. 					 * We block if we're willing to, but 					 * only after trying to steal from 					 * other lists. 					 */
@@ -3018,7 +3018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the worst-case scenario called only if we're allocating with  * 0.  We first drain all the protocols, then try to find an mbuf  * by looking in every PCPU container.  If we're still unsuccesful, we  * try the general container one last time and possibly block on our  * starved cv.  */
+comment|/*  * This is the worst-case scenario called only if we're allocating with  * M_TRYWAIT.  We first drain all the protocols, then try to find an mbuf  * by looking in every PCPU container.  If we're still unsuccesful, we  * try the general container one last time and possibly block on our  * starved cv.  */
 end_comment
 
 begin_function
@@ -4608,7 +4608,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Allocate and return a single (normal) mbuf.  NULL is returned on failure.  *  * Arguments:  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
+comment|/*  * Allocate and return a single (normal) mbuf.  NULL is returned on failure.  *  * Arguments:  *  - how: M_TRYWAIT to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_DONTWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
 end_comment
 
 begin_function
@@ -4672,7 +4672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a given length worth of mbufs and/or clusters (whatever fits  * best) and return a pointer to the top of the allocated chain.  If an  * existing mbuf chain is provided, then we will append the new chain  * to the existing one but still return the top of the newly allocated  * chain.  NULL is returned on failure, in which case the [optional]  * provided chain is left untouched, and any memory already allocated  * is freed.  *  * Arguments:  *  - m: existing chain to which to append new chain (optional).  *  - len: total length of data to append, either in mbufs or clusters  *    (we allocate whatever combination yields the best fit).  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
+comment|/*  * Allocate a given length worth of mbufs and/or clusters (whatever fits  * best) and return a pointer to the top of the allocated chain.  If an  * existing mbuf chain is provided, then we will append the new chain  * to the existing one but still return the top of the newly allocated  * chain.  NULL is returned on failure, in which case the [optional]  * provided chain is left untouched, and any memory already allocated  * is freed.  *  * Arguments:  *  - m: existing chain to which to append new chain (optional).  *  - len: total length of data to append, either in mbufs or clusters  *    (we allocate whatever combination yields the best fit).  *  - how: M_TRYWAIT to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_DONTWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
 end_comment
 
 begin_function
@@ -5129,7 +5129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate and return a single M_PKTHDR mbuf.  NULL is returned on failure.  *  * Arguments:  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
+comment|/*  * Allocate and return a single M_PKTHDR mbuf.  NULL is returned on failure.  *  * Arguments:  *  - how: M_TRYWAIT to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_DONTWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
 end_comment
 
 begin_function
@@ -5221,7 +5221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate and return a single (normal) pre-zero'd mbuf.  NULL is  * returned on failure.  *  * Arguments:  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
+comment|/*  * Allocate and return a single (normal) pre-zero'd mbuf.  NULL is  * returned on failure.  *  * Arguments:  *  - how: M_TRYWAIT to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_DONTWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
 end_comment
 
 begin_function
@@ -5299,7 +5299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate and return a single M_PKTHDR pre-zero'd mbuf.  NULL is  * returned on failure.  *  * Arguments:  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
+comment|/*  * Allocate and return a single M_PKTHDR pre-zero'd mbuf.  NULL is  * returned on failure.  *  * Arguments:  *  - how: M_TRYWAIT to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_DONTWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
 end_comment
 
 begin_function
@@ -5852,7 +5852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch an mbuf with a cluster attached to it.  If one of the  * allocations fails, the entire allocation fails.  This routine is  * the preferred way of fetching both the mbuf and cluster together,  * as it avoids having to unlock/relock between allocations.  Returns  * NULL on failure.   *  * Arguments:  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  *  - flags: any flags to pass to the mbuf being allocated; if this includes  *    the M_PKTHDR bit, then the mbuf is configured as a M_PKTHDR mbuf.  */
+comment|/*  * Fetch an mbuf with a cluster attached to it.  If one of the  * allocations fails, the entire allocation fails.  This routine is  * the preferred way of fetching both the mbuf and cluster together,  * as it avoids having to unlock/relock between allocations.  Returns  * NULL on failure.   *  * Arguments:  *  - how: M_TRYWAIT to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_DONTWAIT to never block.  *  - type: the type of the mbuf being allocated.  *  - flags: any flags to pass to the mbuf being allocated; if this includes  *    the M_PKTHDR bit, then the mbuf is configured as a M_PKTHDR mbuf.  */
 end_comment
 
 begin_function
@@ -6089,7 +6089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch a single mbuf cluster and attach it to an existing mbuf.  If  * successfull, configures the provided mbuf to have mbuf->m_ext.ext_buf  * pointing to the cluster, and sets the M_EXT bit in the mbuf's flags.  * The M_EXT bit is not set on failure.  *  * Arguments:  *  - mb: the existing mbuf to which to attach the allocated cluster.  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  */
+comment|/*  * Fetch a single mbuf cluster and attach it to an existing mbuf.  If  * successfull, configures the provided mbuf to have mbuf->m_ext.ext_buf  * pointing to the cluster, and sets the M_EXT bit in the mbuf's flags.  * The M_EXT bit is not set on failure.  *  * Arguments:  *  - mb: the existing mbuf to which to attach the allocated cluster.  *  - how: M_TRYWAIT to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_DONTWAIT to never block.  */
 end_comment
 
 begin_function

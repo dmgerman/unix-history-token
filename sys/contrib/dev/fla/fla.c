@@ -264,7 +264,7 @@ name|bytes
 argument_list|,
 name|M_FLA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 return|;
 block|}

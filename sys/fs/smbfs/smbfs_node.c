@@ -415,7 +415,7 @@ argument_list|)
 argument_list|,
 name|M_SMBNODENAME
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 operator|*
@@ -472,7 +472,7 @@ name|nmlen
 argument_list|,
 name|M_SMBNODENAME
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1020,7 +1020,7 @@ name|np
 argument_list|,
 name|M_SMBNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error

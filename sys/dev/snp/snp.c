@@ -640,7 +640,7 @@ name|ilen
 argument_list|,
 name|M_SNP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error
@@ -2017,6 +2017,8 @@ argument_list|)
 argument_list|,
 name|M_SNP
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2053,7 +2055,7 @@ name|SNOOP_MINLEN
 argument_list|,
 name|M_SNP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|snp
@@ -2385,7 +2387,7 @@ name|SNOOP_MINLEN
 argument_list|,
 name|M_SNP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|snp

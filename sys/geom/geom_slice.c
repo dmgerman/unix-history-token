@@ -199,6 +199,8 @@ sizeof|sizeof
 expr|*
 name|gsp
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -210,6 +212,8 @@ name|g_malloc
 argument_list|(
 name|scsize
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -227,6 +231,8 @@ expr|struct
 name|g_slice
 argument_list|)
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2122,6 +2128,8 @@ sizeof|sizeof
 expr|*
 name|gsl2
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

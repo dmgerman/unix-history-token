@@ -1990,7 +1990,7 @@ name|uma_zalloc
 argument_list|(
 name|vnodepoll_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -4229,6 +4229,8 @@ name|uma_zalloc
 argument_list|(
 name|vnode_zone
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -12541,7 +12543,7 @@ name|cnt
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Handle the race that we will have here when struct vfsconf 	 * will be locked down by using both cnt and checking vfc_next 	 * against NULL to determine the end of the loop.  The race will 	 * happen because we will have to unlock before calling malloc(). 	 * We are protected by Giant for now. 	 */
@@ -13107,7 +13109,7 @@ name|M_TEMP
 argument_list|,
 name|M_ZERO
 operator||
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|n

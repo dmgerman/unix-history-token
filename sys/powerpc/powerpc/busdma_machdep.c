@@ -733,7 +733,7 @@ operator|)
 condition|?
 name|M_NOWAIT
 else|:
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -759,7 +759,7 @@ operator|)
 condition|?
 name|M_NOWAIT
 else|:
-literal|0
+name|M_WAITOK
 argument_list|,
 literal|0ul
 argument_list|,

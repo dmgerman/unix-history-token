@@ -1666,7 +1666,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1719,7 +1719,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 name|len
@@ -3790,7 +3790,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3811,7 +3811,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 block|}

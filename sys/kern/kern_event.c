@@ -1554,7 +1554,7 @@ argument_list|)
 argument_list|,
 name|M_KQUEUE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1745,6 +1745,8 @@ argument_list|)
 argument_list|,
 name|M_KQUEUE
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -4959,7 +4961,7 @@ argument_list|)
 argument_list|,
 name|M_KQUEUE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
@@ -5486,7 +5488,7 @@ name|uma_zalloc
 argument_list|(
 name|knote_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 operator|)
 return|;

@@ -6887,7 +6887,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 else|#
@@ -8811,7 +8811,7 @@ name|n
 operator|=
 name|m_getclr
 argument_list|(
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|m
 operator|->
@@ -8933,7 +8933,7 @@ name|n
 operator|=
 name|m_get
 argument_list|(
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|m
 operator|->

@@ -998,6 +998,8 @@ argument_list|)
 argument_list|,
 name|M_SEM
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1084,7 +1086,7 @@ literal|1
 argument_list|,
 name|M_SEM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -2668,7 +2670,7 @@ argument_list|)
 argument_list|,
 name|M_SEM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|ku

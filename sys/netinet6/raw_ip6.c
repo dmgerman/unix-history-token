@@ -1554,7 +1554,7 @@ operator|*
 name|ip6
 argument_list|)
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|ip6

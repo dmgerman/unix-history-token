@@ -2465,7 +2465,7 @@ name|nbp
 argument_list|,
 name|M_NBDATA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3185,7 +3185,7 @@ name|m0
 argument_list|,
 literal|4
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if

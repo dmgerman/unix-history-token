@@ -685,7 +685,7 @@ name|m
 argument_list|,
 literal|1
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 comment|/* Prepend IP NLPID */

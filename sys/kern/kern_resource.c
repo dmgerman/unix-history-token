@@ -3788,7 +3788,7 @@ argument_list|)
 argument_list|,
 name|M_SUBPROC
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -3997,6 +3997,8 @@ argument_list|)
 argument_list|,
 name|M_UIDINFO
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -3434,7 +3434,7 @@ name|MGETHDR
 argument_list|(
 name|m_new
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3454,7 +3454,7 @@ name|MCLGET
 argument_list|(
 name|m_new
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

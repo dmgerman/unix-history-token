@@ -583,7 +583,7 @@ name|lock
 argument_list|,
 name|M_LOCKF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|lock
@@ -2922,7 +2922,7 @@ name|splitlock
 argument_list|,
 name|M_LOCKF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy

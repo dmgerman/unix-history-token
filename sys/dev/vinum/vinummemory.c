@@ -502,7 +502,7 @@ name|td_intr_nesting_level
 operator|==
 literal|0
 condition|?
-literal|0
+name|M_WAITOK
 else|:
 name|M_NOWAIT
 argument_list|)

@@ -747,6 +747,8 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1960,7 +1962,7 @@ name|PECOFF_HDR_SIZE
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|peofs
@@ -2082,7 +2084,7 @@ name|scnsiz
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2558,7 +2560,7 @@ name|scnsiz
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|wp
@@ -3029,7 +3031,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3712,7 +3714,7 @@ name|PECOFF_HDR_SIZE
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error

@@ -47,14 +47,14 @@ begin_define
 define|#
 directive|define
 name|KB_F_WAIT
-value|0
+value|M_TRYWAIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|KB_F_NOWAIT
-value|M_NOWAIT
+value|M_DONTWAIT
 end_define
 
 begin_define

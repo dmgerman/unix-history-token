@@ -124,7 +124,7 @@ name|m
 operator|=
 name|m_getclr
 argument_list|(
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_PCB
 argument_list|)

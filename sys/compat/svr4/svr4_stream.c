@@ -1178,7 +1178,7 @@ name|iovlen
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1678,7 +1678,7 @@ name|iovlen
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2313,7 +2313,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 decl_stmt|;
 name|int
@@ -2485,7 +2485,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

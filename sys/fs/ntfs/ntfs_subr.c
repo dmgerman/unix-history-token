@@ -894,7 +894,7 @@ name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error
@@ -1275,7 +1275,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1863,6 +1863,8 @@ argument_list|)
 argument_list|,
 name|M_NTFSNTNODE
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2490,6 +2492,8 @@ argument_list|)
 argument_list|,
 name|M_NTFSNTVATTR
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2822,7 +2826,7 @@ name|va_datalen
 argument_list|,
 name|M_NTFSRDATA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -3011,7 +3015,7 @@ argument_list|)
 argument_list|,
 name|M_NTFSRUN
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -3030,7 +3034,7 @@ argument_list|)
 argument_list|,
 name|M_NTFSRUN
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|off
@@ -3664,6 +3668,8 @@ argument_list|)
 argument_list|,
 name|M_NTFSFNODE
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3711,7 +3717,7 @@ literal|1
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -4071,7 +4077,7 @@ name|namelen
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -4387,7 +4393,7 @@ name|blsize
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error
@@ -5379,7 +5385,7 @@ argument_list|)
 argument_list|,
 name|M_NTFSDIR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -5461,7 +5467,7 @@ name|va_datalen
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error
@@ -8254,7 +8260,7 @@ argument_list|)
 argument_list|,
 name|M_NTFSDECOMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -8271,7 +8277,7 @@ argument_list|)
 argument_list|,
 name|M_NTFSDECOMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|cn
@@ -9418,7 +9424,7 @@ argument_list|)
 argument_list|,
 name|M_NTFSRDATA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -9632,6 +9638,8 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -9702,7 +9710,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for
@@ -9877,7 +9885,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

@@ -3199,6 +3199,8 @@ name|ump
 argument_list|,
 name|M_UFSMNT
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3217,7 +3219,7 @@ name|fs_sbsize
 argument_list|,
 name|M_UFSMNT
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3415,7 +3417,7 @@ name|size
 argument_list|,
 name|M_UFSMNT
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|fs
@@ -6242,7 +6244,7 @@ name|uma_zalloc
 argument_list|(
 name|uma_inode
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a new vnode/inode. */
@@ -6531,7 +6533,7 @@ name|uma_zalloc
 argument_list|(
 name|uma_ufs1
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else
@@ -6543,7 +6545,7 @@ name|uma_zalloc
 argument_list|(
 name|uma_ufs2
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|ffs_load_inode

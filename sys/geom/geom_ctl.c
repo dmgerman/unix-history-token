@@ -616,7 +616,7 @@ name|gcp
 operator|->
 name|len
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error

@@ -1041,7 +1041,7 @@ literal|1
 argument_list|,
 name|M_LINKER
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -2693,7 +2693,7 @@ name|PAGE_SIZE
 argument_list|,
 name|M_LINKER
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3291,7 +3291,7 @@ name|mapsize
 argument_list|,
 name|M_LINKER
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3607,6 +3607,8 @@ name|nbytes
 argument_list|,
 name|M_LINKER
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3754,7 +3756,7 @@ name|symcnt
 argument_list|,
 name|M_LINKER
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|strcnt
@@ -3776,7 +3778,7 @@ name|strcnt
 argument_list|,
 name|M_LINKER
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -5509,7 +5511,7 @@ name|len
 argument_list|,
 name|M_LINKER
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

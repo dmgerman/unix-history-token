@@ -981,7 +981,7 @@ name|M_DEVBUF
 argument_list|,
 name|M_ZERO
 operator||
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

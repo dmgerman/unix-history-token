@@ -2293,7 +2293,7 @@ argument_list|)
 argument_list|,
 name|type
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for
@@ -2600,7 +2600,7 @@ argument_list|)
 argument_list|,
 name|type
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for

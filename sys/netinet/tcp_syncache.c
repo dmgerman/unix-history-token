@@ -1098,7 +1098,7 @@ argument_list|)
 argument_list|,
 name|M_SYNCACHE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the hash buckets. */
@@ -4776,7 +4776,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

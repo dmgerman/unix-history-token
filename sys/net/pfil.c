@@ -180,7 +180,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_add_hook() adds a function to the packet filter hook.  the  * flags are:  *	PFIL_IN		call me on incoming packets  *	PFIL_OUT	call me on outgoing packets  *	PFIL_ALL	call me on all of the above  *	PFIL_WAITOK	OK to call malloc with 0.  */
+comment|/*  * pfil_add_hook() adds a function to the packet filter hook.  the  * flags are:  *	PFIL_IN		call me on incoming packets  *	PFIL_OUT	call me on outgoing packets  *	PFIL_ALL	call me on all of the above  *	PFIL_WAITOK	OK to call malloc with M_WAITOK.  */
 end_comment
 
 begin_decl_stmt
@@ -413,7 +413,7 @@ name|flags
 operator|&
 name|PFIL_WAITOK
 condition|?
-literal|0
+name|M_WAITOK
 else|:
 name|M_NOWAIT
 argument_list|)

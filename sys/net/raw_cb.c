@@ -421,7 +421,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|rp

@@ -1277,7 +1277,7 @@ literal|1024
 argument_list|,
 name|M_USBDEV
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|ucom
@@ -3446,7 +3446,7 @@ name|sc_isize
 argument_list|,
 name|M_USBDEV
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|err

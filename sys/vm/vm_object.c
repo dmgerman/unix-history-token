@@ -1241,7 +1241,7 @@ name|type
 argument_list|,
 name|size
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 operator|)
 return|;

@@ -4702,7 +4702,7 @@ name|uma_zalloc
 argument_list|(
 name|nfsmount_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bzero

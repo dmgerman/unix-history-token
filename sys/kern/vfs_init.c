@@ -324,7 +324,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -541,6 +541,8 @@ argument_list|)
 argument_list|,
 name|M_VNODE
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -752,7 +754,7 @@ argument_list|)
 argument_list|,
 name|M_VNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -895,7 +897,7 @@ argument_list|)
 argument_list|,
 name|M_VNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* new reference count (for unload) */
@@ -920,7 +922,7 @@ argument_list|)
 argument_list|,
 name|M_VNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1241,7 +1243,7 @@ argument_list|)
 argument_list|,
 name|M_VNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* new reference count (for unload) */
@@ -1266,7 +1268,7 @@ argument_list|)
 argument_list|,
 name|M_VNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for
@@ -1490,7 +1492,7 @@ argument_list|)
 argument_list|,
 name|M_VNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy

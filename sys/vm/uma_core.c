@@ -1267,7 +1267,7 @@ name|hashzone
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|hash
@@ -4759,7 +4759,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 operator|)
 return|;
@@ -4861,7 +4861,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"malloc without M_NOWAIT in interrupt context"
+literal|"malloc(M_WAITOK) in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5928,7 +5928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates an item for an internal zone  *  * Arguments  *	zone   The zone to alloc for.  *	udata  The data to be passed to the constructor.  *	flags  M_NOWAIT, M_ZERO.  *  * Returns  *	NULL if there is no memory and M_NOWAIT is set  *	An item if successful  */
+comment|/*  * Allocates an item for an internal zone  *  * Arguments  *	zone   The zone to alloc for.  *	udata  The data to be passed to the constructor.  *	flags  M_WAITOK, M_NOWAIT, M_ZERO.  *  * Returns  *	NULL if there is no memory and M_NOWAIT is set  *	An item if successful  */
 end_comment
 
 begin_function
@@ -7265,7 +7265,7 @@ name|slab_zalloc
 argument_list|(
 name|zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -7673,7 +7673,7 @@ name|linesize
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|len

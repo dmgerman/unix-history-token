@@ -4119,7 +4119,7 @@ name|m
 argument_list|,
 name|hlen
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5173,7 +5173,7 @@ name|m
 argument_list|,
 name|PPP_HEADER_LEN
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5814,7 +5814,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAIT
 argument_list|)
 expr_stmt|;
 name|sl_compress_init
@@ -7397,7 +7397,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7744,7 +7744,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -23318,7 +23318,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

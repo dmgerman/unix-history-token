@@ -334,7 +334,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -446,7 +446,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|copyin
@@ -504,7 +504,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -577,7 +577,7 @@ name|len
 argument_list|,
 name|M_SMBSTR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

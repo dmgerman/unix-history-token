@@ -904,6 +904,8 @@ argument_list|)
 argument_list|,
 name|M_TARG
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -4804,7 +4806,7 @@ name|ccb_len
 argument_list|,
 name|M_TARG
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|CAM_DEBUG
@@ -5034,7 +5036,7 @@ argument_list|)
 argument_list|,
 name|M_TARG
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|descr

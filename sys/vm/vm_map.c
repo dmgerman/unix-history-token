@@ -856,7 +856,7 @@ name|uma_zalloc
 argument_list|(
 name|vmspace_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|CTR1
@@ -1959,7 +1959,7 @@ name|uma_zalloc
 argument_list|(
 name|mapzone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|CTR1
@@ -2206,7 +2206,7 @@ name|uma_zalloc
 argument_list|(
 name|mapentzone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

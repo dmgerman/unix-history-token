@@ -3082,7 +3082,7 @@ name|PAGE_SIZE
 argument_list|,
 name|M_PMAP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|,
 literal|0ul
 argument_list|,
@@ -4780,7 +4780,7 @@ name|uma_zalloc
 argument_list|(
 name|ptezone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|pte

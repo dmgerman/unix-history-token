@@ -4830,7 +4830,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 decl_stmt|;
 name|cam_status

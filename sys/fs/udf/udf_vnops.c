@@ -2285,7 +2285,7 @@ name|uma_zalloc
 argument_list|(
 name|udf_zone_trans
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2433,7 +2433,7 @@ name|uma_zalloc
 argument_list|(
 name|udf_zone_trans
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|cs0len
@@ -2662,6 +2662,8 @@ name|uma_zalloc
 argument_list|(
 name|udf_zone_ds
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2950,6 +2952,8 @@ name|bsize
 argument_list|,
 name|M_UDFFID
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3390,7 +3394,7 @@ name|ncookies
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

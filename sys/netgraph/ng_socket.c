@@ -823,7 +823,7 @@ literal|1
 argument_list|,
 name|M_NETGRAPH_PATH
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -901,7 +901,7 @@ literal|1
 argument_list|,
 name|M_NETGRAPH_MSG
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1866,6 +1866,8 @@ name|sg_len
 argument_list|,
 name|M_SONAME
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2006,6 +2008,8 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH_SOCK
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2193,6 +2197,8 @@ argument_list|)
 argument_list|,
 name|M_PCB
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

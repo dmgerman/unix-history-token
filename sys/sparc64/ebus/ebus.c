@@ -1644,6 +1644,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_ZERO
+operator||
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

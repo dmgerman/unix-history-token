@@ -3820,7 +3820,7 @@ name|mp_napics
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -3842,7 +3842,7 @@ name|mp_napics
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -3865,7 +3865,7 @@ operator|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -3884,7 +3884,7 @@ name|mp_nbusses
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bzero

@@ -577,7 +577,7 @@ literal|1
 condition|)
 name|flag
 operator|=
-literal|0
+name|M_WAITOK
 expr_stmt|;
 else|else
 name|flag
@@ -2236,7 +2236,7 @@ name|SBLOCKWAIT
 parameter_list|(
 name|f
 parameter_list|)
-value|(((f)& MSG_DONTWAIT) ? M_NOWAIT : 0)
+value|(((f)& MSG_DONTWAIT) ? M_NOWAIT : M_WAITOK)
 end_define
 
 begin_comment
@@ -2887,7 +2887,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2939,7 +2939,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3046,7 +3046,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3582,7 +3582,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4970,7 +4970,7 @@ literal|0
 argument_list|,
 name|len
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|m
@@ -5495,7 +5495,7 @@ name|sblock
 argument_list|(
 name|sb
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|s
@@ -5769,7 +5769,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error
@@ -5868,6 +5868,8 @@ argument_list|)
 argument_list|,
 name|M_ACCF
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -5917,7 +5919,7 @@ name|len
 argument_list|,
 name|M_ACCF
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -7077,6 +7079,8 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -7561,9 +7565,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-literal|0
+name|M_TRYWAIT
 else|:
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7592,9 +7596,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-literal|0
+name|M_TRYWAIT
 else|:
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7673,9 +7677,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-literal|0
+name|M_TRYWAIT
 else|:
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7712,9 +7716,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-literal|0
+name|M_TRYWAIT
 else|:
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

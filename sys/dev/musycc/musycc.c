@@ -3673,7 +3673,7 @@ name|MGETHDR
 argument_list|(
 name|m2
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3689,7 +3689,7 @@ name|MCLGET
 argument_list|(
 name|m2
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5733,6 +5733,8 @@ argument_list|)
 argument_list|,
 name|M_MUSYCC
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -6872,7 +6874,7 @@ name|nmd
 argument_list|,
 name|M_MUSYCC
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -6898,7 +6900,7 @@ name|nmd
 argument_list|,
 name|M_MUSYCC
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for
@@ -7178,7 +7180,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7196,7 +7198,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7212,7 +7214,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* We've waited mbuf_wait and still got nothing. 			   We're calling with 0 anyway - a little 			   defensive programming costs us very little - if 			   anything at all in the case of error. */
+comment|/* We've waited mbuf_wait and still got nothing. 			   We're calling with M_TRYWAIT anyway - a little 			   defensive programming costs us very little - if 			   anything at all in the case of error. */
 name|m_free
 argument_list|(
 name|m
@@ -8248,6 +8250,8 @@ argument_list|)
 argument_list|,
 name|M_MUSYCC
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -8803,6 +8807,8 @@ argument_list|)
 argument_list|,
 name|M_MUSYCC
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

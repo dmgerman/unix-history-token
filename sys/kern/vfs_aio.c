@@ -2000,7 +2000,7 @@ name|uma_zalloc
 argument_list|(
 name|kaio_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|p
@@ -3939,7 +3939,7 @@ name|uma_zalloc
 argument_list|(
 name|aiop_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|aiop
@@ -4018,6 +4018,8 @@ argument_list|)
 argument_list|,
 name|M_PGRP
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -4037,6 +4039,8 @@ argument_list|)
 argument_list|,
 name|M_SESSION
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -6049,7 +6053,7 @@ name|uma_zalloc
 argument_list|(
 name|aiocb_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|aiocbe
@@ -7902,7 +7906,7 @@ name|uma_zalloc
 argument_list|(
 name|aiol_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|ujoblist
@@ -7911,7 +7915,7 @@ name|uma_zalloc
 argument_list|(
 name|aiol_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|cbptr
@@ -9712,7 +9716,7 @@ name|uma_zalloc
 argument_list|(
 name|aiolio_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

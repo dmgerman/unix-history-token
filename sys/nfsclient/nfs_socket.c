@@ -2269,7 +2269,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|nfsstats
@@ -3753,7 +3753,7 @@ argument_list|)
 argument_list|,
 name|M_NFSREQ
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|rep
@@ -3888,7 +3888,7 @@ name|m
 argument_list|,
 name|NFSX_UNSIGNED
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4084,7 +4084,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|error
@@ -5041,7 +5041,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 operator|)
 condition|)
@@ -6153,7 +6153,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -6171,7 +6171,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 block|}

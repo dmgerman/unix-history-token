@@ -4512,7 +4512,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)

@@ -5654,7 +5654,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5687,7 +5687,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5766,7 +5766,7 @@ name|m_next
 operator|=
 name|m_get
 argument_list|(
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -5815,7 +5815,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if

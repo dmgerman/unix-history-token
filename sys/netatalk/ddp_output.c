@@ -157,7 +157,7 @@ expr|struct
 name|ddpehdr
 argument_list|)
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|deh
@@ -869,7 +869,7 @@ name|MGET
 argument_list|(
 name|m0
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

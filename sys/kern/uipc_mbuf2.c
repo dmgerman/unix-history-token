@@ -378,7 +378,7 @@ name|m_len
 operator|-
 name|off
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -643,7 +643,7 @@ name|MGET
 argument_list|(
 name|o
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|m
 operator|->
@@ -663,7 +663,7 @@ name|MCLGET
 argument_list|(
 name|o
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

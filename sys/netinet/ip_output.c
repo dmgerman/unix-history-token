@@ -3190,7 +3190,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 comment|/* 			 * XXX 			 * delayed checksums are not currently compatible 			 * with divert sockets. 			 */
@@ -4309,7 +4309,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -5270,7 +5270,7 @@ name|MGETHDR
 argument_list|(
 name|n
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -5872,9 +5872,9 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-literal|0
+name|M_TRYWAIT
 else|:
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -7401,7 +7401,7 @@ argument_list|)
 argument_list|,
 name|M_IPMOPTS
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

@@ -322,6 +322,8 @@ name|dir
 argument_list|,
 name|M_PFSNODES
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -380,6 +382,8 @@ name|dir
 argument_list|,
 name|M_PFSNODES
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -503,6 +507,8 @@ name|dir
 argument_list|,
 name|M_PFSNODES
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -668,6 +674,8 @@ name|node
 argument_list|,
 name|M_PFSNODES
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1407,6 +1415,8 @@ name|root
 argument_list|,
 name|M_PFSNODES
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

@@ -700,7 +700,7 @@ argument_list|,
 operator|(
 name|insist
 condition|?
-literal|0
+name|M_WAITOK
 else|:
 name|M_NOWAIT
 operator|)
@@ -740,7 +740,7 @@ argument_list|,
 operator|(
 name|insist
 condition|?
-literal|0
+name|M_WAITOK
 else|:
 name|M_NOWAIT
 operator|)
@@ -956,6 +956,8 @@ name|i
 argument_list|,
 name|M_DEVFS
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1483,6 +1485,8 @@ name|i
 argument_list|,
 name|M_DEVFS
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1863,7 +1867,7 @@ name|j
 argument_list|,
 name|M_DEVFS
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy

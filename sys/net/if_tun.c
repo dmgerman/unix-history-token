@@ -1233,6 +1233,8 @@ argument_list|)
 argument_list|,
 name|M_TUN
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2456,7 +2458,7 @@ name|dst
 operator|->
 name|sa_len
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 comment|/* if allocation failed drop packet */
@@ -2516,7 +2518,7 @@ name|m0
 argument_list|,
 literal|4
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 comment|/* if allocation failed drop packet */
@@ -3698,7 +3700,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3796,7 +3798,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

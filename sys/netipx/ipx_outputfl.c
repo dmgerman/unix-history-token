@@ -1049,7 +1049,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -1112,7 +1112,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|error
@@ -1648,7 +1648,7 @@ argument_list|)
 argument_list|,
 name|M_SMBIOD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|evp
@@ -2955,7 +2955,7 @@ argument_list|)
 argument_list|,
 name|M_SMBIOD
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|iod

@@ -1645,6 +1645,8 @@ name|pmp
 argument_list|,
 name|M_MSDOSFSMNT
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2708,7 +2710,7 @@ argument_list|)
 argument_list|,
 name|M_MSDOSFSFAT
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * fillinusemap() needs pm_devvp. 	 */

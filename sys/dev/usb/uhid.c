@@ -1996,7 +1996,7 @@ name|sc_isize
 argument_list|,
 name|M_USBDEV
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2011,7 +2011,7 @@ name|sc_osize
 argument_list|,
 name|M_USBDEV
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* Set up interrupt pipe. */

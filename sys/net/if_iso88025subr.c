@@ -1303,7 +1303,7 @@ name|m
 argument_list|,
 literal|3
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1511,7 +1511,7 @@ expr|struct
 name|llc
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1614,7 +1614,7 @@ name|ISO88025_HDR_LEN
 operator|+
 name|rif_len
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -539,7 +539,7 @@ name|sc
 operator|->
 name|sectorsize
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|b
@@ -912,7 +912,7 @@ name|bp
 operator|->
 name|bio_length
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|b
@@ -1559,6 +1559,8 @@ expr|struct
 name|g_aes_softc
 argument_list|)
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

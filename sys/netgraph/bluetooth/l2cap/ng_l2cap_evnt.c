@@ -867,7 +867,7 @@ name|hdr
 operator|->
 name|length
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 else|else

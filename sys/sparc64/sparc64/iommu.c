@@ -2579,7 +2579,7 @@ operator|)
 condition|?
 name|M_NOWAIT
 else|:
-literal|0
+name|M_WAITOK
 argument_list|)
 operator|)
 operator|==

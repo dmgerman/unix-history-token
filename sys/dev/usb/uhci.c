@@ -12867,7 +12867,7 @@ argument_list|)
 argument_list|,
 name|M_USBHC
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|token
@@ -14247,7 +14247,7 @@ argument_list|)
 argument_list|,
 name|M_USBHC
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Figure out which offset in the schedule that has most 	 * bandwidth left over. 	 */

@@ -1273,6 +1273,8 @@ name|n
 argument_list|,
 name|M_IFADDR
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2106,6 +2108,8 @@ name|ifasize
 argument_list|,
 name|M_IFADDR
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -3616,6 +3620,8 @@ name|len
 argument_list|,
 name|M_CLONE
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -8157,7 +8163,7 @@ name|ifma
 argument_list|,
 name|M_IFMADDR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -8174,7 +8180,7 @@ name|sa_len
 argument_list|,
 name|M_IFMADDR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -8315,7 +8321,7 @@ name|ifma
 argument_list|,
 name|M_IFMADDR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -8332,7 +8338,7 @@ name|sa_len
 argument_list|,
 name|M_IFMADDR
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy

@@ -1081,6 +1081,8 @@ argument_list|)
 argument_list|,
 name|M_NFSSVC
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1273,6 +1275,8 @@ argument_list|)
 argument_list|,
 name|M_NFSD
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -1528,7 +1532,7 @@ name|caddr_t
 operator|)
 name|slp
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|nfs_slpunlock
@@ -2117,7 +2121,7 @@ name|m
 argument_list|,
 name|NFSX_UNSIGNED
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3114,7 +3118,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|nfs_udpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_ZERO); 	STAILQ_INIT(&nfs_udpsock->ns_rec); 	TAILQ_INSERT_HEAD(&nfssvc_sockhead, nfs_udpsock, ns_chain);  	nfs_cltpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_ZERO); 	STAILQ_INIT(&nfs_cltpsock->ns_rec); 	TAILQ_INSERT_TAIL(&nfssvc_sockhead, nfs_cltpsock, ns_chain);
+block|nfs_udpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_WAITOK | M_ZERO); 	STAILQ_INIT(&nfs_udpsock->ns_rec); 	TAILQ_INSERT_HEAD(&nfssvc_sockhead, nfs_udpsock, ns_chain);  	nfs_cltpsock = (struct nfssvc_sock *) 	    malloc(sizeof (struct nfssvc_sock), M_NFSSVC, M_WAITOK | M_ZERO); 	STAILQ_INIT(&nfs_cltpsock->ns_rec); 	TAILQ_INSERT_TAIL(&nfssvc_sockhead, nfs_cltpsock, ns_chain);
 endif|#
 directive|endif
 block|}

@@ -1630,7 +1630,7 @@ name|size
 argument_list|,
 name|M_SHM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for
@@ -3406,7 +3406,7 @@ argument_list|)
 argument_list|,
 name|M_SHM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|shmid
@@ -3981,7 +3981,7 @@ name|size
 argument_list|,
 name|M_SHM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -4183,7 +4183,7 @@ argument_list|)
 argument_list|,
 name|M_SHM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4400,7 +4400,7 @@ argument_list|)
 argument_list|,
 name|M_SHM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

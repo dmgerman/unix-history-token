@@ -638,6 +638,8 @@ argument_list|)
 argument_list|,
 name|M_IFADDR
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -693,6 +695,8 @@ argument_list|)
 argument_list|,
 name|M_IFADDR
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2995,7 +2999,7 @@ name|EH_RESTORE
 parameter_list|(
 name|_m
 parameter_list|)
-value|do {						   \     M_PREPEND((_m), ETHER_HDR_LEN, M_NOWAIT);			   	   \     if ((_m) == NULL) {							   \ 	bdg_dropped++;							   \ 	return NULL;							   \     }									   \     if (eh != mtod((_m), struct ether_header *))			   \ 	bcopy(&save_eh, mtod((_m), struct ether_header *), ETHER_HDR_LEN); \     else								   \ 	bdg_predict++;							   \ } while (0);
+value|do {						   \     M_PREPEND((_m), ETHER_HDR_LEN, M_DONTWAIT);			   	   \     if ((_m) == NULL) {							   \ 	bdg_dropped++;							   \ 	return NULL;							   \     }									   \     if (eh != mtod((_m), struct ether_header *))			   \ 	bcopy(&save_eh, mtod((_m), struct ether_header *), ETHER_HDR_LEN); \     else								   \ 	bdg_predict++;							   \ } while (0);
 name|struct
 name|ether_header
 modifier|*
@@ -3718,7 +3722,7 @@ name|m_copypacket
 argument_list|(
 name|m0
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3953,7 +3957,7 @@ name|m_copypacket
 argument_list|(
 name|m0
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4153,6 +4157,8 @@ argument_list|)
 argument_list|,
 name|M_IFADDR
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

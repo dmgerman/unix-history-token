@@ -664,7 +664,7 @@ name|int
 operator|)
 name|M_COPYALL
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1081,7 +1081,7 @@ name|m_gethdr
 argument_list|(
 name|MT_HEADER
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 decl_stmt|;
 if|if
@@ -1177,7 +1177,7 @@ expr|struct
 name|ip
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

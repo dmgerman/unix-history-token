@@ -350,7 +350,7 @@ argument_list|)
 argument_list|,
 name|M_OFWPROP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -504,6 +504,8 @@ name|pci_bus_map_sz
 argument_list|,
 name|M_DEVBUF
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

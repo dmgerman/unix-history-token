@@ -1277,7 +1277,7 @@ expr|struct
 name|ip
 argument_list|)
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|ip
@@ -3083,7 +3083,7 @@ name|inp_list
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

@@ -831,7 +831,7 @@ argument_list|)
 argument_list|,
 name|M_MSDOSFSNODE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Directory entry was not in cache, have to create a vnode and 	 * copy it from the passed disk buffer. 	 */

@@ -7125,7 +7125,7 @@ name|SMB_MAXFNAMELEN
 argument_list|,
 name|M_SMBFSDATA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -7847,7 +7847,7 @@ literal|1
 argument_list|,
 name|M_SMBFSDATA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|ctx
@@ -8028,7 +8028,7 @@ argument_list|)
 argument_list|,
 name|M_SMBFSDATA
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

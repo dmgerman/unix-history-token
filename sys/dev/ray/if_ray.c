@@ -7759,7 +7759,7 @@ name|MGETHDR
 argument_list|(
 name|m0
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7798,7 +7798,7 @@ name|MCLGET
 argument_list|(
 name|m0
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13799,7 +13799,7 @@ argument_list|)
 argument_list|,
 name|M_RAYCOM
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return

@@ -902,7 +902,7 @@ name|hdr
 operator|->
 name|hdr_entsz
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

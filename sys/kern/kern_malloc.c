@@ -659,7 +659,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"malloc() without M_NOWAIT in interrupt context"
+literal|"malloc(M_WAITOK) in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -861,7 +861,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"malloc() without M_NOWAIT returned NULL"
+literal|"malloc(M_WAITOK) returned NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2072,6 +2072,8 @@ name|bufsize
 argument_list|,
 name|M_TEMP
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
@@ -2475,6 +2477,8 @@ name|bufsize
 argument_list|,
 name|M_TEMP
 argument_list|,
+name|M_WAITOK
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
