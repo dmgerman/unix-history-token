@@ -242,7 +242,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * must be passed a malloc'd structure so we don't explode if the kld  * is unloaded, we leak the struct on deallocation to deal with this,  * but if a filter is loaded with the same name as a leaked one we re-use  * the entry.  */
+comment|/*  * Must be passed a malloc'd structure so we don't explode if the kld is  * unloaded, we leak the struct on deallocation to deal with this, but if a  * filter is loaded with the same name as a leaked one we re-use the entry.  */
 end_comment
 
 begin_function
@@ -543,7 +543,7 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* 		 * Do not support unloading yet. we don't keep track of refcounts 		 * and unloading an accept filter callback and then having it called 		 * is a bad thing.  A simple fix would be to track the refcount 		 * in the struct accept_filter. 		 */
+comment|/* 		 * Do not support unloading yet. we don't keep track of 		 * refcounts and unloading an accept filter callback and then 		 * having it called is a bad thing.  A simple fix would be to 		 * track the refcount in the struct accept_filter. 		 */
 if|if
 condition|(
 name|unloadable
