@@ -427,7 +427,7 @@ name|sgn
 operator|.
 name|sg_flags
 operator||=
-name|RAW
+name|CBREAK
 expr_stmt|;
 name|sgn
 operator|.
@@ -446,16 +446,16 @@ name|tc
 operator|.
 name|t_intrc
 operator|=
-literal|17
+literal|07
 expr_stmt|;
-comment|/* ^Q */
+comment|/* ^G */
 name|tc
 operator|.
 name|t_quitc
 operator|=
-literal|17
+literal|07
 expr_stmt|;
-comment|/* ^Q */
+comment|/* ^G */
 name|ioctl
 argument_list|(
 name|std_in
