@@ -2048,11 +2048,21 @@ name|s_groups_count
 condition|)
 name|panic
 argument_list|(
-literal|"ifree: range: dev = 0x%x, ino = %d, fs = %s"
+literal|"ext2_vfree: range: dev = (%d, %d), ino = %d, fs = %s"
 argument_list|,
+name|major
+argument_list|(
 name|pip
 operator|->
 name|i_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|pip
+operator|->
+name|i_dev
+argument_list|)
 argument_list|,
 name|ino
 argument_list|,
