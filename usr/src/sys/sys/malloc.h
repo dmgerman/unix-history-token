@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -629,6 +629,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_IPMOPTS
+value|53
+end_define
+
+begin_comment
+comment|/* internet multicast options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_IPMADDR
+value|54
+end_define
+
+begin_comment
+comment|/* internet multicast address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_IFMADDR
+value|55
+end_define
+
+begin_comment
+comment|/* link-level multicast address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MRTABLE
+value|56
+end_define
+
+begin_comment
+comment|/* multicast routing tables */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
 value|74
 end_define
@@ -758,6 +802,14 @@ value|\ 	"NFS uid",
 comment|/* 51 M_NFSUID */
 value|\ 	"NFS daemon",
 comment|/* 52 M_NFSD */
+value|\ 	"ip_moptions",
+comment|/* 53 M_IPMOPTS */
+value|\ 	"in_multi",
+comment|/* 54 M_IPMADDR */
+value|\ 	"ether_multi",
+comment|/* 55 M_IFMADDR */
+value|\ 	"mrt",
+comment|/* 56 M_MRTABLE */
 value|\ 	NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, \ 	"temp",
 comment|/* 74 M_TEMP */
 value|\ }
