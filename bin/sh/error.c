@@ -511,7 +511,7 @@ name|ALL
 block|,
 literal|"is a directory"
 block|,
-comment|/*    EMFILE, ALL,	"too many open files", */
+comment|/*    EMFILE, ALL,		"too many open files", */
 name|ENFILE
 block|,
 name|ALL
