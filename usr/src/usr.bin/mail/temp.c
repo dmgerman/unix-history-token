@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)temp.c	5.9 (Berkeley) %G%"
+literal|"@(#)temp.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,33 +286,15 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%s/dead.letter"
-argument_list|,
-name|homedir
-argument_list|)
-expr_stmt|;
-name|deadletter
-operator|=
-name|savestr
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"user = %s, deadletter = %s, mailrc = %s\n"
+literal|"user = %s, mailrc = %s\n"
 argument_list|,
 name|myname
-argument_list|,
-name|deadletter
 argument_list|,
 name|mailrc
 argument_list|)
