@@ -397,7 +397,7 @@ control|)
 block|{
 name|oid
 operator|=
-name|sysctl_add_oid
+name|SYSCTL_ADD_OID
 argument_list|(
 operator|&
 name|info
