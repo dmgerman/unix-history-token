@@ -1063,6 +1063,9 @@ name|fp
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|currfile
