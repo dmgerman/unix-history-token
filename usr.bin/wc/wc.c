@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -192,6 +198,16 @@ decl_stmt|;
 name|int
 name|total
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -413,6 +429,8 @@ specifier|register
 name|u_char
 modifier|*
 name|p
+decl_stmt|,
+name|ch
 decl_stmt|;
 specifier|register
 name|short
@@ -420,8 +438,6 @@ name|gotsp
 decl_stmt|;
 specifier|register
 name|int
-name|ch
-decl_stmt|,
 name|len
 decl_stmt|;
 specifier|register
