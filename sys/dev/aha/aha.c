@@ -1324,18 +1324,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"%s: Failed Reset\n"
-argument_list|,
+operator|,
 name|aha_name
 argument_list|(
 name|aha
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7564,7 +7562,6 @@ operator|=
 name|status
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -7804,6 +7801,21 @@ literal|0
 condition|)
 block|{
 comment|/* The controller did not accept the full argument list */
+name|PRVERB
+argument_list|(
+operator|(
+literal|"%s: Controller did not accept full argument list "
+literal|"(%d> 0)\n"
+operator|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+operator|,
+name|param_len
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|E2BIG
@@ -7818,6 +7830,22 @@ name|reply_buf_size
 condition|)
 block|{
 comment|/* Too much or too little data received */
+name|PRVERB
+argument_list|(
+operator|(
+literal|"%s: Too much or too little data received (%d != %d)\n"
+operator|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+operator|,
+name|reply_len
+operator|,
+name|reply_buf_size
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EMSGSIZE
