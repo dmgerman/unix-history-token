@@ -851,6 +851,14 @@ name|ip6e_hbh
 argument_list|)
 expr_stmt|;
 comment|/* Destination options header(1st part) */
+if|if
+condition|(
+name|opt
+operator|->
+name|ip6po_rthdr
+condition|)
+block|{
+comment|/* 			 * Destination options header(1st part) 			 * This only makes sence with a routing header. 			 * See Section 9.2 of RFC 3542. 			 * Disabling this part just for MIP6 convenience is 			 * a bad idea.  We need to think carefully about a 			 * way to make the advanced API coexist with MIP6 			 * options, which might automatically be inserted in 			 * the kernel. 			 */
 name|MAKE_EXTHDR
 argument_list|(
 name|opt
@@ -863,6 +871,7 @@ operator|.
 name|ip6e_dest1
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Routing header */
 name|MAKE_EXTHDR
 argument_list|(
