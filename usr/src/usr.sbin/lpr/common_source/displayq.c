@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	displayq.c	4.3	83/05/18	*/
+comment|/*	displayq.c	4.4	83/05/27	*/
 end_comment
 
 begin_comment
