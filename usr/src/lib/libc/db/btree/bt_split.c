@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.9 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -175,6 +177,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -204,6 +208,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -270,7 +276,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * __BT_SPLIT -- Split the tree.  *  * Parameters:  *	t:	tree  *	sp:	page to split  *	key:	key to insert  *	data:	data to insert  *	flags:	BIGKEY/BIGDATA flags  *	nbytes:	length of insertion  *	skip:	index to leave open  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
+comment|/*  * __BT_SPLIT -- Split the tree.  *  * Parameters:  *	t:	tree  *	sp:	page to split  *	key:	key to insert  *	data:	data to insert  *	flags:	BIGKEY/BIGDATA flags  *	ilen:	insert length  *	skip:	index to leave open  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
 end_comment
 
 begin_function
@@ -287,7 +293,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|,
-name|nbytes
+name|ilen
 parameter_list|,
 name|skip
 parameter_list|)
@@ -317,7 +323,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|size_t
-name|nbytes
+name|ilen
 decl_stmt|;
 end_decl_stmt
 
@@ -336,6 +342,9 @@ decl_stmt|;
 name|BLEAF
 modifier|*
 name|bl
+decl_stmt|,
+modifier|*
+name|tbl
 decl_stmt|;
 name|DBT
 name|a
@@ -366,6 +375,10 @@ name|index_t
 name|nxtindex
 decl_stmt|;
 name|size_t
+name|n
+decl_stmt|,
+name|nbytes
+decl_stmt|,
 name|nksize
 decl_stmt|;
 name|int
@@ -398,6 +411,8 @@ name|r
 argument_list|,
 operator|&
 name|skip
+argument_list|,
+name|ilen
 argument_list|)
 else|:
 name|bt_page
@@ -414,6 +429,8 @@ name|r
 argument_list|,
 operator|&
 name|skip
+argument_list|,
+name|ilen
 argument_list|)
 expr_stmt|;
 if|if
@@ -439,7 +456,7 @@ name|h
 operator|->
 name|upper
 operator|-=
-name|nbytes
+name|ilen
 expr_stmt|;
 name|dest
 operator|=
@@ -579,7 +596,7 @@ condition|)
 goto|goto
 name|err2
 goto|;
-comment|/* The new key goes ONE AFTER the index. */
+comment|/* 		 * The new key goes ONE AFTER the index, because the split 		 * was to the right. 		 */
 name|skip
 operator|=
 name|parent
@@ -588,7 +605,7 @@ name|index
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 		 * Calculate the space needed on the parent page. 		 * 		 * Space hack when inserting into BINTERNAL pages.  Only need to 		 * retain the number of bytes that will distinguish between the 		 * new entry and the LAST entry on the page to its left.  If the 		 * keys compare equal, retain the entire key.  Note, we don't 		 * touch overflow keys and the entire key must be retained for 		 * the next-to-leftmost key on the leftmost page of each level, 		 * or the search will fail. 		 */
+comment|/* 		 * Calculate the space needed on the parent page. 		 * 		 * Prefix trees: space hack when inserting into BINTERNAL 		 * pages.  Retain only what's needed to distinguish between 		 * the new entry and the LAST entry on the page to its left. 		 * If the keys compare equal, retain the entire key.  Note, 		 * we don't touch overflow keys, and the entire key must be 		 * retained for the next-to-left most key on the leftmost 		 * page of each level, or the search will fail.  Applicable 		 * ONLY to internal pages that have leaf pages as children. 		 * Further reduction of the key between pairs of internal 		 * pages loses too much information. 		 */
 switch|switch
 condition|(
 name|rchild
@@ -619,93 +636,6 @@ operator|->
 name|ksize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t
-operator|->
-name|bt_pfx
-operator|&&
-operator|(
-name|h
-operator|->
-name|prevpg
-operator|!=
-name|P_INVALID
-operator|||
-name|skip
-operator|>
-literal|1
-operator|)
-operator|&&
-operator|!
-operator|(
-name|bi
-operator|->
-name|flags
-operator|&
-name|P_BIGKEY
-operator|)
-condition|)
-block|{
-name|BINTERNAL
-modifier|*
-name|tbi
-decl_stmt|;
-name|tbi
-operator|=
-name|GETBINTERNAL
-argument_list|(
-name|lchild
-argument_list|,
-name|NEXTINDEX
-argument_list|(
-name|lchild
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|a
-operator|.
-name|size
-operator|=
-name|tbi
-operator|->
-name|ksize
-expr_stmt|;
-name|a
-operator|.
-name|data
-operator|=
-name|tbi
-operator|->
-name|bytes
-expr_stmt|;
-name|b
-operator|.
-name|size
-operator|=
-name|bi
-operator|->
-name|ksize
-expr_stmt|;
-name|b
-operator|.
-name|data
-operator|=
-name|bi
-operator|->
-name|bytes
-expr_stmt|;
-goto|goto
-name|prefix
-goto|;
-block|}
-else|else
-name|nksize
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|P_BLEAF
@@ -734,6 +664,15 @@ name|t
 operator|->
 name|bt_pfx
 operator|&&
+operator|!
+operator|(
+name|bl
+operator|->
+name|flags
+operator|&
+name|P_BIGKEY
+operator|)
+operator|&&
 operator|(
 name|h
 operator|->
@@ -745,24 +684,8 @@ name|skip
 operator|>
 literal|1
 operator|)
-operator|&&
-operator|!
-operator|(
-name|bl
-operator|->
-name|flags
-operator|&
-name|P_BIGKEY
-operator|)
 condition|)
 block|{
-name|BLEAF
-modifier|*
-name|tbl
-decl_stmt|;
-name|size_t
-name|n
-decl_stmt|;
 name|tbl
 operator|=
 name|GETBLEAF
@@ -809,8 +732,6 @@ name|bl
 operator|->
 name|bytes
 expr_stmt|;
-name|prefix
-label|:
 name|nksize
 operator|=
 name|t
@@ -927,6 +848,8 @@ name|r
 argument_list|,
 operator|&
 name|skip
+argument_list|,
+name|nbytes
 argument_list|)
 else|:
 name|bt_page
@@ -943,6 +866,8 @@ name|r
 argument_list|,
 operator|&
 name|skip
+argument_list|,
+name|nbytes
 argument_list|)
 expr_stmt|;
 if|if
@@ -1061,22 +986,6 @@ name|dest
 argument_list|,
 name|nbytes
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nksize
-condition|)
-operator|(
-operator|(
-name|BINTERNAL
-operator|*
-operator|)
-name|dest
-operator|)
-operator|->
-name|ksize
-operator|=
-name|nksize
 expr_stmt|;
 operator|(
 operator|(
@@ -1524,11 +1433,6 @@ name|MPOOL_DIRTY
 argument_list|)
 expr_stmt|;
 comment|/* Clear any pages left on the stack. */
-name|BT_CLR
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|RET_SUCCESS
@@ -1599,7 +1503,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * BT_PAGE -- Split a non-root page of a btree.  *  * Parameters:  *	t:	tree  *	h:	root page  *	lp:	pointer to left page pointer  *	rp:	pointer to right page pointer  *	skip:	pointer to index to leave open  *  * Returns:  *	Pointer to page in which to insert or NULL on error.  */
+comment|/*  * BT_PAGE -- Split a non-root page of a btree.  *  * Parameters:  *	t:	tree  *	h:	root page  *	lp:	pointer to left page pointer  *	rp:	pointer to right page pointer  *	skip:	pointer to index to leave open  *	ilen:	insert length  *  * Returns:  *	Pointer to page in which to insert or NULL on error.  */
 end_comment
 
 begin_function
@@ -1617,6 +1521,8 @@ parameter_list|,
 name|rp
 parameter_list|,
 name|skip
+parameter_list|,
+name|ilen
 parameter_list|)
 name|BTREE
 modifier|*
@@ -1640,6 +1546,12 @@ begin_decl_stmt
 name|int
 modifier|*
 name|skip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|ilen
 decl_stmt|;
 end_decl_stmt
 
@@ -1960,14 +1872,16 @@ argument_list|,
 name|r
 argument_list|,
 name|skip
+argument_list|,
+name|ilen
 argument_list|)
 expr_stmt|;
 comment|/* Move the new left page onto the old left page. */
-name|memmove
+name|bcopy
 argument_list|(
-name|h
-argument_list|,
 name|l
+argument_list|,
+name|h
 argument_list|,
 name|t
 operator|->
@@ -2008,7 +1922,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * BT_ROOT -- Split the root page of a btree.  *  * Parameters:  *	t:	tree  *	h:	root page  *	lp:	pointer to left page pointer  *	rp:	pointer to right page pointer  *	skip:	pointer to index to leave open  *  * Returns:  *	Pointer to page in which to insert or NULL on error.  */
+comment|/*  * BT_ROOT -- Split the root page of a btree.  *  * Parameters:  *	t:	tree  *	h:	root page  *	lp:	pointer to left page pointer  *	rp:	pointer to right page pointer  *	skip:	pointer to index to leave open  *	ilen:	insert length  *  * Returns:  *	Pointer to page in which to insert or NULL on error.  */
 end_comment
 
 begin_function
@@ -2026,6 +1940,8 @@ parameter_list|,
 name|rp
 parameter_list|,
 name|skip
+parameter_list|,
+name|ilen
 parameter_list|)
 name|BTREE
 modifier|*
@@ -2049,6 +1965,12 @@ begin_decl_stmt
 name|int
 modifier|*
 name|skip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|ilen
 decl_stmt|;
 end_decl_stmt
 
@@ -2204,6 +2126,8 @@ argument_list|,
 name|r
 argument_list|,
 name|skip
+argument_list|,
+name|ilen
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2751,7 +2675,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * BT_PSPLIT -- Do the real work of splitting the page.  *  * Parameters:  *	t:	tree  *	h:	page to be split  *	l:	page to put lower half of data  *	r:	page to put upper half of data  *	pskip:	pointer to index to leave open  *  * Returns:  *	Pointer to page in which to insert.  */
+comment|/*  * BT_PSPLIT -- Do the real work of splitting the page.  *  * Parameters:  *	t:	tree  *	h:	page to be split  *	l:	page to put lower half of data  *	r:	page to put upper half of data  *	pskip:	pointer to index to leave open  *	ilen:	insert length  *  * Returns:  *	Pointer to page in which to insert.  */
 end_comment
 
 begin_function
@@ -2769,6 +2693,8 @@ parameter_list|,
 name|r
 parameter_list|,
 name|pskip
+parameter_list|,
+name|ilen
 parameter_list|)
 name|BTREE
 modifier|*
@@ -2790,6 +2716,12 @@ begin_decl_stmt
 name|int
 modifier|*
 name|pskip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|ilen
 decl_stmt|;
 end_decl_stmt
 
@@ -2816,9 +2748,13 @@ modifier|*
 name|rval
 decl_stmt|;
 name|index_t
+name|full
+decl_stmt|,
 name|half
 decl_stmt|,
 name|skip
+decl_stmt|,
+name|used
 decl_stmt|;
 name|size_t
 name|nbytes
@@ -2838,7 +2774,7 @@ name|off
 decl_stmt|,
 name|top
 decl_stmt|;
-comment|/* 	 * Split the data to the left and right pages. Leave the skip index 	 * open.  Additionally, 	 * make some effort not to split on an overflow key.  This makes it 	 * faster to process internal pages and can save space since overflow 	 * keys used by internal pages are never deleted. 	 */
+comment|/* 	 * Split the data to the left and right pages.  Leave the skip index 	 * open.  Additionally, make some effort not to split on an overflow 	 * key.  This makes internal page processing faster and can save 	 * space as overflow keys used by internal pages are never deleted. 	 */
 name|bigkeycnt
 operator|=
 literal|0
@@ -2848,17 +2784,23 @@ operator|=
 operator|*
 name|pskip
 expr_stmt|;
-name|half
+name|full
 operator|=
-operator|(
 name|t
 operator|->
 name|bt_psize
 operator|-
 name|BTDATAOFF
-operator|)
+expr_stmt|;
+name|half
+operator|=
+name|full
 operator|/
 literal|2
+expr_stmt|;
+name|used
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2889,7 +2831,18 @@ name|skip
 operator|==
 name|off
 condition|)
-continue|continue;
+block|{
+name|nbytes
+operator|=
+name|ilen
+expr_stmt|;
+name|isbigkey
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: not really known. */
+block|}
+else|else
 switch|switch
 condition|(
 name|h
@@ -3013,6 +2966,33 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 		 * If the key/data pairs are substantial fractions of the max 		 * possible size for the page, it's possible to get situations 		 * where we decide to try and copy too much onto the left page. 		 * Make sure that doesn't happen. 		 */
+if|if
+condition|(
+name|skip
+operator|<=
+name|off
+operator|&&
+name|used
+operator|+
+name|nbytes
+operator|>=
+name|full
+condition|)
+block|{
+operator|--
+name|off
+expr_stmt|;
+break|break;
+block|}
+comment|/* Copy the key/data pair, if not the skipped index. */
+if|if
+condition|(
+name|skip
+operator|!=
+name|off
+condition|)
+block|{
 operator|++
 name|nxt
 expr_stmt|;
@@ -3046,12 +3026,16 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
-comment|/* There's no empirical justification for the '3'. */
+block|}
+name|used
+operator|+=
+name|nbytes
+expr_stmt|;
 if|if
 condition|(
+name|used
+operator|>=
 name|half
-operator|<
-name|nbytes
 condition|)
 block|{
 if|if
@@ -3069,12 +3053,8 @@ operator|++
 name|bigkeycnt
 expr_stmt|;
 block|}
-else|else
-name|half
-operator|-=
-name|nbytes
-expr_stmt|;
 block|}
+comment|/* 	 * Off is the last offset that's valid for the left page. 	 * Nxt is the first offset to be placed on the right page. 	 */
 name|l
 operator|->
 name|lower
@@ -3090,7 +3070,7 @@ argument_list|(
 name|index_t
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * skipped slot and the cursor are both on the left page and the cursor 	 * is on or past the skipped slot, the cursor is incremented by one. 	 * If the skipped slot and the cursor are both on the right page and 	 * the cursor is on or past the skipped slot, the cursor is incremented 	 * by one.  If the skipped slot and the cursor aren't on the same page, 	 * the cursor isn't changed.  Regardless of the relationship of the 	 * skipped slot and the cursor, if the cursor is on the right page it 	 * is decremented by the number of records split to the left page. 	 * 	 * Don't bother checking for the BTF_SEQINIT flag, the page number will 	 * be P_INVALID. 	 */
+comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * cursor is at or past the skipped slot, the cursor is incremented by 	 * one.  If the cursor is on the right page, it is decremented by the 	 * number of records split to the left page. 	 * 	 * Don't bother checking for the BTF_SEQINIT flag, the page number will 	 * be P_INVALID. 	 */
 name|c
 operator|=
 operator|&
@@ -3108,16 +3088,29 @@ name|h
 operator|->
 name|pgno
 condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|->
+name|index
+operator|>=
+name|skip
+condition|)
+operator|++
+name|c
+operator|->
+name|index
+expr_stmt|;
 if|if
 condition|(
 name|c
 operator|->
 name|index
 operator|<
-name|off
+name|nxt
 condition|)
-block|{
-comment|/* left page */
+comment|/* Left page. */
 name|c
 operator|->
 name|pgno
@@ -3126,23 +3119,9 @@ name|l
 operator|->
 name|pgno
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|index
-operator|>=
-name|skip
-condition|)
-operator|++
-name|c
-operator|->
-name|index
-expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* right page */
+comment|/* Right page. */
 name|c
 operator|->
 name|pgno
@@ -3151,37 +3130,32 @@ name|r
 operator|->
 name|pgno
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|index
-operator|>=
-name|skip
-operator|&&
-name|skip
-operator|>
-name|off
-condition|)
-operator|++
-name|c
-operator|->
-name|index
-expr_stmt|;
 name|c
 operator|->
 name|index
 operator|-=
-name|off
+name|nxt
 expr_stmt|;
 block|}
-comment|/* 	 * Decide which page to return, and adjust the skip index if the 	 * to-be-inserted-upon page has changed. 	 */
+block|}
+comment|/* 	 * If the skipped index was on the left page, just return that page. 	 * Otherwise, adjust the skip index to reflect the new position on 	 * the right page. 	 */
 if|if
 condition|(
 name|skip
-operator|>
+operator|<=
 name|off
 condition|)
+block|{
+name|skip
+operator|=
+literal|0
+expr_stmt|;
+name|rval
+operator|=
+name|l
+expr_stmt|;
+block|}
+else|else
 block|{
 name|rval
 operator|=
@@ -3190,16 +3164,9 @@ expr_stmt|;
 operator|*
 name|pskip
 operator|-=
-name|off
-operator|+
-literal|1
+name|nxt
 expr_stmt|;
 block|}
-else|else
-name|rval
-operator|=
-name|l
-expr_stmt|;
 for|for
 control|(
 name|off
@@ -3221,11 +3188,13 @@ operator|==
 name|nxt
 condition|)
 block|{
+operator|++
+name|off
+expr_stmt|;
 name|skip
 operator|=
 literal|0
 expr_stmt|;
-continue|continue;
 block|}
 switch|switch
 condition|(
