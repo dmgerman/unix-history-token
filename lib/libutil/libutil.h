@@ -21,6 +21,20 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|PROPERTY_MAX_NAME
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROPERTY_MAX_VALUE
+value|512
+end_define
+
 begin_comment
 comment|/* for properties.c */
 end_comment
