@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.101 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.102 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -683,11 +683,16 @@ directive|ifdef
 name|IRIX
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/sysmacros.h>
-end_include
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_comment
+comment|/* this is a System-V derived system */
+end_comment
 
 begin_define
 define|#
@@ -768,6 +773,13 @@ end_define
 begin_comment
 comment|/* four argument statfs() call */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
 
 begin_endif
 endif|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.85 (Berkeley) %G%"
+literal|"@(#)conf.c	8.86 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2022,6 +2022,11 @@ name|defined
 argument_list|(
 name|__alpha
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IRIX
+argument_list|)
 end_if
 
 begin_define
@@ -2304,6 +2309,20 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|IRIX
+name|Nl
+index|[
+name|X_AVENRUN
+index|]
+operator|.
+name|n_value
+operator|&=
+literal|0x7fffffff
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
