@@ -2776,7 +2776,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|from
+name|fromb
 index|[
 sizeof|sizeof
 argument_list|(
