@@ -2938,6 +2938,11 @@ expr_stmt|;
 if|if
 condition|(
 name|vbp
+condition|)
+block|{
+if|if
+condition|(
+name|vbp
 operator|->
 name|dmamap
 condition|)
@@ -2952,10 +2957,6 @@ operator|->
 name|dmamap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vbp
-condition|)
 name|__sym_mfree
 argument_list|(
 operator|&
@@ -2972,6 +2973,7 @@ argument_list|,
 literal|"VTOB"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
