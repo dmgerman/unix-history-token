@@ -637,17 +637,6 @@ name|c1
 operator|->
 name|name
 index|[
-literal|4
-index|]
-operator|-
-literal|'1'
-expr_stmt|;
-name|j
-operator|=
-name|c1
-operator|->
-name|name
-index|[
 name|strlen
 argument_list|(
 name|d1
