@@ -278,7 +278,7 @@ name|SrcDistTable
 block|}
 block|,
 block|{
-literal|"des"
+literal|"crypto"
 block|,
 literal|"/"
 block|,
