@@ -1024,7 +1024,7 @@ comment|/*  * svi_putchar --  *	Functional version of putchar, for tputs.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|svi_putchar
 parameter_list|(
 name|ch
@@ -1033,14 +1033,12 @@ name|int
 name|ch
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
+return|return
 name|putchar
 argument_list|(
 name|ch
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

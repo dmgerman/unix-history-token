@@ -1125,7 +1125,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|svi_putchar
 name|__P
 argument_list|(
