@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,15 +11,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -30,11 +26,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ip_frag.c,v 2.0.2.10 1997/05/24 07:36:23 darrenr Exp $"
+literal|"@(#)$Id: ip_frag.c,v 2.0.2.19.2.1 1997/11/12 10:50:21 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,11 +152,22 @@ directive|include
 file|<sys/uio.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -167,11 +175,20 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -200,11 +217,22 @@ name|__svr4__
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -287,11 +315,22 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -308,12 +347,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcpip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_icmp.h>
 end_include
 
@@ -321,6 +354,12 @@ begin_include
 include|#
 directive|include
 file|"netinet/ip_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -353,6 +392,12 @@ directive|include
 file|"netinet/ip_state.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"netinet/ip_auth.h"
+end_include
+
 begin_decl_stmt
 name|ipfr_t
 modifier|*
@@ -380,7 +425,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|int
 name|ipfr_inuse
 init|=
 literal|0
@@ -416,7 +461,14 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|SOLARIS
+operator|||
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -716,12 +768,6 @@ operator|.
 name|ifs_exists
 operator|++
 expr_stmt|;
-name|MUTEX_EXIT
-argument_list|(
-operator|&
-name|ipf_frag
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -752,12 +798,6 @@ name|ipfr_stats
 operator|.
 name|ifs_nomem
 operator|++
-expr_stmt|;
-name|MUTEX_EXIT
-argument_list|(
-operator|&
-name|ipf_frag
-argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -1008,7 +1048,7 @@ name|nat
 expr_stmt|;
 name|nat
 operator|->
-name|nat_frag
+name|nat_data
 operator|=
 name|ipf
 expr_stmt|;
@@ -1068,9 +1108,6 @@ name|frag
 decl_stmt|;
 name|u_int
 name|idx
-decl_stmt|;
-name|int
-name|ret
 decl_stmt|;
 comment|/* 	 * For fragments, we record protocol, packet id, TOS and both IP#'s 	 * (these should all be the same for all fragments of a packet). 	 * 	 * build up a hash value to index the table with. 	 */
 name|frag
@@ -1282,12 +1319,8 @@ name|ip_off
 expr_stmt|;
 name|atoff
 operator|=
-operator|(
 name|off
-operator|&
-literal|0x1fff
-operator|)
-operator|-
+operator|+
 operator|(
 name|fin
 operator|->
@@ -1299,7 +1332,11 @@ expr_stmt|;
 comment|/* 			 * If we've follwed the fragments, and this is the 			 * last (in order), shrink expiration time. 			 */
 if|if
 condition|(
-name|atoff
+operator|(
+name|off
+operator|&
+literal|0x1fff
+operator|)
 operator|==
 name|f
 operator|->
@@ -1326,7 +1363,7 @@ name|f
 operator|->
 name|ipfr_off
 operator|=
-name|off
+name|atoff
 expr_stmt|;
 block|}
 name|ipfr_stats
@@ -1345,7 +1382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * functional interface for normal lookups of the fragment cache  */
+comment|/*  * functional interface for NAT lookups of the NAT fragment cache  */
 end_comment
 
 begin_function
@@ -1388,17 +1425,47 @@ name|ip
 argument_list|,
 name|fin
 argument_list|,
-name|ipfr_heads
+name|ipfr_nattab
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ipf
+condition|)
+block|{
 name|nat
 operator|=
 name|ipf
-condition|?
+operator|->
+name|ipfr_data
+expr_stmt|;
+comment|/* 		 * This is the last fragment for this packet. 		 */
+if|if
+condition|(
+name|ipf
+operator|->
+name|ipfr_ttl
+operator|==
+literal|1
+condition|)
+block|{
+name|nat
+operator|->
+name|nat_data
+operator|=
+name|NULL
+expr_stmt|;
 name|ipf
 operator|->
 name|ipfr_data
-else|:
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+else|else
+name|nat
+operator|=
 name|NULL
 expr_stmt|;
 name|MUTEX_EXIT
@@ -1414,7 +1481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * functional interface for NAT lookups of the NAT fragment cache  */
+comment|/*  * functional interface for normal lookups of the fragment cache  */
 end_comment
 
 begin_function
@@ -1481,6 +1548,89 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * forget any references to this external object.  */
+end_comment
+
+begin_function
+name|void
+name|ipfr_forget
+parameter_list|(
+name|nat
+parameter_list|)
+name|void
+modifier|*
+name|nat
+decl_stmt|;
+block|{
+name|ipfr_t
+modifier|*
+name|fr
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+name|MUTEX_ENTER
+argument_list|(
+operator|&
+name|ipf_natfrag
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|idx
+operator|=
+name|IPFT_SIZE
+operator|-
+literal|1
+init|;
+name|idx
+operator|>=
+literal|0
+condition|;
+name|idx
+operator|--
+control|)
+for|for
+control|(
+name|fr
+operator|=
+name|ipfr_heads
+index|[
+name|idx
+index|]
+init|;
+name|fr
+condition|;
+name|fr
+operator|=
+name|fr
+operator|->
+name|ipfr_next
+control|)
+if|if
+condition|(
+name|fr
+operator|->
+name|ipfr_data
+operator|==
+name|nat
+condition|)
+name|fr
+operator|->
+name|ipfr_data
+operator|=
+name|NULL
+expr_stmt|;
+name|MUTEX_EXIT
+argument_list|(
+operator|&
+name|ipf_natfrag
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Free memory in use by fragment state info. kept.  */
 end_comment
 
@@ -1504,25 +1654,6 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|SOLARIS
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-name|int
-name|s
-decl_stmt|;
-endif|#
-directive|endif
-name|SPLNET
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
@@ -1654,13 +1785,13 @@ if|if
 condition|(
 name|nat
 operator|->
-name|nat_frag
+name|nat_data
 operator|==
 name|fr
 condition|)
 name|nat
 operator|->
-name|nat_frag
+name|nat_data
 operator|=
 name|NULL
 expr_stmt|;
@@ -1681,11 +1812,6 @@ name|MUTEX_EXIT
 argument_list|(
 operator|&
 name|ipf_nat
-argument_list|)
-expr_stmt|;
-name|SPLX
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -1711,6 +1837,11 @@ literal|199306
 operator|)
 operator|||
 name|SOLARIS
+operator|||
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
 end_if
 
 begin_expr_stmt
@@ -1742,15 +1873,23 @@ name|s
 block|,
 name|idx
 block|;
+ifdef|#
+directive|ifdef
+name|__sgi
+name|ipfilter_sgi_intfsync
+argument_list|()
+block|;
+endif|#
+directive|endif
+name|SPL_NET
+argument_list|(
+name|s
+argument_list|)
+block|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
 name|ipf_frag
-argument_list|)
-block|;
-name|SPLNET
-argument_list|(
-name|s
 argument_list|)
 block|;
 comment|/* 	 * Go through the entire table, looking for entries to expire, 	 * decreasing the ttl by one for each entry.  If it reaches 0, 	 * remove it from the chain and free it. 	 */
@@ -2014,13 +2153,13 @@ if|if
 condition|(
 name|nat
 operator|->
-name|nat_frag
+name|nat_data
 operator|==
 name|fr
 condition|)
 name|nat
 operator|->
-name|nat_frag
+name|nat_data
 operator|=
 name|NULL
 expr_stmt|;
@@ -2061,18 +2200,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SPLX
+name|SPL_X
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|SOLARIS
-end_if
 
 begin_expr_stmt
 name|fr_timeoutstate
@@ -2085,6 +2218,18 @@ name|ip_natexpire
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|fr_authexpire
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+end_if
 
 begin_expr_stmt
 name|ipfr_timer_id
@@ -2108,17 +2253,11 @@ else|#
 directive|else
 end_else
 
-begin_expr_stmt
-name|fr_timeoutstate
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ip_natexpire
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
 
 begin_expr_stmt
 name|ip_slowtimo
@@ -2126,12 +2265,25 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
+operator|(
 name|BSD
 operator|<
 literal|199306
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
 end_if
 
 begin_return

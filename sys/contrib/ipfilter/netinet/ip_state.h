@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.0.2.9 1997/05/24 07:35:11 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.0.2.14.2.1 1997/11/06 21:23:15 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -271,10 +271,6 @@ typedef|typedef
 struct|struct
 name|ipslog
 block|{
-name|struct
-name|timeval
-name|isl_tv
-decl_stmt|;
 name|U_QUAD_T
 name|isl_pkts
 decl_stmt|;
@@ -356,6 +352,13 @@ define|#
 directive|define
 name|ISL_EXPIRE
 value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISL_FLUSH
+value|0xfffe
 end_define
 
 begin_typedef
@@ -573,6 +576,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|fr_state_flush
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|fr_stateunload
 name|__P
@@ -601,6 +617,42 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_state_ioctl
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|u_long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -617,6 +669,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
