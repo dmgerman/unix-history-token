@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	5.4 (Berkeley) %G%"
+literal|"@(#)cmp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,24 +46,28 @@ directive|include
 file|"ls.h"
 end_include
 
-begin_macro
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_function
+name|int
 name|namecmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -84,24 +88,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|revnamecmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -122,24 +124,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|modcmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -161,24 +161,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|revmodcmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -200,24 +198,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|acccmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -239,24 +235,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|revacccmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -278,24 +272,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|statcmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -317,24 +309,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|revstatcmp
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|LS
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
