@@ -1090,6 +1090,24 @@ condition|(
 name|m
 condition|)
 block|{
+name|int
+name|base
+init|=
+operator|(
+name|int
+operator|)
+name|nsize
+operator|&
+name|PAGE_MASK
+decl_stmt|;
+name|int
+name|size
+init|=
+name|PAGE_SIZE
+operator|-
+name|base
+decl_stmt|;
+comment|/* 				 * Clear out partial-page garbage in case 				 * the page has been mapped. 				 */
 name|kva
 operator|=
 name|vm_pager_map_page
@@ -1104,29 +1122,39 @@ name|caddr_t
 operator|)
 name|kva
 operator|+
-operator|(
-name|nsize
-operator|&
-name|PAGE_MASK
-operator|)
+name|base
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|round_page
-argument_list|(
-name|nsize
-argument_list|)
-operator|-
-name|nsize
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 name|vm_pager_unmap_page
 argument_list|(
 name|kva
 argument_list|)
+expr_stmt|;
+comment|/* 				 * Clear out partial-page dirty bits.  This 				 * has the side effect of setting the valid 				 * bits, but that is ok.  There are a bunch 				 * of places in the VM system where we expected 				 * m->dirty == VM_PAGE_BITS_ALL.  The file EOF 				 * case is one of them.  If the page is still 				 * partially dirty, make it fully dirty. 				 */
+name|vm_page_set_validclean
+argument_list|(
+name|m
+argument_list|,
+name|base
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|dirty
+operator|!=
+literal|0
+condition|)
+name|m
+operator|->
+name|dirty
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
 block|}
@@ -1643,6 +1671,20 @@ operator|->
 name|b_bufsize
 operator|=
 name|bsize
+expr_stmt|;
+name|bp
+operator|->
+name|b_runningbufspace
+operator|=
+name|bp
+operator|->
+name|b_bufsize
+expr_stmt|;
+name|runningbufspace
+operator|+=
+name|bp
+operator|->
+name|b_runningbufspace
 expr_stmt|;
 comment|/* do the input */
 name|VOP_STRATEGY
@@ -3023,6 +3065,20 @@ name|b_bufsize
 operator|=
 name|size
 expr_stmt|;
+name|bp
+operator|->
+name|b_runningbufspace
+operator|=
+name|bp
+operator|->
+name|b_bufsize
+expr_stmt|;
+name|runningbufspace
+operator|+=
+name|bp
+operator|->
+name|b_runningbufspace
+expr_stmt|;
 name|cnt
 operator|.
 name|v_vnodein
@@ -3445,7 +3501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is now called from local media FS's to operate against their  * own vnodes if they fail to implement VOP_PUTPAGES.  */
+comment|/*  * This is now called from local media FS's to operate against their  * own vnodes if they fail to implement VOP_PUTPAGES.  *  * This is typically called indirectly via the pageout daemon and  * clustering has already typically occured, so in general we ask the  * underlying filesystem to write the data out asynchronously rather  * then delayed.  */
 end_comment
 
 begin_function
@@ -3697,6 +3753,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 	 * pageouts are already clustered, use IO_ASYNC to force a bawrite() 	 * rather then a bdwrite() to prevent paging I/O from saturating 	 * the buffer cache. 	 */
 name|ioflags
 operator|=
 name|IO_VMIO
@@ -3715,7 +3772,7 @@ operator|)
 condition|?
 name|IO_SYNC
 else|:
-literal|0
+name|IO_ASYNC
 expr_stmt|;
 name|ioflags
 operator||=

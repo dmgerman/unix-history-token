@@ -739,6 +739,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PG_WINATCFLS
+value|0x0004
+end_define
+
+begin_comment
+comment|/* flush dirty page on inactive q */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PG_FICTITIOUS
 value|0x0008
 end_define

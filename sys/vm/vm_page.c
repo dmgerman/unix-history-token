@@ -3577,6 +3577,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_page_flag_clear
+argument_list|(
+name|m
+argument_list|,
+name|PG_WINATCFLS
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3706,6 +3713,13 @@ name|cnt
 operator|.
 name|v_reactivated
 operator|++
+expr_stmt|;
+name|vm_page_flag_clear
+argument_list|(
+name|m
+argument_list|,
+name|PG_WINATCFLS
+argument_list|)
 expr_stmt|;
 name|vm_page_unqueue
 argument_list|(
