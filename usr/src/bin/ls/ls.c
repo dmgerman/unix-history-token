@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.33 (Berkeley) %G%"
+literal|"@(#)ls.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* show unprintables as ? */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_nosort
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't sort output */
 end_comment
 
 begin_decl_stmt
@@ -540,7 +550,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRacdgiklqrstu"
+literal|"1ACFLRacdfgiklqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -671,6 +681,14 @@ case|case
 literal|'d'
 case|:
 name|f_listdir
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|f_nosort
 operator|=
 literal|1
 expr_stmt|;
@@ -1511,6 +1529,9 @@ condition|(
 name|num
 operator|>
 literal|1
+operator|&&
+operator|!
+name|f_nosort
 condition|)
 block|{
 name|u_long
