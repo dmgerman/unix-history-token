@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	1.3 %G%"
+literal|"@(#)main.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -654,9 +654,32 @@ condition|(
 operator|!
 name|edit
 condition|)
+block|{
+name|sigset
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|sigset
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|sigset
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|quit
 argument_list|()
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
