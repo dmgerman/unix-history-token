@@ -6,31 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysproto.h>
 end_include
 
 begin_include
@@ -43,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/linux/linux_util.h>
 end_include
 
 begin_define

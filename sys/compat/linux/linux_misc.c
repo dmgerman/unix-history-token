@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mac.h"
 end_include
 
@@ -24,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/blist.h>
 end_include
 
 begin_include
@@ -66,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mman.h>
 end_include
 
@@ -90,19 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/blist.h>
 end_include
 
 begin_include
@@ -150,13 +138,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/unistd.h>
+file|<sys/time.h>
 end_include
 
 begin_include

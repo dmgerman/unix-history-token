@@ -6,25 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -49,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
