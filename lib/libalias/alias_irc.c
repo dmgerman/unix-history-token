@@ -1079,6 +1079,9 @@ name|u_short
 name|alias_port
 decl_stmt|;
 comment|/* Port given by aliasing */
+name|int
+name|n
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_FW_PUNCH
@@ -1097,8 +1100,8 @@ argument_list|(
 name|link
 argument_list|)
 expr_stmt|;
-name|iCopy
-operator|+=
+name|n
+operator|=
 name|snprintf
 argument_list|(
 operator|&
@@ -1129,7 +1132,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|n
+operator|<
+literal|0
+condition|)
+block|{
+name|DBprintf
+argument_list|(
+operator|(
+literal|"DCC packet construct failure.\n"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|lBAD_CTCP
+goto|;
+block|}
+if|if
+condition|(
+operator|(
 name|iCopy
+operator|+=
+name|n
+operator|)
 operator|>=
 sizeof|sizeof
 argument_list|(
@@ -1156,8 +1181,8 @@ argument_list|(
 name|dcc_link
 argument_list|)
 expr_stmt|;
-name|iCopy
-operator|+=
+name|n
+operator|=
 name|snprintf
 argument_list|(
 operator|&
@@ -1180,6 +1205,28 @@ argument_list|(
 name|alias_port
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+block|{
+name|DBprintf
+argument_list|(
+operator|(
+literal|"DCC packet construct failure.\n"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|lBAD_CTCP
+goto|;
+block|}
+name|iCopy
+operator|+=
+name|n
 expr_stmt|;
 comment|/* Done - truncated cases will be taken care of by lBAD_CTCP */
 name|DBprintf
