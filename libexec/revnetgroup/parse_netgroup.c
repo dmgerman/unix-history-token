@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: parse_netgroup.c,v 1.2 1996/05/12 17:17:44 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parse_netgroup.c,v 1.2 1996/05/12 17:17:44 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

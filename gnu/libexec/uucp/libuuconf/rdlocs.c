@@ -21,7 +21,7 @@ name|char
 name|_uuconf_rdlocs_rcsid
 index|[]
 init|=
-literal|"$Id: rdlocs.c,v 1.7 1995/06/21 19:23:52 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sysentvec for native FreeBSD a.out executable format.  *  * $Id: init_sysvec.c,v 1.1 1996/03/02 19:38:08 peter Exp $  */
+comment|/*  * sysentvec for native FreeBSD a.out executable format.  *  * $FreeBSD$  */
 end_comment
 
 begin_include

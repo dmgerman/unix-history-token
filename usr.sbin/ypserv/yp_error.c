@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All righ
 end_comment
 
 begin_comment
-comment|/*  * error logging/reporting facilities  * stolen from /usr/libexec/mail.local via ypserv  *  * $Id: yp_error.c,v 1.3 1996/05/01 02:36:34 wpaul Exp $  */
+comment|/*  * error logging/reporting facilities  * stolen from /usr/libexec/mail.local via ypserv  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_error.c,v 1.3 1996/05/01 02:36:34 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

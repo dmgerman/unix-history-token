@@ -21,7 +21,7 @@ name|char
 name|tcp_rcsid
 index|[]
 init|=
-literal|"$Id: tcp.c,v 1.5 1995/06/21 19:20:46 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

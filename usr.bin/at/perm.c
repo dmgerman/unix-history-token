@@ -96,7 +96,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perm.c,v 1.1 1995/05/24 15:07:32 ig25 Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_frexpf.c,v 1.2 1995/04/07 23:23:27 bde Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

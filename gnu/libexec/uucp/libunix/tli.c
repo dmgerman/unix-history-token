@@ -21,7 +21,7 @@ name|char
 name|tli_rcsid
 index|[]
 init|=
-literal|"$Id: tli.c,v 1.4 1995/06/21 19:20:50 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

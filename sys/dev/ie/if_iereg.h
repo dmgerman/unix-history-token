@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  * definitions for AT&T StarLAN 10 etc...  */
+comment|/*  * $FreeBSD$  * definitions for AT&T StarLAN 10 etc...  */
 end_comment
 
 begin_define

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: obstack.c,v 1.3 1993/10/02 20:57:47 pk Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

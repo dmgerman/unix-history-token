@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid_kprop_c[] = "$Id: kprop.c,v 1.4 1995/10/05 21:30:00 gibbs Exp $";
+unit|static char rcsid_kprop_c[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: ruptime.c,v 1.6 1995/09/08 20:33:21 jkh Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

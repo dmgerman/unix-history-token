@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.1.1.1 1995/10/18 08:47:31 deraadt Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

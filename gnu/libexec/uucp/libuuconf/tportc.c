@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tportc_rcsid
 index|[]
 init|=
-literal|"$Id: tportc.c,v 1.14 1995/06/21 19:24:52 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

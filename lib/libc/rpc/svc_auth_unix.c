@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_auth_unix.c,v 1.3 1995/10/22 14:51:35 phk Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

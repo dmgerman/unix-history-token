@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.12 1996/04/03 00:01:40 gpalmer Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

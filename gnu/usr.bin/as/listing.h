@@ -4,7 +4,7 @@ comment|/* This file is listing.h    Copyright (C) 1987, 1988, 1989, 1990, 1991,
 end_comment
 
 begin_comment
-comment|/*  * $Id: listing.h,v 1.1 1993/11/03 00:51:56 paul Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

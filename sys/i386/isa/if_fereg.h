@@ -4,7 +4,7 @@ comment|/*  * Hardware specification of various 8696x based Ethernet cards.  * C
 end_comment
 
 begin_comment
-comment|/* $Id:$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

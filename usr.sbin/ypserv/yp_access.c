@@ -135,7 +135,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_access.c,v 1.11 1996/10/24 18:58:22 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

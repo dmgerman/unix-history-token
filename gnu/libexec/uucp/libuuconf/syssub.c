@@ -21,7 +21,7 @@ name|char
 name|_uuconf_syssub_rcsid
 index|[]
 init|=
-literal|"$Id: syssub.c,v 1.14 1995/06/21 19:24:20 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

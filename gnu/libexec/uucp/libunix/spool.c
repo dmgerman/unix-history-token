@@ -21,7 +21,7 @@ name|char
 name|spool_rcsid
 index|[]
 init|=
-literal|"$Id: spool.c,v 1.11 1995/06/30 21:22:54 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

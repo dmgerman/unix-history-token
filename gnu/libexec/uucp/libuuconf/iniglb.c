@@ -21,7 +21,7 @@ name|char
 name|_uuconf_iniglb_rcsid
 index|[]
 init|=
-literal|"$Id: iniglb.c,v 1.11 1995/06/28 14:38:23 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

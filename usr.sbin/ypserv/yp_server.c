@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.4 1997/01/07 04:10:51 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_cmdlin_rcsid
 index|[]
 init|=
-literal|"$Id: cmdlin.c,v 1.6 1995/06/21 19:21:55 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright (C) 1989, 1992 Fr
 end_comment
 
 begin_comment
-comment|/*  * $Id: tc-i386.h,v 1.2 1994/12/23 22:37:36 nate Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

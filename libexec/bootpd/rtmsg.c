@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1984, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.5 1996/12/10 17:05:35 wollman Exp $  */
+comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $FreeBSD$  */
 end_comment
 
 begin_include

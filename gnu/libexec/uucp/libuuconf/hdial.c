@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hdial_rcsid
 index|[]
 init|=
-literal|"$Id: hdial.c,v 1.6 1995/06/21 19:22:42 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

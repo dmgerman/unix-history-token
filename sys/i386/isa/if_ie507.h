@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: if_ie507.h,v 1.1 1994/05/25 20:06:49 ats Exp $  * Definitions for 3C507  */
+comment|/*  * $FreeBSD$  * Definitions for 3C507  */
 end_comment
 
 begin_define

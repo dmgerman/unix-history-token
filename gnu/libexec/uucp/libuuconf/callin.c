@@ -21,7 +21,7 @@ name|char
 name|_uuconf_callin_rcsid
 index|[]
 init|=
-literal|"$Id: callin.c,v 1.11 1995/06/21 19:21:42 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

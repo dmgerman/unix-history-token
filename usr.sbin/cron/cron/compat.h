@@ -4,7 +4,7 @@ comment|/* Copyright 1993,1994 by Paul Vixie  * All rights reserved  *  * Distri
 end_comment
 
 begin_comment
-comment|/*  * $Id: compat.h,v 1.1.1.1 1994/08/27 13:43:04 jkh Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

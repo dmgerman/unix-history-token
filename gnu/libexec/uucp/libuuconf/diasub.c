@@ -21,7 +21,7 @@ name|char
 name|_uuconf_diasub_rcsid
 index|[]
 init|=
-literal|"$Id: diasub.c,v 1.6 1995/06/21 19:22:08 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

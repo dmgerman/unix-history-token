@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.17 1996/06/12 03:37:42 davidg Exp $ */
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment

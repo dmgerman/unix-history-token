@@ -30,7 +30,7 @@ name|libId
 argument_list|(
 argument|rcstimeId
 argument_list|,
-literal|"$Id: rcstime.c,v 1.4 1995/06/16 06:19:24 eggert Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

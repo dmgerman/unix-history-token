@@ -21,7 +21,7 @@ name|char
 name|_uuconf_rdperm_rcsid
 index|[]
 init|=
-literal|"$Id: rdperm.c,v 1.9 1995/06/21 19:23:54 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

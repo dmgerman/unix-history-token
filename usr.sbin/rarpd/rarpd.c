@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.12 1996/11/27 20:45:10 fenner Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

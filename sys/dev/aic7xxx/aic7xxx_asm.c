@@ -9,7 +9,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"$Id: aic7xxx_asm.c,v 1.11 1996/01/05 01:48:07 gibbs Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/*	from Id: if_ppp.h,v 1.12 1995/04/24 02:40:23 paulus Exp	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_ppp.h,v 1.5 1995/10/31 20:24:10 peter Exp $ */
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment

@@ -21,7 +21,7 @@ name|char
 name|lock_rcsid
 index|[]
 init|=
-literal|"$Id: lock.c,v 1.20 1995/06/21 19:19:38 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

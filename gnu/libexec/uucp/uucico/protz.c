@@ -29,7 +29,7 @@ name|char
 name|protz_rcsid
 index|[]
 init|=
-literal|"$Id: protz.c,v 1.8 1993/12/20 00:44:49 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/* tc.h - target cpu dependent     Copyright (C) 1987, 1990, 1991, 1992 
 end_comment
 
 begin_comment
-comment|/*  * $Id: tc.h,v 1.2 1995/05/30 04:46:38 rgrimes Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

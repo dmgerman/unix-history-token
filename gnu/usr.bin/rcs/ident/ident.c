@@ -73,7 +73,7 @@ argument|identId
 argument_list|,
 literal|"ident"
 argument_list|,
-literal|"$Id: ident.c,v 1.3 1995/10/28 21:49:19 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

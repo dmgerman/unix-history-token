@@ -21,7 +21,7 @@ name|char
 name|_uuconf_time_rcsid
 index|[]
 init|=
-literal|"$Id: time.c,v 1.13 1995/06/21 19:24:39 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -16,7 +16,7 @@ comment|/* ANSI C */
 end_comment
 
 begin_comment
-comment|/* $Id: callout.h,v 1.1 1993/11/11 03:54:25 paulus Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

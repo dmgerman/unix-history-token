@@ -21,7 +21,7 @@ name|char
 name|uustat_rcsid
 index|[]
 init|=
-literal|"$Id: uustat.c,v 1.55 1995/08/02 00:14:15 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

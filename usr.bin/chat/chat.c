@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.1.1.1 1994/11/12 05:25:32 lars Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

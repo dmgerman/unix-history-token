@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.17 1996/11/10 21:12:44 julian Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_errno_rcsid
 index|[]
 init|=
-literal|"$Id: errno.c,v 1.5 1995/06/21 19:22:13 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

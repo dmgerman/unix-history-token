@@ -21,7 +21,7 @@ name|char
 name|_uuconf_allblk_rcsid
 index|[]
 init|=
-literal|"$Id: allblk.c,v 1.5 1995/06/21 19:21:28 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

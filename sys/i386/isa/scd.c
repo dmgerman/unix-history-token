@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.24 1996/07/23 21:51:39 phk Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

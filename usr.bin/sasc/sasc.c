@@ -4,7 +4,7 @@ comment|/* sasc(1) - utility for the `asc' scanner device driver  *  *  * Copyri
 end_comment
 
 begin_comment
-comment|/*  * $Id:$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_include

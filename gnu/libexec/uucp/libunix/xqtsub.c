@@ -21,7 +21,7 @@ name|char
 name|xqtsub_rcsid
 index|[]
 init|=
-literal|"$Id: xqtsub.c,v 1.18 1995/06/21 20:21:14 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

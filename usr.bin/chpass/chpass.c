@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chpass.c,v 1.10 1996/07/14 16:42:33 guido Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -537,7 +537,7 @@ argument|rlogId
 argument_list|,
 literal|"rlog"
 argument_list|,
-literal|"$Id: rlog.c,v 1.9 1995/10/29 18:07:04 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

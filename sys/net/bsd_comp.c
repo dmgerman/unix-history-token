@@ -4,7 +4,7 @@ comment|/* Because this code is derived from the 4.3BSD compress source:  *  *  
 end_comment
 
 begin_comment
-comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * from: Id: bsd-comp.c,v 1.11 1995/07/04 03:35:11 paulus Exp  * $Id: bsd_comp.c,v 1.3 1995/10/31 20:51:22 peter Exp $  */
+comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * from: Id: bsd-comp.c,v 1.11 1995/07/04 03:35:11 paulus Exp  * $FreeBSD$  */
 end_comment
 
 begin_include

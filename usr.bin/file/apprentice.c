@@ -51,7 +51,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: apprentice.c,v 1.2 1995/05/30 06:29:58 rgrimes Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

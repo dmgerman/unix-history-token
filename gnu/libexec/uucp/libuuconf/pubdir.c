@@ -21,7 +21,7 @@ name|char
 name|_uuconf_pubdir_rcsid
 index|[]
 init|=
-literal|"$Id: pubdir.c,v 1.7 1995/06/21 19:23:49 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

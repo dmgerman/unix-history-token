@@ -45,7 +45,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: softmagic.c,v 1.3 1995/05/30 06:30:09 rgrimes Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

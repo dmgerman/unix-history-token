@@ -21,7 +21,7 @@ name|char
 name|_uuconf_cmdfil_rcsid
 index|[]
 init|=
-literal|"$Id: cmdfil.c,v 1.6 1995/06/21 19:21:53 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

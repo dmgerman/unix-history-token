@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hsinfo_rcsid
 index|[]
 init|=
-literal|"$Id: hsinfo.c,v 1.14 1995/06/21 19:23:03 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: flo-copy.c,v 1.1 1993/11/03 00:51:34 paul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

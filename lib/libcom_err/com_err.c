@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: /a/ncvs/src/lib/libcom_err/com_err.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

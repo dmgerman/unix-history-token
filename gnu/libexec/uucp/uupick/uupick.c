@@ -21,7 +21,7 @@ name|char
 name|uupick_rcsid
 index|[]
 init|=
-literal|"$Id: uupick.c,v 1.16 1995/06/29 19:38:55 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

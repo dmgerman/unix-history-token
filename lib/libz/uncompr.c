@@ -4,7 +4,7 @@ comment|/* uncompr.c -- decompress a memory buffer  * Copyright (C) 1995-1996 Je
 end_comment
 
 begin_comment
-comment|/* $Id: uncompr.c,v 1.8 1996/01/30 21:59:26 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

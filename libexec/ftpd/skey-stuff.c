@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Author: Wietse Venema, Eindhoven University of Technology.   *  *	$Id: skey-stuff.c,v 1.3 1996/09/22 21:53:34 wosch Exp $  */
+comment|/* Author: Wietse Venema, Eindhoven University of Technology.   *  *	$FreeBSD$  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * define path names  *  * $Id: pathnames.h,v 1.6 1995/06/12 11:22:53 paulus Exp $  */
+comment|/*  * define path names  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef

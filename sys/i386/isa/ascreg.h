@@ -4,7 +4,7 @@ comment|/* ascreg.h - port and bit definitions for the GI-1904 interface   *  * 
 end_comment
 
 begin_comment
-comment|/*  * $Id:$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996 Joerg Wunsch  *  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  * Create an MS-DOS (FAT) file system.  *  * $Id: mkdosfs.c,v 1.1.1.1 1995/11/05 16:02:04 joerg Exp $  */
+comment|/*  * Create an MS-DOS (FAT) file system.  *  * $FreeBSD$  */
 end_comment
 
 begin_include

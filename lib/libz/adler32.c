@@ -4,7 +4,7 @@ comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyri
 end_comment
 
 begin_comment
-comment|/* $Id: adler32.c,v 1.10 1996/05/22 11:52:18 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

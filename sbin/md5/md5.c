@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.6 1995/07/12 09:14:46 phk Exp $  *  * Derived from:  */
+comment|/*  * $FreeBSD$  *  * Derived from:  */
 end_comment
 
 begin_comment

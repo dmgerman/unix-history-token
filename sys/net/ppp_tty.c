@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.10 1996/08/30 10:41:58 asami Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

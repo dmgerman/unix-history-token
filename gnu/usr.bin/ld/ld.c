@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.36 1996/10/01 01:22:23 peter Exp $  */
+comment|/*  *	$FreeBSD$  */
 end_comment
 
 begin_comment

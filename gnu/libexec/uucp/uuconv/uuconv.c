@@ -21,7 +21,7 @@ name|char
 name|uuconv_rcsid
 index|[]
 init|=
-literal|"$Id: uuconv.c,v 1.27 1995/06/29 19:36:27 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

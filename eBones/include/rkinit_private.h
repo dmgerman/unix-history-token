@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: rkinit_private.h,v 1.1 1995/09/15 06:19:14 gibbs Exp $  *  * Header file for rkinit library and server internal use  */
+comment|/*   * $FreeBSD$  *  * Header file for rkinit library and server internal use  */
 end_comment
 
 begin_ifndef

@@ -26,7 +26,7 @@ name|libId
 argument_list|(
 argument|editId
 argument_list|,
-literal|"$Id: rcsedit.c,v 1.5 1995/10/29 19:31:10 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

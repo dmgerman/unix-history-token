@@ -51,7 +51,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parse_group.c,v 1.5 1996/06/24 00:12:09 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

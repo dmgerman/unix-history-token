@@ -21,7 +21,7 @@ name|char
 name|_uuconf_lineno_rcsid
 index|[]
 init|=
-literal|"$Id: lineno.c,v 1.5 1995/06/21 19:23:24 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

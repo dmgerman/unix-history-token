@@ -8,7 +8,7 @@ comment|/* WARNING: this file should *not* be used by applications. It is    par
 end_comment
 
 begin_comment
-comment|/* $Id: zutil.h,v 1.16 1996/07/24 13:41:13 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

@@ -21,7 +21,7 @@ name|char
 name|log_rcsid
 index|[]
 init|=
-literal|"$Id: log.c,v 1.61 1995/06/21 19:14:58 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

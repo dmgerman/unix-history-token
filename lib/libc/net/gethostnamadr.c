@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: gethostnamadr.c,v 1.9 1996/08/20 08:20:21 julian Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostnamadr.c,v 1.9 1996/08/20 08:20:21 julian Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_port_rcsid
 index|[]
 init|=
-literal|"$Id: port.c,v 1.6 1995/06/21 19:23:43 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

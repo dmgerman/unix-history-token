@@ -4,7 +4,7 @@ comment|/* obj.h - defines the object dependent hooks for all object    format b
 end_comment
 
 begin_comment
-comment|/*  * $Id: obj.h,v 1.1 1993/11/03 00:52:03 paul Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_if

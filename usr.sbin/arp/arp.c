@@ -53,7 +53,7 @@ specifier|const
 name|freebsdid
 index|[]
 init|=
-literal|"$Id: arp.c,v 1.6 1996/12/19 19:33:10 nate Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

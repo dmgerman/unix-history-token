@@ -4,7 +4,7 @@ comment|/* as.h - global header file    Copyright (C) 1987, 1990, 1991, 1992 Fre
 end_comment
 
 begin_comment
-comment|/*  * $Id: as.h,v 1.4 1995/05/30 04:46:02 rgrimes Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_define

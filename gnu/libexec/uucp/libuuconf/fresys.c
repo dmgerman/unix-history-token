@@ -21,7 +21,7 @@ name|char
 name|_uuconf_fresys_rcsid
 index|[]
 init|=
-literal|"$Id: fresys.c,v 1.5 1995/06/21 19:22:36 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

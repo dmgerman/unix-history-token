@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Routine to initialize user to Kerberos.  Prompts optionally for  * user, instance and realm.  Authenticates user and gets a ticket  * for the Kerberos ticket-granting service for future use.  *  * Options are:  *  *   -i[instance]  *   -r[realm]  *   -v[erbose]  *   -l[ifetime]  *  *	from: kinit.c,v 4.12 90/03/20 16:11:15 jon Exp $  *	$Id: kinit.c,v 1.4 1995/09/07 21:37:29 markm Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Routine to initialize user to Kerberos.  Prompts optionally for  * user, instance and realm.  Authenticates user and gets a ticket  * for the Kerberos ticket-granting service for future use.  *  * Options are:  *  *   -i[instance]  *   -r[realm]  *   -v[erbose]  *   -l[ifetime]  *  *	from: kinit.c,v 4.12 90/03/20 16:11:15 jon Exp $  *	$FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: kinit.c,v 1.4 1995/09/07 21:37:29 markm Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

@@ -21,7 +21,7 @@ name|char
 name|proty_id
 index|[]
 init|=
-literal|"$Id: proty.c,v 1.4 1995/06/21 19:15:40 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.8 1995/11/09 08:17:21 bde Exp $ */
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment

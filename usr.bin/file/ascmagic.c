@@ -57,7 +57,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: ascmagic.c,v 1.3 1996/01/23 12:40:06 mpp Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

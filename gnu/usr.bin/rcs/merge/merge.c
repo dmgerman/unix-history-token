@@ -71,7 +71,7 @@ argument|mergeId
 argument_list|,
 literal|"merge"
 argument_list|,
-literal|"$Id: merge.c,v 1.8 1995/06/16 06:19:24 eggert Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

@@ -46,7 +46,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* $Id: revision.h,v 0.25 1993/06/24 08:29:52 jloup Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 end_unit

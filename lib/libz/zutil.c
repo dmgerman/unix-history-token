@@ -4,7 +4,7 @@ comment|/* zutil.c -- target dependent utility functions for the compression lib
 end_comment
 
 begin_comment
-comment|/* $Id: zutil.c,v 1.17 1996/07/24 13:41:12 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

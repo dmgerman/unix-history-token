@@ -4,7 +4,7 @@ comment|/* frags.h - Header file for the frag concept.     Copyright (C) 1987, 1
 end_comment
 
 begin_comment
-comment|/*  * $Id: frags.h,v 1.2 1993/11/03 00:51:40 paul Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_decl_stmt

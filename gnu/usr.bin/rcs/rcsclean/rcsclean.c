@@ -94,7 +94,7 @@ argument|rcscleanId
 argument_list|,
 literal|"rcsclean"
 argument_list|,
-literal|"$Id: rcsclean.c,v 5.9 1995/06/16 06:19:24 eggert Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

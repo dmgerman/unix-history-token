@@ -57,7 +57,7 @@ name|char
 name|uusnap_rcsid
 index|[]
 init|=
-literal|"$Id: uusnap.c,v 1.9 92/05/05 22:51:50 hwr Exp Locker: hwr $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

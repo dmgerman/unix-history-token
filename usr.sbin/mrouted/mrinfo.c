@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mrinfo.c,v 1.8 1996/01/06 21:09:56 peter Exp $"
+literal|"@(#) $FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *   * This has had its entry point changed to crypt_md5 for use in   * a dual-personality (DES& MD5) environment)  -- MarkM - Nov 1995  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *   * This has had its entry point changed to crypt_md5 for use in   * a dual-personality (DES& MD5) environment)  -- MarkM - Nov 1995  *  * $FreeBSD$  *  */
 end_comment
 
 begin_if
@@ -25,7 +25,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|static char rcsid[] = "$Header: /home/ncvs/src/lib/libcrypt/crypt.c,v 1.3 1995/05/30 05:42:22 rgrimes Exp $";
+unit|static char rcsid[] = "$Header: /home/ncvs/src/secure/lib/libcrypt/crypt-md5.c,v 1.1 1995/12/16 09:14:09 markm Exp $";
 endif|#
 directive|endif
 end_endif

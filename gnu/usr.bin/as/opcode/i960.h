@@ -4,7 +4,7 @@ comment|/* Basic 80960 instruction formats.  *  * The 'COJ' instructions are act
 end_comment
 
 begin_comment
-comment|/* $Id: i960.h,v 1.1 1993/11/03 00:55:56 paul Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_define

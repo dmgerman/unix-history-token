@@ -21,7 +21,7 @@ name|char
 name|_uuconf_filnam_rcsid
 index|[]
 init|=
-literal|"$Id: filnam.c,v 1.6 1995/06/21 19:22:20 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_reliab_rcsid
 index|[]
 init|=
-literal|"$Id: reliab.c,v 1.6 1995/06/21 19:23:57 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

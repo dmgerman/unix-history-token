@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.13 1996/02/03 14:19:13 ache Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment

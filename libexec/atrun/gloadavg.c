@@ -62,7 +62,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gloadavg.c,v 1.2 1995/08/10 04:06:54 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

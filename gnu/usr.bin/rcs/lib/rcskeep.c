@@ -22,7 +22,7 @@ name|libId
 argument_list|(
 argument|keepId
 argument_list|,
-literal|"$Id: rcskeep.c,v 1.3 1995/10/28 21:49:43 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

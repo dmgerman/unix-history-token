@@ -21,7 +21,7 @@ name|char
 name|chat_rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.46 1995/06/21 19:14:29 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

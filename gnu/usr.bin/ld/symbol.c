@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * symbol table routines  * $Id: symbol.c,v 1.6 1994/12/23 22:30:54 nate Exp $  */
+comment|/*  * symbol table routines  * $FreeBSD$  */
 end_comment
 
 begin_comment
