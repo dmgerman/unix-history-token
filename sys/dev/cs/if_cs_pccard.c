@@ -427,9 +427,6 @@ argument_list|,
 name|pccard_compat_attach
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|CS_HAS_DETACH
 name|DEVMETHOD
 argument_list|(
 name|device_detach
@@ -437,8 +434,6 @@ argument_list|,
 name|cs_detach
 argument_list|)
 block|,
-endif|#
-directive|endif
 comment|/* Card interface */
 name|DEVMETHOD
 argument_list|(
