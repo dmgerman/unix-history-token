@@ -564,7 +564,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_CPP
-value|"/usr/libexec/cpp"
+value|"/usr/libexec/gcc2/cpp"
 end_define
 
 begin_endif
