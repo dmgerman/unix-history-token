@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	1.2 (Berkeley) %G%"
+literal|"@(#)process.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|"ctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_function_decl
@@ -494,6 +500,16 @@ name|fd
 decl_stmt|,
 name|status
 decl_stmt|;
+name|struct
+name|stat
+name|statb
+decl_stmt|;
+name|char
+name|ftty
+index|[
+literal|20
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -534,6 +550,16 @@ value|strncmp(a, b, sizeof (a))
 name|status
 operator|=
 name|NOT_HERE
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|ftty
+argument_list|,
+literal|"/dev/"
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -579,7 +605,50 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+name|status
+operator|=
+name|PERMISSION_DENIED
+expr_stmt|;
 comment|/* no particular tty was requested */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|ftty
+operator|+
+literal|5
+argument_list|,
+name|ubuf
+operator|.
+name|ut_line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|ftty
+argument_list|,
+operator|&
+name|statb
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|statb
+operator|.
+name|st_mode
+operator|&
+literal|02
+operator|)
+condition|)
+continue|continue;
 operator|(
 name|void
 operator|)
@@ -597,6 +666,7 @@ operator|=
 name|SUCCESS
 expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
