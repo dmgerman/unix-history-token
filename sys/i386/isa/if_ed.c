@@ -4,11 +4,11 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.23 1993/11/22 11:08:14 davidg Exp $  */
+comment|/*  * $Id: if_ed.c,v 2.16 1993/11/29 16:55:56 davidg Exp davidg $  */
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * Revision 2.14  1993/11/22  10:55:30  davidg  * change all splnet's to splimp's  *  * Revision 2.13  1993/11/22  10:53:52  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.12  1993/11/07  18:04:13  davidg  * fix from Garrett Wollman:  * add a return(0) at the end of ed_probe so that if the various device  * specific probes fail that we just don't fall of the end of the function.  *  * Revision 2.11  1993/10/23  04:21:03  davidg  * Novell probe changed to be invasive because of too many complaints  * about some clone boards not being reset properly and thus not  * found on a warmboot. Yuck.  *  * Revision 2.10  1993/10/23  04:07:12  davidg  * increment output errors if the device times out (done via watchdog)  *  * Revision 2.9  1993/10/23  04:01:45  davidg  * increment input error counter if a packet with a bad length is  * detected.  *  * Revision 2.8  1993/10/15  10:59:56  davidg  * increase maximum time to wait for transmit DMA to complete to 120us.  * call ed_reset() if the time limit is reached instead of trying  * to abort the remote DMA.  *  * Revision 2.7  1993/10/15  10:49:10  davidg  * minor change to way the mbuf pointer temp variable is assigned in  * ed_start (slightly improves code readability)  *  * Revision 2.6  93/10/02  01:12:20  davidg  * use ETHER_ADDR_LEN in NE probe rather than '6'.  *   * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
+comment|/*  * Modification history  *  * Revision 2.16  1993/11/29  16:55:56  davidg  * merged in Garrett Wollman's strict prototype changes  *  * Revision 2.15  1993/11/29  16:32:58  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.14  1993/11/22  10:55:30  davidg  * change all splnet's to splimp's  *  * Revision 2.13  1993/11/22  10:53:52  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.12  1993/11/07  18:04:13  davidg  * fix from Garrett Wollman:  * add a return(0) at the end of ed_probe so that if the various device  * specific probes fail that we just don't fall of the end of the function.  *  * Revision 2.11  1993/10/23  04:21:03  davidg  * Novell probe changed to be invasive because of too many complaints  * about some clone boards not being reset properly and thus not  * found on a warmboot. Yuck.  *  * Revision 2.10  1993/10/23  04:07:12  davidg  * increment output errors if the device times out (done via watchdog)  *  * Revision 2.9  1993/10/23  04:01:45  davidg  * increment input error counter if a packet with a bad length is  * detected.  *  * Revision 2.8  1993/10/15  10:59:56  davidg  * increase maximum time to wait for transmit DMA to complete to 120us.  * call ed_reset() if the time limit is reached instead of trying  * to abort the remote DMA.  *  * Revision 2.7  1993/10/15  10:49:10  davidg  * minor change to way the mbuf pointer temp variable is assigned in  * ed_start (slightly improves code readability)  *  * Revision 2.6  93/10/02  01:12:20  davidg  * use ETHER_ADDR_LEN in NE probe rather than '6'.  *   * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
 end_comment
 
 begin_include
@@ -1063,6 +1063,24 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013EBT"
+expr_stmt|;
+name|memsize
+operator|=
+literal|16384
+expr_stmt|;
+name|isa16bit
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|ED_TYPE_WD8013W
+case|:
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"WD8013W"
 expr_stmt|;
 name|memsize
 operator|=
