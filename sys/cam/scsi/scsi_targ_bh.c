@@ -2284,8 +2284,15 @@ name|targbhdone
 argument_list|,
 name|flags
 argument_list|,
-comment|/*tag_action*/
+operator|(
+name|flags
+operator|&
+name|CAM_TAG_ACTION_VALID
+operator|)
+condition|?
 name|MSG_SIMPLE_Q_TAG
+else|:
+literal|0
 argument_list|,
 name|atio
 operator|->
