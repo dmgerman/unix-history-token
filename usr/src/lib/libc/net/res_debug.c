@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.22 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,10 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|p_class
+argument_list|()
+decl_stmt|,
+modifier|*
+name|p_time
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -1001,9 +1005,9 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", ttl = %u"
+literal|", ttl = %s"
 argument_list|,
-name|_getlong
+name|p_time
 argument_list|(
 name|cp
 argument_list|)
@@ -1337,9 +1341,9 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", refresh=%ld"
+literal|", refresh=%s"
 argument_list|,
-name|_getlong
+name|p_time
 argument_list|(
 name|cp
 argument_list|)
@@ -1356,9 +1360,9 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", retry=%ld"
+literal|", retry=%s"
 argument_list|,
-name|_getlong
+name|p_time
 argument_list|(
 name|cp
 argument_list|)
@@ -1375,9 +1379,9 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", expire=%ld"
+literal|", expire=%s"
 argument_list|,
-name|_getlong
+name|p_time
 argument_list|(
 name|cp
 argument_list|)
@@ -1394,9 +1398,9 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", min=%ld\n"
+literal|", min=%s\n"
 argument_list|,
-name|_getlong
+name|p_time
 argument_list|(
 name|cp
 argument_list|)
@@ -1795,7 +1799,7 @@ specifier|static
 name|char
 name|nbuf
 index|[
-literal|20
+literal|40
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2113,6 +2117,230 @@ name|nbuf
 operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return a mnemonic for a time to live  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|p_time
+parameter_list|(
+name|value
+parameter_list|)
+name|u_long
+name|value
+decl_stmt|;
+block|{
+name|int
+name|secs
+decl_stmt|,
+name|mins
+decl_stmt|,
+name|hours
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|secs
+operator|=
+name|value
+operator|%
+literal|60
+expr_stmt|;
+name|value
+operator|/=
+literal|60
+expr_stmt|;
+name|mins
+operator|=
+name|value
+operator|%
+literal|60
+expr_stmt|;
+name|value
+operator|/=
+literal|60
+expr_stmt|;
+name|hours
+operator|=
+name|value
+operator|%
+literal|24
+expr_stmt|;
+name|value
+operator|/=
+literal|24
+expr_stmt|;
+define|#
+directive|define
+name|PLURALIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|x, (x == 1) ? "" : "s"
+name|p
+operator|=
+name|nbuf
+expr_stmt|;
+if|if
+condition|(
+name|value
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%d day%s"
+argument_list|,
+name|PLURALIZE
+argument_list|(
+name|value
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|p
+condition|)
+empty_stmt|;
+block|}
+if|if
+condition|(
+name|hours
+condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|!=
+name|nbuf
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%d hour%s"
+argument_list|,
+name|PLURALIZE
+argument_list|(
+name|hours
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|p
+condition|)
+empty_stmt|;
+block|}
+if|if
+condition|(
+name|mins
+condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|!=
+name|nbuf
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%d min%s"
+argument_list|,
+name|PLURALIZE
+argument_list|(
+name|mins
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|p
+condition|)
+empty_stmt|;
+block|}
+if|if
+condition|(
+name|secs
+condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|!=
+name|nbuf
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%d sec%s"
+argument_list|,
+name|PLURALIZE
+argument_list|(
+name|secs
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|p
+condition|)
+empty_stmt|;
+block|}
+return|return
+operator|(
+name|nbuf
+operator|)
+return|;
 block|}
 end_function
 
