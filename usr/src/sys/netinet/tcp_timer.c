@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.12 82/01/17 */
+comment|/* tcp_timer.c 4.13 82/01/19 */
 end_comment
 
 begin_include
@@ -598,18 +598,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"rexmt set to %d\n"
-argument_list|,
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_REXMT
-index|]
-argument_list|)
-expr_stmt|;
+comment|/* printf("rexmt set to %d\n", tp->t_timer[TCPT_REXMT]); */
 name|tp
 operator|->
 name|snd_nxt

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.28	82/01/07	*/
+comment|/*	if_en.c	4.29	82/01/19	*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ENKLUDGE
-end_define
 
 begin_include
 include|#
