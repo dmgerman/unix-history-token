@@ -554,6 +554,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * These are all the LTV record types that we can read or write  * from the WaveLAN. Not all of them are temendously useful, but I  * list as many as I know about here for completeness.  */
 end_comment
@@ -1124,6 +1129,12 @@ name|WI_RID_TICK_TIME
 value|0xFCE0
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_struct
 struct|struct
 name|wi_key
@@ -1161,6 +1172,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * NIC information  */
@@ -1647,11 +1663,6 @@ end_define
 begin_comment
 comment|/* supported data rates */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

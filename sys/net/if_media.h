@@ -714,6 +714,105 @@ comment|/* Dual attach / single attach */
 end_comment
 
 begin_comment
+comment|/*  * IEEE 802.11 Wireless  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_FH1
+value|3
+end_define
+
+begin_comment
+comment|/* Frequency Hopping 1Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_FH2
+value|4
+end_define
+
+begin_comment
+comment|/* Frequency Hopping 2Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_DS1
+value|5
+end_define
+
+begin_comment
+comment|/* Direct Sequence 1Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_DS2
+value|6
+end_define
+
+begin_comment
+comment|/* Direct Sequence 2Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_DS5
+value|7
+end_define
+
+begin_comment
+comment|/* Direct Sequence 5.5Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_DS11
+value|8
+end_define
+
+begin_comment
+comment|/* Direct Sequence 11Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_DS22
+value|9
+end_define
+
+begin_comment
+comment|/* Direct Sequence 22Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_ADHOC
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Operate in Adhoc mode */
+end_comment
+
+begin_comment
 comment|/*  * Shared media sub-types  */
 end_comment
 
@@ -1024,7 +1123,7 @@ begin_define
 define|#
 directive|define
 name|IFM_TYPE_DESCRIPTIONS
-value|{						\ 	{ IFM_ETHER,	"Ethernet" },					\ 	{ IFM_TOKEN,	"Token ring" },					\ 	{ IFM_FDDI,	"FDDI" },					\ 	{ 0, NULL },							\ }
+value|{						\ 	{ IFM_ETHER,		"Ethernet" },				\ 	{ IFM_TOKEN,		"Token ring" },				\ 	{ IFM_FDDI,		"FDDI" },				\ 	{ IFM_IEEE80211,	"IEEE 802.11 Wireless Ethernet" },	\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1088,6 +1187,27 @@ define|#
 directive|define
 name|IFM_SUBTYPE_FDDI_OPTION_DESCRIPTIONS
 value|{				\ 	{ IFM_FDDI_DA, "Dual-attach" },					\ 	{ 0, NULL },							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_SUBTYPE_IEEE80211_DESCRIPTIONS
+value|{				\ 	{ IFM_IEEE80211_FH1, "FH/1Mbps" },				\ 	{ IFM_IEEE80211_FH2, "FH/2Mbps" },				\ 	{ IFM_IEEE80211_DS1, "DS/1Mbps" },				\ 	{ IFM_IEEE80211_DS2, "DS/2Mbps" },				\ 	{ IFM_IEEE80211_DS5, "DS/5.5Mbps" },				\ 	{ IFM_IEEE80211_DS11, "DS/11Mbps" },				\ 	{ IFM_IEEE80211_DS22, "DS/22Mbps" },				\ 	{ 0, NULL },							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_SUBTYPE_IEEE80211_ALIASES
+value|{					\ 	{ IFM_IEEE80211_FH1, "FH1" },					\ 	{ IFM_IEEE80211_FH2, "FH2" },					\ 	{ IFM_IEEE80211_FH1, "FrequencyHopping/1Mbps" },		\ 	{ IFM_IEEE80211_FH2, "FrequencyHopping/2Mbps" },		\ 	{ IFM_IEEE80211_DS1, "DS1" },					\ 	{ IFM_IEEE80211_DS2, "DS2" },					\ 	{ IFM_IEEE80211_DS5, "DS5.5" },					\ 	{ IFM_IEEE80211_DS11, "DS11" },					\ 	{ IFM_IEEE80211_DS22, "DS22" },					\ 	{ IFM_IEEE80211_DS1, "DirectSequence/1Mbps" },			\ 	{ IFM_IEEE80211_DS2, "DirectSequence/2Mbps" },			\ 	{ IFM_IEEE80211_DS5, "DirectSequence/5.5Mbps" },		\ 	{ IFM_IEEE80211_DS11, "DirectSequence/11Mbps" },		\ 	{ IFM_IEEE80211_DS22, "DirectSequence/22Mbps" },		\ 	{ 0, NULL },							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_SUBTYPE_IEEE80211_OPTION_DESCRIPTIONS
+value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define

@@ -129,6 +129,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcireg.h>
 end_include
 
@@ -716,6 +722,14 @@ decl_stmt|;
 name|an_stop
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ifmedia_removeall
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|an_ifmedia
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
