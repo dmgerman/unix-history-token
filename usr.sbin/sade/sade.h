@@ -422,20 +422,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_DIST_XSERVER
-value|"distXserver"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_DIST_XFONTS
-value|"distXfonts"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_DEDICATE_DISK
 value|"dedicateDisk"
 end_define
@@ -1052,8 +1038,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_XF86_CONFIG
-value|"_xf86config"
+name|VAR_XORG_CONFIG
+value|"_xorgconfig"
 end_define
 
 begin_define
@@ -2111,36 +2097,12 @@ begin_decl_stmt
 specifier|extern
 name|unsigned
 name|int
-name|XF86Dists
+name|XOrgDists
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Which XFree86 dists we want			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|XF86ServerDists
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The XFree86 servers we want			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|XF86FontDists
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The XFree86 fonts we want			*/
+comment|/* Which X.Org dists we want			*/
 end_comment
 
 begin_decl_stmt
@@ -2632,56 +2594,56 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuXF86
+name|MenuXOrg
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XFree86 main menu				*/
+comment|/* X.Org main menu				*/
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuXF86Select
+name|MenuXOrgSelect
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XFree86 distribution selection menu		*/
+comment|/* X.Org distribution selection menu		*/
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuXF86SelectCore
+name|MenuXOrgSelectCore
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XFree86 core distribution menu		*/
+comment|/* X.Org core distribution menu			*/
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuXF86SelectServer
+name|MenuXOrgSelectServer
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XFree86 server distribution menu		*/
+comment|/* X.Org server distribution menu		*/
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuXF86SelectFonts
+name|MenuXOrgSelectFonts
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XFree86 font selection menu			*/
+comment|/* X.Org font selection menu			*/
 end_comment
 
 begin_decl_stmt
@@ -2731,12 +2693,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuXF86Config
+name|MenuXOrgConfig
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Select XFree86 configuration type		*/
+comment|/* Select X.Org configuration tool		*/
 end_comment
 
 begin_decl_stmt
@@ -3985,7 +3947,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|distSetXF86
+name|distSetXOrg
 parameter_list|(
 name|dialogMenuItem
 modifier|*

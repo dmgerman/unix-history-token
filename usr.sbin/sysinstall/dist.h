@@ -154,7 +154,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|DIST_XF86
+name|DIST_XORG
 value|0x04000
 end_define
 
@@ -338,159 +338,161 @@ value|0x7FFFF
 end_define
 
 begin_comment
-comment|/* Subtypes for XFree86 packages */
+comment|/* Subtypes for X.Org packages */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_CLIENTS
-value|0x0001
+name|DIST_XORG_CLIENTS
+value|0x000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_DOC
-value|0x0002
+name|DIST_XORG_LIB
+value|0x000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_LIB
-value|0x0004
+name|DIST_XORG_MAN
+value|0x000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_MAN
-value|0x0008
+name|DIST_XORG_DOC
+value|0x000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_PROG
-value|0x0010
+name|DIST_XORG_IMAKE
+value|0x000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_MISC_ALL
-value|0x001F
+name|DIST_XORG_SERVER
+value|0x000100
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER
-value|0x0020
+name|DIST_XORG_NESTSERVER
+value|0x000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_FB
-value|0x0001
+name|DIST_XORG_PRINTSERVER
+value|0x000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_NEST
-value|0x0002
+name|DIST_XORG_VFBSERVER
+value|0x000800
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_PRINT
-value|0x0004
+name|DIST_XORG_FONTS_MISC
+value|0x010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_VFB
-value|0x0008
+name|DIST_XORG_FONTS_75
+value|0x020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_ALL
-value|0x000F
+name|DIST_XORG_FONTS_100
+value|0x040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS
-value|0x0040
+name|DIST_XORG_FONTS_CYR
+value|0x080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS_75
-value|0x0001
+name|DIST_XORG_FONTS_T1
+value|0x100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS_100
-value|0x0002
+name|DIST_XORG_FONTS_TT
+value|0x200000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS_CYR
-value|0x0004
+name|DIST_XORG_FONTSERVER
+value|0x400000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS_SCALE
-value|0x0008
+name|DIST_XORG_MISC_ALL
+value|0x00001f
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS_BITMAPS
-value|0x0010
+name|DIST_XORG_SERVER_ALL
+value|0x000f00
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS_SERVER
-value|0x0020
+name|DIST_XORG_FONTS_ALL
+value|0x7f0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_FONTS_ALL
-value|0x003F
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XF86_ALL
-value|0x007F
+name|DIST_XORG_ALL
+define|\
+value|(DIST_XORG_MISC_ALL | DIST_XORG_SERVER_ALL | DIST_XORG_FONTS_ALL)
 end_define
 
 begin_comment
 comment|/* Canned distribution sets */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_DIST_XORG_FONTS_BASE
+define|\
+value|(DIST_XORG_FONTS_MISC | DIST_XORG_FONTS_75 | DIST_XORG_FONTS_100 | \ 	 DIST_XORG_FONTS_TT)
+end_define
 
 begin_define
 define|#

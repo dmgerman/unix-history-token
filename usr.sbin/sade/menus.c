@@ -98,13 +98,13 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|XF86Dists
+name|XOrgDists
 operator||=
-name|DIST_XF86_MISC_ALL
+name|DIST_XORG_MISC_ALL
 expr_stmt|;
 name|Dists
 operator||=
-name|DIST_XF86
+name|DIST_XORG
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -124,23 +124,20 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|XF86Dists
+name|XOrgDists
 operator|&=
 operator|~
-name|DIST_XF86_MISC_ALL
+name|DIST_XORG_MISC_ALL
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|XF86ServerDists
-operator|&&
-operator|!
-name|XF86FontDists
+name|XOrgDists
 condition|)
 name|Dists
 operator|&=
 operator|~
-name|DIST_XF86
+name|DIST_XORG
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -160,13 +157,9 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|XF86Dists
+name|XOrgDists
 operator||=
-name|DIST_XF86_SERVER
-expr_stmt|;
-name|XF86ServerDists
-operator|=
-name|DIST_XF86_SERVER_ALL
+name|DIST_XORG_SERVER_ALL
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -186,14 +179,20 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|XF86Dists
+name|XOrgDists
 operator|&=
 operator|~
-name|DIST_XF86_SERVER
+name|DIST_XORG_SERVER_ALL
 expr_stmt|;
-name|XF86ServerDists
-operator|=
-literal|0
+if|if
+condition|(
+operator|!
+name|XOrgDists
+condition|)
+name|Dists
+operator|&=
+operator|~
+name|DIST_XORG
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -213,13 +212,9 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|XF86Dists
+name|XOrgDists
 operator||=
-name|DIST_XF86_FONTS
-expr_stmt|;
-name|XF86FontDists
-operator|=
-name|DIST_XF86_FONTS_ALL
+name|DIST_XORG_FONTS_ALL
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -239,14 +234,20 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|XF86Dists
+name|XOrgDists
 operator|&=
 operator|~
-name|DIST_XF86_FONTS
+name|DIST_XORG_FONTS_ALL
 expr_stmt|;
-name|XF86FontDists
-operator|=
-literal|0
+if|if
+condition|(
+operator|!
+name|XOrgDists
+condition|)
+name|Dists
+operator|&=
+operator|~
+name|DIST_XORG
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -335,7 +336,7 @@ name|IS_DEVELOPER
 argument_list|(
 name|Dists
 argument_list|,
-name|DIST_XF86
+name|DIST_XORG
 argument_list|)
 operator|&&
 name|_IS_SET
@@ -391,7 +392,7 @@ name|IS_DEVELOPER
 argument_list|(
 name|Dists
 argument_list|,
-name|DIST_XF86
+name|DIST_XORG
 argument_list|)
 operator|&&
 name|_IS_SET
@@ -440,7 +441,7 @@ name|IS_USER
 argument_list|(
 name|Dists
 argument_list|,
-name|DIST_XF86
+name|DIST_XORG
 argument_list|)
 return|;
 block|}
@@ -490,23 +491,9 @@ argument_list|)
 operator|&&
 name|_IS_SET
 argument_list|(
-name|XF86Dists
+name|XOrgDists
 argument_list|,
-name|DIST_XF86_ALL
-argument_list|)
-operator|&&
-name|_IS_SET
-argument_list|(
-name|XF86ServerDists
-argument_list|,
-name|DIST_XF86_SERVER_ALL
-argument_list|)
-operator|&&
-name|_IS_SET
-argument_list|(
-name|XF86FontDists
-argument_list|,
-name|DIST_XF86_FONTS_ALL
+name|DIST_XORG_ALL
 argument_list|)
 return|;
 block|}
@@ -538,10 +525,26 @@ modifier|*
 name|item
 parameter_list|)
 block|{
+if|if
+condition|(
+name|XOrgDists
+operator|!=
+literal|0
+condition|)
+name|Dists
+operator||=
+name|DIST_XORG
+expr_stmt|;
+else|else
+name|Dists
+operator|&=
+operator|~
+name|DIST_XORG
+expr_stmt|;
 return|return
 name|Dists
 operator|&
-name|DIST_XF86
+name|DIST_XORG
 return|;
 block|}
 end_function
@@ -789,13 +792,13 @@ name|distExtractAll
 block|}
 block|,
 block|{
-literal|" Distributions, XFree86"
+literal|" Distributions, X.Org"
 block|,
-literal|"XFree86 distribution menu."
+literal|"X.Org distribution menu."
 block|,
 name|NULL
 block|,
-name|distSetXF86
+name|distSetXOrg
 block|}
 block|,
 block|{
@@ -1523,9 +1526,9 @@ name|MenuUsermgmt
 block|}
 block|,
 block|{
-literal|" XFree86, Fonts"
+literal|" X.Org, Fonts"
 block|,
-literal|"XFree86 Font selection menu."
+literal|"X.Org Font selection menu."
 block|,
 name|NULL
 block|,
@@ -1534,13 +1537,13 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuXF86SelectFonts
+name|MenuXOrgSelectFonts
 block|}
 block|,
 block|{
-literal|" XFree86, Server"
+literal|" X.Org, Server"
 block|,
-literal|"XFree86 Server selection menu."
+literal|"X.Org Server selection menu."
 block|,
 name|NULL
 block|,
@@ -1549,7 +1552,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuXF86SelectServer
+name|MenuXOrgSelectServer
 block|}
 block|,
 block|{
@@ -5594,13 +5597,13 @@ name|DIST_PERL
 block|}
 block|,
 block|{
-literal|" XFree86"
+literal|" X.Org"
 block|,
-literal|"The XFree86 distribution"
+literal|"The X.Org distribution"
 block|,
 name|x11FlagCheck
 block|,
-name|distSetXF86
+name|distSetXOrg
 block|}
 block|,
 block|{
@@ -6131,19 +6134,19 @@ block|}
 block|, }
 block|;
 name|DMenu
-name|MenuXF86Config
+name|MenuXOrgConfig
 operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Please select the XFree86 configuration tool you want to use."
+literal|"Please select the X.Org configuration tool you want to use."
 block|,
-literal|"The first option, xf86cfg, is fully graphical.\n"
+literal|"The first option, xorgcfg, is fully graphical.\n"
 literal|"The second option provides a menu-based interface similar to\n"
 literal|"what you are currently using. "
-literal|"The third option, xf86config, is\n"
+literal|"The third option, xorgconfig, is\n"
 literal|"a more simplistic shell-script based tool and less friendly to\n"
 literal|"new users, but it may work in situations where the other options\n"
 literal|"do not."
@@ -6164,9 +6167,9 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"2 xf86cfg"
+literal|"2 xorgcfg"
 block|,
-literal|"Fully graphical XFree86 configuration tool."
+literal|"Fully graphical X.Org configuration tool."
 block|,
 name|NULL
 block|,
@@ -6174,14 +6177,14 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-name|VAR_XF86_CONFIG
-literal|"=xf86cfg"
+name|VAR_XORG_CONFIG
+literal|"=xorgcfg"
 block|}
 block|,
 block|{
-literal|"3 xf86cfg -textmode"
+literal|"3 xorgcfg -textmode"
 block|,
-literal|"ncurses-based XFree86 configuration tool."
+literal|"ncurses-based X.Org configuration tool."
 block|,
 name|NULL
 block|,
@@ -6189,14 +6192,14 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-name|VAR_XF86_CONFIG
-literal|"=xf86cfg -textmode"
+name|VAR_XORG_CONFIG
+literal|"=xorgcfg -textmode"
 block|}
 block|,
 block|{
-literal|"4 xf86config"
+literal|"4 xorgconfig"
 block|,
-literal|"Shell-script based XFree86 configuration tool."
+literal|"Shell-script based X.Org configuration tool."
 block|,
 name|NULL
 block|,
@@ -6204,8 +6207,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-name|VAR_XF86_CONFIG
-literal|"=xf86config"
+name|VAR_XORG_CONFIG
+literal|"=xorgconfig"
 block|}
 block|,
 block|{
@@ -6239,7 +6242,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select the default X desktop to use."
 block|,
-literal|"By default, XFree86 comes with a fairly vanilla desktop which\n"
+literal|"By default, X.Org comes with a fairly vanilla desktop which\n"
 literal|"is based around the twm(1) window manager and does not offer\n"
 literal|"much in the way of features.  It does have the advantage of\n"
 literal|"being a standard part of X so you don't need to load anything\n"
@@ -6344,14 +6347,14 @@ block|}
 block|, }
 block|;
 name|DMenu
-name|MenuXF86Select
+name|MenuXOrgSelect
 operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 Distribution"
+literal|"X.Org Distribution"
 block|,
-literal|"Please select the components you need from the XFree86\n"
+literal|"Please select the components you need from the X.Org\n"
 literal|"distribution sets."
 block|,
 name|NULL
@@ -6381,7 +6384,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuXF86SelectCore
+name|MenuXOrgSelectCore
 block|}
 block|,
 block|{
@@ -6396,7 +6399,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuXF86SelectServer
+name|MenuXOrgSelectServer
 block|}
 block|,
 block|{
@@ -6411,7 +6414,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuXF86SelectFonts
+name|MenuXOrgSelectFonts
 block|}
 block|,
 block|{
@@ -6421,16 +6424,16 @@ block|}
 block|, }
 block|;
 name|DMenu
-name|MenuXF86SelectCore
+name|MenuXOrgSelectCore
 operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 base distribution types"
+literal|"X.Org base distribution types"
 block|,
-literal|"Please check off the basic XFree86 components you wish to install.\n"
+literal|"Please check off the basic X.Org components you wish to install.\n"
 literal|"Bin, lib, and set are recommended for a minimum installaion."
 block|,
 name|NULL
@@ -6499,29 +6502,6 @@ literal|' '
 block|}
 block|,
 block|{
-literal|" bin"
-block|,
-literal|"Client applications"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_CLIENTS
-block|}
-block|,
-block|{
 literal|" lib"
 block|,
 literal|"Shared libraries and data files needed at runtime"
@@ -6533,7 +6513,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86Dists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6541,7 +6521,30 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_LIB
+name|DIST_XORG_LIB
+block|}
+block|,
+block|{
+literal|" bin"
+block|,
+literal|"Client applications"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XOrgDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XORG_CLIENTS
 block|}
 block|,
 block|{
@@ -6556,7 +6559,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86Dists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6564,7 +6567,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_MAN
+name|DIST_XORG_MAN
 block|}
 block|,
 block|{
@@ -6579,7 +6582,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86Dists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6587,7 +6590,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_DOC
+name|DIST_XORG_DOC
 block|}
 block|,
 block|{
@@ -6602,7 +6605,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86Dists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6610,7 +6613,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_PROG
+name|DIST_XORG_IMAKE
 block|}
 block|,
 block|{
@@ -6620,16 +6623,16 @@ block|}
 block|, }
 block|;
 name|DMenu
-name|MenuXF86SelectFonts
+name|MenuXOrgSelectFonts
 operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Font distribution selection."
+literal|"X.Org Font distribution selection."
 block|,
-literal|"Please check off the individual font distributions you wish to\n\ install.  At the minimum, you should install the standard\n\ 75 DPI and misc fonts if you're also installing a server\n\ (these are selected by default)."
+literal|"Please check off the individual font distributions you wish to\n\ install.  At the minimum, you should install the standard\n\ 75 DPI and misc fonts if you're also installing an X server\n\ (these are selected by default).  The TrueType set is also \n\ highly recommended.  The font server is unnecessary in most\n\ configurations."
 block|,
 name|NULL
 block|,
@@ -6697,7 +6700,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|" fnts"
+literal|" fmsc"
 block|,
 literal|"Standard miscellaneous fonts"
 block|,
@@ -6708,7 +6711,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86FontDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6716,7 +6719,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_FONTS_BITMAPS
+name|DIST_XORG_FONTS_MISC
 block|}
 block|,
 block|{
@@ -6731,7 +6734,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86FontDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6739,7 +6742,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_FONTS_75
+name|DIST_XORG_FONTS_75
 block|}
 block|,
 block|{
@@ -6754,7 +6757,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86FontDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6762,7 +6765,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_FONTS_100
+name|DIST_XORG_FONTS_100
 block|}
 block|,
 block|{
@@ -6777,7 +6780,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86FontDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6785,13 +6788,13 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_FONTS_CYR
+name|DIST_XORG_FONTS_CYR
 block|}
 block|,
 block|{
-literal|" fscl"
+literal|" ft1"
 block|,
-literal|"Speedo and Type scalable fonts"
+literal|"Type1 scalable fonts"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -6800,7 +6803,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86FontDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6808,11 +6811,34 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_FONTS_SCALE
+name|DIST_XORG_FONTS_T1
 block|}
 block|,
 block|{
-literal|" server"
+literal|" ftt"
+block|,
+literal|"TrueType scalable fonts"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XOrgDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XORG_FONTS_TT
+block|}
+block|,
+block|{
+literal|" fs"
 block|,
 literal|"Font server"
 block|,
@@ -6823,7 +6849,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86FontDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6831,7 +6857,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_FONTS_SERVER
+name|DIST_XORG_FONTSERVER
 block|}
 block|,
 block|{
@@ -6841,14 +6867,14 @@ block|}
 block|, }
 block|;
 name|DMenu
-name|MenuXF86SelectServer
+name|MenuXOrgSelectServer
 operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"X Server selection."
+literal|"X.Org X Server selection."
 block|,
 literal|"Please check off the types of X servers you wish to install.\n"
 block|,
@@ -6929,7 +6955,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86ServerDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6937,7 +6963,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_SERVER_FB
+name|DIST_XORG_SERVER
 block|}
 block|,
 block|{
@@ -6952,7 +6978,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86ServerDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6960,7 +6986,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_SERVER_NEST
+name|DIST_XORG_NESTSERVER
 block|}
 block|,
 block|{
@@ -6975,7 +7001,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86ServerDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -6983,7 +7009,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_SERVER_PRINT
+name|DIST_XORG_PRINTSERVER
 block|}
 block|,
 block|{
@@ -6998,7 +7024,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|XF86ServerDists
+name|XOrgDists
 block|,
 literal|'['
 block|,
@@ -7006,7 +7032,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_SERVER_VFB
+name|DIST_XORG_VFBSERVER
 block|}
 block|,
 block|{
@@ -7701,9 +7727,9 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|" XFree86"
+literal|" X.Org"
 block|,
-literal|"Configure XFree86 Server"
+literal|"Configure X.Org Server"
 block|,
 name|NULL
 block|,
@@ -7713,7 +7739,7 @@ block|,
 block|{
 literal|" Desktop"
 block|,
-literal|"Configure XFree86 Desktop"
+literal|"Configure X Desktop"
 block|,
 name|NULL
 block|,

@@ -3294,7 +3294,7 @@ argument_list|)
 expr_stmt|;
 name|variable_unset
 argument_list|(
-name|VAR_XF86_CONFIG
+name|VAR_XORG_CONFIG
 argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
@@ -3306,7 +3306,7 @@ operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
-name|MenuXF86Config
+name|MenuXOrgConfig
 argument_list|,
 name|FALSE
 argument_list|)
@@ -3325,7 +3325,7 @@ name|config
 operator|=
 name|variable_get
 argument_list|(
-name|VAR_XF86_CONFIG
+name|VAR_XORG_CONFIG
 argument_list|)
 expr_stmt|;
 name|style
@@ -3523,7 +3523,7 @@ condition|(
 operator|!
 name|file_readable
 argument_list|(
-literal|"/etc/X11/XF86Config"
+literal|"/etc/X11/xorg.conf"
 argument_list|)
 condition|)
 block|{
@@ -3532,7 +3532,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"The XFree86 configuration process seems to have\nfailed.  Would you like to try again?"
+literal|"The X.Org configuration process seems to have\nfailed.  Would you like to try again?"
 argument_list|)
 condition|)
 goto|goto
@@ -3575,8 +3575,8 @@ argument_list|)
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"The XFree86 setup utility you chose does not appear to be installed!\n"
-literal|"Please install this before attempting to configure XFree86."
+literal|"The X.Org setup utility you chose does not appear to be installed!\n"
+literal|"Please install this before attempting to configure X.Org."
 argument_list|)
 expr_stmt|;
 name|restorescr
