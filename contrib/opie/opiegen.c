@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opiegen.c: Sample OTP generator based on the opiegenerator()               library routine.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.3. OPIE_PASS_MAX changed to 		OPIE_SECRET_MAX. Send debug info to syslog. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.              Fixed include order.         Created at NRL for OPIE 2.2. */
+comment|/* opiegen.c: Sample OTP generator based on the opiegenerator()               library routine.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.3. OPIE_PASS_MAX changed to 		OPIE_SECRET_MAX. Send debug info to syslog. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.              Fixed include order.         Created at NRL for OPIE 2.2. */
 end_comment
 
 begin_include
