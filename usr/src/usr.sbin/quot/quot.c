@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quot.c	8.3 (Berkeley) %G%"
+literal|"@(#)quot.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,11 +606,16 @@ continue|continue;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s/r%s"
+sizeof|sizeof
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"%sr%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
