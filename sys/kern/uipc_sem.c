@@ -630,6 +630,41 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SEM_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DP
+parameter_list|(
+name|x
+parameter_list|)
+value|printf x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DP
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -647,15 +682,17 @@ operator|->
 name|ks_ref
 operator|++
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_ref: ks = %p, ref = %d\n"
-argument_list|,
+operator|,
 name|ks
-argument_list|,
+operator|,
 name|ks
 operator|->
 name|ks_ref
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -673,17 +710,19 @@ modifier|*
 name|ks
 parameter_list|)
 block|{
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_rel: ks = %p, ref = %d\n"
-argument_list|,
+operator|,
 name|ks
-argument_list|,
+operator|,
 name|ks
 operator|->
 name|ks_ref
 operator|-
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -738,18 +777,20 @@ name|ksem
 modifier|*
 name|ks
 decl_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"id_to_sem: id = %0x,%p\n"
-argument_list|,
+operator|,
 name|id
-argument_list|,
+operator|,
 operator|(
 expr|struct
 name|ksem
 operator|*
 operator|)
 name|id
+operator|)
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -761,11 +802,13 @@ argument_list|,
 argument|ks_entry
 argument_list|)
 block|{
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"id_to_sem: ks = %p\n"
-argument_list|,
+operator|,
 name|ks
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -911,9 +954,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_create\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -1579,9 +1624,11 @@ operator|(
 name|error
 operator|)
 return|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|">>> sem_open start\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -1611,9 +1658,11 @@ operator|->
 name|idp
 argument_list|)
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"<<< sem_open end\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1810,13 +1859,15 @@ operator|==
 name|UIO_USERSPACE
 condition|)
 block|{
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"about to copyout! %d to %p\n"
-argument_list|,
+operator|,
 name|id
-argument_list|,
+operator|,
 name|idp
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -1874,13 +1925,15 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"about to set! %d to %p\n"
-argument_list|,
+operator|,
 name|id
-argument_list|,
+operator|,
 name|idp
+operator|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1952,9 +2005,11 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_create: about to add to list...\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -1967,9 +2022,11 @@ argument_list|,
 name|ks_entry
 argument_list|)
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_create: setting list bit...\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ksnew
@@ -1978,9 +2035,11 @@ name|ks_onlist
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_create: done, about to unlock...\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2161,29 +2220,31 @@ name|p
 operator|->
 name|p_ucred
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_perm: uc(%d,%d) ks(%d,%d,%o)\n"
-argument_list|,
+operator|,
 name|uc
 operator|->
 name|cr_uid
-argument_list|,
+operator|,
 name|uc
 operator|->
 name|cr_gid
-argument_list|,
+operator|,
 name|ks
 operator|->
 name|ks_uid
-argument_list|,
+operator|,
 name|ks
 operator|->
 name|ks_gid
-argument_list|,
+operator|,
 name|ks
 operator|->
 name|ks_mode
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2480,11 +2541,13 @@ name|kuser
 modifier|*
 name|k
 decl_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_leave: ks = %p\n"
-argument_list|,
+operator|,
 name|ks
+operator|)
 argument_list|)
 expr_stmt|;
 name|k
@@ -2496,13 +2559,15 @@ argument_list|,
 name|ks
 argument_list|)
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_leave: ks = %p, k = %p\n"
-argument_list|,
+operator|,
 name|ks
-argument_list|,
+operator|,
 name|k
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2524,9 +2589,11 @@ argument_list|(
 name|ks
 argument_list|)
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_leave: about to free k\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2536,9 +2603,11 @@ argument_list|,
 name|M_SEM
 argument_list|)
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_leave: returning\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2840,15 +2909,17 @@ argument_list|,
 name|ks
 argument_list|)
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"sem_unlink: '%s' ks = %p, error = %d\n"
-argument_list|,
+operator|,
 name|name
-argument_list|,
+operator|,
 name|ks
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3425,9 +3496,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|">>> kern_sem_wait entered!\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3450,9 +3523,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"kern_sem_wait ks == NULL\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -3481,9 +3556,11 @@ name|ks
 argument_list|)
 condition|)
 block|{
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"kern_sem_wait hasopen failed\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -3494,15 +3571,17 @@ goto|goto
 name|err
 goto|;
 block|}
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"kern_sem_wait value = %d, tryflag %d\n"
-argument_list|,
+operator|,
 name|ks
 operator|->
 name|ks_value
-argument_list|,
+operator|,
 name|tryflag
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3577,11 +3656,13 @@ operator|&
 name|sem_lock
 argument_list|)
 expr_stmt|;
-name|printf
+name|DP
 argument_list|(
+operator|(
 literal|"<<< kern_sem_wait leaving, error = %d\n"
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
