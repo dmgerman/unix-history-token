@@ -378,7 +378,7 @@ literal|503100
 block|,
 literal|599000
 block|,
-literal|"/packages-5-current"
+literal|"/packages-5-stable"
 block|}
 block|,
 block|{
