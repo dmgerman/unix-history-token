@@ -48,13 +48,6 @@ name|NG_EIFACE_EIFACE_NAME
 value|"ngeth"
 end_define
 
-begin_define
-define|#
-directive|define
-name|NG_EIFACE_EIFACE_NAME_MAX
-value|15
-end_define
-
 begin_comment
 comment|/* My hook names */
 end_comment
@@ -102,7 +95,7 @@ name|NGM_EIFACE_GET_IFNAME
 init|=
 literal|1
 block|,
-comment|/* returns struct ng_eiface_ifname */
+comment|/* get the interface name */
 name|NGM_EIFACE_GET_IFADDRS
 block|,
 comment|/* returns list of addresses */
@@ -112,22 +105,6 @@ comment|/* set ethernet address */
 block|}
 enum|;
 end_enum
-
-begin_struct
-struct|struct
-name|ng_eiface_ifname
-block|{
-name|char
-name|ngif_name
-index|[
-name|NG_EIFACE_EIFACE_NAME_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_endif
 endif|#
