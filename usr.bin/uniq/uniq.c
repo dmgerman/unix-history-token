@@ -1229,9 +1229,9 @@ expr_stmt|;
 return|return
 name|strcoll
 argument_list|(
-name|s1
+name|line1
 argument_list|,
-name|s2
+name|line2
 argument_list|)
 return|;
 block|}
