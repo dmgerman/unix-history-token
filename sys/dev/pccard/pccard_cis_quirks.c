@@ -920,7 +920,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pccard_verbose
+name|bootverbose
 condition|)
 block|{
 name|device_printf
