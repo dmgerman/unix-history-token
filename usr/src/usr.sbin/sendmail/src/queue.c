@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.39 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.40 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.39 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.40 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1981,15 +1981,58 @@ name|w
 init|=
 name|WorkQ
 decl_stmt|;
+specifier|extern
+name|bool
+name|shouldqueue
+parameter_list|()
+function_decl|;
 name|WorkQ
 operator|=
 name|WorkQ
 operator|->
 name|w_next
 expr_stmt|;
+comment|/* 		**  Ignore jobs that are too expensive for the moment. 		*/
+if|if
+condition|(
+name|shouldqueue
+argument_list|(
+name|w
+operator|->
+name|w_pri
+argument_list|,
+name|w
+operator|->
+name|w_ctime
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"\nSkipping %s\n"
+argument_list|,
+name|w
+operator|->
+name|w_name
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dowork
 argument_list|(
 name|w
+operator|->
+name|w_name
+operator|+
+literal|2
+argument_list|,
+name|ForkQueueRuns
 argument_list|,
 name|e
 argument_list|)
@@ -3111,22 +3154,32 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		w -- the work request to be satisfied. ** **	Returns: **		none. ** **	Side Effects: **		The work request is satisfied if possible. */
+comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		e - the envelope in which to run it. ** **	Returns: **		none. ** **	Side Effects: **		The work request is satisfied if possible. */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|dowork
 argument_list|(
-name|w
+argument|id
 argument_list|,
-name|e
+argument|forkflag
+argument_list|,
+argument|e
 argument_list|)
-specifier|register
-name|WORK
-operator|*
-name|w
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|forkflag
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -3144,11 +3197,6 @@ name|i
 decl_stmt|;
 specifier|extern
 name|bool
-name|shouldqueue
-parameter_list|()
-function_decl|;
-specifier|extern
-name|bool
 name|readqf
 parameter_list|()
 function_decl|;
@@ -3163,53 +3211,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"dowork: %s pri %ld\n"
+literal|"dowork(%s)\n"
 argument_list|,
-name|w
-operator|->
-name|w_name
-argument_list|,
-name|w
-operator|->
-name|w_pri
+name|id
 argument_list|)
 expr_stmt|;
-comment|/* 	**  Ignore jobs that are too expensive for the moment. 	*/
-if|if
-condition|(
-name|shouldqueue
-argument_list|(
-name|w
-operator|->
-name|w_pri
-argument_list|,
-name|w
-operator|->
-name|w_ctime
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"\nSkipping %s\n"
-argument_list|,
-name|w
-operator|->
-name|w_name
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	**  Fork for work. 	*/
 if|if
 condition|(
-name|ForkQueueRuns
+name|forkflag
 condition|)
 block|{
 name|i
@@ -3279,13 +3289,7 @@ name|e
 operator|->
 name|e_id
 operator|=
-operator|&
-name|w
-operator|->
-name|w_name
-index|[
-literal|2
-index|]
+name|id
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3332,7 +3336,25 @@ condition|)
 block|{
 if|if
 condition|(
-name|ForkQueueRuns
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"readqf(%s) failed\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|forkflag
 condition|)
 name|exit
 argument_list|(
@@ -3376,7 +3398,7 @@ expr_stmt|;
 comment|/* finish up and exit */
 if|if
 condition|(
-name|ForkQueueRuns
+name|forkflag
 condition|)
 name|finis
 argument_list|()
@@ -3509,6 +3531,27 @@ condition|)
 block|{
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"readqf(%s): fopen failure (%s)\n"
+argument_list|,
+name|qf
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|errno
 operator|!=
 name|ENOENT
@@ -3542,6 +3585,27 @@ literal|0
 condition|)
 block|{
 comment|/* must have been being processed by someone else */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"readqf(%s): fstat failure (%s)\n"
+argument_list|,
+name|qf
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|qfp
@@ -3604,6 +3668,22 @@ block|}
 endif|#
 directive|endif
 comment|/* LOG */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"readqf(%s): bogus file\n"
+argument_list|,
+name|qf
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|qfp
@@ -3632,6 +3712,22 @@ argument_list|)
 condition|)
 block|{
 comment|/* being processed by another queuer */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"readqf(%s): locked\n"
+argument_list|,
+name|qf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Verbose

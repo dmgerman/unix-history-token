@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.15 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.16 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.15 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.16 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,6 +679,11 @@ operator|->
 name|q_flags
 operator||=
 name|QVERIFIED
+expr_stmt|;
+name|e
+operator|->
+name|e_nrcpts
+operator|++
 expr_stmt|;
 return|return
 name|EX_OK

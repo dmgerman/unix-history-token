@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.32.1.1 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2635,6 +2635,11 @@ operator|->
 name|q_flags
 operator||=
 name|QVERIFIED
+expr_stmt|;
+name|e
+operator|->
+name|e_nrcpts
+operator|++
 expr_stmt|;
 name|xfclose
 argument_list|(
