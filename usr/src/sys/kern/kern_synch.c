@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.15	%G%	*/
+comment|/*	kern_synch.c	3.16	%G%	*/
 end_comment
 
 begin_include
@@ -1135,11 +1135,15 @@ name|p
 operator|+=
 name|PUSER
 operator|+
+literal|2
+operator|*
+operator|(
 name|pp
 operator|->
 name|p_nice
 operator|-
 name|NZERO
+operator|)
 expr_stmt|;
 if|if
 condition|(
