@@ -147,6 +147,17 @@ begin_comment
 comment|/* demand load format */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QMAGIC
+value|0314
+end_define
+
+begin_comment
+comment|/* "compact" demand load format -- DEPRICATE */
+end_comment
+
 begin_comment
 comment|/* a_mid */
 end_comment
