@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)unifdef.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)unifdef.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,14 +74,27 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<err.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|int
+name|Reject_level
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -117,14 +144,6 @@ name|int
 name|Bool
 typedef|;
 end_typedef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-name|BSS
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -337,7 +356,112 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|flushline
+name|__P
+argument_list|(
+operator|(
+name|Bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getlin
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|error
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pfile
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|doif
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|Reject_level
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|findsym
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -371,23 +495,6 @@ decl_stmt|;
 name|char
 name|ignorethis
 decl_stmt|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-condition|?
-name|argv
-index|[
-literal|0
-index|]
-else|:
-literal|"unifdef"
-expr_stmt|;
 for|for
 control|(
 name|curarg
@@ -494,23 +601,13 @@ name|nsyms
 operator|>=
 name|MAXSYMS
 condition|)
-block|{
-name|prname
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"too many symbols.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"too many symbols"
 argument_list|)
 expr_stmt|;
-block|}
 name|symind
 operator|=
 name|nsyms
@@ -629,21 +726,16 @@ else|else
 block|{
 name|unrec
 label|:
-name|prname
-argument_list|()
-expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unrecognized option: %s\n"
+literal|"unrecognized option: %s"
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -652,24 +744,9 @@ name|nsyms
 operator|==
 literal|0
 condition|)
-block|{
 name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\ Usage: %s [-l] [-t] [-c] [[-Dsym] [-Usym] [-iDsym] [-iUsym]]... [file]\n\     At least one arg from [-D -U -iD -iU] is required\n"
-argument_list|,
-name|progname
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -677,14 +754,9 @@ operator|>
 literal|1
 condition|)
 block|{
-name|prname
-argument_list|()
-expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can only do one file.\n"
+literal|"can only do one file"
 argument_list|)
 expr_stmt|;
 block|}
@@ -731,18 +803,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|prname
-argument_list|()
-expr_stmt|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"can't open %s"
 argument_list|,
-literal|"can't open "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 operator|*
 name|curarg
 argument_list|)
@@ -774,6 +838,29 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|exitstat
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: %s"
+argument_list|,
+literal|"unifdef [-l] [-t] [-c] [[-Dsym] [-Usym] [-iDsym] [-iUsym]] ... [file]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -885,13 +972,6 @@ name|checkline
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_typedef
-typedef|typedef
-name|int
-name|Reject_level
-typedef|;
-end_typedef
 
 begin_decl_stmt
 name|Reject_level
@@ -1030,12 +1110,10 @@ name|IN_ELSE
 value|2
 end_define
 
-begin_macro
+begin_function
+name|void
 name|pfile
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|reject
 operator|=
@@ -1056,9 +1134,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -2228,6 +2305,7 @@ name|cp
 operator|==
 literal|'\0'
 operator|||
+operator|(
 operator|*
 name|cp
 operator|==
@@ -2238,6 +2316,7 @@ operator|++
 name|cp
 operator|==
 literal|'\0'
+operator|)
 condition|)
 return|return
 name|cp
@@ -2625,20 +2704,15 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|flushline
-argument_list|(
-argument|keep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|keep
+parameter_list|)
 name|Bool
 name|keep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2673,11 +2747,13 @@ name|chr
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|chr
 operator|=
 operator|*
 name|line
 operator|++
+operator|)
 condition|)
 name|putc
 argument_list|(
@@ -2699,29 +2775,8 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-end_block
-
-begin_macro
-name|prname
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -2755,17 +2810,12 @@ condition|)
 return|return
 name|err
 return|;
-name|prname
-argument_list|()
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|TESTING
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Error in %s line %d: %s.\n"
+literal|"error in %s line %d: %s"
 argument_list|,
 name|filename
 argument_list|,
@@ -2780,11 +2830,9 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* TESTING */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Error in %s line %d: %s. "
+literal|"error in %s line %d: %s. ifdef depth: %d"
 argument_list|,
 name|filename
 argument_list|,
@@ -2794,13 +2842,6 @@ name|errs
 index|[
 name|err
 index|]
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ifdef depth: %d\n"
 argument_list|,
 name|depth
 argument_list|)
