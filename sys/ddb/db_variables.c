@@ -108,6 +108,15 @@ name|db_tab_stop_width
 block|,
 name|FCN_NULL
 block|}
+block|,
+block|{
+literal|"lines"
+block|,
+operator|&
+name|db_lines_per_page
+block|,
+name|FCN_NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

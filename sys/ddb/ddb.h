@@ -29,13 +29,6 @@ begin_comment
 comment|/* type definitions */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DB_LINES_PER_PAGE
-value|20
-end_define
-
 begin_typedef
 typedef|typedef
 name|void
@@ -174,6 +167,13 @@ begin_decl_stmt
 specifier|extern
 name|db_expr_t
 name|db_tab_stop_width
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|db_expr_t
+name|db_lines_per_page
 decl_stmt|;
 end_decl_stmt
 

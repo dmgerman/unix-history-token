@@ -145,6 +145,18 @@ comment|/* output line width */
 end_comment
 
 begin_decl_stmt
+name|db_expr_t
+name|db_lines_per_page
+init|=
+literal|20
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lines per page */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|db_newlines
@@ -166,7 +178,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* max lines per page */
+comment|/* max lines/page when paging */
 end_comment
 
 begin_decl_stmt
@@ -445,6 +457,9 @@ literal|'\n'
 condition|)
 block|{
 comment|/* Newline */
+name|db_force_whitespace
+argument_list|()
+expr_stmt|;
 name|cnputc
 argument_list|(
 name|c
@@ -504,6 +519,9 @@ literal|'\r'
 condition|)
 block|{
 comment|/* Return */
+name|db_force_whitespace
+argument_list|()
+expr_stmt|;
 name|cnputc
 argument_list|(
 name|c
@@ -624,17 +642,23 @@ parameter_list|)
 block|{
 name|int
 name|c
+decl_stmt|,
+name|done
 decl_stmt|;
 name|db_printf
 argument_list|(
 literal|"--More--\r"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+name|done
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|done
+condition|)
 block|{
 name|c
 operator|=
@@ -646,6 +670,12 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'e'
+case|:
+case|case
+literal|'j'
+case|:
 case|case
 literal|'\n'
 case|:
@@ -659,7 +689,32 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
+name|done
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* Half a page. */
+name|db_setup_paging
+argument_list|(
+name|db_simple_pager
+argument_list|,
+name|arg
+argument_list|,
+name|db_lines_per_page
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+name|done
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
 case|case
 literal|' '
 case|:
@@ -670,10 +725,13 @@ name|db_simple_pager
 argument_list|,
 name|arg
 argument_list|,
-name|DB_LINES_PER_PAGE
+name|db_lines_per_page
 argument_list|)
 expr_stmt|;
-return|return;
+name|done
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'q'
 case|:
@@ -703,12 +761,10 @@ name|arg
 operator|=
 literal|1
 expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"\n"
-argument_list|)
+name|done
+operator|++
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|#
 directive|if
@@ -719,6 +775,11 @@ endif|#
 directive|endif
 block|}
 block|}
+name|db_printf
+argument_list|(
+literal|"        \r"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
