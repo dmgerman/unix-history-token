@@ -539,7 +539,7 @@ condition|(
 name|getuid
 argument_list|()
 operator|!=
-name|geteid
+name|geteuid
 argument_list|()
 operator|||
 name|getgid
