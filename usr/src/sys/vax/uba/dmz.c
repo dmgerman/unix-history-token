@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmz.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmz.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * DMZ-32 driver  * HISTORY  * 23-Apr-85  Joe Camaratta (jcc) at Siemens RTL  *	Driver for DEC's DMZ32 24-line asynchronous multiplexor.  *	Based on Chris Maloney's driver for DEC's DMF32  *	NOTE: The modem control routines have NOT been tested yet!!!  *  * 9-Aug-85	Mike Meyer (mwm) at ucb  *	Mangled into shape for 4.3.  */
+comment|/*  * DMZ-32 driver  * HISTORY  * 23-Apr-85  Joe Camaratta (jcc) at Siemens RTL  *	Driver for DEC's DMZ32 24-line asynchronous multiplexor.  *	Based on Chris Maloney's driver for DEC's DMF32  *  * 9-Aug-85	Mike Meyer (mwm) at ucb  *	Mangled into shape for 4.3.  */
 end_comment
 
 begin_include
@@ -737,7 +737,16 @@ name|ui
 operator|->
 name|ui_flags
 expr_stmt|;
-return|return;
+name|cbase
+index|[
+name|ui
+operator|->
+name|ui_ubanum
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_block
 
@@ -917,7 +926,8 @@ operator|->
 name|ui_ubanum
 index|]
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|dmz_ubinfo
@@ -984,14 +994,15 @@ operator|->
 name|ui_ubanum
 index|]
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|dmz_ubinfo
 index|[
 name|ui
 operator|->
 name|ui_ubanum
 index|]
-operator|&
-literal|0x3ffff
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1651,12 +1662,10 @@ name|ui_addr
 expr_stmt|;
 if|if
 condition|(
-name|cbase
+name|dmz_ubinfo
 index|[
 name|uban
 index|]
-operator|==
-literal|0
 condition|)
 block|{
 name|dmz_ubinfo
@@ -1689,12 +1698,13 @@ index|[
 name|uban
 index|]
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|dmz_ubinfo
 index|[
 name|uban
 index|]
-operator|&
-literal|0x3ffff
+argument_list|)
 expr_stmt|;
 block|}
 for|for
@@ -2214,27 +2224,6 @@ condition|(
 name|character
 operator|&
 name|DMZ_DSC
-operator|&&
-operator|(
-name|dmzsoftCAR
-index|[
-name|controller
-index|]
-operator|&
-operator|(
-literal|1
-operator|<<
-operator|(
-name|octet
-operator|*
-literal|8
-operator|+
-name|unit
-operator|)
-operator|)
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|dmz_addr
@@ -2288,6 +2277,25 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|dmzsoftCAR
+index|[
+name|controller
+index|]
+operator|&
+operator|(
+literal|1
+operator|<<
+operator|(
+name|octet
+operator|*
+literal|8
+operator|+
+name|unit
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
 operator|(
 operator|*
 name|linesw
