@@ -24,7 +24,7 @@ file|<sys/stat.h>
 end_include
 
 begin_comment
-comment|/*  * Vfontedpr.  *  * Bill Joy, Apr. 1979.  * (made table driven - Dave Presotto 11/17/80)  *  */
+comment|/*  * Vfontedpr.  *  * Bill Joy, Apr. 1979.  * (made somewhat table driven - Dave Presotto 11/17/80)  *  * To add a new language:  *	1) add a new keyword table  *	2) add a new entry to "struct langdef ld[]" to  *	   describe comments, strings, etc.  *	3) add two routines to recognize start and end of   *	   procedures  *  */
 end_comment
 
 begin_define
@@ -106,6 +106,20 @@ end_function_decl
 begin_function_decl
 name|int
 name|cprend
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|iprbegin
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|iprend
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -513,6 +527,86 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* keywords for the ISP language */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ikw
+index|[]
+init|=
+block|{
+literal|"and"
+block|,
+literal|"begin"
+block|,
+literal|"decode"
+block|,
+literal|"define"
+block|,
+literal|"end"
+block|,
+literal|"eql"
+block|,
+literal|"eqv"
+block|,
+literal|"geq"
+block|,
+literal|"gtr"
+block|,
+literal|"if"
+block|,
+literal|"leave"
+block|,
+literal|"leq"
+block|,
+literal|"lss"
+block|,
+literal|"mod"
+block|,
+literal|"neq"
+block|,
+literal|"next"
+block|,
+literal|"not"
+block|,
+literal|"or"
+block|,
+literal|"otherwise"
+block|,
+literal|"repeat"
+block|,
+literal|"restart"
+block|,
+literal|"resume"
+block|,
+literal|"sr0"
+block|,
+literal|"sr1"
+block|,
+literal|"srd"
+block|,
+literal|"srr"
+block|,
+literal|"sl0"
+block|,
+literal|"sl1"
+block|,
+literal|"sld"
+block|,
+literal|"slr"
+block|,
+literal|"tst"
+block|,
+literal|"xor"
+block|,
+literal|0
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * the following structure defines a language  */
 end_comment
 
@@ -563,6 +657,21 @@ name|comout
 decl_stmt|;
 comment|/* string output in place of combeg string */
 name|char
+modifier|*
+name|acmbeg
+decl_stmt|;
+comment|/* alternate comment start */
+name|char
+modifier|*
+name|acmend
+decl_stmt|;
+comment|/* alternate comment end */
+name|char
+modifier|*
+name|acmout
+decl_stmt|;
+comment|/* alternate comment start preface */
+name|char
 name|strdel
 decl_stmt|;
 comment|/* delimiter for string constant */
@@ -578,6 +687,10 @@ name|int
 name|onelnstr
 decl_stmt|;
 comment|/* string constants do not continue on next */
+name|int
+name|onecase
+decl_stmt|;
+comment|/* upper and lower case are equivalent */
 block|}
 struct|;
 end_struct
@@ -594,69 +707,181 @@ literal|"-c"
 block|,
 name|ckw
 block|,
+comment|/* kwd */
 name|cprbegin
 block|,
+comment|/* isproc */
 name|cprend
 block|,
+comment|/* ispend */
 literal|"/*"
 block|,
+comment|/* combeg */
 literal|"*/"
 block|,
+comment|/* comend */
 literal|"\\*(/*"
 block|,
+comment|/* comout */
+literal|0
+block|,
+comment|/* acmbeg */
+literal|0
+block|,
+comment|/* acmend */
+literal|0
+block|,
+comment|/* acmout */
 literal|'"'
 block|,
+comment|/* strdel */
 literal|'\''
 block|,
+comment|/* chrdel */
 literal|0
 block|,
+comment|/* onelncom */
 literal|0
 block|,
+comment|/* onelnstr */
+literal|0
+block|,
+comment|/* onecase */
+comment|/* the ISP language */
+literal|"-i"
+block|,
+name|ikw
+block|,
+comment|/* kwd */
+name|iprbegin
+block|,
+comment|/* isproc */
+name|iprend
+block|,
+comment|/* ispend */
+literal|"!"
+block|,
+comment|/* combeg */
+literal|0
+block|,
+comment|/* comend */
+literal|"!"
+block|,
+comment|/* comout */
+literal|0
+block|,
+comment|/* acmbeg */
+literal|0
+block|,
+comment|/* acmend */
+literal|0
+block|,
+comment|/* acmout */
+literal|0
+block|,
+comment|/* strdel */
+literal|0
+block|,
+comment|/* chrdel */
+literal|1
+block|,
+comment|/* onelncom */
+literal|1
+block|,
+comment|/* onelnstr */
+literal|1
+block|,
+comment|/* onecase */
 comment|/* the pascal language */
 literal|"-p"
 block|,
 name|pkw
 block|,
+comment|/* kwd */
 name|pprbegin
 block|,
+comment|/* isproc */
 name|pprend
 block|,
+comment|/* ispend */
 literal|"{"
 block|,
+comment|/* combeg */
 literal|"}"
 block|,
+comment|/* comend */
 literal|"{"
 block|,
+comment|/* comout */
+literal|"(*"
+block|,
+comment|/* acmbeg */
+literal|"*)"
+block|,
+comment|/* acmend */
+literal|"(*"
+block|,
+comment|/* acmout */
 literal|'\''
 block|,
+comment|/* strdel */
 literal|0
 block|,
+comment|/* chrdel */
 literal|0
 block|,
+comment|/* onelncom */
 literal|0
 block|,
+comment|/* onelnstr */
+literal|0
+block|,
+comment|/* onecase */
 comment|/* the model language */
 literal|"-m"
 block|,
 name|mkw
 block|,
+comment|/* kwd */
 name|mprbegin
 block|,
+comment|/* isproc */
 name|mprend
 block|,
+comment|/* ispend */
 literal|"$"
 block|,
+comment|/* combeg */
 literal|"$"
 block|,
+comment|/* comend */
 literal|"$"
 block|,
+comment|/* comout */
+literal|0
+block|,
+comment|/* acmbeg */
+literal|0
+block|,
+comment|/* acmend */
+literal|0
+block|,
+comment|/* acmout */
 literal|'"'
 block|,
+comment|/* strdel */
 literal|'\''
 block|,
+comment|/* chrdel */
 literal|1
 block|,
+comment|/* onelncom */
 literal|0
+block|,
+comment|/* onelnstr */
+literal|0
+block|,
+comment|/* onecase */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -675,11 +900,29 @@ name|incomm
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* in a comment of the primary type */
+end_comment
+
+begin_decl_stmt
+name|int
+name|inacomm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in the alternate type of comment */
+end_comment
+
 begin_decl_stmt
 name|int
 name|instr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* in a string constant */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -817,6 +1060,59 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
+name|acstart
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start of comment string */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|acstop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* end of comment string */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|acout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* string to substitute for cstart */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lacstart
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* length of comment string starter */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lacstop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* length of comment string terminator */
+end_comment
+
+begin_decl_stmt
+name|char
 name|sdelim
 decl_stmt|;
 end_decl_stmt
@@ -853,6 +1149,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* one line strings */
+end_comment
+
+begin_decl_stmt
+name|int
+name|upeqlow
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* upper and lower case equivalent */
 end_comment
 
 begin_decl_stmt
@@ -1049,6 +1355,73 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-s"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|cp
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+operator|+
+literal|2
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+condition|)
+name|i
+operator|=
+name|i
+operator|*
+literal|10
+operator|+
+operator|(
+operator|*
+name|cp
+operator|++
+operator|-
+literal|'0'
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"'ps %d\n'vs %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 for|for
 control|(
 name|i
@@ -1170,6 +1543,8 @@ name|C
 expr_stmt|;
 comment|/* C is the default */
 comment|/* initialize for the appropriate language */
+comment|/* This is done because subscripting is too */
+comment|/* damned slow to be done every reference */
 name|keywds
 operator|=
 name|ld
@@ -1238,6 +1613,47 @@ argument_list|(
 name|cstop
 argument_list|)
 expr_stmt|;
+name|acstart
+operator|=
+name|ld
+index|[
+name|language
+index|]
+operator|.
+name|acmbeg
+expr_stmt|;
+name|acstop
+operator|=
+name|ld
+index|[
+name|language
+index|]
+operator|.
+name|acmend
+expr_stmt|;
+name|acout
+operator|=
+name|ld
+index|[
+name|language
+index|]
+operator|.
+name|acmout
+expr_stmt|;
+name|lacstart
+operator|=
+name|strlen
+argument_list|(
+name|acstart
+argument_list|)
+expr_stmt|;
+name|lacstop
+operator|=
+name|strlen
+argument_list|(
+name|acstop
+argument_list|)
+expr_stmt|;
 name|sdelim
 operator|=
 name|ld
@@ -1274,6 +1690,15 @@ index|]
 operator|.
 name|onelnstr
 expr_stmt|;
+name|upeqlow
+operator|=
+name|ld
+index|[
+name|language
+index|]
+operator|.
+name|onecase
+expr_stmt|;
 name|pname
 index|[
 literal|0
@@ -1286,9 +1711,18 @@ name|incomm
 operator|=
 literal|0
 expr_stmt|;
+name|inacomm
+operator|=
+literal|0
+expr_stmt|;
 name|instr
 operator|=
 literal|0
+expr_stmt|;
+name|ps
+argument_list|(
+literal|"'-F\n"
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1408,10 +1842,18 @@ if|if
 condition|(
 name|com1line
 operator|&&
+operator|(
 name|incomm
+operator|||
+name|inacomm
+operator|)
 condition|)
 block|{
 name|incomm
+operator|=
+literal|0
+expr_stmt|;
+name|inacomm
 operator|=
 literal|0
 expr_stmt|;
@@ -1528,6 +1970,8 @@ condition|(
 name|nokeyw
 operator|||
 name|incomm
+operator|||
+name|inacomm
 operator|||
 name|instr
 condition|)
@@ -1660,13 +2104,19 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+comment|/*  		 *  for the following "really" hacked code, I 		 *  apologize. Creeping featurism got me. DLP 		 */
+comment|/* check for the start of a string */
 if|if
 condition|(
 operator|!
 name|nokeyw
 operator|&&
 operator|!
+operator|(
 name|incomm
+operator|||
+name|inacomm
+operator|)
 operator|&&
 operator|*
 name|s
@@ -1710,9 +2160,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* check for the end of a comment */
 if|if
 condition|(
 name|incomm
+operator|&&
+name|lcstop
+operator|!=
+literal|0
 operator|&&
 name|comcol
 operator|!=
@@ -1748,6 +2203,52 @@ argument_list|(
 literal|"\\c\n'-C\n"
 argument_list|)
 expr_stmt|;
+comment|/* check for the end of a comment of the alternate type */
+block|}
+elseif|else
+if|if
+condition|(
+name|inacomm
+operator|&&
+name|lacstop
+operator|!=
+literal|0
+operator|&&
+name|comcol
+operator|!=
+name|s
+operator|-
+literal|1
+operator|&&
+name|s
+operator|-
+name|os
+operator|>=
+name|lacstop
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+name|acstop
+argument_list|,
+name|s
+operator|-
+name|lacstop
+argument_list|,
+name|lacstop
+argument_list|)
+condition|)
+block|{
+name|inacomm
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+argument_list|(
+literal|"\\c\n'-C\n"
+argument_list|)
+expr_stmt|;
+comment|/* check for the start of a comment */
 block|}
 elseif|else
 if|if
@@ -1759,7 +2260,15 @@ operator|!
 name|nokeyw
 operator|&&
 operator|!
+operator|(
 name|incomm
+operator|||
+name|inacomm
+operator|)
+operator|&&
+name|lcstart
+operator|!=
+literal|0
 operator|&&
 operator|!
 name|strncmp
@@ -1815,7 +2324,84 @@ operator|+=
 name|lcstart
 expr_stmt|;
 continue|continue;
+comment|/* check for the start of a comment of the alternate type */
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|instr
+operator|&&
+operator|!
+name|nokeyw
+operator|&&
+operator|!
+operator|(
+name|incomm
+operator|||
+name|inacomm
+operator|)
+operator|&&
+name|lacstart
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+name|acstart
+argument_list|,
+name|s
+argument_list|,
+name|lacstart
+argument_list|)
+condition|)
+block|{
+name|comcol
+operator|=
+name|s
+expr_stmt|;
+name|inacomm
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+name|os
+condition|)
+name|ps
+argument_list|(
+literal|"\\c"
+argument_list|)
+expr_stmt|;
+name|ps
+argument_list|(
+literal|"\\c\n'+C\n"
+argument_list|)
+expr_stmt|;
+name|margin
+operator|=
+name|width
+argument_list|(
+name|os
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|ps
+argument_list|(
+name|acout
+argument_list|)
+expr_stmt|;
+name|s
+operator|+=
+name|lacstart
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* take care of nice tab stops */
 if|if
 condition|(
 operator|*
@@ -2200,6 +2786,99 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  STRNCMP -	like strncmp except that we convert the  *	 	first string to lower case before comparing.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|makelower
+parameter_list|(
+name|c
+parameter_list|)
+value|(isupper((c)) ? tolower((c)) : (c))
+end_define
+
+begin_expr_stmt
+name|STRNCMP
+argument_list|(
+name|s1
+argument_list|,
+name|s2
+argument_list|,
+name|len
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|s1
+operator|,
+operator|*
+name|s2
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
+name|len
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+do|do
+if|if
+condition|(
+operator|*
+name|s2
+operator|-
+name|makelower
+argument_list|(
+operator|*
+name|s1
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|*
+name|s2
+operator|-
+name|makelower
+argument_list|(
+operator|*
+name|s1
+argument_list|)
+operator|)
+return|;
+else|else
+block|{
+name|s2
+operator|++
+expr_stmt|;
+name|s1
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|len
+condition|)
+do|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  iskw -	check to see if the next word is a keyword  */
+end_comment
+
 begin_expr_stmt
 name|iskw
 argument_list|(
@@ -2259,13 +2938,19 @@ operator|++
 condition|)
 if|if
 condition|(
-operator|*
-name|s
-operator|==
-operator|*
-name|cp
-operator|&&
 operator|!
+operator|(
+name|upeqlow
+condition|?
+name|STRNCMP
+argument_list|(
+name|s
+argument_list|,
+name|cp
+argument_list|,
+name|i
+argument_list|)
+else|:
 name|strncmp
 argument_list|(
 name|s
@@ -2274,6 +2959,7 @@ name|cp
 argument_list|,
 name|i
 argument_list|)
+operator|)
 operator|&&
 operator|!
 name|isidchr
@@ -2319,6 +3005,17 @@ decl_stmt|;
 name|p
 operator|=
 name|pname
+expr_stmt|;
+comment|/* 	 * some people like to start the names of routines that return 	 * a pointer with a '*'. 	 */
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'*'
+condition|)
+name|s
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2413,6 +3110,50 @@ literal|1
 operator|)
 return|;
 else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_expr_stmt
+name|iprbegin
+argument_list|(
+name|s
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_expr_stmt
+name|iprend
+argument_list|(
+name|s
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
 return|return
 operator|(
 literal|0
