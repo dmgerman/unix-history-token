@@ -179,16 +179,20 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"vinum open_drive %s: failed with error %d\n"
+literal|"vinum open_drive %s failed:  %s (%d)\n"
 argument_list|,
 name|drive
 operator|->
 name|devicename
 argument_list|,
+name|strerror
+argument_list|(
+name|error
+argument_list|)
+argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 name|error
 return|;
