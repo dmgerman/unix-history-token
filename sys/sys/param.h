@@ -209,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|SPECNAMELEN
-value|15
+value|63
 end_define
 
 begin_comment
