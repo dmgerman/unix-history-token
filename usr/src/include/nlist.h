@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nlist.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nlist.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -178,47 +178,34 @@ name|N_FORMAT
 value|"%08x"
 end_define
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-operator|||
-name|c_plusplus
-end_if
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
+name|__BEGIN_DECLS
 name|int
 name|nlist
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-name|struct
+operator|*
+operator|,
+expr|struct
 name|nlist
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|int
-name|nlist
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 end_unit
 

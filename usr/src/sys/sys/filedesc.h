@@ -1,13 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)filedesc.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)filedesc.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_FILEDESC_
+name|_FILEDESC_H_
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_FILEDESC_H_
+end_define
 
 begin_comment
 comment|/*  * This structure is used for the management of descriptors.  * It may be shared by multiple threads.  *  * A process is initially started out with NDFILE worth of  * descriptors, selected to be enough for typical applications  * based on the historic limit of 20 open files. Additional  * descriptors may be allocated up to a system defined limit  * defined by the global variable nofile; the initial value  * of nofile is set to NOFILE. The initial expansion is set to  * NDEXTENT; each time it runs out it is doubled until nofile  * is reached. NDEXTENT should be selected to be the biggest  * multiple of OFILESIZE (see below) that will fit in a  * power-of-two sized piece of memory.  */
@@ -259,8 +265,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|_FILEDESC_
 end_endif
+
+begin_comment
+comment|/* !_FILEDESC_H_ */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr.  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)queue.h	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr.  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)queue.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_QUEUE_
+name|_QUEUE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_QUEUE_
+name|_QUEUE_H_
 end_define
 
 begin_struct
@@ -280,7 +280,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _QUEUE_ */
+comment|/* !_QUEUE_H_ */
 end_comment
 
 end_unit
