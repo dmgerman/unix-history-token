@@ -678,10 +678,12 @@ parameter_list|(
 specifier|const
 name|wchar_t
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|wchar_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
