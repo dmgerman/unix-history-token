@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.22 (Berkeley) %G%"
+literal|"@(#)fts.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,7 +415,6 @@ expr_stmt|;
 comment|/* Allocate/initialize root's parent. */
 if|if
 condition|(
-operator|!
 operator|(
 name|parent
 operator|=
@@ -428,6 +427,8 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|mem1
@@ -577,8 +578,9 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|root
+operator|==
+name|NULL
 condition|)
 name|tmp
 operator|=
@@ -623,7 +625,6 @@ expr_stmt|;
 comment|/* 	 * Allocate a dummy pointer and make fts_read think that we've just 	 * finished the node before the root(s); set p->fts_info to FTS_NS 	 * so that everything about the "current" node is ignored. 	 */
 if|if
 condition|(
-operator|!
 operator|(
 name|sp
 operator|->
@@ -638,6 +639,8 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|mem2
@@ -1132,10 +1135,11 @@ decl_stmt|;
 comment|/* If finished or unrecoverable error, return NULL. */
 if|if
 condition|(
-operator|!
 name|sp
 operator|->
 name|fts_cur
+operator|==
+name|NULL
 operator|||
 name|ISSET
 argument_list|(
@@ -1360,7 +1364,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
 operator|(
 name|sp
 operator|->
@@ -1373,6 +1376,8 @@ argument_list|,
 name|BREAD
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 if|if ISSET
@@ -2038,7 +2043,6 @@ expr_stmt|;
 comment|/* 	 * Open the directory for reading.  If this fails, we're done. 	 * If being called from fts_read, set the fts_info field. 	 */
 if|if
 condition|(
-operator|!
 operator|(
 name|dirp
 operator|=
@@ -2049,6 +2053,8 @@ operator|->
 name|fts_accpath
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -2252,7 +2258,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|!
 operator|(
 name|p
 operator|=
@@ -2272,6 +2277,8 @@ operator|->
 name|d_namlen
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|mem1
@@ -3018,7 +3025,6 @@ literal|40
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|sp
 operator|->
@@ -3038,6 +3044,8 @@ operator|->
 name|fts_array
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|sp
