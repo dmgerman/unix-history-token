@@ -1703,6 +1703,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|gv_parse_config
 argument_list|(
 name|sc
@@ -1716,9 +1719,6 @@ name|g_free
 argument_list|(
 name|buf
 argument_list|)
-expr_stmt|;
-name|g_topology_lock
-argument_list|()
 expr_stmt|;
 name|g_access
 argument_list|(
