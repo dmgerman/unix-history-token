@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	6.6	84/08/09	*/
+comment|/*	hp.c	6.6	85/03/27	*/
 end_comment
 
 begin_comment
@@ -1476,7 +1476,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 	 * Attempt to forward bad sectors on 	 * anything but an ML11.  If drive 	 * supports skip sector handling, try to 	 * use it first; otherwise try the 	 * bad sector table. 	 */
+comment|/* 	 * Attempt to forward bad sectors on 	 * anything but an ML11. 	 */
 if|if
 condition|(
 operator|(
@@ -1583,7 +1583,7 @@ operator|=
 literal|1
 expr_stmt|;
 goto|goto
-name|success
+name|restart
 goto|;
 block|}
 comment|/* 	 * ECC correction? 	 */
@@ -1938,6 +1938,13 @@ name|HPDS_PIP
 condition|)
 empty_stmt|;
 block|}
+name|io
+operator|->
+name|i_cc
+operator|=
+name|bytecnt
+expr_stmt|;
+comment|/*reset i_cc to total count xfered*/
 return|return
 operator|(
 name|bytecnt
