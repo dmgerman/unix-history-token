@@ -159,6 +159,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_timecounter
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

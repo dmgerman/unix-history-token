@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -42,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/power.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/power.h>
+file|<sys/smp.h>
 end_include
 
 begin_include
@@ -86,6 +92,56 @@ name|u_int
 name|tsc_present
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|smp_tsc
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_timecounter
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|smp_tsc
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|smp_tsc
+argument_list|,
+literal|0
+argument_list|,
+literal|"Indicates whether the TSC is safe to use in SMP mode"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.timecounter.smp_tsc"
+argument_list|,
+operator|&
+name|smp_tsc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -216,19 +272,19 @@ operator|)
 name|tsc_freq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SMP
-argument_list|)
+comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs 	 * are somehow synchronized.  Some hardware configurations do 	 * this, but we have no way of determining whether this is the 	 * case, so we do not use the TSC in multi-processor systems 	 * unless the user indicated (by setting kern.timecounter.smp_tsc 	 * to 1) that he believes that his TSCs are synchronized. 	 */
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
 operator|&&
 operator|!
-name|defined
-argument_list|(
-name|SMP_TSC
-argument_list|)
-comment|/* 	 * We can not use the TSC in SMP mode, until we figure out a 	 * cheap (impossible), reliable and precise (yeah right!)  way 	 * to synchronize the TSCs of all the CPUs. 	 * Modern SMP hardware has the ACPI timer and we use that. 	 */
+name|smp_tsc
+condition|)
 return|return;
 endif|#
 directive|endif
