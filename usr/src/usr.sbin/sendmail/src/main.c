@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.9 (Berkeley) %G%"
+literal|"@(#)main.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4198,6 +4198,39 @@ begin_comment
 comment|/* SMTP */
 end_comment
 
+begin_if
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_VERIFY
+condition|)
+block|{
+name|CurEnv
+operator|->
+name|e_sendmode
+operator|=
+name|SM_VERIFY
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_errormode
+operator|=
+name|EM_QUIET
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* interactive -- all errors are global */
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_GLOBALERRS
+expr_stmt|;
+block|}
+end_if
+
 begin_comment
 comment|/* 	**  Do basic system initialization and set the sender 	*/
 end_comment
@@ -4288,29 +4321,6 @@ argument_list|)
 expr_stmt|;
 name|finis
 argument_list|()
-expr_stmt|;
-block|}
-end_if
-
-begin_if
-if|if
-condition|(
-name|OpMode
-operator|==
-name|MD_VERIFY
-condition|)
-block|{
-name|CurEnv
-operator|->
-name|e_sendmode
-operator|=
-name|SM_VERIFY
-expr_stmt|;
-name|CurEnv
-operator|->
-name|e_errormode
-operator|=
-name|EM_QUIET
 expr_stmt|;
 block|}
 end_if
