@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.150 2002/01/14 13:23:37 tsutsui Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.151 2002/01/27 23:00:34 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3085,7 +3085,7 @@ name|n
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
