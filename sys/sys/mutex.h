@@ -1720,7 +1720,7 @@ name|char
 name|STR_mtx_enter_fmt
 index|[]
 init|=
-literal|"GOT %s [%p] at %s:%d r=%d"
+literal|"GOT %s [%p] r=%d at %s:%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1729,7 +1729,7 @@ name|char
 name|STR_mtx_exit_fmt
 index|[]
 init|=
-literal|"REL %s [%p] at %s:%d r=%d"
+literal|"REL %s [%p] r=%d at %s:%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1738,7 +1738,7 @@ name|char
 name|STR_mtx_try_enter_fmt
 index|[]
 init|=
-literal|"TRY_ENTER %s [%p] at %s:%d result=%d"
+literal|"TRY_ENTER %s [%p] result=%d at %s:%d"
 decl_stmt|;
 end_decl_stmt
 
@@ -2079,13 +2079,13 @@ name|mtx_description
 argument_list|,
 name|mpp
 argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|,
 name|mpp
 operator|->
 name|mtx_recurse
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -2186,11 +2186,11 @@ name|mtx_description
 argument_list|,
 name|mpp
 argument_list|,
+name|rval
+argument_list|,
 name|file
 argument_list|,
 name|line
-argument_list|,
-name|rval
 argument_list|)
 expr_stmt|;
 return|return
@@ -2266,13 +2266,13 @@ name|mtx_description
 argument_list|,
 name|mpp
 argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|,
 name|mpp
 operator|->
 name|mtx_recurse
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 if|if
