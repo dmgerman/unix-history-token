@@ -702,7 +702,7 @@ if|if
 condition|(
 name|res
 operator|==
-literal|255
+name|ORIR_NOTFOUND
 condition|)
 name|device_printf
 argument_list|(
