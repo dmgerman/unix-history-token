@@ -135,7 +135,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VARTMP_MIN_SIZE
+name|TMP_MIN_SIZE
 value|20
 end_define
 
@@ -185,7 +185,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VARTMP_DEFAULT_SIZE
+name|TMP_DEFAULT_SIZE
 value|256
 end_define
 
@@ -224,7 +224,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VARTMP_NOMINAL_SIZE
+name|TMP_NOMINAL_SIZE
 value|64
 end_define
 
@@ -5346,7 +5346,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to auto-label the disk.  'perc' (0-100) scales  * the size of the various partitions within appropriate  * bounds (NOMINAL through DEFAULT sizes).  The procedure  * succeeds of NULL is returned.  A non-null return message  * is either a failure-status message (*req == 0), or   * a confirmation requestor (*req == 1).  *req is 0 on  * entry to this call.  *  * We autolabel the following partitions:  /, swap, /var, /var/tmp, /usr,  * and /home.  /home receives any extra left over disk space.   */
+comment|/*  * Attempt to auto-label the disk.  'perc' (0-100) scales  * the size of the various partitions within appropriate  * bounds (NOMINAL through DEFAULT sizes).  The procedure  * succeeds of NULL is returned.  A non-null return message  * is either a failure-status message (*req == 0), or   * a confirmation requestor (*req == 1).  *req is 0 on  * entry to this call.  *  * We autolabel the following partitions:  /, swap, /var, /tmp, /usr,  * and /home.  /home receives any extra left over disk space.   */
 end_comment
 
 begin_function
@@ -5932,7 +5932,7 @@ operator|&&
 operator|!
 name|variable_get
 argument_list|(
-name|VAR_NO_VARTMP
+name|VAR_NO_TMP
 argument_list|)
 condition|)
 block|{
@@ -5940,11 +5940,11 @@ name|sz
 operator|=
 name|requested_part_size
 argument_list|(
-name|VAR_VARTMP_SIZE
+name|VAR_TMP_SIZE
 argument_list|,
-name|VARTMP_NOMINAL_SIZE
+name|TMP_NOMINAL_SIZE
 argument_list|,
-name|VARTMP_DEFAULT_SIZE
+name|TMP_DEFAULT_SIZE
 argument_list|,
 name|perc
 argument_list|)
@@ -5991,7 +5991,7 @@ literal|1
 expr_stmt|;
 name|msg
 operator|=
-literal|"Not enough free space for /var/tmp - you will need to\n"
+literal|"Not enough free space for /tmp - you will need to\n"
 literal|"partition your disk manually with a custom install!"
 expr_stmt|;
 goto|goto

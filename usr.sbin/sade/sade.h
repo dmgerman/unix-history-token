@@ -695,8 +695,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_NO_VARTMP
-value|"noVarTmp"
+name|VAR_NO_TMP
+value|"noTmp"
 end_define
 
 begin_define
@@ -877,8 +877,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_VARTMP_SIZE
-value|"varTmpSize"
+name|VAR_TMP_SIZE
+value|"tmpSize"
 end_define
 
 begin_define
