@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.49
+literal|3.50
 operator|%
 name|G
 operator|%
@@ -2226,6 +2226,8 @@ name|char
 name|obuf
 index|[
 name|MAXLINE
+operator|+
+literal|3
 index|]
 decl_stmt|;
 comment|/* 	**  Output the address list translated by the 	**  mailer and with commas. 	*/
@@ -2642,6 +2644,14 @@ operator|*
 name|name
 operator|!=
 literal|'\0'
+operator|&&
+name|obp
+operator|<
+operator|&
+name|obuf
+index|[
+name|MAXLINE
+index|]
 condition|)
 block|{
 if|if

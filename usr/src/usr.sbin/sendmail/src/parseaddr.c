@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.75
+literal|3.76
 operator|%
 name|G
 operator|%
@@ -3008,7 +3008,8 @@ operator|=
 name|buf
 expr_stmt|;
 name|sz
-operator|--
+operator|-=
+literal|2
 expr_stmt|;
 while|while
 condition|(
@@ -3077,6 +3078,8 @@ expr_stmt|;
 name|sz
 operator|-=
 name|i
+operator|+
+literal|1
 expr_stmt|;
 name|pvp
 operator|++
