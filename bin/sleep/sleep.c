@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -88,12 +94,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_function_decl
@@ -142,7 +142,11 @@ block|{
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|p
 operator|=
@@ -205,10 +209,16 @@ name|p
 operator|!=
 literal|'.'
 condition|)
+block|{
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -325,12 +335,14 @@ name|l
 expr_stmt|;
 else|else
 break|break;
+name|l
+operator|/=
+literal|10
+expr_stmt|;
 block|}
 do|while
 condition|(
 name|l
-operator|/=
-literal|10
 condition|)
 do|;
 block|}
@@ -369,11 +381,11 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -386,8 +398,8 @@ parameter_list|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|msg
+index|[]
 init|=
 literal|"usage: sleep seconds\n"
 decl_stmt|;
@@ -397,14 +409,11 @@ name|STDERR_FILENO
 argument_list|,
 name|msg
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|msg
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
