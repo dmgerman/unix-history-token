@@ -2862,9 +2862,8 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|len
 operator|=
