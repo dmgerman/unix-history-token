@@ -2003,7 +2003,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%sr%s"
+literal|"%s%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -2122,9 +2122,11 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|warnx
+name|errx
 argument_list|(
-literal|"warning: %s is not a character device"
+literal|1
+argument_list|,
+literal|"%s is not a character device"
 argument_list|,
 name|fname
 argument_list|)
