@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	7.7 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	7.8 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -47,103 +47,14 @@ name|vm_offset_t
 name|offset
 decl_stmt|;
 comment|/* offset into that object (O,P) */
-name|unsigned
-name|int
+name|u_short
 name|wire_count
-range|:
-literal|16
-decl_stmt|,
-comment|/* how many wired down maps use me? 					   (P) */
-comment|/* boolean_t */
-name|inactive
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in inactive list (P) */
-name|active
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in active list (P) */
-name|laundry
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is being cleaned now (P)*/
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|pagerowned
-range|:
-literal|1
-decl_stmt|,
-comment|/* async paging op in progress */
-name|ptpage
-range|:
-literal|1
-decl_stmt|,
-comment|/* is a user page table page */
-endif|#
-directive|endif
-range|:
-literal|0
 decl_stmt|;
-comment|/* (force to 'long' boundary) */
-ifdef|#
-directive|ifdef
-name|ns32000
-name|int
-name|pad
+comment|/* number wired down maps use me? (P) */
+name|u_short
+name|flags
 decl_stmt|;
-comment|/* extra space for ns32000 bit ops */
-endif|#
-directive|endif
-endif|ns32000
-name|boolean_t
-name|clean
-decl_stmt|;
-comment|/* page has not been modified */
-name|unsigned
-name|int
-comment|/* boolean_t */
-name|busy
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in transit (O) */
-name|wanted
-range|:
-literal|1
-decl_stmt|,
-comment|/* someone is waiting for page (O) */
-name|tabled
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in VP table (O) */
-name|copy_on_write
-range|:
-literal|1
-decl_stmt|,
-comment|/* page must be copied before being 					   changed (O) */
-name|fictitious
-range|:
-literal|1
-decl_stmt|,
-comment|/* physical page doesn't exist (O) */
-name|absent
-range|:
-literal|1
-decl_stmt|,
-comment|/* virtual page doesn't exist (O) */
-name|fake
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is a placeholder for page-in 					   (O) */
-range|:
-literal|0
-decl_stmt|;
+comment|/* see below */
 name|vm_offset_t
 name|phys_addr
 decl_stmt|;
@@ -160,6 +71,153 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * These are the flags defined for vm_page.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_INACTIVE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* page is in inactive list (P) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_ACTIVE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* page is in active list (P) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_LAUNDRY
+value|0x0004
+end_define
+
+begin_comment
+comment|/* page is being cleaned now (P)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CLEAN
+value|0x0008
+end_define
+
+begin_comment
+comment|/* page has not been modified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_BUSY
+value|0x0010
+end_define
+
+begin_comment
+comment|/* page is in transit (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_WANTED
+value|0x0020
+end_define
+
+begin_comment
+comment|/* someone is waiting for page (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_TABLED
+value|0x0040
+end_define
+
+begin_comment
+comment|/* page is in VP table (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_COPYONWRITE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* must copy page before changing (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_FICTITIOUS
+value|0x0100
+end_define
+
+begin_comment
+comment|/* physical page doesn't exist (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_ABSENT
+value|0x0200
+end_define
+
+begin_comment
+comment|/* virtual page doesn't exist (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_FAKE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* page is placeholder for pagein (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PAGEROWNED
+value|0x4000
+end_define
+
+begin_comment
+comment|/* DEBUG: async paging op in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PTPAGE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* DEBUG: is a user page table page */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -173,7 +231,7 @@ name|VM_PAGE_CHECK
 parameter_list|(
 name|mem
 parameter_list|)
-value|{ \ 		if ( (((unsigned int) mem)< ((unsigned int)&vm_page_array[0])) || \ 		     (((unsigned int) mem)> ((unsigned int)&vm_page_array[last_page-first_page])) || \ 		     (mem->active&& mem->inactive) \ 		    ) panic("vm_page_check: not valid!"); \ 		}
+value|{ \ 	if ((((unsigned int) mem)< ((unsigned int)&vm_page_array[0])) || \ 	    (((unsigned int) mem)> \ 		((unsigned int)&vm_page_array[last_page-first_page])) || \ 	    ((mem->flags& (PG_ACTIVE | PG_INACTIVE)) == \ 		(PG_ACTIVE | PG_INACTIVE))) \ 		panic("vm_page_check: not valid!"); \ }
 end_define
 
 begin_else
@@ -371,7 +429,7 @@ name|m
 parameter_list|,
 name|interruptible
 parameter_list|)
-value|{ \ 				(m)->wanted = TRUE; \ 				assert_wait((int) (m), (interruptible)); \ 			}
+value|{ \ 				(m)->flags |= PG_WANTED; \ 				assert_wait((int) (m), (interruptible)); \ 			}
 end_define
 
 begin_define
@@ -381,7 +439,7 @@ name|PAGE_WAKEUP
 parameter_list|(
 name|m
 parameter_list|)
-value|{ \ 				(m)->busy = FALSE; \ 				if ((m)->wanted) { \ 					(m)->wanted = FALSE; \ 					thread_wakeup((int) (m)); \ 				} \ 			}
+value|{ \ 				(m)->flags&= ~PG_BUSY; \ 				if ((m)->flags& PG_WANTED) { \ 					(m)->flags&= ~PG_WANTED; \ 					thread_wakeup((int) (m)); \ 				} \ 			}
 end_define
 
 begin_define
@@ -407,7 +465,7 @@ name|vm_page_set_modified
 parameter_list|(
 name|m
 parameter_list|)
-value|{ (m)->clean = FALSE; }
+value|{ (m)->flags&= ~PG_CLEAN; }
 end_define
 
 begin_ifdef
@@ -423,7 +481,6 @@ name|VM_PAGE_DEBUG_INIT
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->pagerowned = 0, (m)->ptpage = 0)
 end_define
 
 begin_else
@@ -456,7 +513,7 @@ name|object
 parameter_list|,
 name|offset
 parameter_list|)
-value|{ \ 	(mem)->busy = TRUE; \ 	(mem)->tabled = FALSE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->absent = FALSE; \ 	(mem)->fictitious = FALSE; \ 	(mem)->page_lock = VM_PROT_NONE; \ 	(mem)->unlock_request = VM_PROT_NONE; \ 	(mem)->laundry = FALSE; \ 	(mem)->active = FALSE; \ 	(mem)->inactive = FALSE; \ 	(mem)->wire_count = 0; \ 	(mem)->clean = TRUE; \ 	(mem)->copy_on_write = FALSE; \ 	(mem)->fake = TRUE; \ 	VM_PAGE_DEBUG_INIT(mem); \ }
+value|{ \ 	(mem)->flags = PG_BUSY | PG_CLEAN | PG_FAKE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->page_lock = VM_PROT_NONE; \ 	(mem)->unlock_request = VM_PROT_NONE; \ 	(mem)->wire_count = 0; \ 	VM_PAGE_DEBUG_INIT(mem); \ }
 end_define
 
 begin_decl_stmt

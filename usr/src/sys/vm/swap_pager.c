@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3277,9 +3277,9 @@ condition|)
 block|{
 name|m
 operator|->
-name|clean
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|PG_CLEAN
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
@@ -3812,9 +3812,10 @@ name|spc
 operator|->
 name|spc_m
 operator|->
-name|busy
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_BUSY
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(
@@ -3862,9 +3863,9 @@ name|spc
 operator|->
 name|spc_m
 operator|->
-name|laundry
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|PG_LAUNDRY
 expr_stmt|;
 block|}
 else|else
@@ -3873,9 +3874,9 @@ name|spc
 operator|->
 name|spc_m
 operator|->
-name|clean
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|PG_CLEAN
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
@@ -3892,9 +3893,10 @@ name|spc
 operator|->
 name|spc_m
 operator|->
-name|busy
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_BUSY
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pageout.c	7.8 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pageout.c	7.9 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -202,7 +202,9 @@ if|if
 condition|(
 name|m
 operator|->
-name|clean
+name|flags
+operator|&
+name|PG_CLEAN
 condition|)
 block|{
 name|next
@@ -305,7 +307,9 @@ if|if
 condition|(
 name|m
 operator|->
-name|laundry
+name|flags
+operator|&
+name|PG_LAUNDRY
 condition|)
 block|{
 comment|/* 				 *	Clean the page and remove it from the 				 *	laundry. 				 * 				 *	We set the busy bit to cause 				 *	potential page faults on this page to 				 *	block. 				 * 				 *	And we set pageout-in-progress to keep 				 *	the object from disappearing during 				 *	pageout.  This guarantees that the 				 *	page won't move from the inactive 				 *	queue.  (However, any other page on 				 *	the inactive queue may move!) 				 */
@@ -363,9 +367,9 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|busy
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|PG_BUSY
 expr_stmt|;
 name|cnt
 operator|.
@@ -504,9 +508,10 @@ name|VM_PAGER_PEND
 case|:
 name|m
 operator|->
-name|laundry
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_LAUNDRY
 expr_stmt|;
 break|break;
 case|case
@@ -515,15 +520,16 @@ case|:
 comment|/* 					 * Page outside of range of object. 					 * Right now we essentially lose the 					 * changes by pretending it worked. 					 * XXX dubious, what should we do? 					 */
 name|m
 operator|->
-name|laundry
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_LAUNDRY
 expr_stmt|;
 name|m
 operator|->
-name|clean
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|PG_CLEAN
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
@@ -566,9 +572,10 @@ condition|)
 block|{
 name|m
 operator|->
-name|busy
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_BUSY
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(
