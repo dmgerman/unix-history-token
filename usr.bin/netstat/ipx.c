@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ipx.c,v 1.7 1997/02/22 19:56:22 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,11 +93,22 @@ directive|include
 file|<netipx/ipx_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netipx/ipx_error.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -657,8 +668,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-define|\
-value|((x) ? printf("\t%ld %s%s%s -- %s\n",(long)x,y,plural(x),z,"x") : 0)
+value|(printf("\t%u %s%s%s\n",x,y,plural(x),z))
 end_define
 
 begin_comment
@@ -1356,7 +1366,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|((x) ? printf("\t%d %s%s%s\n",x,y,plural(x),z) : 0)
+value|(printf("\t%u %s%s%s\n",x,y,plural(x),z))
 end_define
 
 begin_comment
@@ -1418,11 +1428,22 @@ name|ANY
 argument_list|(
 name|ipxstat
 operator|.
-name|ipxs_toosmall
+name|ipxs_total
+argument_list|,
+literal|"total packet"
+argument_list|,
+literal|" received"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_badsum
 argument_list|,
 literal|"packet"
 argument_list|,
-literal|" smaller than a header"
+literal|" with bad checksums"
 argument_list|)
 expr_stmt|;
 name|ANY
@@ -1440,11 +1461,88 @@ name|ANY
 argument_list|(
 name|ipxstat
 operator|.
-name|ipxs_badsum
+name|ipxs_toosmall
 argument_list|,
 literal|"packet"
 argument_list|,
-literal|" with bad checksums"
+literal|" smaller than a header"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_forward
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" forwarded"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_cantforward
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" not forwardable"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_delivered
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" for this host"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_localout
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" sent from this host"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_odropped
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" dropped due to no bufs, etc."
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_noroute
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" discarded due to no route"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|ipxstat
+operator|.
+name|ipxs_mtutoosmall
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" too big"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1545,6 +1643,12 @@ block|}
 block|, }
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
+end_ifdef
 
 begin_comment
 comment|/*  * Dump IPX Error statistics structure.  */
@@ -1912,6 +2016,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IPXERRORMSGS */
+end_comment
 
 begin_decl_stmt
 specifier|static
