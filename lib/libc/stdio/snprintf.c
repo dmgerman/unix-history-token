@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: snprintf.c,v 1.9 1997/12/24 23:02:40 ache Exp $"
+literal|"$Id: snprintf.c,v 1.10 1997/12/24 23:54:13 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -83,12 +89,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
 
 begin_if
 if|#
@@ -141,6 +141,9 @@ function|va_dcl
 endif|#
 directive|endif
 block|{
+name|size_t
+name|on
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -150,9 +153,6 @@ decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
-name|size_t
-name|on
-decl_stmt|;
 name|on
 operator|=
 name|n
@@ -160,7 +160,7 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|>
+operator|!=
 literal|0
 condition|)
 name|n
@@ -172,11 +172,10 @@ name|n
 operator|>
 name|INT_MAX
 condition|)
-return|return
-operator|(
-name|EOF
-operator|)
-return|;
+name|n
+operator|=
+name|INT_MAX
+expr_stmt|;
 if|#
 directive|if
 name|__STDC__

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vsnprintf.c,v 1.9 1997/12/24 23:02:47 ache Exp $"
+literal|"$Id: vsnprintf.c,v 1.10 1997/12/24 23:54:19 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,13 +53,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<limits.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<stdio.h>
 end_include
 
 begin_function
@@ -90,14 +90,14 @@ name|_BSD_VA_LIST_
 name|ap
 decl_stmt|;
 block|{
+name|size_t
+name|on
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
 name|FILE
 name|f
-decl_stmt|;
-name|size_t
-name|on
 decl_stmt|;
 name|on
 operator|=
@@ -106,7 +106,7 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|>
+operator|!=
 literal|0
 condition|)
 name|n
@@ -118,11 +118,10 @@ name|n
 operator|>
 name|INT_MAX
 condition|)
-return|return
-operator|(
-name|EOF
-operator|)
-return|;
+name|n
+operator|=
+name|INT_MAX
+expr_stmt|;
 name|f
 operator|.
 name|_file
