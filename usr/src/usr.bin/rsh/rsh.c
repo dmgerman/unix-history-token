@@ -621,12 +621,14 @@ operator|>
 literal|0
 operator|&&
 operator|!
-name|strcmp
+name|strncmp
 argument_list|(
 operator|*
 name|argv
 argument_list|,
 literal|"-x"
+argument_list|,
+literal|2
 argument_list|)
 condition|)
 block|{
@@ -1067,16 +1069,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: error getting local realm %s\n"
+literal|"%s: error getting local realm\n"
 argument_list|,
 name|argv0
 index|[
 literal|0
-index|]
-argument_list|,
-name|krb_err_txt
-index|[
-name|rem
 index|]
 argument_list|)
 expr_stmt|;
