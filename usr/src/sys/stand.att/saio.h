@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	1.1	%G%	*/
+comment|/*	saio.h	1.2	%G%	*/
 end_comment
 
 begin_comment
@@ -217,6 +217,33 @@ directive|define
 name|PHYSUMEM
 value|0x2013e000
 end_define
+
+begin_define
+define|#
+directive|define
+name|MBAINIT
+value|0x1
+end_define
+
+begin_decl_stmt
+name|int
+name|mbaact
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|mba_info
+block|{
+name|struct
+name|mba_regs
+modifier|*
+name|mi_phys
+decl_stmt|;
+comment|/* physical address of mba */
+block|}
+struct|;
+end_struct
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	1.1	%G%	*/
+comment|/*	ht.c	1.2	%G%	*/
 end_comment
 
 begin_comment
@@ -74,6 +74,13 @@ define|#
 directive|define
 name|HTADDR
 value|((struct device *)(PHYSMBA1 + MBA_ERB))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HTMBA
+value|1
 end_define
 
 begin_define
@@ -333,6 +340,25 @@ expr_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|mbaact
+operator|&
+operator|(
+literal|1
+operator|<<
+name|HTMBA
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|mbainit
+argument_list|(
+name|HTMBA
+argument_list|)
+expr_stmt|;
 name|htinit
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_empty
-empty|#	srt0.c	1.2	%G%
+empty|#	srt0.c	1.3	%G%
 end_empty
 
 begin_empty
@@ -34,22 +34,6 @@ name|uba
 literal|0
 operator|.
 name|set
-name|PHYSMBA0
-operator|,
-literal|0x20010000
-operator|#
-name|mba
-literal|0
-operator|.
-name|set
-name|PHYSMBA1
-operator|,
-literal|0x20012000
-operator|#
-name|mba
-literal|1
-operator|.
-name|set
 name|PHYSUMEM
 operator|,
 literal|0x2013e000
@@ -76,22 +60,6 @@ end_for
 
 begin_case
 case|case
-name|movl
-name|$1
-operator|,
-name|PHYSMBA0
-operator|+
-literal|4
-operator|#
-name|init
-name|movl
-name|$1
-operator|,
-name|PHYSMBA1
-operator|+
-literal|4
-operator|#
-name|init
 name|movl
 name|$1
 operator|,

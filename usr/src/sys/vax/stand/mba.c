@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	1.2	%G%	*/
+comment|/*	mba.c	1.3	%G%	*/
 end_comment
 
 begin_include
@@ -69,6 +69,20 @@ directive|define
 name|GO
 value|01
 end_define
+
+begin_decl_stmt
+name|struct
+name|mba_info
+name|mbainfo
+index|[]
+init|=
+block|{
+name|PHYSMBA0
+block|,
+name|PHYSMBA1
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|mbastart
@@ -291,6 +305,47 @@ operator||
 name|GO
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|mbainit
+argument_list|(
+argument|mbanum
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|mbanum
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|mba_regs
+modifier|*
+name|mbap
+init|=
+name|mbainfo
+index|[
+name|mbanum
+index|]
+decl_stmt|;
+name|mbap
+operator|->
+name|mba_cr
+operator|=
+name|MBA_INIT
+expr_stmt|;
+name|mbaact
+operator||=
+literal|1
+operator|<<
+name|mbanum
+expr_stmt|;
 block|}
 end_block
 
