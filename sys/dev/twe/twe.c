@@ -4887,7 +4887,7 @@ name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"no attention interrupt"
+literal|"no attention interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
