@@ -5186,8 +5186,8 @@ condition|(
 name|sc
 operator|->
 name|sc_firmware_type
-operator|==
-name|WI_SYMBOL
+operator|!=
+name|WI_INTERSIL
 operator|&&
 name|sc
 operator|->
