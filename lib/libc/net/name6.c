@@ -10211,6 +10211,9 @@ return|;
 comment|/* XXX: never freed */
 block|}
 block|}
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|ICMP6_FILTER_SETBLOCKALL
 argument_list|(
 operator|&
