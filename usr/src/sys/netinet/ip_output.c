@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_output.c 1.1 81/10/14 */
+comment|/* ip_output.c 1.2 81/10/18 */
 end_comment
 
 begin_include
@@ -38,10 +38,6 @@ include|#
 directive|include
 file|"../bbnnet/ucb.h"
 end_include
-
-begin_comment
-comment|/***************************************************************************** *                                                                            * *         internet level output:  called from higher level protocol          * *         or "raw internet driver."  passed a pointer to an mbuf             * *         chain containing the message to be sent, a partially filled        * *         in ip leader, and room for an 1822 leader and 2 pointers.          * *         this routine does fragmentation and mapping of ip parameters       * *         to 1822 ones.                                                      * *                                                                            * *****************************************************************************/
-end_comment
 
 begin_macro
 name|ip_output
@@ -129,7 +125,7 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* header length */
-comment|/* fill in unspecified fields and byte swap others */
+comment|/* 	 * Fill in and byte swap ip header. 	 */
 name|p
 operator|->
 name|ip_v
@@ -193,7 +189,7 @@ name|ip_df
 condition|)
 return|return
 operator|(
-name|FALSE
+literal|0
 operator|)
 return|;
 name|max
@@ -327,7 +323,7 @@ condition|)
 comment|/* no more bufs */
 return|return
 operator|(
-name|FALSE
+literal|0
 operator|)
 return|;
 name|p
@@ -366,7 +362,7 @@ name|rnd
 operator|+
 name|hlen
 expr_stmt|;
-comment|/* setup header for next fragment and  				   append remaining fragment data */
+comment|/* setup header for next fragment and 				   append remaining fragment data */
 name|n
 operator|->
 name|m_next
@@ -556,6 +552,9 @@ name|imp
 modifier|*
 name|l
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|COUNT
 argument_list|(
 name|IP_SEND
@@ -591,31 +590,49 @@ name|L1822
 operator|)
 expr_stmt|;
 comment|/* 	l->i_hst = p->ip_dst.s_host; 	l->i_impno = p->ip_dst.s_imp; 	l->i_mlen = p->ip_len + L1822; 	l->i_link = IPLINK; 	l->i_type = 0; 	l->i_htype = 0; 	l->i_stype = 0; */
+if|if
+condition|(
+operator|(
 name|l
 operator|->
 name|i_shost
 operator|=
-name|arpa_ether
-argument_list|(
 name|p
 operator|->
 name|ip_src
 operator|.
 name|s_host
-argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|l
+operator|->
+name|i_shost
+operator|=
+literal|253
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|l
 operator|->
 name|i_dhost
 operator|=
-name|arpa_ether
-argument_list|(
 name|p
 operator|->
 name|ip_dst
 operator|.
 name|s_host
-argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|l
+operator|->
+name|i_dhost
+operator|=
+literal|253
 expr_stmt|;
 name|l
 operator|->
@@ -663,15 +680,108 @@ name|m_len
 operator|+=
 name|L1822
 expr_stmt|;
+name|m
+operator|->
+name|m_act
+operator|=
+name|NULL
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|IMPLOOP
+comment|/* put output message on queue */
+name|s
+operator|=
+name|spl_imp
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|imp_stat
+operator|.
+name|outq_head
+operator|!=
+name|NULL
+condition|)
+name|imp_stat
+operator|.
+name|outq_tail
+operator|->
+name|m_act
+operator|=
+name|m
+expr_stmt|;
+else|else
+name|imp_stat
+operator|.
+name|outq_head
+operator|=
+name|m
+expr_stmt|;
+name|imp_stat
+operator|.
+name|outq_tail
+operator|=
+name|m
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* if no outstanding output, start some */
+if|if
+condition|(
+operator|!
+name|imp_stat
+operator|.
+name|outactive
+condition|)
+name|imp_output
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* software looping: put msg chain on input queue */
+if|if
+condition|(
+name|imp_stat
+operator|.
+name|inq_head
+operator|!=
+name|NULL
+condition|)
+name|imp_stat
+operator|.
+name|inq_tail
+operator|->
+name|m_act
+operator|=
+name|m
+expr_stmt|;
+else|else
+name|imp_stat
+operator|.
+name|inq_head
+operator|=
+name|m
+expr_stmt|;
+name|imp_stat
+operator|.
+name|inq_tail
+operator|=
+name|m
+expr_stmt|;
+endif|#
+directive|endif
+endif|IMPLOOP
 return|return
 operator|(
-name|imp_snd
-argument_list|(
-name|m
-argument_list|)
+literal|1
 operator|)
 return|;
-comment|/* pass frag to 1822 */
 block|}
 end_block
 
@@ -825,50 +935,6 @@ name|h_addr
 operator|.
 name|s_addr
 expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Convert logical host on imp to ethernet address.  * (Primitive; use gateway table in next version.)  *	0/78	arpavax		253  *	1/78	ucb-c70		-  *	-	csvax		252  *	-	ucb-comet	223  */
-end_comment
-
-begin_macro
-name|arpa_ether
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|COUNT
-argument_list|(
-name|ARPA_ETHER
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|n
-condition|)
-block|{
-case|case
-literal|0
-case|:
-comment|/* arpavax */
-return|return
-literal|253
-return|;
-default|default:
-return|return
-name|n
-return|;
-block|}
 block|}
 end_block
 
