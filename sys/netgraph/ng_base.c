@@ -1445,6 +1445,14 @@ name|node_p
 name|node
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -1484,6 +1492,11 @@ name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2234,6 +2247,14 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -2248,6 +2269,11 @@ argument_list|(
 name|hook
 argument_list|,
 name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -4164,7 +4190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Call the appropriate message handler for the object.  * It is up to the message handler to free the message.  * If it's a generic message, handle it generically, otherwise  * call the type's message handler (if it exists)  */
+comment|/*  * Call the appropriate message handler for the object.  * It is up to the message handler to free the message.  * If it's a generic message, handle it generically, otherwise  * call the type's message handler (if it exists)  * XXX (race). Remember that a queued message may reference a node  * or hook that has just been invalidated. It will exist  * as the queue code is holding a reference, but..  */
 end_comment
 
 begin_define
@@ -7739,6 +7765,12 @@ name|da_meta
 operator|=
 name|meta
 expr_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+comment|/* protect refs and queue */
 name|hook
 operator|->
 name|refs
@@ -7746,11 +7778,6 @@ operator|++
 expr_stmt|;
 comment|/* don't let it go away while on the queue */
 comment|/* Put it on the queue */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ngqbase
@@ -7954,6 +7981,12 @@ name|msg_retaddr
 operator|=
 name|retaddr
 expr_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+comment|/* protect refs and queue */
 name|dest
 operator|->
 name|refs
@@ -7961,11 +7994,6 @@ operator|++
 expr_stmt|;
 comment|/* don't let it go away while on the queue */
 comment|/* Put it on the queue */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ngqbase
