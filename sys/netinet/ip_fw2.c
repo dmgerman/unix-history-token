@@ -8536,9 +8536,12 @@ operator|&&
 operator|!
 name|IN_MULTICAST
 argument_list|(
+name|ntohl
+argument_list|(
 name|dst_ip
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 block|{
