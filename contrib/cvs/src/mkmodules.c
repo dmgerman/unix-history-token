@@ -2536,6 +2536,11 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
+operator|==
+operator|-
+literal|1
+operator|||
+name|argc
 operator|>
 literal|1
 condition|)

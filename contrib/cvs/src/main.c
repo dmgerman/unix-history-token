@@ -1131,6 +1131,8 @@ literal|"        import       Import sources into CVS, using vendor branches\n"
 block|,
 literal|"        export       Export sources from CVS, similar to checkout\n"
 block|,
+literal|"        init         Initialize a new CVS repository\n"
+block|,
 literal|"        log          Prints out 'rlog' information for files\n"
 block|,
 ifdef|#
