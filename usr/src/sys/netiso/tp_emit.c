@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2866,7 +2866,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|caddr_t
 name|cons_channel
 decl_stmt|;
 end_decl_stmt
@@ -3246,6 +3246,15 @@ operator|(
 name|char
 operator|)
 name|error
+expr_stmt|;
+name|hdr
+operator|->
+name|tpdu_ERdref
+operator|=
+name|htons
+argument_list|(
+name|sref
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
