@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addch.c	5.6 (Berkeley) %G%"
+literal|"@(#)addch.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|waddch
 parameter_list|(
 name|win
 parameter_list|,
-name|c
+name|ch
 parameter_list|)
 name|WINDOW
 modifier|*
