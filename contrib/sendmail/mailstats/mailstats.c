@@ -279,7 +279,7 @@ name|usage
 label|:
 name|fputs
 argument_list|(
-literal|"usage: mailstats [-C cffile] [-f stfile] -o\n"
+literal|"usage: mailstats [-o] [-C cffile] [-f stfile]\n"
 argument_list|,
 name|stderr
 argument_list|)
