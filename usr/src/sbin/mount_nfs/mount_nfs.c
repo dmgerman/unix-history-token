@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.8 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3467,17 +3467,18 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
+name|warnx
+argument_list|(
+literal|"can't access %s: %s"
+argument_list|,
+name|spec
+argument_list|,
+name|strerror
+argument_list|(
 name|nfhret
 operator|.
 name|stat
-expr_stmt|;
-name|warn
-argument_list|(
-literal|"can't access %s"
-argument_list|,
-name|spec
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3835,10 +3836,23 @@ name|authfnd
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Some servers, such as DEC's OSF/1 return a nil authenticator 		 * list to indicate RPCAUTH_UNIX. 		 */
 if|if
 condition|(
 operator|!
 name|authfnd
+operator|&&
+operator|(
+name|authcnt
+operator|>
+literal|0
+operator|||
+name|np
+operator|->
+name|auth
+operator|!=
+name|RPCAUTH_UNIX
+operator|)
 condition|)
 name|np
 operator|->
