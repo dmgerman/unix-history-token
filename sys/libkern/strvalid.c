@@ -46,7 +46,7 @@ name|size_t
 name|bufferlen
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 comment|/* Must be NUL-terminated. */
