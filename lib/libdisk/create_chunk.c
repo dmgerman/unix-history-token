@@ -904,9 +904,9 @@ literal|"X"
 argument_list|)
 condition|)
 continue|continue;
-ifndef|#
-directive|ifndef
-name|__alpha__
+ifdef|#
+directive|ifdef
+name|__i386__
 name|c2
 operator|->
 name|oname
@@ -1057,6 +1057,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*__i386__*/
 block|}
 for|for
 control|(
@@ -1283,6 +1284,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* PC98 */
 comment|/* Always end on cylinder boundary */
 name|l
 operator|=
