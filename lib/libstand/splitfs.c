@@ -322,13 +322,6 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
 comment|/* Have to be in "just read it" mode */
 if|if
 condition|(
