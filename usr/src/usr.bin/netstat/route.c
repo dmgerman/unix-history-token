@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	8.2 (Berkeley) %G%"
+literal|"@(#)route.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1912,17 +1912,16 @@ modifier|*
 name|s
 init|=
 operator|(
-operator|(
 name|u_char
 operator|*
 operator|)
 name|sa
 operator|->
 name|sa_data
-expr|,
-operator|*
+decl_stmt|,
+modifier|*
 name|slim
-expr|;
+decl_stmt|;
 name|slim
 operator|=
 name|sa
@@ -1934,7 +1933,7 @@ name|u_char
 operator|*
 operator|)
 name|sa
-expr|;
+expr_stmt|;
 name|cplim
 operator|=
 name|cp
@@ -1945,7 +1944,7 @@ name|workbuf
 argument_list|)
 operator|-
 literal|6
-expr|;
+expr_stmt|;
 name|cp
 operator|+=
 name|sprintf
@@ -1958,7 +1957,7 @@ name|sa
 operator|->
 name|sa_family
 argument_list|)
-expr|;
+expr_stmt|;
 while|while
 condition|(
 name|s
