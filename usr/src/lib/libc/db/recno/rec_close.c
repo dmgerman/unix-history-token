@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_close.c	5.3 (Berkeley) %G%"
+literal|"@(#)rec_close.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,8 @@ name|off
 decl_stmt|;
 name|recno_t
 name|scursor
+decl_stmt|,
+name|trec
 decl_stmt|;
 name|int
 name|status
@@ -286,7 +288,10 @@ name|t
 operator|->
 name|bt_rfd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -321,6 +326,22 @@ operator|=
 name|t
 operator|->
 name|bt_rcursor
+expr_stmt|;
+name|key
+operator|.
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|recno_t
+argument_list|)
+expr_stmt|;
+name|key
+operator|.
+name|data
+operator|=
+operator|&
+name|trec
 expr_stmt|;
 name|status
 operator|=
@@ -442,7 +463,10 @@ name|t
 operator|->
 name|bt_rfd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_CUR
 argument_list|)
