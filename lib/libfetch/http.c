@@ -3417,6 +3417,11 @@ name|new
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|us
+condition|)
+block|{
 name|us
 operator|->
 name|size
@@ -3434,6 +3439,7 @@ name|mtime
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|chunked
 operator|=
 literal|0
@@ -3890,6 +3896,10 @@ goto|;
 case|case
 name|hdr_content_length
 case|:
+if|if
+condition|(
+name|us
+condition|)
 name|us
 operator|->
 name|size
@@ -3914,6 +3924,10 @@ break|break;
 case|case
 name|hdr_last_modified
 case|:
+if|if
+condition|(
+name|us
+condition|)
 name|us
 operator|->
 name|atime
@@ -4294,6 +4308,45 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/*  * Retrieve and stat a file by HTTP  */
+end_comment
+
+begin_function
+name|FILE
+modifier|*
+name|fetchXGetHTTP
+parameter_list|(
+name|struct
+name|url
+modifier|*
+name|URL
+parameter_list|,
+name|struct
+name|url_stat
+modifier|*
+name|us
+parameter_list|,
+name|char
+modifier|*
+name|flags
+parameter_list|)
+block|{
+return|return
+name|_http_request
+argument_list|(
+name|URL
+argument_list|,
+literal|"GET"
+argument_list|,
+name|us
+argument_list|,
+name|flags
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Retrieve a file by HTTP  */
 end_comment
 
@@ -4312,25 +4365,22 @@ modifier|*
 name|flags
 parameter_list|)
 block|{
-name|struct
-name|url_stat
-name|us
-decl_stmt|;
 return|return
-name|_http_request
+name|fetchXGetHTTP
 argument_list|(
 name|URL
 argument_list|,
-literal|"GET"
-argument_list|,
-operator|&
-name|us
+name|NULL
 argument_list|,
 name|flags
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Store a file by HTTP  */
+end_comment
 
 begin_function
 name|FILE

@@ -158,18 +158,23 @@ comment|/*** Public API ********************************************************
 end_comment
 
 begin_comment
-comment|/*  * Select the appropriate protocol for the URL scheme, and return a  * read-only stream connected to the document referenced by the URL.  */
+comment|/*  * Select the appropriate protocol for the URL scheme, and return a  * read-only stream connected to the document referenced by the URL.  * Also fill out the struct url_stat.  */
 end_comment
 
 begin_function
 name|FILE
 modifier|*
-name|fetchGet
+name|fetchXGet
 parameter_list|(
 name|struct
 name|url
 modifier|*
 name|URL
+parameter_list|,
+name|struct
+name|url_stat
+modifier|*
+name|us
 parameter_list|,
 name|char
 modifier|*
@@ -206,9 +211,11 @@ operator|==
 literal|0
 condition|)
 return|return
-name|fetchGetFile
+name|fetchXGetFile
 argument_list|(
 name|URL
+argument_list|,
+name|us
 argument_list|,
 name|flags
 argument_list|)
@@ -228,9 +235,11 @@ operator|==
 literal|0
 condition|)
 return|return
-name|fetchGetHTTP
+name|fetchXGetHTTP
 argument_list|(
 name|URL
+argument_list|,
+name|us
 argument_list|,
 name|flags
 argument_list|)
@@ -270,17 +279,21 @@ operator|!=
 name|NULL
 condition|)
 return|return
-name|fetchGetHTTP
+name|fetchXGetHTTP
 argument_list|(
 name|URL
+argument_list|,
+name|us
 argument_list|,
 name|flags
 argument_list|)
 return|;
 return|return
-name|fetchGetFTP
+name|fetchXGetFTP
 argument_list|(
 name|URL
+argument_list|,
+name|us
 argument_list|,
 name|flags
 argument_list|)
@@ -297,6 +310,38 @@ return|return
 name|NULL
 return|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Select the appropriate protocol for the URL scheme, and return a  * read-only stream connected to the document referenced by the URL.  */
+end_comment
+
+begin_function
+name|FILE
+modifier|*
+name|fetchGet
+parameter_list|(
+name|struct
+name|url
+modifier|*
+name|URL
+parameter_list|,
+name|char
+modifier|*
+name|flags
+parameter_list|)
+block|{
+return|return
+name|fetchXGet
+argument_list|(
+name|URL
+argument_list|,
+name|NULL
+argument_list|,
+name|flags
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -744,17 +789,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to parse the given URL; if successful, call fetchGet().  */
+comment|/*  * Attempt to parse the given URL; if successful, call fetchXGet().  */
 end_comment
 
 begin_function
 name|FILE
 modifier|*
-name|fetchGetURL
+name|fetchXGetURL
 parameter_list|(
 name|char
 modifier|*
 name|URL
+parameter_list|,
+name|struct
+name|url_stat
+modifier|*
+name|us
 parameter_list|,
 name|char
 modifier|*
@@ -788,9 +838,11 @@ name|NULL
 return|;
 name|f
 operator|=
-name|fetchGet
+name|fetchXGet
 argument_list|(
 name|u
+argument_list|,
+name|us
 argument_list|,
 name|flags
 argument_list|)
@@ -802,6 +854,37 @@ argument_list|)
 expr_stmt|;
 return|return
 name|f
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Attempt to parse the given URL; if successful, call fetchGet().  */
+end_comment
+
+begin_function
+name|FILE
+modifier|*
+name|fetchGetURL
+parameter_list|(
+name|char
+modifier|*
+name|URL
+parameter_list|,
+name|char
+modifier|*
+name|flags
+parameter_list|)
+block|{
+return|return
+name|fetchXGetURL
+argument_list|(
+name|URL
+argument_list|,
+name|NULL
+argument_list|,
+name|flags
+argument_list|)
 return|;
 block|}
 end_function
