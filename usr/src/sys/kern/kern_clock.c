@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.30 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -62,14 +62,6 @@ include|#
 directive|include
 file|<sys/gmon.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|u_short
-modifier|*
-name|kcount
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -1431,22 +1423,28 @@ name|g
 operator|->
 name|textsize
 condition|)
-name|kcount
-index|[
+block|{
 name|i
-operator|/
-operator|(
+operator|/=
 name|HISTFRACTION
 operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
+name|g
+operator|->
 name|kcount
 argument_list|)
-operator|)
+expr_stmt|;
+name|g
+operator|->
+name|kcount
+index|[
+name|i
 index|]
 operator|++
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
