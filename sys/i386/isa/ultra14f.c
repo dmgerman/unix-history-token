@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.37 1995/09/19 18:55:20 bde Exp $  */
+comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.38 1995/11/04 17:07:54 bde Exp $  */
 end_comment
 
 begin_include
@@ -1154,6 +1154,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|int
 name|uhaprobe
 parameter_list|()
@@ -1161,6 +1162,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|uha_attach
 parameter_list|()
@@ -1168,6 +1170,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int32
 name|uha_scsi_cmd
 parameter_list|()
@@ -1175,12 +1178,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|timeout_t
 name|uha_timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|uha_free_mscp
 parameter_list|()
@@ -1188,6 +1193,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|uha_abort
 parameter_list|()
@@ -1195,6 +1201,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|uhaminphys
 parameter_list|()
@@ -1202,6 +1209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|uha_done
 parameter_list|()
@@ -1209,6 +1217,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int32
 name|uha_adapter_info
 parameter_list|()
@@ -1216,6 +1225,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|mscp
 modifier|*
@@ -1225,6 +1235,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uha_init
 name|__P
@@ -1238,6 +1249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uha24_init
 name|__P
@@ -1369,6 +1381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_adapter
 name|uha_switch
@@ -1400,6 +1413,7 @@ comment|/* the below structure is so we have a default dev struct for out link s
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|uha_dev
@@ -1613,6 +1627,7 @@ comment|/*  * Function to send a command out through a mailbox  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|uha_send_mbox
 parameter_list|(
@@ -2050,6 +2065,7 @@ comment|/*  * Function to poll for command completion when in poll mode.  *  *	w
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|uha_poll
 parameter_list|(
@@ -3294,6 +3310,7 @@ comment|/*  * Get a free mscp  *  * If there are none, see if we can allocate a 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|mscp
 modifier|*
@@ -3549,6 +3566,7 @@ comment|/*  * given a physical address, find the mscp that it corresponds to.  *
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|mscp
 modifier|*
@@ -4983,6 +5001,7 @@ comment|/*  * start a scsi operation given the command and the data address.  Al
 end_comment
 
 begin_function
+specifier|static
 name|int32
 name|uha_scsi_cmd
 parameter_list|(
@@ -6620,6 +6639,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|uha_timeout
 parameter_list|(
