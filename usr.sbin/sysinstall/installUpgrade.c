@@ -426,6 +426,16 @@ block|,
 block|{
 name|JUST_COPY
 block|,
+literal|"mail"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
 literal|"mail.rc"
 block|,
 name|TRUE
