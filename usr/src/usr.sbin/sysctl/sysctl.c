@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	5.5 (Berkeley) %G%"
+literal|"@(#)sysctl.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2220,7 +2220,17 @@ operator|++
 control|)
 if|if
 condition|(
-operator|!
+name|namelist
+operator|->
+name|list
+index|[
+name|i
+index|]
+operator|.
+name|ctl_name
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|name
@@ -2234,6 +2244,8 @@ index|]
 operator|.
 name|ctl_name
 argument_list|)
+operator|==
+literal|0
 condition|)
 break|break;
 if|if
