@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.28 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -410,9 +410,6 @@ name|RB_AUTOBOOT
 operator||
 name|RB_DUMP
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|panicstr
@@ -451,11 +448,12 @@ operator|&
 name|RB_KDB
 condition|)
 block|{
+name|int
 name|s
-operator|=
+init|=
 name|splnet
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 comment|/* below kdb pri */
 name|setsoftkdb
 argument_list|()
@@ -546,13 +544,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -567,6 +558,14 @@ name|p_session
 operator|->
 name|s_ttyvp
 condition|)
+block|{
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 name|kprintf
 argument_list|(
 name|fmt
@@ -587,6 +586,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -926,11 +926,12 @@ endif|#
 directive|endif
 block|{
 specifier|register
+name|int
 name|s
-operator|=
+init|=
 name|splhigh
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -962,11 +963,24 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|log_open
 condition|)
+block|{
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 name|kprintf
 argument_list|(
 name|fmt
@@ -983,6 +997,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+block|}
 name|logwakeup
 argument_list|()
 expr_stmt|;
@@ -1091,11 +1106,12 @@ endif|#
 directive|endif
 block|{
 specifier|register
+name|int
 name|s
-operator|=
+init|=
 name|splhigh
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -1122,11 +1138,24 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|log_open
 condition|)
+block|{
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 name|kprintf
 argument_list|(
 name|fmt
@@ -1143,11 +1172,21 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+block|}
 name|logwakeup
 argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -1160,6 +1199,11 @@ end_decl_stmt
 begin_comment
 comment|/* ok to handle console interrupts? */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -1189,12 +1233,15 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
+name|va_list
+name|ap
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
 specifier|register
 name|int
 name|savintr
-decl_stmt|;
-name|va_list
-name|ap
 decl_stmt|;
 name|savintr
 operator|=
@@ -1205,6 +1252,8 @@ name|consintr
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|va_start
 argument_list|(
 name|ap
@@ -1238,16 +1287,21 @@ condition|)
 name|logwakeup
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|tahoe
 name|consintr
 operator|=
 name|savintr
 expr_stmt|;
 comment|/* reenable interrupts */
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * The format %r is supposed to pass an additional format string and argument  * list recursively.  * Its usage is:  *  * fn(otherstuff, fmt [, arg1, ... ])  *	char *fmt;  *	u_int arg1, ...;  *  *	printf("prefix: %r, other stuff\n", fmt, ap);  *  * Space or zero padding and a field width are supported for the numeric  * formats only.  */
+comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * The format %r is supposed to pass an additional format string and argument  * list recursively.  * Its usage is:  *  * fn(otherstuff, char *fmt, ...)  * {  *	va_list ap;  *	va_start(ap, fmt);  *	printf("prefix: %r, other stuff\n", fmt, ap);  *	va_end(ap);  *  * Space or zero padding and a field width are supported for the numeric  * formats only.  */
 end_comment
 
 begin_function
@@ -1782,7 +1836,6 @@ expr_stmt|;
 goto|goto
 name|number
 goto|;
-empty_stmt|;
 case|case
 literal|'u'
 case|:
@@ -1972,6 +2025,8 @@ name|struct
 name|msgbuf
 modifier|*
 name|mbp
+init|=
+name|msgbufp
 decl_stmt|;
 if|if
 condition|(
@@ -2089,10 +2144,6 @@ operator|&&
 name|msgbufmapped
 condition|)
 block|{
-name|mbp
-operator|=
-name|msgbufp
-expr_stmt|;
 if|if
 condition|(
 name|mbp
@@ -2102,47 +2153,25 @@ operator|!=
 name|MSG_MAGIC
 condition|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|mbp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|mbp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mbp
 operator|->
 name|msg_magic
 operator|=
 name|MSG_MAGIC
-expr_stmt|;
-name|mbp
-operator|->
-name|msg_bufx
-operator|=
-name|mbp
-operator|->
-name|msg_bufr
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MSG_BSIZE
-condition|;
-name|i
-operator|++
-control|)
-name|mbp
-operator|->
-name|msg_bufc
-index|[
-name|i
-index|]
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|mbp
