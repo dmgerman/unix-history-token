@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fs.h	4.6	83/01/02	*/
+comment|/*	fs.h	4.7	83/01/09	*/
 end_comment
 
 begin_comment
@@ -58,43 +58,7 @@ value|(ROOTINO + 1)
 end_define
 
 begin_comment
-comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however severe performance degredations will be observed if the  * file system is run at greater than 90% full; thus the default  * value of fs_minfree is 10%.  *  * Empirically the best trade-off between block fragmentation and  * overall disk utilization at a loading of 90% comes with a  * fragmentation of 4, thus the default fragment size is a fourth  * of the block size.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MINFREE
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|DESFRAG
-value|4
-end_define
-
-begin_comment
-comment|/*  * Under current technology, most 300MB disks have 32 sectors and  * 16 tracks, thus these are the defaults used for fs_nsect and   * fs_ntrak respectively.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DFLNSECT
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|DFLNTRAK
-value|16
-end_define
-
-begin_comment
-comment|/*  * Cylinder group related limits.  *  * For each cylinder we keep track of the availability of blocks at different  * rotational positions, so that we can lay out the data to be picked  * up with minimum rotational latency.  NRPOS is the number of rotational  * positions which we distinguish.  With NRPOS 8 the resolution of our  * summary information is 2ms for a typical 3600 rpm drive.  *  * ROTDELAY gives the minimum number of milliseconds to initiate  * another disk transfer on the same cylinder. It is used in  * determining the rotationally optimal layout for disk blocks  * within a file; the default of fs_rotdelay is 2ms.  */
+comment|/*  * Cylinder group related limits.  *  * For each cylinder we keep track of the availability of blocks at different  * rotational positions, so that we can lay out the data to be picked  * up with minimum rotational latency.  NRPOS is the number of rotational  * positions which we distinguish.  With NRPOS 8 the resolution of our  * summary information is 2ms for a typical 3600 rpm drive.  */
 end_comment
 
 begin_define
@@ -108,23 +72,9 @@ begin_comment
 comment|/* number distinct rotational positions */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ROTDELAY
-value|2
-end_define
-
 begin_comment
-comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NBPI bytes, expecting this  * to be far more than we will ever need.  *  * MAXIPG bounds the number of inodes per cylinder group, and  * is needed only to keep the structure simpler by having the  * only a single variable size element (the free bit map).  *  * N.B.: MAXIPG must be a multiple of INOPB(fs).  */
+comment|/*  * MAXIPG bounds the number of inodes per cylinder group, and  * is needed only to keep the structure simpler by having the  * only a single variable size element (the free bit map).  *  * N.B.: MAXIPG must be a multiple of INOPB(fs).  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NBPI
-value|2048
-end_define
 
 begin_define
 define|#
@@ -147,17 +97,6 @@ directive|define
 name|MINBSIZE
 value|4096
 end_define
-
-begin_define
-define|#
-directive|define
-name|DESCPG
-value|16
-end_define
-
-begin_comment
-comment|/* desired fs_cpg */
-end_comment
 
 begin_define
 define|#
@@ -295,6 +234,7 @@ name|long
 name|fs_frag
 decl_stmt|;
 comment|/* number of frags in a block in fs */
+comment|/* these are configuration parameters */
 name|long
 name|fs_minfree
 decl_stmt|;
@@ -307,6 +247,7 @@ name|long
 name|fs_rps
 decl_stmt|;
 comment|/* disk revolutions per second */
+comment|/* these fields can be computed from the others */
 name|long
 name|fs_bmask
 decl_stmt|;
@@ -323,6 +264,7 @@ name|long
 name|fs_fshift
 decl_stmt|;
 comment|/* ``numfrags'' calc number of frags */
+comment|/* these are configuration parameters */
 name|long
 name|fs_maxcontig
 decl_stmt|;
@@ -331,6 +273,7 @@ name|long
 name|fs_maxbpg
 decl_stmt|;
 comment|/* max number of blks per cyl group */
+comment|/* these fields can be computed from the others */
 name|long
 name|fs_fragshift
 decl_stmt|;
@@ -502,7 +445,7 @@ parameter_list|,
 name|indx
 parameter_list|)
 define|\
-value|fs_csp[(indx) / ((fs)->fs_bsize / sizeof(struct csum))] \ 	[(indx) % ((fs)->fs_bsize / sizeof(struct csum))]
+value|fs_csp[(indx)>> (fs)->fs_csshift][(indx)& ~(fs)->fs_csmask]
 end_define
 
 begin_comment
@@ -641,7 +584,7 @@ parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|(NBBY * ((fs)->fs_bsize - (sizeof (struct cg))) / (fs)->fs_frag)
+value|(NBBY * ((fs)->fs_bsize - (sizeof (struct cg)))>> (fs)->fs_fragshift)
 end_define
 
 begin_comment
@@ -657,7 +600,7 @@ name|fs
 parameter_list|,
 name|b
 parameter_list|)
-value|((b) * ((fs)->fs_fsize / DEV_BSIZE))
+value|((b)<< (fs)->fs_fsbtodb)
 end_define
 
 begin_define
@@ -669,7 +612,7 @@ name|fs
 parameter_list|,
 name|b
 parameter_list|)
-value|((b) / ((fs)->fs_fsize / DEV_BSIZE))
+value|((b)>> (fs)->fs_fsbtodb)
 end_define
 
 begin_comment
@@ -803,7 +746,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((daddr_t)(cgimin(fs, itog(fs, x)) + \ 	(x) % (fs)->fs_ipg / INOPB(fs) * (fs)->fs_frag))
+value|((daddr_t)(cgimin(fs, itog(fs, x)) + \ 	((((x) % (fs)->fs_ipg) / INOPB(fs))<< (fs)->fs_fragshift)))
 end_define
 
 begin_comment
@@ -983,7 +926,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (ip)->i_size>= ((lbn) + 1) * (fs)->fs_bsize) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
+value|(((lbn)>= NDADDR || (ip)->i_size>= ((lbn) + 1)<< (fs)->fs_bshift) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
 end_define
 
 begin_define
@@ -998,7 +941,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (dip)->di_size>= ((lbn) + 1) * (fs)->fs_bsize) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
+value|(((lbn)>= NDADDR || (dip)->di_size>= ((lbn) + 1)<< (fs)->fs_bshift) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
 end_define
 
 begin_comment
@@ -1012,7 +955,7 @@ name|NSPB
 parameter_list|(
 name|fs
 parameter_list|)
-value|((fs)->fs_bsize / DEV_BSIZE)
+value|((fs)->fs_nspf<< (fs)->fs_fragshift)
 end_define
 
 begin_define
@@ -1022,7 +965,7 @@ name|NSPF
 parameter_list|(
 name|fs
 parameter_list|)
-value|((fs)->fs_fsize / DEV_BSIZE)
+value|((fs)->fs_nspf)
 end_define
 
 begin_comment
@@ -1036,7 +979,7 @@ name|INOPB
 parameter_list|(
 name|fs
 parameter_list|)
-value|((fs)->fs_bsize / sizeof (struct dinode))
+value|((fs)->fs_inopb)
 end_define
 
 begin_define
@@ -1046,7 +989,7 @@ name|INOPF
 parameter_list|(
 name|fs
 parameter_list|)
-value|((fs)->fs_fsize / sizeof (struct dinode))
+value|((fs)->fs_inopb>> (fs)->fs_fragshift)
 end_define
 
 begin_comment
@@ -1060,7 +1003,7 @@ name|NINDIR
 parameter_list|(
 name|fs
 parameter_list|)
-value|((fs)->fs_bsize / sizeof (daddr_t))
+value|((fs)->fs_nindir)
 end_define
 
 begin_ifdef
