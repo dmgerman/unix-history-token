@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_close.c	5.10 (Berkeley) %G%"
+literal|"@(#)bt_close.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,6 +406,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|status
 operator|=
 name|__bt_dleaf
@@ -420,6 +421,7 @@ name|bt_bcursor
 operator|.
 name|index
 argument_list|)
+operator|)
 operator|==
 name|RET_ERROR
 condition|)
@@ -583,7 +585,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-comment|/* Fill in metadata -- lorder is host-independent. */
+comment|/* Fill in metadata. */
 name|m
 operator|.
 name|m_magic
@@ -630,72 +632,6 @@ name|bt_flags
 operator|&
 name|SAVEMETA
 expr_stmt|;
-name|m
-operator|.
-name|m_lorder
-operator|=
-name|htonl
-argument_list|(
-operator|(
-name|u_long
-operator|)
-name|t
-operator|->
-name|bt_lorder
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|t
-operator|->
-name|bt_lorder
-operator|!=
-name|BYTE_ORDER
-condition|)
-block|{
-name|BLSWAP
-argument_list|(
-name|m
-operator|.
-name|m_magic
-argument_list|)
-expr_stmt|;
-name|BLSWAP
-argument_list|(
-name|m
-operator|.
-name|m_version
-argument_list|)
-expr_stmt|;
-name|BLSWAP
-argument_list|(
-name|m
-operator|.
-name|m_psize
-argument_list|)
-expr_stmt|;
-name|BLSWAP
-argument_list|(
-name|m
-operator|.
-name|m_free
-argument_list|)
-expr_stmt|;
-name|BLSWAP
-argument_list|(
-name|m
-operator|.
-name|m_nrecs
-argument_list|)
-expr_stmt|;
-name|BLSWAP
-argument_list|(
-name|m
-operator|.
-name|m_flags
-argument_list|)
-expr_stmt|;
-block|}
 name|memmove
 argument_list|(
 name|p
