@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.31 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1731,6 +1731,10 @@ decl_stmt|;
 block|{
 name|int
 name|s
+decl_stmt|,
+name|on
+init|=
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -1785,9 +1789,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_REUSEADDR
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0
