@@ -602,7 +602,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are capable of async syscalls and there isn't already 	 * another one ready to return, start a new thread 	 * and queue it as ready to run. Note that there is danger here 	 * because we need to make sure that we don't sleep allocating 	 * the thread (recursion here might be bad). 	 */
 if|if
 condition|(
 name|p
