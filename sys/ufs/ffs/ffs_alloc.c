@@ -7122,38 +7122,27 @@ begin_comment
 comment|/*  * Verify allocation of a block or fragment. Returns true if block or  * fragment is allocated, false if it is free.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ffs_checkblk
-argument_list|(
-argument|ip
-argument_list|,
-argument|bno
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|,
+name|bno
+parameter_list|,
+name|size
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ufs_daddr_t
 name|bno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|fs
@@ -7223,7 +7212,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"checkblk: bad size"
+literal|"ffs_checkblk: bad size"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7240,7 +7229,7 @@ name|fs_size
 condition|)
 name|panic
 argument_list|(
-literal|"checkblk: bad block %d"
+literal|"ffs_checkblk: bad block %d"
 argument_list|,
 name|bno
 argument_list|)
@@ -7287,14 +7276,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|brelse
+name|panic
 argument_list|(
-name|bp
+literal|"ffs_checkblk: cg bread failed"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|cgp
 operator|=
 operator|(
@@ -7314,14 +7300,11 @@ argument_list|(
 name|cgp
 argument_list|)
 condition|)
-block|{
-name|brelse
+name|panic
 argument_list|(
-name|bp
+literal|"ffs_checkblk: cg magic mismatch"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|bno
 operator|=
 name|dtogd
@@ -7417,7 +7400,7 @@ name|frags
 condition|)
 name|panic
 argument_list|(
-literal|"checkblk: partially free fragment"
+literal|"ffs_checkblk: partially free fragment"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7433,7 +7416,7 @@ name|free
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
