@@ -259,7 +259,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lnpq"
+literal|"dlnpq"
 argument_list|)
 operator|)
 operator|!=
@@ -271,6 +271,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+name|howto
+operator||=
+name|RB_DUMP
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
@@ -331,6 +339,31 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|howto
+operator|&
+operator|(
+name|RB_DUMP
+operator||
+name|RB_HALT
+operator|)
+operator|)
+operator|==
+operator|(
+name|RB_DUMP
+operator||
+name|RB_HALT
+operator|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot dump (-d) when halting; must reboot instead"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -663,7 +696,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-npq]\n"
+literal|"usage: %s [-dnpq]\n"
 argument_list|,
 name|dohalt
 condition|?
