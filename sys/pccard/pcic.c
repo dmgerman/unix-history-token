@@ -982,6 +982,19 @@ end_endif
 
 begin_function
 specifier|static
+name|void
+name|nullfunc
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+block|{
+comment|/* empty */
+block|}
+end_function
+
+begin_function
+specifier|static
 name|u_int
 name|build_freelist
 parameter_list|(
@@ -989,10 +1002,6 @@ name|u_int
 name|pcic_mask
 parameter_list|)
 block|{
-name|inthand2_t
-modifier|*
-name|nullfunc
-decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
