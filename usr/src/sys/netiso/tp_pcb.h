@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -845,7 +845,7 @@ parameter_list|(
 name|pcb
 parameter_list|)
 define|\
-value|pcb->tp_cong_sample.cs_received = \     pcb->tp_cong_sample.cs_ce_set = 0; \     pcb->tp_cong_sample.cs_size = MAX(pcb->tp_lcredit, 1)<< 1;
+value|pcb->tp_cong_sample.cs_received = \     pcb->tp_cong_sample.cs_ce_set = 0; \     pcb->tp_cong_sample.cs_size = max(pcb->tp_lcredit, 1)<< 1;
 end_define
 
 begin_define
@@ -860,7 +860,7 @@ parameter_list|)
 define|\
 value|pcb->tp_cong_sample.cs_received++; \     if (ce_bit) { \         pcb->tp_cong_sample.cs_ce_set++; \     } \     if (pcb->tp_cong_sample.cs_size<= pcb->tp_cong_sample.cs_received) { \         if ((pcb->tp_cong_sample.cs_ce_set<< 1)>=  \                     pcb->tp_cong_sample.cs_size ) { \             pcb->tp_win_recv -= pcb->tp_win_recv>> 3;
 comment|/* multiply by .875 */
-value|\             pcb->tp_win_recv = MAX(1<< 8, pcb->tp_win_recv); \         } \         else { \             pcb->tp_win_recv += (1<< 8);
+value|\             pcb->tp_win_recv = max(1<< 8, pcb->tp_win_recv); \         } \         else { \             pcb->tp_win_recv += (1<< 8);
 comment|/* add one to the scaled int */
 value|\         } \         pcb->tp_lcredit = ROUND(pcb->tp_win_recv); \         CONG_INIT_SAMPLE(pcb); \     }
 end_define
