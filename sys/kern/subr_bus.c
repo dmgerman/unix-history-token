@@ -79,6 +79,18 @@ directive|include
 file|"opt_bus.h"
 end_include
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_BUS
+argument_list|,
+literal|"bus"
+argument_list|,
+literal|"Bus data structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -817,7 +829,7 @@ argument_list|)
 operator|+
 literal|1
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -981,7 +993,7 @@ name|free
 argument_list|(
 name|m
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|desc
@@ -1102,7 +1114,7 @@ argument_list|(
 name|devop_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1346,7 +1358,7 @@ name|driver
 operator|->
 name|ops
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|driver
@@ -1483,7 +1495,7 @@ argument_list|)
 operator|+
 literal|1
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1660,7 +1672,7 @@ sizeof|sizeof
 expr|*
 name|dl
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1988,7 +2000,7 @@ name|free
 argument_list|(
 name|dl
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|driver
@@ -2596,7 +2608,7 @@ argument_list|)
 operator|*
 name|newsize
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2661,7 +2673,7 @@ name|dc
 operator|->
 name|devices
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|dc
@@ -2755,7 +2767,7 @@ name|malloc
 argument_list|(
 name|buflen
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2804,7 +2816,7 @@ name|dev
 operator|->
 name|nameunit
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|dev
@@ -2971,7 +2983,7 @@ name|dev
 operator|->
 name|nameunit
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|dev
@@ -3120,7 +3132,7 @@ expr|struct
 name|device
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3624,7 +3636,7 @@ name|free
 argument_list|(
 name|child
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 return|return
@@ -4488,7 +4500,7 @@ name|dev
 operator|->
 name|desc
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|dev
@@ -4525,7 +4537,7 @@ argument_list|)
 operator|+
 literal|1
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -5094,7 +5106,7 @@ name|dev
 operator|->
 name|softc
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 name|dev
@@ -5140,7 +5152,7 @@ name|driver
 operator|->
 name|softc
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -8289,7 +8301,7 @@ name|free
 argument_list|(
 name|rle
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 block|}
@@ -8353,7 +8365,7 @@ expr|struct
 name|resource_list_entry
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -8532,7 +8544,7 @@ name|free
 argument_list|(
 name|rle
 argument_list|,
-name|M_DEVBUF
+name|M_BUS
 argument_list|)
 expr_stmt|;
 block|}
