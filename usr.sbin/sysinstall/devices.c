@@ -781,6 +781,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"vge"
+block|,
+literal|"VIA VT612x PCI gigabit ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"vr"
 block|,
 literal|"VIA VT3043/VT86C100A Rhine PCI ethernet card"
