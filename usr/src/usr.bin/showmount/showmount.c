@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)showmount.c	6.1 (Berkeley) %G%"
+literal|"@(#)showmount.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1426,6 +1426,13 @@ end_expr_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|mp
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|mp
