@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_output.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_output.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)clnp_output.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -630,6 +630,19 @@ name|NULL
 operator|)
 operator|&&
 comment|/* route exists */
+operator|(
+name|isop
+operator|->
+name|isop_route
+operator|.
+name|ro_rt
+operator|==
+name|clcp
+operator|->
+name|clc_rt
+operator|)
+operator|&&
+comment|/* and is cached */
 operator|(
 name|isop
 operator|->
@@ -1342,6 +1355,17 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|clcp
+operator|->
+name|clc_rt
+operator|=
+name|isop
+operator|->
+name|isop_route
+operator|.
+name|ro_rt
+expr_stmt|;
+comment|/* XXX */
 name|IFDEBUG
 argument_list|(
 argument|D_OUTPUT
@@ -1939,6 +1963,10 @@ operator|->
 name|clc_segoff
 argument_list|,
 name|flags
+argument_list|,
+name|clcp
+operator|->
+name|clc_rt
 argument_list|)
 expr_stmt|;
 goto|goto
