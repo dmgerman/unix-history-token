@@ -320,6 +320,8 @@ name|NULL
 expr_stmt|;
 name|pri
 operator|=
+name|LOG_USER
+operator||
 name|LOG_NOTICE
 expr_stmt|;
 name|logflags
