@@ -329,11 +329,28 @@ begin_comment
 comment|/* PREEMPTION exposes scheduler bugs that need to be fixed. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"opt_sched.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCHED_4BSD
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PREEMPTION
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
