@@ -1342,6 +1342,15 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|acpi_UserNotify
+argument_list|(
+literal|"CMBAT"
+argument_list|,
+name|h
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|notify

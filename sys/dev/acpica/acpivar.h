@@ -849,6 +849,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|acpi_UserNotify
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|subsystem
+parameter_list|,
+name|ACPI_HANDLE
+name|h
+parameter_list|,
+name|uint8_t
+name|notify
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|acpi_parse_resource_set

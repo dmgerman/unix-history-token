@@ -423,6 +423,17 @@ else|:
 literal|"Off"
 argument_list|)
 expr_stmt|;
+name|acpi_UserNotify
+argument_list|(
+literal|"ACAD"
+argument_list|,
+name|h
+argument_list|,
+name|sc
+operator|->
+name|status
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

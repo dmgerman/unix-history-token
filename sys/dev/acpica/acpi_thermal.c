@@ -3335,6 +3335,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|acpi_UserNotify
+argument_list|(
+literal|"Thermal"
+argument_list|,
+name|h
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
