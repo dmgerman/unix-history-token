@@ -191,6 +191,11 @@ name|logflags
 operator|=
 literal|0
 expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"TZ"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
