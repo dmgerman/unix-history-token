@@ -59,11 +59,13 @@ name|n
 parameter_list|)
 name|char
 modifier|*
+name|__restrict
 name|s
 decl_stmt|;
 specifier|const
 name|wchar_t
 modifier|*
+name|__restrict
 name|pwcs
 decl_stmt|;
 name|size_t
