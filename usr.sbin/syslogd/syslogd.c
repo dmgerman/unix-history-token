@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.12.2.13 1998/07/18 11:37:28 jkh Exp $"
+literal|"$Id: syslogd.c,v 1.12.2.14 1998/08/06 01:43:45 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7311,6 +7311,11 @@ operator|*
 name|p
 operator|!=
 literal|'\t'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|' '
 condition|;
 control|)
 block|{
@@ -7334,6 +7339,11 @@ operator|*
 name|q
 operator|!=
 literal|'\t'
+operator|&&
+operator|*
+name|q
+operator|!=
+literal|' '
 operator|&&
 operator|*
 name|q
@@ -7438,7 +7448,7 @@ operator|&&
 operator|!
 name|strchr
 argument_list|(
-literal|"\t,;"
+literal|"\t,; "
 argument_list|,
 operator|*
 name|q
@@ -7463,7 +7473,7 @@ while|while
 condition|(
 name|strchr
 argument_list|(
-literal|", ;"
+literal|",;"
 argument_list|,
 operator|*
 name|q
@@ -7536,7 +7546,7 @@ operator|&&
 operator|!
 name|strchr
 argument_list|(
-literal|"\t.;"
+literal|"\t.; "
 argument_list|,
 operator|*
 name|p
@@ -7555,7 +7565,7 @@ operator|&&
 operator|!
 name|strchr
 argument_list|(
-literal|"\t,;."
+literal|"\t,;. "
 argument_list|,
 operator|*
 name|p
@@ -7706,6 +7716,11 @@ operator|*
 name|p
 operator|==
 literal|'\t'
+operator|||
+operator|*
+name|p
+operator|==
+literal|' '
 condition|)
 name|p
 operator|++
