@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ide_pci.c,v 1.37 1999/07/21 02:28:35 peter Exp $  */
+comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ide_pci.c,v 1.38 1999/07/22 19:45:33 julian Exp $  */
 end_comment
 
 begin_include
@@ -764,7 +764,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * PRD_ALLOC_SIZE should be something that will not be allocated across a 64k  * boundary.  * DMA_PG_SZ is the size of the chunks that each DMA scatter gather element  * represents. In some systems there can be reasons to make this smaller than  * a pagesize (usually due to broken hardware).  * PRD_MAX_SEGS is defined to be the maximum number of segments required for  * a transfer on an IDE drive, for an xfer that is linear in virtual memory.  * PRD_BUF_SIZE is the size of the buffer needed for a PRD table.  */
+comment|/*  * PRD_ALLOC_SIZE should be something that will not be allocated across a 64k  * boundary.  * PRD_MAX_SEGS is defined to be the maximum number of segments required for  * a transfer on an IDE drive, for an xfer that is linear in virtual memory.  * PRD_BUF_SIZE is the size of the buffer needed for a PRD table.  */
 end_comment
 
 begin_define
@@ -777,15 +777,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DMA_PG_SZ
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
 name|PRD_MAX_SEGS
-value|((256 * 512 / DMA_PG_SZ) + 1)
+value|((256 * 512 / PAGE_SIZE) + 1)
 end_define
 
 begin_define
@@ -7360,7 +7353,7 @@ block|}
 comment|/* Generate first PRD entry, which may be non-aligned. */
 name|firstpage
 operator|=
-name|DMA_PG_SZ
+name|PAGE_SIZE
 operator|-
 operator|(
 operator|(
@@ -7368,11 +7361,7 @@ name|uintptr_t
 operator|)
 name|vaddr
 operator|&
-operator|(
-name|DMA_PG_SZ
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|prd_base
@@ -7418,7 +7407,7 @@ name|MIN
 argument_list|(
 name|count
 argument_list|,
-name|DMA_PG_SZ
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|nend
