@@ -59,18 +59,6 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
 begin_define
 define|#
 directive|define
