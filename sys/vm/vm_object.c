@@ -249,6 +249,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|vm_object_pip_sleep
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|char
+modifier|*
+name|waitid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *	Virtual memory objects maintain the actual data  *	associated with allocated virtual memory.  A given  *	page of memory exists within exactly one object.  *  *	An object is only deallocated when all "references"  *	are given up.  Only one "reference" to a given  *	region of an object should be writeable.  *  *	Associated with each object is a list of all resident  *	memory pages belonging to that object; this list is  *	maintained by the "vm_page" module, and locked by the object's  *	lock.  *  *	Each object also records a "pager" routine which is  *	used to retrieve (and store) pages to the proper backing  *	storage.  In addition, objects may be backed by other  *	objects from which they were virtual-copied.  *  *	The only items within the object structure which are  *	modified after time of creation are:  *		reference count		locked by object's lock  *		pager routine		locked by object's lock  *  */
 end_comment
@@ -1075,6 +1090,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vm_object_pip_sleep
 parameter_list|(
@@ -1148,7 +1164,12 @@ modifier|*
 name|waitid
 parameter_list|)
 block|{
-name|GIANT_REQUIRED
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1156,13 +1177,30 @@ name|object
 operator|->
 name|paging_in_progress
 condition|)
-name|vm_object_pip_sleep
+block|{
+name|object
+operator|->
+name|flags
+operator||=
+name|OBJ_PIPWNT
+expr_stmt|;
+name|msleep
 argument_list|(
 name|object
 argument_list|,
+name|VM_OBJECT_MTX
+argument_list|(
+name|object
+argument_list|)
+argument_list|,
+name|PVM
+argument_list|,
 name|waitid
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1829,17 +1867,17 @@ argument_list|,
 name|OBJ_DEAD
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 	 * wait for the pageout daemon to be done with the object 	 */
 name|vm_object_pip_wait
 argument_list|(
 name|object
 argument_list|,
 literal|"objtrm"
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|KASSERT
