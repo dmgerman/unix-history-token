@@ -133,11 +133,6 @@ name|tte
 modifier|*
 name|pm_tsb
 decl_stmt|;
-name|struct
-name|tte
-modifier|*
-name|pm_tsb_tte
-decl_stmt|;
 name|vm_object_t
 name|pm_tsb_obj
 decl_stmt|;
