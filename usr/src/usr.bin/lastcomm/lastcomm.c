@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lastcomm.c	4.10 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,7 +372,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%-*s %s %-*s %-*s %4d sec%s %.16s\n"
+literal|"%-*s %s %-*s %-*s %6.1f secs %.16s\n"
 argument_list|,
 name|fldsiz
 argument_list|(
@@ -421,18 +421,8 @@ name|ac_tty
 argument_list|)
 argument_list|,
 name|x
-argument_list|,
-name|x
-operator|>
-literal|1
-operator|||
-name|x
-operator|==
-literal|0
-condition|?
-literal|"s"
-else|:
-literal|" "
+operator|/
+literal|64.0
 argument_list|,
 name|ctime
 argument_list|(
