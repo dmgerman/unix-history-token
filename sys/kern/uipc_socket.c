@@ -4841,6 +4841,21 @@ operator|.
 name|ru_msgrcv
 operator|++
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|==
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+argument_list|,
+operator|(
+literal|"soreceive: m != so->so_rcv.sb_mb"
+operator|)
+argument_list|)
+expr_stmt|;
 name|SBLASTRECORDCHK
 argument_list|(
 operator|&
