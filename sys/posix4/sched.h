@@ -99,6 +99,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|int
 name|sched_setparam
 name|__P
@@ -213,6 +214,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
