@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisink.c	7.2 (Berkeley) %G%"
+literal|"@(#)tisink.c	7.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +213,8 @@ name|long
 name|records
 decl_stmt|,
 name|intercept
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -436,6 +438,24 @@ argument_list|)
 expr_stmt|;
 name|argc
 operator|--
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"intercept"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|intercept
+operator|++
 expr_stmt|;
 block|}
 block|}
@@ -867,6 +887,8 @@ expr_stmt|;
 if|if
 condition|(
 name|mynamep
+operator|||
+name|intercept
 condition|)
 block|{
 name|addrlen
