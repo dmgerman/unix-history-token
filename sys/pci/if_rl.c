@@ -1014,7 +1014,7 @@ name|addr
 operator||
 name|RL_EECMD_READ
 expr_stmt|;
-comment|/* 	 * Feed in each bit and stobe the clock. 	 */
+comment|/* 	 * Feed in each bit and strobe the clock. 	 */
 for|for
 control|(
 name|i
