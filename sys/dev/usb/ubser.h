@@ -15,6 +15,13 @@ directive|define
 name|UBSER_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_SER
+value|32
+end_define
+
 begin_comment
 comment|/* Vendor Interface Requests */
 end_comment
