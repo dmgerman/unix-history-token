@@ -109,12 +109,6 @@ directive|include
 file|<netgraph/ng_bridge.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netgraph/ng_ether.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -604,7 +598,7 @@ init|=
 name|NG_BRIDGE_HOST_TYPE_INFO
 argument_list|(
 operator|&
-name|ng_ether_enaddr_type
+name|ng_parse_enaddr_type
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -952,26 +946,6 @@ name|bridge
 argument_list|,
 operator|&
 name|ng_bridge_typestruct
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Depend on ng_ether so we can use the Ethernet parse type */
-end_comment
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|ng_bridge
-argument_list|,
-name|ng_ether
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

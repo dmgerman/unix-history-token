@@ -118,34 +118,6 @@ block|}
 enum|;
 end_enum
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* Ethernet address parse type */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|ng_parse_type
-name|ng_ether_enaddr_type
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
