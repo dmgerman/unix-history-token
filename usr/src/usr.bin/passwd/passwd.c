@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.12 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ condition|(
 operator|(
 name|progname
 operator|=
-name|index
+name|rindex
 argument_list|(
 name|argv
 index|[
@@ -452,6 +452,7 @@ name|uname
 operator|=
 operator|*
 name|argv
+operator|++
 expr_stmt|;
 name|pwd
 operator|=
@@ -536,6 +537,9 @@ argument_list|(
 name|pwd
 argument_list|,
 name|u
+argument_list|,
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 else|else
@@ -1731,6 +1735,8 @@ parameter_list|(
 name|pwd
 parameter_list|,
 name|u
+parameter_list|,
+name|arg
 parameter_list|)
 name|struct
 name|passwd
@@ -1739,6 +1745,10 @@ name|pwd
 decl_stmt|;
 name|int
 name|u
+decl_stmt|;
+name|char
+modifier|*
+name|arg
 decl_stmt|;
 block|{
 specifier|static
@@ -1779,6 +1789,38 @@ name|pw_shell
 operator|=
 name|DEFSHELL
 expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|!=
+literal|0
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|newshell
+argument_list|,
+name|arg
+argument_list|,
+sizeof|sizeof
+name|newshell
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|newshell
+index|[
+sizeof|sizeof
+name|newshell
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"Old shell: %s\nNew shell: "
@@ -1820,6 +1862,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|newshell
