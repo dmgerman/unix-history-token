@@ -1011,6 +1011,7 @@ name|fwd_tag
 operator|==
 name|NULL
 condition|)
+block|{
 name|fwd_tag
 operator|=
 name|m_tag_get
@@ -1035,6 +1036,16 @@ condition|)
 goto|goto
 name|drop
 goto|;
+block|}
+else|else
+name|m_tag_unlink
+argument_list|(
+operator|*
+name|m0
+argument_list|,
+name|fwd_tag
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|args
