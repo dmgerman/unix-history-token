@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999, 2000 Dave Boyce. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *      i4b_iwic - isdn4bsd Winbond W6692 driver  *      ----------------------------------------  *  *      $Id: i4b_iwic_dchan.c,v 1.5 2000/05/29 15:41:42 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Wed Mar  8 16:17:16 2000]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1999, 2000 Dave Boyce. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *      i4b_iwic - isdn4bsd Winbond W6692 driver  *      ----------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Tue Jan 16 13:20:14 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -144,38 +144,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTDEF
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|output_bytes
-parameter_list|(
-name|char
-modifier|*
-name|prefix
-parameter_list|,
-name|u_char
-modifier|*
-name|ptr
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	initialize D-channel variables and registers  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -346,7 +316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	Extended IRQ handler for the D-channel  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -391,6 +361,15 @@ name|iwic_printstate
 argument_list|(
 name|sc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|IWIC_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|D_CMDR
+argument_list|,
+name|D_CMDR_RRST
 argument_list|)
 expr_stmt|;
 block|}
@@ -439,6 +418,15 @@ name|iwic_printstate
 argument_list|(
 name|sc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|IWIC_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|D_CMDR
+argument_list|,
+name|D_CMDR_XRST
 argument_list|)
 expr_stmt|;
 name|sc
@@ -921,7 +909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	disable D-channel  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1030,7 +1018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	queue D-channel message for transmission  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1172,7 +1160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	allocate an mbuf  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1256,7 +1244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	D-channel receive data interrupt  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1273,6 +1261,11 @@ name|int
 name|ista
 parameter_list|)
 block|{
+name|int
+name|command
+init|=
+name|D_CMDR_RACK
+decl_stmt|;
 if|if
 condition|(
 name|ista
@@ -1319,7 +1312,6 @@ operator|.
 name|ibuf_max_len
 condition|)
 block|{
-comment|/*XXX*/
 name|panic
 argument_list|(
 literal|"dchan_receive: not enough space in buffer!\n"
@@ -1373,15 +1365,95 @@ condition|)
 block|{
 comment|/* Got end of frame */
 name|int
+name|status
+decl_stmt|;
+name|status
+operator|=
+name|IWIC_READ
+argument_list|(
+name|sc
+argument_list|,
+name|D_RSTA
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+operator|(
+name|D_RSTA_RDOV
+operator||
+name|D_RSTA_CRCE
+operator||
+name|D_RSTA_RMB
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|status
+operator|&
+name|D_RSTA_RDOV
+condition|)
+name|NDBGL1
+argument_list|(
+name|L1_I_ERR
+argument_list|,
+literal|"iwic%d: D-channel Receive Data Overflow"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+name|D_RSTA_CRCE
+condition|)
+name|NDBGL1
+argument_list|(
+name|L1_I_ERR
+argument_list|,
+literal|"iwic%d: D-channel CRC Error"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+name|D_RSTA_RMB
+condition|)
+name|NDBGL1
+argument_list|(
+name|L1_I_ERR
+argument_list|,
+literal|"iwic%d: D-channel Receive Message Aborted"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+name|command
+operator||=
+name|D_CMDR_RRST
+expr_stmt|;
+block|}
+else|else
+block|{
+name|int
 name|hi
 decl_stmt|,
 name|lo
 decl_stmt|;
 name|int
 name|total_frame_len
-decl_stmt|;
-name|int
-name|status
 decl_stmt|;
 name|lo
 operator|=
@@ -1499,38 +1571,6 @@ name|rx_count
 operator|+=
 name|lo
 expr_stmt|;
-name|status
-operator|=
-name|IWIC_READ
-argument_list|(
-name|sc
-argument_list|,
-name|D_RSTA
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|&
-operator|(
-name|D_RSTA_RDOV
-operator||
-name|D_RSTA_CRCE
-operator||
-name|D_RSTA_RMB
-operator|)
-condition|)
-block|{
-name|NDBGL1
-argument_list|(
-name|L1_I_ERR
-argument_list|,
-literal|"bad read status 0x%x"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-block|}
 name|sc
 operator|->
 name|sc_dchan
@@ -1646,20 +1686,21 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
 name|IWIC_WRITE
 argument_list|(
 name|sc
 argument_list|,
 name|D_CMDR
 argument_list|,
-name|D_CMDR_RACK
+name|command
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	transmit D-channel frame  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -1985,135 +2026,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTDEF
-end_ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/* (NIWIC> 0)&& (NPCI> 0) */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|output_bytes
-parameter_list|(
-name|char
-modifier|*
-name|prefix
-parameter_list|,
-name|u_char
-modifier|*
-name|ptr
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-block|{
-name|char
-name|buf
-index|[
-literal|400
-index|]
-decl_stmt|;
-name|char
-name|tmp
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%s bytes "
-argument_list|,
-name|prefix
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|i
-operator|!=
-operator|(
-name|len
-operator|-
-literal|1
-operator|)
-condition|)
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"0x%x, "
-argument_list|,
-name|ptr
-index|[
-name|i
-index|]
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
-else|else
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"0x%x"
-argument_list|,
-name|ptr
-index|[
-name|i
-index|]
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-block|}
-name|strcat
-argument_list|(
-argument|buf
-argument_list|,
-literal|"\n"
-argument|; 	printf(buf); }
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

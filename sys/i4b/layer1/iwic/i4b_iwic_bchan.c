@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999, 2000 Dave Boyce. All rights reserved.  *  * Copyright (c) 2000, 2001 Hellmuth Michaelis. All rights reserved.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *      i4b_iwic - isdn4bsd Winbond W6692 driver  *      ----------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Fri Jan 12 16:57:01 2001]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1999, 2000 Dave Boyce. All rights reserved.  *  * Copyright (c) 2000, 2001 Hellmuth Michaelis. All rights reserved.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *      i4b_iwic - isdn4bsd Winbond W6692 driver  *      ----------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Tue Jan 16 13:21:24 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -242,7 +242,11 @@ name|NDBGL1
 argument_list|(
 name|L1_H_XFRERR
 argument_list|,
-literal|"RDOV"
+literal|"iwic%d: EXIR B-channel Receive Data Overflow"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -257,9 +261,20 @@ name|NDBGL1
 argument_list|(
 name|L1_H_XFRERR
 argument_list|,
-literal|"XDUN"
+literal|"iwic%d: EXIR B-channel Transmit Data Underrun"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
 argument_list|)
 expr_stmt|;
+name|cmd
+operator||=
+operator|(
+name|B_CMDR_XRST
+operator|)
+expr_stmt|;
+comment|/*XXX must retransmit frame ! */
 block|}
 comment|/* RX message end interrupt */
 if|if
@@ -269,15 +284,8 @@ operator|&
 name|B_EXIR_RME
 condition|)
 block|{
-comment|/* XXXX */
 name|int
 name|error
-init|=
-literal|0
-decl_stmt|;
-specifier|register
-name|int
-name|fifo_data_len
 decl_stmt|;
 name|NDBGL1
 argument_list|(
@@ -286,6 +294,98 @@ argument_list|,
 literal|"B_EXIR_RME"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+operator|(
+name|IWIC_READ
+argument_list|(
+name|sc
+argument_list|,
+name|chan
+operator|->
+name|offset
+operator|+
+name|B_STAR
+argument_list|)
+operator|&
+operator|(
+name|B_STAR_RDOV
+operator||
+name|B_STAR_CRCE
+operator||
+name|B_STAR_RMB
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|&
+name|B_STAR_RDOV
+condition|)
+name|NDBGL1
+argument_list|(
+name|L1_H_XFRERR
+argument_list|,
+literal|"iwic%d: B-channel Receive Data Overflow"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|&
+name|B_STAR_CRCE
+condition|)
+name|NDBGL1
+argument_list|(
+name|L1_H_XFRERR
+argument_list|,
+literal|"iwic%d: B-channel CRC Error"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|&
+name|B_STAR_RMB
+condition|)
+name|NDBGL1
+argument_list|(
+name|L1_H_XFRERR
+argument_list|,
+literal|"iwic%d: B-channel Receive Message Aborted"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* all error conditions checked, now decide and take action */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+specifier|register
+name|int
+name|fifo_data_len
+decl_stmt|;
 name|fifo_data_len
 operator|=
 operator|(
@@ -321,14 +421,6 @@ name|fifo_data_len
 operator|=
 name|IWIC_BCHAN_FIFO_LEN
 expr_stmt|;
-comment|/* all error conditions checked, now decide and take action */
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|chan
@@ -2797,7 +2889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	return B-channel statistics  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
