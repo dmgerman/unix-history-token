@@ -3846,6 +3846,35 @@ name|va_line_width
 expr_stmt|;
 break|break;
 case|case
+name|FBIO_BLANK
+case|:
+comment|/* blank display */
+name|error
+operator|=
+operator|(
+operator|*
+name|vidsw
+index|[
+name|adp
+operator|->
+name|va_index
+index|]
+operator|->
+name|blank_display
+operator|)
+operator|(
+name|adp
+operator|,
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|)
+expr_stmt|;
+break|break;
+case|case
 name|FBIO_GETPALETTE
 case|:
 comment|/* get color palette */
@@ -3859,6 +3888,12 @@ name|FBIOPUTCMAP
 case|:
 case|case
 name|FBIOGETCMAP
+case|:
+case|case
+name|FBIOPUTCMAPI
+case|:
+case|case
+name|FBIOGETCMAPI
 case|:
 comment|/* XXX */
 case|case
@@ -3886,6 +3921,9 @@ case|case
 name|FBIOGVIDEO
 case|:
 case|case
+name|FBIOVERTICAL
+case|:
+case|case
 name|FBIOSCURSOR
 case|:
 case|case
@@ -3899,6 +3937,12 @@ name|FBIOGCURPOS
 case|:
 case|case
 name|FBIOGCURMAX
+case|:
+case|case
+name|FBIOMONINFO
+case|:
+case|case
+name|FBIOGXINFO
 case|:
 default|default:
 name|error
