@@ -12,6 +12,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|FONTDIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FONTDIR
+value|"/usr/lib/font"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NROFF
 end_ifndef
 
@@ -22,7 +40,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/font"
+name|FONTDIR
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +55,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/font"
+name|FONTDIR
 decl_stmt|;
 end_decl_stmt
 
