@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -330,7 +330,7 @@ name|DOSWAP
 end_define
 
 begin_comment
-comment|/* change swdevt, argdev, and dumpdev too */
+comment|/* change swdevt and dumpdev */
 end_comment
 
 begin_decl_stmt
@@ -652,7 +652,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * If argdev and dumpdev were the same as the old primary swap 	 * device, move them to the new primary swap device. 	 */
+comment|/* 	 * If dumpdev was the same as the old primary swap 	 * device, move it to the new primary swap device. 	 */
 if|if
 condition|(
 name|temp
@@ -660,21 +660,6 @@ operator|==
 name|dumpdev
 condition|)
 name|dumpdev
-operator|=
-name|swdevt
-index|[
-literal|0
-index|]
-operator|.
-name|sw_dev
-expr_stmt|;
-if|if
-condition|(
-name|temp
-operator|==
-name|argdev
-condition|)
-name|argdev
 operator|=
 name|swdevt
 index|[
