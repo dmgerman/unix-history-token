@@ -539,11 +539,11 @@ name|SIG_ERR
 value|((__sighandler_t *)-1)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_P1003_1B_VISIBLE
+end_ifdef
 
 begin_union
 union|union
@@ -622,6 +622,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _P1003_1B_VISIBLE */
+end_comment
 
 begin_typedef
 typedef|typedef
