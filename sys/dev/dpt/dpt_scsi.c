@@ -7386,7 +7386,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dpt%d ERROR: Request %d recieved with "
+literal|"dpt%d ERROR: Request %d received with "
 literal|"clear EOC.\n     Marking as LOST.\n"
 argument_list|,
 name|dpt
