@@ -1506,7 +1506,7 @@ literal|"Not confirmed.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+literal|3
 return|;
 block|}
 block|}
