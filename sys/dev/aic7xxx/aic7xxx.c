@@ -23675,19 +23675,6 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"qinpos = %d, qintail = %d\n"
-argument_list|,
-name|qinpos
-argument_list|,
-name|qintail
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|action
 operator|==
 name|SEARCH_COMPLETE
