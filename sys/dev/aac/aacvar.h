@@ -290,6 +290,11 @@ name|void
 modifier|*
 name|cm_private
 decl_stmt|;
+name|struct
+name|callout_handle
+name|timeout_handle
+decl_stmt|;
+comment|/* timeout handle */
 block|}
 struct|;
 end_struct
