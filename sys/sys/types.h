@@ -748,6 +748,34 @@ begin_comment
 comment|/* segment size (in pages) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SUSECONDS_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__suseconds_t
+name|suseconds_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* microseconds (signed) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SUSECONDS_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|__u_register_t
@@ -776,6 +804,34 @@ begin_define
 define|#
 directive|define
 name|_UID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_USECONDS_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__useconds_t
+name|useconds_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* microseconds (unsigned) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_USECONDS_T_DECLARED
 end_define
 
 begin_endif

@@ -163,6 +163,17 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|long
+name|__suseconds_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* microseconds (signed) */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|__int32_t
 name|__timer_t
 typedef|;
@@ -178,6 +189,18 @@ name|__uint32_t
 name|__uid_t
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__useconds_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* microseconds (unsigned) */
+end_comment
 
 begin_comment
 comment|/*  * Unusual type definitions.  */
