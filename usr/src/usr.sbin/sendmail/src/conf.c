@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.110 (Berkeley) %G%"
+literal|"@(#)conf.c	8.111 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1454,8 +1454,50 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SWITCH_MAP_FIND -- find the list of types associated with a map ** **	This is the system-dependent interface to the service switch. ** **	Parameters: **		service -- the name of the service of interest. **		maptype -- an out-array of strings containing the types **			of access to use for this service.  There can **			be at most MAXMAPSTACK types for a single service. ** **	Returns: **		The number of map types filled in, or -1 for failure. */
+comment|/* **  SWITCH_MAP_FIND -- find the list of types associated with a map ** **	This is the system-dependent interface to the service switch. ** **	Parameters: **		service -- the name of the service of interest. **		maptype -- an out-array of strings containing the types **			of access to use for this service.  There can **			be at most MAXMAPSTACK types for a single service. **		mapreturn -- an out-array of return information bitmaps **			for the map. ** **	Returns: **		The number of map types filled in, or -1 for failure. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<nsswitch.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/svcinfo.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -1464,6 +1506,8 @@ parameter_list|(
 name|service
 parameter_list|,
 name|maptype
+parameter_list|,
+name|mapreturn
 parameter_list|)
 name|char
 modifier|*
@@ -1474,6 +1518,12 @@ modifier|*
 name|maptype
 index|[
 name|MAXMAPSTACK
+index|]
+decl_stmt|;
+name|short
+name|mapreturn
+index|[
+literal|3
 index|]
 decl_stmt|;
 block|{
@@ -1611,9 +1661,7 @@ index|]
 operator|==
 name|__NSW_RETURN
 condition|)
-name|map
-operator|->
-name|map_return
+name|mapreturn
 index|[
 name|MA_NOTFOUND
 index|]
@@ -1633,9 +1681,7 @@ index|]
 operator|==
 name|__NSW_RETURN
 condition|)
-name|map
-operator|->
-name|map_return
+name|mapreturn
 index|[
 name|MA_TRYAGAIN
 index|]
@@ -1655,9 +1701,7 @@ index|]
 operator|==
 name|__NSW_RETURN
 condition|)
-name|map
-operator|->
-name|map_return
+name|mapreturn
 index|[
 name|MA_TRYAGAIN
 index|]
@@ -1715,22 +1759,21 @@ operator|=
 name|SVC_HOSTS
 expr_stmt|;
 elseif|else
-if|if strcmp
+if|if
 condition|(
+name|strcmp
+argument_list|(
 name|service
-operator|,
+argument_list|,
 literal|"aliases"
-condition|)
+argument_list|)
 operator|==
 literal|0
-block|)
-function|svc
-init|=
+condition|)
+name|svc
+operator|=
 name|SVC_ALIASES
-function|;
-end_function
-
-begin_elseif
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -1747,17 +1790,11 @@ name|svc
 operator|=
 name|SVC_PASSWD
 expr_stmt|;
-end_elseif
-
-begin_else
 else|else
 return|return
 operator|-
 literal|1
 return|;
-end_else
-
-begin_for
 for|for
 control|(
 name|svcno
@@ -1844,20 +1881,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_for
-
-begin_return
 return|return
 name|svcno
 return|;
-end_return
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|#
 directive|if
 operator|!
@@ -1877,20 +1905,11 @@ name|defined
 argument_list|(
 name|__osf__
 argument_list|)
-end_if
-
-begin_comment
 comment|/* 	**  Fall-back mechanism. 	*/
-end_comment
-
-begin_expr_stmt
 name|svcno
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fp
 operator|=
 name|fopen
@@ -1900,9 +1919,6 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|fp
@@ -2053,13 +2069,7 @@ return|return
 name|svcno
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* if the service file doesn't work, use an absolute fallback */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|strcmp
@@ -2083,9 +2093,6 @@ return|return
 literal|1
 return|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|strcmp
@@ -2154,53 +2161,47 @@ return|return
 name|svcno
 return|;
 block|}
-end_if
-
-begin_return
 return|return
 operator|-
 literal|1
 return|;
-end_return
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
 comment|/* **  USERNAME -- return the user id of the logged in user. ** **	Parameters: **		none. ** **	Returns: **		The login name of the logged in user. ** **	Side Effects: **		none. ** **	Notes: **		The return value is statically allocated. */
 end_comment
 
-begin_expr_stmt
-unit|char
-operator|*
+begin_function
+name|char
+modifier|*
 name|username
-argument_list|()
+parameter_list|()
 block|{
 specifier|static
 name|char
-operator|*
+modifier|*
 name|myname
-operator|=
+init|=
 name|NULL
-block|;
+decl_stmt|;
 specifier|extern
 name|char
-operator|*
+modifier|*
 name|getlogin
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 specifier|register
-expr|struct
+name|struct
 name|passwd
-operator|*
+modifier|*
 name|pw
-block|;
+decl_stmt|;
 comment|/* cache the result */
 if|if
 condition|(
@@ -2251,9 +2252,6 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 name|uid_t
@@ -2318,9 +2316,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_else
-
-begin_if
 if|if
 condition|(
 name|myname
@@ -2345,50 +2340,49 @@ operator|=
 literal|"postmaster"
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
-unit|}  	return
+block|}
+return|return
 operator|(
 name|myname
 operator|)
-expr_stmt|;
-end_expr_stmt
+return|;
+block|}
+end_function
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
 comment|/* **  TTYPATH -- Get the path of the user's tty ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
 
-begin_expr_stmt
-unit|char
-operator|*
+begin_function
+name|char
+modifier|*
 name|ttypath
-argument_list|()
-block|{ 	struct
+parameter_list|()
+block|{
+name|struct
 name|stat
 name|stbuf
-block|;
+decl_stmt|;
 specifier|register
 name|char
-operator|*
+modifier|*
 name|pathn
-block|;
+decl_stmt|;
 specifier|extern
 name|char
-operator|*
+modifier|*
 name|ttyname
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 specifier|extern
 name|char
-operator|*
+modifier|*
 name|getlogin
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/* compute the pathname of the controlling tty */
 if|if
 condition|(
@@ -2436,13 +2430,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/* see if we have write permission */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|stat
@@ -2476,13 +2464,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* see if the user is logged in */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|getlogin
@@ -2495,22 +2477,16 @@ operator|(
 name|NULL
 operator|)
 return|;
-end_if
-
-begin_comment
 comment|/* looks good */
-end_comment
-
-begin_return
 return|return
 operator|(
 name|pathn
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
@@ -2518,12 +2494,12 @@ comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	Thi
 end_comment
 
 begin_expr_stmt
-unit|checkcompat
-operator|(
+name|checkcompat
+argument_list|(
 name|to
-operator|,
+argument_list|,
 name|e
-operator|)
+argument_list|)
 specifier|register
 name|ADDRESS
 operator|*

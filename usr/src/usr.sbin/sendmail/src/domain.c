@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.26 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.27 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.26 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.27 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1716,6 +1716,12 @@ block|{
 name|int
 name|nmaps
 decl_stmt|;
+name|short
+name|mapreturn
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|nmaps
 operator|=
 name|switch_map_find
@@ -1723,6 +1729,8 @@ argument_list|(
 literal|"hosts"
 argument_list|,
 name|maptype
+argument_list|,
+name|mapreturn
 argument_list|)
 expr_stmt|;
 name|hasmx

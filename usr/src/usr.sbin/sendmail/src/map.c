@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.32 (Berkeley) %G%"
+literal|"@(#)map.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9162,6 +9162,10 @@ operator|->
 name|map_file
 argument_list|,
 name|maptype
+argument_list|,
+name|map
+operator|->
+name|map_return
 argument_list|)
 expr_stmt|;
 if|if
