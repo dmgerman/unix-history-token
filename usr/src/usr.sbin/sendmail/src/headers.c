@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -2111,7 +2111,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
-comment|/* 	**  Now parse the real address part.  from points to the (null 	**  terminated) version of what we are inerested in; rhs points 	**  to the extra stuff at the end of the line, if any. 	*/
+comment|/* 	**  Now parse the real address part.  "addr" points to the (null 	**  terminated) version of what we are inerested in; rhs points 	**  to the extra stuff at the end of the line, if any. 	*/
 name|p
 operator|=
 name|addr
@@ -2254,12 +2254,29 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
-comment|/* 	**  If there is a tag at the end, insert it. 	*/
+comment|/* hack, hack.... strip trailing blanks */
+do|do
+block|{
 operator|*
 name|bp
+operator|--
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+condition|)
+do|;
+name|bp
+operator|++
+expr_stmt|;
+comment|/* put any right hand side back on */
 if|if
 condition|(
 name|rhs
@@ -2294,7 +2311,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"crackaddr=>%s\n"
+literal|"crackaddr=>`%s'\n"
 argument_list|,
 name|buf
 argument_list|)
