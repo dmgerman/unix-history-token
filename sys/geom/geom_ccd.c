@@ -2031,13 +2031,11 @@ name|ccg_nsectors
 operator|=
 literal|1024
 operator|*
-operator|(
 literal|1024
 operator|/
 name|ccg
 operator|->
 name|ccg_secsize
-operator|)
 expr_stmt|;
 name|ccg
 operator|->
