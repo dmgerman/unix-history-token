@@ -283,16 +283,17 @@ name|loif
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|OLDMAP
-value|1
-end_define
-
 begin_comment
-comment|/* if LNA> 1023 use old 3COM mapping */
+comment|/*  * Local addresses in the range oldmap to infinity are  * mapped according to the old mapping scheme.  That is,  * mapping of Internet to Ethernet addresses is performed  * by taking the high three bytes of the network interface's  * address and the low three bytes of the local address part.  * This only allows boards from the same manufacturer to  * communicate unless the on-board address is overridden  * (not possible in many manufacture's hardware).  *  * NB: setting oldmap to zero completely disables ARP  *     (i.e. identical to setting IFF_NOARP with an ioctl).  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|oldmap
+init|=
+literal|1024
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Attach an ethernet interface to the list "arpcom" where  * arptimer() can find it.  If first time   * initialization, start arptimer().  */
@@ -930,6 +931,12 @@ name|arptab
 modifier|*
 name|at
 decl_stmt|;
+specifier|register
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|struct
 name|sockaddr_in
 name|sin
@@ -979,6 +986,14 @@ literal|1
 operator|)
 return|;
 block|}
+name|ifp
+operator|=
+operator|&
+name|ac
+operator|->
+name|ac_if
+expr_stmt|;
+comment|/* if for us, then use software loopback driver */
 if|if
 condition|(
 name|destip
@@ -992,10 +1007,8 @@ name|sockaddr_in
 operator|*
 operator|)
 operator|&
-name|ac
+name|ifp
 operator|->
-name|ac_if
-operator|.
 name|if_addr
 operator|)
 operator|->
@@ -1004,7 +1017,6 @@ operator|.
 name|s_addr
 condition|)
 block|{
-comment|/* if for us, use lo driver */
 name|sin
 operator|.
 name|sin_family
@@ -1038,14 +1050,19 @@ argument_list|)
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|OLDMAP
 if|if
 condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+operator|)
+operator|||
 name|lna
 operator|>=
-literal|1024
+name|oldmap
 condition|)
 block|{
 name|bcopy
@@ -1106,9 +1123,6 @@ literal|1
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-endif|OLDMAP
 name|s
 operator|=
 name|splimp
