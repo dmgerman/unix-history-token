@@ -2643,26 +2643,14 @@ return|;
 block|}
 block|}
 comment|/* Run packet through ipfw processing, if enabled */
-if|if
-condition|(
-name|priv
-operator|->
-name|conf
-operator|.
-name|ipfw
-index|[
-name|linkNum
-index|]
-operator|&&
-name|fw_enable
-operator|&&
-name|ip_fw_chk_ptr
-operator|!=
-name|NULL
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+block|if (priv->conf.ipfw[linkNum]&& fw_enable&& ip_fw_chk_ptr != NULL) {
 comment|/* XXX not implemented yet */
 block|}
+endif|#
+directive|endif
 comment|/* 	 * If unicast and destination host known, deliver to host's link, 	 * unless it is the same link as the packet came in on. 	 */
 if|if
 condition|(

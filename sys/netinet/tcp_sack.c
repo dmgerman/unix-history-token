@@ -10,16 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ipfw.h"
-end_include
-
-begin_comment
-comment|/* for ipfw_fwd		*/
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 

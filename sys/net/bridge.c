@@ -4133,6 +4133,13 @@ name|PFIL_HOOKS
 comment|/* 	 * NetBSD-style generic packet filter, pfil(9), hooks. 	 * Enables ipf(8) in bridging. 	 */
 if|if
 condition|(
+operator|!
+name|IPFW_LOADED
+condition|)
+block|{
+comment|/* XXX: Prevent ipfw from being run twice. */
+if|if
+condition|(
 name|inet_pfil_hook
 operator|.
 name|ph_busy_count
@@ -4266,6 +4273,8 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* XXX: Prevent ipfw from being run twice. */
 endif|#
 directive|endif
 comment|/* PFIL_HOOKS */

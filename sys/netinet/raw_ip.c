@@ -247,6 +247,8 @@ begin_decl_stmt
 name|ip_fw_ctl_t
 modifier|*
 name|ip_fw_ctl_ptr
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -254,6 +256,8 @@ begin_decl_stmt
 name|ip_dn_ctl_t
 modifier|*
 name|ip_dn_ctl_ptr
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1686,7 +1690,9 @@ name|IP_FW_TABLE_LIST
 case|:
 if|if
 condition|(
-name|IPFW_LOADED
+name|ip_fw_ctl_ptr
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=
@@ -1706,7 +1712,9 @@ name|IP_DUMMYNET_GET
 case|:
 if|if
 condition|(
-name|DUMMYNET_LOADED
+name|ip_dn_ctl_ptr
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=
@@ -1863,7 +1871,9 @@ name|IP_FW_TABLE_FLUSH
 case|:
 if|if
 condition|(
-name|IPFW_LOADED
+name|ip_fw_ctl_ptr
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=
@@ -1889,7 +1899,9 @@ name|IP_DUMMYNET_FLUSH
 case|:
 if|if
 condition|(
-name|DUMMYNET_LOADED
+name|ip_dn_ctl_ptr
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=

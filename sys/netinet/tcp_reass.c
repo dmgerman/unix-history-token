@@ -1943,13 +1943,16 @@ name|headlocked
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
 name|struct
-name|sockaddr_in
+name|m_tag
 modifier|*
-name|next_hop
-init|=
-name|NULL
+name|fwd_tag
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|rstreason
 decl_stmt|;
@@ -1998,16 +2001,6 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. */
-name|next_hop
-operator|=
-name|m_claim_next
-argument_list|(
-name|m
-argument_list|,
-name|PACKET_TAG_IPFORWARD
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2775,10 +2768,24 @@ literal|1
 expr_stmt|;
 name|findpcb
 label|:
-comment|/* IPFIREWALL_FORWARD section */
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
+comment|/* Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. */
+name|fwd_tag
+operator|=
+name|m_tag_find
+argument_list|(
+name|m
+argument_list|,
+name|PACKET_TAG_IPFORWARD
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|next_hop
+name|fwd_tag
 operator|!=
 name|NULL
 operator|&&
@@ -2788,6 +2795,24 @@ literal|0
 condition|)
 block|{
 comment|/* IPv6 support is not yet */
+name|struct
+name|sockaddr_in
+modifier|*
+name|next_hop
+decl_stmt|;
+name|next_hop
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|(
+name|fwd_tag
+operator|+
+literal|1
+operator|)
+expr_stmt|;
 comment|/* 		 * Transparently forwarded. Pretend to be the destination. 		 * already got one like this? 		 */
 name|inp
 operator|=
@@ -2827,7 +2852,7 @@ operator|!
 name|inp
 condition|)
 block|{
-comment|/* It's new.  Try find the ambushing socket. */
+comment|/* It's new.  Try to find the ambushing socket. */
 name|inp
 operator|=
 name|in_pcblookup_hash
@@ -2872,9 +2897,20 @@ name|rcvif
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Remove the tag from the packet.  We don't need it anymore. */
+name|m_tag_delete
+argument_list|(
+name|m
+argument_list|,
+name|fwd_tag
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
+comment|/* IPFIREWALL_FORWARD */
 if|if
 condition|(
 name|isipv6
@@ -2953,7 +2989,13 @@ operator|.
 name|rcvif
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
 block|}
+endif|#
+directive|endif
+comment|/* IPFIREWALL_FORWARD */
 if|#
 directive|if
 name|defined

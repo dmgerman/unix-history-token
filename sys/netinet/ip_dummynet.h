@@ -235,16 +235,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* interface, for ip_output		*/
-name|struct
-name|sockaddr_in
-modifier|*
-name|dn_dst
-decl_stmt|;
-name|struct
-name|route
-name|ro
-decl_stmt|;
-comment|/* route, for ip_output. MUST COPY	*/
 name|int
 name|flags
 decl_stmt|;

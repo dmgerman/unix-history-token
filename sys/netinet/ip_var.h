@@ -711,6 +711,19 @@ end_function_decl
 
 begin_function_decl
 name|struct
+name|mbuf
+modifier|*
+name|ip_reass
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
 name|in_ifaddr
 modifier|*
 name|ip_rtaddr
