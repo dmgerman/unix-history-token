@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.15 (Berkeley) %G%"
+literal|"@(#)ex_io.c	7.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3293,6 +3293,28 @@ argument_list|,
 literal|0666
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vms
+comment|/* to retain file protection modes on newer version of file */
+if|if
+condition|(
+operator|!
+name|nonexist
+condition|)
+name|chmod
+argument_list|(
+name|file
+argument_list|,
+name|stbuf
+operator|.
+name|st_mode
+operator|&
+literal|0777
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if
