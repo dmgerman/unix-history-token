@@ -3824,6 +3824,9 @@ name|tp
 operator|->
 name|t_inpcb
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|socket
 modifier|*
@@ -3833,6 +3836,8 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
+endif|#
+directive|endif
 name|tcp_discardcb
 argument_list|(
 name|tp
@@ -8252,14 +8257,6 @@ name|inp_inc
 operator|.
 name|inc_isipv6
 decl_stmt|;
-else|#
-directive|else
-specifier|const
-name|int
-name|isipv6
-init|=
-literal|0
-decl_stmt|;
 endif|#
 directive|endif
 name|m
@@ -8288,6 +8285,9 @@ name|m_data
 operator|+=
 name|max_linkhdr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|isipv6
@@ -8342,6 +8342,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|hdrlen
 operator|=
@@ -8606,6 +8608,9 @@ operator|->
 name|last_win
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|isipv6
@@ -8693,6 +8698,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|th
 operator|->
