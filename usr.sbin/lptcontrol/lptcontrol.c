@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lptcontrol.c,v 1.6 1997/09/25 06:36:29 charnier Exp $"
+literal|"$Id: lptcontrol.c,v 1.8 1999/02/14 12:23:49 nsouch Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,8 +111,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEFAULT_UNIT
-value|"0"
+name|DEFAULT_DEVICE
+value|"/dev/lpt0"
 end_define
 
 begin_define
@@ -160,7 +160,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lptcontrol -i | -p | -s | -e [-u<unit no.>]\n"
+literal|"usage: lptcontrol -i | -p | -s | -e [-d device]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -242,65 +242,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|char
-modifier|*
-name|dev_file
-parameter_list|(
-name|char
-name|unit_no
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|devname
-index|[
-name|_POSIX_PATH_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|strncpy
-argument_list|(
-name|devname
-argument_list|,
-name|PATH_LPCTL
-argument_list|,
-name|_POSIX_PATH_MAX
-argument_list|)
-expr_stmt|;
-name|devname
-index|[
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|devname
-argument_list|)
-index|]
-operator|=
-name|unit_no
-expr_stmt|;
-name|devname
-index|[
-operator|++
-name|len
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return
-operator|(
-name|devname
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|int
 name|main
 parameter_list|(
@@ -323,9 +264,9 @@ name|IRQ_INVALID
 decl_stmt|;
 name|char
 modifier|*
-name|unit
+name|device
 init|=
-name|DEFAULT_UNIT
+name|DEFAULT_DEVICE
 decl_stmt|;
 while|while
 condition|(
@@ -338,7 +279,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ipesu:"
+literal|"ipesd:"
 argument_list|)
 operator|)
 operator|!=
@@ -383,23 +324,11 @@ name|USE_STD_MODE
 expr_stmt|;
 break|break;
 case|case
-literal|'u'
+literal|'d'
 case|:
-name|unit
+name|device
 operator|=
 name|optarg
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isdigit
-argument_list|(
-operator|*
-name|unit
-argument_list|)
-condition|)
-name|usage
-argument_list|()
 expr_stmt|;
 break|break;
 default|default :
@@ -420,11 +349,7 @@ name|set_interrupt_status
 argument_list|(
 name|irq_status
 argument_list|,
-name|dev_file
-argument_list|(
-operator|*
-name|unit
-argument_list|)
+name|device
 argument_list|)
 expr_stmt|;
 name|exit
