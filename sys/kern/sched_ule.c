@@ -4745,7 +4745,7 @@ condition|(
 name|sum
 operator|>
 operator|(
-name|SCHED_INTERACT_MAX
+name|SCHED_SLP_RUN_MAX
 operator|/
 literal|5
 operator|)
