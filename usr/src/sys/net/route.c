@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	6.1	83/07/29	*/
+comment|/*	route.c	6.2	83/10/20	*/
 end_comment
 
 begin_include
@@ -128,7 +128,7 @@ modifier|*
 name|m
 decl_stmt|;
 specifier|register
-name|unsigned
+name|u_long
 name|hash
 decl_stmt|;
 name|struct
@@ -844,8 +844,6 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|hash
-decl_stmt|,
 argument_list|(
 operator|*
 name|match
@@ -854,6 +852,9 @@ argument_list|()
 decl_stmt|;
 name|u_int
 name|af
+decl_stmt|;
+name|u_long
+name|hash
 decl_stmt|;
 name|struct
 name|ifnet
