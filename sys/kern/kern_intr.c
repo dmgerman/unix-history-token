@@ -1979,15 +1979,6 @@ name|ih
 operator|->
 name|ih_ithread
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|it
-operator|->
-name|it_proc
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2008,11 +1999,15 @@ name|KTR_INTR
 argument_list|,
 literal|"swi_sched pid %d(%s) need=%d"
 argument_list|,
-name|p
+name|it
+operator|->
+name|it_proc
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|it
+operator|->
+name|it_proc
 operator|->
 name|p_comm
 argument_list|,
