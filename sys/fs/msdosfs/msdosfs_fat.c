@@ -430,9 +430,7 @@ operator|-
 name|bn
 argument_list|)
 operator|*
-name|pmp
-operator|->
-name|pm_BytesPerSec
+name|DEV_BSIZE
 expr_stmt|;
 name|bn
 operator|+=
@@ -1450,7 +1448,10 @@ name|pmp
 operator|->
 name|pm_fsinfo
 argument_list|,
-literal|1024
+name|fsi_size
+argument_list|(
+name|pmp
+argument_list|)
 argument_list|,
 name|NOCRED
 argument_list|,
