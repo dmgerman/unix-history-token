@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.24 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,32 +36,6 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -221,9 +195,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|fp_query
 argument_list|(
 name|msg
@@ -231,8 +202,6 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -265,9 +234,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 specifier|register
 name|char
 modifier|*
@@ -754,8 +720,6 @@ condition|)
 return|return;
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -788,9 +752,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|char
 name|name
 index|[
@@ -870,8 +831,6 @@ operator|+
 name|n
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -908,9 +867,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|int
 name|type
 decl_stmt|,
@@ -1009,7 +965,10 @@ literal|", ttl = %s"
 argument_list|,
 name|p_time
 argument_list|(
+name|_getlong
+argument_list|(
 name|cp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1175,18 +1134,6 @@ case|:
 case|case
 name|T_MB
 case|:
-ifdef|#
-directive|ifdef
-name|OLDRR
-case|case
-name|T_MD
-case|:
-case|case
-name|T_MF
-case|:
-endif|#
-directive|endif
-comment|/* OLDRR */
 case|case
 name|T_MG
 case|:
@@ -1322,7 +1269,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"\n\tserial=%ld"
+literal|"\n\tserial = %ld"
 argument_list|,
 name|_getlong
 argument_list|(
@@ -1341,11 +1288,14 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", refresh=%s"
+literal|"\n\trefresh = %s"
 argument_list|,
 name|p_time
 argument_list|(
+name|_getlong
+argument_list|(
 name|cp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1360,11 +1310,14 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", retry=%s"
+literal|"\n\tretry = %s"
 argument_list|,
 name|p_time
 argument_list|(
+name|_getlong
+argument_list|(
 name|cp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1379,11 +1332,14 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", expire=%s"
+literal|"\n\texpire = %s"
 argument_list|,
 name|p_time
 argument_list|(
+name|_getlong
+argument_list|(
 name|cp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1398,11 +1354,14 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", min=%s\n"
+literal|"\n\tmin = %s\n"
 argument_list|,
 name|p_time
 argument_list|(
+name|_getlong
+argument_list|(
 name|cp
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1497,6 +1456,9 @@ expr_stmt|;
 break|break;
 case|case
 name|T_UINFO
+case|:
+case|case
+name|T_TXT
 case|:
 name|fprintf
 argument_list|(
@@ -1789,8 +1751,6 @@ operator|(
 name|cp
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -1841,30 +1801,6 @@ operator|(
 literal|"NS"
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|OLDRR
-case|case
-name|T_MD
-case|:
-comment|/* mail destination */
-return|return
-operator|(
-literal|"MD"
-operator|)
-return|;
-case|case
-name|T_MF
-case|:
-comment|/* mail forwarder */
-return|return
-operator|(
-literal|"MF"
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* OLDRR */
 case|case
 name|T_CNAME
 case|:
@@ -1899,15 +1835,6 @@ comment|/* mail group member */
 return|return
 operator|(
 literal|"MG"
-operator|)
-return|;
-case|case
-name|T_MX
-case|:
-comment|/* mail routing info */
-return|return
-operator|(
-literal|"MX"
 operator|)
 return|;
 case|case
@@ -1962,6 +1889,24 @@ comment|/* mailbox information */
 return|return
 operator|(
 literal|"MINFO"
+operator|)
+return|;
+case|case
+name|T_MX
+case|:
+comment|/* mail routing info */
+return|return
+operator|(
+literal|"MX"
+operator|)
+return|;
+case|case
+name|T_TXT
+case|:
+comment|/* text */
+return|return
+operator|(
+literal|"TXT"
 operator|)
 return|;
 case|case
@@ -2087,6 +2032,15 @@ comment|/* internet class */
 return|return
 operator|(
 literal|"IN"
+operator|)
+return|;
+case|case
+name|C_HS
+case|:
+comment|/* internet class */
+return|return
+operator|(
+literal|"HESIOD"
 operator|)
 return|;
 case|case
