@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -593,7 +619,7 @@ break|break;
 default|default:
 name|error
 argument_list|(
-literal|"Syntax error"
+literal|"syntax error"
 argument_list|)
 expr_stmt|;
 name|pusht
@@ -729,7 +755,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Illegal card config index"
+literal|"illegal card config index"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -813,7 +839,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Illegal card IRQ value"
+literal|"illegal card IRQ value"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -903,7 +929,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Illegal card reset time"
+literal|"illegal card reset time"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -938,7 +964,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Illegal ether address offset"
+literal|"illegal ether address offset"
 argument_list|)
 expr_stmt|;
 name|cp
@@ -1303,7 +1329,7 @@ name|force
 condition|)
 name|error
 argument_list|(
-literal|"Illegal or missing I/O block spec"
+literal|"illegal or missing I/O block spec"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1363,7 +1389,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Illegal memory block"
+literal|"illegal memory block"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1428,7 +1454,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Memory address out of range"
+literal|"memory address out of range"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1470,7 +1496,7 @@ name|force
 condition|)
 name|error
 argument_list|(
-literal|"Illegal or missing memory block spec"
+literal|"illegal or missing memory block spec"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1546,7 +1572,7 @@ name|force
 condition|)
 name|error
 argument_list|(
-literal|"Illegal IRQ value"
+literal|"illegal IRQ value"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2324,7 +2350,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Unterminated string"
+literal|"unterminated string"
 argument_list|)
 expr_stmt|;
 break|break;
