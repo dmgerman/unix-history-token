@@ -589,8 +589,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Equality  */
+comment|/*  * Equality  * NOTE: Some of kernel programming environment (for example, openbsd/sparc)  * does not supply memcmp().  For userland memcmp() is preferred as it is  * in ANSI standard.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IN6_ARE_ADDR_EQUAL
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(bcmp((a), (b), sizeof(struct in6_addr)) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -604,6 +628,11 @@ parameter_list|)
 define|\
 value|(memcmp((a), (b), sizeof(struct in6_addr)) == 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Unspecified  */
