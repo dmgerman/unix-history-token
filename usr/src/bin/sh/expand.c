@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	5.7 (Berkeley) %G%"
+literal|"@(#)expand.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +378,16 @@ end_function_decl
 begin_function_decl
 name|STATIC
 name|void
+name|expari
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|STATIC
+name|void
 name|addfname
 parameter_list|(
 name|char
@@ -525,6 +535,14 @@ end_function_decl
 begin_function_decl
 name|STATIC
 name|void
+name|expari
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|STATIC
+name|void
 name|addfname
 parameter_list|()
 function_decl|;
@@ -630,7 +648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform variable substitution and command substitution on an argument,  * placing the resulting list of arguments in arglist.  If full is true,  * perform splitting and file name expansion.  When arglist is NULL, perform  * here document expansion.  */
+comment|/*  * Perform variable substitution and command substitution on an argument,  * placing the resulting list of arguments in arglist.  If EXP_FULL is true,  * perform splitting and file name expansion.  When arglist is NULL, perform  * here document expansion.  */
 end_comment
 
 begin_function
@@ -901,7 +919,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform variable and command substitution.  If full is set, output CTLESC  * characters to allow for further processing.  If full is not set, treat  * $@ like $* since no splitting will be performed.  */
+comment|/*  * Perform variable and command substitution.  If EXP_FULL is set, output CTLESC  * characters to allow for further processing.  Otherwise treat  * $@ like $* since no splitting will be performed.  */
 end_comment
 
 begin_function
@@ -919,29 +937,22 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+specifier|register
 name|char
 name|c
 decl_stmt|;
 name|int
-name|sawari
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|full
+name|quotes
 init|=
 name|flag
 operator|&
+operator|(
 name|EXP_FULL
+operator||
+name|EXP_CASE
+operator|)
 decl_stmt|;
-comment|/* is there a later stage? */
-name|int
-name|vartilde
-init|=
-name|flag
-operator|&
-name|EXP_VARTILDE
-decl_stmt|;
+comment|/* do CTLESC */
 if|if
 condition|(
 operator|*
@@ -965,7 +976,7 @@ name|exptilde
 argument_list|(
 name|p
 argument_list|,
-name|vartilde
+name|flag
 argument_list|)
 expr_stmt|;
 for|for
@@ -998,7 +1009,7 @@ name|CTLESC
 case|:
 if|if
 condition|(
-name|full
+name|quotes
 condition|)
 name|STPUTC
 argument_list|(
@@ -1052,7 +1063,7 @@ name|c
 operator|&
 name|CTLQUOTE
 argument_list|,
-name|full
+name|flag
 argument_list|)
 expr_stmt|;
 name|argbackq
@@ -1066,7 +1077,9 @@ case|case
 name|CTLENDARI
 case|:
 name|expari
-argument_list|()
+argument_list|(
+name|flag
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1081,7 +1094,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vartilde
+name|flag
+operator|&
+name|EXP_VARTILDE
 operator|&&
 operator|*
 name|p
@@ -1094,7 +1109,7 @@ name|exptilde
 argument_list|(
 name|p
 argument_list|,
-name|vartilde
+name|flag
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1122,7 +1137,7 @@ name|exptilde
 parameter_list|(
 name|p
 parameter_list|,
-name|vartilde
+name|flag
 parameter_list|)
 name|char
 modifier|*
@@ -1145,6 +1160,17 @@ decl_stmt|;
 name|char
 modifier|*
 name|home
+decl_stmt|;
+name|int
+name|quotes
+init|=
+name|flag
+operator|&
+operator|(
+name|EXP_FULL
+operator||
+name|EXP_CASE
+operator|)
 decl_stmt|;
 while|while
 condition|(
@@ -1172,7 +1198,9 @@ literal|':'
 case|:
 if|if
 condition|(
-name|vartilde
+name|flag
+operator|&
+name|EXP_VARTILDE
 condition|)
 goto|goto
 name|done
@@ -1278,6 +1306,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|quotes
+operator|&&
 name|SQSYNTAX
 index|[
 name|c
@@ -1324,12 +1354,12 @@ begin_comment
 comment|/*  * Expand arithmetic expression.  Backup to start of expression,  * evaluate, place result in (backed up) result, adjust string position.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|expari
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|flag
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1340,6 +1370,17 @@ name|start
 decl_stmt|;
 name|int
 name|result
+decl_stmt|;
+name|int
+name|quotes
+init|=
+name|flag
+operator|&
+operator|(
+name|EXP_FULL
+operator||
+name|EXP_CASE
+operator|)
 decl_stmt|;
 comment|/* 	 * This routine is slightly over-compilcated for 	 * efficiency.  First we make sure there is 	 * enough space for the result, which may be bigger 	 * than the expression if we add exponentation.  Next we 	 * scan backwards looking for the start of arithmetic.  If the 	 * next previous character is a CTLESC character, then we 	 * have to rescan starting from the beginning since CTLESC 	 * characters have to be processed left to right.   	 */
 name|CHECKSTRSPACE
@@ -1430,6 +1471,10 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|quotes
+condition|)
 name|rmescapes
 argument_list|(
 name|p
@@ -1481,7 +1526,7 @@ name|expdest
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Expand stuff in backwards quotes.  */
@@ -1496,7 +1541,7 @@ name|cmd
 parameter_list|,
 name|quoted
 parameter_list|,
-name|full
+name|flag
 parameter_list|)
 name|union
 name|node
@@ -1563,6 +1608,17 @@ name|BASESYNTAX
 decl_stmt|;
 name|int
 name|saveherefd
+decl_stmt|;
+name|int
+name|quotes
+init|=
+name|flag
+operator|&
+operator|(
+name|EXP_FULL
+operator||
+name|EXP_CASE
+operator|)
 decl_stmt|;
 name|INTOFF
 expr_stmt|;
@@ -1729,7 +1785,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|full
+name|quotes
 operator|&&
 name|syntax
 index|[
@@ -1910,6 +1966,17 @@ decl_stmt|;
 name|int
 name|startloc
 decl_stmt|;
+name|int
+name|quotes
+init|=
+name|flag
+operator|&
+operator|(
+name|EXP_FULL
+operator||
+name|EXP_CASE
+operator|)
+decl_stmt|;
 name|varflags
 operator|=
 operator|*
@@ -2081,11 +2148,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|flag
-operator|&
-name|EXP_FULL
-operator|)
+name|quotes
 operator|&&
 name|syntax
 index|[
@@ -4565,6 +4628,9 @@ modifier|*
 name|string
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|pattern
@@ -4594,6 +4660,8 @@ name|string
 argument_list|)
 return|;
 else|else
+endif|#
+directive|endif
 return|return
 name|pmatch
 argument_list|(
@@ -5155,7 +5223,9 @@ name|narg
 operator|.
 name|text
 argument_list|,
-literal|0
+name|EXP_TILDE
+operator||
+name|EXP_CASE
 argument_list|)
 expr_stmt|;
 name|STPUTC
