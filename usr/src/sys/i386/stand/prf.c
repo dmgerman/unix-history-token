@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)prf.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)prf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"types.h"
 end_include
 
 begin_comment
@@ -125,7 +125,6 @@ operator|*
 name|fmt
 operator|++
 expr_stmt|;
-comment|/* 	 * THIS CODE IS BYTE-ORDER DEPENDENT IN HANDLING %c 	 * AND IGNORES SHORT/LONG DISTINCTIONS. 	 */
 switch|switch
 condition|(
 name|c
@@ -231,8 +230,8 @@ name|c
 argument_list|)
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|notyet
 case|case
 literal|'b'
@@ -502,20 +501,6 @@ do|;
 block|}
 end_block
 
-begin_define
-define|#
-directive|define
-name|lf
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|cr
-value|13
-end_define
-
 begin_macro
 name|putchar
 argument_list|(
@@ -535,20 +520,13 @@ if|if
 condition|(
 name|c
 operator|==
-name|lf
+literal|'\n'
 condition|)
-block|{
 name|sput
 argument_list|(
-name|cr
+literal|'\r'
 argument_list|)
 expr_stmt|;
-name|wait
-argument_list|(
-literal|60000
-argument_list|)
-expr_stmt|;
-block|}
 name|sput
 argument_list|(
 name|c
