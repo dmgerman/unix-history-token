@@ -2027,13 +2027,6 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-name|g_free
-argument_list|(
-name|gp
-operator|->
-name|softc
-argument_list|)
-expr_stmt|;
 name|g_destroy_geom
 argument_list|(
 name|gp
