@@ -114,6 +114,11 @@ directive|define
 name|SI_CLONELIST
 value|0x0200
 comment|/* on a clone list */
+define|#
+directive|define
+name|SI_ISDISK
+value|0x0400
+comment|/* device is a disk */
 name|struct
 name|timespec
 name|si_atime
@@ -1091,6 +1096,32 @@ name|struct
 name|cdevsw
 modifier|*
 name|devsw
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|cdevsw
+modifier|*
+name|dev_refthread
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dev_relthread
 parameter_list|(
 name|struct
 name|cdev
