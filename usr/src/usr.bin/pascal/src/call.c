@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.4.1.1 %G%"
+literal|"@(#)call.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
