@@ -2023,12 +2023,55 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|&
+name|IP_FW_PORT_DENY_FLAG
+condition|)
+block|{
+comment|/* XXX new interface-denied */
+if|if
+condition|(
+name|m
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+if|if
+condition|(
 name|m
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* Packet discarded by firewall */
+specifier|static
+name|int
+name|__debug
+init|=
+literal|10
+decl_stmt|;
+if|if
+condition|(
+name|__debug
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"firewall returns NULL, please update!\n"
+argument_list|)
+expr_stmt|;
+name|__debug
+operator|--
+expr_stmt|;
+block|}
 return|return;
+block|}
 if|if
 condition|(
 name|i

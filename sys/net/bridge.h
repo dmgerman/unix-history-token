@@ -48,6 +48,131 @@ name|bdg_table
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * We need additional info for the bridge. The bdg_ifp2sc[] array  * provides a pointer to this struct using the if_index.     * bdg_softc has a backpointer to the struct ifnet, the bridge  * flags, and a cluster (bridging occurs only between port of the  * same cluster).  */
+end_comment
+
+begin_struct
+struct|struct
+name|bdg_softc
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+comment|/* also ((struct arpcom *)ifp)->ac_enaddr is the eth. addr */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|IFF_BDG_PROMISC
+value|0x0001
+comment|/* set promisc mode on this if.  */
+define|#
+directive|define
+name|IFF_MUTE
+value|0x0002
+comment|/* mute this if for bridging.   */
+define|#
+directive|define
+name|IFF_USED
+value|0x0004
+comment|/* use this if for bridging.    */
+name|short
+name|cluster_id
+decl_stmt|;
+comment|/* in network format */
+name|u_long
+name|magic
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|bdg_softc
+modifier|*
+name|ifp2sc
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|BDG_USED
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(ifp2sc[ifp->if_index].flags& IFF_USED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDG_MUTED
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(ifp2sc[ifp->if_index].flags& IFF_MUTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDG_MUTE
+parameter_list|(
+name|ifp
+parameter_list|)
+value|ifp2sc[ifp->if_index].flags |= IFF_MUTE
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDG_UNMUTE
+parameter_list|(
+name|ifp
+parameter_list|)
+value|ifp2sc[ifp->if_index].flags&= ~IFF_MUTE
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDG_CLUSTER
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(ifp2sc[ifp->if_index].cluster_id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDG_EH
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((struct arpcom *)ifp)->ac_enaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDG_SAMECLUSTER
+parameter_list|(
+name|ifp
+parameter_list|,
+name|src
+parameter_list|)
+define|\
+value|(src == NULL || BDG_CLUSTER(ifp) == BDG_CLUSTER(src) )
+end_define
+
 begin_define
 define|#
 directive|define
@@ -55,14 +180,31 @@ name|BDG_MAX_PORTS
 value|128
 end_define
 
-begin_decl_stmt
-specifier|extern
+begin_typedef
+typedef|typedef
+struct|struct
+name|_bdg_addr
+block|{
 name|unsigned
 name|char
-name|bdg_addresses
+name|etheraddr
 index|[
 literal|6
-operator|*
+index|]
+decl_stmt|;
+name|short
+name|cluster_id
+decl_stmt|;
+block|}
+name|bdg_addr
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|bdg_addr
+name|bdg_addresses
+index|[
 name|BDG_MAX_PORTS
 index|]
 decl_stmt|;
@@ -134,12 +276,13 @@ comment|/* bdg_forward frees the mbuf if necessary, returning null */
 end_comment
 
 begin_function_decl
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|bdg_forward
 parameter_list|(
 name|struct
 name|mbuf
-modifier|*
 modifier|*
 name|m0
 parameter_list|,
@@ -353,7 +496,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Find the right pkt destination:  *	BDG_BCAST	is a broadcast  *	BDG_MCAST	is a multicast  *	BDG_LOCAL	is for a local address  *	BDG_DROP	must be dropped  *	other		ifp of the dest. interface (incl.self)  */
+comment|/*  * Find the right pkt destination:  *	BDG_BCAST	is a broadcast  *	BDG_MCAST	is a multicast  *	BDG_LOCAL	is for a local address  *	BDG_DROP	must be dropped  *	other		ifp of the dest. interface (incl.self)  *  * We assume this is only called for interfaces for which bridging  * is enabled, i.e. BDG_USED(ifp) is true.  */
 end_comment
 
 begin_expr_stmt
@@ -374,11 +517,9 @@ block|;
 name|int
 name|index
 block|;
-name|u_char
+name|bdg_addr
 operator|*
-name|eth_addr
-operator|=
-name|bdg_addresses
+name|p
 block|;
 if|if
 condition|(
@@ -422,7 +563,7 @@ name|index
 operator|=
 name|bdg_ports
 operator|,
-name|eth_addr
+name|p
 operator|=
 name|bdg_addresses
 init|;
@@ -431,15 +572,16 @@ condition|;
 name|index
 operator|--
 operator|,
-name|eth_addr
-operator|+=
-literal|6
+name|p
+operator|++
 control|)
 if|if
 condition|(
 name|BDG_MATCH
 argument_list|(
-name|eth_addr
+name|p
+operator|->
+name|etheraddr
 argument_list|,
 name|eh
 operator|->

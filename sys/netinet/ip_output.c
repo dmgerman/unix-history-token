@@ -1884,7 +1884,32 @@ operator|&
 name|dst
 argument_list|)
 expr_stmt|;
-comment|/*                  * On return we must do the following:                  * m == NULL         -> drop the pkt                  * 1<=off<= 0xffff   -> DIVERT                  * (off& 0x10000)   -> send to a DUMMYNET pipe                  * (off& 0x20000)   -> TEE the packet                  * dst != old        -> IPFIREWALL_FORWARD                  * off==0, dst==old  -> accept                  * If some of the above modules is not compiled in, then                  * we should't have to check the corresponding condition                  * (because the ipfw control socket should not accept                  * unsupported rules), but better play safe and drop                  * packets in case of doubt.                  */
+comment|/*                  * On return we must do the following:                  * m == NULL         -> drop the pkt (old interface, deprecated)                  * (off& 0x40000)   -> drop the pkt (new interface)                  * 1<=off<= 0xffff   -> DIVERT                  * (off& 0x10000)   -> send to a DUMMYNET pipe                  * (off& 0x20000)   -> TEE the packet                  * dst != old        -> IPFIREWALL_FORWARD                  * off==0, dst==old  -> accept                  * If some of the above modules is not compiled in, then                  * we should't have to check the corresponding condition                  * (because the ipfw control socket should not accept                  * unsupported rules), but better play safe and drop                  * packets in case of doubt.                  */
+if|if
+condition|(
+name|off
+operator|&
+name|IP_FW_PORT_DENY_FLAG
+condition|)
+block|{
+comment|/* XXX new interface-denied */
+if|if
+condition|(
+name|m
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EACCES
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1892,6 +1917,28 @@ name|m
 condition|)
 block|{
 comment|/* firewall said to reject */
+specifier|static
+name|int
+name|__debug
+init|=
+literal|10
+decl_stmt|;
+if|if
+condition|(
+name|__debug
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"firewall returns NULL, please update!\n"
+argument_list|)
+expr_stmt|;
+name|__debug
+operator|--
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|EACCES
