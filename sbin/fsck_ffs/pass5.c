@@ -2238,6 +2238,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bkgrdsumadj
+operator|==
+literal|0
+operator|||
 name|sysctl
 argument_list|(
 name|adjndir
@@ -2308,6 +2312,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bkgrdsumadj
+operator|==
+literal|0
+operator|||
 name|sysctl
 argument_list|(
 name|adjnbfree
@@ -2378,6 +2386,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bkgrdsumadj
+operator|==
+literal|0
+operator|||
 name|sysctl
 argument_list|(
 name|adjnifree
@@ -2448,6 +2460,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bkgrdsumadj
+operator|==
+literal|0
+operator|||
 name|sysctl
 argument_list|(
 name|adjnffree
@@ -2518,6 +2534,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bkgrdsumadj
+operator|==
+literal|0
+operator|||
 name|sysctl
 argument_list|(
 name|adjnumclusters
