@@ -454,6 +454,12 @@ begin_comment
 comment|/* Prototypes for non-quad routines. */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|malloc_type
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|uint32_t
 name|arc4random
@@ -771,6 +777,10 @@ specifier|const
 name|char
 modifier|*
 name|__restrict
+parameter_list|,
+name|struct
+name|malloc_type
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

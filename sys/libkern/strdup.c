@@ -48,6 +48,11 @@ specifier|const
 name|char
 modifier|*
 name|string
+parameter_list|,
+name|struct
+name|malloc_type
+modifier|*
+name|type
 parameter_list|)
 block|{
 name|size_t
@@ -72,7 +77,7 @@ name|malloc
 argument_list|(
 name|len
 argument_list|,
-name|M_STRING
+name|type
 argument_list|,
 name|M_WAITOK
 argument_list|)
