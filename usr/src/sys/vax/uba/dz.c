@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dz.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dz.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3517,6 +3517,30 @@ operator|~
 name|b
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mbits
+operator|&
+name|DZ_DTR
+operator|&&
+name|dzsoftCAR
+index|[
+name|unit
+operator|>>
+literal|3
+index|]
+operator|&
+name|b
+condition|)
+name|dz_tty
+index|[
+name|unit
+index|]
+operator|.
+name|t_state
+operator||=
+name|TS_CARR_ON
+expr_stmt|;
 operator|(
 name|void
 operator|)
