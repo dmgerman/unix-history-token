@@ -864,7 +864,9 @@ name|drive
 operator|->
 name|dev
 operator|,
-literal|0
+name|FWRITE
+operator||
+name|FREAD
 operator|,
 literal|0
 operator|,
