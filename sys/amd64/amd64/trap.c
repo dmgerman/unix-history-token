@@ -839,6 +839,15 @@ operator|&&
 name|type
 operator|!=
 name|T_TRCTRAP
+operator|&&
+name|frame
+operator|.
+name|tf_eip
+operator|!=
+operator|(
+name|int
+operator|)
+name|cpu_switch_load_gs
 condition|)
 block|{
 comment|/* 			 * XXX not quite right, since this may be for a 			 * multiple fault in user mode. 			 */
@@ -862,15 +871,6 @@ name|spinlocks
 argument_list|)
 operator|==
 name|NULL
-operator|&&
-name|frame
-operator|.
-name|tf_eip
-operator|!=
-operator|(
-name|int
-operator|)
-name|cpu_switch_load_gs
 condition|)
 name|enable_intr
 argument_list|()
@@ -1669,15 +1669,6 @@ operator|->
 name|pcb_gs
 operator|=
 literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Process %d has bad %%gs, reset to zero\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
 expr_stmt|;
 if|#
 directive|if
