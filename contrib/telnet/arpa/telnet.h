@@ -809,6 +809,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_TN3270E
+value|40
+end_define
+
+begin_comment
+comment|/* RFC2355 - TN3270 Enhancements */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_CHARSET
+value|42
+end_define
+
+begin_comment
+comment|/* RFC2066 - Charset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_COMPORT
+value|44
+end_define
+
+begin_comment
+comment|/* RFC2217 - Com Port Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_KERMIT
+value|47
+end_define
+
+begin_comment
+comment|/* RFC2840 - Kermit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TELOPT_EXOPL
 value|255
 end_define
@@ -821,7 +865,7 @@ begin_define
 define|#
 directive|define
 name|NTELOPTS
-value|(1+TELOPT_NEW_ENVIRON)
+value|(1+TELOPT_KERMIT)
 end_define
 
 begin_ifdef
@@ -922,6 +966,14 @@ literal|"ENCRYPT"
 block|,
 literal|"NEW-ENVIRON"
 block|,
+literal|"TN3270E"
+block|,
+literal|"CHARSET"
+block|,
+literal|"COM-PORT"
+block|,
+literal|"KERMIT"
+block|,
 literal|0
 block|}
 decl_stmt|;
@@ -938,7 +990,7 @@ begin_define
 define|#
 directive|define
 name|TELOPT_LAST
-value|TELOPT_NEW_ENVIRON
+value|TELOPT_KERMIT
 end_define
 
 begin_define
