@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Robert N. M. Watson  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004-2005 Robert N. M. Watson  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1304,6 +1304,17 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ddp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|DDP_LOCK_INIT
 argument_list|(
 name|ddp
