@@ -9564,7 +9564,7 @@ argument|); 		fw_bmr(fc); 	}else{ 		printf(
 literal|"\n"
 argument|); 	} error: 	fw_xfer_free(xfer); }
 comment|/*  * To candidate Bus Manager election process.  */
-argument|void fw_try_bmr(void *arg) { 	struct fw_xfer *xfer; 	struct firewire_comm *fc = (struct firewire_comm *)arg; 	struct fw_pkt *fp; 	int err =
+argument|static void fw_try_bmr(void *arg) { 	struct fw_xfer *xfer; 	struct firewire_comm *fc = (struct firewire_comm *)arg; 	struct fw_pkt *fp; 	int err =
 literal|0
 argument|;  	xfer = fw_xfer_alloc(M_FWXFER); 	if(xfer == NULL){ 		return; 	} 	xfer->send.len =
 literal|24
@@ -9697,7 +9697,7 @@ argument|) ^ ( sum<<
 literal|5
 argument|) ^ sum; 		} 		crc&=
 literal|0xffff
-argument|; 	} 	return((u_int16_t) crc); }  int fw_bmr(struct firewire_comm *fc) { 	struct fw_device fwdev; 	int cmstr;
+argument|; 	} 	return((u_int16_t) crc); }  static int fw_bmr(struct firewire_comm *fc) { 	struct fw_device fwdev; 	int cmstr;
 comment|/* XXX Assume that the current root node is cycle master capable */
 argument|cmstr = fc->max_node;
 comment|/* If I am the bus manager, optimize gapcount */
