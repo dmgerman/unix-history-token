@@ -5378,11 +5378,11 @@ argument_list|)
 expr_stmt|;
 name|msg
 operator|->
-name|msg_ie_cgsa
+name|msg_ie_cgad
 operator|->
 name|ie_ident
 operator|=
-name|UNI_IE_CGSA
+name|UNI_IE_CGAD
 expr_stmt|;
 name|ATM_ADDR_COPY
 argument_list|(
