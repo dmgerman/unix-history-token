@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  * $FreeBSD$  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$FreeBSD$  */
 end_comment
 
 begin_define
@@ -53,18 +53,29 @@ decl_stmt|,
 name|majorversion
 decl_stmt|;
 name|u_int
-name|intversion
+name|cs32_base
 decl_stmt|,
-name|connectmode
+name|cs16_base
+decl_stmt|,
+name|ds_base
+decl_stmt|;
+name|u_int
+name|cs16_limit
+decl_stmt|,
+name|cs32_limit
+decl_stmt|,
+name|ds_limit
+decl_stmt|;
+name|u_int
+name|cs_entry
+decl_stmt|;
+name|u_int
+name|intversion
 decl_stmt|;
 name|u_int
 name|standbys
 decl_stmt|,
 name|suspends
-decl_stmt|;
-name|struct
-name|bios_args
-name|bios
 decl_stmt|;
 name|struct
 name|apmhook
@@ -100,6 +111,15 @@ index|[
 name|APM_NPMEV
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|void
+modifier|*
+name|sc_devfs_token
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
