@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getnetgrent.c	8.1 (Berkeley) %G%"
+literal|"@(#)getnetgrent.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1177,6 +1177,13 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|pos
+operator|==
+name|NULL
+condition|)
+break|break;
 while|while
 condition|(
 operator|*
