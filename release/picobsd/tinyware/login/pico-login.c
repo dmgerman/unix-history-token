@@ -222,7 +222,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<security/pam_misc.h>
+file|<security/openpam.h>
 end_include
 
 begin_include
@@ -2946,7 +2946,7 @@ name|pam_end
 argument_list|(
 name|pamh
 argument_list|,
-name|PAM_DATA_SILENT
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -3616,7 +3616,7 @@ name|pam_conv
 name|conv
 init|=
 block|{
-name|misc_conv
+name|openpam_ttyconv
 block|,
 name|NULL
 block|}
