@@ -19,5 +19,25 @@ directive|undef
 name|HAVE_STRUCT_TIMEZONE
 end_undef
 
+begin_comment
+comment|/* Define if your gettimeofday takes only one argument. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GETTIMEOFDAY_ONE_ARGUMENT
+end_undef
+
+begin_comment
+comment|/* Define if your gettimeofday takes a time zome argument. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_TIMEZONE
+end_undef
+
 end_unit
 

@@ -294,10 +294,17 @@ name|errno
 operator|=
 name|ENOSYS
 expr_stmt|;
-return|return
-operator|-
+name|s_copy
+argument_list|(
+name|ret_val
+argument_list|,
+literal|" "
+argument_list|,
+name|ret_val_len
+argument_list|,
 literal|1
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
