@@ -1640,15 +1640,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|targp
-condition|)
-name|PROC_UNLOCK
-argument_list|(
-name|targp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ESRCH
