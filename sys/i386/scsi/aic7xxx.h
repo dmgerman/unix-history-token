@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.28.2.2 1996/10/06 01:31:25 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.30 1996/10/25 06:42:53 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -302,84 +302,98 @@ enum|enum
 block|{
 name|AHC_NONE
 init|=
-literal|0x000
+literal|0x0000
 block|,
 name|AHC_ULTRA
 init|=
-literal|0x001
+literal|0x0001
 block|,
 comment|/* Supports 20MHz Transfers */
 name|AHC_WIDE
 init|=
-literal|0x002
+literal|0x0002
 block|,
 comment|/* Wide Channel */
 name|AHC_TWIN
 init|=
-literal|0x008
+literal|0x0008
 block|,
 comment|/* Twin Channel */
 name|AHC_AIC7770
 init|=
-literal|0x010
+literal|0x0010
 block|,
 name|AHC_AIC7850
 init|=
-literal|0x020
+literal|0x0020
 block|,
 name|AHC_AIC7860
 init|=
-literal|0x021
+literal|0x0021
 block|,
 comment|/* ULTRA version of the aic7850 */
 name|AHC_AIC7870
 init|=
-literal|0x040
+literal|0x0040
 block|,
 name|AHC_AIC7880
 init|=
-literal|0x041
+literal|0x0041
 block|,
 name|AHC_AIC78X0
 init|=
-literal|0x060
+literal|0x0060
 block|,
 comment|/* PCI Based Controller */
 name|AHC_274
 init|=
-literal|0x110
+literal|0x0110
 block|,
 comment|/* EISA Based Controller */
 name|AHC_284
 init|=
-literal|0x210
+literal|0x0210
 block|,
 comment|/* VL/ISA Based Controller */
 name|AHC_294AU
 init|=
-literal|0x421
+literal|0x0421
 block|,
 comment|/* aic7860 based '2940' */
 name|AHC_294
 init|=
-literal|0x440
+literal|0x0440
 block|,
 comment|/* PCI Based Controller */
 name|AHC_294U
 init|=
-literal|0x441
+literal|0x0441
 block|,
 comment|/* ULTRA PCI Based Controller */
 name|AHC_394
 init|=
-literal|0x840
+literal|0x0840
 block|,
 comment|/* Twin Channel PCI Controller */
 name|AHC_394U
 init|=
-literal|0x841
+literal|0x0841
 block|,
-comment|/* Twin, ULTRA Channel PCI Controller */
+comment|/* ULTRA, Twin Channel PCI Controller */
+name|AHC_398
+init|=
+literal|0x1040
+block|,
+comment|/* Multi Channel PCI RAID Controller */
+name|AHC_398U
+init|=
+literal|0x1041
+block|,
+comment|/* ULTRA, Multi Channel PCI 					 * RAID Controller 					 */
+name|AHC_39X
+init|=
+literal|0x1800
+comment|/* Multi Channel PCI Adapter */
 block|}
 name|ahc_type
 typedef|;
@@ -420,7 +434,11 @@ name|AHC_CHNLB
 init|=
 literal|0x20
 block|,
-comment|/*  					 * Second controller on 3940  					 * Also encodes the offset in the 					 * SEEPROM for CHNLB info (32) 					 */
+comment|/*  					 * Second controller on 3940/398X  					 * Also encodes the offset in the 					 * SEEPROM for CHNLB info (32) 					 */
+name|AHC_CHNLC
+init|=
+literal|0x40
+comment|/* 					 * Third controller on 3985 					 * Also encodes the offset in the 					 * SEEPROM for CHNLC info (64) 					 */
 block|}
 name|ahc_flag
 typedef|;
@@ -620,7 +638,49 @@ end_struct
 
 begin_struct
 struct|struct
-name|ahc_data
+name|scb_data
+block|{
+name|struct
+name|hardware_scb
+modifier|*
+name|hscbs
+decl_stmt|;
+comment|/* Array of hardware SCBs */
+name|struct
+name|scb
+modifier|*
+name|scbarray
+index|[
+name|AHC_SCB_MAX
+index|]
+decl_stmt|;
+comment|/* Array of kernel SCBs */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|free_scbs
+expr_stmt|;
+comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
+name|u_int8_t
+name|numscbs
+decl_stmt|;
+name|u_int8_t
+name|maxhscbs
+decl_stmt|;
+comment|/* Number of SCBs on the card */
+name|u_int8_t
+name|maxscbs
+decl_stmt|;
+comment|/* 					 * Max SCBs we allocate total including 					 * any that will force us to page SCBs 					 */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ahc_softc
 block|{
 if|#
 directive|if
@@ -676,36 +736,10 @@ modifier|*
 name|maddr
 decl_stmt|;
 name|struct
-name|hardware_scb
+name|scb_data
 modifier|*
-name|hscbs
+name|scb_data
 decl_stmt|;
-comment|/* Array of hardware SCBs */
-name|struct
-name|scb
-modifier|*
-name|scbarray
-index|[
-name|AHC_SCB_MAX
-index|]
-decl_stmt|;
-comment|/* Array of kernel SCBs */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|scb
-argument_list|)
-name|free_scbs
-expr_stmt|;
-comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|scb
-argument_list|)
-name|waiting_scbs
-expr_stmt|;
-comment|/* 					 * SCBs waiting ready to go but 					 * waiting for space in the QINFIFO. 					 */
 name|struct
 name|scsi_link
 name|sc_link
@@ -715,6 +749,17 @@ name|scsi_link
 name|sc_link_b
 decl_stmt|;
 comment|/* Second bus for Twin channel cards */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|waiting_scbs
+expr_stmt|;
+comment|/* 					 * SCBs waiting ready to go but 					 * waiting for space in the QINFIFO. 					 */
+name|u_int8_t
+name|activescbs
+decl_stmt|;
 name|u_int16_t
 name|needsdtr_orig
 decl_stmt|;
@@ -760,20 +805,6 @@ name|our_id_b
 decl_stmt|;
 comment|/* B channel scsi id */
 name|u_int8_t
-name|numscbs
-decl_stmt|;
-name|u_int8_t
-name|activescbs
-decl_stmt|;
-name|u_int8_t
-name|maxhscbs
-decl_stmt|;
-comment|/* Number of SCBs on the card */
-name|u_int8_t
-name|maxscbs
-decl_stmt|;
-comment|/* 					 * Max SCBs we allocate total including 					 * any that will force us to page SCBs 					 */
-name|u_int8_t
 name|qcntmask
 decl_stmt|;
 comment|/* 					 * Mask of valid registers in the 					 * Q*CNT registers. 					 */
@@ -793,6 +824,22 @@ name|pause
 decl_stmt|;
 name|u_int8_t
 name|in_timeout
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|full_ahc_softc
+block|{
+name|struct
+name|ahc_softc
+name|softc
+decl_stmt|;
+name|struct
+name|scb_data
+name|scb_data_storage
 decl_stmt|;
 block|}
 struct|;
@@ -887,7 +934,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ahc_data
+name|ahc_softc
 operator|*
 name|ahc
 operator|)
@@ -910,7 +957,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ahc_data
+name|ahc_softc
 modifier|*
 name|ahc_alloc
 name|__P
@@ -930,6 +977,11 @@ name|type
 operator|,
 name|ahc_flag
 name|flags
+operator|,
+expr|struct
+name|scb_data
+operator|*
+name|scb_data
 operator|)
 argument_list|)
 decl_stmt|;
@@ -981,7 +1033,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ahc_data
+name|ahc_softc
 operator|*
 name|ahc
 operator|,
@@ -1013,7 +1065,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ahc_data
+name|ahc_softc
 operator|*
 operator|)
 argument_list|)
@@ -1027,7 +1079,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ahc_data
+name|ahc_softc
 operator|*
 operator|)
 argument_list|)
@@ -1041,7 +1093,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ahc_data
+name|ahc_softc
 operator|*
 operator|)
 argument_list|)

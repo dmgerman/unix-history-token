@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface for the 93C46/26/06 serial eeprom parts.  *  * Copyright (c) 1995 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.c,v 1.5 1996/05/30 07:19:54 gibbs Exp $  */
+comment|/*  * Interface for the 93C66/56/46/26/06 serial eeprom parts.  *  * Copyright (c) 1995, 1996 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.c,v 1.6 1996/10/25 06:42:49 gibbs Exp $  */
 end_comment
 
 begin_comment
-comment|/*  *   The instruction set of the 93C46/26/06 chips are as follows:  *  *               Start  OP  *     Function   Bit  Code  Address    Data     Description  *     -------------------------------------------------------------------  *     READ        1    10   A5 - A0             Reads data stored in memory,  *                                               starting at specified address  *     EWEN        1    00   11XXXX              Write enable must preceed  *                                               all programming modes  *     ERASE       1    11   A5 - A0             Erase register A5A4A3A2A1A0  *     WRITE       1    01   A5 - A0   D15 - D0  Writes register  *     ERAL        1    00   10XXXX              Erase all registers  *     WRAL        1    00   01XXXX    D15 - D0  Writes to all registers  *     EWDS        1    00   00XXXX              Disables all programming  *                                               instructions  *     *Note: A value of X for address is a don't care condition.  *  *   The 93C46 has a four wire interface: clock, chip select, data in, and  *   data out.  In order to perform one of the above functions, you need  *   to enable the chip select for a clock period (typically a minimum of  *   1 usec, with the clock high and low a minimum of 750 and 250 nsec  *   respectively.  While the chip select remains high, you can clock in  *   the instructions (above) starting with the start bit, followed by the  *   OP code, Address, and Data (if needed).  For the READ instruction, the  *   requested 16-bit register contents is read from the data out line but  *   is preceded by an initial zero (leading 0, followed by 16-bits, MSB  *   first).  The clock cycling from low to high initiates the next data  *   bit to be sent from the chip.  *  */
+comment|/*  *   The instruction set of the 93C66/56/46/26/06 chips are as follows:  *  *               Start  OP	    *  *     Function   Bit  Code  Address**  Data     Description  *     -------------------------------------------------------------------  *     READ        1    10   A5 - A0             Reads data stored in memory,  *                                               starting at specified address  *     EWEN        1    00   11XXXX              Write enable must preceed  *                                               all programming modes  *     ERASE       1    11   A5 - A0             Erase register A5A4A3A2A1A0  *     WRITE       1    01   A5 - A0   D15 - D0  Writes register  *     ERAL        1    00   10XXXX              Erase all registers  *     WRAL        1    00   01XXXX    D15 - D0  Writes to all registers  *     EWDS        1    00   00XXXX              Disables all programming  *                                               instructions  *     *Note: A value of X for address is a don't care condition.  *    **Note: There are 8 address bits for the 93C56/66 chips unlike  *	      the 93C46/26/06 chips which have 6 address bits.  *  *   The 93C46 has a four wire interface: clock, chip select, data in, and  *   data out.  In order to perform one of the above functions, you need  *   to enable the chip select for a clock period (typically a minimum of  *   1 usec, with the clock high and low a minimum of 750 and 250 nsec  *   respectively).  While the chip select remains high, you can clock in  *   the instructions (above) starting with the start bit, followed by the  *   OP code, Address, and Data (if needed).  For the READ instruction, the  *   requested 16-bit register contents is read from the data out line but  *   is preceded by an initial zero (leading 0, followed by 16-bits, MSB  *   first).  The clock cycling from low to high initiates the next data  *   bit to be sent from the chip.  *  */
 end_comment
 
 begin_include
@@ -326,12 +326,18 @@ operator|->
 name|sd_DO
 expr_stmt|;
 block|}
-comment|/* Send the 6 bit address (MSB first, LSB last). */
+comment|/* Send the 6 or 8 bit address (MSB first, LSB last). */
 for|for
 control|(
 name|i
 operator|=
-literal|5
+operator|(
+name|sd
+operator|->
+name|sd_chip
+operator|-
+literal|1
+operator|)
 init|;
 name|i
 operator|>=
