@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-domain.c,v 1.37 96/12/10 23:21:06 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-domain.c,v 1.39 97/06/13 12:56:28 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,12 @@ directive|include
 file|<netinet/tcpip.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOERROR
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
@@ -136,6 +142,17 @@ begin_comment
 comment|/* Solaris sucks */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOERROR
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
@@ -145,6 +162,11 @@ end_undef
 begin_comment
 comment|/* SINIX does too */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1164,6 +1186,51 @@ block|{
 name|T_LOC
 block|,
 literal|"LOC "
+block|}
+block|,
+ifndef|#
+directive|ifndef
+name|T_UINFO
+define|#
+directive|define
+name|T_UINFO
+value|100
+endif|#
+directive|endif
+block|{
+name|T_UINFO
+block|,
+literal|"UINFO"
+block|}
+block|,
+ifndef|#
+directive|ifndef
+name|T_UID
+define|#
+directive|define
+name|T_UID
+value|101
+endif|#
+directive|endif
+block|{
+name|T_UID
+block|,
+literal|"UID"
+block|}
+block|,
+ifndef|#
+directive|ifndef
+name|T_GID
+define|#
+directive|define
+name|T_GID
+value|102
+endif|#
+directive|endif
+block|{
+name|T_GID
+block|,
+literal|"GID"
 block|}
 block|,
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  Internet, ethernet, port, and protocol string to address  *  and address to string conversion routines  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  Internet, ethernet, port, and protocol string to address  *  and address to string conversion routines  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: addrtoname.c,v 1.54 96/12/05 22:10:19 leres Exp $ (LBL)"
+literal|"@(#) $Header: addrtoname.c,v 1.61 97/06/15 13:20:18 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,40 @@ directive|include
 file|<pcap-namedb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MALLOC_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MEMORY_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -160,6 +194,18 @@ begin_include
 include|#
 directive|include
 file|"llc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"savestr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"setsignal.h"
 end_include
 
 begin_comment
@@ -854,7 +900,7 @@ operator|=
 name|newhnamemem
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Only print names when: 	 *	(1) -n was not given. 	 *	(2) Address is foreign and -f was given.  If -f was not 	 *	    present, f_netmask and f_local are 0 and the second 	 *	    test will succeed. 	 *	(3) The host portion is not 0 (i.e., a network address). 	 *	(4) The host portion is not broadcast. 	 */
+comment|/* 	 * Only print names when: 	 *	(1) -n was not given. 	 *      (2) Address is foreign and -f was given. (If -f was not 	 *	    give, f_netmask and f_local are 0 and the test 	 *	    evaluates to true) 	 *      (3) -a was given or the host portion is not all ones 	 *          nor all zeros (i.e. not a network or broadcast address) 	 */
 if|if
 condition|(
 operator|!
@@ -869,21 +915,28 @@ operator|==
 name|f_localnet
 operator|&&
 operator|(
+name|aflag
+operator|||
+operator|!
+operator|(
+operator|(
 name|addr
 operator|&
 operator|~
 name|netmask
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|&&
+operator|||
 operator|(
 name|addr
 operator||
 name|netmask
 operator|)
-operator|!=
+operator|==
 literal|0xffffffff
+operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -898,7 +951,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -1474,10 +1527,18 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tp
 operator|->
 name|e_nsap
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|nsap
 argument_list|,
 name|nlen
@@ -3715,9 +3776,6 @@ begin_function
 name|void
 name|init_addrtoname
 parameter_list|(
-name|int
-name|fflag
-parameter_list|,
 name|u_int32_t
 name|localnet
 parameter_list|,

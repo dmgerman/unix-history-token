@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-sunrpc.c,v 1.25 96/09/26 23:36:49 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-sunrpc.c,v 1.26 96/12/31 21:27:43 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,10 +525,11 @@ literal|32
 index|]
 decl_stmt|;
 specifier|static
+name|int
 name|lastprog
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|lastprog

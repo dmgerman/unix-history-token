@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print AppleTalk packets.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print AppleTalk packets.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-atalk.c,v 1.45 96/12/10 23:24:07 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-atalk.c,v 1.48 97/05/28 12:50:58 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +176,12 @@ begin_include
 include|#
 directive|include
 file|"appletalk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"savestr.h"
 end_include
 
 begin_decl_stmt
@@ -2086,10 +2092,6 @@ comment|/* Spec says string can be at most 32 bytes long */
 if|if
 condition|(
 name|length
-operator|<
-literal|0
-operator|||
-name|length
 operator|>
 literal|32
 condition|)
@@ -2099,7 +2101,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"[len=%d]"
+literal|"[len=%u]"
 argument_list|,
 name|length
 argument_list|)
@@ -2112,6 +2114,9 @@ return|;
 block|}
 while|while
 condition|(
+operator|(
+name|int
+operator|)
 operator|--
 name|length
 operator|>=
