@@ -21,11 +21,19 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|I386_CPU
-end_ifdef
+argument_list|)
+end_if
 
 begin_error
 error|#
