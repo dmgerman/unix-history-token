@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: parse.c,v 1.1.1.1.8.1 1997/07/11 06:25:59 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,7 @@ name|name
 decl_stmt|;
 block|{
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -272,10 +273,13 @@ modifier|*
 name|fmt
 decl_stmt|;
 block|{
-specifier|register
+name|unsigned
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|savep
 decl_stmt|;
 specifier|static
 name|FS
@@ -294,10 +298,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|nextfu
-decl_stmt|;
-name|char
-modifier|*
-name|savep
 decl_stmt|;
 comment|/* start new linked list of format units */
 name|tfs
@@ -695,6 +695,7 @@ decl_stmt|,
 name|cursize
 decl_stmt|;
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|fmt
@@ -964,19 +965,19 @@ name|FU
 modifier|*
 name|fu
 decl_stmt|;
-specifier|register
+name|unsigned
 name|char
 modifier|*
 name|p1
 decl_stmt|,
 modifier|*
 name|p2
-decl_stmt|;
-name|char
-name|savech
 decl_stmt|,
 modifier|*
 name|fmtp
+decl_stmt|;
+name|char
+name|savech
 decl_stmt|,
 name|cs
 index|[
