@@ -1173,6 +1173,9 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'P'
+case|:
+case|case
 literal|'T'
 case|:
 name|device
