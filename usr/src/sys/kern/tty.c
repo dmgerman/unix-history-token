@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.9	81/07/06	*/
+comment|/*	tty.c	4.10	81/07/08	*/
 end_comment
 
 begin_comment
@@ -2126,6 +2126,19 @@ comment|/* fall into ... */
 case|case
 name|NTTYDISC
 case|:
+if|if
+condition|(
+name|tp
+operator|->
+name|t_local
+operator|&
+name|LPENDIN
+condition|)
+name|ntypend
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|nread
 operator|=
 name|tp
