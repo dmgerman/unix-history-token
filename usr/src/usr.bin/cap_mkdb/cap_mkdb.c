@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	1.5 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,14 +368,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REFERENCE
+name|RECOK
 value|(char)0
 end_define
 
 begin_define
 define|#
 directive|define
-name|RECORD
+name|TCERR
 value|(char)1
 end_define
 
@@ -586,6 +586,12 @@ name|bplen
 expr_stmt|;
 block|}
 comment|/* 		 * Store record under name field. 		 */
+if|if
+condition|(
+name|st
+operator|==
+literal|2
+condition|)
 operator|(
 operator|(
 name|char
@@ -601,7 +607,25 @@ index|[
 literal|0
 index|]
 operator|=
-name|RECORD
+name|TCERR
+expr_stmt|;
+else|else
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|data
+operator|.
+name|data
+operator|)
+operator|)
+index|[
+literal|0
+index|]
+operator|=
+name|RECOK
 expr_stmt|;
 operator|(
 name|void
@@ -720,29 +744,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * Store references for other names. 		 */
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|data
-operator|.
-name|data
-operator|)
-operator|)
-index|[
-literal|0
-index|]
-operator|=
-name|REFERENCE
-expr_stmt|;
-operator|(
 name|void
 operator|)
 name|strcpy
 argument_list|(
-operator|&
-operator|(
 operator|(
 name|char
 operator|*
@@ -752,10 +757,6 @@ name|data
 operator|.
 name|data
 operator|)
-operator|)
-index|[
-literal|1
-index|]
 argument_list|,
 name|nf
 argument_list|)
