@@ -1150,14 +1150,6 @@ name|LINUX_ISOFS_SUPER_MAGIC
 operator|)
 return|;
 case|case
-name|VT_MFS
-case|:
-return|return
-operator|(
-name|LINUX_UFS_SUPER_MAGIC
-operator|)
-return|;
-case|case
 name|VT_MSDOSFS
 case|:
 return|return
