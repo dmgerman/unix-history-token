@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.23 1997/09/25 01:14:25 peter Exp $"
+literal|"$Id: vmstat.c,v 1.24 1998/05/27 21:01:37 jhay Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4007,9 +4007,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|b
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|b
+argument_list|)
 argument_list|,
 literal|"%*d"
 argument_list|,
@@ -4118,9 +4123,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|b
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|b
+argument_list|)
 argument_list|,
 literal|"%*.*f"
 argument_list|,

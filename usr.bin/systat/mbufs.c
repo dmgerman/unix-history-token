@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbufs.c,v 1.5 1997/02/24 20:59:03 wollman Exp $"
+literal|"$Id: mbufs.c,v 1.6 1997/09/24 02:43:40 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,9 +419,14 @@ operator|>
 literal|60
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|" %d"
 argument_list|,
@@ -522,9 +527,14 @@ operator|>
 literal|60
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|" %d"
 argument_list|,

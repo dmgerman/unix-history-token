@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: swap.c,v 1.5 1997/07/06 04:37:22 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,6 +424,10 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 specifier|static
 name|int
 name|once
@@ -452,12 +456,28 @@ name|syms
 argument_list|)
 condition|)
 block|{
-name|strcpy
+name|snprintf
 argument_list|(
 name|msgbuf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msgbuf
+argument_list|)
+argument_list|,
 literal|"systat: swap: cannot find"
 argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|msgbuf
+operator|+
+name|strlen
+argument_list|(
+name|msgbuf
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -473,6 +493,15 @@ operator|.
 name|n_name
 operator|!=
 name|NULL
+operator|&&
+name|cp
+operator|-
+name|msgbuf
+operator|<
+sizeof|sizeof
+argument_list|(
+name|msgbuf
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -490,16 +519,22 @@ operator|==
 literal|0
 condition|)
 block|{
-name|strcat
+name|snprintf
 argument_list|(
-name|msgbuf
+name|cp
 argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|msgbuf
+argument_list|)
+operator|-
+operator|(
+name|cp
+operator|-
+name|msgbuf
+operator|)
+argument_list|,
+literal|" %s"
 argument_list|,
 name|syms
 index|[
@@ -508,6 +543,15 @@ index|]
 operator|.
 name|n_name
 argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 block|}
 block|}

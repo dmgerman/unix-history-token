@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.6 1997/08/13 06:45:10 charnier Exp $"
+literal|"$Id: main.c,v 1.7 1997/08/26 10:59:26 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1162,9 +1162,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
