@@ -1837,11 +1837,21 @@ decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 comment|/* 	 * Make sure no one uses us. 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_set_flag
 argument_list|(
 name|object
 argument_list|,
 name|OBJ_DEAD
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * wait for the pageout daemon to be done with the object 	 */
