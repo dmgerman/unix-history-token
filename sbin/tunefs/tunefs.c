@@ -2263,7 +2263,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"soft updates:  (-n)                                %s"
+literal|"soft updates: (-n)                                 %s"
 argument_list|,
 operator|(
 name|sblock
