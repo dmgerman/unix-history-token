@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.26 (Berkeley) %G%"
+literal|"@(#)main.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,6 +546,44 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOG_MAIL
+end_ifdef
+
+begin_expr_stmt
+name|openlog
+argument_list|(
+literal|"sendmail"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_MAIL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|openlog
+argument_list|(
+literal|"sendmail"
+argument_list|,
+name|LOG_PID
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	**  Set default values for variables. 	**	These cannot be in initialized data space. 	*/
@@ -1062,32 +1100,6 @@ literal|"NAME"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOG_MAIL
-end_ifdef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|openlog
-argument_list|(
-literal|"sendmail"
-argument_list|,
-name|LOG_PID
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|errno
@@ -3772,6 +3784,15 @@ operator|<
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Cannot open frozen config file %s: %m"
+argument_list|,
+name|freezefile
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 literal|0
@@ -3802,7 +3823,29 @@ argument_list|)
 operator|<
 sizeof|sizeof
 name|fhdr
-operator|||
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Cannot read frozen config file"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|fhdr
 operator|.
 name|frzinfo
@@ -3835,6 +3878,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Wrong version of frozen config file"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3937,6 +3987,11 @@ name|edata
 argument_list|)
 condition|)
 block|{
+name|syserr
+argument_list|(
+literal|"Cannot read frozen config file"
+argument_list|)
+expr_stmt|;
 comment|/* oops!  we have trashed memory..... */
 operator|(
 name|void
