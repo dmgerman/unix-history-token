@@ -171,17 +171,6 @@ comment|/* address family */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|prog
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* program name */
-end_comment
-
-begin_decl_stmt
 name|int
 name|kread
 name|__P

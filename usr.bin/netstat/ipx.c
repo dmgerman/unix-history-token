@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipx.c,v 1.4 1996/10/28 18:56:39 wollman Exp $"
+literal|"$Id: ipx.c,v 1.4.2.1 1997/06/28 09:23:50 jhay Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,21 +208,6 @@ operator|(
 expr|struct
 name|ipx_addr
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ipx_erputil
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

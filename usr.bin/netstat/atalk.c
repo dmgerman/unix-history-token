@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: atalk.c,v 1.6 1996/10/28 18:56:31 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,21 +134,6 @@ begin_decl_stmt
 name|struct
 name|socket
 name|sockb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|atalk_erputil
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
