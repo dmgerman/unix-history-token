@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.3 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,12 +112,17 @@ block|}
 struct|;
 comment|/* 	 *	ALL REGISTER VARIABLES!!! 	 */
 specifier|register
+name|int
+name|r11
+decl_stmt|;
+comment|/* init needs r11 */
+specifier|register
 name|struct
 name|kframe
 modifier|*
 name|kfp
 decl_stmt|;
-comment|/* r11 */
+comment|/* r10 */
 specifier|register
 name|char
 modifier|*
@@ -140,7 +145,7 @@ expr_stmt|;
 else|#
 directive|else
 else|not lint
-asm|asm( "	movl	sp,r11" );
+asm|asm( "	movl	sp,r10" );
 comment|/* catch it quick */
 endif|#
 directive|endif
