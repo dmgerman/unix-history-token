@@ -2067,12 +2067,20 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 name|length
+operator|>
+literal|0
+operator|&&
+name|length
 operator|>=
-literal|512
+name|cp
+operator|->
+name|provider
+operator|->
+name|sectorsize
 operator|&&
 name|length
 operator|<=
-name|DFLTPHYS
+name|MAXPHYS
 argument_list|,
 operator|(
 literal|"g_read_data(): invalid length %jd"
@@ -2214,12 +2222,20 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 name|length
+operator|>
+literal|0
+operator|&&
+name|length
 operator|>=
-literal|512
+name|cp
+operator|->
+name|provider
+operator|->
+name|sectorsize
 operator|&&
 name|length
 operator|<=
-name|DFLTPHYS
+name|MAXPHYS
 argument_list|,
 operator|(
 literal|"g_write_data(): invalid length %jd"
