@@ -308,7 +308,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|vop_noislocked
+name|vop_stdislocked
 block|}
 block|,
 block|{
@@ -330,7 +330,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|vop_nolock
+name|vop_stdlock
 block|}
 block|,
 block|{
@@ -429,7 +429,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|vop_nounlock
+name|vop_stdunlock
 block|}
 block|,
 block|{
