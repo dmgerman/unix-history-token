@@ -15,10 +15,15 @@ directive|define
 name|_STDARG_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_typedef
 typedef|typedef
-name|char
-modifier|*
+name|_BSD_VA_LIST_
 name|va_list
 typedef|;
 end_typedef
