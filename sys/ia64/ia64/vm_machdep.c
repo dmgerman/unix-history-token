@@ -1219,7 +1219,11 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
-comment|/* prom_halt(0); */
+name|cpu_boot
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
