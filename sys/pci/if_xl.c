@@ -6087,10 +6087,9 @@ name|XL_RX_LIST_SZ
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -6214,7 +6213,7 @@ name|xl_ldata
 operator|.
 name|xl_rx_dmaaddr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6297,10 +6296,9 @@ name|XL_TX_LIST_SZ
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -6424,7 +6422,7 @@ name|xl_ldata
 operator|.
 name|xl_tx_dmaaddr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6510,10 +6508,9 @@ name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -8698,7 +8695,7 @@ argument_list|,
 operator|&
 name|baddr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10655,7 +10652,7 @@ name|c
 operator|->
 name|xl_ptr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10754,7 +10751,7 @@ name|c
 operator|->
 name|xl_ptr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
