@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.11 2001/03/22 05:51:58 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.12 2001/07/05 03:19:43 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.111 2001/01/20 01:56:16 imp Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.131 2001/06/29 14:56:22 christos Exp $ */
 end_comment
 
 begin_comment
@@ -165,6 +165,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_NI
+value|0x010b
+end_define
+
+begin_comment
+comment|/* National Instruments */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_USROBOTICS
 value|0x0115
 end_define
@@ -226,6 +237,17 @@ end_define
 
 begin_comment
 comment|/* Linksys Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_DLINK_2
+value|0x0143
+end_define
+
+begin_comment
+comment|/* D-Link */
 end_comment
 
 begin_define
@@ -369,6 +391,28 @@ end_define
 
 begin_comment
 comment|/* Samsung */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_BUFFALO
+value|0x026f
+end_define
+
+begin_comment
+comment|/* BUFFALO (Melco Corporation) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_IODATA2
+value|0x028a
+end_define
+
+begin_comment
+comment|/* I-O DATA */
 end_comment
 
 begin_define
@@ -782,6 +826,27 @@ name|PCCARD_STR_COMPAQ2_CPQ_10_100
 value|"Compaq Netelligent 10/100 Ethernet"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_COMPAQ_NC5004
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COMPAQ_NC5004
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COMPAQ_NC5004
+value|"Compaq Agency NC5004 Wireless Card"
+end_define
+
 begin_comment
 comment|/* Compex Products */
 end_comment
@@ -901,6 +966,31 @@ define|#
 directive|define
 name|PCCARD_STR_DIGITAL_MOBILE_MEDIA_CDROM
 value|"Digital Mobile Media CD-ROM"
+end_define
+
+begin_comment
+comment|/* D-Link Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_DLINK_2_DMF560TX
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_DLINK_2_DMF560TX
+value|0xc0ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_DLINK_2_DMF560TX
+value|"D-Link DMF-650TX"
 end_define
 
 begin_comment
@@ -1309,6 +1399,27 @@ name|PCCARD_STR_INTEL_EEPRO100
 value|"Intel EtherExpress PRO/100"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_INTEL_PRO_WLAN_2011
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_INTEL_PRO_WLAN_2011
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_INTEL_PRO_WLAN_2011
+value|"Intel PRO/Wireless 2011 LAN PC Card"
+end_define
+
 begin_comment
 comment|/* I-O DATA */
 end_comment
@@ -1332,6 +1443,27 @@ define|#
 directive|define
 name|PCCARD_STR_IODATA_PCLATE
 value|"I-O DATA PCLA/TE"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IODATA2_WNB11PCM
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IODATA2_WNB11PCM
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IODATA2_WNB11PCM
+value|"I-O DATA WN-B11/PCM"
 end_define
 
 begin_comment
@@ -1607,6 +1739,31 @@ value|"Melco LPC3-TX"
 end_define
 
 begin_comment
+comment|/* National Instruments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_NI_PCMCIA_GPIB
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_NI_PCMCIA_GPIB
+value|0x4882
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_NI_PCMCIA_GPIB
+value|"National Instruments PCMCIA-GPIB"
+end_define
+
+begin_comment
 comment|/* Nokia Products */
 end_comment
 
@@ -1809,6 +1966,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_CIS_SOCKET_EA_ETHER
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SOCKET_EA_ETHER
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SOCKET_EA_ETHER
+value|"Socket Communications EA"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_SOCKET_PAGECARD
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -1957,6 +2135,27 @@ name|PCCARD_STR_TDK_LAK_CF010
 value|"TDK LAC-CF010"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_TDK_LAK_CD011WL
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_TDK_LAK_CD011WL
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_TDK_LAK_CD011WL
+value|"TDK LAK-CD011WL"
+end_define
+
 begin_comment
 comment|/* Xircom Products */
 end_comment
@@ -2022,6 +2221,27 @@ define|#
 directive|define
 name|PCCARD_STR_XIRCOM_CE3
 value|"Xircom CreditCard 10/100 Ethernet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_XIRCOM_CT2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_XIRCOM_CT2
+value|0x1101
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_XIRCOM_CT2
+value|"Xircom CreditCard Token Ring II"
 end_define
 
 begin_define
@@ -2288,6 +2508,27 @@ name|PCCARD_STR_CONTEC_CNETPC
 value|"Contec C-NET(PC)C"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_CONTEC_FX_DS110_PCC
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_CONTEC_FX_DS110_PCC
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_CONTEC_FX_DS110_PCC
+value|"Contec FLEXLAN/FX-DS110-PCC"
+end_define
+
 begin_comment
 comment|/* Roland */
 end_comment
@@ -2336,31 +2577,6 @@ define|#
 directive|define
 name|PCCARD_STR_ALLIEDTELESIS_LA_PCM
 value|"Allied Telesis LA-PCM"
-end_define
-
-begin_comment
-comment|/* RATOC System Inc. Products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_CIS_RATOC_REX_R280
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_PRODUCT_RATOC_REX_R280
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_STR_RATOC_REX_R280
-value|"RATOC REX-R280"
 end_define
 
 begin_comment
@@ -2432,6 +2648,27 @@ define|#
 directive|define
 name|PCCARD_STR_AIRONET_PC4800
 value|"Aironet PC4800 Wireless LAN Adapter"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_AIRONET_350
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_AIRONET_350
+value|0x000a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_AIRONET_350
+value|"Aironet 350 Wireless LAN Adapter"
 end_define
 
 begin_comment
@@ -2624,6 +2861,31 @@ define|#
 directive|define
 name|PCCARD_STR_EMTAC_WLAN
 value|"EMTAC A2424i 11Mbps WLAN Card"
+end_define
+
+begin_comment
+comment|/* BUFFALO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_BUFFALO_WLI_PCM_S11
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_BUFFALO_WLI_PCM_S11
+value|0x0305
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_BUFFALO_WLI_PCM_S11
+value|"BUFFALO AirStation 11Mbps WLAN"
 end_define
 
 begin_comment
@@ -2826,6 +3088,28 @@ end_define
 
 begin_comment
 comment|/* Intersil */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_SYNERGY21
+value|-1
+end_define
+
+begin_comment
+comment|/* Synergy 21 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_CNET
+value|-1
+end_define
+
+begin_comment
+comment|/* CNet */
 end_comment
 
 begin_define
@@ -3192,6 +3476,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCCARD_CIS_COREGA_FETHER_PCC_TXD
+value|{ "corega K.K.", "corega FEther PCC-TXD", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COREGA_FETHER_PCC_TXD
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COREGA_FETHER_PCC_TXD
+value|"Corega FEther PCC-TXD"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_COREGA_FETHER_PCC_TXF
+value|{ "corega", "FEther PCC-TXF", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COREGA_FETHER_PCC_TXF
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COREGA_FETHER_PCC_TXF
+value|"Corega FEther PCC-TXF"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_COREGA_WIRELESS_LAN_PCC_11
 value|{ "corega K.K.", "Wireless LAN PCC-11", NULL, NULL }
 end_define
@@ -3208,6 +3534,27 @@ define|#
 directive|define
 name|PCCARD_STR_COREGA_WIRELESS_LAN_PCC_11
 value|"Corega Wireless LAN PCC-11"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_COREGA_WIRELESS_LAN_PCCA_11
+value|{ "corega K.K.", "Wireless LAN PCCA-11", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COREGA_WIRELESS_LAN_PCCA_11
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COREGA_WIRELESS_LAN_PCCA_11
+value|"Corega Wireless LAN PCCA-11"
 end_define
 
 begin_define
@@ -3590,6 +3937,90 @@ define|#
 directive|define
 name|PCCARD_STR_NANOSPEED_PRISM2
 value|"NANOSPEED ROOT-RZ2000 WLAN Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_NEC_CMZ_RT_WP
+value|{ "NEC", "Wireless Card CMZ-RT-WP", "Version 01.01", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_NEC_CMZ_RT_WP
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_NEC_CMZ_RT_WP
+value|"NEC Wireless Card CMZ-RT-WP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_NTT_ME_WLAN
+value|{ "NTT-ME", "11Mbps Wireless LAN PC Card", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_NTT_ME_WLAN
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_NTT_ME_WLAN
+value|"NTT-ME 11Mbps Wireless LAN PC Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SYNERGY21_S21810
+value|{ "PCMCIA", "Ethernet", "A", "004743118001" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SYNERGY21_S21810
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SYNERGY21_S21810
+value|"Synergy 21 S21810+ NE2000 Compatible Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_CNET_NE2000
+value|{ "CNet", "CN40BC Ethernet", "D", "NE2000" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_CNET_NE2000
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_CNET_NE2000
+value|"CNet CN40BC NE2000 Compatible"
 end_define
 
 begin_define
