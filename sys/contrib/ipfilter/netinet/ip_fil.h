@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.4 2000/11/12 11:54:53 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.4 2000/11/12 11:54:53 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSTGSZ
-value|_IOWR('r', 82, struct natget *)
+value|_IOWR('r', 82, struct natget)
 end_define
 
 begin_define
@@ -476,7 +476,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSTGSZ
-value|_IOWR(r, 82, struct natget *)
+value|_IOWR(r, 82, struct natget)
 end_define
 
 begin_define
@@ -787,6 +787,27 @@ name|fin_v
 value|fin_fi.fi_v
 end_define
 
+begin_define
+define|#
+directive|define
+name|fin_saddr
+value|fin_fi.fi_saddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|fin_daddr
+value|fin_fi.fi_daddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|fin_fl
+value|fin_fi.fi_fl
+end_define
+
 begin_comment
 comment|/*  * Size for compares on fr_info structures  */
 end_comment
@@ -828,6 +849,16 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|SOLARIS
+name|mb_t
+modifier|*
+name|fd_mp
+decl_stmt|;
+comment|/* cache resolver for to/dup-to */
+endif|#
+directive|endif
 block|}
 name|frdest_t
 typedef|;
@@ -931,14 +962,6 @@ name|frentry
 modifier|*
 name|fr_next
 decl_stmt|;
-name|u_32_t
-name|fr_group
-decl_stmt|;
-comment|/* group to which this rule belongs */
-name|u_32_t
-name|fr_grhead
-decl_stmt|;
-comment|/* group # which this rule starts */
 name|struct
 name|frentry
 modifier|*
@@ -990,6 +1013,14 @@ decl_stmt|;
 name|frtuc_t
 name|fr_tuc
 decl_stmt|;
+name|u_32_t
+name|fr_group
+decl_stmt|;
+comment|/* group to which this rule belongs */
+name|u_32_t
+name|fr_grhead
+decl_stmt|;
+comment|/* group # which this rule starts */
 name|u_32_t
 name|fr_flags
 decl_stmt|;
@@ -2180,6 +2211,17 @@ name|IPLLOGSIZE
 value|8192
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPF_OPTCOPY
+value|0x07ff00
+end_define
+
+begin_comment
+comment|/* bit mask of copied options */
+end_comment
+
 begin_comment
 comment|/*  * Device filenames for reading log information.  Use ipf on Solaris2 because  * ipl is already a name used by something else.  */
 end_comment
@@ -2523,26 +2565,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipfr_fastroute
-name|__P
-argument_list|(
-operator|(
-name|ip_t
-operator|*
-operator|,
-name|fr_info_t
-operator|*
-operator|,
-name|frdest_t
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3261,6 +3283,10 @@ name|__P
 argument_list|(
 operator|(
 name|mb_t
+operator|*
+operator|,
+name|mb_t
+operator|*
 operator|*
 operator|,
 name|fr_info_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2000 by Darren Reed& Guido Van Rooij.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_auth.h,v 2.1 1999/08/04 17:29:54 darrenr Exp $  * $FreeBSD$  *  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_ifndef
@@ -255,6 +255,8 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|,
+name|int
+operator|,
 name|u_long
 operator|,
 name|frentry_t
@@ -281,6 +283,8 @@ name|__P
 argument_list|(
 operator|(
 name|caddr_t
+operator|,
+name|int
 operator|,
 name|int
 operator|,

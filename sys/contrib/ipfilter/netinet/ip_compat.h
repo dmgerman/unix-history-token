@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.9 2001/01/14 14:58:01 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.9 2001/01/14 14:58:01 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -97,6 +97,34 @@ directive|define
 name|SOLARIS
 value|(defined(sun)&& (defined(__svr4__) || defined(__SVR4)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOLARIS2
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SOLARIS2
+value|4
+end_define
+
+begin_comment
+comment|/* Pick an old version */
+end_comment
 
 begin_endif
 endif|#
@@ -693,10 +721,101 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|qif
+block|{
+name|struct
+name|qif
+modifier|*
+name|qf_next
+decl_stmt|;
+name|ill_t
+modifier|*
+name|qf_ill
+decl_stmt|;
+name|kmutex_t
+name|qf_lock
+decl_stmt|;
+name|void
+modifier|*
+name|qf_iptr
+decl_stmt|;
+name|void
+modifier|*
+name|qf_optr
+decl_stmt|;
+name|queue_t
+modifier|*
+name|qf_in
+decl_stmt|;
+name|queue_t
+modifier|*
+name|qf_out
+decl_stmt|;
+name|struct
+name|qinit
+modifier|*
+name|qf_wqinfo
+decl_stmt|;
+name|struct
+name|qinit
+modifier|*
+name|qf_rqinfo
+decl_stmt|;
+name|struct
+name|qinit
+name|qf_wqinit
+decl_stmt|;
+name|struct
+name|qinit
+name|qf_rqinit
+decl_stmt|;
+name|mblk_t
+modifier|*
+name|qf_m
+decl_stmt|;
+comment|/* These three fields are for passing data up from */
+name|queue_t
+modifier|*
+name|qf_q
+decl_stmt|;
+comment|/* fr_qin and fr_qout to the packet processing. */
+name|size_t
+name|qf_off
+decl_stmt|;
+name|size_t
+name|qf_len
+decl_stmt|;
+comment|/* this field is used for in ipfr_fastroute */
+name|char
+name|qf_name
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 	 * in case the ILL has disappeared... 	 */
+name|size_t
+name|qf_hl
+decl_stmt|;
+comment|/* header length */
+name|int
+name|qf_sap
+decl_stmt|;
+block|}
+name|qif_t
+typedef|;
+end_typedef
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* SOLARIS */
+end_comment
 
 begin_if
 if|#
@@ -1554,11 +1673,57 @@ directive|ifdef
 name|IPFILTER_LKM
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_cc_version
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_cc_version
+operator|<
+literal|430000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1571,11 +1736,57 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_cc_version
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/osreldate.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_cc_version
+operator|<
+literal|430000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/osreldate.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1957,6 +2168,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|IRE_CACHE
+value|IRE_ROUTE
+end_define
 
 begin_define
 define|#
@@ -2385,93 +2603,6 @@ name|x
 parameter_list|)
 value|getminor(x)
 end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|qif
-block|{
-name|struct
-name|qif
-modifier|*
-name|qf_next
-decl_stmt|;
-name|ill_t
-modifier|*
-name|qf_ill
-decl_stmt|;
-name|kmutex_t
-name|qf_lock
-decl_stmt|;
-name|void
-modifier|*
-name|qf_iptr
-decl_stmt|;
-name|void
-modifier|*
-name|qf_optr
-decl_stmt|;
-name|queue_t
-modifier|*
-name|qf_in
-decl_stmt|;
-name|queue_t
-modifier|*
-name|qf_out
-decl_stmt|;
-name|struct
-name|qinit
-modifier|*
-name|qf_wqinfo
-decl_stmt|;
-name|struct
-name|qinit
-modifier|*
-name|qf_rqinfo
-decl_stmt|;
-name|struct
-name|qinit
-name|qf_wqinit
-decl_stmt|;
-name|struct
-name|qinit
-name|qf_rqinit
-decl_stmt|;
-name|mblk_t
-modifier|*
-name|qf_m
-decl_stmt|;
-comment|/* These three fields are for passing data up from */
-name|queue_t
-modifier|*
-name|qf_q
-decl_stmt|;
-comment|/* fr_qin and fr_qout to the packet processing. */
-name|size_t
-name|qf_off
-decl_stmt|;
-name|size_t
-name|qf_len
-decl_stmt|;
-comment|/* this field is used for in ipfr_fastroute */
-name|char
-name|qf_name
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* 	 * in case the ILL has disappeared... 	 */
-name|size_t
-name|qf_hl
-decl_stmt|;
-comment|/* header length */
-name|int
-name|qf_sap
-decl_stmt|;
-block|}
-name|qif_t
-typedef|;
-end_typedef
 
 begin_decl_stmt
 specifier|extern
@@ -2995,12 +3126,35 @@ end_else
 begin_define
 define|#
 directive|define
+name|USE_GETIFNAME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct ifnet *)x)->if_name
+value|get_ifname((struct ifnet *)x)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|get_ifname
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -3546,18 +3700,38 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|NetBSD
 argument_list|)
 operator|&&
+operator|(
 name|NetBSD
 operator|<=
 literal|1991011
+operator|)
 operator|&&
+operator|(
 name|NetBSD
 operator|>=
 literal|199407
+operator|)
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|OpenBSD
+argument_list|)
+operator|&&
+operator|(
+name|OpenBSD
+operator|>=
+literal|200006
+operator|)
+operator|)
 end_if
 
 begin_define
@@ -3639,7 +3813,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NetBSD&& NetBSD<= 1991011&& NetBSD>= 199407 */
+comment|/* NetBSD&& (NetBSD<= 1991011)&& (NetBSD>= 199407) */
 end_comment
 
 begin_define
@@ -4124,20 +4298,6 @@ begin_comment
 comment|/* SOLARIS */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|linux
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-end_if
-
 begin_comment
 comment|/*  * These #ifdef's are here mainly for linux, but who knows, they may  * not be in other places or maybe one day linux will grow up and some  * of these will turn up there too.  */
 end_comment
@@ -4333,6 +4493,24 @@ define|#
 directive|define
 name|ICMP_MASKREPLY
 value|ICMP_ADDRESSREPLY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ICMP_PARAMPROB_OPTABSENT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ICMP_PARAMPROB_OPTABSENT
+value|1
 end_define
 
 begin_endif
@@ -4864,15 +5042,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* linux || __sgi */
-end_comment
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.2 2000/11/10 13:10:54 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.2 2000/11/10 13:10:54 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -50,6 +50,15 @@ decl_stmt|;
 name|void
 modifier|*
 name|ipfr_ifp
+decl_stmt|;
+name|u_32_t
+name|ipfr_optmsk
+decl_stmt|;
+name|u_short
+name|ipfr_secmsk
+decl_stmt|;
+name|u_short
+name|ipfr_auth
 decl_stmt|;
 name|u_short
 name|ipfr_id
