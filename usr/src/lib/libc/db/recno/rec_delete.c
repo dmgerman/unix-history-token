@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_delete.c	8.2 (Berkeley) %G%"
+literal|"@(#)rec_delete.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,26 +357,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|e
-operator|->
-name|page
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|RET_ERROR
 operator|)
 return|;
-block|}
 comment|/* Delete the record. */
 name|h
 operator|=
