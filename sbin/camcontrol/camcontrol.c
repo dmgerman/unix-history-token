@@ -310,6 +310,14 @@ block|,
 name|CAM_ARG_DEBUG_CDB
 init|=
 literal|0x08000000
+block|,
+name|CAM_ARG_DEBUG_XPT
+init|=
+literal|0x10000000
+block|,
+name|CAM_ARG_DEBUG_PERIPH
+init|=
+literal|0x20000000
 block|, }
 name|cam_argmask
 typedef|;
@@ -593,7 +601,7 @@ name|CAM_CMD_DEBUG
 block|,
 name|CAM_ARG_NONE
 block|,
-literal|"ITSc"
+literal|"IPTSXc"
 block|}
 block|,
 block|{
@@ -9250,6 +9258,22 @@ name|CAM_DEBUG_INFO
 expr_stmt|;
 break|break;
 case|case
+literal|'P'
+case|:
+name|arglist
+operator||=
+name|CAM_ARG_DEBUG_PERIPH
+expr_stmt|;
+name|ccb
+operator|.
+name|cdbg
+operator|.
+name|flags
+operator||=
+name|CAM_DEBUG_PERIPH
+expr_stmt|;
+break|break;
+case|case
 literal|'S'
 case|:
 name|arglist
@@ -9279,6 +9303,22 @@ operator|.
 name|flags
 operator||=
 name|CAM_DEBUG_TRACE
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|arglist
+operator||=
+name|CAM_ARG_DEBUG_XPT
+expr_stmt|;
+name|ccb
+operator|.
+name|cdbg
+operator|.
+name|flags
+operator||=
+name|CAM_DEBUG_XPT
 expr_stmt|;
 break|break;
 case|case
@@ -9424,9 +9464,13 @@ operator|~
 operator|(
 name|CAM_ARG_DEBUG_INFO
 operator||
+name|CAM_ARG_DEBUG_PERIPH
+operator||
 name|CAM_ARG_DEBUG_TRACE
 operator||
 name|CAM_ARG_DEBUG_SUBTRACE
+operator||
+name|CAM_ARG_DEBUG_XPT
 operator|)
 expr_stmt|;
 block|}
@@ -14196,7 +14240,8 @@ literal|"        camcontrol modepage   [dev_id][generic args]<-m page | -l>\n"
 literal|"                              [-P pagectl][-e | -b][-d]\n"
 literal|"        camcontrol cmd        [dev_id][generic args]<-c cmd [args]>\n"
 literal|"                              [-i len fmt|-o len fmt [args]]\n"
-literal|"        camcontrol debug      [-I][-T][-S][-c]<all|bus[:target[:lun]]|off>\n"
+literal|"        camcontrol debug      [-I][-P][-T][-S][-X][-c]\n"
+literal|"<all|bus[:target[:lun]]|off>\n"
 literal|"        camcontrol tags       [dev_id][generic args] [-N tags] [-q] [-v]\n"
 literal|"        camcontrol negotiate  [dev_id][generic args] [-a][-c]\n"
 literal|"                              [-D<enable|disable>][-O offset][-q]\n"
