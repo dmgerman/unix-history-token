@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.3 (Berkeley) %G%"
+literal|"@(#)command.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,10 +813,6 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-specifier|register
-name|int
-name|n
 decl_stmt|;
 operator|*
 name|cp
