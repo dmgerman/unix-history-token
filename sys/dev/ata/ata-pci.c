@@ -578,6 +578,9 @@ case|:
 case|case
 literal|0x4d30105a
 case|:
+return|return
+literal|"Promise ATA100 controller"
+return|;
 case|case
 literal|0x4d68105a
 case|:
@@ -585,7 +588,7 @@ case|case
 literal|0x6268105a
 case|:
 return|return
-literal|"Promise ATA100 controller"
+literal|"Promise TX2 ATA100 controller"
 return|;
 case|case
 literal|0x00041103
@@ -983,18 +986,12 @@ break|break;
 case|case
 literal|0x4d38105a
 case|:
-comment|/* Promise 66& 100 need their clock changed */
+comment|/* Promise 66& 100 (before TX2) need the clock changed */
 case|case
 literal|0x4d30105a
 case|:
 case|case
 literal|0x0d30105a
-case|:
-case|case
-literal|0x4d68105a
-case|:
-case|case
-literal|0x6268105a
 case|:
 name|ATA_OUTB
 argument_list|(
@@ -1020,7 +1017,7 @@ comment|/* FALLTHROUGH */
 case|case
 literal|0x4d33105a
 case|:
-comment|/* Promise (all) need burst mode to be turned on */
+comment|/* Promise (before TX2) need burst mode turned on */
 name|ATA_OUTB
 argument_list|(
 name|sc

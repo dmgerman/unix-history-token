@@ -4909,24 +4909,32 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-comment|/* Promise controllers doesn't work with tagged queuing */
-if|if
+switch|switch
 condition|(
-operator|(
 name|adp
 operator|->
 name|controller
 operator|->
 name|chiptype
-operator|&
-literal|0x0000ffff
-operator|)
-operator|==
-literal|0x0000105a
 condition|)
+block|{
+case|case
+literal|0x4d33105a
+case|:
+comment|/* Promises before TX2 doesn't work with tagged queuing */
+case|case
+literal|0x4d38105a
+case|:
+case|case
+literal|0x0d30105a
+case|:
+case|case
+literal|0x4d30105a
+case|:
 return|return
 literal|0
 return|;
+block|}
 comment|/* check that drive does DMA, has tags enabled, and is one we know works */
 if|if
 condition|(

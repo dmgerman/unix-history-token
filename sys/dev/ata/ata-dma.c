@@ -6846,14 +6846,6 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA 100 */
-case|case
-literal|0x4d68105a
-case|:
-comment|/* Promise TX2 ATA 100 */
-case|case
-literal|0x6268105a
-case|:
-comment|/* Promise TX2v2 ATA 100 */
 switch|switch
 condition|(
 name|mode
@@ -7114,6 +7106,15 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA 100 */
+case|case
+literal|0x6268105a
+case|:
+comment|/* Promise TX2v2 ATA 100 */
+return|return;
 block|}
 name|pci_write_config
 argument_list|(
