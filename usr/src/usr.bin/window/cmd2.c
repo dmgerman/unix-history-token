@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.15 83/12/02"
+literal|"@(#)cmd2.c	3.16 83/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,98 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|help_shortcmd
+index|[]
+init|=
+block|{
+literal|"{1-9}   Select window {1-9} and return to conversation mode."
+block|,
+literal|"%{1-9}  Select window {1-9} but stay in command mode."
+block|,
+literal|"escape  Return to conversation mode"
+block|,
+literal|"        and don't change the current window."
+block|,
+literal|"^^      Return to conversation mode"
+block|,
+literal|"        and change to previously selected window."
+block|,
+literal|"c{1-9}  Close window {1-9}."
+block|,
+literal|"C       Close all windows."
+block|,
+literal|"S       Show all windows in sequence."
+block|,
+literal|"L       List all windows with their labels."
+block|,
+literal|"w       Open a new window."
+block|,
+literal|"m{1-9}  Move window {1-9}."
+block|,
+literal|"M{1-9}  Move window {1-9} to previous position."
+block|,
+literal|"v       List all variables."
+block|,
+literal|"{^Y^E}  Scroll {up, down} one line"
+block|,
+literal|"{^U^D}  Scroll {up, down} half a window."
+block|,
+literal|"{^B^F}  Scroll {up, down} a full window."
+block|,
+literal|"{hjkl}  Move cursor {left, down, up, right}."
+block|,
+literal|"^L      Redraw screen."
+block|,
+literal|"^Z      Suspend."
+block|,
+literal|"q       Quit."
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|help_longcmd
+index|[]
+init|=
+block|{
+literal|":%{1-9}               Select window {1-9}."
+block|,
+literal|":buffer lines         Set the default window buffer size."
+block|,
+literal|":close {1-9}          Close window."
+block|,
+literal|":cursor modes         Set the cursor modes."
+block|,
+literal|":escape C             Set escape character to C."
+block|,
+literal|":label {1-9} string   Label window {1-9}."
+block|,
+literal|":source filename      Execute commands in ``filename''."
+block|,
+literal|":terse [off]          Turn on (or off) terse mode."
+block|,
+literal|":window row col nrow ncol [nline label]"
+block|,
+literal|"                      Open a window at ``row'', ``col''"
+block|,
+literal|"                      of size ``nrow'', ``ncol'',"
+block|,
+literal|"                      with ``nline'', and ``label''."
+block|,
+literal|":write {1-9} string   Write ``string'' to window {1-9}."
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|c_help
@@ -82,294 +174,22 @@ name|escapec
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
+name|help_print
 argument_list|(
 name|w
 argument_list|,
-literal|"Short commands:\n\n"
+literal|"Short commands"
+argument_list|,
+name|help_shortcmd
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
+name|help_print
 argument_list|(
 name|w
 argument_list|,
-literal|"{1-9}   Select window {1-9} and return to conversation mode.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
+literal|"Long commands"
 argument_list|,
-literal|"%%{1-9}  Select window {1-9} but stay in command mode.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"escape  Return to conversation mode and don't change the current window.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"c{1-9}  Close window {1-9}.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"C       Close all windows.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"S       Show all windows in sequence.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"L       List all windows with their labels.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"w       Open a new window.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"{^Y^E}  Scroll {up, down} one line\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"{^U^D}  Scroll {up, down} half a window.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"{^B^F}  Scroll {up, down} a full window.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"{hjkl}  Move cursor {left, down, up, right}.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"^L      Redraw screen.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"^Z      Suspend.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"q       Quit.\n"
-argument_list|)
-expr_stmt|;
-name|waitnl
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"Long commands:\n\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":terse [off]              Turn on (or off) terse mode.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":label {1-9} string       Label window {1-9}.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":write {1-9} string       Write ``strings'' to window {1-9}.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":escape C                 Set escape character to C.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":%%{1-9}                   Select window {1-9}.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":window r c nr nc [nl]    Open a window at row r column c\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"                          with nr rows, nc colomns,\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"                          and nl lines in the buffer.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":buffer lines             Set the default window buffer size.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":close {1-9}              Close window.\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|":source filename          Execute commands in ``filename''.\n"
-argument_list|)
-expr_stmt|;
-name|waitnl
-argument_list|(
-name|w
+name|help_longcmd
 argument_list|)
 expr_stmt|;
 name|closeiwin
@@ -377,6 +197,147 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|help_print
+argument_list|(
+name|w
+argument_list|,
+name|name
+argument_list|,
+name|list
+argument_list|)
+specifier|register
+expr|struct
+name|ww
+operator|*
+name|w
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|list
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|p
+decl_stmt|;
+name|char
+name|firsttime
+init|=
+literal|1
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|list
+init|;
+operator|*
+name|p
+condition|;
+control|)
+block|{
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"%s:%s\n\n"
+argument_list|,
+name|name
+argument_list|,
+name|firsttime
+condition|?
+literal|""
+else|:
+literal|" (continued)"
+argument_list|)
+expr_stmt|;
+name|firsttime
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|&&
+name|w
+operator|->
+name|ww_cur
+operator|.
+name|r
+operator|<
+name|w
+operator|->
+name|ww_w
+operator|.
+name|b
+operator|-
+literal|2
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|wwputs
+argument_list|(
+operator|*
+name|p
+operator|++
+argument_list|,
+name|w
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|w
+argument_list|)
+expr_stmt|;
+block|}
+name|waitnl
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwputs
+argument_list|(
+literal|"\033E"
+argument_list|,
+name|w
+argument_list|)
+expr_stmt|;
+comment|/* clear and home cursor */
+block|}
 block|}
 end_block
 
@@ -1003,17 +964,26 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"No windows."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|w
 operator|=
 name|openiwin
 argument_list|(
-name|MAX
-argument_list|(
 name|n
-argument_list|,
-literal|1
-argument_list|)
 operator|+
 literal|2
 argument_list|,
@@ -1034,26 +1004,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|wwputs
-argument_list|(
-literal|"No windows.\n"
-argument_list|,
-name|w
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 for|for
 control|(
 name|i
@@ -1128,7 +1078,6 @@ else|:
 literal|"(No label)"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|waitnl
 argument_list|(
@@ -1362,13 +1311,26 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|wwputs
+name|wwprintf
 argument_list|(
-literal|"\nType return to continue: "
+name|w
+argument_list|,
+literal|"\033Y%c%c[Type any key to continue] "
 argument_list|,
 name|w
+operator|->
+name|ww_w
+operator|.
+name|nr
+operator|-
+literal|1
+operator|+
+literal|' '
+argument_list|,
+literal|' '
 argument_list|)
 expr_stmt|;
+comment|/* print on last line */
 name|wwcurtowin
 argument_list|(
 name|w
@@ -1384,17 +1346,6 @@ condition|)
 name|bread
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwputs
-argument_list|(
-literal|"\033E"
-argument_list|,
-name|w
-argument_list|)
-expr_stmt|;
-comment|/* clear and home cursor */
 block|}
 end_block
 
