@@ -833,14 +833,14 @@ name|UFS_EXTATTR_CMD_ENABLE
 argument_list|,
 name|argv
 index|[
-literal|4
+literal|5
 index|]
 argument_list|,
 name|namespace
 argument_list|,
 name|argv
 index|[
-literal|5
+literal|4
 index|]
 argument_list|)
 expr_stmt|;
@@ -938,7 +938,7 @@ name|namespace
 argument_list|,
 name|argv
 index|[
-literal|5
+literal|4
 index|]
 argument_list|)
 expr_stmt|;
