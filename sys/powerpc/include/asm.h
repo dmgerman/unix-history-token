@@ -164,21 +164,31 @@ end_endif
 begin_define
 define|#
 directive|define
-name|_C_LABEL
+name|CNAME
 parameter_list|(
-name|x
+name|csym
 parameter_list|)
-value|x
+value|csym
 end_define
 
 begin_define
 define|#
 directive|define
-name|_ASM_LABEL
+name|ASMNAME
 parameter_list|(
-name|x
+name|asmsym
 parameter_list|)
-value|x
+value|asmsym
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIDENAME
+parameter_list|(
+name|asmsym
+parameter_list|)
+value|__CONCAT(.,asmsym)
 end_define
 
 begin_define
@@ -239,7 +249,7 @@ name|ENTRY
 parameter_list|(
 name|y
 parameter_list|)
-value|_ENTRY(_C_LABEL(y)); _PROF_PROLOGUE
+value|_ENTRY(CNAME(y)); _PROF_PROLOGUE
 end_define
 
 begin_define
@@ -249,7 +259,7 @@ name|ASENTRY
 parameter_list|(
 name|y
 parameter_list|)
-value|_ENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
+value|_ENTRY(ASMNAME(y)); _PROF_PROLOGUE
 end_define
 
 begin_define
@@ -259,7 +269,7 @@ name|GLOBAL
 parameter_list|(
 name|y
 parameter_list|)
-value|_GLOBAL(_C_LABEL(y))
+value|_GLOBAL(CNAME(y))
 end_define
 
 begin_define
