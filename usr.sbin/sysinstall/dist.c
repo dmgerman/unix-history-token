@@ -4181,7 +4181,7 @@ name|seconds
 expr_stmt|;
 name|msgInfo
 argument_list|(
-literal|"%10d bytes read from %s dist, chunk %2d of %2d @ %.1f KB/sec."
+literal|"%10d bytes read from %s dist, chunk %2d of %2d @ %.1f KBytes/sec."
 argument_list|,
 name|total
 argument_list|,
