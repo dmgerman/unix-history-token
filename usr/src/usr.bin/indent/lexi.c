@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.10 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1164,26 +1164,26 @@ block|{
 specifier|register
 name|char
 modifier|*
-name|p
+name|tp
 init|=
 name|buf_ptr
 decl_stmt|;
 while|while
 condition|(
-name|p
+name|tp
 operator|<
 name|buf_end
 condition|)
 if|if
 condition|(
 operator|*
-name|p
+name|tp
 operator|++
 operator|==
 literal|')'
 operator|&&
 operator|*
-name|p
+name|tp
 operator|==
 literal|';'
 condition|)
