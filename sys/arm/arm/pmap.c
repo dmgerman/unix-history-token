@@ -7332,7 +7332,7 @@ name|contigmalloc
 argument_list|(
 name|L1_TABLE_SIZE
 argument_list|,
-name|NULL
+name|M_VMPMAP
 argument_list|,
 literal|0
 argument_list|,
