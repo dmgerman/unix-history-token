@@ -3178,6 +3178,18 @@ block|,
 block|{
 name|USB_VENDOR_LOGITECH
 block|,
+name|USB_PRODUCT_LOGITECH_WMRPAD
+block|,
+literal|0
+block|,
+literal|"Logitech"
+block|,
+literal|"WingMan RumblePad"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
 name|USB_PRODUCT_LOGITECH_WMJOY
 block|,
 literal|0
@@ -3653,6 +3665,18 @@ block|,
 literal|"Motorola"
 block|,
 literal|"MC141555 hub controller"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MOTOROLA
+block|,
+name|USB_PRODUCT_MOTOROLA_SB4100
+block|,
+literal|0
+block|,
+literal|"Motorola"
+block|,
+literal|"SB4100 USB Cable Modem"
 block|, 	}
 block|,
 block|{
@@ -4553,6 +4577,18 @@ block|,
 literal|"SanDisk Corp"
 block|,
 literal|"ImageMate SDDR-05a"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_SANDISK
+block|,
+name|USB_PRODUCT_SANDISK_SDDR05
+block|,
+literal|0
+block|,
+literal|"SanDisk Corp"
+block|,
+literal|"ImageMate SDDR-05"
 block|, 	}
 block|,
 block|{

@@ -6332,6 +6332,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRODUCT_LOGITECH_WMRPAD
+value|0xc20a
+end_define
+
+begin_comment
+comment|/* WingMan RumblePad */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PRODUCT_LOGITECH_WMJOY
 value|0xc281
 end_define
@@ -6819,6 +6830,17 @@ end_define
 
 begin_comment
 comment|/* MC141555 hub controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MOTOROLA_SB4100
+value|0x4100
+end_define
+
+begin_comment
+comment|/* SB4100 USB Cable Modem */
 end_comment
 
 begin_comment
@@ -7756,6 +7778,17 @@ end_define
 
 begin_comment
 comment|/* ImageMate SDDR-05a */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_SANDISK_SDDR05
+value|0x0005
+end_define
+
+begin_comment
+comment|/* ImageMate SDDR-05 */
 end_comment
 
 begin_define
