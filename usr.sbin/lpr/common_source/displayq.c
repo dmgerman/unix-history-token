@@ -531,6 +531,8 @@ name|CT
 operator|=
 name|DEFTIMEOUT
 expr_stmt|;
+if|if
+condition|(
 name|cgetstr
 argument_list|(
 name|bp
@@ -540,6 +542,12 @@ argument_list|,
 operator|&
 name|RM
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|RM
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1407,7 +1415,7 @@ name|remote
 condition|)
 name|printf
 argument_list|(
-literal|"\n%s: "
+literal|"%s: "
 argument_list|,
 name|host
 argument_list|)
