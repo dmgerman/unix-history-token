@@ -638,7 +638,7 @@ name|long
 name|kmempages
 parameter_list|)
 block|{
-comment|/* 	 * Limit pageable pipe memory usage to 5% of the kernel map 	 * (via pipe_map).  Ensure that all have reasonable floors. 	 * (See sys_pipe.c for more info.) 	 */
+comment|/* 	 * The default for maxpipekva is max(5% of the kernel map, 512KB). 	 * See sys_pipe.c for more details. 	 */
 name|maxpipekva
 operator|=
 operator|(
