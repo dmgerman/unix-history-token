@@ -384,7 +384,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.12.2.35 2002/06/04 14:43:49 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.12.2.36 2002/08/22 15:12:23 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6124,7 +6124,7 @@ name|ipf
 operator|->
 name|fl_flags
 operator|&
-name|FR_LOGP
+name|FR_LOG
 condition|)
 operator|*
 name|t
@@ -6160,7 +6160,7 @@ name|ipf
 operator|->
 name|fl_flags
 operator|&
-name|FR_LOGB
+name|FR_LOG
 condition|)
 operator|*
 name|t

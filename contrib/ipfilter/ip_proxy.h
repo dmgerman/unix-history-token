@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_proxy.h,v 2.8.2.12 2002/01/01 13:41:43 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_proxy.h,v 2.8.2.13 2002/07/04 11:07:37 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -486,6 +486,9 @@ name|ftps_wptr
 decl_stmt|;
 name|u_32_t
 name|ftps_seq
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|u_32_t
 name|ftps_len

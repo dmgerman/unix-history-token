@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.45 2002/06/04 14:40:54 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.46 2002/06/27 14:39:40 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1029,6 +1029,17 @@ comment|/* header length */
 name|int
 name|qf_sap
 decl_stmt|;
+if|#
+directive|if
+name|SOLARIS2
+operator|>=
+literal|8
+name|int
+name|qf_tunoff
+decl_stmt|;
+comment|/* tunnel offset */
+endif|#
+directive|endif
 name|size_t
 name|qf_incnt
 decl_stmt|;

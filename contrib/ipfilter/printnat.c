@@ -357,7 +357,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.1.2.9 2002/05/03 11:48:49 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.1.2.10 2002/08/28 12:45:51 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1743,7 +1743,7 @@ argument_list|)
 operator|,
 name|printf
 argument_list|(
-literal|"%s pr %u bkt %d/%d flags %x\n"
+literal|"%s pr %u bkt %d/%d flags %x drop %d/%d\n"
 argument_list|,
 name|getsumd
 argument_list|(
@@ -1766,6 +1766,20 @@ argument_list|,
 name|nat
 operator|->
 name|nat_flags
+argument_list|,
+name|nat
+operator|->
+name|nat_drop
+index|[
+literal|0
+index|]
+argument_list|,
+name|nat
+operator|->
+name|nat_drop
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
