@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.35 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -319,20 +319,10 @@ name|int
 name|p_sig
 decl_stmt|;
 comment|/* signals pending to this process */
-name|struct
-name|timeval
-name|p_utime
-decl_stmt|;
-comment|/* user time */
-name|struct
-name|timeval
-name|p_stime
-decl_stmt|;
-comment|/* system time */
 name|long
 name|p_spare
 index|[
-literal|2
+literal|6
 index|]
 decl_stmt|;
 comment|/* tmp spares to avoid shifting eproc */
@@ -937,6 +927,7 @@ comment|/* find process group by id */
 end_comment
 
 begin_decl_stmt
+specifier|volatile
 name|struct
 name|proc
 modifier|*
@@ -1058,7 +1049,7 @@ comment|/* bit mask summarizing non-empty qs's */
 end_comment
 
 begin_decl_stmt
-name|int
+name|void
 name|sleep
 name|__P
 argument_list|(
@@ -1099,7 +1090,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|unsleep
 name|__P
 argument_list|(
@@ -1113,7 +1104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|wakeup
 name|__P
 argument_list|(
@@ -1127,7 +1118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|setrun
 name|__P
 argument_list|(
@@ -1141,7 +1132,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|setpri
 name|__P
 argument_list|(
@@ -1149,6 +1140,18 @@ operator|(
 expr|struct
 name|proc
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|swtch
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
