@@ -4152,7 +4152,7 @@ struct|struct
 name|ndis_timer_entry
 block|{
 name|struct
-name|callout_handle
+name|callout
 name|nte_ch
 decl_stmt|;
 name|ndis_miniport_timer
