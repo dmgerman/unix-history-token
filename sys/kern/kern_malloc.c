@@ -1199,6 +1199,21 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|KASSERT
+argument_list|(
+name|ksp
+operator|->
+name|ks_memuse
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"malloc(9)/free(9) confusion.\n%s"
+operator|,
+literal|"Probably freeing with wrong type, but maybe not here."
+operator|)
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 literal|0
@@ -1362,6 +1377,21 @@ operator|&
 name|ksp
 operator|->
 name|ks_mtx
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|size
+operator|<=
+name|ksp
+operator|->
+name|ks_memuse
+argument_list|,
+operator|(
+literal|"malloc(9)/free(9) confusion.\n%s"
+operator|,
+literal|"Probably freeing with wrong type, but maybe not here."
+operator|)
 argument_list|)
 expr_stmt|;
 name|ksp
