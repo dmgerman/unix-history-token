@@ -143,6 +143,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTLTYPE_UINT
+value|6
+end_define
+
+begin_comment
+comment|/* name describes an unsigned integer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_LONG
+value|7
+end_define
+
+begin_comment
+comment|/* name describes a long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_ULONG
+value|8
+end_define
+
+begin_comment
+comment|/* name describes an unsigned long */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTLFLAG_RD
 value|0x80000000
 end_define
@@ -803,7 +836,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|access, \ 		ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_define
@@ -828,7 +861,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|access,	    \ 	ptr, val, sysctl_handle_int, "IU", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|access,	    \ 	ptr, val, sysctl_handle_int, "IU", descr);
 end_define
 
 begin_comment
@@ -855,7 +888,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_long, "L", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|access, \ 		ptr, val, sysctl_handle_long, "L", descr)
 end_define
 
 begin_define
@@ -878,7 +911,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|access,	    \ 	ptr, 0, sysctl_handle_long, "L", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|access,	    \ 	ptr, 0, sysctl_handle_long, "L", descr);
 end_define
 
 begin_comment
@@ -905,7 +938,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_long, "LU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|access, \ 		ptr, val, sysctl_handle_long, "LU", descr)
 end_define
 
 begin_define
@@ -928,7 +961,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|access,	    \ 	ptr, 0, sysctl_handle_long, "LU", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|access,	    \ 	ptr, 0, sysctl_handle_long, "LU", descr);
 end_define
 
 begin_comment
@@ -1633,7 +1666,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ 	{ "nisdomainname", CTLTYPE_STRING }, \ 	{ "update", CTLTYPE_INT }, \ 	{ "osreldate", CTLTYPE_INT }, \ 	{ "ntp_pll", CTLTYPE_NODE }, \ 	{ "bootfile", CTLTYPE_STRING }, \ 	{ "maxfilesperproc", CTLTYPE_INT }, \ 	{ "maxprocperuid", CTLTYPE_INT }, \ 	{ "dumpdev", CTLTYPE_STRUCT },
+value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_UINT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ 	{ "nisdomainname", CTLTYPE_STRING }, \ 	{ "update", CTLTYPE_INT }, \ 	{ "osreldate", CTLTYPE_INT }, \ 	{ "ntp_pll", CTLTYPE_NODE }, \ 	{ "bootfile", CTLTYPE_STRING }, \ 	{ "maxfilesperproc", CTLTYPE_INT }, \ 	{ "maxprocperuid", CTLTYPE_INT }, \ 	{ "dumpdev", CTLTYPE_STRUCT },
 comment|/* we lie; don't print as int */
 value|\ 	{ "ipc", CTLTYPE_NODE }, \ 	{ "dummy", CTLTYPE_INT }, \ 	{ "ps_strings", CTLTYPE_INT }, \ 	{ "usrstack", CTLTYPE_INT }, \ 	{ "logsigexit", CTLTYPE_INT }, \ }
 end_define
@@ -1984,7 +2017,7 @@ begin_define
 define|#
 directive|define
 name|CTL_HW_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "machine", CTLTYPE_STRING }, \ 	{ "model", CTLTYPE_STRING }, \ 	{ "ncpu", CTLTYPE_INT }, \ 	{ "byteorder", CTLTYPE_INT }, \ 	{ "physmem", CTLTYPE_INT }, \ 	{ "usermem", CTLTYPE_INT }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "disknames", CTLTYPE_STRUCT }, \ 	{ "diskstats", CTLTYPE_STRUCT }, \ 	{ "floatingpoint", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "machine", CTLTYPE_STRING }, \ 	{ "model", CTLTYPE_STRING }, \ 	{ "ncpu", CTLTYPE_INT }, \ 	{ "byteorder", CTLTYPE_INT }, \ 	{ "physmem", CTLTYPE_UINT }, \ 	{ "usermem", CTLTYPE_UINT }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "disknames", CTLTYPE_STRUCT }, \ 	{ "diskstats", CTLTYPE_STRUCT }, \ 	{ "floatingpoint", CTLTYPE_INT }, \ }
 end_define
 
 begin_comment
