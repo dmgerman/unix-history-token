@@ -3838,6 +3838,11 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
+init|=
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
@@ -3962,13 +3967,6 @@ name|error
 operator|)
 return|;
 block|}
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|fs
 operator|=
 name|ump
