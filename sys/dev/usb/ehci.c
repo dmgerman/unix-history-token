@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  */
+comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  */
 end_comment
 
 begin_comment
@@ -31,6 +31,10 @@ end_comment
 
 begin_comment
 comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *  * The EHCI 1.0 spec can be found at  * http://developer.intel.com/technology/usb/download/ehci-r10.pdf  * and the USB 2.0 spec at  * http://www.usb.org/developers/docs/usb_20.zip  *  */
+end_comment
+
+begin_comment
+comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) There might also be some issues with the data toggle, it was not  *    completely tested to work properly under all condistions. If wrong  *    toggle would be sent/recvd, bulk data transfers would stop working.  *  * 4) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite compolicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 5) command failures are not recovered correctly */
 end_comment
 
 begin_include
@@ -270,6 +274,13 @@ ifdef|#
 directive|ifdef
 name|USB_DEBUG
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EHCI_DEBUG
+value|USB_DEBUG
+end_define
 
 begin_define
 define|#
@@ -1244,7 +1255,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -1600,7 +1611,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 name|theehci
 operator|=
 name|sc
@@ -2254,7 +2265,7 @@ name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|ehcidebug
@@ -3131,6 +3142,9 @@ name|struct
 name|ehci_xfer
 modifier|*
 name|ex
+decl_stmt|,
+modifier|*
+name|nextex
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -3180,13 +3194,18 @@ name|ex
 condition|;
 name|ex
 operator|=
+name|nextex
+control|)
+block|{
+name|nextex
+operator|=
 name|LIST_NEXT
 argument_list|(
 name|ex
 argument_list|,
 name|inext
 argument_list|)
-control|)
+expr_stmt|;
 name|ehci_check_intr
 argument_list|(
 name|sc
@@ -3194,6 +3213,7 @@ argument_list|,
 name|ex
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|USB_USE_SOFTINTR
@@ -3472,7 +3492,7 @@ name|xfer
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 name|struct
 name|ehci_pipe
 modifier|*
@@ -3539,7 +3559,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 name|printf
 argument_list|(
 literal|"ehci_idone: ex is done!\n   "
@@ -3605,7 +3625,7 @@ return|return;
 block|}
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 name|DPRINTFN
 argument_list|(
 comment|/*10*/
@@ -3680,6 +3700,29 @@ break|break;
 name|status
 operator|=
 name|nstatus
+expr_stmt|;
+comment|/* halt is ok if descriptor is last, and complete */
+if|if
+condition|(
+name|sqtd
+operator|->
+name|qtd
+operator|.
+name|qtd_next
+operator|==
+name|EHCI_NULL
+operator|&&
+name|EHCI_QTD_GET_BYTES
+argument_list|(
+name|status
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|status
+operator|&=
+operator|~
+name|EHCI_QTD_HALTED
 expr_stmt|;
 if|if
 condition|(
@@ -3770,7 +3813,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 name|char
 name|sbuf
 index|[
@@ -4006,7 +4049,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|ehcidebug
@@ -4086,7 +4129,7 @@ name|bus
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 specifier|static
 name|int
 name|last
@@ -4419,7 +4462,7 @@ name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 name|DPRINTF
 argument_list|(
 operator|(
@@ -4639,7 +4682,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|err
@@ -5009,7 +5052,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 end_ifdef
 
 begin_function
@@ -6125,7 +6168,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|err
@@ -6326,7 +6369,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|ehcidebug
@@ -8178,7 +8221,11 @@ argument_list|)
 case|:
 if|if
 condition|(
+operator|(
 name|value
+operator|&
+literal|0xff
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -9585,7 +9632,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|err
@@ -9806,7 +9853,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|err
@@ -10472,6 +10519,17 @@ name|htole32
 argument_list|(
 name|a
 argument_list|)
+expr_stmt|;
+name|cur
+operator|->
+name|qtd
+operator|.
+name|qtd_buffer_hi
+index|[
+name|i
+index|]
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -12176,6 +12234,17 @@ argument_list|)
 expr_stmt|;
 name|setup
 operator|->
+name|qtd
+operator|.
+name|qtd_buffer_hi
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|setup
+operator|->
 name|nextqtd
 operator|=
 name|next
@@ -12254,6 +12323,18 @@ expr_stmt|;
 comment|/* XXX not needed? */
 name|stat
 operator|->
+name|qtd
+operator|.
+name|qtd_buffer_hi
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX not needed? */
+name|stat
+operator|->
 name|nextqtd
 operator|=
 name|NULL
@@ -12286,7 +12367,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|ehcidebug
@@ -12419,7 +12500,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|ehcidebug
@@ -12789,7 +12870,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|ehcidebug
@@ -12922,7 +13003,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|EHCI_DEBUG
 if|if
 condition|(
 name|ehcidebug
