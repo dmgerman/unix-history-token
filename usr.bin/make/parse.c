@@ -7847,7 +7847,7 @@ condition|)
 block|{
 name|Punt
 argument_list|(
-literal|"make: no target to make.\n"
+literal|"no target to make."
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
