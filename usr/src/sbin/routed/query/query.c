@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.1 (Berkeley) %G%"
+literal|"@(#)query.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../protocol.h"
+file|<protocols/routed.h>
 end_include
 
 begin_define
@@ -703,7 +703,9 @@ name|h_name
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"from %s(%s):\n"
+literal|"%d bytes from %s(%s):\n"
+argument_list|,
+name|size
 argument_list|,
 name|name
 argument_list|,
@@ -1028,7 +1030,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return the possible subnetwork number from an internet address.  * If the address is of the form of a subnet address (most significant  * bit of the host part is set), believe the subnet exists.  * Otherwise, return the network number.  * SHOULD FIND OUT WHETHER THIS IS A LOCAL NETWORK BEFORE LOOKING  * INSIDE OF THE HOST PART.  We can only believe this if we have other  * information (e.g., we can find a name for this number).  */
+comment|/*  * Return the possible subnetwork number from an internet address.  * SHOULD FIND OUT WHETHER THIS IS A LOCAL NETWORK BEFORE LOOKING  * INSIDE OF THE HOST PART.  We can only believe this if we have other  * information (e.g., we can find a name for this number).  */
 end_comment
 
 begin_macro
@@ -1065,66 +1067,6 @@ argument_list|(
 name|i
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
-name|IN_SUBNETA
-argument_list|(
-name|i
-argument_list|)
-condition|)
-return|return
-operator|(
-operator|(
-name|i
-operator|&
-name|IN_CLASSA_SUBNET
-operator|)
-operator|>>
-name|IN_CLASSA_SUBNSHIFT
-operator|)
-return|;
-else|else
-return|return
-operator|(
-operator|(
-name|i
-operator|&
-name|IN_CLASSA_NET
-operator|)
-operator|>>
-name|IN_CLASSA_NSHIFT
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|IN_CLASSB
-argument_list|(
-name|i
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|IN_SUBNETB
-argument_list|(
-name|i
-argument_list|)
-condition|)
-return|return
-operator|(
-operator|(
-name|i
-operator|&
-name|IN_CLASSB_SUBNET
-operator|)
-operator|>>
-name|IN_CLASSB_SUBNSHIFT
-operator|)
-return|;
-else|else
 return|return
 operator|(
 operator|(
@@ -1136,8 +1078,14 @@ operator|>>
 name|IN_CLASSB_NSHIFT
 operator|)
 return|;
-block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|IN_CLASSB
+argument_list|(
+name|i
+argument_list|)
+condition|)
 return|return
 operator|(
 operator|(
@@ -1147,6 +1095,18 @@ name|IN_CLASSC_NET
 operator|)
 operator|>>
 name|IN_CLASSC_NSHIFT
+operator|)
+return|;
+else|else
+return|return
+operator|(
+operator|(
+name|i
+operator|&
+literal|0xffffffc0
+operator|)
+operator|>>
+literal|28
 operator|)
 return|;
 block|}
