@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -739,7 +739,7 @@ comment|/* Initial pgrp and tty pgrp */
 end_comment
 
 begin_comment
-comment|/*  * To be able to redirect i/o for builtins easily, the shell moves the i/o  * descriptors it uses away from 0,1,2.  * Ideally these should be in units which are closed across exec's  * (this saves work) but for version 6, this is not usually possible.  * The desired initial values for these descriptors are defined in  * local.h.  */
+comment|/*  * To be able to redirect i/o for builtins easily, the shell moves the i/o  * descriptors it uses away from 0,1,2.  * Ideally these should be in units which are closed across exec's  * (this saves work) but for version 6, this is not usually possible.  * The desired initial values for these descriptors are F{SHIN,...}.  */
 end_comment
 
 begin_decl_stmt
