@@ -140,47 +140,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
-struct|struct
-name|an_80211_hdr
-block|{
-name|u_int16_t
-name|frame_ctl
-decl_stmt|;
-name|u_int16_t
-name|dur_id
-decl_stmt|;
-name|u_int8_t
-name|addr1
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_int8_t
-name|addr2
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_int8_t
-name|addr3
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_int16_t
-name|seq_ctl
-decl_stmt|;
-name|u_int8_t
-name|addr4
-index|[
-literal|6
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -400,41 +359,6 @@ begin_comment
 comment|/* deauthentication */
 end_comment
 
-begin_struct
-struct|struct
-name|an_mgmt_hdr
-block|{
-name|u_int16_t
-name|frame_ctl
-decl_stmt|;
-name|u_int16_t
-name|duration
-decl_stmt|;
-name|u_int8_t
-name|dst_addr
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_int8_t
-name|src_addr
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_int8_t
-name|bssid
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_int16_t
-name|seq_ctl
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*   * Aironet IEEE signal strength cache  *  * driver keeps cache of last  * MAXANCACHE packets to arrive including signal strength info.  * daemons may read this via ioctl  *  * Each entry in the wi_sigcache has a unique macsrc.  */
 end_comment
@@ -516,16 +440,10 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* 40-bit keys */
+comment|/* 128-bit keys */
 block|}
 struct|;
 end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
 
 begin_struct
 struct|struct
@@ -940,6 +858,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * General configuration information.  */
+end_comment
+
 begin_struct
 struct|struct
 name|an_ltv_genconfig
@@ -1222,11 +1144,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1557,11 +1474,9 @@ name|AN_HOME_INSTALL_AP
 value|0x0002
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
+begin_comment
+comment|/*  * Valid SSID list. You can specify up to three SSIDs denoting  * the service sets that you want to join. The first SSID always  * defaults to "tsunami" which is a handy way to detect the  * card.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -1604,6 +1519,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Valid AP list.  */
+end_comment
+
 begin_struct
 struct|struct
 name|an_ltv_aplist
@@ -1642,6 +1561,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Driver name.  */
+end_comment
+
 begin_struct
 struct|struct
 name|an_ltv_drvname
@@ -1661,6 +1584,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Frame encapsulation.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -1765,6 +1692,10 @@ directive|define
 name|AN_TXENCAP_80211
 value|0x0002
 end_define
+
+begin_comment
+comment|/*  * Card capabilities (read only).  */
+end_comment
 
 begin_struct
 struct|struct
@@ -1905,6 +1836,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Access point (read only)  */
+end_comment
+
 begin_struct
 struct|struct
 name|an_ltv_apinfo
@@ -1925,6 +1860,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Radio info (read only).  */
+end_comment
+
 begin_struct
 struct|struct
 name|an_ltv_radioinfo
@@ -1939,6 +1878,10 @@ comment|/* ??? */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Status (read only). Note: the manual claims this RID is 108 bytes  * long (0x6A is the last datum, which is 2 bytes long) however when  * this RID is read from the NIC, it returns a length of 110. To be  * on the safe side, this structure is padded with an extra 16-bit  * word. (There is a misprint in the manual which says the macaddr  * field is 8 bytes long.)  *  * Also, the channel_set and current_channel fields appear to be  * reversed. Either that, or the hop_period field is unused.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -2148,6 +2091,10 @@ name|AN_STATUS_OPMODE_ERROR
 value|0x8000
 end_define
 
+begin_comment
+comment|/*  * WEP Key  */
+end_comment
+
 begin_struct
 struct|struct
 name|an_ltv_wepkey
@@ -2282,28 +2229,6 @@ begin_comment
 comment|/* Current configuration settings */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AN_RID_WEP_VOLATILE
-value|0xFF15
-end_define
-
-begin_comment
-comment|/* Volatile WEP Key */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AN_RID_WEP_PERSISTENT
-value|0xFF16
-end_define
-
-begin_comment
-comment|/* Persistent WEP Key */
-end_comment
-
 begin_comment
 comment|/*  * Reporting (read only)  */
 end_comment
@@ -2351,6 +2276,27 @@ end_define
 begin_comment
 comment|/* Current status info */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_BEACONS_HST
+value|0xFF51
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_RID_BUSY_HST
+value|0xFF52
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_RID_RETRIES_HST
+value|0xFF53
+end_define
 
 begin_comment
 comment|/*  * Statistics  */
@@ -2422,10 +2368,110 @@ begin_comment
 comment|/* 32-bit stats, clear on read */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * LEAP  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_LEAPUSERNAME
+value|0xFF23
+end_define
+
+begin_comment
+comment|/* Username */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_LEAPPASSWORD
+value|0xFF24
+end_define
+
+begin_comment
+comment|/* Password */
+end_comment
+
+begin_comment
+comment|/*  * OTHER Unknonwn for now  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_MOD
+value|0xFF17
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_RID_OPTIONS
+value|0xFF18
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_RID_FACTORY_CONFIG
+value|0xFF18
+end_define
+
+begin_comment
+comment|/*  *   FreeBSD fake RID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_MONITOR_MODE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Set monitor mode for driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_MONITOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_MONITOR_ANY_BSS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_MONITOR_INCLUDE_BEACON
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_MONITOR_AIRONET_HEADER
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_AIRONET_HEADER
+value|120
+end_define
+
+begin_comment
+comment|/* Just something for now */
+end_comment
 
 begin_endif
 endif|#
