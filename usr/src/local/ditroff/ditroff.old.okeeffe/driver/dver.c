@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dver.c	1.5	83/07/08  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, Berkeley  */
+comment|/* dver.c	1.6	83/07/09  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, Berkeley  */
 end_comment
 
 begin_comment
@@ -175,7 +175,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.5	83/07/08"
+literal|"dver.c	1.6	83/07/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1623,6 +1623,10 @@ case|case
 literal|'~'
 case|:
 comment|/* wiggly line */
+case|case
+literal|'g'
+case|:
+comment|/* gremlin spline */
 name|drawwig
 argument_list|(
 name|buf
@@ -1630,6 +1634,57 @@ operator|+
 literal|1
 argument_list|,
 name|fp
+argument_list|,
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'~'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+comment|/* line thickness */
+name|sscanf
+argument_list|(
+name|buf
+operator|+
+literal|1
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|n
+argument_list|)
+expr_stmt|;
+name|drawthick
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* line style */
+name|sscanf
+argument_list|(
+name|buf
+operator|+
+literal|1
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|n
+argument_list|)
+expr_stmt|;
+name|drawstyle
+argument_list|(
+name|n
 argument_list|)
 expr_stmt|;
 break|break;
