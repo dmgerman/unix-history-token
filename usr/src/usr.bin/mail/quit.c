@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)quit.c	1.1 %G%"
+literal|"@(#)quit.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ name|struct
 name|stat
 name|minfo
 decl_stmt|;
+comment|/* 	 * If we are read only, we can't do anything, 	 * so just return quickly. 	 */
+if|if
+condition|(
+name|readonly
+condition|)
+return|return;
 comment|/* 	 * See if there any messages to save in mbox.  If no, we 	 * can save copying mbox to /tmp and back. 	 * 	 * Check also to see if any files need to be preserved. 	 * Delete all untouched messages to keep them out of mbox. 	 * If all the messages are to be preserved, just exit with 	 * a message. 	 * 	 * If the luser has sent mail to himself, refuse to do 	 * anything with the mailbox, unless mail locking works. 	 */
 name|lock
 argument_list|(
