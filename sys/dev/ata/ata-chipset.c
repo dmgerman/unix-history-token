@@ -10251,7 +10251,7 @@ literal|0
 block|,
 name|ATA_UDMA2
 block|,
-literal|"SiS 5313"
+literal|"SiS 5513"
 block|}
 block|,
 block|{
@@ -10265,7 +10265,7 @@ literal|0
 block|,
 name|ATA_WDMA2
 block|,
-literal|"SiS 5313"
+literal|"SiS 5513"
 block|}
 block|,
 block|{
