@@ -8422,6 +8422,8 @@ argument_list|,
 name|pindex
 argument_list|,
 name|VM_ALLOC_NORMAL
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -8443,7 +8445,8 @@ name|pg
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|vm_page_sleep_busy
@@ -8455,12 +8458,10 @@ argument_list|,
 literal|"sfpbsy"
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|retry_lookup
 goto|;
-block|}
-comment|/* 		 * Wire the page so it does not get ripped out from under 		 * us.  		 */
+comment|/* 		 	 * Wire the page so it does not get ripped out from 			 * under us. 			 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -8472,6 +8473,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* 		 * If page is not valid for what we need, initiate I/O 		 */
 if|if
 condition|(
