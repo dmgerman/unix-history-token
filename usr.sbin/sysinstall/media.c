@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.5 1995/05/16 11:37:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.6 1995/05/17 14:39:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -28,6 +28,13 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|Device
+modifier|*
+name|devs
+decl_stmt|;
+name|int
+name|cnt
+decl_stmt|;
 if|if
 condition|(
 name|OnCDROM
@@ -39,30 +46,56 @@ literal|1
 return|;
 else|else
 block|{
-name|dmenuOpenSimple
+name|devs
+operator|=
+name|deviceFind
 argument_list|(
-operator|&
-name|MenuMediaCDROM
+name|NULL
+argument_list|,
+name|MEDIA_TYPE_CDROM
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|=
+name|deviceCount
+argument_list|(
+name|devs
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getenv
-argument_list|(
-name|MEDIA_DEVICE
-argument_list|)
+operator|!
+name|cnt
 condition|)
 block|{
-name|variable_set2
+name|msgConfirm
 argument_list|(
-name|MEDIA_TYPE
-argument_list|,
-literal|"cdrom"
+literal|"No CDROM devices found!  Please check that your system's\nconfiguration is correct and that the CDROM drive is of a supported\ntype.  For more information, consult the hardware guide\nin the Doc menu."
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cnt
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* put up a menu */
+block|}
+else|else
+block|{
+name|mediaDevice
+operator|=
+name|devs
+index|[
+literal|0
+index|]
+expr_stmt|;
 block|}
 block|}
 return|return
@@ -263,40 +296,12 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|getenv
-argument_list|(
-name|MEDIA_TYPE
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|mediaGetType
+name|mediaVerify
 argument_list|()
 condition|)
 return|return
 name|NULL
 return|;
-block|}
-if|if
-condition|(
-operator|!
-name|getenv
-argument_list|(
-name|MEDIA_DEVICE
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"No media device has been set up!?\nPlease configure a device from the media type menu."
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 if|if
 condition|(
 name|parent
@@ -324,7 +329,7 @@ argument_list|,
 name|FILENAME_MAX
 argument_list|)
 expr_stmt|;
-comment|/* XXX find a Device here XXX */
+comment|/* XXX mediaDevice points to where we want to get it from */
 return|return
 name|NULL
 return|;
@@ -398,21 +403,12 @@ block|{
 if|if
 condition|(
 operator|!
-name|getenv
-argument_list|(
-name|MEDIA_TYPE
-argument_list|)
-operator|||
-operator|!
-name|getenv
-argument_list|(
-name|MEDIA_DEVICE
-argument_list|)
+name|mediaDevice
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Media type or device not set!  Please select a media type\nfrom the Installation menu before proceeding."
+literal|"Media type not set!  Please select a media type\nfrom the Installation menu before proceeding."
 argument_list|)
 expr_stmt|;
 return|return

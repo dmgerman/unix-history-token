@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.16 1995/05/18 09:02:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.17 1995/05/19 16:58:56 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -130,6 +130,21 @@ operator|*
 operator|)
 operator|&
 name|MenuInstall
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Quit"
+block|,
+literal|"Exit this installation utility"
+block|,
+comment|/* Q */
+name|DMENU_CANCEL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -542,89 +557,13 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a CDROM type"
 block|,
-literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD 2.0.5 distribution.  If you are seeing this menu, it's either\n\ because you haven't booted directly from the CDROM in DOS/Windows or\n\ your CDROM was not detected.  If you feel that you are seeing this dialog\n\ in error, you may wish to reboot FreeBSD with the -c boot flag (see the\n\ hardware guide in the Documentation menu for more info) and check that your\n\ CDROM controller and the kernel agree on reasonable values.  Please also\n\ note that FreeBSD does NOT currently support IDE CDROM drives!"
+literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD 2.0.5 distribution.  If you are seeing this menu it's because\n\ more than one CDROM drive on your system was found.  Please select one\n\ of the following CDROM drives as your installation drive."
 block|,
-literal|"Press F1 for more information on CDROM support"
+literal|"Press F1 to read the installation guide"
 block|,
-literal|"media_cdrom.hlp"
-block|,
-block|{
-block|{
-literal|"Matsushita"
-block|,
-literal|"Panasonic \"Sound Blaster\" CDROM."
-block|,
-comment|/* M */
-name|DMENU_SET_VARIABLE
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|"mediaDevice=/dev/matcd0a"
-block|,
-literal|0
-block|,
-literal|0
-block|}
+literal|"install.hlp"
 block|,
 block|{
-literal|"Mitsumi"
-block|,
-literal|"Mitsumi FX-001 series drive (not IDE)"
-block|,
-comment|/* M */
-name|DMENU_SET_VARIABLE
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|"mediaDevice=/dev/mcd0a"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"SCSI"
-block|,
-literal|"SCSI CDROM drive attached to supported SCSI controller"
-block|,
-comment|/* S */
-name|DMENU_SET_VARIABLE
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|"mediaDevice=/dev/cd0a"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Sony"
-block|,
-literal|"Sony CDU31/33A or compatible CDROM drive"
-block|,
-comment|/* S */
-name|DMENU_SET_VARIABLE
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|"mediaDevice=/dev/scd0a"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
 block|{
 name|NULL
 block|}
@@ -663,7 +602,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=/dev/fd0a"
+literal|"mediaDevice=fd0a"
 block|,
 literal|0
 block|,
@@ -682,7 +621,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=/dev/fd1a"
+literal|"mediaDevice=fd1a"
 block|,
 literal|0
 block|,
