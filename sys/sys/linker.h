@@ -733,6 +733,64 @@ begin_comment
 comment|/* _DYNAMIC pointer */
 end_comment
 
+begin_comment
+comment|/* These values are MD on these two platforms */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_ENVP
+value|0x0006
+end_define
+
+begin_comment
+comment|/* envp[] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_HOWTO
+value|0x0007
+end_define
+
+begin_comment
+comment|/* boothowto */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_KERNEND
+value|0x0008
+end_define
+
+begin_comment
+comment|/* kernend */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -754,6 +812,31 @@ end_define
 begin_comment
 comment|/* depends on */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MD_FETCH
+parameter_list|(
+name|mdp
+parameter_list|,
+name|info
+parameter_list|,
+name|type
+parameter_list|)
+value|({ \ 	type *__p; \ 	__p = (type *)preload_search_info((mdp), MODINFO_METADATA | (info)); \ 	__p ? *__p : 0; \ })
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

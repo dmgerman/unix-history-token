@@ -78,20 +78,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|MD_FETCH
-parameter_list|(
-name|mdp
-parameter_list|,
-name|info
-parameter_list|,
-name|type
-parameter_list|)
-value|({ \ 	type *__p; \ 	__p = (type *)preload_search_info((mdp), MODINFO_METADATA | (info)); \ 	__p ? *__p : 0; \ })
-end_define
-
 begin_endif
 endif|#
 directive|endif
