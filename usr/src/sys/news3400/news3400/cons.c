@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)cons.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)cons.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bm.h"
 end_include
 
 begin_decl_stmt
@@ -651,6 +657,11 @@ condition|)
 return|return
 literal|0
 return|;
+if|#
+directive|if
+name|NBM
+operator|>
+literal|0
 if|if
 condition|(
 name|consdev
@@ -671,6 +682,15 @@ name|putc
 operator|=
 name|bmcons_putc
 expr_stmt|;
+else|#
+directive|else
+name|putc
+operator|=
+name|scccons_putc
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* KU: should be much more efficient */
 name|s
 operator|=
 name|splhigh
@@ -743,6 +763,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|NBM
+operator|>
+literal|0
+end_if
+
 begin_macro
 name|bmcons_putc
 argument_list|(
@@ -785,6 +813,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
