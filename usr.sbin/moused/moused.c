@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.19 1998/06/14 20:05:27 ahasty Exp $"
+literal|"$Id: moused.c,v 1.21 1998/11/20 11:17:59 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1289,6 +1289,10 @@ name|zmap
 decl_stmt|;
 comment|/* MOUSE_{X|Y}AXIS or a button number */
 name|int
+name|wmode
+decl_stmt|;
+comment|/* wheel mode button number */
+name|int
 name|mfd
 decl_stmt|;
 comment|/* mouse file descriptor */
@@ -1350,6 +1354,10 @@ operator|:
 name|MOUSE_RES_UNKNOWN
 block|,
 name|zmap
+operator|:
+literal|0
+block|,
+name|wmode
 operator|:
 literal|0
 block|,
@@ -1737,7 +1745,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"3C:DF:I:PRS:cdfhi:l:m:p:r:st:z:"
+literal|"3C:DF:I:PRS:cdfhi:l:m:p:r:st:w:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2094,6 +2102,55 @@ operator|.
 name|baudrate
 operator|=
 literal|9600
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+name|i
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|<=
+literal|0
+operator|)
+operator|||
+operator|(
+name|i
+operator|>
+name|MOUSE_MAXBUTTON
+operator|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid argument `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+name|rodent
+operator|.
+name|wmode
+operator|=
+literal|1
+operator|<<
+operator|(
+name|i
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -3686,9 +3743,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: moused [-3DRcdfs] [-I file] [-F rate] [-r resolution] [-S baudrate] [-C threshold]"
+literal|"usage: moused [-3DRcdfs] [-I file] [-F rate] [-r resolution] [-S baudrate]"
 argument_list|,
-literal|"              [-m N=M] [-z N] [-t<mousetype>] -p<port>"
+literal|"              [-C threshold] [-m N=M] [-w N] [-z N] [-t<mousetype>] -p<port>"
 argument_list|,
 literal|"       moused [-d] -i -p<port>"
 argument_list|)
@@ -8029,6 +8086,43 @@ name|act2
 operator|->
 name|button
 expr_stmt|;
+if|if
+condition|(
+name|pbuttons
+operator|&
+name|rodent
+operator|.
+name|wmode
+condition|)
+block|{
+name|pbuttons
+operator|&=
+operator|~
+name|rodent
+operator|.
+name|wmode
+expr_stmt|;
+name|act1
+operator|->
+name|dz
+operator|=
+name|act1
+operator|->
+name|dy
+expr_stmt|;
+name|act1
+operator|->
+name|dx
+operator|=
+literal|0
+expr_stmt|;
+name|act1
+operator|->
+name|dy
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|act2
 operator|->
 name|dx
