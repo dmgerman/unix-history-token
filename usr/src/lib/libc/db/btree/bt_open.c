@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.16 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,7 +576,8 @@ block|{
 define|#
 directive|define
 name|USEFLAGS
-value|(O_CREAT|O_EXCL|O_RDONLY|O_RDWR|O_TRUNC|O_WRONLY)
+define|\
+value|(O_CREAT|O_EXCL|O_EXLOCK|O_RDONLY|O_RDWR|O_SHLOCK|O_TRUNC|O_WRONLY)
 if|if
 condition|(
 operator|(
