@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.41 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.42 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.41 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.42 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,7 +1151,7 @@ name|strcasecmp
 argument_list|(
 name|line
 argument_list|,
-literal|"x-dsn-3"
+literal|"x-dsn-03"
 argument_list|)
 operator|==
 literal|0
