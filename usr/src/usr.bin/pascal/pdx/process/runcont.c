@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runcont.c 1.1 %G%"
+literal|"@(#)runcont.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * execution management  */
+comment|/*  * Execution management.  */
 end_comment
 
 begin_include
@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"main.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"breakpoint.h"
 end_include
 
@@ -69,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|MAXNARGS
-value|10
+value|100
 end_define
 
 begin_comment
@@ -80,7 +86,7 @@ begin_typedef
 typedef|typedef
 name|char
 modifier|*
-name|string
+name|String
 typedef|;
 end_typedef
 
@@ -100,7 +106,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LOCAL
-name|string
+name|String
 name|argv
 index|[
 name|MAXNARGS
@@ -110,20 +116,70 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LOCAL
-name|string
+name|String
 name|infile
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|LOCAL
-name|string
+name|String
 name|outfile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * initialize the argument list  */
+comment|/*  * This is a px-related kludge to deal with the possibility  * of object code magically coming from a tmp file.  */
+end_comment
+
+begin_decl_stmt
+name|LOCAL
+name|String
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LOCAL
+name|String
+name|realname
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|setargs
+argument_list|(
+argument|m
+argument_list|,
+argument|r
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|m
+decl_stmt|,
+modifier|*
+name|r
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|mode
+operator|=
+name|m
+expr_stmt|;
+name|realname
+operator|=
+name|r
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Initialize the argument list.  */
 end_comment
 
 begin_macro
@@ -151,26 +207,46 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"px"
+name|mode
 expr_stmt|;
 name|argv
 index|[
 literal|1
 index|]
 operator|=
-literal|"-d"
+name|objname
 expr_stmt|;
+if|if
+condition|(
+name|option
+argument_list|(
+literal|'t'
+argument_list|)
+operator|&&
+name|realname
+operator|==
+name|NIL
+condition|)
+block|{
+name|argc
+operator|=
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
 name|argv
 index|[
 literal|2
 index|]
 operator|=
-name|objname
+name|realname
 expr_stmt|;
 name|argc
 operator|=
 literal|3
 expr_stmt|;
+block|}
 else|#
 directive|else
 name|argv
@@ -190,7 +266,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * add an argument to the list for the debuggee  */
+comment|/*  * Add an argument to the list for the debuggee.  */
 end_comment
 
 begin_macro
@@ -201,7 +277,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|string
+name|String
 name|arg
 decl_stmt|;
 end_decl_stmt
@@ -217,7 +293,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"too many arguments"
+literal|"too many arguments to run"
 argument_list|)
 expr_stmt|;
 block|}
@@ -233,7 +309,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * set the standard input for the debuggee  */
+comment|/*  * Set the standard input for the debuggee.  */
 end_comment
 
 begin_macro
@@ -244,7 +320,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|string
+name|String
 name|filename
 decl_stmt|;
 end_decl_stmt
@@ -272,7 +348,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * set the standard output for the debuggee  * should probably check to avoid overwriting an existing file  */
+comment|/*  * Set the standard output for the debuggee.  * Probably should check to avoid overwriting an existing file.  */
 end_comment
 
 begin_macro
@@ -283,7 +359,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|string
+name|String
 name|filename
 decl_stmt|;
 end_decl_stmt
@@ -311,7 +387,40 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * run starts debuggee executing  */
+comment|/*  * Initial start of the process.  The idea is to get it to the point  * where the object code has been loaded but execution has not begun.  */
+end_comment
+
+begin_macro
+name|initstart
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|arginit
+argument_list|()
+expr_stmt|;
+name|argv
+index|[
+name|argc
+index|]
+operator|=
+name|NIL
+expr_stmt|;
+name|start
+argument_list|(
+name|argv
+argument_list|,
+name|infile
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Run starts debuggee executing.  */
 end_comment
 
 begin_macro
@@ -327,6 +436,13 @@ expr_stmt|;
 name|curline
 operator|=
 literal|0
+expr_stmt|;
+name|argv
+index|[
+name|argc
+index|]
+operator|=
+name|NIL
 expr_stmt|;
 name|start
 argument_list|(
@@ -352,7 +468,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * continue execution wherever we left off  *  * Note that this routine never returns.  Eventually bpact() will fail  * and we'll call printstatus or step will call it.  */
+comment|/*  * Continue execution wherever we left off.  *  * Note that this routine never returns.  Eventually bpact() will fail  * and we'll call printstatus or step will call it.  */
 end_comment
 
 begin_typedef
@@ -483,7 +599,7 @@ name|step
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 end_block
 
