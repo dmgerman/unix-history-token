@@ -10785,7 +10785,6 @@ block|}
 comment|/* already loaded? */
 if|if
 condition|(
-operator|!
 name|strncmp
 argument_list|(
 name|name
@@ -10797,6 +10796,22 @@ argument_list|(
 name|cp
 argument_list|)
 argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|ifkind
+argument_list|,
+name|cp
+argument_list|,
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return;
 block|}
