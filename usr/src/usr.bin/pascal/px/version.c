@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)version.c	5.1 (Berkeley) %G%"
+literal|"@(#)version.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,11 @@ name|time
 argument_list|(
 literal|0
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
