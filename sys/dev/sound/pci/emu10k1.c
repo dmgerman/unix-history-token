@@ -649,7 +649,7 @@ name|pcmchan_caps
 name|emu_playcaps
 init|=
 block|{
-literal|48000
+literal|4000
 block|,
 literal|48000
 block|,
