@@ -3050,6 +3050,11 @@ decl_stmt|,
 name|oldpte
 decl_stmt|;
 comment|/* 	 * allocate object for the upages 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3063,6 +3068,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|upobj
 operator|=
 name|vm_object_allocate
@@ -3070,6 +3080,11 @@ argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
 name|UPAGES
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|p
@@ -3093,6 +3108,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|up
 operator|=
 operator|(
@@ -3120,6 +3140,11 @@ argument_list|(
 literal|"pmap_new_proc: u_map allocation failed"
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_addr
@@ -3127,6 +3152,11 @@ operator|=
 name|up
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|ptek
 operator|=
 operator|(
