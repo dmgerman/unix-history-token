@@ -3046,6 +3046,12 @@ if|#
 directive|if
 name|JOBS
 comment|/* Relocate `next' pointers and list head */
+if|if
+condition|(
+name|jobmru
+operator|!=
+name|NULL
+condition|)
 name|jobmru
 operator|=
 operator|&
