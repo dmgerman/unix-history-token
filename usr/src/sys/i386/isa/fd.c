@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.386.c%  *  *	@(#)fd.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.386.c%  *  *	@(#)fd.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
