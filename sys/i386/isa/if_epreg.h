@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.13 1996/02/28 17:19:04 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.14 1996/06/14 22:11:38 nate Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -1314,9 +1314,11 @@ define|#
 directive|define
 name|SET_IRQ
 parameter_list|(
-name|i
+name|base
+parameter_list|,
+name|irq
 parameter_list|)
-value|(((i)<<12) | 0xF00)
+value|outw((base) + EP_W0_RESOURCE_CFG, \                               ((inw((base) + EP_W0_RESOURCE_CFG)& 0x0fff) | \                               ((u_short)(irq)<<12))  )
 end_define
 
 begin_comment

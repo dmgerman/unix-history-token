@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: 3c5x9.c,v 1.2 1996/02/28 17:18:55 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: 3c5x9.c,v 1.3 1996/06/12 05:02:39 gpalmer Exp $  */
 end_comment
 
 begin_include
@@ -1109,6 +1109,26 @@ argument_list|(
 name|sc
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+comment|/* Even we get irq number from board, we should tell him..             Otherwise we never get a H/W interrupt anymore...*/
+if|if
+condition|(
+name|irq
+operator|==
+literal|9
+condition|)
+name|irq
+operator|=
+literal|2
+expr_stmt|;
+name|SET_IRQ
+argument_list|(
+name|eisa_ioport
+operator|->
+name|addr
+argument_list|,
+name|irq
 argument_list|)
 expr_stmt|;
 name|ep_attach
