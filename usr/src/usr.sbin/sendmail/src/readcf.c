@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.95 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.96 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8286,7 +8286,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKEMAPENTRY -- create a map entry ** **	Parameters: **		line -- the config file line ** **	Returns: **		TRUE if it successfully entered the map entry. **		FALSE otherwise (usually syntax error). ** **	Side Effects: **		Enters the map into the dictionary. */
+comment|/* **  MAKEMAPENTRY -- create a map entry ** **	Parameters: **		line -- the config file line ** **	Returns: **		none. ** **	Side Effects: **		Enters the map into the dictionary. */
 end_comment
 
 begin_function
