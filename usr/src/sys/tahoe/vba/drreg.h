@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	drreg.h	1.2	86/11/23	*/
+comment|/*	drreg.h	1.3	87/12/22	*/
 end_comment
 
 begin_comment
@@ -767,168 +767,168 @@ begin_define
 define|#
 directive|define
 name|DRWAIT
-value|_IOWR(d,1,long)
+value|_IOWR('d',1,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRPIOW
-value|_IOWR(d,2,long)
+value|_IOWR('d',2,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRPACL
-value|_IOWR(d,3,long)
+value|_IOWR('d',3,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRDACL
-value|_IOWR(d,4,long)
+value|_IOWR('d',4,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRPCYL
-value|_IOWR(d,5,long)
+value|_IOWR('d',5,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRDFCN
-value|_IOWR(d,6,long)
+value|_IOWR('d',6,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRRPER
-value|_IOWR(d,7,long)
+value|_IOWR('d',7,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRRATN
-value|_IOWR(d,8,long)
+value|_IOWR('d',8,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRRDMA
-value|_IOWR(d,9,long)
+value|_IOWR('d',9,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRSFCN
-value|_IOWR(d,10,long)
+value|_IOWR('d',10,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRSETRSTALL
-value|_IOWR(d,13,long)
+value|_IOWR('d',13,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRSETNORSTALL
-value|_IOWR(d,14,long)
+value|_IOWR('d',14,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRGETRSTALL
-value|_IOWR(d,15,long)
+value|_IOWR('d',15,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRSETRTIMEOUT
-value|_IOWR(d,16,long)
+value|_IOWR('d',16,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRGETRTIMEOUT
-value|_IOWR(d,17,long)
+value|_IOWR('d',17,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRSETWSTALL
-value|_IOWR(d,18,long)
+value|_IOWR('d',18,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRSETNOWSTALL
-value|_IOWR(d,19,long)
+value|_IOWR('d',19,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRGETWSTALL
-value|_IOWR(d,20,long)
+value|_IOWR('d',20,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRSETWTIMEOUT
-value|_IOWR(d,21,long)
+value|_IOWR('d',21,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRGETWTIMEOUT
-value|_IOWR(d,22,long)
+value|_IOWR('d',22,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRWRITEREADY
-value|_IOWR(d,23,long)
+value|_IOWR('d',23,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRREADREADY
-value|_IOWR(d,24,long)
+value|_IOWR('d',24,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRBUSY
-value|_IOWR(d,25,long)
+value|_IOWR('d',25,long)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRRESET
-value|_IOWR(d,26,long)
+value|_IOWR('d',26,long)
 end_define
 
 begin_comment
@@ -954,7 +954,7 @@ begin_define
 define|#
 directive|define
 name|DR11STAT
-value|_IOWR(d,30,struct dr11io)
+value|_IOWR('d',30,struct dr11io)
 end_define
 
 begin_comment
@@ -965,7 +965,7 @@ begin_define
 define|#
 directive|define
 name|DR11LOOP
-value|_IOR(d,31,struct dr11io)
+value|_IOR('d',31,struct dr11io)
 end_define
 
 begin_comment

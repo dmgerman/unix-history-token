@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	psreg.h	1.1	86/11/29	*/
+comment|/*	psreg.h	1.2	87/12/22	*/
 end_comment
 
 begin_ifndef
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|PSIOGETERROR
-value|_IOR(p, 0, int)
+value|_IOR('p', 0, int)
 end_define
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|PSIOLOOKUP
-value|_IOWR(p, 1, struct pslookup)
+value|_IOWR('p', 1, struct pslookup)
 end_define
 
 begin_comment
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|PSIORWLOGICAL
-value|_IOWR(p, 2, int)
+value|_IOWR('p', 2, int)
 end_define
 
 begin_comment
