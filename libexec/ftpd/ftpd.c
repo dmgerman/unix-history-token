@@ -10666,6 +10666,8 @@ name|atstart
 decl_stmt|;
 name|int
 name|c
+decl_stmt|,
+name|code
 decl_stmt|;
 name|char
 name|line
@@ -10673,6 +10675,33 @@ index|[
 name|LINE_MAX
 index|]
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
+name|code
+operator|=
+name|lstat
+argument_list|(
+name|filename
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|S_ISDIR
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+condition|?
+literal|212
+else|:
+literal|213
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -10702,7 +10731,7 @@ argument_list|)
 expr_stmt|;
 name|lreply
 argument_list|(
-literal|211
+name|code
 argument_list|,
 literal|"status of %s:"
 argument_list|,
@@ -10849,7 +10878,7 @@ argument_list|)
 expr_stmt|;
 name|reply
 argument_list|(
-literal|211
+name|code
 argument_list|,
 literal|"End of Status"
 argument_list|)
