@@ -1488,27 +1488,6 @@ name|s
 decl_stmt|,
 name|iolen
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|BUF_REFCNT
-argument_list|(
-name|bp
-argument_list|)
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"fwmem_strategy: bp %p not busy %d"
-operator|,
-name|bp
-operator|,
-name|BUF_REFCNT
-argument_list|(
-name|bp
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 name|dev
 operator|=
 name|bp
