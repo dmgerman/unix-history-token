@@ -2314,6 +2314,20 @@ name|LINUX_SETALL
 value|17
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_SEM_STAT
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SEM_INFO
+value|19
+end_define
+
 begin_union
 union|union
 name|l_semun
