@@ -44,10 +44,12 @@ block|{
 name|int
 name|token
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pname
@@ -588,6 +590,7 @@ value|(LASTTOKEN - FIRSTTOKEN + 1)
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|table
@@ -620,6 +623,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|xx
 modifier|*

@@ -4,11 +4,12 @@ comment|/**************************************************************** Copyri
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|version
 init|=
-literal|"version 20020210"
+literal|"version 20021129"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -208,12 +215,20 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|fs
 init|=
 name|NULL
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|cmdname
 operator|=
 name|argv

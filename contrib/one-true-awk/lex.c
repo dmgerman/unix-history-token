@@ -90,6 +90,7 @@ typedef|typedef
 struct|struct
 name|Keyword
 block|{
+specifier|const
 name|char
 modifier|*
 name|word
@@ -2896,7 +2897,7 @@ name|startreg
 parameter_list|(
 name|void
 parameter_list|)
-comment|/* next call to yyles will return a regular expression */
+comment|/* next call to yylex will return a regular expression */
 block|{
 name|reg
 operator|=
@@ -3314,6 +3315,7 @@ begin_function
 name|void
 name|unputstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
