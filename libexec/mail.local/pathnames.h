@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_LOCTMP
-value|"/tmp/local.XXXXXX"
+value|"/var/tmp/local.XXXXXX"
 end_define
 
 end_unit
