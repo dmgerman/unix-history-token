@@ -86,22 +86,23 @@ define|#
 directive|define
 name|ST_ADU
 value|1
-comment|/* Alpha Demo. Unit (?) */
+comment|/* Alpha Demo. Unit */
 define|#
 directive|define
 name|ST_DEC_4000
 value|2
-comment|/* "Cobra" (?) */
+comment|/* "Cobra/Fang" (?) */
 define|#
 directive|define
 name|ST_DEC_7000
 value|3
-comment|/* "Ruby" (?) */
+comment|/* "Ruby/Laser" (?) */
 define|#
 directive|define
 name|ST_DEC_3000_500
 value|4
 comment|/* "Flamingo" family (TC) */
+comment|/* 5 = "Mannequin" simulator */
 define|#
 directive|define
 name|ST_DEC_2000_300
@@ -121,17 +122,17 @@ define|#
 directive|define
 name|ST_DEC_2100_A500
 value|9
-comment|/* "Sable" (?) */
+comment|/* "Sable" (EISA/PCI) */
 define|#
 directive|define
 name|ST_DEC_APXVME_64
 value|10
-comment|/* "AXPvme" (VME?) */
+comment|/* "AXPvme" (VME) */
 define|#
 directive|define
 name|ST_DEC_AXPPCI_33
 value|11
-comment|/* "NoName" (PCI/ISA) */
+comment|/* "NoName" (PCI/ISA/PCMCIA) */
 define|#
 directive|define
 name|ST_DEC_21000
@@ -151,12 +152,18 @@ define|#
 directive|define
 name|ST_DEC_KN20AA
 value|15
-comment|/* kn20aa (PCI/EISA) */
+comment|/* "Alcor" (PCI/EISA) */
+comment|/* 16 = cancelled */
 define|#
 directive|define
 name|ST_DEC_1000
 value|17
-comment|/* "Mikasa" (PCI/ISA?) */
+comment|/* "Mikasa" (PCI/EISA) */
+define|#
+directive|define
+name|ST_DEC_EB64
+value|18
+comment|/* EB64 (PCI/ISA?) */
 define|#
 directive|define
 name|ST_EB66
@@ -181,12 +188,17 @@ define|#
 directive|define
 name|ST_DEC_EV45_PBP
 value|23
-comment|/* "Lego" (?) */
+comment|/* "K2" (PCI/ISA) */
 define|#
 directive|define
 name|ST_DEC_2100A_A500
 value|24
-comment|/* "Lynx" (?) */
+comment|/* "Lynx" (EISA/PCI) */
+define|#
+directive|define
+name|ST_DEC_ALPHAXL
+value|25
+comment|/* AlphaXL (PCI/ISA) */
 define|#
 directive|define
 name|ST_EB164
@@ -196,12 +208,13 @@ define|#
 directive|define
 name|ST_DEC_1000A
 value|27
-comment|/* "Noritake" (?) */
+comment|/* "Noritake" (PCI/EISA) */
 define|#
 directive|define
 name|ST_DEC_ALPHAVME_224
 value|28
-comment|/* "Cortex" (?) */
+comment|/* "Cortex" (VME) */
+comment|/* 29 = unused */
 define|#
 directive|define
 name|ST_DEC_550
@@ -209,29 +222,50 @@ value|30
 comment|/* "Miata" (PCI/ISA) */
 define|#
 directive|define
+name|ST_DEC_XXM
+value|31
+comment|/* "XXM" ?? */
+define|#
+directive|define
 name|ST_DEC_EV56_PBP
 value|32
-comment|/* "Takara" (?) */
+comment|/* "Takara" (PCI/ISA) */
 define|#
 directive|define
 name|ST_DEC_ALPHAVME_320
 value|33
-comment|/* "Yukon" (VME?) */
+comment|/* "Yukon" (VME) */
 define|#
 directive|define
 name|ST_DEC_6600
 value|34
-comment|/* "Monet/Goldrush" */
+comment|/* "Tsunami/Typhoon" (PCI) */
+define|#
+directive|define
+name|ST_DEC_WILDFIRE
+value|35
+comment|/* "Wildfire" (PCI)" */
 define|#
 directive|define
 name|ST_DEC_CUSCO
 value|36
-comment|/* "CUSCO" */
+comment|/* "Cusco" */
 define|#
 directive|define
 name|ST_DEC_EIGER
 value|37
 comment|/* "Eiger" */
+define|#
+directive|define
+name|ST_DEC_TITAN
+value|38
+comment|/* "Titan" ES45 (PCI) */
+define|#
+directive|define
+name|ST_DEC_MARVEL
+value|39
+comment|/* "Marvel" (PCI) */
+comment|/* 40 = "Phoenix" (cPCI) */
 comment|/*  * System types for Alpha Processor Inc. machines  */
 define|#
 directive|define

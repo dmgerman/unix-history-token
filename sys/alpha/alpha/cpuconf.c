@@ -506,43 +506,43 @@ argument_list|(
 literal|"ST_ADU"
 argument_list|)
 block|,
-comment|/*  1: ST_ADU */
+comment|/*  1: ADU */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_4000"
 argument_list|)
 block|,
-comment|/*  2: ST_DEC_4000 */
+comment|/*  2: Cobra */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_7000"
 argument_list|)
 block|,
-comment|/*  3: ST_DEC_7000 */
+comment|/*  3: Ruby */
 name|cpu_notsupp
 argument_list|(
 literal|"DEC_3000_500"
 argument_list|)
 block|,
-comment|/*  4: ST_DEC_3000_500 */
+comment|/*  4: Flamingo */
 name|cpu_notsupp
 argument_list|(
 literal|"???"
 argument_list|)
 block|,
-comment|/*  5: ??? */
+comment|/*  5: simulator */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_2000_300"
 argument_list|)
 block|,
-comment|/*  6: ST_DEC_2000_300 */
+comment|/*  6: Jensen */
 name|cpu_notsupp
 argument_list|(
 literal|"DEC_3000_300"
 argument_list|)
 block|,
-comment|/*  7: ST_DEC_3000_300 */
+comment|/*  7: Pelican */
 name|cpu_init
 argument_list|(
 name|avalon_a12_init
@@ -550,7 +550,7 @@ argument_list|,
 literal|"ST_AVALON_A12"
 argument_list|)
 block|,
-comment|/*  8: ST_AVALON_A12 */
+comment|/*  8: AVALON */
 name|cpu_init
 argument_list|(
 name|dec_2100_a500_init
@@ -558,13 +558,13 @@ argument_list|,
 literal|"ST_DEC_2100_A500"
 argument_list|)
 block|,
-comment|/*  9: ST_DEC_2100_A500 */
+comment|/*  9: Sable */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_APXVME_64"
 argument_list|)
 block|,
-comment|/* 10: ST_DEC_APXVME_64 */
+comment|/* 10: AXPvme */
 name|cpu_init
 argument_list|(
 name|dec_axppci_33_init
@@ -572,7 +572,7 @@ argument_list|,
 literal|"DEC_AXPPCI_33"
 argument_list|)
 block|,
-comment|/* 11: ST_DEC_AXPPCI_33 */
+comment|/* 11: NoName */
 name|cpu_init
 argument_list|(
 name|dec_kn8ae_init
@@ -580,7 +580,7 @@ argument_list|,
 literal|"DEC_KN8AE"
 argument_list|)
 block|,
-comment|/* 12: ST_DEC_21000 */
+comment|/* 12: Turbolaser */
 name|cpu_init
 argument_list|(
 name|dec_2100_a50_init
@@ -588,13 +588,13 @@ argument_list|,
 literal|"DEC_2100_A50"
 argument_list|)
 block|,
-comment|/* 13: ST_DEC_2100_A50 */
+comment|/* 13: Avanti */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_MUSTANG"
 argument_list|)
 block|,
-comment|/* 14: ST_DEC_MUSTANG */
+comment|/* 14: Mustang */
 name|cpu_init
 argument_list|(
 name|dec_kn20aa_init
@@ -602,13 +602,13 @@ argument_list|,
 literal|"DEC_KN20AA"
 argument_list|)
 block|,
-comment|/* 15: ST_DEC_KN20AA */
+comment|/* 15: Alcor */
 name|cpu_notsupp
 argument_list|(
-literal|"???"
+literal|"cancelled"
 argument_list|)
 block|,
-comment|/* 16: ??? */
+comment|/* 16: cancelled */
 name|cpu_init
 argument_list|(
 name|dec_1000a_init
@@ -616,19 +616,19 @@ argument_list|,
 literal|"ST_DEC_1000"
 argument_list|)
 block|,
-comment|/* 17: ST_DEC_1000 */
+comment|/* 17: Mikasa */
 name|cpu_notsupp
 argument_list|(
-literal|"???"
+literal|"ST_DEC_EB64"
 argument_list|)
 block|,
-comment|/* 18: ??? */
+comment|/* 18: EB64 */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_EB66"
 argument_list|)
 block|,
-comment|/* 19: ST_EB66 */
+comment|/* 19: EB66 */
 name|cpu_init
 argument_list|(
 name|dec_eb64plus_init
@@ -636,13 +636,13 @@ argument_list|,
 literal|"DEC_EB64PLUS"
 argument_list|)
 block|,
-comment|/* 20: ST_EB64P */
+comment|/* 20: EB64+ */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_ALPHABOOK1"
 argument_list|)
 block|,
-comment|/* 21: ST_ALPHABOOK1 */
+comment|/* 21: AlphaBook */
 name|cpu_init
 argument_list|(
 name|dec_kn300_init
@@ -650,13 +650,13 @@ argument_list|,
 literal|"DEC_KN300"
 argument_list|)
 block|,
-comment|/* 22: ST_DEC_4100 */
+comment|/* 22: Rawhide */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_EV45_PBP"
 argument_list|)
 block|,
-comment|/* 23: ST_DEC_EV45_PBP */
+comment|/* 23: K2 */
 name|cpu_init
 argument_list|(
 name|dec_2100_a500_init
@@ -664,13 +664,13 @@ argument_list|,
 literal|"ST_DEC_2100A_A500"
 argument_list|)
 block|,
-comment|/* 24: ST_DEC_2100A_A500 */
+comment|/* 24: Lynx */
 name|cpu_notsupp
 argument_list|(
-literal|"???"
+literal|"ST_DEC_ALPHAXL"
 argument_list|)
 block|,
-comment|/* 25: ??? */
+comment|/* 25: AlphaXL */
 name|cpu_init
 argument_list|(
 name|dec_eb164_init
@@ -678,7 +678,7 @@ argument_list|,
 literal|"DEC_EB164"
 argument_list|)
 block|,
-comment|/* 26: ST_EB164 */
+comment|/* 26: EB164 */
 name|cpu_init
 argument_list|(
 name|dec_1000a_init
@@ -686,19 +686,19 @@ argument_list|,
 literal|"ST_DEC_1000A"
 argument_list|)
 block|,
-comment|/* 27: ST_DEC_1000A */
+comment|/* 27: Noritake */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_ALPHAVME_224"
 argument_list|)
 block|,
-comment|/* 28: ST_DEC_ALPHAVME_224 */
+comment|/* 28: Cortex */
 name|cpu_notsupp
 argument_list|(
-literal|"???"
+literal|"unused"
 argument_list|)
 block|,
-comment|/* 29: ??? */
+comment|/* 29: unused */
 name|cpu_init
 argument_list|(
 name|st550_init
@@ -706,25 +706,25 @@ argument_list|,
 literal|"DEC_ST550"
 argument_list|)
 block|,
-comment|/* 30: ST_DEC_550 */
+comment|/* 30: Miata */
 name|cpu_notsupp
 argument_list|(
-literal|"???"
+literal|"ST_DEC_XXM"
 argument_list|)
 block|,
-comment|/* 31: ??? */
+comment|/* 31: XXM */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_EV56_PBP"
 argument_list|)
 block|,
-comment|/* 32: ST_DEC_EV56_PBP */
+comment|/* 32: Takara */
 name|cpu_notsupp
 argument_list|(
 literal|"ST_DEC_ALPHAVME_320"
 argument_list|)
 block|,
-comment|/* 33: ST_DEC_ALPHAVME_320 */
+comment|/* 33: Yukon */
 name|cpu_init
 argument_list|(
 name|st6600_init
@@ -732,7 +732,36 @@ argument_list|,
 literal|"ST_DEC_ST6600"
 argument_list|)
 block|,
-comment|/* 34: ST_DEC_6600 */
+comment|/* 34: Tsunami */
+name|cpu_notsupp
+argument_list|(
+literal|"ST_DEC_WILDFIRE"
+argument_list|)
+block|,
+comment|/* 35: Wildfire */
+name|cpu_notsupp
+argument_list|(
+literal|"ST_DEC_CUSCO"
+argument_list|)
+block|,
+comment|/* 36: Cusco */
+name|cpu_notsupp
+argument_list|(
+literal|"ST_DEC_EIGER"
+argument_list|)
+block|,
+comment|/* 37: Eiger */
+name|cpu_notsupp
+argument_list|(
+literal|"ST_DEC_TITAN"
+argument_list|)
+block|,
+comment|/* 38: Titan */
+name|cpu_notsupp
+argument_list|(
+literal|"ST_DEC_MARVEL"
+argument_list|)
+comment|/* 39: Marvel */
 block|}
 decl_stmt|;
 end_decl_stmt
