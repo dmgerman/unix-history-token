@@ -46,7 +46,7 @@ argument|pcibus
 argument_list|,
 argument|PCIBUS
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|)
 end_macro
 
@@ -67,7 +67,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int32_t
+name|uint32_t
 name|legacy_pcib_read_config
 parameter_list|(
 name|device_t
