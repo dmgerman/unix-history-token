@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.1 (CWI) 85/07/18"
+literal|"@(#)main.c	2.2 (CWI) 86/04/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,6 +694,35 @@ expr_stmt|;
 name|ttype
 operator|=
 name|DEVVER
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|s
+argument_list|,
+literal|"psc"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Postscript printer (Laserwriter) using transcript */
+name|res
+operator|=
+literal|576
+expr_stmt|;
+comment|/* at least, troff thinks so */
+name|minsize
+operator|=
+literal|4
+expr_stmt|;
+comment|/* troff believes 2, but that's so small */
+name|ttype
+operator|=
+name|DEVPSC
 expr_stmt|;
 block|}
 else|else
