@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_debug.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_debug.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -191,52 +191,38 @@ begin_comment
 comment|/*  * Tcp debug routines  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_trace
-argument_list|(
-argument|act
-argument_list|,
-argument|ostate
-argument_list|,
-argument|tp
-argument_list|,
-argument|ti
-argument_list|,
-argument|req
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|act
+parameter_list|,
+name|ostate
+parameter_list|,
+name|tp
+parameter_list|,
+name|ti
+parameter_list|,
+name|req
+parameter_list|)
 name|short
 name|act
 decl_stmt|,
 name|ostate
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|tcpiphdr
 modifier|*
 name|ti
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|req
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|tcp_seq
 name|seq
@@ -709,7 +695,7 @@ endif|#
 directive|endif
 comment|/* TCPDEBUG */
 block|}
-end_block
+end_function
 
 end_unit
 

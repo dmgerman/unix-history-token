@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -477,16 +477,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|void
+name|save_rte
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+expr|struct
+name|in_addr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * IP initialization: fill in IP protocol switch table.  * All protocols not implemented in kernel go to raw IP protocol handler.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -666,16 +681,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
-
-begin_function_decl
-name|struct
-name|ip
-modifier|*
-name|ip_reass
-parameter_list|()
-function_decl|;
-end_function_decl
+end_function
 
 begin_decl_stmt
 name|struct
@@ -704,12 +710,10 @@ begin_comment
 comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  * try to reassemble.  Process options.  Pass to next level.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ipintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1780,7 +1784,7 @@ goto|goto
 name|next
 goto|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Take incoming datagram fragment and try to  * reassemble it into whole datagram.  If a chain for  * reassembly of this datagram already exists, then it  * is given as fp; otherwise have to make a chain.  */
@@ -2515,22 +2519,17 @@ begin_comment
 comment|/*  * Free a fragment reassembly header and all  * associated datagrams.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_freef
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|struct
 name|ipq
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2600,29 +2599,30 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Put an ip fragment on a reassembly chain.  * Like insque, but pointers in middle of structure.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ip_enq
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|prev
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ipasfrag
-operator|*
+modifier|*
 name|p
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|prev
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -2661,20 +2661,18 @@ begin_comment
 comment|/*  * To ip_enq as remque is to insque.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ip_deq
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ipasfrag
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|p
 operator|->
@@ -2697,18 +2695,16 @@ operator|->
 name|ipf_prev
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * IP timer processing;  * if a timer expires on a reassembly  * queue, discard it.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_slowtimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2792,18 +2788,16 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Drain off all datagram fragments.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_drain
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 while|while
 condition|(
@@ -2829,37 +2823,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
-
-begin_function_decl
-name|struct
-name|in_ifaddr
-modifier|*
-name|ip_rtaddr
-parameter_list|()
-function_decl|;
-end_function_decl
+end_function
 
 begin_comment
 comment|/*  * Do option processing on a datagram,  * possibly discarding it if bad options are encountered,  * or forwarding it if source-routed.  * Returns 1 if packet has been forwarded/freed,  * 0 if the packet should be processed further.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ip_dooptions
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3915,7 +3895,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Given address of next destination (final or next hop),  * return internet address info of interface to be used to get there.  */
@@ -4060,30 +4040,22 @@ begin_comment
 comment|/*  * Save incoming source route for use in replies,  * to be picked up later by ip_srcroute if the receiver is interested.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|save_rte
-argument_list|(
-argument|option
-argument_list|,
-argument|dst
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|option
+parameter_list|,
+name|dst
+parameter_list|)
 name|u_char
 modifier|*
 name|option
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|in_addr
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|unsigned
 name|olen
@@ -4170,7 +4142,7 @@ operator|=
 name|dst
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Retrieve incoming source route for use in replies,  * in the same form used by setsockopt.  * The first hop is placed before the options, will be removed later.  */
@@ -4596,12 +4568,13 @@ comment|/*  * Strip out IP options, at higher  * level protocol in the kernel.  
 end_comment
 
 begin_expr_stmt
-unit|ip_stripoptions
-operator|(
+unit|void
+name|ip_stripoptions
+argument_list|(
 name|m
-operator|,
+argument_list|,
 name|mopt
-operator|)
+argument_list|)
 specifier|register
 expr|struct
 name|mbuf
@@ -4796,30 +4769,22 @@ begin_comment
 comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  *  * If not forwarding, just drop the packet.  This could be confusing  * if ipforwarding was zero but some routing protocol was advancing  * us as a gateway to somewhere.  However, we must let the routing  * protocol deal with that.  *  * The srcrt parameter indicates whether the packet is being forwarded  * via a source route.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_forward
-argument_list|(
-argument|m
-argument_list|,
-argument|srcrt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|srcrt
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|srcrt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -5495,66 +5460,46 @@ name|destifp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ip_sysctl
-argument_list|(
-argument|name
-argument_list|,
-argument|namelen
-argument_list|,
-argument|oldp
-argument_list|,
-argument|oldlenp
-argument_list|,
-argument|newp
-argument_list|,
-argument|newlen
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|namelen
+parameter_list|,
+name|oldp
+parameter_list|,
+name|oldlenp
+parameter_list|,
+name|newp
+parameter_list|,
+name|newlen
+parameter_list|)
 name|int
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|namelen
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 modifier|*
 name|oldp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 modifier|*
 name|newp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|newlen
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -5674,7 +5619,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_cksum.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_cksum.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -36,29 +36,24 @@ name|REDUCE
 value|{l_util.l = sum; sum = l_util.s[0] + l_util.s[1]; ADDCARRY(sum);}
 end_define
 
-begin_expr_stmt
+begin_function
+name|int
 name|in_cksum
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|len
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_short
@@ -619,7 +614,7 @@ literal|0xffff
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

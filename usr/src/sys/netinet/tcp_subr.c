@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -184,12 +184,10 @@ begin_comment
 comment|/*  * Tcp initialization  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|tcp_iss
 operator|=
@@ -243,7 +241,7 @@ literal|"tcp_init"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create template to be used to send tcp packets on a connection.  * Call after host entry created, allocates an mbuf and fills  * in a skeletal tcp/ip header, minimizing the amount of work  * necessary when the connection is used.  */
@@ -473,64 +471,47 @@ begin_comment
 comment|/*  * Send a single message to the TCP at address specified by  * the given TCP/IP header.  If m == 0, then we make a copy  * of the tcpiphdr at ti and send directly to the addressed host.  * This is used to force keep alive messages out using the TCP  * template for a connection tp->t_template.  If flags are given  * then we send a message back to the TCP which originated the  * segment ti, and discard the mbuf containing it and any other  * attached mbufs.  *  * In any case the ack and sequence number of the transmitted  * segment are as specified by the parameters.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_respond
-argument_list|(
-argument|tp
-argument_list|,
-argument|ti
-argument_list|,
-argument|m
-argument_list|,
-argument|ack
-argument_list|,
-argument|seq
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|,
+name|ti
+parameter_list|,
+name|m
+parameter_list|,
+name|ack
+parameter_list|,
+name|seq
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|tcpiphdr
 modifier|*
 name|ti
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|tcp_seq
 name|ack
 decl_stmt|,
 name|seq
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -937,20 +918,17 @@ name|ip_output
 argument_list|(
 name|m
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|ro
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create a new TCP control block, making an  * empty reassembly queue and hooking it to the argument  * protocol control block.  */
@@ -1765,43 +1743,33 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|tcp_drain
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{  }
-end_block
+end_function
 
 begin_comment
 comment|/*  * Notify a tcp user of an asynchronous error;  * store error as soft error, but wake up user  * (for now, won't do anything until can select for soft error).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_notify
-argument_list|(
-argument|inp
-argument_list|,
-argument|error
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inp
+parameter_list|,
+name|error
+parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|error
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1908,43 +1876,32 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|tcp_ctlinput
-argument_list|(
-argument|cmd
-argument_list|,
-argument|sa
-argument_list|,
-argument|ip
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|sa
+parameter_list|,
+name|ip
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1962,18 +1919,23 @@ name|u_char
 name|inetctlerrmap
 index|[]
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|notify
-function_decl|)
-parameter_list|()
-init|=
-name|tcp_notify
+name|void
+argument_list|(
+argument|*notify
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
 operator|,
-function_decl|tcp_quench
-parameter_list|()
-function_decl|;
+name|int
+operator|)
+argument_list|)
+operator|=
+name|tcp_notify
+expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -2082,7 +2044,7 @@ name|notify
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_if
 if|#
@@ -2126,22 +2088,22 @@ begin_comment
 comment|/*  * When a source quench is received, close congestion window  * to one segment.  We will gradually open it again as we proceed.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_quench
-argument_list|(
-argument|inp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inp
+parameter_list|,
+name|errno
+parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|errno
+decl_stmt|;
 block|{
 name|struct
 name|tcpcb
@@ -2166,7 +2128,7 @@ operator|->
 name|t_maxseg
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -171,20 +171,18 @@ begin_comment
 comment|/*  * Tcp output routine: figure out what should be sent and send it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|tcp_output
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tcpcb
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2146,6 +2144,8 @@ argument_list|(
 name|tp
 operator|->
 name|t_inpcb
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2259,22 +2259,20 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|tcp_setpersist
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tcpcb
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|t
@@ -2347,7 +2345,7 @@ name|t_rxtshift
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

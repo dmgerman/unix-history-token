@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -254,6 +254,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|arptimer
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|llinfo_arp
 modifier|*
@@ -274,10 +288,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|arpcatchme
+name|in_arpinput
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|mbuf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -373,10 +390,21 @@ begin_comment
 comment|/*  * Timeout routine.  Age arp_tab entries periodically.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|arptimer
-parameter_list|()
+parameter_list|(
+name|ignored_arg
+parameter_list|)
+name|void
+modifier|*
+name|ignored_arg
+decl_stmt|;
 block|{
 name|int
 name|s
@@ -623,6 +651,11 @@ argument_list|(
 name|rt
 argument_list|)
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|null_sdl
 argument_list|)
@@ -1940,6 +1973,7 @@ comment|/*  * ARP for Internet protocols on 10 Mb/s Ethernet.  * Algorithm is th
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|in_arpinput
 parameter_list|(

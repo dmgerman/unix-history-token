@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -170,12 +170,10 @@ begin_comment
 comment|/*  * Fast timeout routine for processing delayed acks  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_fasttimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -276,18 +274,16 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Tcp protocol timeout routine called every 500 ms.  * Updates the timers in all active tcb's and  * causes finite state machine actions if timers expire.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_slowtimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -512,7 +508,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifndef
 ifndef|#
@@ -524,22 +520,17 @@ begin_comment
 comment|/*  * Cancel all timers for TCP tp.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_canceltimers
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -568,7 +559,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int

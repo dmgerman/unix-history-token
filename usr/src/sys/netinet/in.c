@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
 end_include
 
 begin_ifdef
@@ -1927,31 +1933,26 @@ begin_comment
 comment|/*  * Delete any existing route for an interface.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|in_ifscrub
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|ia
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2021,7 +2022,7 @@ operator|~
 name|IFA_ROUTE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize an interface's internet address  * and routing table entry.  */
@@ -2103,10 +2104,6 @@ decl_stmt|,
 name|ether_output
 argument_list|()
 decl_stmt|;
-name|void
-name|arp_rtrequest
-parameter_list|()
-function_decl|;
 name|oldaddr
 operator|=
 name|ia
@@ -2666,7 +2663,9 @@ return|return
 literal|1
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 undef|#
 directive|undef
