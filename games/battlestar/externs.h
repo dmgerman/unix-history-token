@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signal.h>
 end_include
 
@@ -19,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|BITS
-value|(8 * sizeof (int))
+value|(8)
 end_define
 
 begin_define
@@ -63,6 +69,12 @@ parameter_list|)
 value|(array[index/BITS]& (1<< (index % BITS)))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|setbit
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -74,6 +86,11 @@ name|index
 parameter_list|)
 value|(array[index/BITS] |= (1<< (index % BITS)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1250,7 +1267,6 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
-name|unsigned
 name|int
 name|objects
 index|[
@@ -1420,7 +1436,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|time
+name|gtime
 decl_stmt|;
 end_decl_stmt
 
@@ -1450,7 +1466,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|clock
+name|gclock
 decl_stmt|,
 name|fuel
 decl_stmt|,
@@ -1578,7 +1594,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
 name|int
 name|inven
 index|[
@@ -1588,7 +1603,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
 name|int
 name|wear
 index|[
@@ -1621,7 +1635,7 @@ begin_decl_stmt
 name|char
 name|uname
 index|[
-literal|9
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 end_decl_stmt

@@ -79,7 +79,7 @@ name|exhaustion
 decl_stmt|;
 name|fighton
 label|:
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|snooze
@@ -90,7 +90,7 @@ if|if
 condition|(
 name|snooze
 operator|>
-name|time
+name|gtime
 condition|)
 name|exhaustion
 operator|=
@@ -99,7 +99,7 @@ operator|/
 operator|(
 name|snooze
 operator|-
-name|time
+name|gtime
 operator|)
 expr_stmt|;
 else|else
@@ -117,7 +117,7 @@ if|if
 condition|(
 name|snooze
 operator|-
-name|time
+name|gtime
 operator|<
 literal|20
 condition|)
@@ -791,7 +791,7 @@ literal|1
 expr_stmt|;
 name|followfight
 operator|=
-name|time
+name|gtime
 expr_stmt|;
 return|return
 operator|(
@@ -1000,7 +1000,7 @@ case|:
 name|cypher
 argument_list|()
 expr_stmt|;
-name|time
+name|gtime
 operator|--
 expr_stmt|;
 break|break;

@@ -103,7 +103,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|fuel
@@ -213,7 +213,7 @@ name|fuel
 operator|-=
 literal|2
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|puts
@@ -740,7 +740,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|time
+name|gtime
 operator|+=
 literal|15
 expr_stmt|;
@@ -971,7 +971,7 @@ argument_list|(
 literal|"Your match splutters to life."
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|matchlight

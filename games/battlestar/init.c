@@ -124,7 +124,7 @@ name|direction
 operator|=
 name|NORTH
 expr_stmt|;
-name|time
+name|gtime
 operator|=
 literal|0
 expr_stmt|;
@@ -425,7 +425,7 @@ operator|=
 literal|9
 expr_stmt|;
 comment|/* that'll get him! */
-name|clock
+name|gclock
 operator|=
 literal|10
 expr_stmt|;
