@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -166,7 +172,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:s:"
+literal|"f:s:?"
 argument_list|)
 operator|)
 operator|!=
@@ -316,6 +322,20 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
+comment|/* read from stdin */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|file
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{ 	}
+elseif|else
 if|if
 condition|(
 operator|!
