@@ -835,18 +835,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"no devsw (majdev=%d bootdev=%#lx)\n"
-argument_list|,
-name|majdev
-argument_list|,
-name|bootdev
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|unit
 operator|=
 name|B_UNIT

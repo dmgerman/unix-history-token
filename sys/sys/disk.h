@@ -57,6 +57,12 @@ begin_comment
 comment|/* _SYS_DISKLABEL */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_struct
 struct|struct
 name|disk
@@ -84,6 +90,12 @@ name|struct
 name|disklabel
 name|d_label
 decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|disk
+argument_list|)
+name|d_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -166,6 +178,23 @@ operator|,
 name|u_int
 operator|*
 name|secsize
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|disk
+modifier|*
+name|disk_enumerate
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|disk
+operator|*
+name|disk
 operator|)
 argument_list|)
 decl_stmt|;
