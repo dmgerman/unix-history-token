@@ -3118,14 +3118,11 @@ name|ch
 operator|->
 name|hwch
 argument_list|,
-name|vtophys
-argument_list|(
-name|sndbuf_getbuf
+name|sndbuf_getbufaddr
 argument_list|(
 name|ch
 operator|->
 name|buffer
-argument_list|)
 argument_list|)
 argument_list|,
 name|sndbuf_getsize

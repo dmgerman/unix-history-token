@@ -1694,8 +1694,7 @@ parameter_list|,
 name|u_int32_t
 name|rate
 parameter_list|,
-name|void
-modifier|*
+name|bus_addr_t
 name|base
 parameter_list|,
 name|u_int32_t
@@ -1972,10 +1971,7 @@ name|PgBase
 operator|=
 name|base
 condition|?
-name|vtophys
-argument_list|(
 name|base
-argument_list|)
 else|:
 literal|0
 expr_stmt|;
@@ -2242,9 +2238,8 @@ name|c
 decl_stmt|,
 name|sz
 decl_stmt|;
-name|void
-modifier|*
-name|buf
+name|bus_addr_t
+name|addr
 decl_stmt|;
 name|stereo
 operator|=
@@ -2282,9 +2277,9 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|buf
+name|addr
 operator|=
-name|sndbuf_getbuf
+name|sndbuf_getbufaddr
 argument_list|(
 name|ch
 operator|->
@@ -2316,7 +2311,7 @@ name|ch
 operator|->
 name|spd
 argument_list|,
-name|buf
+name|addr
 argument_list|,
 name|sz
 argument_list|)
@@ -2339,7 +2334,7 @@ name|ch
 operator|->
 name|spd
 argument_list|,
-name|buf
+name|addr
 argument_list|,
 name|sz
 argument_list|)
@@ -2360,7 +2355,7 @@ name|ch
 operator|->
 name|spd
 argument_list|,
-name|buf
+name|addr
 argument_list|,
 name|sz
 argument_list|)
@@ -2383,7 +2378,7 @@ name|ch
 operator|->
 name|spd
 argument_list|,
-name|buf
+name|addr
 argument_list|,
 name|sz
 argument_list|)
@@ -2427,9 +2422,8 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-name|void
-modifier|*
-name|buf
+name|bus_addr_t
+name|addr
 decl_stmt|;
 name|stereo
 operator|=
@@ -2459,9 +2453,9 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|buf
+name|addr
 operator|=
-name|sndbuf_getbuf
+name|sndbuf_getbufaddr
 argument_list|(
 name|ch
 operator|->
@@ -2514,10 +2508,7 @@ index|]
 operator|.
 name|PgBase
 operator|=
-name|vtophys
-argument_list|(
-name|buf
-argument_list|)
+name|addr
 expr_stmt|;
 name|ch
 operator|->

@@ -1365,14 +1365,11 @@ decl_stmt|;
 name|u_int32_t
 name|baseaddr
 init|=
-name|vtophys
-argument_list|(
-name|sndbuf_getbuf
+name|sndbuf_getbufaddr
 argument_list|(
 name|ch
 operator|->
 name|buffer
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|au_wr

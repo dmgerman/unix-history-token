@@ -956,14 +956,11 @@ name|ch
 operator|->
 name|phys_buf
 operator|=
-name|vtophys
-argument_list|(
-name|sndbuf_getbuf
+name|sndbuf_getbufaddr
 argument_list|(
 name|ch
 operator|->
 name|buffer
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cmi_wr

@@ -111,6 +111,26 @@ block|}
 end_function
 
 begin_function
+name|bus_addr_t
+name|sndbuf_getbufaddr
+parameter_list|(
+name|struct
+name|snd_dbuf
+modifier|*
+name|buf
+parameter_list|)
+block|{
+return|return
+operator|(
+name|buf
+operator|->
+name|buf_addr
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|sndbuf_setmap
@@ -193,6 +213,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|b
+operator|->
+name|buf_addr
+operator|=
+name|segs
+operator|->
+name|ds_addr
+expr_stmt|;
 block|}
 end_function
 
