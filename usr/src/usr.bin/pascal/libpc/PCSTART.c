@@ -9,14 +9,26 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCSTART.c 1.5 %G%"
+literal|"@(#)PCSTART.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"h00vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libpc.h"
 end_include
 
 begin_comment
@@ -339,8 +351,16 @@ end_decl_stmt
 
 begin_macro
 name|PCSTART
-argument_list|()
+argument_list|(
+argument|mode
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -351,6 +371,20 @@ modifier|*
 modifier|*
 name|ip
 decl_stmt|;
+comment|/* 	 * if running with runtime tests enabled, give more 	 * coherent error messages for FPEs 	 */
+if|if
+condition|(
+name|mode
+condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGFPE
+argument_list|,
+name|EXCEPT
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|ip
