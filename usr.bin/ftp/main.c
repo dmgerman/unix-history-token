@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.c,v 1.16 1997/12/13 20:38:19 pst Exp $	*/
+comment|/*	$Id: main.c,v 1.16.2.1 1999/07/01 11:33:35 ru Exp $	*/
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.16 1997/12/13 20:38:19 pst Exp $"
+literal|"$Id: main.c,v 1.16.2.1 1999/07/01 11:33:35 ru Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -548,9 +548,9 @@ name|strcasecmp
 argument_list|(
 name|s
 argument_list|,
-literal|"yes"
+literal|"no"
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 name|passivemode
