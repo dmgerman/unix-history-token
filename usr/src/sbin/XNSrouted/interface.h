@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	interface.h	4.2	84/04/09	*/
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)interface.h	5.3 (Berkeley) %G%";  */
 end_comment
 
 begin_comment
@@ -87,12 +87,31 @@ name|u_short
 name|int_transitions
 decl_stmt|;
 comment|/* times gone up-down */
+comment|/*XNS Specific entry */
+struct|struct
+name|sameq
+block|{
+name|struct
+name|sameq
+modifier|*
+name|n
+decl_stmt|;
+comment|/* q of other pt-to-pt links */
+name|struct
+name|sameq
+modifier|*
+name|p
+decl_stmt|;
+comment|/* with same net # */
+block|}
+name|int_sq
+struct|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * 0x1 to 0x100 are reused from the kernel's ifnet definitions,  * the others agree with the RTS_ flags defined elsewhere.  */
+comment|/*  * 0x1 to 0x10 are reused from the kernel's ifnet definitions,  * the others agree with the RTS_ flags defined elsewhere.  */
 end_comment
 
 begin_define
@@ -153,17 +172,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFF_LOCAL
-value|0x100
-end_define
-
-begin_comment
-comment|/* local network, host part encoded */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IFF_PASSIVE
 value|0x2000
 end_define
@@ -199,6 +207,15 @@ name|struct
 name|interface
 modifier|*
 name|if_ifwithaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|interface
+modifier|*
+name|if_ifwithdstaddr
 parameter_list|()
 function_decl|;
 end_function_decl

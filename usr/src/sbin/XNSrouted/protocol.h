@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protocol.h	1.0 4/12/85 */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)protocol.h	5.3 (Berkeley) %G%";  *  * Includes material written at Cornell University by Bill Nesheim,  * by permission of the author.  */
 end_comment
 
 begin_comment

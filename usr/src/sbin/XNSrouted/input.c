@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * Includes material written at Cornell University by Bill Nesheim,  * by permission of the author.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -8,16 +12,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Header$"
+literal|"@(#)input.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
@@ -229,13 +234,6 @@ block|{
 case|case
 name|RIPCMD_REQUEST
 case|:
-comment|/* Be quiet if we don't have anything interesting to talk about */
-if|if
-condition|(
-operator|!
-name|supplier
-condition|)
-return|return;
 name|newsize
 operator|=
 literal|0
@@ -329,6 +327,43 @@ name|rip_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tracepackets
+operator|>
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|ftrace
+argument_list|,
+literal|"specific request for %d"
+argument_list|,
+name|ntohl
+argument_list|(
+name|xnnet
+argument_list|(
+name|n
+operator|->
+name|rip_dst
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|ftrace
+argument_list|,
+literal|"yields route %x"
+argument_list|,
+name|rt
+argument_list|)
+expr_stmt|;
+block|}
 name|n
 operator|->
 name|rip_metric
@@ -389,15 +424,15 @@ name|u_short
 argument_list|)
 expr_stmt|;
 comment|/* should check for if with dstaddr(from) first */
-if|if
-condition|(
+operator|(
 name|ifp
 operator|=
 name|if_ifwithnet
 argument_list|(
 name|from
 argument_list|)
-condition|)
+operator|)
+expr_stmt|;
 call|(
 modifier|*
 name|afp
@@ -412,6 +447,23 @@ argument_list|,
 name|newsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tracepackets
+operator|>
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|ftrace
+argument_list|,
+literal|", request arriving on interface %x\n"
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return;
 case|case
@@ -491,7 +543,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* update timer for interface on which the packet arrived */
+comment|/* Update timer for interface on which the packet arrived. 		 * If from other end of a point-to-point link that isn't 		 * in the routing tables, (re-)add the route. 		 */
 if|if
 condition|(
 operator|(
@@ -511,12 +563,57 @@ operator|&
 name|RTS_INTERFACE
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|tracepackets
+operator|>
+literal|1
+condition|)
+name|fprintf
+argument_list|(
+name|ftrace
+argument_list|,
+literal|"Got route\n"
+argument_list|)
+expr_stmt|;
 name|rt
 operator|->
 name|rt_timer
 operator|=
 literal|0
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|=
+name|if_ifwithdstaddr
+argument_list|(
+name|from
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tracepackets
+operator|>
+literal|1
+condition|)
+name|fprintf
+argument_list|(
+name|ftrace
+argument_list|,
+literal|"Got partner\n"
+argument_list|)
+expr_stmt|;
+name|addrouteforif
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -536,6 +633,11 @@ name|n
 operator|++
 control|)
 block|{
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+decl_stmt|;
 if|if
 condition|(
 name|size
@@ -566,6 +668,8 @@ name|rt
 operator|=
 name|rtfind
 argument_list|(
+name|sa
+operator|=
 name|xns_nettosa
 argument_list|(
 name|n
@@ -583,12 +687,7 @@ condition|)
 block|{
 name|rtadd
 argument_list|(
-name|xns_nettosa
-argument_list|(
-name|n
-operator|->
-name|rip_dst
-argument_list|)
+name|sa
 argument_list|,
 name|from
 argument_list|,
