@@ -3139,7 +3139,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce"
+literal|"nVidia nForce"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3152,7 +3152,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce2"
+literal|"nVidia nForce2"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3165,7 +3165,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce2 400"
+literal|"nVidia nForce2 400"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3178,7 +3178,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce3"
+literal|"nVidia nForce3"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3191,7 +3191,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce3 250"
+literal|"nVidia nForce3 250"
 argument_list|)
 expr_stmt|;
 return|return
