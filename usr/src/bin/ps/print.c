@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.7 (Berkeley) %G%"
+literal|"@(#)print.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1606,8 +1606,8 @@ condition|)
 block|{
 specifier|static
 name|char
-modifier|*
 name|fmt
+index|[]
 init|=
 literal|"%l:@M%p"
 decl_stmt|;
@@ -1659,8 +1659,8 @@ condition|)
 block|{
 specifier|static
 name|char
-modifier|*
 name|fmt
+index|[]
 init|=
 literal|"%a@I%p"
 decl_stmt|;
