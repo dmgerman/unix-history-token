@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rs.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rs.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +70,12 @@ end_comment
 begin_comment
 comment|/*  *	rs - reshape a data array  *	Author:  John Kunze, Office of Comp. Affairs, UCB  *		BEWARE: lots of unfinished edges  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -331,22 +351,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|error
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|getargs
 name|__P
 argument_list|(
@@ -468,6 +472,19 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|putfile
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
 name|__P
 argument_list|(
 operator|(
@@ -1135,45 +1152,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|error
-parameter_list|(
-name|msg
-parameter_list|,
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|msg
-decl_stmt|,
-decl|*
-name|s
-decl_stmt|;
-end_function
-
-begin_block
+name|usage
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rs:  "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|msg
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\nUsage:  rs [ -[csCS][x][kKgGw][N]tTeEnyjhHm ] [ rows [ cols ] ]\n"
+literal|"usage: rs [-[csCS][x][kKgGw][N]tTeEnyjhHmz] [rows [cols]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1182,7 +1170,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1284,11 +1272,9 @@ name|ocols
 operator|==
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Display width %d is less than column width %d\n"
+literal|"display width %d is less than column width %d"
 argument_list|,
 name|owidth
 argument_list|,
@@ -1461,11 +1447,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"malloc:  No gutter space"
+literal|1
 argument_list|,
-literal|""
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1679,7 +1665,7 @@ name|nelem
 operator|=
 name|n
 expr_stmt|;
-comment|/*for (i = 0; i< ocols; i++) 		fprintf(stderr, "%d ",colwidths[i]); 	fprintf(stderr, "is colwidths, nelem %d\n", nelem);*/
+comment|/*for (i = 0; i< ocols; i++) 		warnx("%d is colwidths, nelem %d", colwidths[i], nelem);*/
 block|}
 end_function
 
@@ -1811,11 +1797,11 @@ name|BSIZE
 argument_list|)
 operator|)
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"File too large"
+literal|1
 argument_list|,
-literal|""
+literal|"file too large"
 argument_list|)
 expr_stmt|;
 name|endblock
@@ -1941,18 +1927,13 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"rs"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2185,11 +2166,11 @@ name|owidth
 operator|<=
 literal|0
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Width must be a positive integer"
+literal|1
 argument_list|,
-literal|""
+literal|"width must be a positive integer"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2389,12 +2370,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
-argument_list|(
-literal|"Bad flag:  %.1s"
-argument_list|,
-name|p
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 comment|/*if (!osep) 		osep = isep;*/
@@ -2435,14 +2412,11 @@ literal|0
 case|:
 break|break;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"Too many arguments.  What do you mean by `%s'?"
+literal|1
 argument_list|,
-name|av
-index|[
-literal|3
-index|]
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2503,9 +2477,11 @@ operator|*
 name|t
 argument_list|)
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Option %.1s requires a list of unsigned numbers separated by commas"
+literal|1
+argument_list|,
+literal|"option %.1s requires a list of unsigned numbers separated by commas"
 argument_list|,
 name|t
 argument_list|)
@@ -2558,11 +2534,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"No list space"
+literal|1
 argument_list|,
-literal|""
+literal|"no list space"
 argument_list|)
 expr_stmt|;
 name|count
@@ -2717,9 +2693,11 @@ name|t
 operator|==
 literal|'+'
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Option %.1s requires an unsigned integer"
+literal|1
+argument_list|,
+literal|"option %.1s requires an unsigned integer"
 argument_list|,
 name|p
 argument_list|)
