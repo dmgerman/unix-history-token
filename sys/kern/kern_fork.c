@@ -2143,20 +2143,14 @@ operator|->
 name|p_limit
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We don't need to prevent the parent from being swapped out just yet, 	 * but this is a convenient point to block to swap it in if needed. 	 */
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p2
-argument_list|)
-expr_stmt|;
-name|_PHOLD
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 comment|/* Bump references to the text vnode (for procfs) */
@@ -2548,7 +2542,12 @@ operator|->
 name|p_pfsflags
 expr_stmt|;
 block|}
-comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped.  We already got a hold on the parent earlier. 	 */
+comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
+name|_PHOLD
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p1
