@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -505,12 +505,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The clist space is mapped by the driver onto each UNIBUS.  * The UBACVT macro converts a clist space address for unibus uban  * into an i/o space address for the DMA routine.  */
+comment|/*  * The clist space is mapped by one terminal driver onto each UNIBUS.  * The identity of the board which allocated resources is recorded,  * so the process may be repeated after UNIBUS resets.  * The UBACVT macro converts a clist space address for unibus uban  * into an i/o space address for the DMA routine.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|dmf_ubinfo
+name|dmf_uballoc
 index|[
 name|NUBA
 index|]
@@ -518,7 +518,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* info about allocated unibus map */
+comment|/* which dmf (if any) allocated unibus map */
 end_comment
 
 begin_decl_stmt
@@ -531,7 +531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* base address in unibus map */
+comment|/* base address of clists in unibus map */
 end_comment
 
 begin_define
@@ -1233,6 +1233,16 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|dmf_uballoc
+index|[
+name|ui
+operator|->
+name|ui_unit
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_block
 
@@ -1425,13 +1435,24 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dmf_ubinfo
+name|dmf_uballoc
 index|[
 name|ui
 operator|->
 name|ui_ubanum
 index|]
 operator|=
+name|dmf
+expr_stmt|;
+name|cbase
+index|[
+name|ui
+operator|->
+name|ui_ubanum
+index|]
+operator|=
+name|UBAI_ADDR
+argument_list|(
 name|uballoc
 argument_list|(
 name|ui
@@ -1453,22 +1474,6 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|cbase
-index|[
-name|ui
-operator|->
-name|ui_ubanum
-index|]
-operator|=
-name|UBAI_ADDR
-argument_list|(
-name|dmf_ubinfo
-index|[
-name|ui
-operator|->
-name|ui_ubanum
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -4385,16 +4390,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dmf_ubinfo
+name|dmf_uballoc
 index|[
 name|uban
 index|]
+operator|==
+name|dmf
 condition|)
 block|{
-name|dmf_ubinfo
-index|[
-name|uban
-index|]
+name|int
+name|info
+decl_stmt|;
+name|info
 operator|=
 name|uballoc
 argument_list|(
@@ -4413,9 +4420,13 @@ expr|struct
 name|cblock
 argument_list|)
 argument_list|,
-literal|0
+name|UBA_CANTWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info
+condition|)
 name|cbase
 index|[
 name|uban
@@ -4423,12 +4434,25 @@ index|]
 operator|=
 name|UBAI_ADDR
 argument_list|(
-name|dmf_ubinfo
+name|info
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" [can't get uba map]"
+argument_list|)
+expr_stmt|;
+name|cbase
 index|[
 name|uban
 index|]
-argument_list|)
+operator|=
+operator|-
+literal|1
 expr_stmt|;
+block|}
 block|}
 name|addr
 operator|=

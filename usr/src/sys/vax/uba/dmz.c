@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmz.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmz.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -473,6 +473,23 @@ name|FALSE
 value|(0)
 end_define
 
+begin_comment
+comment|/*  * The clist space is mapped by one terminal driver onto each UNIBUS.  * The identity of the board which allocated resources is recorded,  * so the process may be repeated after UNIBUS resets.  * The UBACVT macro converts a clist space address for unibus uban  * into an i/o space address for the DMA routine.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dmz_uballoc
+index|[
+name|NUBA
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* which dmz (if any) allocated unibus map */
+end_comment
+
 begin_decl_stmt
 name|int
 name|cbase
@@ -483,20 +500,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* base address in unibus map */
-end_comment
-
-begin_decl_stmt
-name|int
-name|dmz_ubinfo
-index|[
-name|NUBA
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* info about allocated unibus map */
+comment|/* base address of clists in unibus map */
 end_comment
 
 begin_define
@@ -747,6 +751,16 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|dmz_uballoc
+index|[
+name|ui
+operator|->
+name|ui_unit
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_block
 
@@ -930,13 +944,24 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dmz_ubinfo
+name|dmz_uballoc
 index|[
 name|ui
 operator|->
 name|ui_ubanum
 index|]
 operator|=
+name|controller
+expr_stmt|;
+name|cbase
+index|[
+name|ui
+operator|->
+name|ui_ubanum
+index|]
+operator|=
+name|UBAI_ADDR
+argument_list|(
 name|uballoc
 argument_list|(
 name|ui
@@ -958,50 +983,6 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dmz_ubinfo
-index|[
-name|ui
-operator|->
-name|ui_ubanum
-index|]
-operator|==
-literal|0
-condition|)
-block|{
-name|splx
-argument_list|(
-name|priority
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"dmz: insufficient unibus map regs\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
-name|cbase
-index|[
-name|ui
-operator|->
-name|ui_ubanum
-index|]
-operator|=
-name|UBAI_ADDR
-argument_list|(
-name|dmz_ubinfo
-index|[
-name|ui
-operator|->
-name|ui_ubanum
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1694,16 +1675,18 @@ name|ui_addr
 expr_stmt|;
 if|if
 condition|(
-name|dmz_ubinfo
+name|dmz_uballoc
 index|[
 name|uban
 index|]
+operator|==
+name|controller
 condition|)
 block|{
-name|dmz_ubinfo
-index|[
-name|uban
-index|]
+name|int
+name|info
+decl_stmt|;
+name|info
 operator|=
 name|uballoc
 argument_list|(
@@ -1722,9 +1705,13 @@ expr|struct
 name|cblock
 argument_list|)
 argument_list|,
-literal|0
+name|UBA_CANTWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info
+condition|)
 name|cbase
 index|[
 name|uban
@@ -1732,12 +1719,25 @@ index|]
 operator|=
 name|UBAI_ADDR
 argument_list|(
-name|dmz_ubinfo
+name|info
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" [can't get uba map]"
+argument_list|)
+expr_stmt|;
+name|cbase
 index|[
 name|uban
 index|]
-argument_list|)
+operator|=
+operator|-
+literal|1
 expr_stmt|;
+block|}
 block|}
 for|for
 control|(
