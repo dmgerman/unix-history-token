@@ -881,6 +881,7 @@ name|dingdong
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|alarm
@@ -911,6 +912,7 @@ name|interrupt
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|longjmp
@@ -934,6 +936,7 @@ name|timeoverrun
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|syslog
@@ -1303,7 +1306,7 @@ name|rfds
 decl_stmt|;
 name|struct
 name|timeval
-name|timeout
+name|to
 decl_stmt|;
 if|if
 condition|(
@@ -1334,13 +1337,13 @@ operator|<<
 literal|0
 expr_stmt|;
 comment|/* FD_SET */
-name|timeout
+name|to
 operator|.
 name|tv_sec
 operator|=
 name|RT
 expr_stmt|;
-name|timeout
+name|to
 operator|.
 name|tv_usec
 operator|=
@@ -1374,7 +1377,7 @@ argument_list|,
 name|RT
 condition|?
 operator|&
-name|timeout
+name|to
 else|:
 name|NULL
 argument_list|)
@@ -1816,12 +1819,6 @@ name|q
 init|=
 name|name
 decl_stmt|;
-name|int
-name|n
-init|=
-sizeof|sizeof
-name|name
-decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -2249,7 +2246,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ttyn
+name|tty
 parameter_list|,
 name|int
 name|flags
@@ -2278,7 +2275,7 @@ name|i
 operator|=
 name|open
 argument_list|(
-name|ttyn
+name|tty
 argument_list|,
 name|flags
 argument_list|)
@@ -2316,7 +2313,7 @@ name|LOG_ERR
 argument_list|,
 literal|"open %s: %m"
 argument_list|,
-name|ttyn
+name|tty
 argument_list|)
 expr_stmt|;
 name|failopenlogged
@@ -2347,7 +2344,7 @@ name|LOG_ERR
 argument_list|,
 literal|"open %s: %m"
 argument_list|,
-name|ttyn
+name|tty
 argument_list|)
 expr_stmt|;
 return|return
@@ -2410,7 +2407,7 @@ name|LOG_ERR
 argument_list|,
 literal|"login_tty %s: %m"
 argument_list|,
-name|ttyn
+name|tty
 argument_list|)
 expr_stmt|;
 name|close
