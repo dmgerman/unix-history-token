@@ -47,6 +47,22 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SIZE_MAX
+value|UINT_MAX
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
