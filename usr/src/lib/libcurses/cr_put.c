@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.16 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,7 @@ name|fgoto
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -77,6 +77,8 @@ name|plod
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -111,10 +113,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Sync the position of the output cursor.  Most work here is rounding for  * terminal boundaries getting the column position implied by wraparound or  * the lack thereof and rolling up the screen to get destline on the screen.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -128,16 +126,13 @@ name|destline
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|WINDOW
-modifier|*
-name|_win
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * Sync the position of the output cursor.  Most work here is rounding for  * terminal boundaries getting the column position implied by wraparound or  * the lack thereof and rolling up the screen to get destline on the screen.  */
+end_comment
 
 begin_function
 name|int
-name|mvcur
+name|__mvcur
 parameter_list|(
 name|ly
 parameter_list|,
@@ -146,6 +141,8 @@ parameter_list|,
 name|y
 parameter_list|,
 name|x
+parameter_list|,
+name|in_refresh
 parameter_list|)
 name|int
 name|ly
@@ -155,6 +152,8 @@ decl_stmt|,
 name|y
 decl_stmt|,
 name|x
+decl_stmt|,
+name|in_refresh
 decl_stmt|;
 block|{
 ifdef|#
@@ -192,7 +191,9 @@ operator|=
 name|ly
 expr_stmt|;
 name|fgoto
-argument_list|()
+argument_list|(
+name|in_refresh
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -206,7 +207,12 @@ begin_function
 specifier|static
 name|void
 name|fgoto
-parameter_list|()
+parameter_list|(
+name|in_refresh
+parameter_list|)
+name|int
+name|in_refresh
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -398,7 +404,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|fgoto
-argument_list|()
+argument_list|(
+name|in_refresh
+argument_list|)
 expr_stmt|;
 name|destcol
 operator|=
@@ -498,6 +506,8 @@ name|strlen
 argument_list|(
 name|cgp
 argument_list|)
+argument_list|,
+name|in_refresh
 argument_list|)
 operator|>
 literal|0
@@ -505,6 +515,8 @@ condition|)
 name|plod
 argument_list|(
 literal|0
+argument_list|,
+name|in_refresh
 argument_list|)
 expr_stmt|;
 else|else
@@ -522,6 +534,8 @@ else|else
 name|plod
 argument_list|(
 literal|0
+argument_list|,
+name|in_refresh
 argument_list|)
 expr_stmt|;
 name|outline
@@ -581,9 +595,13 @@ name|int
 name|plod
 parameter_list|(
 name|cnt
+parameter_list|,
+name|in_refresh
 parameter_list|)
 name|int
 name|cnt
+decl_stmt|,
+name|in_refresh
 decl_stmt|;
 block|{
 specifier|register
@@ -1377,9 +1395,8 @@ block|{
 comment|/* 		 * Move one char to the right.  We don't use ND space because 		 * it's better to just print the char we are moving over. 		 */
 if|if
 condition|(
-name|_win
-operator|!=
-name|NULL
+operator|!
+name|in_refresh
 condition|)
 if|if
 condition|(
