@@ -726,7 +726,9 @@ operator|--
 operator|<
 literal|1
 condition|)
-return|return;
+goto|goto
+name|bad
+goto|;
 switch|switch
 condition|(
 operator|*
@@ -847,7 +849,7 @@ operator|&
 name|ck
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 case|case
 name|SRA_USER
 case|:
@@ -906,7 +908,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 case|case
 name|SRA_PASS
 case|:
@@ -1059,7 +1061,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-break|break;
+return|return;
 default|default:
 if|if
 condition|(
@@ -1076,6 +1078,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+name|bad
+label|:
 name|Data
 argument_list|(
 name|ap
@@ -1098,8 +1103,6 @@ argument_list|,
 name|AUTH_REJECT
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 end_function
 
