@@ -134,6 +134,8 @@ argument_list|,
 literal|"eventhandler"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 name|eventhandler_lists_initted

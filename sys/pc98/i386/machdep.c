@@ -2056,6 +2056,8 @@ argument_list|,
 literal|"callout"
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 if|#
@@ -2127,6 +2129,8 @@ argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_COLD
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -9879,6 +9883,8 @@ argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_COLD
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
@@ -9909,6 +9915,8 @@ argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_COLD
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -159,12 +159,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MTX_RECURSE
+value|0x2
+end_define
+
+begin_comment
+comment|/* Recursive lock (for mtx_init) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MTX_RLIKELY
 value|0x4
 end_define
 
 begin_comment
-comment|/* (opt) Recursion likely */
+comment|/* Recursion likely */
 end_comment
 
 begin_define
@@ -262,7 +273,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MTX_RECURSE
+name|MTX_RECURSED
 value|0x01
 end_define
 
@@ -285,7 +296,7 @@ begin_define
 define|#
 directive|define
 name|MTX_FLAGMASK
-value|~(MTX_RECURSE | MTX_CONTESTED)
+value|~(MTX_RECURSED | MTX_CONTESTED)
 end_define
 
 begin_define
@@ -1537,7 +1548,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|do {				\ 	if (!_obtain_lock(mp, tid)) {					\ 		if (((mp)->mtx_lock& MTX_FLAGMASK) != ((uintptr_t)(tid)))\ 			mtx_enter_hard(mp, (type)& MTX_HARDOPTS, 0);	\ 		else {							\ 			atomic_set_ptr(&(mp)->mtx_lock, MTX_RECURSE);	\ 			(mp)->mtx_recurse++;				\ 		}							\ 	}								\ } while (0)
+value|do {				\ 	if (!_obtain_lock(mp, tid)) {					\ 		if (((mp)->mtx_lock& MTX_FLAGMASK) != ((uintptr_t)(tid)))\ 			mtx_enter_hard(mp, (type)& MTX_HARDOPTS, 0);	\ 		else {							\ 			atomic_set_ptr(&(mp)->mtx_lock, MTX_RECURSED);	\ 			(mp)->mtx_recurse++;				\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -1653,7 +1664,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	if (!_release_lock(mp, tid)) {					\ 		if ((mp)->mtx_lock& MTX_RECURSE) {			\ 			if (--((mp)->mtx_recurse) == 0)			\ 				atomic_clear_ptr(&(mp)->mtx_lock,	\ 				    MTX_RECURSE);			\ 		} else {						\ 			mtx_exit_hard((mp), (type)& MTX_HARDOPTS);	\ 		}							\ 	}								\ } while (0)
+value|do {					\ 	if (!_release_lock(mp, tid)) {					\ 		if ((mp)->mtx_lock& MTX_RECURSED) {			\ 			if (--((mp)->mtx_recurse) == 0)			\ 				atomic_clear_ptr(&(mp)->mtx_lock,	\ 				    MTX_RECURSED);			\ 		} else {						\ 			mtx_exit_hard((mp), (type)& MTX_HARDOPTS);	\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -1678,7 +1689,7 @@ name|_exitlock_spin
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	if ((mp)->mtx_recurse == 0) {					\ 		int _mtx_intr = (mp)->mtx_saveintr;			\ 									\ 		_release_lock_quick(mp);				\ 		restore_intr(_mtx_intr);				\ 	} else {							\ 		(mp)->mtx_recurse--;					\ 	}								\ } while (0)
+value|do {						\ 	if (!mtx_recursed((mp))) {					\ 		int _mtx_intr = (mp)->mtx_saveintr;			\ 									\ 		_release_lock_quick(mp);				\ 		restore_intr(_mtx_intr);				\ 	} else {							\ 		(mp)->mtx_recurse--;					\ 	}								\ } while (0)
 end_define
 
 begin_endif

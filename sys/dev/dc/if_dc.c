@@ -8407,6 +8407,8 @@ name|dev
 argument_list|)
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 name|DC_LOCK
