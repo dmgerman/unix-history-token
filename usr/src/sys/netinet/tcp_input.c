@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_input.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_input.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1537,7 +1537,7 @@ index|[
 name|TCPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|tcp_keepidle
 expr_stmt|;
 comment|/* 	 * Process options if not in LISTEN state, 	 * else do it below (after getting remote address). 	 */
 if|if
@@ -1915,7 +1915,7 @@ index|[
 name|TCPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|TCPTV_KEEP_INIT
 expr_stmt|;
 name|dropsocket
 operator|=
@@ -2414,31 +2414,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|TCP_COMPAT_42
-comment|/* 			 * Don't toss RST in response to 4.2-style keepalive. 			 */
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_seq
-operator|==
-name|tp
-operator|->
-name|rcv_nxt
-operator|-
-literal|1
-operator|&&
-name|tiflags
-operator|&
-name|TH_RST
-condition|)
-goto|goto
-name|do_rst
-goto|;
-endif|#
-directive|endif
 name|tcpstat
 operator|.
 name|tcps_rcvduppack
@@ -2452,6 +2427,45 @@ name|ti
 operator|->
 name|ti_len
 expr_stmt|;
+comment|/* 			 * If segment is just one to the left of the window, 			 * check two special cases: 			 * 1. Don't toss RST in response to 4.2-style keepalive. 			 * 2. If the only thing to drop is a FIN, we can drop 			 *    it, but check the ACK or we will get into FIN 			 *    wars if our FINs crossed (both CLOSING). 			 * In either case, send ACK to resynchronize, 			 * but keep on processing for RST or ACK. 			 */
+if|if
+condition|(
+operator|(
+name|tiflags
+operator|&
+name|TH_FIN
+operator|&&
+name|todrop
+operator|==
+name|ti
+operator|->
+name|ti_len
+operator|+
+literal|1
+operator|)
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
+operator|||
+operator|(
+name|tiflags
+operator|&
+name|TH_RST
+operator|&&
+name|ti
+operator|->
+name|ti_seq
+operator|==
+name|tp
+operator|->
+name|rcv_nxt
+operator|-
+literal|1
+operator|)
+endif|#
+directive|endif
+condition|)
+block|{
 name|todrop
 operator|=
 name|ti
@@ -2469,6 +2483,11 @@ name|t_flags
 operator||=
 name|TF_ACKNOW
 expr_stmt|;
+block|}
+else|else
+goto|goto
+name|dropafterack
+goto|;
 block|}
 else|else
 block|{
@@ -2532,7 +2551,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If new data is received on a connection after the 	 * user processes are gone, then RST the other end. 	 */
+comment|/* 	 * If new data are received on a connection after the 	 * user processes are gone, then RST the other end. 	 */
 if|if
 condition|(
 operator|(
@@ -2773,13 +2792,6 @@ name|TH_FIN
 operator|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|TCP_COMPAT_42
-name|do_rst
-label|:
-endif|#
-directive|endif
 comment|/* 	 * If the RST bit is set examine the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK, TIME_WAIT STATES 	 *	Close the tcb. 	 */
 if|if
 condition|(
@@ -2797,17 +2809,14 @@ block|{
 case|case
 name|TCPS_SYN_RECEIVED
 case|:
-name|tp
+name|so
+operator|->
+name|so_error
 operator|=
-name|tcp_drop
-argument_list|(
-name|tp
-argument_list|,
 name|ECONNREFUSED
-argument_list|)
 expr_stmt|;
 goto|goto
-name|drop
+name|close
 goto|;
 case|case
 name|TCPS_ESTABLISHED
@@ -2821,13 +2830,30 @@ case|:
 case|case
 name|TCPS_CLOSE_WAIT
 case|:
+name|so
+operator|->
+name|so_error
+operator|=
+name|ECONNRESET
+expr_stmt|;
+name|close
+label|:
+name|tp
+operator|->
+name|t_state
+operator|=
+name|TCPS_CLOSED
+expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_drops
+operator|++
+expr_stmt|;
 name|tp
 operator|=
-name|tcp_drop
+name|tcp_close
 argument_list|(
 name|tp
-argument_list|,
-name|ECONNRESET
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3285,16 +3311,13 @@ name|short
 name|delta
 decl_stmt|;
 comment|/* 				 * srtt is stored as fixed point with 3 bits 				 * after the binary point (i.e., scaled by 8). 				 * The following magic is equivalent 				 * to the smoothing algorithm in rfc793 				 * with an alpha of .875 				 * (srtt = rtt/8 + srtt*7/8 in fixed point). 				 * Adjust t_rtt to origin 0. 				 */
-name|tp
-operator|->
-name|t_rtt
-operator|--
-expr_stmt|;
 name|delta
 operator|=
 name|tp
 operator|->
 name|t_rtt
+operator|-
+literal|1
 operator|-
 operator|(
 name|tp
@@ -3683,7 +3706,7 @@ index|[
 name|TCPT_2MSL
 index|]
 operator|=
-name|TCPTV_MAXIDLE
+name|tcp_maxidle
 expr_stmt|;
 block|}
 name|tp

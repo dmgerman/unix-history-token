@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_timer.c	7.11.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_timer.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -128,6 +128,28 @@ name|int
 name|tcpnodelack
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_keepidle
+init|=
+name|TCPTV_KEEP_IDLE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_keepintvl
+init|=
+name|TCPTV_KEEPINTVL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_maxidle
 decl_stmt|;
 end_decl_stmt
 
@@ -279,6 +301,12 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|tcp_maxidle
+operator|=
+name|TCPTV_KEEPCNT
+operator|*
+name|tcp_keepintvl
+expr_stmt|;
 comment|/* 	 * Search through tcb's and update active timers. 	 */
 name|ip
 operator|=
@@ -607,7 +635,7 @@ name|tp
 operator|->
 name|t_idle
 operator|<=
-name|TCPTV_MAXIDLE
+name|tcp_maxidle
 condition|)
 name|tp
 operator|->
@@ -616,7 +644,7 @@ index|[
 name|TCPT_2MSL
 index|]
 operator|=
-name|TCPTV_KEEP
+name|tcp_keepintvl
 expr_stmt|;
 else|else
 name|tp
@@ -919,7 +947,9 @@ name|tp
 operator|->
 name|t_idle
 operator|>=
-name|TCPTV_MAXIDLE
+name|tcp_keepidle
+operator|+
+name|tcp_maxidle
 condition|)
 goto|goto
 name|dropit
@@ -982,7 +1012,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|tp
 operator|->
 name|t_timer
@@ -990,7 +1019,18 @@ index|[
 name|TCPT_KEEP
 index|]
 operator|=
-name|TCPTV_KEEP
+name|tcp_keepintvl
+expr_stmt|;
+block|}
+else|else
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_KEEP
+index|]
+operator|=
+name|tcp_keepidle
 expr_stmt|;
 break|break;
 name|dropit
