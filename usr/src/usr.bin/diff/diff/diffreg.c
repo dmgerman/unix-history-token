@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.15 %G%"
+literal|"@(#)diffreg.c 4.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4166,6 +4166,13 @@ decl_stmt|;
 name|int
 name|k
 decl_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+return|return;
 for|for
 control|(
 name|j
