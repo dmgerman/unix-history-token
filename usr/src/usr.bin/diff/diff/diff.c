@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c 4.3 %G%"
+literal|"@(#)diff.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,6 +238,30 @@ case|case
 literal|'b'
 case|:
 name|bflag
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
+literal|'w'
+case|:
+name|wflag
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
+literal|'i'
+case|:
+name|iflag
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
+literal|'t'
+case|:
+name|tflag
 operator|=
 literal|1
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	diff.h	4.5	85/06/03	*/
+comment|/*	diff.h	4.6	85/06/07	*/
 end_comment
 
 begin_comment
@@ -108,6 +108,16 @@ begin_comment
 comment|/* Diff with merged #ifdef's */
 end_comment
 
+begin_decl_stmt
+name|int
+name|tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expand tabs on output */
+end_comment
+
 begin_comment
 comment|/*  * Algorithm related options  */
 end_comment
@@ -129,7 +139,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ignore blanks in comparisions */
+comment|/* ignore blanks in comparisons */
+end_comment
+
+begin_decl_stmt
+name|int
+name|wflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* totally ignore blanks in comparisons */
+end_comment
+
+begin_decl_stmt
+name|int
+name|iflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ignore case in comparisons */
 end_comment
 
 begin_comment
