@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine adds the character to the current position  *  * @(#)addch.c	1.5 (Berkeley) %G%  */
+comment|/*  *	This routine adds the character to the current position  *  * @(#)addch.c	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_macro
@@ -531,6 +531,10 @@ name|y
 index|]
 operator|=
 name|x
+operator|+
+name|win
+operator|->
+name|_ch_off
 expr_stmt|;
 elseif|else
 if|if
@@ -552,6 +556,10 @@ name|y
 index|]
 operator|=
 name|x
+operator|+
+name|win
+operator|->
+name|_ch_off
 expr_stmt|;
 elseif|else
 if|if
@@ -573,6 +581,10 @@ name|y
 index|]
 operator|=
 name|x
+operator|+
+name|win
+operator|->
+name|_ch_off
 expr_stmt|;
 block|}
 block|}
