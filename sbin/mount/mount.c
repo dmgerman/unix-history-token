@@ -377,6 +377,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_short
+name|serverport
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1427,6 +1435,9 @@ name|opflags
 argument_list|,
 operator|&
 name|retrycnt
+argument_list|,
+operator|&
+name|serverport
 argument_list|)
 expr_stmt|;
 if|if
@@ -1445,6 +1456,9 @@ name|opflags
 argument_list|,
 operator|&
 name|retrycnt
+argument_list|,
+operator|&
+name|serverport
 argument_list|)
 expr_stmt|;
 if|if
@@ -3204,6 +3218,8 @@ argument_list|,
 argument|opflagsp
 argument_list|,
 argument|retrycntp
+argument_list|,
+argument|serverport
 argument_list|)
 end_macro
 
@@ -3234,6 +3250,13 @@ begin_decl_stmt
 name|int
 modifier|*
 name|retrycntp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_short
+modifier|*
+name|serverport
 decl_stmt|;
 end_decl_stmt
 
@@ -3627,6 +3650,28 @@ operator||=
 name|NFSMNT_RETRANS
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"port"
+argument_list|)
+operator|&&
+name|num
+operator|>
+literal|0
+condition|)
+block|{
+operator|*
+name|serverport
+operator|=
+name|num
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3941,8 +3986,17 @@ argument_list|(
 name|PMAPPORT
 argument_list|)
 expr_stmt|;
+name|tport
+operator|=
+name|serverport
+expr_stmt|;
 if|if
 condition|(
+name|serverport
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|(
 name|tport
 operator|=
@@ -3960,6 +4014,7 @@ argument_list|)
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 if|if
