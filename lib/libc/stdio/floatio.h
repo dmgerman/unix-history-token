@@ -8,26 +8,34 @@ comment|/*  * Floating point scanf/printf (input/output) definitions.  */
 end_comment
 
 begin_comment
-comment|/* 11-bit exponent (VAX G floating point) is 308 decimal digits */
+comment|/*  * MAXEXPDIG is the maximum number of decimal digits needed to store a  * floating point exponent in the largest supported format.  It should  * be ceil(log10(LDBL_MAX_10_EXP)) or, if hexadecimal floating point  * conversions are supported, ceil(log10(LDBL_MAX_EXP)).  But since it  * is presently never greater than 5 in practice, we fudge it.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXEXP
-value|308
+name|MAXEXPDIG
+value|6
 end_define
 
-begin_comment
-comment|/* 128 bit fraction takes up 39 decimal digits; max reasonable precision */
-end_comment
+begin_if
+if|#
+directive|if
+name|LDBL_MAX_EXP
+operator|>
+literal|999999
+end_if
 
-begin_define
-define|#
-directive|define
-name|MAXFRACT
-value|39
-end_define
+begin_error
+error|#
+directive|error
+literal|"floating point buffers too small"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1634,17 +1634,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|BUF
-value|((MAXEXP*2)+MAXFRACT+1)
-end_define
-
-begin_comment
-comment|/* + decimal point */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DEFPREC
 value|6
 end_define
@@ -1727,22 +1716,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* no FLOATING_POINT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUF
-value|136
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1751,6 +1724,17 @@ end_endif
 begin_comment
 comment|/* FLOATING_POINT */
 end_comment
+
+begin_comment
+comment|/*  * The size of the buffer we use as scratch space for integer  * conversions, among other things.  Technically, we would need the  * most space for base 10 conversions with thousands' grouping  * characters between each pair of digits.  100 bytes is a  * conservative overestimate even for a 128-bit uintmax_t.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUF
+value|100
+end_define
 
 begin_define
 define|#
@@ -2077,7 +2061,7 @@ index|[
 name|BUF
 index|]
 decl_stmt|;
-comment|/* space for %c, %[diouxX], %[eEfFgG] */
+comment|/* buffer with space for digits of uintmax_t */
 name|wchar_t
 name|ox
 index|[
@@ -4036,6 +4020,16 @@ operator|+
 name|BUF
 operator|-
 name|cp
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|BUF
+condition|)
+comment|/* should never happen */
+name|abort
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:
@@ -6473,7 +6467,7 @@ decl_stmt|;
 name|wchar_t
 name|expbuf
 index|[
-name|MAXEXP
+name|MAXEXPDIG
 index|]
 decl_stmt|;
 name|p
@@ -6516,7 +6510,7 @@ name|t
 operator|=
 name|expbuf
 operator|+
-name|MAXEXP
+name|MAXEXPDIG
 expr_stmt|;
 if|if
 condition|(
@@ -6566,7 +6560,7 @@ name|t
 operator|<
 name|expbuf
 operator|+
-name|MAXEXP
+name|MAXEXPDIG
 condition|;
 operator|*
 name|p
