@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.1 (Berkeley) %G%"
+literal|"@(#)mount.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1880,6 +1880,17 @@ if|if
 condition|(
 name|flags
 operator|&
+name|MNT_ASYNC
+condition|)
+name|PR
+argument_list|(
+literal|"asynchronous"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
 name|MNT_QUOTA
 condition|)
 name|PR
@@ -2317,6 +2328,36 @@ name|flagp
 operator|&=
 operator|~
 name|MNT_SYNCHRONOUS
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"asynchronous"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|negative
+condition|)
+operator|*
+name|flagp
+operator||=
+name|MNT_ASYNC
+expr_stmt|;
+else|else
+operator|*
+name|flagp
+operator|&=
+operator|~
+name|MNT_ASYNC
 expr_stmt|;
 continue|continue;
 block|}
