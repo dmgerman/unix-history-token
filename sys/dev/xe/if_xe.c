@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  * XXX TODO XXX  *  * I've pushed this fairly far, but there are some things that need to be  * done here.  I'm documenting them here in case I get destracted. -- imp  *  * xe_memwrite -- maybe better handled pccard layer?  * xe_cem56fix -- need to figure out how to map the extra stuff.  * xe_activate -- need to write it, and add some stuff to it.  Look at if_sn  *                for guidance.  resources/interrupts.  * xe_deactivate -- turn off resources/interrupts.  */
+comment|/*  * XXX TODO XXX  *  * I've pushed this fairly far, but there are some things that need to be  * done here.  I'm documenting them here in case I get destracted. -- imp  *  * xe_memwrite -- maybe better handled pccard layer?  * xe_cem56fix -- need to figure out how to map the extra stuff.  */
 end_comment
 
 begin_comment
@@ -167,6 +167,18 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pccard/pccardvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"card_if.h"
 end_include
 
 begin_include
@@ -1193,7 +1205,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Map in the CIS */
-comment|/* XXX This CANNOT work as it needs RF_PCCARD_ATTR support */
 name|r
 operator|=
 name|bus_alloc_resource
@@ -1248,6 +1259,22 @@ operator|)
 name|rman_get_start
 argument_list|(
 name|r
+argument_list|)
+expr_stmt|;
+name|CARD_SET_RES_FLAGS
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|rid
+argument_list|,
+name|PCCARD_A_MEM_ATTR
 argument_list|)
 expr_stmt|;
 comment|/* Grep through CIS looking for relevant tuples */
