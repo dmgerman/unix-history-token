@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rwhod.h	4.4	83/05/04	*/
+comment|/*	rwhod.h	4.5	83/05/05	*/
 end_comment
 
 begin_comment
@@ -12,13 +12,17 @@ struct|struct
 name|whod
 block|{
 name|char
+name|wd_vers
+decl_stmt|;
+comment|/* protocol version # */
+name|char
 name|wd_type
 decl_stmt|;
 comment|/* packet type, see below */
 name|char
 name|wd_pad
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 name|int
@@ -74,6 +78,13 @@ struct|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|WHODVERSION
+value|1
+end_define
 
 begin_define
 define|#
