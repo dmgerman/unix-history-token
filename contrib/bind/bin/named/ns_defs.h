@@ -2024,7 +2024,7 @@ name|int16_t
 name|q_dfd
 decl_stmt|;
 comment|/* UDP file descriptor */
-name|int16_t
+name|u_int16_t
 name|q_udpsize
 decl_stmt|;
 comment|/* UDP message size */
