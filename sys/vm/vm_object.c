@@ -5345,7 +5345,7 @@ operator|==
 name|backing_object
 argument_list|,
 operator|(
-literal|"vm_object_qcollapse(): object mismatch"
+literal|"vm_object_backing_scan: object mismatch"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5533,24 +5533,12 @@ operator|!=
 literal|1
 condition|)
 return|return;
-name|backing_object
-operator|->
-name|ref_count
-operator|+=
-literal|2
-expr_stmt|;
 name|vm_object_backing_scan
 argument_list|(
 name|object
 argument_list|,
 name|OBSC_COLLAPSE_NOWAIT
 argument_list|)
-expr_stmt|;
-name|backing_object
-operator|->
-name|ref_count
-operator|-=
-literal|2
 expr_stmt|;
 block|}
 end_function
