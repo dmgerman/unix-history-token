@@ -1712,8 +1712,8 @@ operator|-=
 name|nn
 expr_stmt|;
 block|}
-name|bp
-operator|+=
+name|buflen
+operator|-=
 sizeof|sizeof
 argument_list|(
 name|align
@@ -1731,8 +1731,8 @@ name|align
 argument_list|)
 operator|)
 expr_stmt|;
-name|buflen
-operator|-=
+name|bp
+operator|+=
 sizeof|sizeof
 argument_list|(
 name|align
