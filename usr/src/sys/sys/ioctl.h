@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -789,6 +789,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCPKT_IOCTL
+value|0x40
+end_define
+
+begin_comment
+comment|/* state change of pty driver */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TIOCPKT_TIOC
 value|0x40
 end_define
@@ -977,6 +988,28 @@ end_define
 
 begin_comment
 comment|/* become controlling tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCEXT
+value|_IOW('t', 96, int)
+end_define
+
+begin_comment
+comment|/* pty: external processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSIG
+value|_IO('t', 95)
+end_define
+
+begin_comment
+comment|/* pty: generate signal */
 end_comment
 
 begin_define
