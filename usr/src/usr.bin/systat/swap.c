@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.6 (Berkeley) %G%"
+literal|"@(#)swap.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"systat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
 end_include
 
 begin_include
