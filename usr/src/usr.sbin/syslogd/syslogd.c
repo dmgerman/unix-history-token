@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.47 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1284,6 +1284,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_family
