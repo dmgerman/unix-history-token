@@ -37,7 +37,7 @@ operator|)
 name|rmail
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|(
 name|Berkeley
 operator|)
@@ -444,7 +444,7 @@ name|strcat
 argument_list|(
 name|from
 argument_list|,
-name|ufrom
+name|uf
 argument_list|)
 expr_stmt|;
 operator|(
