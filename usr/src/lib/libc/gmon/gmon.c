@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	1.2 (Berkeley) %G%"
+literal|"@(#)gmon.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,11 +18,231 @@ end_include
 begin_include
 include|#
 directive|include
-file|"monitor.h"
+file|"gmcrt0.h"
 end_include
 
 begin_comment
-comment|/*	froms is actually a bunch of unsigned shorts indexing tos */
+comment|/*      *	C start up routines, for monitoring      *	Robert Henry, UCB, 20 Oct 81      *      *	We make the following (true) assumptions:      *	1) when the kernel calls start, it does a jump to location 2,      *	and thus avoids the register save mask.  We are NOT called      *	with a calls!  see sys1.c:setregs().      *	2) The only register variable that we can trust is sp,      *	which points to the base of the kernel calling frame.      *	Do NOT believe the documentation in exec(2) regarding the      *	values of fp and ap.      *	3) We can allocate as many register variables as we want,      *	and don't have to save them for anybody.      *	4) Because of the ways that asm's work, we can't have      *	any automatic variables allocated on the stack, because      *	we must catch the value of sp before any automatics are      *	allocated.      */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|etext
+decl_stmt|;
+end_decl_stmt
+
+begin_asm
+asm|asm( "#define _eprol eprol" );
+end_asm
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|eprol
+decl_stmt|;
+end_decl_stmt
+
+begin_asm
+asm|asm( "#define _start start" );
+end_asm
+
+begin_macro
+name|start
+argument_list|()
+end_macro
+
+begin_block
+block|{
+struct|struct
+name|kframe
+block|{
+name|int
+name|kargc
+decl_stmt|;
+name|char
+modifier|*
+name|kargv
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* size depends on kargc */
+name|char
+name|kargstr
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* size varies */
+name|char
+name|kenvstr
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* size varies */
+block|}
+struct|;
+comment|/* 	 *	ALL REGISTER VARIABLES!!! 	 */
+specifier|register
+name|struct
+name|kframe
+modifier|*
+name|kfp
+decl_stmt|;
+comment|/* r11 */
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|targv
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|kfp
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+else|not lint
+asm|asm( "	movl	sp,r11" );
+comment|/* catch it quick */
+endif|#
+directive|endif
+endif|not lint
+for|for
+control|(
+name|argv
+operator|=
+name|targv
+operator|=
+operator|&
+name|kfp
+operator|->
+name|kargv
+index|[
+literal|0
+index|]
+init|;
+operator|*
+name|targv
+operator|++
+condition|;
+comment|/* void */
+control|)
+comment|/* VOID */
+empty_stmt|;
+if|if
+condition|(
+name|targv
+operator|>=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
+operator|*
+name|argv
+operator|)
+condition|)
+operator|--
+name|targv
+expr_stmt|;
+name|environ
+operator|=
+name|targv
+expr_stmt|;
+asm|asm("eprol:");
+name|_mstartup
+argument_list|(
+operator|&
+name|eprol
+argument_list|,
+operator|&
+name|etext
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|main
+argument_list|(
+name|kfp
+operator|->
+name|kargc
+argument_list|,
+name|argv
+argument_list|,
+name|environ
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_asm
+asm|asm( "#undef _start" );
+end_asm
+
+begin_asm
+asm|asm( "#undef _eprol" );
+end_asm
+
+begin_expr_stmt
+name|exit
+argument_list|(
+name|code
+argument_list|)
+comment|/* ARGSUSED */
+specifier|register
+name|int
+name|code
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* r11 */
+end_comment
+
+begin_block
+block|{
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|_mcleanup
+argument_list|()
+expr_stmt|;
+name|_cleanup
+argument_list|()
+expr_stmt|;
+asm|asm( "	movl r11, r0" );
+asm|asm( "	chmk $1" );
+block|}
+end_block
+
+begin_comment
+comment|/*      *	froms is actually a bunch of unsigned shorts indexing tos      */
 end_comment
 
 begin_decl_stmt
@@ -90,63 +310,12 @@ name|sbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|sbrk
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
 name|MSG
 value|"No space for monitor buffer(s)\n"
 end_define
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_expr_stmt
-name|exit
-argument_list|(
-name|code
-argument_list|)
-specifier|register
-name|int
-name|code
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|_mcleanup
-argument_list|()
-expr_stmt|;
-name|_cleanup
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|code
-operator|=
-name|code
-expr_stmt|;
-endif|#
-directive|endif
-endif|lint
-asm|asm("	movl r11, r0");
-asm|asm("	chmk $1");
-block|}
-end_block
 
 begin_macro
 name|_mstartup
@@ -183,6 +352,11 @@ decl_stmt|;
 name|int
 name|textsize
 decl_stmt|;
+name|char
+modifier|*
+name|sbrk
+parameter_list|()
+function_decl|;
 name|s_lowpc
 operator|=
 name|lowpc
@@ -374,15 +548,6 @@ block|}
 end_block
 
 begin_macro
-name|_peek
-argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
-
-begin_macro
 name|_mcleanup
 argument_list|()
 end_macro
@@ -422,7 +587,7 @@ name|fd
 operator|=
 name|fopen
 argument_list|(
-literal|"dmon.out"
+literal|"gmon.out"
 argument_list|,
 literal|"w"
 argument_list|)
@@ -436,18 +601,35 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"mcount: dmon.out"
+literal|"mcount: gmon.out"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"[mcleanup] sbuf 0x%x ssiz %d\n"
+argument_list|,
+name|sbuf
+argument_list|,
+name|ssiz
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 name|fwrite
 argument_list|(
 name|sbuf
 argument_list|,
-name|ssiz
-argument_list|,
 literal|1
+argument_list|,
+name|ssiz
 argument_list|,
 name|fd
 argument_list|)
@@ -522,8 +704,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"[mcleanup] frompc %d selfpc %d count %d\n"
 argument_list|,
 name|frompc
@@ -616,7 +800,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	This routine is massaged so that it may be jsb'ed to  */
+comment|/*      *	This routine is massaged so that it may be jsb'ed to      */
 end_comment
 
 begin_asm
@@ -656,7 +840,7 @@ name|profiling
 init|=
 literal|0
 decl_stmt|;
-asm|asm( "	forgot to run ex script on monitor.s" );
+asm|asm( "	forgot to run ex script on gmcrt0.s" );
 asm|asm( "#define r11 r5" );
 asm|asm( "#define r10 r4" );
 asm|asm( "#define r9 r3" );
@@ -686,14 +870,21 @@ comment|/* frompcindex =     (calls frame) */
 endif|#
 directive|endif
 endif|not lint
-comment|/* 	 *	check that we are profiling 	 */
+comment|/* 	 *	check that we are profiling 	 *	and that we aren't recursively invoked. 	 */
 if|if
 condition|(
-name|profiling
-operator|||
 name|tos
 operator|==
 literal|0
+condition|)
+block|{
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|profiling
 condition|)
 block|{
 goto|goto
@@ -985,7 +1176,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*VARARGS1*/
+comment|/* VARARGS1 */
 end_comment
 
 begin_decl_stmt
