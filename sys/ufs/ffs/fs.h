@@ -47,20 +47,6 @@ name|SBOFF
 value|((off_t)(BBOFF + BBSIZE))
 end_define
 
-begin_define
-define|#
-directive|define
-name|BBLOCK
-value|((ufs_daddr_t)(0))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBLOCK
-value|((ufs_daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
-end_define
-
 begin_comment
 comment|/* Max number of fragments per block, this is not tweakable */
 end_comment

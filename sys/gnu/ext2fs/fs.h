@@ -39,20 +39,6 @@ name|SBOFF
 value|((off_t)(BBOFF + BBSIZE))
 end_define
 
-begin_define
-define|#
-directive|define
-name|BBLOCK
-value|((daddr_t)(0))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBLOCK
-value|((daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
-end_define
-
 begin_comment
 comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  */
 end_comment
