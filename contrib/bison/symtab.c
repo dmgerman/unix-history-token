@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Symbol table manager for Bison,    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Symbol table manager for Bison,    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"new.h"
+file|"alloc.h"
 end_include
 
 begin_include
@@ -55,16 +55,39 @@ name|lastsymbol
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|tabinit
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|free_symtab
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+specifier|static
 name|int
 name|hash
 parameter_list|(
-name|key
-parameter_list|)
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -117,16 +140,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|copys
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -190,7 +212,9 @@ end_function
 begin_function
 name|void
 name|tabinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/*   register int i; JF unused */
 name|symtab
@@ -219,12 +243,10 @@ name|bucket
 modifier|*
 name|getsym
 parameter_list|(
-name|key
-parameter_list|)
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -388,7 +410,9 @@ end_function
 begin_function
 name|void
 name|free_symtab
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Subroutines for bison    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Subroutines for bison    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"new.h"
+file|"alloc.h"
 end_include
 
 begin_include
@@ -55,27 +55,84 @@ name|tags
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|void
+name|initialize_closure
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|set_fderives
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|set_firsts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|void
+name|closure
+name|PARAMS
+argument_list|(
+operator|(
+name|short
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|finalize_closure
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|RTC
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|short
@@ -145,11 +202,9 @@ begin_function
 name|void
 name|initialize_closure
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|itemset
 operator|=
@@ -191,7 +246,9 @@ end_comment
 begin_function
 name|void
 name|set_fderives
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -400,7 +457,9 @@ end_comment
 begin_function
 name|void
 name|set_firsts
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -537,17 +596,13 @@ begin_function
 name|void
 name|closure
 parameter_list|(
-name|core
-parameter_list|,
-name|n
-parameter_list|)
 name|short
 modifier|*
 name|core
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -844,7 +899,9 @@ end_function
 begin_function
 name|void
 name|finalize_closure
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FREE
 argument_list|(
@@ -925,12 +982,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|print_firsts
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -947,7 +1004,10 @@ name|rowp
 decl_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\n\nFIRSTS\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -966,7 +1026,10 @@ control|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\n%s firsts\n\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -1024,14 +1087,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|print_fderives
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1048,7 +1111,10 @@ name|rp
 decl_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\n\nFDERIVES\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1067,7 +1133,10 @@ control|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\n%s derives\n\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -1119,7 +1188,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

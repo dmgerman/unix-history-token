@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate transitive closure of a matrix,    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Generate transitive closure of a matrix,    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -21,25 +21,37 @@ directive|include
 file|"machine.h"
 end_include
 
+begin_decl_stmt
+name|void
+name|RTC
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* given n by n matrix of bits R, modify its contents    to be the transive closure of what was given.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|TC
 parameter_list|(
-name|R
-parameter_list|,
-name|n
-parameter_list|)
 name|unsigned
 modifier|*
 name|R
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -273,17 +285,13 @@ begin_function
 name|void
 name|RTC
 parameter_list|(
-name|R
-parameter_list|,
-name|n
-parameter_list|)
 name|unsigned
 modifier|*
 name|R
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987, 88, 89, 90, 91, 92, 1993, 1994 	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987,88,89,90,91,92,93,94,96,97,98      Free Software Foundation, Inc.     NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
 end_comment
 
 begin_escape
@@ -34,9 +34,7 @@ if|#
 directive|if
 operator|!
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|||
 operator|!
 name|__STDC__
@@ -78,20 +76,63 @@ begin_comment
 comment|/* Comment out all this code if we are using the GNU C Library, and are not    actually compiling the library itself.  This code is part of the GNU C    Library, but also included in many other GNU distributions.  Compiling    and linking in this code is a waste when using the GNU C library    (especially if it is a shared library).  Rather than having every GNU    program understand `configure --with-gnu-libc' and omit the object files,    it is simpler to just do this in the source for each such file.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GETOPT_INTERFACE_VERSION
+value|2
+end_define
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_LIBC
-argument_list|)
-operator|||
 operator|!
 name|defined
-argument_list|(
-name|__GNU_LIBRARY__
-argument_list|)
+name|_LIBC
+operator|&&
+name|defined
+name|__GLIBC__
+operator|&&
+name|__GLIBC__
+operator|>=
+literal|2
 end_if
+
+begin_include
+include|#
+directive|include
+file|<gnu-versions.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|_GNU_GETOPT_INTERFACE_VERSION
+operator|==
+name|GETOPT_INTERFACE_VERSION
+end_if
+
+begin_define
+define|#
+directive|define
+name|ELIDE_CODE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ELIDE_CODE
+end_ifndef
 
 begin_comment
 comment|/* This needs to come after some library #include    to get __GNU_LIBRARY__ defined.  */
@@ -108,19 +149,6 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
@@ -271,7 +299,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBC or not __GNU_LIBRARY__.  */
+comment|/* Not ELIDE_CODE.  */
 end_comment
 
 begin_escape
@@ -431,7 +459,8 @@ if|if
 condition|(
 name|c
 operator|==
-name|EOF
+operator|-
+literal|1
 condition|)
 break|break;
 switch|switch

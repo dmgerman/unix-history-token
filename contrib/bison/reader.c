@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Input parser for bison    Copyright (C) 1984, 1986, 1989, 1992 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Input parser for bison    Copyright (C) 1984, 1986, 1989, 1992, 1998 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -34,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"new.h"
+file|"alloc.h"
 end_include
 
 begin_include
@@ -144,285 +138,319 @@ name|token_buffer
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxtoken
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|init_lex
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|grow_token_buffer
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|tabinit
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|output_headers
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|output_trailers
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|free_symtab
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|open_extra_files
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|int_to_string
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|printable_version
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|fatal
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|fatals
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|warn
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|warni
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|warns
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|warnss
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|warnsss
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|unlex
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|done
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|skip_white_space
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_percent_token
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|lex
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+name|PARAMS
+argument_list|(
+operator|(
 name|void
-name|reader_output_yylsp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|read_declarations
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|copy_definition
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|parse_token_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|parse_start_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|parse_type_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|parse_assoc_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|parse_union_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|parse_expect_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|parse_thong_decl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|copy_action
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|readgram
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|record_rule_line
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|packsymbols
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|output_token_defines
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|packgram
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|read_signed_integer
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|get_type
-parameter_list|()
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -446,6 +474,286 @@ block|}
 name|symbol_list
 typedef|;
 end_typedef
+
+begin_decl_stmt
+name|void
+name|reader
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|reader_output_yylsp
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|read_declarations
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|copy_definition
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse_token_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse_start_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse_type_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse_assoc_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse_union_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse_expect_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|get_type_name
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|symbol_list
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|copy_guard
+name|PARAMS
+argument_list|(
+operator|(
+name|symbol_list
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse_thong_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|copy_action
+name|PARAMS
+argument_list|(
+operator|(
+name|symbol_list
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bucket
+modifier|*
+name|gensym
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|readgram
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|record_rule_line
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|packsymbols
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|output_token_defines
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|packgram
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|read_signed_integer
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static int get_type PARAMS((void));
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -540,6 +848,14 @@ name|errtoken
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|bucket
+modifier|*
+name|undeftoken
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Nonzero if any action or guard uses the @n construct.  */
 end_comment
@@ -551,24 +867,14 @@ name|yylsp_needed
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|version_string
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
 name|skip_to_char
 parameter_list|(
-name|target
-parameter_list|)
 name|int
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -581,13 +887,19 @@ literal|'\n'
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"   Skipping to next \\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 name|warni
 argument_list|(
+name|_
+argument_list|(
 literal|"   Skipping to next %c"
+argument_list|)
 argument_list|,
 name|target
 argument_list|)
@@ -628,7 +940,9 @@ end_function
 begin_function
 name|void
 name|reader
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|start_flag
 operator|=
@@ -742,14 +1056,24 @@ expr_stmt|;
 comment|/* Value specified by posix.  */
 comment|/* construct a token that represents all undefined literal tokens. */
 comment|/* it is always token number 2.  */
+name|undeftoken
+operator|=
 name|getsym
 argument_list|(
 literal|"$undefined."
 argument_list|)
+expr_stmt|;
+name|undeftoken
 operator|->
 name|class
 operator|=
 name|STOKEN
+expr_stmt|;
+name|undeftoken
+operator|->
+name|user_token_number
+operator|=
+literal|2
 expr_stmt|;
 comment|/* Read the declaration section.  Copy %{ ... %} groups to ftable and fdefines file.      Also notice any %token, %left, etc. found there.  */
 if|if
@@ -779,9 +1103,9 @@ name|fprintf
 argument_list|(
 name|ftable
 argument_list|,
-literal|" by  %s  */\n\n"
+literal|"    by %s  */\n\n"
 argument_list|,
-name|version_string
+name|VERSION_STRING
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -846,12 +1170,10 @@ begin_function
 name|void
 name|reader_output_yylsp
 parameter_list|(
-name|f
-parameter_list|)
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -874,7 +1196,9 @@ end_comment
 begin_function
 name|void
 name|read_declarations
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1041,7 +1365,10 @@ break|break;
 default|default:
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"unrecognized: %s"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|)
@@ -1062,7 +1389,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no input grammar"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1077,7 +1407,10 @@ name|sprintf
 argument_list|(
 name|buff
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown character: %s"
+argument_list|)
 argument_list|,
 name|printable_version
 argument_list|(
@@ -1107,7 +1440,9 @@ end_comment
 begin_function
 name|void
 name|copy_definition
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1229,7 +1564,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string at end of file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1241,7 +1579,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ungetc
@@ -1286,7 +1627,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string at end of file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putc
@@ -1478,7 +1822,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated comment in `%{' definition"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1505,7 +1852,10 @@ name|EOF
 case|:
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated `%{' definition"
+argument_list|)
 argument_list|)
 expr_stmt|;
 default|default:
@@ -1560,15 +1910,12 @@ begin_function
 name|void
 name|parse_token_decl
 parameter_list|(
-name|what_is
-parameter_list|,
-name|what_is_not
-parameter_list|)
 name|int
 name|what_is
-decl_stmt|,
+parameter_list|,
+name|int
 name|what_is_not
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1601,8 +1948,9 @@ init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
+name|int
+name|tmp_char
+init|=
 name|ungetc
 argument_list|(
 name|skip_white_space
@@ -1610,10 +1958,27 @@ argument_list|()
 argument_list|,
 name|finput
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tmp_char
 operator|==
 literal|'%'
 condition|)
 return|return;
+if|if
+condition|(
+name|tmp_char
+operator|==
+name|EOF
+condition|)
+name|fatals
+argument_list|(
+literal|"Premature EOF after %s"
+argument_list|,
+name|token_buffer
+argument_list|)
+expr_stmt|;
 name|token
 operator|=
 name|lex
@@ -1770,7 +2135,10 @@ name|what_is_not
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"symbol %s redefined"
+argument_list|)
 argument_list|,
 name|symbol
 operator|->
@@ -1835,7 +2203,10 @@ literal|0
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"type redeclaration for %s"
+argument_list|)
 argument_list|,
 name|symbol
 operator|->
@@ -1869,7 +2240,10 @@ else|else
 block|{
 name|warnss
 argument_list|(
+name|_
+argument_list|(
 literal|"`%s' is invalid in %s"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|,
@@ -1895,13 +2269,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* parse what comes after %thong  	the full syntax is 		%thong<type> token number literal  the<type> or number may be omitted.  The number specifies the  user_token_number.   Two symbols are entered in the table, one for the token symbol and  one for the literal.  Both are given the<type>, if any, from the declaration.  The ->user_token_number of the first is SALIAS and the ->user_token_number  of the second is set to the number, if any, from the declaration.  The two symbols are linked via pointers in their ->alias fields.    during output_defines_table, the symbol is reported  thereafter, only the literal string is retained  it is the literal string that is output to yytname */
+comment|/* parse what comes after %thong 	the full syntax is 		%thong<type> token number literal  the<type> or number may be omitted.  The number specifies the  user_token_number.   Two symbols are entered in the table, one for the token symbol and  one for the literal.  Both are given the<type>, if any, from the declaration.  The ->user_token_number of the first is SALIAS and the ->user_token_number  of the second is set to the number, if any, from the declaration.  The two symbols are linked via pointers in their ->alias fields.   during output_defines_table, the symbol is reported  thereafter, only the literal string is retained  it is the literal string that is output to yytname */
 end_comment
 
 begin_function
 name|void
 name|parse_thong_decl
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1988,7 +2364,10 @@ condition|)
 block|{
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"unrecognized item %s, expected an identifier"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|)
@@ -2068,7 +2447,10 @@ condition|)
 block|{
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"expected string constant instead of %s"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|)
@@ -2124,7 +2506,9 @@ end_comment
 begin_function
 name|void
 name|parse_start_decl
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2132,7 +2516,10 @@ name|start_flag
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"multiple %start declarations"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2144,7 +2531,10 @@ name|IDENTIFIER
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"invalid %start declaration"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2168,7 +2558,9 @@ end_comment
 begin_function
 name|void
 name|parse_type_decl
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2189,7 +2581,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"%type declaration has no<typename>"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|skip_to_char
@@ -2234,8 +2629,9 @@ specifier|register
 name|int
 name|t
 decl_stmt|;
-if|if
-condition|(
+name|int
+name|tmp_char
+init|=
 name|ungetc
 argument_list|(
 name|skip_white_space
@@ -2243,10 +2639,27 @@ argument_list|()
 argument_list|,
 name|finput
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tmp_char
 operator|==
 literal|'%'
 condition|)
 return|return;
+if|if
+condition|(
+name|tmp_char
+operator|==
+name|EOF
+condition|)
+name|fatals
+argument_list|(
+literal|"Premature EOF after %s"
+argument_list|,
+name|token_buffer
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 name|lex
@@ -2297,7 +2710,10 @@ literal|0
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"type redeclaration for %s"
+argument_list|)
 argument_list|,
 name|symval
 operator|->
@@ -2308,7 +2724,10 @@ break|break;
 default|default:
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"invalid %%type declaration due to item: `%s'"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|)
@@ -2335,11 +2754,9 @@ begin_function
 name|void
 name|parse_assoc_decl
 parameter_list|(
-name|assoc
-parameter_list|)
 name|int
 name|assoc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2372,8 +2789,9 @@ specifier|register
 name|int
 name|t
 decl_stmt|;
-if|if
-condition|(
+name|int
+name|tmp_char
+init|=
 name|ungetc
 argument_list|(
 name|skip_white_space
@@ -2381,10 +2799,27 @@ argument_list|()
 argument_list|,
 name|finput
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tmp_char
 operator|==
 literal|'%'
 condition|)
 return|return;
+if|if
+condition|(
+name|tmp_char
+operator|==
+name|EOF
+condition|)
+name|fatals
+argument_list|(
+literal|"Premature EOF after %s"
+argument_list|,
+name|token_buffer
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 name|lex
@@ -2441,7 +2876,10 @@ literal|0
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"redefining precedence of %s"
+argument_list|)
 argument_list|,
 name|symval
 operator|->
@@ -2470,7 +2908,10 @@ name|SNTERM
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"symbol %s redefined"
+argument_list|)
 argument_list|,
 name|symval
 operator|->
@@ -2519,7 +2960,10 @@ literal|0
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"type redeclaration for %s"
+argument_list|)
 argument_list|,
 name|symval
 operator|->
@@ -2553,7 +2997,10 @@ else|else
 block|{
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"invalid text (%s) - number should be after identifier"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|)
@@ -2572,7 +3019,10 @@ return|return;
 default|default:
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected item: %s"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|)
@@ -2598,7 +3048,9 @@ end_comment
 begin_function
 name|void
 name|parse_union_decl
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2621,7 +3073,10 @@ name|typed
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"multiple %union declarations"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|typed
@@ -2841,7 +3296,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated comment at end of file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2921,7 +3379,10 @@ literal|0
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unmatched close-brace (`}')"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|count
@@ -2992,7 +3453,9 @@ end_comment
 begin_function
 name|void
 name|parse_expect_decl
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -3095,7 +3558,10 @@ literal|10
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"argument of %expect is not an integer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|expected_conflicts
@@ -3124,24 +3590,23 @@ name|char
 modifier|*
 name|get_type_name
 parameter_list|(
-name|n
-parameter_list|,
-name|rule
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|,
 name|symbol_list
 modifier|*
 name|rule
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
 modifier|*
 name|msg
 init|=
+name|N_
+argument_list|(
 literal|"invalid $ value"
+argument_list|)
 decl_stmt|;
 specifier|register
 name|int
@@ -3161,7 +3626,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 name|msg
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3204,7 +3672,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 name|msg
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3235,17 +3706,13 @@ begin_function
 name|void
 name|copy_guard
 parameter_list|(
-name|rule
-parameter_list|,
-name|stack_offset
-parameter_list|)
 name|symbol_list
 modifier|*
 name|rule
-decl_stmt|;
+parameter_list|,
 name|int
 name|stack_offset
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -3409,7 +3876,10 @@ else|else
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unmatched right brace (`}')"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -3461,7 +3931,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string at end of file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3473,7 +3946,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ungetc
@@ -3519,7 +3995,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putc
@@ -3711,7 +4190,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated comment"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3778,12 +4260,29 @@ name|c
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|cp
+operator|==
+name|token_buffer
+operator|+
+name|maxtoken
+condition|)
+name|cp
+operator|=
+name|grow_token_buffer
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 operator|*
 name|cp
 operator|++
 operator|=
 name|c
 expr_stmt|;
+block|}
 operator|*
 name|cp
 operator|=
@@ -3850,7 +4349,10 @@ name|typed
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"$$ of `%s' has no declared type"
+argument_list|)
 argument_list|,
 name|rule
 operator|->
@@ -3945,7 +4447,10 @@ name|typed
 condition|)
 name|warnss
 argument_list|(
+name|_
+argument_list|(
 literal|"$%s of `%s' has no declared type"
+argument_list|)
 argument_list|,
 name|int_to_string
 argument_list|(
@@ -3962,9 +4467,12 @@ expr_stmt|;
 continue|continue;
 block|}
 else|else
-name|warni
+name|warns
+argument_list|(
+name|_
 argument_list|(
 literal|"$%s is invalid"
+argument_list|)
 argument_list|,
 name|printable_version
 argument_list|(
@@ -4019,9 +4527,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|warni
+name|warns
+argument_list|(
+name|_
 argument_list|(
 literal|"@%s is invalid"
+argument_list|)
 argument_list|,
 name|printable_version
 argument_list|(
@@ -4055,7 +4566,10 @@ name|EOF
 case|:
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated %%guard clause"
+argument_list|)
 argument_list|)
 expr_stmt|;
 default|default:
@@ -4159,17 +4673,13 @@ begin_function
 name|void
 name|copy_action
 parameter_list|(
-name|rule
-parameter_list|,
-name|stack_offset
-parameter_list|)
 name|symbol_list
 modifier|*
 name|rule
-decl_stmt|;
+parameter_list|,
 name|int
 name|stack_offset
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -4338,7 +4848,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ungetc
@@ -4363,7 +4876,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string at end of file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putc
@@ -4395,7 +4911,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putc
@@ -4587,7 +5106,10 @@ name|EOF
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unterminated comment"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -4654,12 +5176,29 @@ name|c
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|cp
+operator|==
+name|token_buffer
+operator|+
+name|maxtoken
+condition|)
+name|cp
+operator|=
+name|grow_token_buffer
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 operator|*
 name|cp
 operator|++
 operator|=
 name|c
 expr_stmt|;
+block|}
 operator|*
 name|cp
 operator|=
@@ -4731,7 +5270,10 @@ name|typed
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"$$ of `%s' has no declared type"
+argument_list|)
 argument_list|,
 name|rule
 operator|->
@@ -4826,7 +5368,10 @@ name|typed
 condition|)
 name|warnss
 argument_list|(
+name|_
+argument_list|(
 literal|"$%s of `%s' has no declared type"
+argument_list|)
 argument_list|,
 name|int_to_string
 argument_list|(
@@ -4843,9 +5388,12 @@ expr_stmt|;
 continue|continue;
 block|}
 else|else
-name|warni
+name|warns
+argument_list|(
+name|_
 argument_list|(
 literal|"$%s is invalid"
+argument_list|)
 argument_list|,
 name|printable_version
 argument_list|(
@@ -4902,7 +5450,10 @@ else|else
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"invalid @-construct"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|n
@@ -4931,7 +5482,10 @@ name|EOF
 case|:
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unmatched `{'"
+argument_list|)
 argument_list|)
 expr_stmt|;
 default|default:
@@ -4992,7 +5546,9 @@ begin_function
 name|bucket
 modifier|*
 name|gensym
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|bucket
@@ -5044,7 +5600,9 @@ end_comment
 begin_function
 name|void
 name|readgram
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -5054,6 +5612,8 @@ specifier|register
 name|bucket
 modifier|*
 name|lhs
+init|=
+name|NULL
 decl_stmt|;
 specifier|register
 name|symbol_list
@@ -5176,7 +5736,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"ill-formed rule: initial symbol not followed by colon"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|unlex
@@ -5199,7 +5762,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"grammar starts with vertical bar"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lhs
@@ -5295,7 +5861,10 @@ name|STOKEN
 condition|)
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"rule given for %s, which is a token"
+argument_list|)
 argument_list|,
 name|lhs
 operator|->
@@ -5600,7 +6169,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"two @prec's in a row"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t
@@ -5634,7 +6206,10 @@ name|semantic_parser
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"%%guard present but %%semantic_parser not specified"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|copy_guard
@@ -5665,7 +6240,10 @@ name|actionflag
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"two actions at end of one rule"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|copy_action
@@ -5734,7 +6312,10 @@ argument_list|)
 condition|)
 name|warnss
 argument_list|(
+name|_
+argument_list|(
 literal|"type clash (`%s' `%s') on default action"
+argument_list|)
 argument_list|,
 name|lhs
 operator|->
@@ -5776,7 +6357,10 @@ literal|0
 condition|)
 name|warn
 argument_list|(
+name|_
+argument_list|(
 literal|"empty rule for typed nonterminal, and no action"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5803,7 +6387,10 @@ else|else
 block|{
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"invalid input: %s"
+argument_list|)
 argument_list|,
 name|token_buffer
 argument_list|)
@@ -5824,7 +6411,10 @@ name|MAXSHORT
 condition|)
 name|fatals
 argument_list|(
+name|_
+argument_list|(
 literal|"too many symbols (tokens plus nonterminals); maximum %s"
+argument_list|)
 argument_list|,
 name|int_to_string
 argument_list|(
@@ -5840,7 +6430,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no rules in the input grammar"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5900,7 +6493,10 @@ condition|)
 block|{
 name|warns
 argument_list|(
+name|_
+argument_list|(
 literal|"symbol %s is used, but is not defined as a token and has no rules"
+argument_list|)
 argument_list|,
 name|bp
 operator|->
@@ -5933,7 +6529,9 @@ end_function
 begin_function
 name|void
 name|record_rule_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Record each rule's source line number in rline table.  */
 if|if
@@ -5957,6 +6555,10 @@ operator|*
 operator|)
 name|xrealloc
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|rline
 argument_list|,
 name|rline_allocated
@@ -5978,6 +6580,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* read in a %type declaration and record its information for get_type_name to access */
 end_comment
@@ -5986,151 +6594,11 @@ begin_comment
 comment|/* this is unused.  it is only called from the #if 0 part of readgram */
 end_comment
 
-begin_function
-specifier|static
-name|int
-name|get_type
-parameter_list|()
-block|{
-specifier|register
-name|int
-name|k
-decl_stmt|;
-specifier|register
-name|int
-name|t
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|t
-operator|=
-name|lex
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|t
-operator|!=
-name|TYPENAME
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"ill-formed %type declaration"
-argument_list|)
-expr_stmt|;
-return|return
-name|t
-return|;
-block|}
-name|k
-operator|=
-name|strlen
-argument_list|(
-name|token_buffer
-argument_list|)
-expr_stmt|;
-name|name
-operator|=
-name|NEW2
-argument_list|(
-name|k
-operator|+
-literal|1
-argument_list|,
-name|char
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|name
-argument_list|,
-name|token_buffer
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|t
-operator|=
-name|lex
-argument_list|()
-expr_stmt|;
-switch|switch
-condition|(
-name|t
-condition|)
-block|{
-case|case
-name|SEMICOLON
-case|:
-return|return
-operator|(
-name|lex
-argument_list|()
-operator|)
-return|;
-case|case
-name|COMMA
-case|:
-break|break;
-case|case
-name|IDENTIFIER
-case|:
-if|if
-condition|(
-name|symval
-operator|->
-name|type_name
-operator|==
-name|NULL
-condition|)
-name|symval
-operator|->
-name|type_name
-operator|=
-name|name
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-name|symval
-operator|->
-name|type_name
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|warns
-argument_list|(
-literal|"type redeclaration for %s"
-argument_list|,
-name|symval
-operator|->
-name|tag
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-return|return
-operator|(
-name|t
-operator|)
-return|;
-block|}
-block|}
-block|}
-end_function
+begin_endif
+unit|static int get_type (void) {   register int k;   register int t;   register char *name;    t = lex();    if (t != TYPENAME)     {       warn(_("ill-formed %type declaration"));       return t;     }    k = strlen(token_buffer);   name = NEW2(k + 1, char);   strcpy(name, token_buffer);    for (;;)     {       t = lex();        switch (t) 	{ 	case SEMICOLON: 	  return (lex());  	case COMMA: 	  break;  	case IDENTIFIER: 	  if (symval->type_name == NULL) 	    symval->type_name = name; 	  else if (strcmp(name, symval->type_name) != 0) 	    warns(_("type redeclaration for %s"), symval->tag);  	  break;  	default: 	  return (t); 	}     } }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* assign symbol numbers, and write definition of token names into fdefines. Set up vectors tags and sprec of names and precedences of symbols.  */
@@ -6139,7 +6607,9 @@ end_comment
 begin_function
 name|void
 name|packsymbols
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|bucket
@@ -6263,7 +6733,7 @@ operator|->
 name|alias
 condition|)
 block|{
-comment|/* this symbol and its alias are a single token defn. 		  allocate a tokno, and assign to both 		  check agreement of ->prec and ->assoc fields  			and make both the same 		*/
+comment|/* this symbol and its alias are a single token defn. 		  allocate a tokno, and assign to both 		  check agreement of ->prec and ->assoc fields 			and make both the same 		*/
 if|if
 condition|(
 name|bp
@@ -6322,7 +6792,10 @@ name|SALIAS
 condition|)
 name|warnss
 argument_list|(
+name|_
+argument_list|(
 literal|"conflicting precedences for %s and %s"
+argument_list|)
 argument_list|,
 name|bp
 operator|->
@@ -6402,7 +6875,10 @@ name|SALIAS
 condition|)
 name|warnss
 argument_list|(
+name|_
+argument_list|(
 literal|"conflicting assoc values for %s and %s"
+argument_list|)
 argument_list|,
 name|bp
 operator|->
@@ -6642,7 +7118,10 @@ literal|2
 condition|)
 name|warnsss
 argument_list|(
+name|_
+argument_list|(
 literal|"tokens %s and %s both assigned number %s"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -6705,7 +7184,10 @@ name|SUNKNOWN
 condition|)
 name|fatals
 argument_list|(
+name|_
+argument_list|(
 literal|"the start symbol %s is undefined"
+argument_list|)
 argument_list|,
 name|startval
 operator|->
@@ -6723,7 +7205,10 @@ name|STOKEN
 condition|)
 name|fatals
 argument_list|(
+name|_
+argument_list|(
 literal|"the start symbol %s is a token"
+argument_list|)
 argument_list|,
 name|startval
 operator|->
@@ -6830,19 +7315,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* For named tokens, but not literal ones, define the name.      The value is the user token number.   */
+comment|/* For named tokens, but not literal ones, define the name.    The value is the user token number. */
 end_comment
 
 begin_function
 name|void
 name|output_token_defines
 parameter_list|(
-name|file
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|bucket
 modifier|*
@@ -7031,7 +7514,9 @@ end_comment
 begin_function
 name|void
 name|packgram
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -7309,12 +7794,10 @@ begin_function
 name|int
 name|read_signed_integer
 parameter_list|(
-name|stream
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
