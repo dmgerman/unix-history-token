@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.5 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.6 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.5 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.6 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +172,16 @@ begin_comment
 comment|/* pid of mailer */
 end_comment
 
+begin_decl_stmt
+name|bool
+name|SmtpNeedIntro
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* need "while talking" in transcript */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -296,6 +306,10 @@ operator|->
 name|mci_host
 expr_stmt|;
 comment|/* XXX UGLY XXX */
+name|SmtpNeedIntro
+operator|=
+name|TRUE
+expr_stmt|;
 switch|switch
 condition|(
 name|mci
@@ -2941,6 +2955,28 @@ operator|)
 condition|)
 block|{
 comment|/* serious error -- log the previous command */
+if|if
+condition|(
+name|SmtpNeedIntro
+condition|)
+block|{
+comment|/* inform user who we are chatting with */
+name|fprintf
+argument_list|(
+name|CurEnv
+operator|->
+name|e_xfp
+argument_list|,
+literal|"... while talking to %s:\n"
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
+name|SmtpNeedIntro
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|SmtpMsgBuffer
