@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.28	81/03/21	*/
+comment|/*	machdep.c	4.29	81/04/03	*/
 end_comment
 
 begin_include
@@ -1775,11 +1775,11 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 case|case
-name|VAX_730
+name|VAX_7ZZ
 case|:
-name|M730_ENA
+name|M7ZZ_ENA
 argument_list|(
 name|mcr
 argument_list|)
@@ -1939,13 +1939,13 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 case|case
-name|VAX_730
+name|VAX_7ZZ
 case|:
 if|if
 condition|(
-name|M730_ERR
+name|M7ZZ_ERR
 argument_list|(
 name|mcr
 argument_list|)
@@ -1975,20 +1975,20 @@ literal|"mcr%d: soft ecc addr %x syn %x\n"
 argument_list|,
 name|m
 argument_list|,
-name|M730_ADDR
+name|M7ZZ_ADDR
 argument_list|(
 operator|&
 name|amcr
 argument_list|)
 argument_list|,
-name|M730_SYN
+name|M7ZZ_SYN
 argument_list|(
 operator|&
 name|amcr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|M730_INH
+name|M7ZZ_INH
 argument_list|(
 name|mcr
 argument_list|)
@@ -2240,7 +2240,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|VAX730
+name|VAX7ZZ
 argument_list|)
 if|if
 condition|(
@@ -2484,20 +2484,20 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 end_if
 
 begin_define
 define|#
 directive|define
-name|NMC730
+name|NMC7ZZ
 value|12
 end_define
 
 begin_decl_stmt
 name|char
 modifier|*
-name|mc730
+name|mc7ZZ
 index|[]
 init|=
 block|{
@@ -2658,7 +2658,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|mc730frame
+name|mc7ZZframe
 block|{
 name|int
 name|mc3_bcnt
@@ -2785,21 +2785,21 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 case|case
-name|VAX_730
+name|VAX_7ZZ
 case|:
 if|if
 condition|(
 name|type
 operator|<
-name|NMC730
+name|NMC7ZZ
 condition|)
 name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|mc730
+name|mc7ZZ
 index|[
 name|type
 index|]
@@ -3028,20 +3028,20 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 case|case
-name|VAX_730
+name|VAX_7ZZ
 case|:
 block|{
 specifier|register
 name|struct
-name|mc730frame
+name|mc7ZZframe
 modifier|*
 name|mcf
 init|=
 operator|(
 expr|struct
-name|mc730frame
+name|mc7ZZframe
 operator|*
 operator|)
 name|cmcf
