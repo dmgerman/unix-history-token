@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: variable.c,v 1.11 1996/06/12 14:02:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: variable.c,v 1.12 1996/12/09 08:22:19 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -29,7 +29,7 @@ parameter_list|)
 block|{
 name|Variable
 modifier|*
-name|newvar
+name|vp
 decl_stmt|;
 comment|/* Put it in the environment in any case */
 name|setenv
@@ -44,15 +44,15 @@ expr_stmt|;
 comment|/* Now search to see if it's already in the list */
 for|for
 control|(
-name|newvar
+name|vp
 operator|=
 name|VarHead
 init|;
-name|newvar
+name|vp
 condition|;
-name|newvar
+name|vp
 operator|=
-name|newvar
+name|vp
 operator|->
 name|next
 control|)
@@ -62,7 +62,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|newvar
+name|vp
 operator|->
 name|name
 argument_list|,
@@ -79,23 +79,30 @@ name|msgDebug
 argument_list|(
 literal|"variable %s was %s, now %s\n"
 argument_list|,
-name|newvar
+name|vp
 operator|->
 name|name
 argument_list|,
-name|newvar
+name|vp
 operator|->
 name|value
 argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-name|SAFE_STRCPY
+name|free
 argument_list|(
-name|newvar
+name|vp
 operator|->
 name|value
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|value
+operator|=
+name|strdup
+argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
@@ -103,7 +110,7 @@ return|return;
 block|}
 block|}
 comment|/* No?  Create a new one */
-name|newvar
+name|vp
 operator|=
 operator|(
 name|Variable
@@ -117,25 +124,25 @@ name|Variable
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SAFE_STRCPY
-argument_list|(
-name|newvar
+name|vp
 operator|->
 name|name
-argument_list|,
+operator|=
+name|strdup
+argument_list|(
 name|var
 argument_list|)
 expr_stmt|;
-name|SAFE_STRCPY
-argument_list|(
-name|newvar
+name|vp
 operator|->
 name|value
-argument_list|,
+operator|=
+name|strdup
+argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-name|newvar
+name|vp
 operator|->
 name|next
 operator|=
@@ -143,7 +150,7 @@ name|VarHead
 expr_stmt|;
 name|VarHead
 operator|=
-name|newvar
+name|vp
 expr_stmt|;
 if|if
 condition|(
@@ -154,11 +161,11 @@ name|msgDebug
 argument_list|(
 literal|"Setting variable %s to %s\n"
 argument_list|,
-name|newvar
+name|vp
 operator|->
 name|name
 argument_list|,
-name|newvar
+name|vp
 operator|->
 name|value
 argument_list|)
@@ -178,9 +185,7 @@ block|{
 name|char
 name|tmp
 index|[
-name|VAR_NAME_MAX
-operator|+
-name|VAR_VALUE_MAX
+literal|1024
 index|]
 decl_stmt|,
 modifier|*
@@ -342,9 +347,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|VAR_NAME_MAX
-operator|+
-literal|1
+literal|512
 index|]
 decl_stmt|,
 modifier|*
@@ -371,7 +374,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strncpy
+name|sstrncpy
 argument_list|(
 name|name
 argument_list|,
@@ -381,15 +384,6 @@ name|cp
 operator|-
 name|var
 argument_list|)
-expr_stmt|;
-name|name
-index|[
-name|cp
-operator|-
-name|var
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|var
 operator|=
@@ -422,6 +416,20 @@ name|var
 argument_list|)
 condition|)
 block|{
+name|safe_free
+argument_list|(
+name|VarHead
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|safe_free
+argument_list|(
+name|VarHead
+operator|->
+name|value
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|VarHead
@@ -475,6 +483,20 @@ name|vp
 operator|=
 operator|*
 name|save
+expr_stmt|;
+name|safe_free
+argument_list|(
+name|save
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|safe_free
+argument_list|(
+name|save
+operator|->
+name|value
+argument_list|)
 expr_stmt|;
 name|safe_free
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: main.c,v 1.27 1996/09/15 23:55:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: main.c,v 1.32 1996/12/12 08:33:37 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -36,10 +36,8 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\007Fatal signal %d caught!  I'm dead..\n"
 argument_list|,
 name|sig
@@ -181,6 +179,7 @@ if|if
 condition|(
 name|OnVTY
 condition|)
+block|{
 for|for
 control|(
 name|curr
@@ -199,6 +198,19 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+comment|/* Move stderr aside */
+if|if
+condition|(
+name|DebugFD
+condition|)
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Probe for all relevant devices on the system */
 name|deviceGetAll
 argument_list|()
@@ -324,39 +336,38 @@ argument_list|)
 expr_stmt|;
 block|}
 block|{
-name|int
-name|fd
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 name|Attribs
+modifier|*
 name|attrs
-index|[
-literal|512
-index|]
 decl_stmt|;
-name|bzero
-argument_list|(
 name|attrs
-argument_list|,
+operator|=
+name|alloca
+argument_list|(
 sizeof|sizeof
 argument_list|(
-name|attrs
+name|Attribs
 argument_list|)
+operator|*
+name|MAX_ATTRIBS
 argument_list|)
 expr_stmt|;
-name|fd
+name|fp
 operator|=
-name|open
+name|fopen
 argument_list|(
 literal|"install.cfg"
 argument_list|,
-name|O_RDONLY
+literal|"r"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fd
-operator|>=
-literal|0
+name|fp
 condition|)
 block|{
 name|msgNotify
@@ -372,7 +383,7 @@ name|attr_parse
 argument_list|(
 name|attrs
 argument_list|,
-name|fd
+name|fp
 argument_list|)
 argument_list|)
 operator|==
@@ -388,7 +399,6 @@ name|i
 operator|=
 literal|0
 init|;
-operator|*
 name|attrs
 index|[
 name|i
@@ -417,9 +427,9 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
-name|close
+name|fclose
 argument_list|(
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -470,7 +480,7 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-name|fd
+name|fp
 operator|=
 name|mediaDevice
 operator|->
@@ -485,9 +495,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fd
-operator|>
-literal|0
+name|fp
 condition|)
 block|{
 name|msgNotify
@@ -505,7 +513,7 @@ name|attr_parse
 argument_list|(
 name|attrs
 argument_list|,
-name|fd
+name|fp
 argument_list|)
 argument_list|)
 operator|==
@@ -521,7 +529,6 @@ name|i
 operator|=
 literal|0
 init|;
-operator|*
 name|attrs
 index|[
 name|i
@@ -550,13 +557,9 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
-name|mediaDevice
-operator|->
-name|close
+name|fclose
 argument_list|(
-name|mediaDevice
-argument_list|,
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 block|}

@@ -208,9 +208,11 @@ literal|511
 index|]
 decl_stmt|;
 name|int
-name|fd
-decl_stmt|,
 name|ret
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 comment|/* Check to make sure it's not already there */
 if|if
@@ -342,7 +344,7 @@ else|:
 literal|".tgz"
 argument_list|)
 expr_stmt|;
-name|fd
+name|fp
 operator|=
 name|dev
 operator|->
@@ -357,9 +359,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fd
-operator|>=
-literal|0
+name|fp
 condition|)
 block|{
 name|int
@@ -544,13 +544,15 @@ operator|&&
 operator|(
 name|i
 operator|=
-name|read
+name|fread
 argument_list|(
-name|fd
-argument_list|,
 name|buf
 argument_list|,
+literal|1
+argument_list|,
 name|BUFSIZ
+argument_list|,
+name|fp
 argument_list|)
 operator|)
 operator|>
@@ -698,13 +700,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|close
+name|fclose
 argument_list|(
-name|dev
-argument_list|,
-name|fd
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -824,9 +822,7 @@ else|else
 block|{
 name|msgDebug
 argument_list|(
-literal|"pkg_extract: get operation returned %d\n"
-argument_list|,
-name|fd
+literal|"pkg_extract: get returned NULL\n"
 argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
