@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	5.3 (Berkeley) %G%"
+literal|"@(#)find.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,28 +103,6 @@ decl_stmt|,
 modifier|*
 name|new
 decl_stmt|;
-name|PLAN
-modifier|*
-name|c_print
-argument_list|()
-decl_stmt|,
-modifier|*
-name|find_create
-argument_list|()
-decl_stmt|,
-modifier|*
-name|not_squish
-argument_list|()
-decl_stmt|,
-modifier|*
-name|or_squish
-argument_list|()
-decl_stmt|;
-name|PLAN
-modifier|*
-name|paren_squish
-parameter_list|()
-function_decl|;
 comment|/* 	 * for each argument in the command line, determine what kind of node 	 * it is, create the appropriate node type and add the new plan node 	 * to the end of the existing plan.  The resulting plan is a linked 	 * list of plan nodes.  For example, the string: 	 * 	 *	% find . -name foo -newer bar -print 	 * 	 * results in the plan: 	 * 	 *	[-name foo]--> [-newer bar]--> [-print] 	 * 	 * in this diagram, `[-name foo]' represents the plan node generated 	 * by c_name() with an argument of foo and `-->' represents the 	 * plan->next pointer. 	 */
 for|for
 control|(
