@@ -1430,19 +1430,11 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-operator|(
-name|ofs
-operator|>=
-literal|0
-operator|)
-operator|&&
-operator|(
 name|ofs
 operator|<=
 name|b
 operator|->
 name|bufsize
-operator|)
 argument_list|,
 operator|(
 literal|"%s: ofs invalid %d"
