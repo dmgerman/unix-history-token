@@ -7275,6 +7275,17 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|NDINIT
 argument_list|(
 operator|&
