@@ -852,13 +852,10 @@ name|nd_ifinfo
 modifier|*
 name|ndi
 init|=
-operator|&
-name|nd_ifinfo
-index|[
+name|ND_IFINFO
+argument_list|(
 name|ifp
-operator|->
-name|if_index
-index|]
+argument_list|)
 decl_stmt|;
 name|struct
 name|ip6_hdr

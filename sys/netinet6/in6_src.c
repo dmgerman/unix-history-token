@@ -1012,13 +1012,11 @@ name|ifp
 condition|)
 return|return
 operator|(
-name|nd_ifinfo
-index|[
+name|ND_IFINFO
+argument_list|(
 name|ifp
+argument_list|)
 operator|->
-name|if_index
-index|]
-operator|.
 name|chlim
 operator|)
 return|;

@@ -205,6 +205,10 @@ comment|/* CurHopLimit */
 name|u_int8_t
 name|receivedra
 decl_stmt|;
+name|u_int8_t
+name|initialized
+decl_stmt|;
+comment|/* Flag to see the entry is initialized */
 comment|/* the following 3 members are for privacy extension for addrconf */
 name|u_int8_t
 name|randomseed0
@@ -244,6 +248,39 @@ directive|define
 name|ND6_IFF_ACCEPT_RTADV
 value|0x2
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ND_IFINFO
+parameter_list|(
+name|ifp
+parameter_list|)
+define|\
+value|(((struct in6_ifextra *)(ifp)->if_afdata[AF_INET6])->nd_ifinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_LINKMTU
+parameter_list|(
+name|ifp
+parameter_list|)
+define|\
+value|((ND_IFINFO(ifp)->linkmtu&& ND_IFINFO(ifp)->linkmtu< (ifp)->if_mtu) \ 	    ? ND_IFINFO(ifp)->linkmtu \ 	    : ((ND_IFINFO(ifp)->maxmtu&& ND_IFINFO(ifp)->maxmtu< (ifp)->if_mtu) \ 		? ND_IFINFO(ifp)->maxmtu : (ifp)->if_mtu))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -1403,13 +1440,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|nd_ifinfo
+modifier|*
 name|nd6_ifattach
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nd6_ifdetach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nd_ifinfo
 operator|*
 operator|)
 argument_list|)

@@ -454,6 +454,11 @@ init|=
 literal|0x8800000
 block|,
 comment|/* domains (address families?)*/
+name|SI_SUB_PROTO_IFATTACHDOMAIN
+init|=
+literal|0x8800001
+block|,
+comment|/* domain dependent data init*/
 name|SI_SUB_PROTO_END
 init|=
 literal|0x8ffffff

@@ -29,6 +29,12 @@ name|mbuf
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|domain
@@ -115,6 +121,33 @@ name|int
 name|dom_maxrtkey
 decl_stmt|;
 comment|/* for routing layer */
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|dom_ifattach
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|dom_ifdetach
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* af-dependent data on ifnet */
 block|}
 struct|;
 end_struct

@@ -537,6 +537,13 @@ name|label
 name|if_label
 decl_stmt|;
 comment|/* interface MAC label */
+name|void
+modifier|*
+name|if_afdata
+index|[
+name|AF_MAX
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -248,6 +248,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/scope6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/in6_ifattach.h>
 end_include
 
@@ -797,6 +803,9 @@ operator|&
 name|ip6intrq
 argument_list|)
 expr_stmt|;
+name|scope6_init
+argument_list|()
+expr_stmt|;
 name|nd6_init
 argument_list|()
 expr_stmt|;
@@ -835,18 +844,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-comment|/* 	 * to route local address of p2p link to loopback, 	 * assign loopback address first. 	 */
-name|in6_ifattach
-argument_list|(
-operator|&
-name|loif
-index|[
-literal|0
-index|]
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* nd6_timer_init */
 name|callout_init
 argument_list|(

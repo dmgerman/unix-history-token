@@ -1087,12 +1087,16 @@ argument_list|)
 operator|<<
 literal|3
 block|,
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 expr|struct
 name|sockaddr_in6
-operator|)
-block|}
+argument_list|)
+block|,
+name|in6_domifattach
+block|,
+name|in6_domifdetach
+block|, }
 decl_stmt|;
 end_decl_stmt
 
