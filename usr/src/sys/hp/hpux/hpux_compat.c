@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.42 92/01/20$  *  *	@(#)hpux_compat.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.43 92/04/23$  *  *	@(#)hpux_compat.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Various HPUX compatibility routines  */
+comment|/*  * Various HP-UX compatibility routines  */
 end_comment
 
 begin_ifdef
@@ -552,7 +552,7 @@ index|[]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"HPUX %s("
+literal|"HP-UX %s("
 argument_list|,
 name|hpuxsyscallnames
 index|[
@@ -733,7 +733,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * HPUX versions of wait and wait3 actually pass the parameters  * (status pointer, options, rusage) into the kernel rather than  * handling it in the C library stub.  We also need to map any  * termination signal from BSD to HPUX.  */
+comment|/*  * HP-UX versions of wait and wait3 actually pass the parameters  * (status pointer, options, rusage) into the kernel rather than  * handling it in the C library stub.  We also need to map any  * termination signal from BSD to HP-UX.  */
 end_comment
 
 begin_macro
@@ -2175,7 +2175,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * 4.3bsd dup allows dup2 to come in on the same syscall entry  * and hence allows two arguments.  HPUX dup has only one arg.  */
+comment|/*  * 4.3bsd dup allows dup2 to come in on the same syscall entry  * and hence allows two arguments.  HP-UX dup has only one arg.  */
 end_comment
 
 begin_macro
@@ -2530,6 +2530,20 @@ operator|=
 literal|'5'
 expr_stmt|;
 break|break;
+comment|/* includes 425 */
+case|case
+name|HP_380
+case|:
+name|protoutsname
+operator|.
+name|machine
+index|[
+literal|6
+index|]
+operator|=
+literal|'8'
+expr_stmt|;
+break|break;
 block|}
 comment|/* copy hostname (sans domain) to nodename */
 for|for
@@ -2788,7 +2802,7 @@ break|break;
 default|default:
 name|uprintf
 argument_list|(
-literal|"HPUX sysconf(%d) not implemented\n"
+literal|"HP-UX sysconf(%d) not implemented\n"
 argument_list|,
 name|uap
 operator|->
@@ -3970,6 +3984,12 @@ directive|ifdef
 name|SYSVSHM
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|"shm.h"
+end_include
+
 begin_macro
 name|hpuxshmat
 argument_list|(
@@ -4004,52 +4024,6 @@ block|{
 return|return
 operator|(
 name|shmat
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|hpuxshmctl
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-modifier|*
-name|uap
-decl_stmt|,
-modifier|*
-name|retval
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|shmctl
 argument_list|(
 name|p
 argument_list|,
@@ -4142,6 +4116,172 @@ block|{
 return|return
 operator|(
 name|shmget
+argument_list|(
+name|p
+argument_list|,
+name|uap
+argument_list|,
+name|retval
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Handle HP-UX specific commands.  */
+end_comment
+
+begin_macro
+name|hpuxshmctl
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|args
+block|{
+name|int
+name|shmid
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|caddr_t
+name|buf
+decl_stmt|;
+block|}
+modifier|*
+name|uap
+struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|shmid_ds
+modifier|*
+name|shp
+decl_stmt|;
+specifier|register
+name|struct
+name|ucred
+modifier|*
+name|cred
+init|=
+name|p
+operator|->
+name|p_ucred
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|shmvalid
+argument_list|(
+name|uap
+operator|->
+name|shmid
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|shp
+operator|=
+operator|&
+name|shmsegs
+index|[
+name|uap
+operator|->
+name|shmid
+operator|%
+name|SHMMMNI
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|uap
+operator|->
+name|cmd
+operator|==
+name|SHM_LOCK
+operator|||
+name|uap
+operator|->
+name|cmd
+operator|==
+name|SHM_UNLOCK
+condition|)
+block|{
+comment|/* don't really do anything, but make them think we did */
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_uid
+operator|&&
+name|cred
+operator|->
+name|cr_uid
+operator|!=
+name|shp
+operator|->
+name|shm_perm
+operator|.
+name|uid
+operator|&&
+name|cred
+operator|->
+name|cr_uid
+operator|!=
+name|shp
+operator|->
+name|shm_perm
+operator|.
+name|cuid
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|shmctl
 argument_list|(
 name|p
 argument_list|,
@@ -4337,7 +4477,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* convert from BSD to HPUX errno */
+comment|/* convert from BSD to HP-UX errno */
 end_comment
 
 begin_macro
@@ -5038,7 +5178,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * HPUX ioctl system call.  The differences here are:  *	IOC_IN also means IOC_VOID if the size portion is zero.  *	no FIOCLEX/FIONCLEX/FIOASYNC/FIOGETOWN/FIOSETOWN  *	the sgttyb struct is 2 bytes longer  */
+comment|/*  * HP-UX ioctl system call.  The differences here are:  *	IOC_IN also means IOC_VOID if the size portion is zero.  *	no FIOCLEX/FIONCLEX/FIOASYNC/FIOGETOWN/FIOSETOWN  *	the sgttyb struct is 2 bytes longer  */
 end_comment
 
 begin_macro
@@ -6854,7 +6994,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Brutal hack!  Map HPUX u-area offsets into BSD u offsets.  * No apologies offered, if you don't like it, rewrite it!  */
+comment|/*  * Brutal hack!  Map HP-UX u-area offsets into BSD u offsets.  * No apologies offered, if you don't like it, rewrite it!  */
 end_comment
 
 begin_decl_stmt
@@ -7113,7 +7253,7 @@ operator|)
 name|kstack
 operator|)
 expr_stmt|;
-comment|/* 	 * 68020 registers. 	 * We know that the HPUX registers are in the same order as ours. 	 * The only difference is that their PS is 2 bytes instead of a 	 * padded 4 like ours throwing the alignment off. 	 */
+comment|/* 	 * 68020 registers. 	 * We know that the HP-UX registers are in the same order as ours. 	 * The only difference is that their PS is 2 bytes instead of a 	 * padded 4 like ours throwing the alignment off. 	 */
 if|if
 condition|(
 name|off
@@ -7247,7 +7387,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Kludge up a uarea dump so that HPUX debuggers can find out  * what they need.  IMPORTANT NOTE: we do not EVEN attempt to  * convert the entire user struct.  */
+comment|/*  * Kludge up a uarea dump so that HP-UX debuggers can find out  * what they need.  IMPORTANT NOTE: we do not EVEN attempt to  * convert the entire user struct.  */
 end_comment
 
 begin_macro
@@ -7397,7 +7537,7 @@ name|hpux_exec
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Adjust user's saved registers (on kernel stack) to reflect 	 * HPUX order.  Note that HPUX saves the SR as 2 bytes not 4 	 * so we have to move it up. 	 */
+comment|/* 	 * Adjust user's saved registers (on kernel stack) to reflect 	 * HP-UX order.  Note that HP-UX saves the SR as 2 bytes not 4 	 * so we have to move it up. 	 */
 name|faku
 operator|->
 name|hpuxu_ar0
@@ -7453,7 +7593,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FPCOPROC
-comment|/* 	 * Copy 68881 registers from our PCB format to HPUX format 	 */
+comment|/* 	 * Copy 68881 registers from our PCB format to HP-UX format 	 */
 name|bp
 operator|=
 operator|(
