@@ -1,25 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)conn.c	5.10 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -338,29 +317,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCP_CALLBACK
-value|8
+name|PCP_CITY
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCP_CITY
-value|10
+name|PCP_PASSWORD
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCP_RPHONE
-value|12
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
 name|NPCFIELDS
-value|15
+value|23
 end_define
 
 begin_decl_stmt
@@ -381,38 +360,55 @@ literal|"1200"
 block|,
 name|CNULL
 block|,
-comment|/*<--- **** Welcome to Telenet PC Pursuit ***** */
+name|CNULL
+block|,
+literal|"P_ZERO"
+block|,
+comment|/* Telenet insists on zero parity */
 literal|"ABORT"
 block|,
-literal|"Good"
+literal|"BUSY"
 block|,
-comment|/* Abort of Good bye! */
-literal|")"
-block|,
-comment|/*<--- Enter your 7-digit phone number (xxx-xxxx) */
+comment|/* Abort on Busy Signal */
 name|CNULL
 block|,
-comment|/* ---> 528-1234 */
-literal|"call?"
+literal|"\\d\\d\\r\\d\\r"
 block|,
-comment|/*<--- Which city do you wish to call? */
-name|CNULL
+comment|/* Get telenet's attention */
+literal|"TERMINAL=~3-\r-TERM~3-\r-TERM~5"
 block|,
-comment|/* ---> CHICAGO */
-literal|")"
+comment|/* Terminal type ? */
+literal|"\\r"
 block|,
-comment|/*<--- Enter the phone number you wish to call (xxx-xxxx) */
-name|CNULL
+literal|"@"
 block|,
-comment|/* ---> 690-7171 */
-literal|"R)?"
+comment|/* telenet's prompt */
+literal|"D/DCWAS/21,telenetloginstring"
 block|,
-comment|/*<--- You are #1 in the queue. Do you want to wait, or Restart (Y/N/R)? */
-literal|"Y"
+comment|/* overwritten later */
+literal|"PASSWORD"
 block|,
 name|CNULL
-comment|/*<--- .....Good Bye! */
-block|}
+block|,
+comment|/* telenet password */
+literal|"CONNECTED"
+block|,
+comment|/* We're now talking to a Hayes in the remote city */
+literal|"ATZ"
+block|,
+comment|/* Reset it */
+literal|"OK"
+block|,
+literal|"ATDT6907171"
+block|,
+comment|/* overwritten */
+literal|"CONNECT"
+block|,
+literal|"\\d\\r"
+block|,
+comment|/* We're in !*/
+name|CNULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -421,7 +417,7 @@ specifier|static
 name|char
 name|PCP_brand
 index|[
-literal|20
+literal|25
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -786,37 +782,71 @@ name|dev
 operator|.
 name|D_calldev
 expr_stmt|;
+name|sprintf
+argument_list|(
 name|PCFlds
 index|[
-name|PCP_CALLBACK
+name|PCP_CITY
 index|]
-operator|=
+argument_list|,
+literal|"c d/%s%s,%s"
+argument_list|,
+name|Flds
+index|[
+name|F_CLASS
+index|]
+argument_list|,
+name|index
+argument_list|(
+name|Flds
+index|[
+name|F_CLASS
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|==
+name|NULL
+condition|?
+literal|"/12"
+else|:
+literal|""
+argument_list|,
 name|dev
 operator|.
 name|D_arg
 index|[
 name|D_CHAT
 index|]
+argument_list|)
 expr_stmt|;
 name|PCFlds
 index|[
-name|PCP_CITY
+name|PCP_PASSWORD
 index|]
 operator|=
-name|Flds
-index|[
-name|F_CLASS
-index|]
+name|dev
+operator|.
+name|D_line
 expr_stmt|;
+name|strncpy
+argument_list|(
+operator|&
 name|PCFlds
 index|[
 name|PCP_RPHONE
 index|]
-operator|=
+index|[
+literal|4
+index|]
+argument_list|,
 name|Flds
 index|[
 name|F_PHONE
 index|]
+argument_list|,
+literal|7
+argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -845,7 +875,14 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
+name|rmlock
+argument_list|(
+name|PCP
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|Dcf
 operator|=
 name|fcode
@@ -861,43 +898,25 @@ argument_list|,
 name|Dcf
 argument_list|)
 expr_stmt|;
-name|clsacu
-argument_list|()
-expr_stmt|;
-comment|/* Hang up, they'll call back */
 if|if
 condition|(
 name|fcode
-operator|!=
+operator|==
 name|SUCCESS
 condition|)
-block|{
+break|break;
 name|fcode
 operator|=
 name|CF_DIAL
 expr_stmt|;
-continue|continue;
-block|}
-name|Flds
-index|[
-name|F_CLASS
-index|]
-operator|=
-name|dev
-operator|.
-name|D_class
+name|rmlock
+argument_list|(
+name|PCP
+argument_list|)
 expr_stmt|;
-name|Flds
-index|[
-name|F_PHONE
-index|]
-operator|=
-name|dev
-operator|.
-name|D_line
-expr_stmt|;
-block|}
 comment|/* end PC Pursuit */
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -911,7 +930,13 @@ operator|)
 operator|>
 literal|0
 condition|)
+block|{
+name|Dcf
+operator|=
+name|fcode
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -932,62 +957,6 @@ name|fcode
 else|:
 name|nf
 return|;
-block|}
-name|Dcf
-operator|=
-name|fcode
-expr_stmt|;
-if|if
-condition|(
-name|fcode
-operator|>=
-literal|0
-operator|&&
-name|snccmp
-argument_list|(
-name|LineType
-argument_list|,
-name|PCP
-argument_list|)
-operator|==
-name|SAME
-condition|)
-block|{
-name|AbortOn
-operator|=
-literal|"Good"
-expr_stmt|;
-comment|/* .... Good Bye */
-name|fcode
-operator|=
-name|expect
-argument_list|(
-literal|"****~300"
-argument_list|,
-name|Dcf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fcode
-operator|!=
-name|SUCCESS
-condition|)
-block|{
-name|DEBUG
-argument_list|(
-literal|4
-argument_list|,
-literal|"\nexpect timed out\n"
-argument_list|,
-name|CNULL
-argument_list|)
-expr_stmt|;
-name|fcode
-operator|=
-name|CF_DIAL
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2083,6 +2052,16 @@ index|[
 name|k
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|want
+operator|==
+name|NULL
+condition|)
+name|want
+operator|=
+literal|""
+expr_stmt|;
 name|ok
 operator|=
 name|FAIL
@@ -2242,9 +2221,24 @@ operator|==
 name|ABORT
 condition|)
 block|{
+name|char
+name|sbuf
+index|[
+name|MAXFULLNAME
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|sbuf
+argument_list|,
+literal|"LOGIN ABORTED on \"%s\""
+argument_list|,
+name|AbortOn
+argument_list|)
+expr_stmt|;
 name|logent
 argument_list|(
-literal|"LOGIN ABORTED"
+name|sbuf
 argument_list|,
 name|_FAILED
 argument_list|)
