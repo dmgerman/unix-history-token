@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.23 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2110,7 +2110,7 @@ operator|=
 operator|&
 name|namebuf
 index|[
-name|BUFSIZ
+name|MAXPATHLEN
 operator|-
 literal|1
 index|]
@@ -2301,7 +2301,7 @@ argument_list|,
 operator|&
 name|namebuf
 index|[
-name|BUFSIZ
+name|MAXPATHLEN
 index|]
 operator|-
 name|cp
