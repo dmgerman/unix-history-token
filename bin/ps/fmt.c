@@ -621,9 +621,6 @@ name|cmd
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|cp
