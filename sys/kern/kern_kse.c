@@ -2843,20 +2843,6 @@ argument_list|,
 name|newkg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_sflag
-operator|&
-name|PS_NEEDSIGCHK
-condition|)
-name|newke
-operator|->
-name|ke_flags
-operator||=
-name|KEF_ASTPENDING
-expr_stmt|;
 comment|/* Add engine */
 name|kse_reassign
 argument_list|(
@@ -4400,18 +4386,13 @@ block|{
 comment|/* Current always do via ast() */
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
-operator||=
-name|KEF_ASTPENDING
-expr_stmt|;
-comment|/* XXX TDF_ASTPENDING */
-name|td
-operator|->
 name|td_flags
 operator||=
+operator|(
 name|TDF_USTATCLOCK
+operator||
+name|TDF_ASTPENDING
+operator|)
 expr_stmt|;
 name|td
 operator|->

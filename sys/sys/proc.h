@@ -635,6 +635,10 @@ modifier|*
 name|td_standin
 decl_stmt|;
 comment|/* (?) Use this for an upcall */
+name|u_int
+name|td_prticks
+decl_stmt|;
+comment|/* (?) Profclock hits in sys for user */
 name|struct
 name|kse_upcall
 modifier|*
@@ -868,6 +872,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_ASTPENDING
+value|0x000800
+end_define
+
+begin_comment
+comment|/* Thread has some asynchronous events. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_TIMOFAIL
 value|0x001000
 end_define
@@ -896,6 +911,28 @@ end_define
 
 begin_comment
 comment|/* Stat clock hits in userland. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_OWEUPC
+value|0x008000
+end_define
+
+begin_comment
+comment|/* Owe thread an addupc() call at next AST. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_NEEDRESCHED
+value|0x010000
+end_define
+
+begin_comment
+comment|/* Process needs to yield. */
 end_comment
 
 begin_define
@@ -1369,17 +1406,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KEF_OWEUPC
-value|0x008000
-end_define
-
-begin_comment
-comment|/* Owe thread an addupc() call at next ast. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|KEF_IDLEKSE
 value|0x00004
 end_define
@@ -1397,28 +1423,6 @@ end_define
 
 begin_comment
 comment|/* Process is not officially in the kernel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_ASTPENDING
-value|0x00400
-end_define
-
-begin_comment
-comment|/* KSE has a pending ast. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_NEEDRESCHED
-value|0x00800
-end_define
-
-begin_comment
-comment|/* Process needs to yield. */
 end_comment
 
 begin_define

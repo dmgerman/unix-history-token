@@ -2356,11 +2356,9 @@ argument_list|)
 expr_stmt|;
 name|curthread
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_ASTPENDING
+name|TDF_ASTPENDING
 expr_stmt|;
 name|curthread
 operator|->

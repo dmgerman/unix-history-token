@@ -467,11 +467,9 @@ name|PS_ALRMPEND
 expr_stmt|;
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_ASTPENDING
+name|TDF_ASTPENDING
 expr_stmt|;
 block|}
 if|if
@@ -513,11 +511,9 @@ name|PS_PROFPEND
 expr_stmt|;
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_ASTPENDING
+name|TDF_ASTPENDING
 expr_stmt|;
 block|}
 block|}
@@ -1396,6 +1392,10 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 if|if
 condition|(
 name|CLKF_USERMODE
@@ -1433,8 +1433,6 @@ condition|)
 name|addupc_intr
 argument_list|(
 name|td
-operator|->
-name|td_kse
 argument_list|,
 name|CLKF_PC
 argument_list|(

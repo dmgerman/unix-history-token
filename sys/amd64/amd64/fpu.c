@@ -1116,11 +1116,9 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_ASTPENDING
+name|TDF_ASTPENDING
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(

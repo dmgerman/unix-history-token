@@ -522,7 +522,7 @@ block|{
 name|int
 name|id
 decl_stmt|;
-comment|/* 	 * signotify() has already set KEF_ASTPENDING and PS_NEEDSIGCHECK on 	 * this process, so all we need to do is poke it if it is currently 	 * executing so that it executes ast(). 	 */
+comment|/* 	 * signotify() has already set TDF_ASTPENDING and PS_NEEDSIGCHECK on 	 * this process, so all we need to do is poke it if it is currently 	 * executing so that it executes ast(). 	 */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -709,11 +709,9 @@ condition|)
 block|{
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_NEEDRESCHED
+name|TDF_NEEDRESCHED
 expr_stmt|;
 name|map
 operator||=

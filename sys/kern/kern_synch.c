@@ -1779,15 +1779,6 @@ operator|->
 name|td_proc
 decl_stmt|;
 comment|/* XXX */
-name|struct
-name|kse
-modifier|*
-name|ke
-init|=
-name|td
-operator|->
-name|td_kse
-decl_stmt|;
 name|u_int
 name|sched_nest
 decl_stmt|;
@@ -1943,11 +1934,11 @@ name|p_sflag
 operator||=
 name|PS_XCPU
 expr_stmt|;
-name|ke
+name|td
 operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_ASTPENDING
+name|TDF_ASTPENDING
 expr_stmt|;
 block|}
 comment|/* 	 * Finish up stats for outgoing thread. 	 */

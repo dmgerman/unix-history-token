@@ -1973,11 +1973,9 @@ else|else
 block|{
 name|curthread
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_NEEDRESCHED
+name|TDF_NEEDRESCHED
 expr_stmt|;
 block|}
 block|}

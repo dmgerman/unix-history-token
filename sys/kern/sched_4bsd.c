@@ -474,11 +474,9 @@ name|td_kse
 condition|)
 name|curthread
 operator|->
-name|td_kse
-operator|->
-name|ke_flags
+name|td_flags
 operator||=
-name|KEF_NEEDRESCHED
+name|TDF_NEEDRESCHED
 expr_stmt|;
 block|}
 end_function
@@ -1733,12 +1731,12 @@ name|ke_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
-name|ke
+name|td
 operator|->
-name|ke_flags
+name|td_flags
 operator|&=
 operator|~
-name|KEF_NEEDRESCHED
+name|TDF_NEEDRESCHED
 expr_stmt|;
 comment|/* 	 * At the last moment, if this thread is still marked RUNNING, 	 * then put it back on the run queue as it has not been suspended 	 * or stopped or any thing else similar. 	 */
 if|if
