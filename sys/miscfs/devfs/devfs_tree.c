@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.37 1997/07/14 04:53:52 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.38 1997/08/26 17:17:52 julian Exp $  */
 end_comment
 
 begin_include
@@ -3129,7 +3129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Create a vnode for a block device.  * Used for root filesystem, argdev, and swap areas.  * Also used for memory file system special devices.  */
+comment|/*   * Create a vnode for a block device.  * Used for root filesystem and swap areas.  * Also used for memory file system special devices.  */
 end_comment
 
 begin_function
