@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.35 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.35.1.1 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.35 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.35.1.1 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1812,7 +1812,11 @@ name|sendall
 argument_list|(
 name|e
 argument_list|,
-name|SM_DEFAULT
+name|Verbose
+condition|?
+name|SM_DELIVER
+else|:
+name|SM_QUEUE
 argument_list|)
 expr_stmt|;
 name|e
@@ -1831,6 +1835,11 @@ name|ADDRESS
 operator|*
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+name|unlockqueue
+argument_list|(
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* issue success if appropriate and reset */
@@ -1856,6 +1865,27 @@ name|e_flags
 operator|&=
 operator|~
 name|EF_FATALERRS
+expr_stmt|;
+comment|/* now make it really happen */
+if|if
+condition|(
+operator|!
+name|Verbose
+operator|&&
+name|e
+operator|->
+name|e_sendmode
+operator|!=
+name|SM_QUEUE
+condition|)
+name|dowork
+argument_list|(
+name|id
+argument_list|,
+name|TRUE
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 comment|/* if in a child, pop back to our parent */
 if|if
