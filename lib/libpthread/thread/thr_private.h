@@ -514,6 +514,10 @@ directive|define
 name|KF_INITIALIZED
 value|0x0002
 comment|/* initialized on 1st upcall */
+define|#
+directive|define
+name|KF_TERMINATED
+value|0x0004
 name|int
 name|k_idle
 decl_stmt|;

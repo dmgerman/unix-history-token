@@ -4267,6 +4267,18 @@ name|kg_threadcount
 operator|!=
 literal|0
 operator|)
+operator|&&
+operator|(
+operator|(
+name|curkse
+operator|->
+name|k_flags
+operator|&
+name|KF_TERMINATED
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 		 * Wait for a thread to become active or until there are 		 * no more threads. 		 */
@@ -4300,6 +4312,7 @@ block|}
 comment|/* Check for no more threads: */
 if|if
 condition|(
+operator|(
 name|curkse
 operator|->
 name|k_kseg
@@ -4307,6 +4320,19 @@ operator|->
 name|kg_threadcount
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|curkse
+operator|->
+name|k_flags
+operator|&
+name|KF_TERMINATED
+operator|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 		 * Normally this shouldn't return, but it will if there 		 * are other KSEs running that create new threads that 		 * are assigned to this KSE[G].  For instance, if a scope 		 * system thread were to create a scope process thread 		 * and this kse[g] is the initial kse[g], then that newly 		 * created thread would be assigned to us (the initial 		 * kse[g]). 		 */
@@ -7714,15 +7740,26 @@ directive|endif
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|NOT_YET
-comment|/* 		 * In future, we might allow program to kill 		 * kse in initial group. 		 */
+comment|/* 		 * We allow program to kill kse in initial group (by 		 * lowering the concurrency). 		 */
 if|if
 condition|(
+operator|(
 name|kse
 operator|!=
 name|_kse_initial
+operator|)
+operator|&&
+operator|(
+operator|(
+name|kse
+operator|->
+name|k_flags
+operator|&
+name|KF_TERMINATED
+operator|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|KSE_SCHED_LOCK
@@ -7795,8 +7832,6 @@ literal|"kse_exit() failed for initial kseg"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|KSE_SCHED_LOCK
 argument_list|(
 name|kse
