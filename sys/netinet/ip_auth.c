@@ -1995,7 +1995,7 @@ name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fr_info_t
+name|frauth_t
 argument_list|)
 argument_list|)
 expr_stmt|;

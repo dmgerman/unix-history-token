@@ -456,6 +456,9 @@ decl_stmt|;
 name|u_32_t
 name|ftps_seq
 decl_stmt|;
+name|u_32_t
+name|ftps_len
+decl_stmt|;
 name|int
 name|ftps_junk
 decl_stmt|;

@@ -1745,6 +1745,10 @@ name|u_long
 name|fr_badsrc
 decl_stmt|;
 comment|/* source received doesn't match route */
+name|u_long
+name|fr_badttl
+decl_stmt|;
+comment|/* TTL in packet doesn't reach minimum */
 if|#
 directive|if
 name|SOLARIS
@@ -4311,6 +4315,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|fr_chksrc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_minttl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_minttllog
 decl_stmt|;
 end_decl_stmt
 

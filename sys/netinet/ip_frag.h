@@ -47,6 +47,10 @@ name|struct
 name|in_addr
 name|ipfr_dst
 decl_stmt|;
+name|void
+modifier|*
+name|ipfr_ifp
+decl_stmt|;
 name|u_short
 name|ipfr_id
 decl_stmt|;
@@ -356,6 +360,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* (BSD>= 199306) || SOLARIS */
+end_comment
 
 begin_endif
 endif|#
