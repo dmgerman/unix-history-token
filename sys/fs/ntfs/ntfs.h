@@ -888,11 +888,15 @@ name|bootfile
 name|ntm_bootfile
 decl_stmt|;
 name|struct
-name|cdev
+name|g_consumer
 modifier|*
-name|ntm_dev
+name|ntm_cp
 decl_stmt|;
-comment|/* device mounted */
+name|struct
+name|bufobj
+modifier|*
+name|ntm_bo
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*
