@@ -4081,7 +4081,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Note that we have to be careful here to avoid a race between checking  * procrunnable() and actually halting.  If we don't do this, we may waste  * the time between calling hlt and the next interrupt even though there  * is a runnable process.  */
+comment|/*  * Note that we have to be careful here to avoid a race between checking  * kserunnable() and actually halting.  If we don't do this, we may waste  * the time between calling hlt and the next interrupt even though there  * is a runnable process.  */
 end_comment
 
 begin_function
