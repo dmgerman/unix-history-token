@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1361,12 +1361,13 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|om
+name|caddr_t
+name|optp
 init|=
-literal|0
+name|NULL
+decl_stmt|;
+name|int
+name|optlen
 decl_stmt|;
 name|int
 name|len
@@ -1415,6 +1416,18 @@ init|=
 literal|0
 decl_stmt|,
 name|iss
+init|=
+literal|0
+decl_stmt|;
+name|u_long
+name|tiwin
+decl_stmt|,
+name|ts_val
+decl_stmt|,
+name|ts_ecr
+decl_stmt|;
+name|int
+name|ts_present
 init|=
 literal|0
 decl_stmt|;
