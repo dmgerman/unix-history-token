@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,25 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)20b.c	5.1 (Berkeley) %G%"
+literal|"@(#)20b.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSIZE
+value|(20 * 512)
+end_define
 
 begin_function
 name|main
@@ -64,13 +77,6 @@ name|cc
 decl_stmt|,
 name|want
 decl_stmt|;
-name|int
-name|bsize
-init|=
-literal|20
-operator|*
-literal|512
-decl_stmt|;
 name|char
 modifier|*
 name|alloca
@@ -80,14 +86,14 @@ name|base
 operator|=
 name|alloca
 argument_list|(
-name|bsize
+name|BSIZE
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|cc
 operator|=
-name|bsize
+name|BSIZE
 init|;
 name|cc
 operator|>
@@ -103,7 +109,7 @@ for|for
 control|(
 name|want
 operator|=
-name|bsize
+name|BSIZE
 init|;
 name|want
 operator|>
@@ -118,6 +124,9 @@ operator|-=
 name|cc
 control|)
 block|{
+if|if
+condition|(
+operator|(
 name|cc
 operator|=
 name|read
@@ -128,24 +137,31 @@ name|current
 argument_list|,
 name|want
 argument_list|)
-expr_stmt|;
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|current
 operator|+=
 name|cc
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
 name|want
 operator|=
-name|bsize
+name|BSIZE
 operator|-
 name|want
-operator|)
-operator|>
-literal|0
-condition|)
+expr_stmt|;
+if|if
+condition|(
+name|want
+operator|&&
 name|write
 argument_list|(
 literal|1
@@ -154,7 +170,15 @@ name|base
 argument_list|,
 name|want
 argument_list|)
-expr_stmt|;
+operator|!=
+name|want
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 return|return
 operator|(
