@@ -225,25 +225,25 @@ block|{
 block|{
 name|ISA_ID_3C509_TP
 block|,
-literal|"3Com EtherLink III (3c509-TP)"
+literal|"3Com 3C509-TP EtherLink III"
 block|}
 block|,
 block|{
 name|ISA_ID_3C509_BNC
 block|,
-literal|"3Com EtherLink III (3c509-BNC)"
+literal|"3Com 3C509-BNC EtherLink III"
 block|}
 block|,
 block|{
 name|ISA_ID_3C509_COMBO
 block|,
-literal|"3Com EtherLink III (3c509-Combo)"
+literal|"3Com 3C509-Combo EtherLink III"
 block|}
 block|,
 block|{
 name|ISA_ID_3C509_TPO
 block|,
-literal|"3Com EtherLink III (3c509-TPO)"
+literal|"3Com 3C509-TPO EtherLink III"
 block|}
 block|,
 block|{
@@ -266,28 +266,28 @@ block|{
 block|{
 literal|0x90506d50
 block|,
-name|NULL
+literal|"3Com 3C509B-TP EtherLink III (PnP)"
 block|}
 block|,
 comment|/* TCM5090 */
 block|{
 literal|0x91506d50
 block|,
-name|NULL
+literal|"3Com 3C509B-BNC EtherLink III (PnP)"
 block|}
 block|,
 comment|/* TCM5091 */
 block|{
 literal|0x94506d50
 block|,
-name|NULL
+literal|"3Com 3C509B-Combo EtherLink III (PnP)"
 block|}
 block|,
 comment|/* TCM5094 */
 block|{
 literal|0x95506d50
 block|,
-name|NULL
+literal|"3Com 3C509B-TPO EtherLink III (PnP)"
 block|}
 block|,
 comment|/* TCM5095 */
