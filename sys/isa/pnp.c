@@ -2195,9 +2195,6 @@ decl_stmt|;
 name|u_int32_t
 name|logical_id
 decl_stmt|;
-name|u_int32_t
-name|compat_id
-decl_stmt|;
 name|device_t
 name|dev
 init|=
@@ -2492,10 +2489,6 @@ name|ldn
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|compat_id
-operator|=
-literal|0
 expr_stmt|;
 name|dev
 operator|=
@@ -2817,9 +2810,12 @@ condition|(
 operator|!
 name|newres
 condition|)
+block|{
+comment|/* XXX: free resources */
 return|return
 name|ENOMEM
 return|;
+block|}
 name|bcopy
 argument_list|(
 name|resources
