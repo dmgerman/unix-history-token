@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kcmd.c	5.6 (Berkeley) %G%"
+literal|"@(#)kcmd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,10 +38,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  *	$Source: /mit/kerberos/src/appl/bsd/RCS/kcmd.c,v $  *	$Header: kcmd.c,v 4.16 89/05/17 10:54:31 jtkohl Exp $  *  * static char *rcsid_kcmd_c =  * "$Header: kcmd.c,v 4.16 89/05/17 10:54:31 jtkohl Exp $";  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -52,12 +48,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
 end_include
 
 begin_include
@@ -81,13 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -111,7 +95,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -123,7 +131,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"krb.h"
 end_include
 
 begin_ifndef
@@ -144,26 +170,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_extern
-extern|extern	errno;
-end_extern
-
-begin_decl_stmt
-name|char
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|krb_realmofhost
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -175,76 +181,78 @@ begin_comment
 comment|/* arbitrary */
 end_comment
 
-begin_macro
-name|kcmd
-argument_list|(
-argument|sock
-argument_list|,
-argument|ahost
-argument_list|,
-argument|rport
-argument_list|,
-argument|locuser
-argument_list|,
-argument|remuser
-argument_list|,
-argument|cmd
-argument_list|,
-argument|fd2p
-argument_list|,
-argument|ticket
-argument_list|,
-argument|service
-argument_list|,
-argument|realm
-argument_list|,
-argument|cred
-argument_list|,
-argument|schedule
-argument_list|,
-argument|msg_data
-argument_list|,
-argument|laddr
-argument_list|,
-argument|faddr
-argument_list|,
-argument|authopts
-argument_list|)
-end_macro
-
 begin_decl_stmt
+name|int
+name|getport
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|kcmd
+parameter_list|(
+name|sock
+parameter_list|,
+name|ahost
+parameter_list|,
+name|rport
+parameter_list|,
+name|locuser
+parameter_list|,
+name|remuser
+parameter_list|,
+name|cmd
+parameter_list|,
+name|fd2p
+parameter_list|,
+name|ticket
+parameter_list|,
+name|service
+parameter_list|,
+name|realm
+parameter_list|,
+name|cred
+parameter_list|,
+name|schedule
+parameter_list|,
+name|msg_data
+parameter_list|,
+name|laddr
+parameter_list|,
+name|faddr
+parameter_list|,
+name|authopts
+parameter_list|)
 name|int
 modifier|*
 name|sock
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|ahost
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_short
 name|rport
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|locuser
 decl_stmt|,
-modifier|*
+decl|*
 name|remuser
 decl_stmt|,
 modifier|*
 name|cmd
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -352,7 +360,6 @@ name|START_PORT
 decl_stmt|;
 endif|#
 directive|endif
-endif|ATHENA_COMPAT
 name|struct
 name|hostent
 modifier|*
@@ -385,7 +392,7 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* fprintf(stderr, "%s: unknown host\n", *ahost); */
@@ -427,22 +434,17 @@ expr_stmt|;
 comment|/* If realm is null, look up from table */
 if|if
 condition|(
-operator|(
 name|realm
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|realm
 index|[
 literal|0
 index|]
 operator|==
 literal|'\0'
-operator|)
 condition|)
-block|{
 name|realm
 operator|=
 name|krb_realmofhost
@@ -450,7 +452,6 @@ argument_list|(
 name|host_save
 argument_list|)
 expr_stmt|;
-block|}
 name|oldmask
 operator|=
 name|sigblock
@@ -586,7 +587,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(ultrix) || defined(sun) */
 name|sin
 operator|.
 name|sin_port
@@ -706,7 +706,7 @@ name|oerrno
 expr_stmt|;
 name|perror
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|hp
@@ -1004,12 +1004,17 @@ argument_list|,
 literal|"kcmd(socket): protocol failure in circuit setup.\n"
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 goto|goto
 name|bad2
 goto|;
 block|}
 block|}
-comment|/*      * Kerberos-authenticated service.  Don't have to send locuser,      * since its already in the ticket, and we'll extract it on      * the other side.      */
+comment|/* 	 * Kerberos-authenticated service.  Don't have to send locuser, 	 * since its already in the ticket, and we'll extract it on 	 * the other side. 	 */
 comment|/* (void) write(s, locuser, strlen(locuser)+1); */
 comment|/* set up the needed stuff for mutual auth, but only if necessary */
 if|if
@@ -1176,16 +1181,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|perror
 argument_list|(
 operator|*
 name|ahost
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1193,7 +1195,6 @@ argument_list|,
 literal|"kcmd: bad connection with remote host\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|status
 operator|=
 operator|-
@@ -1207,7 +1208,7 @@ if|if
 condition|(
 name|c
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
 while|while
@@ -1308,21 +1309,16 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|getport
-argument_list|(
-argument|alport
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|alport
+parameter_list|)
 name|int
 modifier|*
 name|alport
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|sockaddr_in
@@ -1467,7 +1463,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-endif|ATHENA_COMPAT
 operator|(
 name|void
 operator|)
@@ -1490,7 +1485,7 @@ return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

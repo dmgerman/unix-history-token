@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krcmd.c	1.6.1.1 (Berkeley) %G%"
+literal|"@(#)krcmd.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  *	$Source: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v $  *	$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1  *		89/07/25 15:38:44 kfall Exp Locker: kfall $  * static char *rcsid_kcmd_c =  * "$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1 89/07/25 15:38:44  *	kfall Exp Locker: kfall $";  */
+comment|/*  *	$Source: /usr/src/usr.bin/rlogin/RCS/krcmd.c,v $  *	$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1  *		89/07/25 15:38:44 kfall Exp Locker: kfall $  * static char *rcsid_kcmd_c =  * "$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1 89/07/25 15:38:44  *	kfall Exp Locker: kfall $";  */
 end_comment
 
 begin_ifdef
@@ -44,10 +44,27 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRYPT
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -62,12 +79,75 @@ directive|include
 file|<kerberosIV/krb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|SERVICE_NAME
 value|"rcmd"
 end_define
+
+begin_decl_stmt
+name|int
+name|kcmd
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|u_short
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|KTEXT
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|CREDENTIALS
+operator|*
+operator|,
+name|Key_schedule
+operator|,
+name|MSG_DAT
+operator|*
+operator|,
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * krcmd: simplified version of Athena's "kcmd"  *	returns a socket attached to the destination, -1 or krb error on error   *	if fd2p is non-NULL, another socket is filled in for it  */
