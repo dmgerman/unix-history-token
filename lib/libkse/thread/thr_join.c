@@ -52,6 +52,10 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+name|void
+modifier|*
+name|tmp
+decl_stmt|;
 name|kse_critical_t
 name|crit
 decl_stmt|;
@@ -198,15 +202,8 @@ operator|==
 name|PS_DEAD
 condition|)
 block|{
-if|if
-condition|(
-name|thread_return
-operator|!=
-name|NULL
-condition|)
 comment|/* Return the thread's return value: */
-operator|*
-name|thread_return
+name|tmp
 operator|=
 name|pthread
 operator|->
@@ -277,6 +274,17 @@ name|curthread
 argument_list|,
 name|pthread
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|thread_return
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|thread_return
+operator|=
+name|tmp
 expr_stmt|;
 block|}
 elseif|else

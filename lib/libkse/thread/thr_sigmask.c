@@ -86,6 +86,11 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+name|sigset_t
+name|oldset
+decl_stmt|,
+name|newset
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -99,6 +104,15 @@ name|_kse_setthreaded
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|set
+condition|)
+name|newset
+operator|=
+operator|*
+name|set
 expr_stmt|;
 name|THR_SCHED_LOCK
 argument_list|(
@@ -118,8 +132,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* Return the current mask: */
-operator|*
-name|oset
+name|oldset
 operator|=
 name|curthread
 operator|->
@@ -150,8 +163,7 @@ name|curthread
 operator|->
 name|sigmask
 argument_list|,
-operator|*
-name|set
+name|newset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -166,8 +178,7 @@ name|curthread
 operator|->
 name|sigmask
 argument_list|,
-operator|*
-name|set
+name|newset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -180,8 +191,7 @@ name|curthread
 operator|->
 name|sigmask
 operator|=
-operator|*
-name|set
+name|newset
 expr_stmt|;
 break|break;
 comment|/* Trap invalid actions: */
@@ -232,6 +242,21 @@ name|curthread
 argument_list|,
 name|curthread
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+operator|&&
+name|oset
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|oset
+operator|=
+name|oldset
 expr_stmt|;
 return|return
 operator|(

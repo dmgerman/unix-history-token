@@ -75,6 +75,9 @@ decl_stmt|;
 name|kse_critical_t
 name|crit
 decl_stmt|;
+name|sigset_t
+name|sigset
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -124,8 +127,7 @@ operator|->
 name|kseg
 argument_list|)
 expr_stmt|;
-operator|*
-name|set
+name|sigset
 operator|=
 name|curthread
 operator|->
@@ -154,8 +156,7 @@ argument_list|)
 expr_stmt|;
 name|SIGSETOR
 argument_list|(
-operator|*
-name|set
+name|sigset
 argument_list|,
 name|_thr_proc_sigpending
 argument_list|)
@@ -174,6 +175,11 @@ name|_kse_critical_leave
 argument_list|(
 name|crit
 argument_list|)
+expr_stmt|;
+operator|*
+name|set
+operator|=
+name|sigset
 expr_stmt|;
 block|}
 comment|/* Return the completion status: */

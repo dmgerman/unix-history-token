@@ -305,6 +305,9 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|tmp
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -356,9 +359,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Return the old ceiling and set the new ceiling: */
-operator|*
-name|old_ceiling
+name|tmp
 operator|=
 operator|(
 operator|*
@@ -367,6 +368,7 @@ operator|)
 operator|->
 name|m_prio
 expr_stmt|;
+comment|/* Set the new ceiling: */
 operator|(
 operator|*
 name|mutex
@@ -383,6 +385,12 @@ name|pthread_mutex_unlock
 argument_list|(
 name|mutex
 argument_list|)
+expr_stmt|;
+comment|/* Return the old ceiling: */
+operator|*
+name|old_ceiling
+operator|=
+name|tmp
 expr_stmt|;
 block|}
 return|return

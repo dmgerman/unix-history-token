@@ -58,6 +58,8 @@ argument_list|()
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|tmp
 decl_stmt|;
 if|if
 condition|(
@@ -105,8 +107,7 @@ operator|->
 name|base_priority
 argument_list|)
 expr_stmt|;
-operator|*
-name|policy
+name|tmp
 operator|=
 name|pthread
 operator|->
@@ -120,6 +121,11 @@ name|curthread
 argument_list|,
 name|curthread
 argument_list|)
+expr_stmt|;
+operator|*
+name|policy
+operator|=
+name|tmp
 expr_stmt|;
 name|ret
 operator|=
@@ -165,8 +171,7 @@ operator|->
 name|base_priority
 argument_list|)
 expr_stmt|;
-operator|*
-name|policy
+name|tmp
 operator|=
 name|pthread
 operator|->
@@ -187,6 +192,11 @@ name|curthread
 argument_list|,
 name|pthread
 argument_list|)
+expr_stmt|;
+operator|*
+name|policy
+operator|=
+name|tmp
 expr_stmt|;
 block|}
 return|return
