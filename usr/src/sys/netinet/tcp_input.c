@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2607,7 +2607,9 @@ name|tcpstat
 operator|.
 name|tcps_rcvbyteafterwin
 operator|+=
-name|todrop
+name|ti
+operator|->
+name|ti_len
 expr_stmt|;
 block|}
 goto|goto
@@ -3120,20 +3122,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * When new data is acked, open the congestion window a bit. 		 */
+comment|/* 		 * When new data is acked, open the congestion window 		 * by one max sized segment. 		 */
 name|tp
 operator|->
 name|snd_cwnd
 operator|=
 name|MIN
 argument_list|(
-literal|11
-operator|*
 name|tp
 operator|->
 name|snd_cwnd
-operator|/
-literal|10
+operator|+
+name|tp
+operator|->
+name|t_maxseg
 argument_list|,
 literal|65535
 argument_list|)
