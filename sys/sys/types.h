@@ -488,6 +488,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__id_t
+name|id_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* can hold a uid_t or pid_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|__uint32_t
@@ -629,16 +657,33 @@ name|register_t
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_RLIM_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
-name|__int64_t
+name|__rlim_t
 name|rlim_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* resource limit (XXX not unsigned) */
+comment|/* resource limit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_RLIM_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

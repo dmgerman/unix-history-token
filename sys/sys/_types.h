@@ -76,6 +76,17 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|__int64_t
+name|__id_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* can hold a uid_t or pid_t */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|long
 name|__key_t
 typedef|;
@@ -123,6 +134,17 @@ end_typedef
 
 begin_comment
 comment|/* process [group] */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__int64_t
+name|__rlim_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* resource limit (XXX not unsigned) */
 end_comment
 
 begin_typedef
