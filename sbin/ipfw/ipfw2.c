@@ -214,9 +214,6 @@ comment|/* Show time stamps */
 name|do_quiet
 decl_stmt|,
 comment|/* Be quiet in add and flush */
-name|do_force
-decl_stmt|,
-comment|/* Don't ask for confirmation */
 name|do_pipe
 decl_stmt|,
 comment|/* this cmd refers to a pipe */
@@ -9791,7 +9788,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"ipfw syntax summary (but please do read the ipfw(8) manpage):\n"
-literal|"ipfw [-acdeftnNpqS] command:"
+literal|"ipfw [-acdeftTnNpqS]<command> where<command is one of:\n"
 literal|"add [num] [set N] [prob x] RULE-BODY\n"
 literal|"{pipe|queue} N config PIPE-BODY\n"
 literal|"[pipe|queue] {zero|delete|show} [N{,N}]\n"
@@ -9801,10 +9798,10 @@ literal|"RULE-BODY:	check-state [LOG] | ACTION [LOG] ADDR [OPTION_LIST]\n"
 literal|"ACTION:	check-state | allow | count | deny | reject | skipto N |\n"
 literal|"		{divert|tee} PORT | forward ADDR | pipe N | queue N\n"
 literal|"ADDR:		[ MAC dst src ether_type ] \n"
-literal|"		[ from IPLIST [ PORT ] to IPLIST [ PORTLIST ] ]\n"
-literal|"IPLIST:	IPADDR[,IPADDR] | { IPADDR or ... or IPADDR }\n"
-literal|"IPADDR:	[not] { any | me | ip | ip/bits | ip:mask | ip/bits{x,y,z} }\n"
-literal|"OPTION_LIST:	OPTION [,OPTION_LIST]\n"
+literal|"		[ from IPADDR [ PORT ] to IPADDR [ PORTLIST ] ]\n"
+literal|"IPADDR:	[not] { any | me | ip/bits{x,y,z} | IPLIST }\n"
+literal|"IPLIST:	{ ip | ip/bits | ip:mask }[,IPLIST]\n"
+literal|"OPTION_LIST:	OPTION [OPTION_LIST]\n"
 literal|"OPTION:	bridged | {dst-ip|src-ip} ADDR | {dst-port|src-port} LIST |\n"
 literal|"	estab | frag | {gid|uid} N | icmptypes LIST | in | out | ipid LIST |\n"
 literal|"	iplen LIST | ipoptions SPEC | ipprecedence | ipsec | iptos SPEC |\n"
@@ -18226,7 +18223,8 @@ specifier|static
 name|void
 name|flush
 parameter_list|(
-name|void
+name|int
+name|force
 parameter_list|)
 block|{
 name|int
@@ -18241,7 +18239,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|do_force
+name|force
 operator|&&
 operator|!
 name|do_quiet
@@ -18367,7 +18365,57 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * called with the arguments (excluding program name).  */
+comment|/*  * Free a the (locally allocated) copy of command line arguments.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|free_args
+parameter_list|(
+name|int
+name|ac
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|av
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ac
+condition|;
+name|i
+operator|++
+control|)
+name|free
+argument_list|(
+name|av
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|av
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Called with the arguments (excluding program name).  * Returns 0 if successful, 1 if empty command, errx() in case of errors.  */
 end_comment
 
 begin_function
@@ -18406,10 +18454,26 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Show packet/byte count */
+name|int
+name|do_force
+init|=
+literal|0
+decl_stmt|;
+comment|/* Don't ask for confirmation */
 define|#
 directive|define
 name|WHITESP
 value|" \t\f\v\n\r"
+if|if
+condition|(
+name|oldac
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+elseif|else
 if|if
 condition|(
 name|oldac
@@ -18570,9 +18634,9 @@ operator|==
 literal|0
 condition|)
 comment|/* empty string! */
-name|show_usage
-argument_list|()
-expr_stmt|;
+return|return
+literal|1
+return|;
 comment|/* 		 * First, count number of arguments. Because of the previous 		 * processing, this is just the number of blanks plus 1. 		 */
 for|for
 control|(
@@ -18871,15 +18935,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|ac
-operator|==
-literal|0
-condition|)
-name|show_usage
-argument_list|()
-expr_stmt|;
 comment|/* Set the force flag for non-interactive processes */
 name|do_force
 operator|=
@@ -18971,6 +19026,13 @@ case|case
 literal|'h'
 case|:
 comment|/* help */
+name|free_args
+argument_list|(
+name|save_ac
+argument_list|,
+name|save_av
+argument_list|)
+expr_stmt|;
 name|help
 argument_list|()
 expr_stmt|;
@@ -19047,9 +19109,16 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|show_usage
-argument_list|()
+name|free_args
+argument_list|(
+name|save_ac
+argument_list|,
+name|save_av
+argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 name|ac
 operator|-=
@@ -19064,6 +19133,50 @@ argument_list|(
 literal|"bad arguments, for usage summary ``ipfw''"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * An undocumented behaviour of ipfw1 was to allow rule numbers first, 	 * e.g. "100 add allow ..." instead of "add 100 allow ...". 	 * In case, swap first and second argument to get the normal form. 	 */
+if|if
+condition|(
+name|ac
+operator|>
+literal|1
+operator|&&
+name|isdigit
+argument_list|(
+operator|*
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|p
+init|=
+name|av
+index|[
+literal|0
+index|]
+decl_stmt|;
+name|av
+index|[
+literal|0
+index|]
+operator|=
+name|av
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|av
+index|[
+literal|1
+index|]
+operator|=
+name|p
+expr_stmt|;
+block|}
 comment|/* 	 * optional: pipe or queue 	 */
 if|if
 condition|(
@@ -19082,18 +19195,10 @@ name|av
 argument_list|)
 argument_list|)
 condition|)
-block|{
 name|do_pipe
 operator|=
 literal|1
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
-name|av
-operator|++
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -19112,11 +19217,15 @@ name|av
 argument_list|)
 argument_list|)
 condition|)
-block|{
 name|do_pipe
 operator|=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|do_pipe
+condition|)
+block|{
 name|ac
 operator|--
 expr_stmt|;
@@ -19272,7 +19381,9 @@ argument_list|)
 argument_list|)
 condition|)
 name|flush
-argument_list|()
+argument_list|(
+name|do_force
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -19489,29 +19600,10 @@ name|av
 argument_list|)
 expr_stmt|;
 comment|/* Free memory allocated in the argument parsing. */
-for|for
-control|(
-name|ch
-operator|=
-literal|0
-init|;
-name|ch
-operator|<
+name|free_args
+argument_list|(
 name|save_ac
-condition|;
-name|ch
-operator|++
-control|)
-name|free
-argument_list|(
-name|save_av
-index|[
-name|ch
-index|]
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
+argument_list|,
 name|save_av
 argument_list|)
 expr_stmt|;
@@ -20163,6 +20255,9 @@ name|av
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
 name|ipfw_main
 argument_list|(
 name|ac
@@ -20173,7 +20268,11 @@ name|av
 operator|+
 literal|1
 argument_list|)
+condition|)
+name|show_usage
+argument_list|()
 expr_stmt|;
+block|}
 return|return
 name|EX_OK
 return|;
