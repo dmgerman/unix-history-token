@@ -862,14 +862,21 @@ block|,
 name|FTS_BACKUP
 init|=
 literal|7
-block|,
-name|FTS_LAST
-init|=
-literal|8
 block|}
 name|binding_state_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* FTS_LAST is the highest value that is valid for a lease binding state. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTS_LAST
+value|FTS_BACKUP
+end_define
 
 begin_comment
 comment|/* A dhcp lease declaration structure. */
@@ -2452,7 +2459,7 @@ name|is_bootp
 range|:
 literal|1
 decl_stmt|;
-comment|/* If set, lease was aquired with BOOTP. */
+comment|/* If set, lease was acquired with BOOTP. */
 name|struct
 name|option_state
 modifier|*
@@ -2838,7 +2845,8 @@ modifier|*
 name|rbuf
 decl_stmt|;
 comment|/* Read buffer, if required. */
-name|size_t
+name|unsigned
+name|int
 name|rbuf_max
 decl_stmt|;
 comment|/* Size of read buffer. */
@@ -3396,6 +3404,19 @@ define|#
 directive|define
 name|_PATH_DHCPD_DB
 value|"dhcpd.leases"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|_PATH_DHCPD_PID
+end_undef
+
+begin_define
+define|#
+directive|define
+name|_PATH_DHCPD_PID
+value|"dhcpd.pid"
 end_define
 
 begin_else
@@ -17474,6 +17495,10 @@ name|new_address_range
 name|PROTO
 argument_list|(
 operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
 expr|struct
 name|iaddr
 operator|,

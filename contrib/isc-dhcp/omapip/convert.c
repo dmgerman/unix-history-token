@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: convert.c,v 1.1 2000/08/01 22:34:36 neild Exp $ Copyright (c) 1996-1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: convert.c,v 1.1.2.1 2002/04/27 05:35:20 murray Exp $ Copyright (c) 1996-1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,8 +51,7 @@ modifier|*
 name|buf
 decl_stmt|;
 block|{
-name|unsigned
-name|long
+name|u_int32_t
 name|ibuf
 decl_stmt|;
 name|memcpy
@@ -90,7 +89,7 @@ modifier|*
 name|buf
 decl_stmt|;
 block|{
-name|long
+name|int32_t
 name|ibuf
 decl_stmt|;
 name|memcpy

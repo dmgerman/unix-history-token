@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.7 2001/02/22 07:28:25 mellon Exp $"
+literal|"$Id: res_send.c,v 1.7.2.1 2002/11/03 04:34:24 dhankins Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2560,12 +2560,19 @@ expr_stmt|;
 block|}
 name|Dprint
 argument_list|(
-argument|statp->options& RES_DEBUG
+name|statp
+operator|->
+name|options
+operator|&
+name|RES_DEBUG
 argument_list|,
-argument|(stdout,
+operator|(
+name|stdout
+operator|,
 literal|";; new DG socket\n"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* CAN_RECONNECT */
