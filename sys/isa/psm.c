@@ -13,23 +13,6 @@ directive|include
 file|"psm.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"apm.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -122,23 +105,6 @@ directive|include
 file|<sys/uio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/apm_bios.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -161,12 +127,6 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/isareg.h>
 end_include
 
 begin_include
@@ -216,26 +176,31 @@ comment|/* features */
 end_comment
 
 begin_comment
-comment|/* #define PSM_HOOKAPM	   	   hook the APM resume event */
+comment|/* #define PSM_HOOKRESUME   	   hook the system resume event */
 end_comment
 
 begin_comment
 comment|/* #define PSM_RESETAFTERSUSPEND   reset the device at the resume event */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NAPM
-operator|<=
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PSM_HOOKAPM
+end_ifdef
 
 begin_undef
 undef|#
 directive|undef
-name|PSM_HOOKAPM
+name|PSM_HOOKRESUME
 end_undef
+
+begin_define
+define|#
+directive|define
+name|PSM_HOOKRESUME
+value|1
+end_define
 
 begin_endif
 endif|#
@@ -243,13 +208,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NAPM */
+comment|/* PSM_HOOKAPM */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PSM_HOOKAPM
+name|PSM_HOOKRESUME
 end_ifndef
 
 begin_undef
@@ -264,7 +229,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PSM_HOOKAPM */
+comment|/* PSM_HOOKRESUME */
 end_comment
 
 begin_comment
@@ -558,15 +523,6 @@ name|int
 name|yold
 decl_stmt|;
 comment|/* previous absolute Y position */
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
-name|struct
-name|apmhook
-name|resumehook
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -849,12 +805,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -862,17 +812,11 @@ name|psmresume
 name|__P
 argument_list|(
 operator|(
-name|void
-operator|*
+name|device_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1409,6 +1353,13 @@ argument_list|(
 name|device_attach
 argument_list|,
 name|psmattach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|psmresume
 argument_list|)
 block|,
 block|{
@@ -4598,69 +4549,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
-name|sc
-operator|->
-name|resumehook
-operator|.
-name|ah_name
-operator|=
-literal|"PS/2 mouse"
-expr_stmt|;
-name|sc
-operator|->
-name|resumehook
-operator|.
-name|ah_fun
-operator|=
-name|psmresume
-expr_stmt|;
-name|sc
-operator|->
-name|resumehook
-operator|.
-name|ah_arg
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|unit
-expr_stmt|;
-name|sc
-operator|->
-name|resumehook
-operator|.
-name|ah_order
-operator|=
-name|APM_MID_ORDER
-expr_stmt|;
-name|apm_hook_establish
-argument_list|(
-name|APM_HOOK_RESUME
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|resumehook
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"psm%d: APM hooks installed.\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PSM_HOOKAPM */
 if|if
 condition|(
 operator|!
@@ -11106,42 +10994,35 @@ comment|/* PS/2 absolute mode */
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_HOOKAPM
-end_ifdef
-
 begin_function
 specifier|static
 name|int
 name|psmresume
 parameter_list|(
-name|void
-modifier|*
-name|dummy
+name|device_t
+name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PSM_HOOKRESUME
 name|struct
 name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
+name|device_get_softc
 argument_list|(
-operator|(
-name|int
-operator|)
-name|dummy
+name|dev
 argument_list|)
 decl_stmt|;
 name|int
 name|unit
 init|=
-operator|(
-name|int
-operator|)
-name|dummy
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|int
 name|err
@@ -11164,7 +11045,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"psm%d: APM resume hook called.\n"
+literal|"psm%d: system resume hook called.\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -11540,7 +11421,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"psm%d: APM resume hook exiting.\n"
+literal|"psm%d: system resume hook exiting.\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -11550,17 +11431,19 @@ operator|(
 name|err
 operator|)
 return|;
-block|}
-end_function
-
-begin_endif
+else|#
+directive|else
+comment|/* !PSM_HOOKRESUME */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* PSM_HOOKAPM */
-end_comment
+comment|/* PSM_HOOKRESUME */
+block|}
+end_function
 
 begin_expr_stmt
 name|DRIVER_MODULE
