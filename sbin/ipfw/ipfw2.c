@@ -10766,7 +10766,6 @@ literal|"	iplen LIST | ipoptions SPEC | ipprecedence | ipsec | iptos SPEC |\n"
 literal|"	ipttl LIST | ipversion VER | keep-state | layer2 | limit ... |\n"
 literal|"	mac ... | mac-type LIST | proto LIST | {recv|xmit|via} {IF|IPADDR} |\n"
 literal|"	setup | {tcpack|tcpseq|tcpwin} NN | tcpflags SPEC | tcpoptions SPEC |\n"
-literal|"	verrevpath | versrcreach | antispoof\n"
 literal|"	tcpdatalen LIST | verrevpath | versrcreach | antispoof\n"
 argument_list|)
 expr_stmt|;
