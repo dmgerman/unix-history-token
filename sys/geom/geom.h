@@ -1124,6 +1124,7 @@ name|void
 name|g_sanity
 parameter_list|(
 name|void
+specifier|const
 modifier|*
 name|ptr
 parameter_list|)
