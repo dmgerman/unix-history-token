@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pr.c	4.1 (Berkeley) %G%"
+literal|"@(#)pr.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,6 +387,7 @@ block|{
 case|case
 literal|'h'
 case|:
+comment|/* define page header */
 if|if
 condition|(
 name|argc
@@ -408,6 +409,7 @@ continue|continue;
 case|case
 literal|'t'
 case|:
+comment|/* don't print page headers */
 name|ntflg
 operator|++
 expr_stmt|;
@@ -415,6 +417,7 @@ continue|continue;
 case|case
 literal|'f'
 case|:
+comment|/* use form feeds */
 name|fflg
 operator|++
 expr_stmt|;
@@ -426,6 +429,7 @@ continue|continue;
 case|case
 literal|'l'
 case|:
+comment|/* length of page */
 name|length
 operator|=
 name|atoi
@@ -439,6 +443,7 @@ continue|continue;
 case|case
 literal|'w'
 case|:
+comment|/* width of page */
 name|width
 operator|=
 name|atoi
@@ -452,6 +457,7 @@ continue|continue;
 case|case
 literal|'s'
 case|:
+comment|/* col separator */
 if|if
 condition|(
 operator|*
@@ -474,11 +480,25 @@ continue|continue;
 case|case
 literal|'m'
 case|:
+comment|/* all files at once */
 name|mflg
 operator|++
 expr_stmt|;
 continue|continue;
 default|default:
+if|if
+condition|(
+name|numeric
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+condition|)
+block|{
+comment|/* # of cols */
+if|if
+condition|(
+operator|(
 name|ncol
 operator|=
 name|atoi
@@ -486,7 +506,42 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"can't print 0 cols, using 1 instead.\n"
+argument_list|)
 expr_stmt|;
+name|ncol
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"pr: bad key %s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 block|}
@@ -500,6 +555,7 @@ operator|==
 literal|'+'
 condition|)
 block|{
+comment|/* start at page ++*argv */
 name|fpage
 operator|=
 name|atoi
@@ -584,6 +640,64 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/* numeric -- returns 1 if str is numeric, elsewise 0 */
+end_comment
+
+begin_macro
+name|numeric
+argument_list|(
+argument|str
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|str
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+for|for
+control|(
+init|;
+operator|*
+name|str
+condition|;
+name|str
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|str
+operator|>
+literal|'9'
+operator|||
+operator|*
+name|str
+operator|<
+literal|'0'
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_block
+
 begin_macro
 name|onintr
 argument_list|()
@@ -660,6 +774,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/* print -- print file */
+end_comment
 
 begin_macro
 name|print
