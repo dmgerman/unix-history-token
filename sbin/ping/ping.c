@@ -4885,11 +4885,20 @@ name|sum
 init|=
 literal|0
 decl_stmt|;
-name|u_short
-name|answer
-init|=
-literal|0
+union|union
+block|{
+name|u_int16_t
+name|us
 decl_stmt|;
+name|u_int8_t
+name|uc
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|answer
+union|;
 comment|/* 	 * Our algorithm is simple, using a 32 bit accumulator (sum), we add 	 * sequential 16 bit words to it, and at the end, fold back all the 	 * carry bits from the top 16 bits into the lower 16 bits. 	 */
 while|while
 condition|(
@@ -4917,15 +4926,12 @@ operator|==
 literal|1
 condition|)
 block|{
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-operator|&
 name|answer
-operator|)
+operator|.
+name|uc
+index|[
+literal|0
+index|]
 operator|=
 operator|*
 operator|(
@@ -4934,9 +4940,20 @@ operator|*
 operator|)
 name|w
 expr_stmt|;
+name|answer
+operator|.
+name|uc
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|sum
 operator|+=
 name|answer
+operator|.
+name|us
 expr_stmt|;
 block|}
 comment|/* add back carry outs from top 16 bits to low 16 bits */
@@ -4965,6 +4982,8 @@ operator|)
 expr_stmt|;
 comment|/* add carry */
 name|answer
+operator|.
+name|us
 operator|=
 operator|~
 name|sum
@@ -4973,6 +4992,8 @@ comment|/* truncate to 16 bits */
 return|return
 operator|(
 name|answer
+operator|.
+name|us
 operator|)
 return|;
 block|}
