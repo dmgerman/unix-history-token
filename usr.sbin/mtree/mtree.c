@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mtree.c,v 1.6 1997/10/01 06:30:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ begin_decl_stmt
 name|int
 name|ftsoptions
 init|=
-name|FTS_PHYSICAL
+name|FTS_LOGICAL
 decl_stmt|;
 end_decl_stmt
 
