@@ -766,7 +766,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -4869,7 +4869,7 @@ continue|continue;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|cnt
@@ -4898,7 +4898,7 @@ index|]
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|optlen
