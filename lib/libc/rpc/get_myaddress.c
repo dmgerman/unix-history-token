@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: get_myaddress.c,v 1.4 1996/06/08 22:54:51 jraynard Exp $"
+literal|"$Id: get_myaddress.c,v 1.5 1996/11/22 23:37:08 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,11 +106,11 @@ file|<arpa/inet.h>
 end_include
 
 begin_comment
-comment|/*  * don't use gethostbyname, which would invoke yellow pages  */
+comment|/*  * don't use gethostbyname, which would invoke yellow pages  *  * Avoid loopback interfaces.  We return information from a loopback  * interface only if there are no other possible interfaces.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|get_myaddress
 parameter_list|(
 name|addr
@@ -144,6 +144,15 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
+name|int
+name|loopback
+init|=
+literal|0
+decl_stmt|,
+name|gotit
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -162,16 +171,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"get_myaddress: socket"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
+operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|ifc
 operator|.
@@ -207,17 +212,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|close
 argument_list|(
-literal|"get_myaddress: ioctl (get interface configuration)"
+name|s
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
+operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
+name|again
+label|:
 name|ifr
 operator|=
 name|ifc
@@ -272,16 +280,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|close
 argument_list|(
-literal|"get_myaddress: ioctl"
+name|s
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
+operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -300,6 +309,20 @@ operator|.
 name|sa_family
 operator|==
 name|AF_INET
+operator|&&
+operator|(
+name|loopback
+operator|==
+literal|1
+operator|&&
+operator|(
+name|ifreq
+operator|.
+name|ifr_flags
+operator|&
+name|IFF_LOOPBACK
+operator|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -326,6 +349,10 @@ name|htons
 argument_list|(
 name|PMAPPORT
 argument_list|)
+expr_stmt|;
+name|gotit
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -367,6 +394,25 @@ name|ifr
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|gotit
+operator|==
+literal|0
+operator|&&
+name|loopback
+operator|==
+literal|0
+condition|)
+block|{
+name|loopback
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 operator|(
 name|void
 operator|)
@@ -375,6 +421,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
