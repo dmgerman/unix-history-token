@@ -6846,6 +6846,8 @@ operator||
 name|IFF_MULTICAST
 operator||
 name|IFF_ALTPHYS
+operator||
+name|IFF_NEEDSGIANT
 operator|)
 expr_stmt|;
 else|else
@@ -6859,6 +6861,8 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
+operator||
+name|IFF_NEEDSGIANT
 operator|)
 expr_stmt|;
 comment|/* 	 * Attach the interface 	 */
