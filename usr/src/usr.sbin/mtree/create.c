@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.20 (Berkeley) %G%"
+literal|"@(#)create.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -749,7 +749,7 @@ argument_list|(
 operator|&
 name|indent
 argument_list|,
-literal|"gid=%s"
+literal|"gname=%s"
 argument_list|,
 name|gr
 operator|->
