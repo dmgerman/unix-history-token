@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"atkbdc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_kbd.h"
 end_include
 
@@ -89,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|MAXKBDC
-value|MAX(NATKBDC, 1)
+value|1
 end_define
 
 begin_comment
