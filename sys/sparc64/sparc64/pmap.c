@@ -1833,7 +1833,7 @@ argument_list|(
 name|slot
 argument_list|)
 argument_list|,
-name|ASI_DTLB_DATA_IN_REG
+name|ASI_DTLB_DATA_ACCESS_REG
 argument_list|,
 name|data
 argument_list|)
