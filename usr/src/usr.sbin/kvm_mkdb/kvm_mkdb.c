@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.9 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndbm.h>
+file|<db.h>
 end_include
 
 begin_include
@@ -143,7 +143,7 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
-name|DBM
+name|DB
 modifier|*
 name|db
 decl_stmt|;
@@ -264,12 +264,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|db
 operator|=
-name|dbm_open
+name|hash_open
 argument_list|(
 name|dbtemp
 argument_list|,
@@ -286,10 +283,14 @@ operator||
 name|S_IRGRP
 operator||
 name|S_IROTH
-argument_list|)
-operator|)
-operator|==
+argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|db
 condition|)
 block|{
 operator|(
@@ -322,22 +323,16 @@ argument_list|,
 name|db
 argument_list|)
 expr_stmt|;
-operator|(
+call|(
 name|void
-operator|)
-name|dbm_close
+call|)
 argument_list|(
 name|db
+operator|->
+name|close
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
 argument_list|(
-name|dbtemp
-argument_list|,
-name|DBM_SUFFIX
+name|db
 argument_list|)
 expr_stmt|;
 if|if
