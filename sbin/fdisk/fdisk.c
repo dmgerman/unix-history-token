@@ -2629,7 +2629,12 @@ name|struct
 name|dos_partition
 modifier|*
 name|partp
-init|=
+decl_stmt|;
+name|u_int64_t
+name|part_mb
+decl_stmt|;
+name|partp
+operator|=
 operator|(
 operator|(
 expr|struct
@@ -2643,7 +2648,7 @@ name|parts
 operator|)
 operator|+
 name|i
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2669,6 +2674,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Be careful not to overflow. 	 */
+name|part_mb
+operator|=
+name|partp
+operator|->
+name|dp_size
+expr_stmt|;
+name|part_mb
+operator|*=
+name|secsize
+expr_stmt|;
+name|part_mb
+operator|/=
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"sysid %d,(%s)\n"
@@ -2687,7 +2711,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    start %ld, size %ld (%ld Meg), flag %x\n"
+literal|"    start %ld, size %ld (%qd Meg), flag %x\n"
 argument_list|,
 name|partp
 operator|->
@@ -2697,17 +2721,7 @@ name|partp
 operator|->
 name|dp_size
 argument_list|,
-name|partp
-operator|->
-name|dp_size
-operator|*
-name|secsize
-operator|/
-operator|(
-literal|1024
-operator|*
-literal|1024
-operator|)
+name|part_mb
 argument_list|,
 name|partp
 operator|->
