@@ -36,9 +36,6 @@ name|long
 name|mc_onstack
 decl_stmt|;
 name|long
-name|mc_sp
-decl_stmt|;
-name|long
 name|mc_tpc
 decl_stmt|;
 name|long
@@ -50,7 +47,7 @@ decl_stmt|;
 name|long
 name|mc_spare
 index|[
-literal|11
+literal|2
 index|]
 decl_stmt|;
 block|}
