@@ -346,7 +346,8 @@ comment|/* 				 * offset of next expected read or write 				 */
 name|off_t
 name|f_offset
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|f_data
 decl_stmt|;
 comment|/* vnode or socket */
