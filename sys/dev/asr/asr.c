@@ -1758,6 +1758,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|Message_Ptr
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"Message_Ptr == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Message_Ptr
@@ -8290,7 +8301,6 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|Message_Ptr
 argument_list|,
 sizeof|sizeof
