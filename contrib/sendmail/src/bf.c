@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: bf.c,v 8.54.2.2 2002/06/21 19:58:40 gshapiro Exp $"
+literal|"@(#)$Id: bf.c,v 8.54.2.3 2003/09/03 19:58:26 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1770,6 +1770,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
+operator||
+name|QF_O_EXTRA
 argument_list|,
 name|bfp
 operator|->

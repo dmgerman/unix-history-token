@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stdio.c,v 1.56.2.10 2003/01/10 23:07:17 ca Exp $"
+literal|"@(#)$Id: stdio.c,v 1.56.2.13 2003/09/04 01:18:08 ca Exp $"
 argument_list|)
 end_macro
 
@@ -161,7 +161,10 @@ name|oflags
 decl_stmt|;
 switch|switch
 condition|(
+name|SM_IO_MODE
+argument_list|(
 name|flags
+argument_list|)
 condition|)
 block|{
 case|case
@@ -238,6 +241,23 @@ operator|-
 literal|1
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|O_BINARY
+if|if
+condition|(
+name|SM_IS_BINARY
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+name|oflags
+operator||=
+name|O_BINARY
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* O_BINARY */
 name|fp
 operator|->
 name|f_file
@@ -538,8 +558,11 @@ literal|0
 decl_stmt|;
 switch|switch
 condition|(
+name|SM_IO_MODE
+argument_list|(
 operator|*
 name|mode
+argument_list|)
 condition|)
 block|{
 case|case
@@ -995,7 +1018,10 @@ operator|)
 decl_stmt|;
 switch|switch
 condition|(
+name|SM_IO_MODE
+argument_list|(
 name|flags
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1062,6 +1088,23 @@ operator|-
 literal|1
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|O_BINARY
+if|if
+condition|(
+name|SM_IS_BINARY
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+name|oflags
+operator||=
+name|O_BINARY
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* O_BINARY */
 comment|/* Make sure the mode the user wants is a subset of the actual mode. */
 if|if
 condition|(

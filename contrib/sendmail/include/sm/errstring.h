@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: errstring.h,v 1.4 2001/06/07 20:04:53 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: errstring.h,v 1.4.4.3 2003/06/24 17:16:10 ca Exp $  */
 end_comment
 
 begin_comment
@@ -393,6 +393,13 @@ define|#
 directive|define
 name|SMDBE_OLD_VERSION
 value|(E_SMDBBASE + 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMDBE_VERSION_MISMATCH
+value|(E_SMDBBASE + 24)
 end_define
 
 begin_decl_stmt

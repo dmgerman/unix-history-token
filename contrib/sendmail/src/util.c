@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.363.2.5 2002/12/12 22:50:41 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.363.2.7 2003/06/02 03:25:39 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1125,7 +1125,10 @@ operator|*
 name|p
 operator|++
 operator|=
-literal|':'
+operator|(
+name|char
+operator|)
+name|delim
 expr_stmt|;
 operator|*
 name|p
@@ -8474,7 +8477,7 @@ comment|/* **  PATH_IS_DIR -- check to see if file exists and is a directory. **
 end_comment
 
 begin_function
-name|int
+name|bool
 name|path_is_dir
 parameter_list|(
 name|pathname

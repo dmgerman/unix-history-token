@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.181.2.6 2003/01/15 19:17:15 ca Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.181.2.9 2003/08/11 23:23:40 gshapiro Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.181.2.6 2003/01/15 19:17:15 ca Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.181.2.9 2003/08/11 23:23:40 gshapiro Exp $ (without name server)"
 argument_list|)
 end_macro
 
@@ -750,6 +750,16 @@ argument_list|,
 name|droplocalhost
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|host
+operator|==
+literal|'\0'
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|(
@@ -2886,44 +2896,6 @@ begin_comment
 comment|/* **  DNS_GETCANONNAME -- get the canonical name for named host using DNS ** **	This algorithm tries to be smart about wildcard MX records. **	This is hard to do because DNS doesn't tell is if we matched **	against a wildcard or a specific MX. ** **	We always prefer A& CNAME records, since these are presumed **	to be specific. ** **	If we match an MX in one pass and lose it in the next, we use **	the old one.  For example, consider an MX matching *.FOO.BAR.COM. **	A hostname bletch.foo.bar.com will match against this MX, but **	will stop matching when we try bletch.bar.com -- so we know **	that bletch.foo.bar.com must have been right.  This fails if **	there was also an MX record matching *.BAR.COM, but there are **	some things that just can't be fixed. ** **	Parameters: **		host -- a buffer containing the name of the host. **			This is a value-result parameter. **		hbsize -- the size of the host buffer. **		trymx -- if set, try MX records as well as A and CNAME. **		statp -- pointer to place to store status. **		pttl -- pointer to return TTL (can be NULL). ** **	Returns: **		true -- if the host matched. **		false -- otherwise. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NETINET6
-end_if
-
-begin_define
-define|#
-directive|define
-name|SM_T_INITIAL
-value|T_AAAA
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NETINET6 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SM_T_INITIAL
-value|T_A
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NETINET6 */
-end_comment
-
 begin_function
 name|bool
 name|dns_getcanonname
@@ -3022,6 +2994,9 @@ name|false
 decl_stmt|;
 name|int
 name|qtype
+decl_stmt|;
+name|int
+name|initial
 decl_stmt|;
 name|int
 name|loopcnt
@@ -3315,9 +3290,29 @@ name|mxmatch
 operator|=
 name|NULL
 expr_stmt|;
+name|initial
+operator|=
+name|T_A
+expr_stmt|;
+if|#
+directive|if
+name|NETINET6
+if|if
+condition|(
+name|InetMode
+operator|==
+name|AF_INET6
+condition|)
+name|initial
+operator|=
+name|T_AAAA
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 name|qtype
 operator|=
-name|SM_T_INITIAL
+name|initial
 expr_stmt|;
 for|for
 control|(
@@ -3336,7 +3331,7 @@ if|if
 condition|(
 name|qtype
 operator|==
-name|SM_T_INITIAL
+name|initial
 condition|)
 name|gotmx
 operator|=
@@ -3589,7 +3584,7 @@ operator|++
 expr_stmt|;
 name|qtype
 operator|=
-name|SM_T_INITIAL
+name|initial
 expr_stmt|;
 continue|continue;
 block|}
@@ -3896,13 +3891,6 @@ name|NETINET6
 case|case
 name|T_AAAA
 case|:
-comment|/* Flag that a good match was found */
-name|amatch
-operator|=
-name|true
-expr_stmt|;
-comment|/* continue in case a CNAME also exists */
-continue|continue;
 endif|#
 directive|endif
 comment|/* NETINET6 */
@@ -4119,7 +4107,7 @@ else|else
 block|{
 name|qtype
 operator|=
-name|SM_T_INITIAL
+name|initial
 expr_stmt|;
 name|dp
 operator|++

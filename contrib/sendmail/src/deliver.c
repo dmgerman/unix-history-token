@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.940.2.18 2003/03/28 17:34:39 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.940.2.19 2003/09/03 19:58:26 ca Exp $"
 argument_list|)
 end_macro
 
@@ -18188,7 +18188,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|df
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -20966,7 +20966,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|df
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
