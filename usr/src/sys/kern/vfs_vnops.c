@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -597,7 +597,6 @@ block|{
 comment|/* 	 * Disallow write attempts on read-only file systems; 	 * unless the file is a socket or a block or character 	 * device resident on the file system. 	 */
 if|if
 condition|(
-operator|(
 name|vp
 operator|->
 name|v_mount
@@ -605,31 +604,31 @@ operator|->
 name|mnt_flag
 operator|&
 name|MNT_RDONLY
-operator|)
-operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VCHR
-operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VSOCK
 condition|)
+block|{
+switch|switch
+condition|(
+name|vp
+operator|->
+name|v_type
+condition|)
+block|{
+case|case
+name|VREG
+case|:
+case|case
+name|VDIR
+case|:
+case|case
+name|VLNK
+case|:
 return|return
 operator|(
 name|EROFS
 operator|)
 return|;
+block|}
+block|}
 comment|/* 	 * If there's shared text associated with 	 * the vnode, try to free it up once.  If 	 * we fail, we can't allow writing. 	 */
 if|if
 condition|(
@@ -2024,7 +2023,7 @@ block|}
 if|if
 condition|(
 name|error
-operator|=
+operator|==
 literal|0
 operator|&&
 operator|(
@@ -2102,8 +2101,6 @@ name|lockstr
 argument_list|,
 literal|0
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
