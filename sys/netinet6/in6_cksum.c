@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_cksum.c,v 1.6 2000/03/25 07:23:43 sumikawa Exp $	*/
+comment|/*	$KAME: in6_cksum.c,v 1.9 2000/09/09 15:33:31 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -72,38 +72,6 @@ name|REDUCE
 value|{l_util.l = sum; sum = l_util.s[0] + l_util.s[1]; ADDCARRY(sum);}
 end_define
 
-begin_union
-specifier|static
-union|union
-block|{
-name|u_int16_t
-name|phs
-index|[
-literal|4
-index|]
-decl_stmt|;
-struct|struct
-block|{
-name|u_int32_t
-name|ph_len
-decl_stmt|;
-name|u_int8_t
-name|ph_zero
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|u_int8_t
-name|ph_nxt
-decl_stmt|;
-block|}
-name|ph
-struct|;
-block|}
-name|uph
-union|;
-end_union
-
 begin_comment
 comment|/*  * m MUST contain a continuous IP6 header.  * off is a offset where TCP/UDP/ICMP6 header starts.  * len is a total length of a transport segment.  * (e.g. TCP header + TCP payload)  */
 end_comment
@@ -170,6 +138,40 @@ name|ip6
 decl_stmt|;
 union|union
 block|{
+name|u_int16_t
+name|phs
+index|[
+literal|4
+index|]
+decl_stmt|;
+struct|struct
+block|{
+name|u_int32_t
+name|ph_len
+decl_stmt|;
+name|u_int8_t
+name|ph_zero
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int8_t
+name|ph_nxt
+decl_stmt|;
+block|}
+name|ph
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
+struct|;
+block|}
+name|uph
+union|;
+union|union
+block|{
 name|u_int8_t
 name|c
 index|[
@@ -226,6 +228,17 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+operator|&
+name|uph
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uph
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * First create IP6 pseudo header and calculate a summary. 	 */
 name|ip6
 operator|=
