@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fetch.c	5.1 (Berkeley) %G%"
+literal|"@(#)fetch.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"systat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
 end_include
 
 begin_include
@@ -390,20 +384,6 @@ operator|(
 literal|""
 operator|)
 return|;
-if|if
-condition|(
-name|getu
-argument_list|(
-name|mproc
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|"???"
-operator|)
-return|;
 operator|(
 name|void
 operator|)
@@ -411,9 +391,9 @@ name|strncpy
 argument_list|(
 name|cmd
 argument_list|,
-name|u
-operator|.
-name|u_comm
+name|mproc
+operator|->
+name|p_comm
 argument_list|,
 sizeof|sizeof
 argument_list|(
