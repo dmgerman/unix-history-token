@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 1.15 1998/06/11 09:02:54 peter Exp $"
+literal|"$Id: res_init.c,v 1.16 1998/09/02 00:53:17 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,6 +465,11 @@ expr_stmt|;
 comment|/* Allow user to override the local domain definition */
 if|if
 condition|(
+name|issetugid
+argument_list|()
+operator|==
+literal|0
+operator|&&
 operator|(
 name|cp
 operator|=
@@ -497,6 +502,22 @@ argument_list|)
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|_res
+operator|.
+name|defdname
+index|[
+sizeof|sizeof
+argument_list|(
+name|_res
+operator|.
+name|defdname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|haveenv
 operator|++
@@ -770,6 +791,22 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|_res
+operator|.
+name|defdname
+index|[
+sizeof|sizeof
+argument_list|(
+name|_res
+operator|.
+name|defdname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -875,6 +912,22 @@ argument_list|)
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|_res
+operator|.
+name|defdname
+index|[
+sizeof|sizeof
+argument_list|(
+name|_res
+operator|.
+name|defdname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -1677,6 +1730,18 @@ endif|#
 directive|endif
 comment|/* !RFC1535 */
 block|}
+if|if
+condition|(
+name|issetugid
+argument_list|()
+condition|)
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_NOALIASES
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
