@@ -32,11 +32,9 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* modified since vread (or with _m) */
-name|pg_swapm
 range|:
 literal|1
 decl_stmt|,
-comment|/* have to write back to swap */
 name|pg_fod
 range|:
 literal|1
@@ -240,7 +238,7 @@ name|dirty
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->pg_fod == 0&& (pte)->pg_pfnum&& \ 			    ((pte)->pg_m || (pte)->pg_swapm))
+value|((pte)->pg_m)
 end_define
 
 begin_ifndef
