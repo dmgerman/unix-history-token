@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.24 (Berkeley) %G%"
+literal|"@(#)util.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2212,6 +2212,20 @@ operator|++
 operator|=
 name|i
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|nmessage
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"warning: line truncated"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -2255,7 +2269,20 @@ name|i
 operator|!=
 literal|'\t'
 condition|)
-block|{
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|p
+operator|==
+name|buf
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 operator|*
 operator|--
 name|p
@@ -2309,14 +2336,6 @@ block|}
 return|return
 operator|(
 name|buf
-operator|)
-return|;
-block|}
-block|}
-block|}
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}

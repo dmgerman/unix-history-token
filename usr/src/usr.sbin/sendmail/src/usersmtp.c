@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.19 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.20 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.19 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.20 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -984,18 +984,9 @@ literal|"RCPT To:<%s>"
 argument_list|,
 name|m
 argument_list|,
-name|remotename
-argument_list|(
 name|to
 operator|->
 name|q_user
-argument_list|,
-name|m
-argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|SmtpPhase
