@@ -138,6 +138,8 @@ literal|'*'
 condition|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|truedirec
 argument_list|(
 name|compass

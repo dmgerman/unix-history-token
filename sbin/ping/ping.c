@@ -2497,6 +2497,8 @@ name|errx
 argument_list|(
 name|EX_CONFIG
 argument_list|,
+literal|"%s"
+argument_list|,
 name|ipsec_strerror
 argument_list|()
 argument_list|)
@@ -2562,6 +2564,8 @@ condition|)
 name|errx
 argument_list|(
 name|EX_CONFIG
+argument_list|,
+literal|"%s"
 argument_list|,
 name|ipsec_strerror
 argument_list|()

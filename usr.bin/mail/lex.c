@@ -651,6 +651,8 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
