@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.21 (Berkeley) %G%"
+literal|"@(#)file.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<hp300/hpux/hpux_exec.h>
+file|<hp/hpux/hpux_exec.h>
 end_include
 
 begin_endif
