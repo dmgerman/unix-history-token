@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.11	81/05/15	*/
+comment|/*	Locore.c	4.12	81/08/29	*/
 end_comment
 
 begin_include
@@ -1611,9 +1611,9 @@ end_comment
 begin_macro
 name|bcopy
 argument_list|(
-argument|to
-argument_list|,
 argument|from
+argument_list|,
+argument|to
 argument_list|,
 argument|count
 argument_list|)
@@ -1621,9 +1621,9 @@ end_macro
 
 begin_decl_stmt
 name|caddr_t
-name|to
-decl_stmt|,
 name|from
+decl_stmt|,
+name|to
 decl_stmt|;
 end_decl_stmt
 
