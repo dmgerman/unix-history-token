@@ -132,41 +132,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_UNALIGNED_PRINT
-value|3
-end_define
-
-begin_comment
-comment|/* int: print unaligned accesses */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_UNALIGNED_FIX
-value|4
-end_define
-
-begin_comment
-comment|/* int: fix unaligned accesses */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_UNALIGNED_SIGBUS
-value|5
-end_define
-
-begin_comment
-comment|/* int: SIGBUS unaligned accesses */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_BOOTED_KERNEL
-value|6
+value|3
 end_define
 
 begin_comment
@@ -177,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|CPU_ADJKERNTZ
-value|7
+value|4
 end_define
 
 begin_comment
@@ -188,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|CPU_DISRTCSET
-value|8
+value|5
 end_define
 
 begin_comment
@@ -199,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|CPU_WALLCLOCK
-value|9
+value|6
 end_define
 
 begin_comment
@@ -210,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|CPU_MAXID
-value|10
+value|7
 end_define
 
 begin_comment
@@ -221,7 +188,7 @@ begin_define
 define|#
 directive|define
 name|CTL_MACHDEP_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ 	{ "root_device", CTLTYPE_STRING }, \ 	{ "unaligned_print", CTLTYPE_INT }, \ 	{ "unaligned_fix", CTLTYPE_INT }, \ 	{ "unaligned_sigbus", CTLTYPE_INT }, \ 	{ "booted_kernel", CTLTYPE_STRING }, \ 	{ "adjkerntz", CTLTYPE_INT }, \ 	{ "disable_rtc_set", CTLTYPE_INT }, \ 	{ "wall_cmos_clock", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ 	{ "root_device", CTLTYPE_STRING }, \ 	{ "booted_kernel", CTLTYPE_STRING }, \ 	{ "adjkerntz", CTLTYPE_INT }, \ 	{ "disable_rtc_set", CTLTYPE_INT }, \ 	{ "wall_cmos_clock", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef

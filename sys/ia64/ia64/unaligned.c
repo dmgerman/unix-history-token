@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -64,20 +70,106 @@ value|(((int64_t)(imm)<< (64 - (w)))>> (64 - (w)))
 end_define
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|ia64_unaligned_print
-decl_stmt|,
-name|ia64_unaligned_fix
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* warn about unaligned accesses */
+end_comment
+
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
-name|ia64_unaligned_sigbus
+name|ia64_unaligned_fix
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* fix up unaligned accesses */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ia64_unaligned_sigbus
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't SIGBUS on fixed-up accesses */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unaligned_print
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ia64_unaligned_print
+argument_list|,
+literal|0
+argument_list|,
+literal|"warn about unaligned accesses"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unaligned_fix
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ia64_unaligned_fix
+argument_list|,
+literal|0
+argument_list|,
+literal|"fix up unaligned accesses (if possible)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unaligned_sigbus
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ia64_unaligned_sigbus
+argument_list|,
+literal|0
+argument_list|,
+literal|"do not SIGBUS on fixed-up accesses"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
