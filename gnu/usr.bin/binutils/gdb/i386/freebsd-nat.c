@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.3 1994/05/18 12:43:13 pk Exp $ */
+comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.2 1994/12/30 23:25:44 jkh Exp $ */
 end_comment
 
 begin_include
@@ -52,7 +52,7 @@ file|"defs.h"
 end_include
 
 begin_comment
-comment|/* this table must line up with REGISTER_NAMES in tm-i386.h */
+comment|/* this table must line up with REGISTER_NAMES in tm-i386v.h */
 end_comment
 
 begin_comment
@@ -89,6 +89,16 @@ block|,
 name|tCS
 block|,
 name|tSS
+block|,
+name|tDS
+block|,
+name|tES
+block|,
+name|tSS
+block|,
+name|tSS
+block|,
+comment|/* lies: no fs or gs */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -197,33 +207,22 @@ comment|/* flush saved copy */
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|double_to_i387
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|)
-name|char
-modifier|*
-name|from
-decl_stmt|;
-name|char
-modifier|*
-name|to
-decl_stmt|;
-block|{
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static void double_to_i387 (from, to)      char *from;      char *to; {
 comment|/* push double mode on 387 stack, then pop in extended mode    * no errors are possible because every 64-bit pattern    * can be converted to an extended    */
-asm|asm ("movl 8(%ebp),%eax");
-asm|asm ("fldl (%eax)");
-asm|asm ("fwait");
-asm|asm ("movl 12(%ebp),%eax");
-asm|asm ("fstpt (%eax)");
-asm|asm ("fwait");
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|asm ("movl 8(%ebp),%eax");   asm ("fldl (%eax)");   asm ("fwait");   asm ("movl 12(%ebp),%eax");   asm ("fstpt (%eax)");   asm ("fwait"); }
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -290,6 +289,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* static */
+end_comment
 
 begin_function
 name|void
@@ -521,6 +524,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* static */
+end_comment
 
 begin_function
 name|void
@@ -811,11 +818,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"last exception: "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"opcode 0x%x; "
 argument_list|,
 name|ep
@@ -886,7 +888,7 @@ decl_stmt|;
 name|double
 name|val
 decl_stmt|;
-comment|/* The physical regno `fpreg' is only relevant as an index into the        * tag word.  Logical `%st' numbers are required for indexing `p->regs.        */
+comment|/* The physical regno `fpreg' is only relevant as an index into the        * tag word.  Logical `%st' numbers are required for indexing ep->regs.        */
 name|st_regno
 operator|=
 operator|(
@@ -897,7 +899,7 @@ operator|-
 name|top
 operator|)
 operator|&
-literal|0x7
+literal|7
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1208,40 +1210,91 @@ block|}
 block|}
 else|else
 block|{
+if|#
+directive|if
+literal|1
 name|printf
 argument_list|(
 literal|"float info: can't do a core file (yet)\n"
 argument_list|)
 expr_stmt|;
 return|return;
-if|#
-directive|if
+else|#
+directive|else
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|corechan
+argument_list|,
+name|uaddr
+argument_list|,
 literal|0
-block|if (lseek (corechan, uaddr, 0)< 0) 	perror_with_name ("seek on core file");       if (myread (corechan, buf, sizeof (struct fpstate))< 0)  	perror_with_name ("read from core file");       skip = 0;
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror_with_name
+argument_list|(
+literal|"seek on core file"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|myread
+argument_list|(
+name|corechan
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|fpstate
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror_with_name
+argument_list|(
+literal|"read from core file"
+argument_list|)
+expr_stmt|;
+name|skip
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|fpstatep
+operator|=
+operator|(
+expr|struct
+name|fpstate
+operator|*
+operator|)
+operator|(
+name|buf
+operator|+
+name|skip
+operator|)
+expr_stmt|;
 name|print_387_status
 argument_list|(
-literal|0
+name|fpstatep
+operator|->
+name|sv_ex_sw
 argument_list|,
 operator|(
 expr|struct
 name|env387
 operator|*
 operator|)
-name|buf
+name|fpstatep
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|clear_regs
-parameter_list|()
-block|{
-return|return;
 block|}
 end_function
 
