@@ -385,23 +385,22 @@ block|{
 name|char
 name|descr
 index|[
-literal|64
+literal|28
 index|]
 decl_stmt|,
 name|name
 index|[
-literal|10
+literal|12
 index|]
 decl_stmt|;
 comment|/* 	 * We explicitly do not check _STA since not all systems set it to 	 * sensible values. 	 */
 if|if
 condition|(
-operator|!
 name|acpi_disabled
 argument_list|(
 literal|"pci_link"
 argument_list|)
-operator|&&
+operator|||
 name|ACPI_ID_PROBE
 argument_list|(
 name|device_get_parent
@@ -413,13 +412,17 @@ name|dev
 argument_list|,
 name|pci_link_ids
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
-name|ACPI_FAILURE
+name|ACPI_SUCCESS
 argument_list|(
 name|acpi_short_name
 argument_list|(
@@ -437,14 +440,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 condition|)
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"ACPI PCI Link"
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|snprintf
 argument_list|(
@@ -468,15 +463,17 @@ name|descr
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"ACPI PCI Link"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|ENXIO
 operator|)
 return|;
 block|}
@@ -1123,7 +1120,7 @@ name|link
 operator|->
 name|l_isa_irq
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 name|link
 operator|->
@@ -1188,7 +1185,7 @@ name|link
 operator|->
 name|l_isa_irq
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 block|}
 break|break;
@@ -1234,7 +1231,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 comment|/* Any interrupt in the list of possible interrupts is valid. */
@@ -1266,7 +1263,7 @@ name|irq
 condition|)
 return|return
 operator|(
-literal|1
+name|TRUE
 operator|)
 return|;
 comment|/* 	 * For links routed via an ISA interrupt, if the SCI is routed via 	 * an ISA interrupt, the SCI is always treated as a valid IRQ. 	 */
@@ -1288,13 +1285,13 @@ name|NUM_ISA_INTERRUPTS
 condition|)
 return|return
 operator|(
-literal|1
+name|TRUE
 operator|)
 return|;
 comment|/* If the interrupt wasn't found in the list it is not valid. */
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}
@@ -1615,7 +1612,7 @@ index|]
 operator|.
 name|l_isa_irq
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 block|}
 name|rreq
@@ -1929,7 +1926,7 @@ index|]
 operator|.
 name|l_routed
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -3232,7 +3229,7 @@ name|link
 operator|->
 name|l_routed
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 name|acpi_config_intr
 argument_list|(
@@ -3384,11 +3381,10 @@ name|i
 decl_stmt|;
 name|KASSERT
 argument_list|(
+operator|!
 name|link
 operator|->
 name|l_routed
-operator|==
-literal|0
 argument_list|,
 operator|(
 literal|"%s: link already routed"
