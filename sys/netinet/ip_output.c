@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_random_ip_id.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -892,6 +898,18 @@ name|ip_off
 operator|&=
 name|IP_DF
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RANDOM_IP_ID
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|ip_randomid
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|ip
 operator|->
 name|ip_id
@@ -902,6 +920,8 @@ name|ip_id
 operator|++
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ipstat
 operator|.
 name|ips_localout

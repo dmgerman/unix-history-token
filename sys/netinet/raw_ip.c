@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_random_ip_id.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -980,6 +986,18 @@ name|ip_id
 operator|==
 literal|0
 condition|)
+ifdef|#
+directive|ifdef
+name|RANDOM_IP_ID
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|ip_randomid
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|ip
 operator|->
 name|ip_id
@@ -990,6 +1008,8 @@ name|ip_id
 operator|++
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX prevent ip_output from overwriting header fields */
 name|flags
 operator||=
