@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.25 1999/10/12 04:38:20 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1285,6 +1285,9 @@ name|int
 name|reviveok
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 name|struct
 name|rqgroup
 modifier|*
@@ -1300,8 +1303,10 @@ modifier|*
 name|rqe
 decl_stmt|;
 comment|/* current element */
-name|int
-name|s
+name|struct
+name|drive
+modifier|*
+name|drive
 decl_stmt|;
 comment|/*      * First find out whether we're reviving, and the      * request contains a conflict.  If so, we hang      * the request off plex->waitlist of the first      * plex we find which is reviving      */
 if|if
@@ -1576,11 +1581,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
+comment|/*      * We have a potential race condition here: between firing off each      * request, we need to check that we're not overloading the system,      * and possibly sleep.  But the bottom half releases the request      * when the active count goes to 0, so we need to set the total      * active count in advance.      */
 for|for
 control|(
 name|rqg
@@ -1651,42 +1652,175 @@ name|active
 operator|--
 expr_stmt|;
 comment|/* one less active request */
-else|else
+block|}
+if|if
+condition|(
+name|rqg
+operator|->
+name|active
+condition|)
+comment|/* we have at least one active request, */
+name|rq
+operator|->
+name|active
+operator|++
+expr_stmt|;
+comment|/* one more active request group */
+block|}
+comment|/* Now fire off the requests */
+for|for
+control|(
+name|rqg
+operator|=
+name|rq
+operator|->
+name|rqg
+init|;
+name|rqg
+operator|!=
+name|NULL
+condition|;
+name|rqg
+operator|=
+name|rqg
+operator|->
+name|next
+control|)
 block|{
-comment|/* we can do it */
+comment|/* through the whole request chain */
+for|for
+control|(
+name|rqno
+operator|=
+literal|0
+init|;
+name|rqno
+operator|<
+name|rqg
+operator|->
+name|count
+condition|;
+name|rqno
+operator|++
+control|)
+block|{
+name|rqe
+operator|=
+operator|&
+name|rqg
+operator|->
+name|rqe
+index|[
+name|rqno
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|rqe
 operator|->
-name|b
-operator|.
-name|b_flags
+name|flags
 operator|&
-name|B_READ
+name|XFR_BAD_SUBDISK
 operator|)
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* this subdisk is good, */
+comment|/* Check that we're not overloading things */
+name|drive
+operator|=
+operator|&
+name|DRIVE
+index|[
 name|rqe
 operator|->
-name|b
-operator|.
-name|b_vp
+name|driveno
+index|]
+expr_stmt|;
+comment|/* look at drive */
+while|while
+condition|(
+operator|(
+name|drive
 operator|->
-name|v_numoutput
+name|active
+operator|>=
+name|DRIVE_MAXACTIVE
+operator|)
+comment|/* it has too much to do already, */
+operator|||
+operator|(
+name|vinum_conf
+operator|.
+name|active
+operator|>=
+name|VINUM_MAXACTIVE
+operator|)
+condition|)
+comment|/* or too many requests globally */
+name|tsleep
+argument_list|(
+operator|&
+name|launch_requests
+argument_list|,
+name|PRIBIO
+operator||
+name|PCATCH
+argument_list|,
+literal|"vinbuf"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* wait for it to subside */
+name|drive
+operator|->
+name|active
 operator|++
 expr_stmt|;
-comment|/* one more output going */
-name|rqe
+if|if
+condition|(
+name|drive
 operator|->
-name|b
-operator|.
-name|b_flags
-operator||=
-name|B_ORDERED
+name|active
+operator|>=
+name|drive
+operator|->
+name|maxactive
+condition|)
+name|drive
+operator|->
+name|maxactive
+operator|=
+name|drive
+operator|->
+name|active
 expr_stmt|;
-comment|/* stick to the request order */
+name|vinum_conf
+operator|.
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|active
+operator|>=
+name|vinum_conf
+operator|.
+name|maxactive
+condition|)
+name|vinum_conf
+operator|.
+name|maxactive
+operator|=
+name|vinum_conf
+operator|.
+name|active
+expr_stmt|;
 if|#
 directive|if
 name|VINUMDEBUG
@@ -1817,6 +1951,51 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_vp
+operator|->
+name|v_numoutput
+operator|++
+expr_stmt|;
+comment|/* one more output going */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_flags
+operator||=
+name|B_ORDERED
+expr_stmt|;
+comment|/* stick to the request order */
 comment|/* fire off the request */
 name|BUF_STRATEGY
 argument_list|(
@@ -1830,25 +2009,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|rqg
-operator|->
-name|active
-condition|)
-comment|/* we have at least one active request, */
-name|rq
-operator|->
-name|active
-operator|++
-expr_stmt|;
-comment|/* one more active request group */
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
