@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.38 1998/06/15 19:06:25 brian Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.39 1998/10/17 12:28:03 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -731,7 +731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialised in system_IsValid(), set in ReadSystem(), used by system_IsValid() */
+comment|/*  * Initialised in system_IsValid(), set in ReadSystem(),  * used by system_IsValid()  */
 end_comment
 
 begin_decl_stmt
@@ -1725,7 +1725,9 @@ block|}
 end_function
 
 begin_function
-name|int
+specifier|const
+name|char
+modifier|*
 name|system_IsValid
 parameter_list|(
 specifier|const
@@ -1743,6 +1745,9 @@ name|mode
 parameter_list|)
 block|{
 comment|/*    * Note:  The ReadSystem() calls only result in calls to the Allow*    * functions.  arg->bundle will be set to NULL for these commands !    */
+name|int
+name|def
+decl_stmt|;
 if|if
 condition|(
 name|ID0realuid
@@ -1750,13 +1755,27 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-return|return
+block|{
 name|userok
 operator|=
 name|modeok
 operator|=
 literal|1
+expr_stmt|;
+return|return
+name|NULL
 return|;
+block|}
+name|def
+operator|=
+operator|!
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"default"
+argument_list|)
+expr_stmt|;
 name|userok
 operator|=
 literal|0
@@ -1769,6 +1788,8 @@ name|modereq
 operator|=
 name|mode
 expr_stmt|;
+if|if
+condition|(
 name|ReadSystem
 argument_list|(
 name|NULL
@@ -1783,13 +1804,19 @@ name|prompt
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+operator|&&
+name|def
+condition|)
+return|return
+literal|"System not found"
+return|;
 if|if
 condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
+operator|!
+name|def
+operator|&&
 name|ReadSystem
 argument_list|(
 name|NULL
@@ -1804,11 +1831,30 @@ name|prompt
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
 return|return
+literal|"System not found"
+return|;
+if|if
+condition|(
+operator|!
 name|userok
-operator|&&
+condition|)
+return|return
+literal|"Invalid user id"
+return|;
+if|if
+condition|(
+operator|!
 name|modeok
+condition|)
+return|return
+literal|"Invalid mode"
+return|;
+return|return
+name|NULL
 return|;
 block|}
 end_function
