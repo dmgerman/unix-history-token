@@ -1981,6 +1981,13 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
+name|vm_object_deallocate
+argument_list|(
+name|shm_handle
+operator|->
+name|shm_object
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
