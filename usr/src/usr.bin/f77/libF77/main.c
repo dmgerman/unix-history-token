@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.12	%G%"
+literal|"@(#)main.c	2.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,9 +189,6 @@ literal|1
 block|}
 block|,
 comment|/* SIGQUIT */
-ifdef|#
-directive|ifdef
-name|UCBVAX
 block|{
 literal|"Illegal "
 block|,
@@ -199,19 +196,6 @@ literal|1
 block|}
 block|,
 comment|/* SIGILL  */
-else|#
-directive|else
-else|UCBVAX
-block|{
-literal|"Illegal instruction"
-block|,
-literal|1
-block|}
-block|,
-comment|/* SIGILL  */
-endif|#
-directive|endif
-endif|UCBVAX
 block|{
 literal|"Trace Trap"
 block|,
@@ -233,9 +217,6 @@ literal|1
 block|}
 block|,
 comment|/* SIGEMT  */
-ifdef|#
-directive|ifdef
-name|UCBVAX
 block|{
 literal|"Arithmetic Exception"
 block|,
@@ -243,19 +224,6 @@ literal|1
 block|}
 block|,
 comment|/* SIGFPE  */
-else|#
-directive|else
-else|UCBVAX
-block|{
-literal|"Floating Point Exception"
-block|,
-literal|1
-block|}
-block|,
-comment|/* SIGFPE  */
-endif|#
-directive|endif
-endif|UCBVAX
 block|{
 literal|0
 block|,
@@ -316,12 +284,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UCBVAX
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|action
@@ -342,19 +304,19 @@ literal|1
 block|}
 block|,
 block|{
-literal|"Floating point overflow"
+literal|"Floating point overflow trap"
 block|,
 literal|1
 block|}
 block|,
 block|{
-literal|"Floating divide by zero"
+literal|"Floating divide by zero trap"
 block|,
 literal|1
 block|}
 block|,
 block|{
-literal|"Floating point underflow"
+literal|"Floating point underflow trap"
 block|,
 literal|1
 block|}
@@ -420,12 +382,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-endif|UCBVAX
-end_endif
-
 begin_macro
 name|sigdie
 argument_list|(
@@ -484,9 +440,6 @@ operator|->
 name|mesg
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|UCBVAX
 name|fprintf
 argument_list|(
 name|units
@@ -633,28 +586,6 @@ operator|.
 name|ufd
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-else|UCBVAX
-name|fprintf
-argument_list|(
-name|units
-index|[
-name|STDERR
-index|]
-operator|.
-name|ufd
-argument_list|,
-literal|"*** %s\n"
-argument_list|,
-name|act
-operator|->
-name|mesg
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|UCBVAX
 block|}
 name|f_exit
 argument_list|()
