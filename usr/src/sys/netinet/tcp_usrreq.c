@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.20 81/10/30 */
+comment|/* tcp_usrreq.c 1.21 81/10/31 */
 end_comment
 
 begin_include
@@ -559,9 +559,36 @@ case|case
 name|CLS_RWT
 case|:
 comment|/* 20 */
-name|present_data
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|tc_flags
+operator|&
+name|TC_FIN_RCVD
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|tc_flags
+operator|&
+name|TC_USR_CLOSED
+operator|)
+operator|==
+literal|0
+operator|&&
+name|rcv_empty
 argument_list|(
 name|tp
+argument_list|)
+condition|)
+name|to_user
+argument_list|(
+name|tp
+argument_list|,
+name|UCLOSED
 argument_list|)
 expr_stmt|;
 if|if
@@ -640,9 +667,36 @@ name|tp
 argument_list|)
 expr_stmt|;
 comment|/* send new window */
-name|present_data
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|tc_flags
+operator|&
+name|TC_FIN_RCVD
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|tc_flags
+operator|&
+name|TC_USR_CLOSED
+operator|)
+operator|==
+literal|0
+operator|&&
+name|rcv_empty
 argument_list|(
 name|tp
+argument_list|)
+condition|)
+name|to_user
+argument_list|(
+name|tp
+argument_list|,
+name|UCLOSED
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.13 81/10/30 */
+comment|/* tcp_input.c 1.14 81/10/31 */
 end_comment
 
 begin_include
@@ -1181,31 +1181,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|n
 operator|->
 name|th_flags
 operator|&
 name|TH_ACK
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|n
-operator|->
-name|t_ackno
-operator|>
-name|tp
-operator|->
-name|iss
-condition|)
-name|present_data
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* 32 */
-block|}
-else|else
 block|{
 name|tp
 operator|->
@@ -1230,32 +1215,21 @@ goto|goto
 name|done
 goto|;
 block|}
-if|if
-condition|(
+name|nstate
+operator|=
+operator|(
 name|n
 operator|->
 name|th_flags
 operator|&
 name|TH_ACK
-condition|)
-block|{
-name|present_data
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* 11 */
-name|nstate
-operator|=
+operator|)
+condition|?
 name|ESTAB
-expr_stmt|;
-block|}
-else|else
-name|nstate
-operator|=
+else|:
 name|SYN_RCVD
 expr_stmt|;
-comment|/* 8 */
+comment|/* 11:8 */
 goto|goto
 name|done
 goto|;
@@ -1329,11 +1303,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 39 */
-name|present_data
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|tp
@@ -1841,11 +1810,24 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|m_freem
+comment|/* inline expansion of m_freem */
+while|while
+condition|(
+name|mp
+condition|)
+block|{
+name|MFREE
 argument_list|(
 name|mp
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
+name|mp
+operator|=
+name|m
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* NOTREACHED */
@@ -2187,7 +2169,6 @@ name|ucb
 modifier|*
 name|up
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -3018,6 +2999,8 @@ expr_stmt|;
 block|}
 name|notext
 label|:
+name|urgeolfin
+label|:
 comment|/* urg */
 if|if
 condition|(
@@ -3438,54 +3421,28 @@ operator|~
 name|TC_CANCELLED
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_expr_stmt
-name|present_data
-argument_list|(
-name|tp
-argument_list|)
-specifier|register
-expr|struct
-name|tcb
-operator|*
-name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+comment|/* present data to user */
 block|{
 specifier|register
 name|struct
-name|th
+name|mbuf
 modifier|*
-name|t
+modifier|*
+name|mp
 decl_stmt|;
 specifier|register
 name|struct
 name|ucb
 modifier|*
 name|up
-decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|,
-modifier|*
-modifier|*
-name|mp
+init|=
+name|tp
+operator|->
+name|t_ucb
 decl_stmt|;
 name|seq_t
 name|ready
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PRESENT_DATA
-argument_list|)
-expr_stmt|;
 comment|/* connection must be synced and data available for user */
 if|if
 condition|(
@@ -3528,7 +3485,7 @@ operator|)
 operator|->
 name|m_next
 expr_stmt|;
-name|t
+name|n
 operator|=
 name|tp
 operator|->
@@ -3537,7 +3494,7 @@ expr_stmt|;
 comment|/* SHOULD PACK DATA IN HERE */
 while|while
 condition|(
-name|t
+name|n
 operator|!=
 operator|(
 expr|struct
@@ -3546,7 +3503,7 @@ operator|*
 operator|)
 name|tp
 operator|&&
-name|t
+name|n
 operator|->
 name|t_seq
 operator|<
@@ -3557,21 +3514,21 @@ condition|)
 block|{
 name|remque
 argument_list|(
-name|t
+name|n
 argument_list|)
 expr_stmt|;
 name|m
 operator|=
 name|dtom
 argument_list|(
-name|t
+name|n
 argument_list|)
 expr_stmt|;
 name|up
 operator|->
 name|uc_rcc
 operator|+=
-name|t
+name|n
 operator|->
 name|t_len
 expr_stmt|;
@@ -3579,7 +3536,7 @@ name|tp
 operator|->
 name|seqcnt
 operator|-=
-name|t
+name|n
 operator|->
 name|t_len
 expr_stmt|;
@@ -3596,9 +3553,9 @@ argument_list|(
 literal|"present_data"
 argument_list|)
 expr_stmt|;
-name|t
+name|n
 operator|=
-name|t
+name|n
 operator|->
 name|t_next
 expr_stmt|;
@@ -3693,6 +3650,7 @@ name|UCLOSED
 argument_list|)
 expr_stmt|;
 comment|/* ### */
+block|}
 block|}
 end_block
 
