@@ -77,10 +77,11 @@ end_macro
 
 begin_block
 block|{
+name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|rm
 modifier|*
@@ -225,10 +226,11 @@ end_comment
 begin_block
 block|{
 comment|/* 1 means misc movement, 0 means blindness */
+name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|rm
 modifier|*
@@ -2827,22 +2829,23 @@ end_macro
 
 begin_block
 block|{
+name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-operator|,
+decl_stmt|,
 name|i
-operator|,
+decl_stmt|,
 name|x0
-operator|,
+decl_stmt|,
 name|y0
-operator|,
+decl_stmt|,
 name|m0
-operator|,
+decl_stmt|,
 name|i0
-operator|=
+init|=
 literal|9
-expr_stmt|;
+decl_stmt|;
 name|int
 name|corrct
 init|=
@@ -4472,10 +4475,11 @@ end_macro
 
 begin_block
 block|{
+name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|Blind
@@ -4872,10 +4876,11 @@ argument|nval
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|nval
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -5135,10 +5140,11 @@ begin_comment
 comment|/* may kill you; cause may be poison or monster like 'A' */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|num
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -5193,10 +5199,11 @@ argument|knam
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|n
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -5270,10 +5277,11 @@ argument|mtmp
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|n
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -5324,8 +5332,9 @@ end_comment
 
 begin_block
 block|{
+name|int
 name|num
-expr_stmt|;
+decl_stmt|;
 specifier|extern
 name|long
 name|newuexp

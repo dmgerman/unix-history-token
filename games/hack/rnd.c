@@ -32,12 +32,13 @@ argument|y
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|x
-operator|,
+decl_stmt|,
 name|y
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -61,10 +62,11 @@ argument|x
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -86,10 +88,11 @@ argument|x
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -115,19 +118,21 @@ argument|x
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|n
-operator|,
+decl_stmt|,
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+name|int
 name|tmp
-operator|=
+init|=
 name|n
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 name|n
