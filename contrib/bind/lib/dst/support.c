@@ -6,7 +6,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/support.c,v 1.9 2001/04/05 22:00:06 bwelling Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/support.c,v 1.9.2.1 2001/06/06 21:45:17 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -864,6 +864,20 @@ operator|-
 literal|3
 index|]
 argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|dns_key_rdata
+index|[
+literal|3
+index|]
+operator|==
+name|KEY_HMAC_MD5
+condition|)
+comment|/* compatibility */
+return|return
+literal|0
 return|;
 else|else
 comment|/* compute a checksum on the key part of the key rr */
