@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.32 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2002,7 +2002,7 @@ name|ip
 operator|->
 name|i_rdev
 argument_list|,
-name|S_IFBLK
+name|type
 argument_list|)
 operator|)
 operator|==
@@ -2236,7 +2236,7 @@ name|VT
 operator|.
 name|va_rdev
 argument_list|,
-name|S_IFBLK
+name|type
 argument_list|)
 operator|)
 operator|==
