@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.5 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,9 @@ name|setglob
 argument_list|()
 decl_stmt|,
 name|sethash
+argument_list|()
+decl_stmt|,
+name|setlinger
 argument_list|()
 decl_stmt|,
 name|setmode
@@ -319,6 +322,15 @@ name|lcdhelp
 index|[]
 init|=
 literal|"change local working directory"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|lingerhelp
+index|[]
+init|=
+literal|"wait for other side when closing data connections"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,6 +777,18 @@ block|,
 literal|0
 block|,
 name|lcd
+block|}
+block|,
+block|{
+literal|"linger"
+block|,
+name|lingerhelp
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|setlinger
 block|}
 block|,
 block|{

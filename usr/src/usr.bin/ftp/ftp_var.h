@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ftp_var.h	4.4	83/03/23	*/
+comment|/*	ftp_var.h	4.5	83/06/19	*/
 end_comment
 
 begin_comment
@@ -109,6 +109,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* glob local file names */
+end_comment
+
+begin_decl_stmt
+name|int
+name|linger
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* linger on close of data connections */
 end_comment
 
 begin_decl_stmt
