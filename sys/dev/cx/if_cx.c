@@ -275,7 +275,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|500000
+literal|400000
 end_if
 
 begin_include
@@ -359,7 +359,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|500000
+literal|400000
 end_if
 
 begin_include
@@ -420,7 +420,7 @@ end_if
 begin_error
 error|#
 directive|error
-error|The device cp requires sppp or netgraph.
+error|The device cx requires sppp or netgraph.
 end_error
 
 begin_endif
