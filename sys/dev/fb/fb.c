@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"fb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_fb.h"
 end_include
 
