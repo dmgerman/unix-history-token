@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	6.7	84/09/05	*/
+comment|/*	route.c	6.8	85/03/19	*/
 end_comment
 
 begin_include
@@ -586,7 +586,7 @@ decl_stmt|;
 comment|/* verify the gateway is directly reachable */
 if|if
 condition|(
-name|if_ifwithnet
+name|ifa_ifwithnet
 argument_list|(
 name|gateway
 argument_list|)
@@ -907,9 +907,9 @@ name|u_long
 name|hash
 decl_stmt|;
 name|struct
-name|ifnet
+name|ifaddr
 modifier|*
-name|ifp
+name|ifa
 decl_stmt|;
 name|af
 operator|=
@@ -1218,9 +1218,9 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ifp
+name|ifa
 operator|=
-name|if_ifwithaddr
+name|ifa_ifwithaddr
 argument_list|(
 operator|&
 name|entry
@@ -1230,14 +1230,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
+name|ifa
 operator|==
 literal|0
 condition|)
 block|{
-name|ifp
+name|ifa
 operator|=
-name|if_ifwithnet
+name|ifa_ifwithnet
 argument_list|(
 operator|&
 name|entry
@@ -1247,7 +1247,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
+name|ifa
 operator|==
 literal|0
 condition|)
@@ -1373,7 +1373,9 @@ name|rt
 operator|->
 name|rt_ifp
 operator|=
-name|ifp
+name|ifa
+operator|->
+name|ifa_ifp
 expr_stmt|;
 break|break;
 block|}

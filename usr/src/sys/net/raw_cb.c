@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	6.2	84/08/29	*/
+comment|/*	raw_cb.c	6.3	85/03/19	*/
 end_comment
 
 begin_include
@@ -427,7 +427,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|&&
-name|if_ifwithaddr
+name|ifa_ifwithaddr
 argument_list|(
 name|addr
 argument_list|)
@@ -494,7 +494,7 @@ name|inpup
 operator|.
 name|sin_addr
 operator|=
-name|if_makeaddr
+name|in_makeaddr
 argument_list|(
 name|spup
 operator|->
@@ -513,7 +513,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|&&
-name|if_ifwithaddr
+name|ifa_ifwithaddr
 argument_list|(
 operator|(
 expr|struct
