@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vad.c	4.1 (Berkeley) %G%"
+literal|"@(#)vad.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,9 +340,23 @@ name|write
 argument_list|(
 name|dh
 argument_list|,
-literal|"\005\r"
+literal|"\005"
 argument_list|,
-literal|2
+literal|1
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|dh
+argument_list|,
+literal|"\r"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|DEBUG
@@ -358,7 +372,7 @@ name|ok
 operator|=
 name|expect
 argument_list|(
-literal|"*"
+literal|"*~5"
 argument_list|,
 name|dh
 argument_list|)
@@ -406,7 +420,7 @@ name|ok
 operator|=
 name|expect
 argument_list|(
-literal|"NUMBER?\r\n"
+literal|"NUMBER?\r\n~5"
 argument_list|,
 name|dh
 argument_list|)
