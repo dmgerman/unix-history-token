@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.3 (Berkeley) %G%"
+literal|"@(#)lex.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1431,6 +1431,13 @@ name|getrawlist
 argument_list|(
 name|cp
 argument_list|,
+name|arglist
+argument_list|,
+sizeof|sizeof
+name|arglist
+operator|/
+sizeof|sizeof
+expr|*
 name|arglist
 argument_list|)
 operator|)

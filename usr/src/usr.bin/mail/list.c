@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)list.c	5.3 (Berkeley) %G%"
+literal|"@(#)list.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1583,6 +1583,8 @@ argument_list|(
 argument|line
 argument_list|,
 argument|argv
+argument_list|,
+argument|argc
 argument_list|)
 end_macro
 
@@ -1598,6 +1600,12 @@ name|char
 modifier|*
 modifier|*
 name|argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|argc
 decl_stmt|;
 end_decl_stmt
 
@@ -1623,6 +1631,12 @@ index|]
 decl_stmt|,
 name|quotec
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|last
+decl_stmt|;
 name|ap
 operator|=
 name|argv
@@ -1630,6 +1644,14 @@ expr_stmt|;
 name|cp
 operator|=
 name|line
+expr_stmt|;
+name|last
+operator|=
+name|argv
+operator|+
+name|argc
+operator|-
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -1751,6 +1773,20 @@ operator|==
 name|linebuf
 condition|)
 break|break;
+if|if
+condition|(
+name|ap
+operator|>=
+name|last
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Too many elements in the list; excess discarded\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 operator|*
 name|ap
 operator|++
