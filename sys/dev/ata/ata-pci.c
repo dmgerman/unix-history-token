@@ -771,7 +771,7 @@ name|dev
 argument_list|,
 literal|0x06331039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -780,7 +780,7 @@ name|dev
 argument_list|,
 literal|0x06351039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -789,7 +789,7 @@ name|dev
 argument_list|,
 literal|0x06401039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -798,7 +798,7 @@ name|dev
 argument_list|,
 literal|0x06451039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -807,7 +807,7 @@ name|dev
 argument_list|,
 literal|0x06501039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -816,7 +816,7 @@ name|dev
 argument_list|,
 literal|0x07301039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -825,7 +825,7 @@ name|dev
 argument_list|,
 literal|0x07331039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -834,7 +834,7 @@ name|dev
 argument_list|,
 literal|0x07351039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -843,7 +843,7 @@ name|dev
 argument_list|,
 literal|0x07401039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -852,7 +852,7 @@ name|dev
 argument_list|,
 literal|0x07451039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -861,7 +861,7 @@ name|dev
 argument_list|,
 literal|0x07501039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -876,7 +876,7 @@ name|dev
 argument_list|,
 literal|0x05301039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -885,7 +885,7 @@ name|dev
 argument_list|,
 literal|0x05401039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -894,7 +894,7 @@ name|dev
 argument_list|,
 literal|0x06201039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 name|ata_find_dev
@@ -903,7 +903,7 @@ name|dev
 argument_list|,
 literal|0x06301039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 condition|)
 return|return
