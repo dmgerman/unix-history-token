@@ -305,7 +305,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|time_t
 name|t
 decl_stmt|;
 comment|/* Print symbols in alphabetical order for reader's convenience. */
