@@ -734,17 +734,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|int
-name|in_interfaces
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of external internet interfaces */
-end_comment
-
 begin_comment
 comment|/*  * Generic internet control operations (ioctl's).  * Ifp is 0 if not an interface-specific ioctl.  */
 end_comment
@@ -1356,20 +1345,6 @@ operator|->
 name|ia_ifp
 operator|=
 name|ifp
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-condition|)
-name|in_interfaces
-operator|++
 expr_stmt|;
 name|splx
 argument_list|(
