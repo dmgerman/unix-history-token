@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.5 1996/05/30 02:19:55 pst Exp $"
+literal|"$Id: slstat.c,v 1.7 1996/11/04 17:14:43 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,13 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sockio.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -76,6 +83,18 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -118,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
 end_include
 
 begin_include
@@ -260,7 +273,7 @@ name|int
 name|maxifno
 decl_stmt|;
 name|int
-name|index
+name|indx
 decl_stmt|;
 name|struct
 name|ifmibdata
@@ -340,74 +353,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|name
-index|[
-literal|0
-index|]
-operator|=
-name|CTL_NET
-expr_stmt|;
-name|name
-index|[
-literal|1
-index|]
-operator|=
-name|PF_LINK
-expr_stmt|;
-name|name
-index|[
-literal|2
-index|]
-operator|=
-name|NETLINK_GENERIC
-expr_stmt|;
-name|name
-index|[
-literal|3
-index|]
-operator|=
-name|IFMIB_SYSTEM
-expr_stmt|;
-name|name
-index|[
-literal|4
-index|]
-operator|=
-name|IFMIB_IFCOUNT
-expr_stmt|;
-name|len
-operator|=
-sizeof|sizeof
-name|maxifno
-expr_stmt|;
 if|if
 condition|(
-name|sysctl
-argument_list|(
-name|name
-argument_list|,
-literal|5
-argument_list|,
-operator|&
-name|maxifno
-argument_list|,
-operator|&
-name|len
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
+name|optind
+operator|>=
+name|argc
 condition|)
-name|err
+name|sprintf
 argument_list|(
-literal|1
+name|interface
 argument_list|,
-literal|"sysctl net.link.generic.system.ifcount"
+name|INTERFACE_PREFIX
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|isdigit
@@ -422,13 +383,6 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
-name|struct
-name|ifmibdata
-name|ifmd
-decl_stmt|;
 name|unit
 operator|=
 name|atoi
@@ -521,7 +475,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|usage
 argument_list|(
 name|argv
@@ -530,7 +483,74 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-block|}
+name|name
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_NET
+expr_stmt|;
+name|name
+index|[
+literal|1
+index|]
+operator|=
+name|PF_LINK
+expr_stmt|;
+name|name
+index|[
+literal|2
+index|]
+operator|=
+name|NETLINK_GENERIC
+expr_stmt|;
+name|name
+index|[
+literal|3
+index|]
+operator|=
+name|IFMIB_SYSTEM
+expr_stmt|;
+name|name
+index|[
+literal|4
+index|]
+operator|=
+name|IFMIB_IFCOUNT
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+name|maxifno
+expr_stmt|;
+if|if
+condition|(
+name|sysctl
+argument_list|(
+name|name
+argument_list|,
+literal|5
+argument_list|,
+operator|&
+name|maxifno
+argument_list|,
+operator|&
+name|len
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"sysctl net.link.generic.system.ifcount"
+argument_list|)
+expr_stmt|;
 name|name
 index|[
 literal|3
@@ -556,9 +576,6 @@ name|i
 operator|=
 literal|1
 init|;
-name|i
-operator|<=
-name|maxifno
 condition|;
 name|i
 operator|++
@@ -623,17 +640,16 @@ operator|==
 name|IFT_SLIP
 condition|)
 block|{
-name|index
+name|indx
 operator|=
 name|i
 expr_stmt|;
 break|break;
 block|}
-block|}
 if|if
 condition|(
 name|i
-operator|>
+operator|>=
 name|maxifno
 condition|)
 name|errx
@@ -645,12 +661,13 @@ argument_list|,
 name|interface
 argument_list|)
 expr_stmt|;
+block|}
 name|name
 index|[
 literal|4
 index|]
 operator|=
-name|index
+name|indx
 expr_stmt|;
 name|name
 index|[
@@ -704,9 +721,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: usage:\n\t%s [-i interval] [-rv] [unit]\n"
-argument_list|,
-name|argv0
+literal|"usage: %s [-i interval] [-vr] [unit]\n"
 argument_list|,
 name|argv0
 argument_list|)
@@ -755,9 +770,6 @@ name|sc
 decl_stmt|,
 modifier|*
 name|osc
-decl_stmt|;
-name|off_t
-name|addr
 decl_stmt|;
 name|size_t
 name|len
@@ -825,6 +837,16 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+operator|&&
+operator|(
+name|errno
+operator|!=
+name|ENOMEM
+operator|||
+name|len
+operator|!=
+name|AMT
+operator|)
 condition|)
 name|err
 argument_list|(
@@ -936,7 +958,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%8u %6d %6u %6u %6u"
+literal|"%8lu %6ld %6u %6u %6u"
 argument_list|,
 name|V
 argument_list|(
@@ -980,7 +1002,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|" %6u %6u %6u"
+literal|" %6u %6lu %6lu"
 argument_list|,
 name|V
 argument_list|(
@@ -1027,7 +1049,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" | %8u %6d %6u %6u %6u"
+literal|" | %8lu %6ld %6u %6u %6lu"
 argument_list|,
 name|V
 argument_list|(
@@ -1093,7 +1115,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|" %6u %6u %6u %6u"
+literal|" %6u %6u %6lu %6lu"
 argument_list|,
 name|V
 argument_list|(

@@ -160,12 +160,8 @@ name|argc
 operator|<
 literal|2
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"usage: nice [-number] command [arguments]"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -327,7 +323,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nice [ -# ] command [ options ] [ operands ]\n"
+literal|"usage: nice [-number] command [arguments]\n"
 argument_list|)
 expr_stmt|;
 name|exit
