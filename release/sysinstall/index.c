@@ -3838,13 +3838,11 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to get packages/INDEX file from selected media.\n"
-literal|"This may be because the packages collection is not available at\n"
-literal|"on the distribution media you've chosen (most likely an FTP site\n"
-literal|"without the packages collection mirrored).  Please verify media\n"
-literal|"(or path to media) and try again.  If your local site does not\n"
-literal|"carry the packages collection, then we recommend either a CD\n"
-literal|"distribution or the master distribution on ftp.freebsd.org."
+literal|"Unable to get packages/INDEX file from selected media.\n\n"
+literal|"This may be because the packages collection is not available\n"
+literal|"on the distribution media you've chosen, most likely an FTP site\n"
+literal|"without the packages collection mirrored.  Please verify that\n"
+literal|"your media, or your path to the media, is correct and try again."
 argument_list|)
 expr_stmt|;
 name|mediaDevice
