@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.10 (Berkeley) %G%"
+literal|"@(#)log.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1169,14 +1169,14 @@ name|Double
 ifdef|#
 directive|ifdef
 name|_ANSI_SOURCE
-name|log__D
+name|__log__D
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|log__D
+function|__log__D
 parameter_list|(
 name|x
 parameter_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	5.9 (Berkeley) %G%"
+literal|"@(#)pow.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,11 +520,11 @@ name|s
 decl_stmt|,
 name|t
 decl_stmt|,
-name|log__D
+name|__log__D
 argument_list|()
 decl_stmt|;
 name|double
-name|exp__D
+name|__exp__D
 argument_list|()
 decl_stmt|,
 name|huge
@@ -591,7 +591,7 @@ comment|/* Return exp(y*log(x)), using simulated extended */
 comment|/* precision for the log and the multiply.	  */
 name|s
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|x
 argument_list|)
@@ -677,7 +677,7 @@ name|b
 expr_stmt|;
 return|return
 operator|(
-name|exp__D
+name|__exp__D
 argument_list|(
 name|s
 operator|.

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	5.11 (Berkeley) %G%"
+literal|"@(#)lgamma.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -665,7 +665,7 @@ name|v
 decl_stmt|;
 name|u
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|x
 argument_list|)
@@ -1167,7 +1167,7 @@ operator|)
 expr_stmt|;
 name|rr
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|z
 argument_list|)
@@ -1234,7 +1234,7 @@ expr_stmt|;
 default|default:
 name|rr
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|x
 argument_list|)
@@ -1464,7 +1464,7 @@ operator|)
 expr_stmt|;
 name|rr
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|z
 argument_list|)
@@ -1503,7 +1503,7 @@ literal|0
 case|:
 name|rr
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|x
 argument_list|)
@@ -1539,7 +1539,7 @@ return|;
 default|default:
 name|rr
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|x
 argument_list|)

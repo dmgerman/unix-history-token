@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mathimpl.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mathimpl.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -260,7 +260,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|double
-name|exp__E
+name|__exp__E
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -268,7 +268,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|double
-name|log__L
+name|__log__L
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -288,7 +288,7 @@ end_struct
 
 begin_decl_stmt
 name|double
-name|exp__D
+name|__exp__D
 name|__P
 argument_list|(
 operator|(
@@ -303,7 +303,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|Double
-name|log__D
+name|__log__D
 name|__P
 argument_list|(
 operator|(

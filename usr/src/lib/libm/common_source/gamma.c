@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gamma.c	5.3 (Berkeley) %G%"
+literal|"@(#)gamma.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,7 +491,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|exp__D
+name|__exp__D
 argument_list|(
 name|u
 operator|.
@@ -725,7 +725,7 @@ name|x
 expr_stmt|;
 name|u
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|x
 argument_list|)
@@ -1820,7 +1820,7 @@ argument_list|)
 expr_stmt|;
 name|lsine
 operator|=
-name|log__D
+name|__log__D
 argument_list|(
 name|M_PI
 operator|/
@@ -1874,7 +1874,7 @@ name|b
 expr_stmt|;
 name|y
 operator|=
-name|exp__D
+name|__exp__D
 argument_list|(
 name|y
 argument_list|,

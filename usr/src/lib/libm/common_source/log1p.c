@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log1p.c	5.6 (Berkeley) %G%"
+literal|"@(#)log1p.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,7 +412,7 @@ operator|*
 operator|(
 name|t
 operator|+
-name|log__L
+name|__log__L
 argument_list|(
 name|s
 operator|*

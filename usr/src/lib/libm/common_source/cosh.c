@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cosh.c	5.6 (Berkeley) %G%"
+literal|"@(#)cosh.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,7 +329,7 @@ name|t
 operator|=
 name|x
 operator|+
-name|exp__E
+name|__exp__E
 argument_list|(
 name|x
 argument_list|,

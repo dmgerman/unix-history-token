@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)erf.c	5.7 (Berkeley) %G%"
+literal|"@(#)erf.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1126,7 +1126,7 @@ decl_stmt|,
 name|fabs
 argument_list|()
 decl_stmt|,
-name|exp__D
+name|__exp__D
 argument_list|()
 decl_stmt|;
 if|if
@@ -1848,7 +1848,7 @@ name|y
 expr_stmt|;
 name|r
 operator|=
-name|exp__D
+name|__exp__D
 argument_list|(
 name|s
 argument_list|,
