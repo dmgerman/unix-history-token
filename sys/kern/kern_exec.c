@@ -4561,6 +4561,31 @@ operator|=
 name|curthread
 expr_stmt|;
 comment|/* XXXKSE */
+comment|/* Get file attributes */
+name|error
+operator|=
+name|VOP_GETATTR
+argument_list|(
+name|vp
+argument_list|,
+name|attr
+argument_list|,
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -4590,31 +4615,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* Get file attributes */
-name|error
-operator|=
-name|VOP_GETATTR
-argument_list|(
-name|vp
-argument_list|,
-name|attr
-argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* 	 * 1) Check if file execution is disabled for the filesystem that this 	 *	file resides on. 	 * 2) Insure that at least one execute bit is on - otherwise root 	 *	will always succeed, and we don't want to happen unless the 	 *	file really is executable. 	 * 3) Insure that the file is a regular file. 	 */
 if|if
 condition|(
