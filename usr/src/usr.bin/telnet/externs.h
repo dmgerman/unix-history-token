@@ -177,9 +177,6 @@ decl_stmt|,
 name|dosynch
 argument_list|()
 decl_stmt|,
-name|doflush
-argument_list|()
-decl_stmt|,
 name|setconnmode
 argument_list|()
 decl_stmt|,
