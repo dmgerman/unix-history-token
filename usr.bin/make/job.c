@@ -6626,11 +6626,24 @@ end_comment
 
 begin_function
 name|void
+ifdef|#
+directive|ifdef
+name|USE_KQUEUE
 name|Job_CatchOutput
 parameter_list|(
 name|int
 name|flag
+name|__unused
 parameter_list|)
+else|#
+directive|else
+function|Job_CatchOutput
+parameter_list|(
+name|int
+name|flag
+parameter_list|)
+endif|#
+directive|endif
 block|{
 name|int
 name|nfds
