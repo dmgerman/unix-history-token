@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)mach.h	4.2	(Berkeley)	%G%	*/
+comment|/*	@(#)mach.h	4.3	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  	mach.h	-- define machine-dependent things  *** Pre-processor Flags ***  This set of code is controlled by this set of conditional compilation flags:  TESTING		if defined, do not generate tests, etc. which require 		super-user status.  OLDTTY		if defined, compile for old 1 character TTY names CCTTY		if defined, compile for CC tty name format 		if neither is defined, use v7 ttyname format  PASSWDF		compile in code to handle /etc/passwdf - split passwd files  V6		Assume the v6 features instead of the v7 ones.  FUID		use the funny uid's present on CC V6  DELIVERM	Uses the delivermail program  HPASSWD		The local machine has the hashed password stuff  OLDMAIL		mail is in home-directory/.mail USRMAIL		mail is in /usr/mail/name 		(mail is in /usr/spool/mail/name)  CC		Machine is a Computer Center machine NUID		userid (as returned by getuid()) on this machine UID1CHAR	Uses vanila Version6 userid's (only 1 byte for uid) NOEUID		Does not have the geteuid() system call NFREECMD	doesn't allow any "network" free commands NOFP		floating point just doesn't work on this machine NOREMACCT	allows netlpr's on remote machines without an account CSH		use the /bin/csh shell (Paths.h sets BINSH to this path ). CRN		CC crn's are passed DONTHOLDBIG	large (size> MAXDAYFILE ) jobs wont be held until night for 		transmission  SWAB		this machine has byte-ordering reversed from the DEC VAX  		and PDP-11 standard (the only current example is Onyx) The conditonal flags are first defined in "/usr/include/whoami.h" on the local machine.  For "normal" version 6 machines, there is a dummy machine definition for "VANILLA6" which indicates the v6 UNIX options.  For "normal" version 7 machines, there is a dummy machine definition for "VANILLA7" which indicates the v7 UNIX options. (VM/UNIX and Berkeley VM/VAX/UNIX can use this) */
+comment|/*  	mach.h	-- define machine-dependent things  *** Pre-processor Flags ***  This set of code is controlled by this set of conditional compilation flags:  TESTING		if defined, do not generate tests, etc. which require 		super-user status.  OLDTTY		if defined, compile for old 1 character TTY names CCTTY		if defined, compile for CC tty name format 		if neither is defined, use v7 ttyname format  PASSWDF		compile in code to handle /etc/passwdf - split passwd files  V6		Assume the v6 features instead of the v7 ones.  FUID		use the funny uid's present on CC V6  DELIVERM	Uses the delivermail program  HPASSWD		The local machine has the hashed password stuff  OLDMAIL		mail is in home-directory/.mail USRMAIL		mail is in /usr/mail/name 		(mail is in /usr/spool/mail/name)  CC		Machine is a Computer Center machine NUID		userid (as returned by getuid()) on this machine UID1CHAR	Uses vanila Version6 userid's (only 1 byte for uid) NOEUID		Does not have the geteuid() system call NFREECMD	doesn't allow any "network" free commands NOFP		floating point just doesn't work on this machine NOREMACCT	allows netlpr's on remote machines without an account CSH		use the /bin/csh shell (Paths.h sets BINSH to this path ). CRN		CC crn's are passed DONTHOLDBIG	large (size> MAXDAYFILE ) jobs wont be held until night for 		transmission  SWAB		this machine has byte-ordering reversed from the DEC VAX  		and PDP-11 standard (the only current example is Onyx) The conditonal flags are first defined in "local.h" in this directory.  For "normal" version 6 machines, there is a dummy machine definition for "VANILLA6" which indicates the v6 UNIX options.  For "normal" version 7 machines, there is a dummy machine definition for "VANILLA7" which indicates the v7 UNIX options. (VM/UNIX and Berkeley VM/VAX/UNIX can use this) */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"whoami.h"
+file|"local.h"
 end_include
 
 begin_include
@@ -364,7 +364,7 @@ name|BERKELEY
 end_ifdef
 
 begin_comment
-comment|/* definitions for Berkeley */
+comment|/* CFO - A */
 end_comment
 
 begin_ifdef
@@ -392,6 +392,10 @@ directive|endif
 endif|A
 end_endif
 
+begin_comment
+comment|/* CFO - B */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -416,6 +420,10 @@ endif|#
 directive|endif
 endif|B
 end_endif
+
+begin_comment
+comment|/* CFO - C */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -442,6 +450,10 @@ directive|endif
 endif|C
 end_endif
 
+begin_comment
+comment|/* CFO - D */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -466,6 +478,10 @@ endif|#
 directive|endif
 endif|D
 end_endif
+
+begin_comment
+comment|/* CFO - E */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -492,6 +508,10 @@ directive|endif
 endif|E
 end_endif
 
+begin_comment
+comment|/* CFO - F */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -516,6 +536,10 @@ endif|#
 directive|endif
 endif|F
 end_endif
+
+begin_comment
+comment|/* CFO - G */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -543,53 +567,45 @@ directive|endif
 endif|G
 end_endif
 
+begin_comment
+comment|/* CFO - Jade */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ING70
+name|H
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|V6
+name|LOCAL
+value|'h'
 end_define
 
 begin_define
 define|#
 directive|define
-name|OLDTTY
+name|NUID
+value|(501)
 end_define
 
-begin_define
-define|#
-directive|define
-name|UID1CHAR
-end_define
+begin_endif
+endif|#
+directive|endif
+endif|H
+end_endif
 
-begin_define
-define|#
-directive|define
-name|PASSWDF
-end_define
+begin_comment
+comment|/* CSSG - ing70 */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|DELIVERM
-end_define
-
-begin_define
-define|#
-directive|define
-name|MULTNAMS
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREELPR
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ING70
+end_ifdef
 
 begin_define
 define|#
@@ -605,15 +621,15 @@ name|NUID
 value|(174)
 end_define
 
-begin_comment
-comment|/* correct vers. 7 = LOCAL, NUID */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 endif|ING70
 end_endif
+
+begin_comment
+comment|/* Ingres Group - ucbingres */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -653,10 +669,14 @@ directive|endif
 endif|INGVAX
 end_endif
 
+begin_comment
+comment|/* CS network hub - ucbvax */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VIRUS
+name|UCBVAX
 end_ifdef
 
 begin_define
@@ -670,19 +690,66 @@ begin_define
 define|#
 directive|define
 name|NUID
-value|(-1)
+value|(35)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELIVERM
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXSENDQ
+value|35
 end_define
 
 begin_endif
 endif|#
 directive|endif
-endif|VIRUS
+endif|UCBVAX
 end_endif
+
+begin_comment
+comment|/* Brodersen - ucboz */
+end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IMAGE
+name|OZ
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCAL
+value|'l'
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUID
+value|(501)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|OZ
+end_endif
+
+begin_comment
+comment|/* EE-Signal Proccessing - ucbmedea */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MEDEA
 end_ifdef
 
 begin_define
@@ -696,43 +763,18 @@ begin_define
 define|#
 directive|define
 name|NUID
-value|(120)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXSENDQ
-value|35
-end_define
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_comment
-comment|/* on some v7 cory-derivative systems, this is defined AFTER this point    so you have to give the -l flag to the netdaemon, or remove it.    it is usually in /usr/include/sys/ioctl.h */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NETLDISC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DELIVERM
+value|(501)
 end_define
 
 begin_endif
 endif|#
 directive|endif
-endif|IMAGE
+endif|MEDEA
 end_endif
+
+begin_comment
+comment|/* Fateman - ucbkim */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -750,8 +792,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|DELIVERM
+end_define
+
+begin_define
+define|#
+directive|define
 name|NUID
-value|(XXX)
+value|(501)
 end_define
 
 begin_endif
@@ -759,6 +807,10 @@ endif|#
 directive|endif
 endif|KIM
 end_endif
+
+begin_comment
+comment|/* EECS-Research - ucbesvax */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -786,6 +838,10 @@ directive|endif
 endif|ESVAX
 end_endif
 
+begin_comment
+comment|/* Newton CAD - ucbcad */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -812,6 +868,10 @@ directive|endif
 endif|CAD
 end_endif
 
+begin_comment
+comment|/* currently unused */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -821,104 +881,19 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|V6
-end_define
-
-begin_define
-define|#
-directive|define
-name|CCV6
-end_define
-
-begin_define
-define|#
-directive|define
-name|OLDTTY
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUID
-end_define
-
-begin_define
-define|#
-directive|define
-name|PASSWDF
-end_define
-
-begin_define
-define|#
-directive|define
-name|USRMAIL
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOEUID
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOCAL
 value|'q'
 end_define
-
-begin_define
-define|#
-directive|define
-name|NOREMACCT
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXSENDQ
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUID
-value|((11<< 8) | 38)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXSENDQ
-value|35
-end_define
-
-begin_define
-define|#
-directive|define
-name|CRN
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAGICCRN
-value|"3700"
-end_define
-
-begin_comment
-comment|/* default CC crn */
-end_comment
-
-begin_comment
-comment|/* correct vers. 7 = LOCAL, NUID */
-end_comment
 
 begin_endif
 endif|#
 directive|endif
 endif|Q
 end_endif
+
+begin_comment
+comment|/* Fabry CSRG - ucbarpa */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -959,35 +934,15 @@ directive|endif
 endif|ARPAVAX
 end_endif
 
+begin_comment
+comment|/* CFO& SRC - SRC */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|SRC
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|V6
-end_define
-
-begin_define
-define|#
-directive|define
-name|OLDTTY
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUID
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOEUID
-end_define
 
 begin_define
 define|#
@@ -1003,21 +958,15 @@ name|NUID
 value|38
 end_define
 
-begin_define
-define|#
-directive|define
-name|USRMAIL
-end_define
-
-begin_comment
-comment|/* correct vers. 7 = LOCAL, NUID */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 endif|SRC
 end_endif
+
+begin_comment
+comment|/* Math/Stat Dept - MathStat */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1035,37 +984,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXSENDQ
-value|35
-end_define
-
-begin_define
-define|#
-directive|define
 name|NUID
-value|(31)
-end_define
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_comment
-comment|/* on some v7 cory-derivative systems, this is defined AFTER this point    so you have to give the -l flag to the netdaemon, or remove it.    it is usually in /usr/include/sys/ioctl.h */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NETLDISC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DELIVERM
+value|(-1)
 end_define
 
 begin_endif
@@ -1073,6 +993,53 @@ endif|#
 directive|endif
 endif|MATHSTAT
 end_endif
+
+begin_comment
+comment|/* Fabry CSRG - c70 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|C70
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCAL
+value|'u'
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUID
+value|(501)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELIVERM
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXSENDQ
+value|35
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|C70
+end_endif
+
+begin_comment
+comment|/* CS Research - ucbernie */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1113,6 +1080,39 @@ directive|endif
 endif|CSVAX
 end_endif
 
+begin_comment
+comment|/* Stat Dept - statvax */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STATVAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCAL
+value|'w'
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUID
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|STATVAX
+end_endif
+
+begin_comment
+comment|/* CS Research - Onyx */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1145,10 +1145,6 @@ directive|define
 name|SWAB
 end_define
 
-begin_comment
-comment|/* on the version 6 systems at Berkeley, the best versions of cc (e.g. ncc)    can't take this nested undef so you must delete it when compiling on    version 6 systems */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -1162,11 +1158,21 @@ name|PARMLIST
 value|20
 end_define
 
+begin_define
+define|#
+directive|define
+name|DELIVERM
+end_define
+
 begin_endif
 endif|#
 directive|endif
 endif|ONYX
 end_endif
+
+begin_comment
+comment|/* EECS Dept - Cory */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1201,10 +1207,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_comment
-comment|/* on some v7 cory-derivative systems, this is defined AFTER this point    so you have to give the -l flag to the netdaemon, or remove it.    it is usually in /usr/include/sys/ioctl.h */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -1223,35 +1225,15 @@ directive|endif
 endif|CORY
 end_endif
 
+begin_comment
+comment|/* EECS Dept Administrative - ucbear */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EECS40
+name|EARVAX
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|V6
-end_define
-
-begin_define
-define|#
-directive|define
-name|OLDTTY
-end_define
-
-begin_define
-define|#
-directive|define
-name|PASSWDF
-end_define
-
-begin_define
-define|#
-directive|define
-name|UID1CHAR
-end_define
 
 begin_define
 define|#
@@ -1270,40 +1252,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFREECMD
+name|DELIVERM
 end_define
-
-begin_define
-define|#
-directive|define
-name|NOFP
-end_define
-
-begin_comment
-comment|/* this is necessary on 11/40's since the netdaemon is too    big without split I/D when parmlst is 2000    */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PARMLIST
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PARMLIST
-value|50
-end_define
-
-begin_comment
-comment|/* correct vers. 7 = LOCAL, NUID */
-end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|EECS40
+endif|EARVAX
 end_endif
 
 begin_comment
