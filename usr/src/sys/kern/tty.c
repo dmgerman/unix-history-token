@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.15	%G%	*/
+comment|/*	tty.c	3.16	%G%	*/
 end_comment
 
 begin_comment
@@ -929,6 +929,31 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+operator|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+operator|(
+name|FREAD
+operator||
+name|FWRITE
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|EBADF
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|uap
@@ -1906,6 +1931,32 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|0
+case|:
+operator|(
+name|void
+operator|)
+name|spl5
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|canon
+argument_list|(
+name|tp
+argument_list|)
+operator|>=
+literal|0
+condition|)
+empty_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
+expr_stmt|;
+comment|/* fall into ... */
+case|case
 name|NTTYDISC
 case|:
 name|nread
@@ -1937,11 +1988,6 @@ operator|.
 name|c_cc
 expr_stmt|;
 break|break;
-case|case
-literal|0
-case|:
-comment|/* do something here ... */
-empty_stmt|;
 block|}
 if|if
 condition|(
