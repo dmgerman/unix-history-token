@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.12 1995/11/04 13:23:40 bde Exp $  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.13 1995/11/04 17:07:47 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -36,16 +36,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SI_DEBUG
-end_define
-
-begin_comment
-comment|/* turn driver debugging on */
 end_comment
 
 begin_include
@@ -200,6 +190,16 @@ begin_comment
 comment|/* turn on poller to generate buffer empty interrupt */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|FASTPOLL
+end_undef
+
+begin_comment
+comment|/* turn on 100Hz poller, (XXX: NOTYET!) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|SI_I_HIGH_WATER
-value|(TTYHOG - SLXOS_BUFFERSIZE)
+value|(TTYHOG - 2 * SLXOS_BUFFERSIZE)
 end_define
 
 begin_enum
@@ -494,6 +494,14 @@ directive|ifdef
 name|SI_DEBUG
 end_ifdef
 
+begin_comment
+comment|/* use: ``options "SI_DEBUG"'' in your config file */
+end_comment
+
+begin_comment
+comment|/* XXX: should be varargs, I know.. but where's vprintf()? */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -501,7 +509,7 @@ name|si_dprintf
 name|__P
 argument_list|(
 operator|(
-comment|/* XXX should be varargs struct si_port *pp, int flags, char *str, int a1, int a2, int a3, int a4, int a5, int a6 */
+comment|/* struct si_port *pp, int flags, char *str, int a1, int a2, int a3, int a4, int a5, int a6 */
 operator|)
 argument_list|)
 decl_stmt|;
@@ -593,7 +601,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* where the firmware lives */
+comment|/* where the firmware lives; defined in si_code.c */
 end_comment
 
 begin_decl_stmt
@@ -683,7 +691,7 @@ name|B2000
 end_ifndef
 
 begin_comment
-comment|/* not standard */
+comment|/* not standard, but the hardware knows it. */
 end_comment
 
 begin_define
@@ -981,6 +989,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|fastpoll
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|si_poll
 name|__P
@@ -1141,6 +1158,17 @@ name|kdc_isa
 operator|=
 name|id
 expr_stmt|;
+name|si_kdc
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_UNCONFIGURED
+expr_stmt|;
 name|dev_attach
 argument_list|(
 operator|&
@@ -1270,12 +1298,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"si%d: iomem (%x) out of range\n"
+literal|"si%d: iomem (%lx) out of range\n"
 argument_list|,
 name|id
 operator|->
 name|id_unit
 argument_list|,
+operator|(
+name|long
+operator|)
 name|paddr
 argument_list|)
 expr_stmt|;
@@ -1981,7 +2012,7 @@ name|DBG_AUTOBOOT
 operator||
 name|DBG_FAIL
 operator|,
-literal|"SLXOS si%d: match fail at phys 0x%x, was %x should be %x\n"
+literal|"si%d: match fail at phys 0x%x, was %x should be %x\n"
 operator|,
 name|id
 operator|->
@@ -2084,7 +2115,7 @@ name|DBG_AUTOBOOT
 operator||
 name|DBG_FAIL
 operator|,
-literal|"SLXOS si%d: clear fail at phys 0x%x, was %x\n"
+literal|"si%d: clear fail at phys 0x%x, was %x\n"
 operator|,
 name|id
 operator|->
@@ -2349,6 +2380,9 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
+name|int
+name|uart_type
+decl_stmt|;
 name|DPRINT
 argument_list|(
 operator|(
@@ -2486,7 +2520,7 @@ comment|/* fall-through if not EISA */
 case|case
 name|SI2
 case|:
-comment|/* must get around to writing the code for 		 * these one day */
+comment|/* 		 * must get around to converting the code for 		 * these one day, if FreeBSD ever supports it. 		 */
 return|return
 literal|0
 return|;
@@ -2643,7 +2677,7 @@ name|sc
 operator|->
 name|sc_type
 operator|=
-name|NULL
+name|SIEMPTY
 expr_stmt|;
 return|return
 literal|0
@@ -2651,7 +2685,7 @@ return|;
 case|case
 literal|1
 case|:
-comment|/* set throttle to 100 intr per second */
+comment|/* set throttle to 125 intr per second */
 name|regp
 operator|->
 name|int_count
@@ -2748,7 +2782,7 @@ literal|0
 operator|,
 name|DBG_DOWNLOAD
 operator|,
-literal|"SLXOS si%d: ccb addr 0x%x\n"
+literal|"si%d: ccb addr 0x%x\n"
 operator|,
 name|unit
 operator|,
@@ -2781,7 +2815,7 @@ literal|0
 operator|,
 name|DBG_DOWNLOAD
 operator|,
-literal|"SLXOS si%d: Found 232/422 module, %d ports\n"
+literal|"si%d: Found 232/422 module, %d ports\n"
 operator|,
 name|unit
 operator|,
@@ -3031,6 +3065,10 @@ operator|+
 literal|0x80
 operator|)
 expr_stmt|;
+name|uart_type
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3085,6 +3123,18 @@ operator|+
 literal|0x100
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|uart_type
+operator|==
+literal|0
+condition|)
+name|uart_type
+operator|=
+name|ccbp
+operator|->
+name|type
+expr_stmt|;
 for|for
 control|(
 name|x
@@ -3124,12 +3174,6 @@ operator|->
 name|sp_pend
 operator|=
 name|IDLE_CLOSE
-expr_stmt|;
-name|pp
-operator|->
-name|sp_flags
-operator|=
-literal|0
 expr_stmt|;
 name|pp
 operator|->
@@ -3224,7 +3268,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"si%d: card: %s, ports: %d, modules: %d\n"
+literal|"si%d: card: %s, ports: %d, modules: %d (type: %d)\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3237,6 +3281,8 @@ operator|->
 name|sc_nport
 argument_list|,
 name|nmodule
+argument_list|,
+name|uart_type
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3470,7 +3516,7 @@ name|sc
 operator|->
 name|sc_type
 operator|==
-name|NULL
+name|SIEMPTY
 condition|)
 block|{
 name|DPRINT
@@ -3482,7 +3528,7 @@ name|DBG_OPEN
 operator||
 name|DBG_FAIL
 operator|,
-literal|"SLXOS si%d: type %s??\n"
+literal|"si%d: type %s??\n"
 operator|,
 name|card
 operator|,
@@ -3523,7 +3569,7 @@ name|DBG_OPEN
 operator||
 name|DBG_FAIL
 operator|,
-literal|"SLXOS si%d: nports %d\n"
+literal|"si%d: nports %d\n"
 operator|,
 name|card
 operator|,
@@ -6326,7 +6372,7 @@ name|xsc
 operator|->
 name|sc_type
 operator|==
-name|NULL
+name|SIEMPTY
 condition|)
 block|{
 name|error
@@ -7381,8 +7427,6 @@ argument_list|(
 name|oldspl
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 operator|(
 name|error
@@ -7846,7 +7890,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Poller to catch missed interrupts.  */
+comment|/*  * Poller to catch missed interrupts.  *  * Note that the SYSV SLXOS drivers poll at 100 times per second to get better  * response.  We could really use a "periodic" version timeout(). :-)  */
 end_comment
 
 begin_ifdef
@@ -7881,10 +7925,18 @@ name|si_reg
 modifier|*
 name|regp
 decl_stmt|;
+specifier|register
+name|struct
+name|si_port
+modifier|*
+name|pp
+decl_stmt|;
 name|int
 name|lost
 decl_stmt|,
 name|oldspl
+decl_stmt|,
+name|port
 decl_stmt|;
 name|DPRINT
 argument_list|(
@@ -7941,7 +7993,7 @@ name|sc
 operator|->
 name|sc_type
 operator|==
-name|NULL
+name|SIEMPTY
 condition|)
 continue|continue;
 name|regp
@@ -7982,7 +8034,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SLXOS si%d: lost intr\n"
+literal|"si%d: lost intr\n"
 argument_list|,
 name|i
 argument_list|)
@@ -8000,6 +8052,60 @@ name|int_scounter
 operator|=
 literal|0
 expr_stmt|;
+block|}
+comment|/* 		 * gripe about no input flow control.. 		 */
+name|pp
+operator|=
+name|sc
+operator|->
+name|sc_ports
+expr_stmt|;
+for|for
+control|(
+name|port
+operator|=
+literal|0
+init|;
+name|port
+operator|<
+name|sc
+operator|->
+name|sc_nport
+condition|;
+name|pp
+operator|++
+operator|,
+name|port
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|pp
+operator|->
+name|sp_delta_overflows
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"si%d: %d tty level buffer overflows\n"
+argument_list|,
+name|i
+argument_list|,
+name|pp
+operator|->
+name|sp_delta_overflows
+argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|sp_delta_overflows
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -8051,7 +8157,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|BYTE
-name|rxbuf
+name|si_rxbuf
 index|[
 name|SLXOS_BUFFERSIZE
 index|]
@@ -8113,6 +8219,8 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|i
+decl_stmt|,
+name|isopen
 decl_stmt|;
 specifier|volatile
 name|BYTE
@@ -8158,7 +8266,7 @@ comment|/* should never happen */
 return|return;
 name|printf
 argument_list|(
-literal|"SLXOS si%d: Warning interrupt handler re-entered\n"
+literal|"si%d: Warning interrupt handler re-entered\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -8198,9 +8306,10 @@ name|sc
 operator|->
 name|sc_type
 operator|==
-name|NULL
+name|SIEMPTY
 condition|)
 continue|continue;
+comment|/* 		 * First, clear the interrupt 		 */
 switch|switch
 condition|(
 name|sc
@@ -8359,6 +8468,7 @@ name|int_scounter
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * check each port 		 */
 for|for
 control|(
 name|pp
@@ -8499,16 +8609,7 @@ operator|->
 name|hi_ip
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Do break processing 			 */
-if|if
-condition|(
-name|ccbp
-operator|->
-name|hi_state
-operator|&
-name|ST_BREAK
-condition|)
-block|{
+comment|/* 			 * Check to see if there's we should 'receive' 			 * characters. 			 */
 if|if
 condition|(
 name|tp
@@ -8522,6 +8623,29 @@ operator|->
 name|t_state
 operator|&
 name|TS_ISOPEN
+condition|)
+name|isopen
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|isopen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 			 * Do break processing 			 */
+if|if
+condition|(
+name|ccbp
+operator|->
+name|hi_state
+operator|&
+name|ST_BREAK
+condition|)
+block|{
+if|if
+condition|(
+name|isopen
 condition|)
 block|{
 operator|(
@@ -8562,28 +8686,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Do RX stuff - if not open then 			 * dump any characters. 			 */
+comment|/* 			 * Do RX stuff - if not open then dump any characters. 			 * XXX: This is VERY messy and needs to be cleaned up. 			 * 			 * XXX: can we leave data in the host adapter buffer 			 * when the clists are full?  That may be dangerous 			 * if the user cannot get an interrupt signal through. 			 */
+name|more_rx
+label|:
+comment|/* XXX Sorry. the nesting was driving me bats! :-( */
 if|if
 condition|(
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_CONNECTED
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-operator|)
-operator|==
-literal|0
+operator|!
+name|isopen
 condition|)
 block|{
 name|ccbp
@@ -8594,12 +8704,11 @@ name|ccbp
 operator|->
 name|hi_rxipos
 expr_stmt|;
+goto|goto
+name|end_rx
+goto|;
 block|}
-else|else
-block|{
-while|while
-condition|(
-operator|(
+comment|/* 			 * Process read characters if not skipped above 			 */
 name|c
 operator|=
 name|ccbp
@@ -8609,11 +8718,18 @@ operator|-
 name|ccbp
 operator|->
 name|hi_rxopos
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
 literal|0
 condition|)
 block|{
+goto|goto
+name|end_rx
+goto|;
+block|}
 name|op
 operator|=
 name|ccbp
@@ -8649,6 +8765,7 @@ name|ip
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Suck characters out of host card buffer into the 			 * "input staging buffer" - so that we dont leave the 			 * host card in limbo while we're possibly echoing 			 * characters and possibly flushing input inside the 			 * ldisc l_rint() routine. 			 */
 if|if
 condition|(
 name|n
@@ -8684,7 +8801,7 @@ name|caddr_t
 operator|)
 name|z
 argument_list|,
-name|rxbuf
+name|si_rxbuf
 argument_list|,
 name|n
 argument_list|)
@@ -8730,7 +8847,7 @@ name|caddr_t
 operator|)
 name|z
 argument_list|,
-name|rxbuf
+name|si_rxbuf
 argument_list|,
 name|x
 argument_list|)
@@ -8763,7 +8880,7 @@ name|caddr_t
 operator|)
 name|z
 argument_list|,
-name|rxbuf
+name|si_rxbuf
 operator|+
 name|x
 argument_list|,
@@ -8777,6 +8894,7 @@ operator|+=
 name|n
 expr_stmt|;
 block|}
+comment|/* clear collected characters from buffer */
 name|ccbp
 operator|->
 name|hi_rxopos
@@ -8800,8 +8918,8 @@ name|ip
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 					 * at this point... 					 * n = number of chars placed in rxbuf 					 */
-comment|/* 		 * Avoid the grotesquely inefficient lineswitch routine 		 * (ttyinput) in "raw" mode.  It usually takes about 450 		 * instructions (that's without canonical processing or echo!). 		 * slinput is reasonably fast (usually 40 instructions plus 		 * call overhead). 		 */
+comment|/* 			 * at this point... 			 * n = number of chars placed in si_rxbuf 			 */
+comment|/* 			 * Avoid the grotesquely inefficient lineswitch 			 * routine (ttyinput) in "raw" mode. It usually 			 * takes about 450 instructions (that's without 			 * canonical processing or echo!). slinput is 			 * reasonably fast (usually 40 instructions 			 * plus call overhead). 			 */
 if|if
 condition|(
 name|tp
@@ -8866,13 +8984,17 @@ name|t_rawcc
 operator|+=
 name|n
 expr_stmt|;
+name|pp
+operator|->
+name|sp_delta_overflows
+operator|+=
 name|b_to_q
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|rxbuf
+name|si_rxbuf
 argument_list|,
 name|n
 argument_list|,
@@ -8941,6 +9063,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 				 * It'd be nice to not have to go through the 				 * function call overhead for each char here. 				 * It'd be nice to block input it, saving a 				 * loop here and the call/return overhead. 				 */
 for|for
 control|(
 name|x
@@ -8957,11 +9080,13 @@ control|)
 block|{
 name|i
 operator|=
-name|rxbuf
+name|si_rxbuf
 index|[
 name|x
 index|]
 expr_stmt|;
+if|if
+condition|(
 operator|(
 operator|*
 name|linesw
@@ -8974,14 +9099,22 @@ operator|.
 name|l_rint
 operator|)
 operator|(
-name|rxbuf
-index|[
-name|x
-index|]
+name|i
 operator|,
 name|tp
 operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|pp
+operator|->
+name|sp_delta_overflows
+operator|++
 expr_stmt|;
+block|}
+comment|/* 					 * doesn't seem to be much point doing 					 * this here.. this driver has no 					 * softtty processing! ?? 					 */
 if|if
 condition|(
 name|pp
@@ -9001,10 +9134,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-comment|/* end of RX while */
-block|}
-comment|/* end TS_CONNECTED */
+goto|goto
+name|more_rx
+goto|;
+comment|/* try for more until RXbuf is empty */
+name|end_rx
+label|:
+comment|/* XXX: Again, sorry about the gotos.. :-) */
 comment|/* 			 * Do TX stuff 			 */
 operator|(
 operator|*
@@ -9054,7 +9190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Nudge the transmitter...  */
+comment|/*  * Nudge the transmitter...  *  * XXX: I inherited some funny code here.  It implies the host card only  * interrupts when the transmit buffer reaches the low-water-mark, and does  * not interrupt when it's actually hits empty.  In some cases, we have  * processes waiting for complete drain, and we need to simulate an interrupt  * about when we think the buffer is going to be empty (and retry if not).  * I really am not certain about this...  I *need* the hardware manuals.  */
 end_comment
 
 begin_function
@@ -9576,8 +9712,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"SLXOS si%d: bad char time value!!\n"
+literal|"si%d: bad char time value!!\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|SI_CARD
 argument_list|(
 name|tp
@@ -9789,7 +9928,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* nudge protocols */
+comment|/* nudge protocols - eg: ppp */
 operator|(
 operator|*
 name|linesw
@@ -9933,9 +10072,25 @@ block|}
 block|}
 if|#
 directive|if
-literal|0
-comment|/* this doesn't work right yet.. */
-block|if (rw& FREAD) { 		ccbp->hi_rxopos = ccbp->hi_rxipos; 	}
+literal|1
+comment|/* XXX: this doesn't work right yet.. */
+comment|/* XXX: this may have been failing because we used to call l_rint() 	 * while we were looping based on these two counters. Now, we collect 	 * the data and then loop stuffing it into l_rint(), making this 	 * useless.  Should we cause this to blow away the staging buffer? 	 */
+if|if
+condition|(
+name|rw
+operator|&
+name|FREAD
+condition|)
+block|{
+name|ccbp
+operator|->
+name|hi_rxopos
+operator|=
+name|ccbp
+operator|->
+name|hi_rxipos
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -10547,6 +10702,9 @@ literal|"SLXOS %ci%d(%d): "
 argument_list|,
 literal|'s'
 argument_list|,
+operator|(
+name|int
+operator|)
 name|SI_CARD
 argument_list|(
 name|pp
@@ -10556,6 +10714,9 @@ operator|->
 name|t_dev
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|SI_PORT
 argument_list|(
 name|pp
