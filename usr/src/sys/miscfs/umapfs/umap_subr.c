@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)umap_subr.c	8.7 (Berkeley) %G%  *  * $Id: lofs_subr.c, v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)umap_subr.c	8.8 (Berkeley) %G%  *  * $Id: lofs_subr.c, v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_include
@@ -114,8 +114,18 @@ end_comment
 
 begin_macro
 name|umapfs_init
-argument_list|()
+argument_list|(
+argument|vfsp
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
