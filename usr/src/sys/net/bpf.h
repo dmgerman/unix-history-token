@@ -135,8 +135,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BIOCDEVP
-value|_IOR(B,106, struct bpf_devp)
+name|BIOCGDLT
+value|_IOR(B,106, u_int)
 end_define
 
 begin_define
@@ -224,8 +224,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BIOCDEVP
-value|_IOR('B',106, struct bpf_devp)
+name|BIOCGDLT
+value|_IOR('B',106, u_int)
 end_define
 
 begin_define
@@ -274,26 +274,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * The device parameters of a network interface.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bpf_devp
-block|{
-name|u_short
-name|bdev_type
-decl_stmt|;
-comment|/* data link layer type, codes below */
-name|u_short
-name|bdev_hdrlen
-decl_stmt|;
-comment|/* length of a hardware packet header */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Structure prepended to each packet.  */
@@ -347,7 +327,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Data-link level type codes.  * Currently, only ENDT_10MB and DLT_SLIP are supported.  */
+comment|/*  * Data-link level type codes.  * Currently, only DLT_EN10MB and DLT_SLIP are supported.  */
 end_comment
 
 begin_define
