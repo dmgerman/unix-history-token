@@ -2101,7 +2101,7 @@ literal|"%s/%s/%s"
 argument_list|,
 name|LOG_DIR
 argument_list|,
-name|basename_of
+name|basename
 argument_list|(
 name|p
 operator|->

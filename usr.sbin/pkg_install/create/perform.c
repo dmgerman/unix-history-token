@@ -695,7 +695,7 @@ name|plist
 argument_list|,
 name|PLIST_NAME
 argument_list|,
-name|basename_of
+name|basename
 argument_list|(
 name|pkg
 argument_list|)
