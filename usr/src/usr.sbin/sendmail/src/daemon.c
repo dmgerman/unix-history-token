@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -920,6 +920,9 @@ name|EALREADY
 case|:
 case|case
 name|EADDRINUSE
+case|:
+case|case
+name|EHOSTDOWN
 case|:
 case|case
 name|ENETDOWN
