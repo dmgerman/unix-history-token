@@ -60,6 +60,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pthread_resume_all_np
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pthread_resume_np
 parameter_list|(
 name|pthread_t
@@ -70,6 +79,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|pthread_single_np
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pthread_suspend_all_np
 parameter_list|(
 name|void
 parameter_list|)
