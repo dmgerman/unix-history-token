@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -153,16 +159,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* update message */
-end_comment
-
-begin_decl_stmt
-name|char
-name|ospeed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tty output speed */
 end_comment
 
 begin_decl_stmt
