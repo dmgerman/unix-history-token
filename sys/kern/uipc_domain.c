@@ -174,6 +174,21 @@ begin_comment
 comment|/* domain list lock */
 end_comment
 
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|domain
+argument_list|,
+operator|&
+name|dom_mtx
+argument_list|,
+literal|"domain list"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Add a new protocol domain to the list of supported domains  * Note: you cant unload it again because  a socket may be using it.  * XXX can't fail at this time.  */
 end_comment
@@ -387,18 +402,6 @@ argument_list|(
 name|socket_zone
 argument_list|,
 name|maxsockets
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|dom_mtx
-argument_list|,
-literal|"domain list lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
