@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.17 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2945,7 +2945,7 @@ name|prescan
 argument_list|(
 name|from
 argument_list|,
-literal|'\0'
+name|delimchar
 argument_list|,
 name|pvpbuf
 argument_list|,
