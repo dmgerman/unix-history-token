@@ -3984,7 +3984,7 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wihap_deauth_req: unknown station: 6D\n"
+literal|"wihap_deauth_req: unknown station: %6D\n"
 argument_list|,
 name|rxfrm
 operator|->
@@ -4097,7 +4097,7 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wihap_disassoc_req: unknown station: 6D\n"
+literal|"wihap_disassoc_req: unknown station: %6D\n"
 argument_list|,
 name|rxfrm
 operator|->

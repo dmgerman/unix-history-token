@@ -176,7 +176,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"can't allocate memory for root feeder\n"
+literal|"can't allocate memory for root feeder: %s\n"
 argument_list|,
 name|fc
 operator|->

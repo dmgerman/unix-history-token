@@ -1063,10 +1063,6 @@ literal|"%dKB/s,"
 argument_list|,
 name|fdp
 operator|->
-name|lun
-argument_list|,
-name|fdp
-operator|->
 name|cap
 operator|.
 name|transfer_rate

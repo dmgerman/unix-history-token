@@ -2395,10 +2395,6 @@ name|sc
 operator|->
 name|tz_temperature
 argument_list|)
-argument_list|,
-name|sc
-operator|->
-name|tz_temperature
 argument_list|)
 expr_stmt|;
 comment|/* shutdown_nice(RB_POWEROFF);*/

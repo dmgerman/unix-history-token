@@ -621,7 +621,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"iavc%d: no card ? b1_detect returns 0x02x\n"
+literal|"iavc%d: no card ? b1_detect returns %0x02x\n"
 argument_list|,
 name|sc
 operator|->

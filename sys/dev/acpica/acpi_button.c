@@ -509,10 +509,6 @@ argument_list|,
 name|acpi_sc
 argument_list|,
 literal|"power button pressed\n"
-argument_list|,
-name|sc
-operator|->
-name|button_type
 argument_list|)
 expr_stmt|;
 name|acpi_eventhandler_power_button_for_sleep
@@ -537,10 +533,6 @@ argument_list|,
 name|acpi_sc
 argument_list|,
 literal|"sleep button pressed\n"
-argument_list|,
-name|sc
-operator|->
-name|button_type
 argument_list|)
 expr_stmt|;
 name|acpi_eventhandler_sleep_button_for_sleep
@@ -641,10 +633,6 @@ argument_list|,
 name|acpi_sc
 argument_list|,
 literal|"wakeup by power button\n"
-argument_list|,
-name|sc
-operator|->
-name|button_type
 argument_list|)
 expr_stmt|;
 name|acpi_eventhandler_power_button_for_wakeup
@@ -669,10 +657,6 @@ argument_list|,
 name|acpi_sc
 argument_list|,
 literal|"wakeup by sleep button\n"
-argument_list|,
-name|sc
-operator|->
-name|button_type
 argument_list|)
 expr_stmt|;
 name|acpi_eventhandler_sleep_button_for_wakeup
