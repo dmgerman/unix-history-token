@@ -87,6 +87,9 @@ decl_stmt|;
 name|u_int
 name|flags
 decl_stmt|;
+name|int
+name|regshft
+decl_stmt|;
 block|}
 name|ports
 index|[
@@ -155,6 +158,45 @@ name|PUC_PORT_TYPE_LPT
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|PUC_PORT_TYPE_UART
+value|3
+end_define
+
+begin_comment
+comment|/* UART subtypes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PUC_PORT_SUBTYPE_MASK
+value|(~0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUC_PORT_UART_NS8250
+value|(0<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUC_PORT_UART_SAB82532
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUC_PORT_UART_Z8530
+value|(2<<8)
+end_define
+
 begin_comment
 comment|/* Interrupt Latch Register (ILR) types */
 end_comment
@@ -187,6 +229,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PUC_FLAGS_ALTRES
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Use alternate I/O type. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PUC_PORT_VALID
 parameter_list|(
 name|desc
@@ -194,7 +247,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|((port)< PUC_MAX_PORTS&& (desc)->ports[(port)].type != PUC_PORT_TYPE_NONE)
+value|((port)< PUC_MAX_PORTS&& (desc).ports[(port)].type != PUC_PORT_TYPE_NONE)
 end_define
 
 begin_define
@@ -209,6 +262,10 @@ enum|enum
 name|puc_device_ivars
 block|{
 name|PUC_IVAR_FREQ
+block|,
+name|PUC_IVAR_SUBTYPE
+block|,
+name|PUC_IVAR_REGSHFT
 block|}
 enum|;
 end_enum
@@ -375,32 +432,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|const
-name|struct
-name|puc_device_description
-modifier|*
-name|puc_find_description
-parameter_list|(
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|puc_softc
 block|{
-specifier|const
 name|struct
 name|puc_device_description
-modifier|*
 name|sc_desc
 decl_stmt|;
 comment|/* card-global dynamic data */
@@ -495,27 +532,6 @@ end_endif
 begin_comment
 comment|/* PUC_ENTRAILS */
 end_comment
-
-begin_function_decl
-name|int
-name|puc_config_win877
-parameter_list|(
-name|struct
-name|puc_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|puc_device_description
-name|puc_devices
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 
