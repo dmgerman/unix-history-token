@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.22 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.23 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.22 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.23 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,13 +361,19 @@ literal|"showq"
 block|,
 name|CMDDBGQSHOW
 block|,
+endif|#
+directive|endif
+endif|DEBUG
+ifdef|#
+directive|ifdef
+name|notdef
 literal|"debug"
 block|,
 name|CMDDBGDEBUG
 block|,
 endif|#
 directive|endif
-endif|DEBUG
+endif|notdef
 ifdef|#
 directive|ifdef
 name|WIZ
