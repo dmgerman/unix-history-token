@@ -377,7 +377,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"svctcp_.c - udp socket creation problem"
+literal|"svctcp_.c - tcp socket creation problem"
 argument_list|)
 expr_stmt|;
 return|return
