@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.13 1994/05/27 01:02:14 paulus Exp $"
+literal|"$Id: main.c,v 1.2 1994/09/25 02:32:07 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -387,6 +393,13 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
+name|username
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|hostname
 index|[
 name|MAXNAMELEN
@@ -457,6 +470,12 @@ end_decl_stmt
 begin_comment
 comment|/* Our real user-id */
 end_comment
+
+begin_decl_stmt
+name|gid_t
+name|gid
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1108,34 +1127,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|ttyname
-name|__ARGS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|getlogin
-name|__ARGS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * PPP Data Link Layer "protocol" table.  * One entry per supported protocol.  */
 end_comment
@@ -1354,6 +1345,11 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
+name|gid
+operator|=
+name|getgid
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1516,14 +1512,14 @@ expr_stmt|;
 name|magic_init
 argument_list|()
 expr_stmt|;
-name|p
+name|username
 operator|=
 name|getlogin
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|username
 operator|==
 name|NULL
 condition|)
@@ -1547,14 +1543,14 @@ name|pw_name
 operator|!=
 name|NULL
 condition|)
-name|p
+name|username
 operator|=
 name|pw
 operator|->
 name|pw_name
 expr_stmt|;
 else|else
-name|p
+name|username
 operator|=
 literal|"(unknown)"
 expr_stmt|;
@@ -1569,7 +1565,7 @@ name|VERSION
 argument_list|,
 name|PATCHLEVEL
 argument_list|,
-name|p
+name|username
 argument_list|,
 name|uid
 argument_list|)
@@ -1590,9 +1586,7 @@ operator|(
 name|pgrpid
 operator|=
 name|getpgrp
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|)
 operator|<
 literal|0
@@ -1602,7 +1596,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"getpgrp(0): %m"
+literal|"getpgrp(): %m"
 argument_list|)
 expr_stmt|;
 name|die
@@ -5306,22 +5300,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|setreuid
+name|initgroups
 argument_list|(
-name|getuid
-argument_list|()
+name|username
 argument_list|,
-name|getuid
-argument_list|()
+name|gid
 argument_list|)
 expr_stmt|;
-name|setregid
+name|setgid
 argument_list|(
-name|getgid
-argument_list|()
-argument_list|,
-name|getgid
-argument_list|()
+name|gid
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 name|sigprocmask
