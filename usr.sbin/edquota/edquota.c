@@ -561,7 +561,7 @@ name|readtimes
 argument_list|(
 name|protoprivs
 argument_list|,
-name|tmpfd
+name|tmpfil
 argument_list|)
 condition|)
 name|putprivs
@@ -653,7 +653,7 @@ name|readprivs
 argument_list|(
 name|curprivs
 argument_list|,
-name|tmpfd
+name|tmpfil
 argument_list|)
 condition|)
 name|putprivs
@@ -1987,7 +1987,7 @@ name|readprivs
 argument_list|(
 argument|quplist
 argument_list|,
-argument|infd
+argument|inname
 argument_list|)
 end_macro
 
@@ -2000,8 +2000,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|infd
+name|char
+modifier|*
+name|inname
 decl_stmt|;
 end_decl_stmt
 
@@ -2043,23 +2044,11 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|lseek
-argument_list|(
-name|infd
-argument_list|,
-literal|0
-argument_list|,
-name|L_SET
-argument_list|)
-expr_stmt|;
 name|fd
 operator|=
-name|fdopen
+name|fopen
 argument_list|(
-name|dup
-argument_list|(
-name|infd
-argument_list|)
+name|inname
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2855,7 +2844,7 @@ name|readtimes
 argument_list|(
 argument|quplist
 argument_list|,
-argument|infd
+argument|inname
 argument_list|)
 end_macro
 
@@ -2868,8 +2857,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|infd
+name|char
+modifier|*
+name|inname
 decl_stmt|;
 end_decl_stmt
 
@@ -2921,23 +2911,11 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|lseek
-argument_list|(
-name|infd
-argument_list|,
-literal|0
-argument_list|,
-name|L_SET
-argument_list|)
-expr_stmt|;
 name|fd
 operator|=
-name|fdopen
+name|fopen
 argument_list|(
-name|dup
-argument_list|(
-name|infd
-argument_list|)
+name|inname
 argument_list|,
 literal|"r"
 argument_list|)
