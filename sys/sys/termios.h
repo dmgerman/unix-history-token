@@ -286,6 +286,11 @@ begin_comment
 comment|/* ICANON */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*			19	   spare 2 */
 end_comment
@@ -296,11 +301,6 @@ directive|define
 name|NCCS
 value|20
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
