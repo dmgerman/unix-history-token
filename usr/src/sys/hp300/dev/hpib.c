@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -155,7 +155,7 @@ begin_decl_stmt
 name|int
 name|hpibidtimeout
 init|=
-literal|100000
+literal|10000
 decl_stmt|;
 end_decl_stmt
 
@@ -512,7 +512,7 @@ decl_stmt|;
 name|int
 name|ohpibtimeout
 decl_stmt|;
-comment|/* 	 * XXX: shorten timeout value (so autoconfig doesn't take forever) 	 */
+comment|/* 	 * XXX shorten timeout value so autoconfig doesn't 	 * take forever on slow CPUs. 	 */
 name|ohpibtimeout
 operator|=
 name|hpibtimeout
@@ -520,6 +520,8 @@ expr_stmt|;
 name|hpibtimeout
 operator|=
 name|hpibidtimeout
+operator|*
+name|cpuspeed
 expr_stmt|;
 if|if
 condition|(
