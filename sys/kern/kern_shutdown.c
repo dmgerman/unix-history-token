@@ -305,6 +305,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dumping
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system is dumping */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|void
 name|boot
@@ -1793,10 +1803,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-decl_stmt|;
-specifier|static
-name|int
-name|dumping
 decl_stmt|;
 if|if
 condition|(
