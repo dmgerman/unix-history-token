@@ -1367,7 +1367,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_biba_subject_equal_ok
+name|mac_biba_subject_privileged
 parameter_list|(
 name|struct
 name|mac_biba
@@ -1388,7 +1388,7 @@ operator|==
 name|MAC_BIBA_FLAGS_BOTH
 argument_list|,
 operator|(
-literal|"mac_biba_subject_equal_ok: subject doesn't have both labels"
+literal|"mac_biba_subject_privileged: subject doesn't have both labels"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6868,7 +6868,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_biba_subject_equal_ok
+name|mac_biba_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -7584,7 +7584,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_biba_subject_equal_ok
+name|mac_biba_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -8269,7 +8269,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_biba_subject_equal_ok
+name|mac_biba_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9985,7 +9985,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_biba_subject_equal_ok
+name|mac_biba_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
