@@ -1916,7 +1916,7 @@ operator|>=
 name|ERRBUFSIZ
 argument_list|,
 operator|(
-literal|"gv_sd_to_drive: short errlen"
+literal|"gv_sd_to_drive: short errlen (%d)"
 operator|,
 name|errlen
 operator|)
