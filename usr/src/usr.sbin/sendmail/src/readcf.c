@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.8 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5873,6 +5873,12 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SECONDS
+end_define
+
+begin_define
+define|#
+directive|define
 name|MINUTES
 value|* 60
 end_define
@@ -6024,6 +6030,16 @@ name|time_t
 operator|)
 literal|2
 name|MINUTES
+expr_stmt|;
+name|TimeOuts
+operator|.
+name|to_ident
+operator|=
+operator|(
+name|time_t
+operator|)
+literal|30
+name|SECONDS
 expr_stmt|;
 return|return;
 block|}
@@ -6399,6 +6415,24 @@ condition|)
 name|TimeOuts
 operator|.
 name|to_miscshort
+operator|=
+name|to
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|val
+argument_list|,
+literal|"ident"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|TimeOuts
+operator|.
+name|to_ident
 operator|=
 name|to
 expr_stmt|;

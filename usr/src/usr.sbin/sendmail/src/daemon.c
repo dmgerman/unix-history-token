@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.6 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.7 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.6 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.7 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2112,10 +2112,9 @@ name|ev
 operator|=
 name|setevent
 argument_list|(
-operator|(
-name|time_t
-operator|)
-literal|30
+name|TimeOuts
+operator|.
+name|to_ident
 argument_list|,
 name|authtimeout
 argument_list|,
