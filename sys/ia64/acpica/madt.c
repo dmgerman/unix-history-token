@@ -171,11 +171,9 @@ decl_stmt|;
 comment|/* Processor local SAPIC eid */
 name|UINT8
 name|Reserved
-decl_stmt|;
-name|UINT32
-name|Reserved1
-range|:
-literal|16
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|UINT32
 name|ProcessorEnabled
@@ -183,9 +181,9 @@ range|:
 literal|1
 decl_stmt|;
 name|UINT32
-name|Reserved2
+name|FlagsReserved
 range|:
-literal|15
+literal|31
 decl_stmt|;
 block|}
 name|LOCAL_SAPIC
