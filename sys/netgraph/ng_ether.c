@@ -2635,6 +2635,16 @@ operator|*
 name|eh
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|priv
+operator|->
+name|ifp
+expr_stmt|;
 comment|/* Route packet back in */
 name|NG_FREE_META
 argument_list|(
