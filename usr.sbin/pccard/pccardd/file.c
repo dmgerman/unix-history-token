@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: file.c,v 1.4 1996/04/18 04:25:13 nate Exp $  */
 end_comment
 
 begin_include
@@ -73,25 +73,25 @@ name|keys
 index|[]
 init|=
 block|{
-literal|"io"
+literal|"__EOF__"
 block|,
 comment|/* 1 */
-literal|"irq"
+literal|"io"
 block|,
 comment|/* 2 */
-literal|"memory"
+literal|"irq"
 block|,
 comment|/* 3 */
-literal|"card"
+literal|"memory"
 block|,
 comment|/* 4 */
-literal|"device"
+literal|"card"
 block|,
 comment|/* 5 */
-literal|"config"
+literal|"device"
 block|,
 comment|/* 6 */
-literal|"__EOF__"
+literal|"config"
 block|,
 comment|/* 7 */
 literal|"reset"
@@ -406,23 +406,13 @@ argument_list|()
 argument_list|)
 condition|)
 block|{
-default|default:
-name|error
-argument_list|(
-literal|"Syntax error"
-argument_list|)
-expr_stmt|;
-name|pusht
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-literal|7
-case|:
-return|return;
 case|case
 literal|1
+case|:
+comment|/* EOF */
+return|return;
+case|case
+literal|2
 case|:
 comment|/* reserved I/O blocks */
 while|while
@@ -497,7 +487,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|2
+literal|3
 case|:
 comment|/* reserved irqs */
 while|while
@@ -526,7 +516,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|3
+literal|4
 case|:
 comment|/* reserved memory blocks. */
 while|while
@@ -607,21 +597,24 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|4
+literal|5
 case|:
 comment|/* Card definition. */
 name|parse_card
 argument_list|()
 expr_stmt|;
 break|break;
-if|#
-directive|if
+default|default:
+name|error
+argument_list|(
+literal|"Syntax error"
+argument_list|)
+expr_stmt|;
+name|pusht
+operator|=
 literal|0
-block|case 5:
-comment|/* Device description */
-block|parse_device(); 			break;
-endif|#
-directive|endif
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -730,45 +723,10 @@ argument_list|()
 argument_list|)
 condition|)
 block|{
-default|default:
-name|pusht
-operator|=
-literal|1
-expr_stmt|;
-return|return;
 case|case
-literal|8
+literal|7
 case|:
-name|i
-operator|=
-name|num_tok
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"Illegal card reset time"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|cp
-operator|->
-name|reset_time
-operator|=
-name|i
-expr_stmt|;
-break|break;
-case|case
-literal|6
-case|:
+comment|/* config */
 name|i
 operator|=
 name|num_tok
@@ -938,8 +896,40 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|8
+case|:
+comment|/* reset */
+name|i
+operator|=
+name|num_tok
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Illegal card reset time"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|cp
+operator|->
+name|reset_time
+operator|=
+name|i
+expr_stmt|;
+break|break;
+case|case
 literal|9
 case|:
+comment|/* ether */
 name|cp
 operator|->
 name|ether
@@ -973,6 +963,7 @@ break|break;
 case|case
 literal|10
 case|:
+comment|/* insert */
 name|addcmd
 argument_list|(
 operator|&
@@ -985,6 +976,7 @@ break|break;
 case|case
 literal|11
 case|:
+comment|/* remove */
 name|addcmd
 argument_list|(
 operator|&
@@ -994,6 +986,12 @@ name|remove
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|pusht
+operator|=
+literal|1
+expr_stmt|;
+return|return;
 block|}
 block|}
 block|}
@@ -1164,51 +1162,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  *	Parse the device description.  */
-end_comment
-
-begin_comment
-unit|parse_device(void) { 	enum drvclass type = drvclass_tok(); 	struct device *dp; 	static struct device *lastp;  	if (type == drv_none) { 		error("Unknown driver class"); 		return; 	} 	dp = xmalloc(sizeof(*dp)); 	dp->type = type; 	if (devlist == 0) 		devlist = dp; 	else 		lastp->next = dp; 	lastp = dp; 	for (;;) 		switch (keyword(next_tok())) { 		default: 			pusht = 1; 			return; 		case 10: 			addcmd(&dp->insert); 			break; 		case 11: 			addcmd(&dp->remove); 			break; 		} }
-comment|/*  *	Parse the driver description.  */
-end_comment
-
-begin_comment
-unit|parse_driver(void) { 	char   *name, *dev, *p; 	struct driver *dp; 	static struct driver *lastp; 	int     i; 	struct allocblk *bp; 	static struct flags io_flags[] = { 		{"ws", 0x01}, 		{"16bit", 0x02}, 		{"cs16", 0x04}, 		{"zerows", 0x08}, 		{0, 0} 	}; 	static struct flags mem_flags[] = { 		{"16bit", 0x01}, 		{"zerows", 0x02}, 		{"ws0", 0x04}, 		{"ws1", 0x08}, 		{0, 0} 	};  	name = newstr(next_tok()); 	dev = newstr(next_tok()); 	type = drvclass_tok(); 	if (type == drv_none) { 		error("Unknown driver class"); 		return; 	} 	dp = xmalloc(sizeof(*dp)); 	dp->name = name; 	dp->kernel = dev; 	dp->type = type; 	dp->unit = -1; 	dp->irq = -1;
-comment|/* Check for unit number in driver name. */
-end_comment
-
-begin_comment
-unit|p = dev; 	while (*p++) 		if (*p>= '0'&& *p<= '9') { 			dp->unit = atoi(p); 			*p = 0; 			break; 		} 	if (dp->unit< 0) 		error("Illegal kernel driver unit");
-comment|/* Place at end of list. */
-end_comment
-
-begin_comment
-unit|if (lastp == 0) 		drivers = dp; 	else 		lastp->next = dp; 	lastp = dp; 	for (;;) 		switch (keyword(next_tok())) { 		default: 			pusht = 1; 			return; 		case 1: 			bp = ioblk_tok(1); 			if (bp) { 				setflags(io_flags,&bp->flags); 				if (dp->io) { 					error("Duplicate I/O spec"); 					free(bp); 				} else { 					bit_nclear(io_avail, bp->addr, 					    bp->addr + bp->size - 1); 					dp->io = bp; 				} 			} 			break; 		case 2: 			dp->irq = irq_tok(1); 			if (dp->irq> 0) 				pool_irq[i] = 0; 			break; 		case 3: 			bp = memblk_tok(1); 			if (bp) { 				setflags(mem_flags,&bp->flags); 				if (dp->mem) { 					error("Duplicate memory spec"); 					free(bp); 				} else { 					bit_nclear(mem_avail, 					    MEM2BIT(bp->addr), 					    MEM2BIT(bp->addr + bp->size) - 1); 					dp->mem = bp; 				} 			} 			break; 		case 10: 			addcmd(&dp->insert); 			break; 		case 11: 			addcmd(&dp->remove); 			break; 		case 12:
-comment|/* 			 * iosize - Don't allocate an I/O port, but specify 			 * a size for the range of ports. The actual port 			 * number will be allocated dynamically. 			 */
-end_comment
-
-begin_comment
-unit|i = num_tok(); 			if (i<= 0 || i> 128) 				error("Illegal iosize"); 			else { 				int     flags = 0; 				setflags(io_flags,&flags); 				if (dp->io) 					error("Duplicate I/O spec"); 				else { 					dp->io = xmalloc(sizeof(*dp->io)); 					dp->io->flags = flags; 					dp->io->size = i; 				} 			} 			break; 		case 13: 			i = num_tok(); 			if (i<= 0 || i> 256 * 1024) 				error("Illegal memsize"); 			else { 				int     flags = 0; 				setflags(mem_flags,&flags); 				if (dp->mem) 					error("Duplicate memory spec"); 				else { 					dp->mem = xmalloc(sizeof(*dp->mem)); 					dp->mem->flags = flags; 					dp->mem->size = i; 				} 			} 			break; 		} }
-comment|/*  *	drvclass_tok - next token is expected to  *	be a driver class.  */
-end_comment
-
-begin_endif
-unit|enum drvclass drvclass_tok(void) { 	char   *s = next_tok();  	if (strcmp(s, "tty") == 0) 		return (drv_tty); 	else 		if (strcmp(s, "net") == 0) 			return (drv_net); 		else 			if (strcmp(s, "bio") == 0) 				return (drv_bio); 			else 				if (strcmp(s, "null") == 0) 					return (drv_null); 	return (drv_none); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_comment
 comment|/*  *	Parse one I/O block.  */

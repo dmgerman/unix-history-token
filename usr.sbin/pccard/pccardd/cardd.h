@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  *  *	Common include file for PCMCIA daemon  */
+comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: cardd.h,v 1.4 1996/04/18 04:25:12 nate Exp $  *  *	Common include file for PCMCIA daemon  */
 end_comment
 
 begin_include
@@ -162,13 +162,6 @@ modifier|*
 name|config
 decl_stmt|;
 comment|/* Config back ptr */
-if|#
-directive|if
-literal|0
-block|struct device *device;
-comment|/* System device info */
-endif|#
-directive|endif
 name|unsigned
 name|int
 name|mem
@@ -180,38 +173,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|struct device { 	struct device *next;
-comment|/* List of devices */
-end_comment
-
-begin_comment
-unit|int     inuse;
-comment|/* Driver being used */
-end_comment
-
-begin_comment
-unit|struct cmd *insert;
-comment|/* Insert commands */
-end_comment
-
-begin_comment
-unit|struct cmd *remove;
-comment|/* Remove commands */
-end_comment
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	Defines one allocation block i.e a starting address  *	and size. Used for either memory or I/O ports  */
@@ -398,18 +359,6 @@ name|cards
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|struct device *devlist;
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|bitstr_t
 modifier|*
@@ -506,12 +455,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
-name|alloc_memory
+name|void
+name|readfile
 parameter_list|(
-name|int
-name|size
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -522,24 +470,20 @@ name|bit_fns
 parameter_list|(
 name|bitstr_t
 modifier|*
-name|nm
 parameter_list|,
 name|int
-name|nbits
 parameter_list|,
 name|int
-name|count
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|readfile
+name|unsigned
+name|long
+name|alloc_memory
 parameter_list|(
-name|char
-modifier|*
-name|name
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
