@@ -972,6 +972,10 @@ name|t
 operator|=
 literal|0
 expr_stmt|;
+name|invalid
+operator|=
+name|FALSE
+expr_stmt|;
 do|do
 block|{
 name|ldisc
@@ -987,10 +991,6 @@ argument_list|,
 operator|&
 name|ldisc
 argument_list|)
-expr_stmt|;
-name|invalid
-operator|=
-name|FALSE
 expr_stmt|;
 name|SCPYN
 argument_list|(
@@ -1030,6 +1030,9 @@ comment|/* 		 * If remote login take given name, 		 * otherwise prompt user for 
 if|if
 condition|(
 name|rflag
+operator|&&
+operator|!
+name|invalid
 condition|)
 name|SCPYN
 argument_list|(
@@ -1046,6 +1049,10 @@ argument_list|(
 operator|&
 name|utmp
 argument_list|)
+expr_stmt|;
+name|invalid
+operator|=
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
