@@ -2483,13 +2483,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|snp_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
