@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.15	(Berkeley)	83/08/11"
+literal|"@(#)utilities.c	3.16	(Berkeley)	83/12/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -815,7 +815,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot create symbolic link %s->%s"
+literal|"Warning: cannot create symbolic link %s->%s: "
 argument_list|,
 name|new
 argument_list|,
@@ -835,7 +835,11 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
 block|}
 block|}
 elseif|else
@@ -862,7 +866,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot create hard link %s->%s"
+literal|"Warning: cannot create hard link %s->%s: "
 argument_list|,
 name|new
 argument_list|,
@@ -882,7 +886,11 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
 block|}
 block|}
 else|else
@@ -894,6 +902,11 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
 block|}
 name|vprintf
 argument_list|(
@@ -914,6 +927,11 @@ argument_list|,
 name|existing
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|GOOD
+operator|)
+return|;
 block|}
 end_block
 
