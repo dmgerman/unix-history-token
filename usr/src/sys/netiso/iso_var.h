@@ -4,7 +4,7 @@ comment|/*********************************************************** 		Copyright
 end_comment
 
 begin_comment
-comment|/*  * Modifications,  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)iso_var.h	7.2 (Berkeley) %G%  */
+comment|/*  * Modifications,  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)iso_var.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -32,9 +32,10 @@ define|#
 directive|define
 name|ia_ifp
 value|ia_ifa.ifa_ifp
-name|int
+define|#
+directive|define
 name|ia_flags
-decl_stmt|;
+value|ia_ifa.ifa_flags
 name|int
 name|ia_snpaoffset
 decl_stmt|;
@@ -187,87 +188,6 @@ end_define
 
 begin_comment
 comment|/* get dst address */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IFA_ROUTE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IFA_ROUTE
-value|0x01
-end_define
-
-begin_comment
-comment|/* routing entry installed */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ISO arp IOCTL data structures */
-end_comment
-
-begin_struct
-struct|struct
-name|arpreq_iso
-block|{
-name|int
-name|arp_flags
-decl_stmt|;
-comment|/* flags */
-name|struct
-name|sockaddr_iso
-name|arp_pa
-decl_stmt|;
-comment|/* protocol address */
-name|struct
-name|sockaddr
-name|arp_ha
-decl_stmt|;
-comment|/* hardware address */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|SIOCSISOMAP
-value|_IOW('a',30, struct arpreq_iso)
-end_define
-
-begin_comment
-comment|/* set arp entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGISOMAP
-value|_IOWR('a',38, struct arpreq_iso)
-end_define
-
-begin_comment
-comment|/* get arp entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCDISOMAP
-value|_IOW('a',31, struct arpreq_iso)
-end_define
-
-begin_comment
-comment|/* delete arp entry */
 end_comment
 
 begin_comment
