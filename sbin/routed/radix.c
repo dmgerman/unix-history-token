@@ -64,7 +64,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.10 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_include
@@ -2221,14 +2221,15 @@ operator|(
 name|x
 operator|)
 return|;
-name|R_Malloc
-argument_list|(
 name|x
-argument_list|,
+operator|=
+operator|(
 expr|struct
 name|radix_node
 operator|*
-argument_list|,
+operator|)
+name|rtmalloc
+argument_list|(
 name|max_keylen
 operator|+
 literal|2
@@ -2238,6 +2239,8 @@ argument_list|(
 operator|*
 name|x
 argument_list|)
+argument_list|,
+literal|"rn_addmask"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4697,19 +4700,22 @@ operator|(
 literal|1
 operator|)
 return|;
-name|R_Malloc
-argument_list|(
 name|rnh
-argument_list|,
+operator|=
+operator|(
 expr|struct
 name|radix_node_head
 operator|*
-argument_list|,
+operator|)
+name|rtmalloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|rnh
 argument_list|)
+argument_list|,
+literal|"rn_inithead"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4883,16 +4889,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|R_Malloc
-argument_list|(
 name|rn_zeros
-argument_list|,
+operator|=
+operator|(
 name|char
 operator|*
-argument_list|,
+operator|)
+name|rtmalloc
+argument_list|(
 literal|3
 operator|*
 name|max_keylen
+argument_list|,
+literal|"rn_init"
 argument_list|)
 expr_stmt|;
 if|if

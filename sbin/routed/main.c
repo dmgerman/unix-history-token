@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.2.2.1 $"
+empty|#ident "$Revision: 1.2.2.2 $"
 end_empty
 
 begin_include
@@ -219,7 +219,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1=must continue adverising it */
+comment|/* 1=must continue advertising it */
 end_comment
 
 begin_decl_stmt
@@ -853,7 +853,7 @@ break|break;
 case|case
 literal|'P'
 case|:
-comment|/* handle arbirary, (usually) per-interface 			 * parameters. 			 */
+comment|/* handle arbitrary, (usually) per-interface 			 * parameters. 			 */
 name|p
 operator|=
 name|parse_parms
@@ -1692,7 +1692,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* It is desirable to send routing updates 				 * regularly.  So schedule the next update 				 * 30 seconds after the previous one was 				 * secheduled, instead of 30 seconds after 				 * the previous update was finished. 				 * Even if we just started after discovering 				 * a 2nd interface or were otherwise delayed, 				 * pick a 30-second aniversary of the 				 * original broadcast time. 				 */
+comment|/* It is desirable to send routing updates 				 * regularly.  So schedule the next update 				 * 30 seconds after the previous one was 				 * scheduled, instead of 30 seconds after 				 * the previous update was finished. 				 * Even if we just started after discovering 				 * a 2nd interface or were otherwise delayed, 				 * pick a 30-second aniversary of the 				 * original broadcast time. 				 */
 name|n
 operator|=
 literal|1
@@ -3275,7 +3275,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 name|logbad
 argument_list|(
@@ -3391,7 +3391,7 @@ name|t2
 operator|->
 name|tv_usec
 operator|)
-operator|>
+operator|>=
 literal|1000000
 condition|)
 block|{

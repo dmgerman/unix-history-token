@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.3 $"
+empty|#ident "$Revision: 1.1.1.1.2.1 $"
 end_empty
 
 begin_include
@@ -745,7 +745,7 @@ operator|+
 name|cc
 operator|)
 expr_stmt|;
-comment|/* Notice authentication. 	 * As required by section 4.2 in RFC 1723, discard authenticated 	 * RIPv2 messages, but only if configured for that silliness. 	 * 	 * RIPv2 authentication is lame.  Why authenticate queries? 	 * Why should a RIPv2 implementation with authentication disabled 	 * not be able to listen to RIPv2 packets with authenication, while 	 * RIPv1 systems will listen?  Crazy! 	 */
+comment|/* Notice authentication. 	 * As required by section 4.2 in RFC 1723, discard authenticated 	 * RIPv2 messages, but only if configured for that silliness. 	 * 	 * RIPv2 authentication is lame.  Why authenticate queries? 	 * Why should a RIPv2 implementation with authentication disabled 	 * not be able to listen to RIPv2 packets with authentication, while 	 * RIPv1 systems will listen?  Crazy! 	 */
 if|if
 condition|(
 operator|!
@@ -928,7 +928,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* According to RFC 1723, we should ignore unathenticated 		 * queries.  That is too silly to bother with.  Sheesh! 		 * Are forwarding tables supposed to be secret, when 		 * a bad guy can infer them with test traffic?  When RIP 		 * is still the most common router-discovery protocol 		 * and so hosts need to send queries that will be answered? 		 * What about `rtquery`? 		 * Maybe on firewalls you'd care, but not enough to 		 * give up the diagnostic facilities of remote probing. 		 */
+comment|/* According to RFC 1723, we should ignore unauthenticated 		 * queries.  That is too silly to bother with.  Sheesh! 		 * Are forwarding tables supposed to be secret, when 		 * a bad guy can infer them with test traffic?  When RIP 		 * is still the most common router-discovery protocol 		 * and so hosts need to send queries that will be answered? 		 * What about `rtquery`? 		 * Maybe on firewalls you'd care, but not enough to 		 * give up the diagnostic facilities of remote probing. 		 */
 if|if
 condition|(
 name|n

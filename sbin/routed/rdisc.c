@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.1.1.4 $"
+empty|#ident "$Revision: 1.1.1.1.2.1 $"
 end_empty
 
 begin_include
@@ -1045,7 +1045,7 @@ condition|)
 return|return;
 name|trace_act
 argument_list|(
-literal|"start suppying routes"
+literal|"start supplying routes"
 argument_list|)
 expr_stmt|;
 comment|/* Forget discovered routes. 	 */
@@ -1197,7 +1197,7 @@ name|dr
 modifier|*
 name|drp
 decl_stmt|;
-comment|/* If only adverising, then do only that. */
+comment|/* If only advertising, then do only that. */
 if|if
 condition|(
 name|supplier
@@ -1576,7 +1576,7 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-comment|/* If that was the last good discovered router on the interface, 	 * then solicit a new one. 	 * This is contrary to RFC 1256, but defends against black holes. 	 */
+comment|/* If that was the last good discovered router on the interface, 	 * then solicite a new one. 	 * This is contrary to RFC 1256, but defends against black holes. 	 */
 if|if
 condition|(
 name|i
@@ -2383,7 +2383,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* look for the least valueable entry to reuse 			 */
+comment|/* look for the least valuable entry to reuse 			 */
 if|if
 condition|(
 operator|(
@@ -2798,7 +2798,7 @@ comment|/* select the right interface. */
 ifdef|#
 directive|ifdef
 name|MCAST_PPP_BUG
-comment|/* Do not specifiy the primary interface explicitly 			 * if we have the multicast point-to-point kernel 			 * bug, since the kernel will do the wrong thing 			 * if the local address of a point-to-point link 			 * is the same as the address of an ordinary 			 * interface. 			 */
+comment|/* Do not specify the primary interface explicitly 			 * if we have the multicast point-to-point kernel 			 * bug, since the kernel will do the wrong thing 			 * if the local address of a point-to-point link 			 * is the same as the address of an ordinary 			 * interface. 			 */
 if|if
 condition|(
 name|ifp

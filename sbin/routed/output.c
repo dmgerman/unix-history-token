@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.1.1.3 $"
+empty|#ident "$Revision: 1.1.1.1.2.1 $"
 end_empty
 
 begin_include
@@ -527,7 +527,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|MCAST_PPP_BUG
-comment|/* Do not specifiy the primary interface 				 * explicitly if we have the multicast 				 * point-to-point kernel bug, since the 				 * kernel will do the wrong thing if the 				 * local address of a point-to-point link 				 * is the same as the address of an ordinary 				 * interface. 				 */
+comment|/* Do not specify the primary interface 				 * explicitly if we have the multicast 				 * point-to-point kernel bug, since the 				 * kernel will do the wrong thing if the 				 * local address of a point-to-point link 				 * is the same as the address of an ordinary 				 * interface. 				 */
 if|if
 condition|(
 name|ifp
@@ -758,7 +758,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the first key for a packet to send.  * Try for a key that is eligable and has not expired, but settle for  * the last key if they have all expired.  * If no key is ready yet, give up.  */
+comment|/* Find the first key for a packet to send.  * Try for a key that is eligible and has not expired, but settle for  * the last key if they have all expired.  * If no key is ready yet, give up.  */
 end_comment
 
 begin_function
@@ -1293,7 +1293,7 @@ modifier|*
 name|wb
 parameter_list|)
 block|{
-comment|/* Output multicast only if legal. 	 * If we would multcast and it would be illegal, then discard the 	 * packet. 	 */
+comment|/* Output multicast only if legal. 	 * If we would multicast and it would be illegal, then discard the 	 * packet. 	 */
 switch|switch
 condition|(
 name|wb
@@ -2029,7 +2029,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Do not send automatic synthetic network routes 			 * if they are not needed becaus no RIPv1 listeners 			 * can hear them. 			 */
+comment|/* Do not send automatic synthetic network routes 			 * if they are not needed because no RIPv1 listeners 			 * can hear them. 			 */
 if|if
 condition|(
 name|ws

@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.1.1.1.2.1 $"
+empty|#ident "$Revision: 1.1.1.1.2.2 $"
 end_empty
 
 begin_include
@@ -1290,13 +1290,15 @@ expr|struct
 name|interface
 operator|*
 operator|)
-name|malloc
+name|rtmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|ifp
 argument_list|)
+argument_list|,
+literal|"gwkludge"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1606,6 +1608,7 @@ name|c
 operator|==
 literal|'\\'
 operator|&&
+operator|*
 name|pc
 operator|!=
 literal|'\0'
@@ -2634,13 +2637,15 @@ expr|struct
 name|intnet
 operator|*
 operator|)
-name|malloc
+name|rtmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|intnetp
 argument_list|)
+argument_list|,
+literal|"parse_parms"
 argument_list|)
 expr_stmt|;
 name|intnetp
@@ -3557,13 +3562,15 @@ expr|struct
 name|tgate
 operator|*
 operator|)
-name|malloc
+name|rtmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|tg
 argument_list|)
+argument_list|,
+literal|"parse_parms"
 argument_list|)
 expr_stmt|;
 name|tg
@@ -3996,13 +4003,15 @@ expr|struct
 name|parm
 operator|*
 operator|)
-name|malloc
+name|rtmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|parmp
 argument_list|)
+argument_list|,
+literal|"check_parms"
 argument_list|)
 expr_stmt|;
 name|bcopy

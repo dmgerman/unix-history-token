@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.2 $"
+empty|#ident "$Revision: 1.1.1.1.2.1 $"
 end_empty
 
 begin_include
@@ -2914,7 +2914,7 @@ else|:
 name|CHECK_QUIET_INTERVAL
 operator|)
 expr_stmt|;
-comment|/* mark all interfaces so we can get rid of thost that disappear */
+comment|/* mark all interfaces so we can get rid of those that disappear */
 for|for
 control|(
 name|ifp
@@ -4568,7 +4568,7 @@ name|ifs
 operator|.
 name|int_data
 expr_stmt|;
-comment|/* Withhold judgement when the short error 			 * counters wrap or the interface is reset. 			 */
+comment|/* Withhold judgment when the short error 			 * counters wrap or the interface is reset. 			 */
 if|if
 condition|(
 name|ierr

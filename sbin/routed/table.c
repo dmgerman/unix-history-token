@@ -463,7 +463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Flush routes waiting for aggretation.  *	This must not suppress a route unless it is known that among all  *	routes with coarser masks that match it, the one with the longest  *	mask is appropriate.  This is ensured by scanning the routes  *	in lexical order, and with the most restritive mask first  *	among routes to the same destination.  */
+comment|/* Flush routes waiting for aggregation.  *	This must not suppress a route unless it is known that among all  *	routes with coarser masks that match it, the one with the longest  *	mask is appropriate.  This is ensured by scanning the routes  *	in lexical order, and with the most restrictive mask first  *	among routes to the same destination.  */
 end_comment
 
 begin_function
@@ -951,7 +951,7 @@ operator|>=
 name|mask
 condition|)
 break|break;
-comment|/* Suppress old routes (i.e. combine with compatible routes 		 * with coarser masks) as we look for the right slot in the 		 * aggregation table for the new route. 		 * A route to an address less than the current destination 		 * will not be affected by the current route or any route 		 * seen hereafter.  That means it is safe to suppress it. 		 * This check keeps poor routes (eg. with large hop counts) 		 * from preventing suppresion of finer routes. 		 */
+comment|/* Suppress old routes (i.e. combine with compatible routes 		 * with coarser masks) as we look for the right slot in the 		 * aggregation table for the new route. 		 * A route to an address less than the current destination 		 * will not be affected by the current route or any route 		 * seen hereafter.  That means it is safe to suppress it. 		 * This check keeps poor routes (e.g. with large hop counts) 		 * from preventing suppression of finer routes. 		 */
 if|if
 condition|(
 name|ag_cors
@@ -2855,13 +2855,15 @@ expr|struct
 name|khash
 operator|*
 operator|)
-name|malloc
+name|rtmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|k
 argument_list|)
+argument_list|,
+literal|"kern_add"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3783,9 +3785,15 @@ return|return;
 block|}
 name|buf
 operator|=
-name|malloc
+operator|(
+name|char
+operator|*
+operator|)
+name|rtmalloc
 argument_list|(
 name|needed
+argument_list|,
+literal|"flush_kern"
 argument_list|)
 expr_stmt|;
 if|if
