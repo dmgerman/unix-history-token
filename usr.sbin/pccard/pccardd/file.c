@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: file.c,v 1.4 1996/04/18 04:25:13 nate Exp $  */
+comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: file.c,v 1.5 1996/06/18 19:52:29 nate Exp $  */
 end_comment
 
 begin_include
@@ -133,6 +133,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|void
 name|parsefile
 parameter_list|(
@@ -142,16 +143,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-name|token
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|getline
@@ -162,6 +154,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|next_tok
@@ -172,6 +165,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|num_tok
 parameter_list|(
@@ -181,6 +175,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|error
 parameter_list|(
@@ -191,6 +186,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|keyword
 parameter_list|(
@@ -201,6 +197,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|int
+name|irq_tok
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|struct
 name|allocblk
 modifier|*
@@ -212,6 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|allocblk
 modifier|*
@@ -223,29 +231,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|irq_tok
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|setflags
-parameter_list|(
-name|struct
-name|flags
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|struct
 name|driver
 modifier|*
@@ -258,6 +244,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|addcmd
 parameter_list|(
@@ -271,6 +258,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|parse_card
 parameter_list|(
@@ -370,6 +358,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|parsefile
 parameter_list|(
@@ -624,6 +613,7 @@ comment|/*  *	Parse a card definition.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|parse_card
 parameter_list|(
@@ -1002,6 +992,7 @@ comment|/*  *	Generate a new driver structure. If one exists, use  *	that one af
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|driver
 modifier|*
@@ -1168,6 +1159,7 @@ comment|/*  *	Parse one I/O block.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|allocblk
 modifier|*
@@ -1328,6 +1320,7 @@ comment|/*  *	Parse a memory block.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|allocblk
 modifier|*
@@ -1494,6 +1487,7 @@ comment|/*  *	IRQ token. Must be number> 0&&< 16.  *	If force is set, IRQ must e
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|irq_tok
 parameter_list|(
@@ -1570,6 +1564,7 @@ comment|/*  *	search the table for a match.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|keyword
 parameter_list|(
@@ -1629,129 +1624,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Set/clear flags  */
-end_comment
-
-begin_function
-name|void
-name|setflags
-parameter_list|(
-name|struct
-name|flags
-modifier|*
-name|flags
-parameter_list|,
-name|int
-modifier|*
-name|value
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|struct
-name|flags
-modifier|*
-name|fp
-decl_stmt|;
-name|int
-name|set
-init|=
-literal|1
-decl_stmt|;
-do|do
-block|{
-name|s
-operator|=
-name|next_tok
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|s
-operator|==
-literal|'!'
-condition|)
-block|{
-name|s
-operator|++
-expr_stmt|;
-name|set
-operator|=
-literal|0
-expr_stmt|;
-block|}
-for|for
-control|(
-name|fp
-operator|=
-name|flags
-init|;
-name|fp
-operator|->
-name|name
-condition|;
-name|fp
-operator|++
-control|)
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|s
-argument_list|,
-name|fp
-operator|->
-name|name
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|set
-condition|)
-operator|*
-name|value
-operator||=
-name|fp
-operator|->
-name|mask
-expr_stmt|;
-else|else
-operator|*
-name|value
-operator|&=
-operator|~
-name|fp
-operator|->
-name|mask
-expr_stmt|;
-break|break;
-block|}
-block|}
-do|while
-condition|(
-name|fp
-operator|->
-name|name
-condition|)
-do|;
-name|pusht
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	addcmd - Append the command line to the list of  *	commands.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|addcmd
 parameter_list|(
@@ -1822,6 +1699,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|error
 parameter_list|(
@@ -1858,12 +1736,14 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|last_char
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|get
 parameter_list|(
@@ -1994,6 +1874,7 @@ comment|/*  *	num_tok - expecting a number token. If not a number,  *	return -1.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|num_tok
 parameter_list|(
@@ -2289,6 +2170,7 @@ block|}
 end_function
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|_next_tok
@@ -2299,6 +2181,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|next_tok
@@ -2332,6 +2215,7 @@ comment|/*  *	get one token. Handles string quoting etc.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|_next_tok
@@ -2479,7 +2363,6 @@ operator|=
 name|c
 expr_stmt|;
 break|break;
-comment|/*  *	Special characters that must be tokens on their own.  */
 case|case
 literal|'-'
 case|:
@@ -2489,6 +2372,7 @@ case|:
 case|case
 literal|'*'
 case|:
+comment|/* Special characters that are tokens on their own. */
 if|if
 condition|(
 name|instr
@@ -2575,6 +2459,7 @@ comment|/*  *	get the rest of the line. If the  *	last character scanned was a n
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|getline
