@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lseek.c	8.1 (Berkeley) %G%"
+literal|"@(#)lseek.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,12 +75,12 @@ decl_stmt|;
 block|{
 specifier|extern
 name|off_t
-name|__indir
+name|__syscall
 parameter_list|()
 function_decl|;
 return|return
 operator|(
-name|__indir
+name|__syscall
 argument_list|(
 operator|(
 name|quad_t

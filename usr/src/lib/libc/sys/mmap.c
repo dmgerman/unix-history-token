@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mmap.c	8.1 (Berkeley) %G%"
+literal|"@(#)mmap.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ operator|(
 operator|(
 name|caddr_t
 operator|)
-name|__indir
+name|__syscall
 argument_list|(
 operator|(
 name|quad_t
