@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.51 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2839,14 +2839,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* compute effective uid/gid when sending */
-if|if
-condition|(
-name|to
-operator|->
-name|q_mailer
-operator|==
-name|ProgMailer
-condition|)
 name|ctladdr
 operator|=
 name|getctladdr
@@ -3053,22 +3045,13 @@ operator|==
 name|FileMailer
 condition|)
 block|{
-name|ADDRESS
-modifier|*
-name|caddr
-init|=
-name|getctladdr
-argument_list|(
-name|to
-argument_list|)
-decl_stmt|;
 name|rcode
 operator|=
 name|mailfile
 argument_list|(
 name|user
 argument_list|,
-name|caddr
+name|ctladdr
 argument_list|,
 name|e
 argument_list|)
@@ -3081,7 +3064,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|caddr
+name|ctladdr
 argument_list|,
 name|e
 argument_list|)
@@ -3338,23 +3321,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Call the mailer. 	**	The argument vector gets built, pipes 	**	are created as necessary, and we fork& exec as 	**	appropriate. 	**	If we are running SMTP, we just need to clean up. 	*/
-if|if
-condition|(
-name|ctladdr
-operator|==
-name|NULL
-operator|&&
-name|m
-operator|!=
-name|ProgMailer
-condition|)
-name|ctladdr
-operator|=
-operator|&
-name|e
-operator|->
-name|e_from
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
