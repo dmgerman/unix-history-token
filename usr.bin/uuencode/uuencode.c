@@ -458,22 +458,29 @@ name|void
 name|base64_encode
 parameter_list|()
 block|{
+comment|/* 	 * Output must fit into 80 columns, chunks come in 4, leave 1. 	 */
 define|#
 directive|define
 name|GROUPS
-value|8
-comment|/* Group output chunks */
+value|((80 / 4) - 1)
 name|unsigned
 name|char
 name|buf
 index|[
-literal|6
+literal|3
 index|]
 decl_stmt|;
 name|char
 name|buf2
 index|[
-literal|16
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|*
+literal|2
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|size_t
