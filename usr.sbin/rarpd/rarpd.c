@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -40,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.7.2.2 1996/11/28 08:28:15 phk Exp $ (LBL)"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,6 +814,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -2089,6 +2092,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -2100,7 +2104,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rarpd [ -afnv ] [ interface ]\n"
+literal|"usage: rarpd [-afnv] [interface]\n"
 argument_list|)
 expr_stmt|;
 name|exit
