@@ -66,6 +66,11 @@ decl_stmt|;
 comment|/* additional dependancies */
 name|char
 modifier|*
+name|f_clean
+decl_stmt|;
+comment|/* File list to add to clean rule */
+name|char
+modifier|*
 name|f_needs
 decl_stmt|;
 comment|/* 	 * Random values: 	 *	swap space parameters for swap areas 	 *	root device, etc. for system specifications 	 */
