@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.31 1999/02/10 00:46:27 ken Exp $"
+literal|"$Id: vmstat.c,v 1.32 1999/02/13 09:59:24 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -671,10 +671,10 @@ decl_stmt|,
 name|domem
 argument_list|()
 decl_stmt|,
-name|dozmem
+name|dosum
 argument_list|()
 decl_stmt|,
-name|dosum
+name|dozmem
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -810,7 +810,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:fiM:mzN:n:p:stw:"
+literal|"c:fiM:mN:n:p:stw:z"
 argument_list|)
 operator|)
 operator|!=
@@ -878,14 +878,6 @@ case|:
 name|todo
 operator||=
 name|MEMSTAT
-expr_stmt|;
-break|break;
-case|case
-literal|'z'
-case|:
-name|todo
-operator||=
-name|ZMEMSTAT
 expr_stmt|;
 break|break;
 case|case
@@ -993,6 +985,14 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|todo
+operator||=
+name|ZMEMSTAT
 expr_stmt|;
 break|break;
 case|case
@@ -5502,7 +5502,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: vmstat [-ims] [-c count] [-M core] [-N system] [-w wait] [disks]\n"
+literal|"usage: vmstat [-imsz] [-c count] [-M core] [-N system] [-w wait] [disks]\n"
 argument_list|)
 expr_stmt|;
 name|exit
