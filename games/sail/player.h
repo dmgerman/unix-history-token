@@ -345,7 +345,7 @@ define|#
 directive|define
 name|SCREENTEST
 parameter_list|()
-value|(initscr() != ERR&& signal(SIGTSTP, SIG_DFL) != BADSIG&& STAT_R< COLS&& SCROLL_Y> 0)
+value|(initscr() != ERR&& signal(SIGTSTP, SIG_DFL) != SIG_ERR&& STAT_R< COLS&& SCROLL_Y> 0)
 end_define
 
 begin_else
