@@ -7763,9 +7763,6 @@ operator|->
 name|su_family
 condition|)
 block|{
-case|case
-name|AF_INET
-case|:
 ifdef|#
 directive|ifdef
 name|INET6
