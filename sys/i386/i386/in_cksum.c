@@ -1397,6 +1397,7 @@ name|REDUCE
 expr_stmt|;
 return|return
 operator|(
+operator|~
 name|sum
 operator|&
 literal|0xffff
