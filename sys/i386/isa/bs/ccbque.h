@@ -23,6 +23,23 @@ directive|define
 name|_CCBQUE_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|CCB_MWANTED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCB_WOK
+parameter_list|(
+name|fl
+parameter_list|)
+value|(((fl) == 0) ? M_WAITOK : M_NOWAIT)
+end_define
+
 begin_comment
 comment|/* (I)  structure and prototype */
 end_comment
@@ -37,7 +54,7 @@ parameter_list|,
 name|CCBTYPE
 parameter_list|)
 define|\
-value|TAILQ_HEAD(CCBTYPE##tab, CCBTYPE);					\ struct CCBTYPE##que {							\ 	struct CCBTYPE##tab CCBTYPE##tab;				\ 	int count;							\ 	int maxccb;							\ };									\ void DEV##_init_ccbque __P((int));					\ struct CCBTYPE *DEV##_get_ccb __P((int));				\ void DEV##_free_ccb __P((struct CCBTYPE *));
+value|TAILQ_HEAD(CCBTYPE##tab, CCBTYPE);					\ struct CCBTYPE##que {							\ 	struct CCBTYPE##tab CCBTYPE##tab;				\ 	int count;							\ 	int maxccb;							\ 	u_int flags;							\ };									\ 									\ void DEV##_init_ccbque __P((int));					\ struct CCBTYPE *DEV##_get_ccb __P((int));				\ void DEV##_free_ccb __P((register struct CCBTYPE *));
 end_define
 
 begin_comment
@@ -73,7 +90,7 @@ parameter_list|,
 name|CHAIN
 parameter_list|)
 define|\ 									\
-value|void									\ DEV##_init_ccbque(count)						\ 	int count;							\ {									\ 	if (CCBTYPE##que.maxccb == 0)					\ 		TAILQ_INIT(&CCBTYPE##que.CCBTYPE##tab)			\ 	CCBTYPE##que.maxccb += count;					\ }									\ 									\ struct CCBTYPE *							\ DEV##_get_ccb(flags)							\ 	int flags;							\ {									\ 	struct CCBTYPE *cb;						\ 	int s = splbio();						\ 									\ 	do								\ 	{								\ 		if (CCBTYPE##que.count> CCBTYPE##que.maxccb)		\ 		{							\ 			if (flags)					\ 			{						\ 				cb = NULL;				\ 				goto done;				\ 			}						\ 			else						\ 			{						\ 				tsleep((caddr_t)&CCBTYPE##que.count,	\ 					PRIBIO, "ccbwait", 0);		\ 				continue;				\ 			}						\ 		}							\ 									\ 		if (cb = CCBTYPE##que.CCBTYPE##tab.tqh_first)		\ 		{							\ 			TAILQ_REMOVE(&CCBTYPE##que.CCBTYPE##tab, cb, CHAIN)\ 			break;						\ 		}							\ 		else							\ 		{							\ 			if (cb = malloc(sizeof(*cb), M_DEVBUF, M_NOWAIT))\ 			{						\ 				bzero(cb, sizeof(*cb));			\ 				break;					\ 			}						\ 			else if (flags)					\ 				goto done;				\ 									\ 			tsleep((caddr_t)&CCBTYPE##que.count,		\ 				PRIBIO, "ccbwait", 0);			\ 		}							\ 	}								\ 	while (1);							\ 	CCBTYPE##que.count ++;						\ 									\ done:									\ 	splx(s);							\ 	return cb;							\ }									\ 									\ void									\ DEV##_free_ccb(cb)							\ 	struct CCBTYPE *cb;						\ {									\ 	int s = splbio();						\ 									\ 	TAILQ_INSERT_TAIL(&CCBTYPE##que.CCBTYPE##tab, cb, CHAIN)	\ 	CCBTYPE##que.count --;						\ 									\ 	if (CCBTYPE##que.count == CCBTYPE##que.maxccb)			\ 		wakeup ((caddr_t)&CCBTYPE##que.count);			\ 	splx(s);							\ }
+value|void									\ DEV##_init_ccbque(count)						\ 	int count;							\ {									\ 	if (CCBTYPE##que.maxccb == 0)					\ 		TAILQ_INIT(&CCBTYPE##que.CCBTYPE##tab)			\ 	CCBTYPE##que.maxccb += count;					\ }									\ 									\ struct CCBTYPE *							\ DEV##_get_ccb(flags)							\ 	int flags;							\ {									\ 	register struct CCBTYPE *cb;					\ 	int s = splbio();						\ 									\ again:									\ 	if (CCBTYPE##que.count< CCBTYPE##que.maxccb)			\ 	{								\ 		CCBTYPE##que.count ++;					\ 		cb = CCBTYPE##que.CCBTYPE##tab.tqh_first;		\ 		if (cb != NULL)						\ 		{							\ 			TAILQ_REMOVE(&CCBTYPE##que.CCBTYPE##tab, cb, CHAIN)\ 			goto out;					\ 		}							\ 		else							\ 		{							\ 			cb = malloc(sizeof(*cb), M_DEVBUF, CCB_WOK(flags));\ 			if (cb != NULL)					\ 			{						\ 				bzero(cb, sizeof(*cb));			\ 				goto out;				\ 			}						\ 		}							\ 		CCBTYPE##que.count --;					\ 	}								\ 									\ 	if (flags == 0)							\ 	{ 								\ 		CCBTYPE##que.flags |= CCB_MWANTED;			\ 		tsleep((caddr_t)&CCBTYPE##que.count, PRIBIO, "ccbwait", 0);\ 		goto again;						\ 	}								\ 	cb = NULL;							\ 									\ out:									\ 	splx(s);							\ 	return cb;							\ }									\ 									\ void									\ DEV##_free_ccb(cb)							\ 	register struct CCBTYPE *cb;					\ {									\ 	int s = splbio();						\ 									\ 	TAILQ_INSERT_TAIL(&CCBTYPE##que.CCBTYPE##tab, cb, CHAIN)	\ 	CCBTYPE##que.count --;						\ 									\ 	if (CCBTYPE##que.flags& CCB_MWANTED)				\ 	{								\ 		CCBTYPE##que.flags&= ~CCB_MWANTED;			\ 		wakeup ((caddr_t)&CCBTYPE##que.count);			\ 	}								\ 	splx(s);							\ }
 end_define
 
 begin_endif
