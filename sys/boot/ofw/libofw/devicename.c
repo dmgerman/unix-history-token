@@ -363,7 +363,9 @@ name|type
 argument_list|,
 name|strlen
 argument_list|(
-name|type
+name|dv
+operator|->
+name|dv_name
 argument_list|)
 argument_list|)
 operator|==
