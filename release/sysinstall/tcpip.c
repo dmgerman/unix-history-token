@@ -2015,6 +2015,14 @@ if|if
 condition|(
 operator|!
 name|ifaces
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|ifaces
+argument_list|,
+literal|"auto"
+argument_list|)
 condition|)
 name|variable_set2
 argument_list|(

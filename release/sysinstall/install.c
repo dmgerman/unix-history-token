@@ -2491,6 +2491,10 @@ literal|"applications, from text editors to games to WEB servers and more.  Woul
 literal|"like to browse the collection now?"
 argument_list|)
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2499,6 +2503,7 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
