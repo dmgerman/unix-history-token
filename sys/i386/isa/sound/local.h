@@ -3,6 +3,10 @@ begin_comment
 comment|/* for FreeBSD */
 end_comment
 
+begin_comment
+comment|/*  * $Id$  */
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -1,18 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header$ */
+comment|/*  * $Id$  */
 end_comment
-
-begin_comment
-comment|/* $Source$ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ST_ERROR
-value|0x0
-end_define
 
 begin_define
 define|#

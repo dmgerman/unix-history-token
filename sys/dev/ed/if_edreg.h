@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Id: if_edreg.h,v 1.13 1994/02/02 14:05:58 davidg Exp $  *  * Modification history  *  * Revision 2.2  1993/11/29  16:33:39  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.1  1993/11/22  10:52:33  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.0  93/09/29  00:37:15  davidg  * changed double buffering flag to multi buffering  * made changes/additions for 3c503 multi-buffering  * ...companion to Rev. 2.0 of 'ed' driver.  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
+comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.14 1994/04/10 20:06:28 davidg Exp $  */
+end_comment
+
+begin_comment
+comment|/*  * National Semiconductor DS8390 NIC register definitions   *  *  * Modification history  *  * Revision 2.2  1993/11/29  16:33:39  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.1  1993/11/22  10:52:33  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.0  93/09/29  00:37:15  davidg  * changed double buffering flag to multi buffering  * made changes/additions for 3c503 multi-buffering  * ...companion to Rev. 2.0 of 'ed' driver.  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
 end_comment
 
 begin_comment

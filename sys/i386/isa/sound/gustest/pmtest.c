@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * $Id$  */
+end_comment
+
+begin_comment
 comment|/*  * CAUTION!	This program is just an incompletely implemented version  *		of the patch manager daemon for GUS. Using this program  *		with the driver version 1.99.9 will hang your system  *		completely (sooner or later).  *  *		This program is for information only. The final  *		implementation of the patch manager will not be  *		compatible with this one.  */
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	gmod.c	- Module player for GUS and Linux.  *		(C) Hannu Savolainen, 1993  *  *	NOTE!	This program doesn't try to be a complete module player.  *		It's just a too I used while developing the driver. In  *		addition it can be used as an example on programming  *		the LInux Sound Driver with GUS.  */
+comment|/*  *	gmod.c	- Module player for GUS and Linux.  *		(C) Hannu Savolainen, 1993  *  *	NOTE!	This program doesn't try to be a complete module player.  *		It's just a too I used while developing the driver. In  *		addition it can be used as an example on programming  *		the LInux Sound Driver with GUS.  * $Id$  */
 end_comment
 
 begin_include

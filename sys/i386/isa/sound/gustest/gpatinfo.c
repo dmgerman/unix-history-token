@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	gpatinfo.c: This program demonstrates the patch management  *		    interface of the GUS driver.  *  *	NOTE! The patch manager interface is highly device dependent,  *	      currently incompletely implemented prototype and  *	      will change before final implementation.  *   */
+comment|/*  *	gpatinfo.c: This program demonstrates the patch management  *		    interface of the GUS driver.  *  *	NOTE! The patch manager interface is highly device dependent,  *	      currently incompletely implemented prototype and  *	      will change before final implementation.  *   * $Id$  */
 end_comment
 
 begin_include
