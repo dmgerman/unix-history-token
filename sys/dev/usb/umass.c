@@ -8802,6 +8802,9 @@ name|addr
 parameter_list|)
 block|{
 comment|/* Note: The sc is only passed in for debugging prints. If the device 	 * is disconnected before umass_cam_rescan has been able to run the 	 * driver might bomb. 	 */
+ifdef|#
+directive|ifdef
+name|UMASS_DEBUG
 name|struct
 name|umass_softc
 modifier|*
@@ -8814,6 +8817,8 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|cam_path
 modifier|*
