@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.17	82/06/17	*/
+comment|/*	if_ec.c	4.18	82/06/17	*/
 end_comment
 
 begin_include
@@ -1096,7 +1096,7 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
-comment|/* 	 * Hang receive buffers and start any pending 	 * writes by faking a transmit complete. 	 * Writing into the rcr also makes sure the memory 	 * is turned on. 	 */
+comment|/* 	 * Hang receive buffers and start any pending writes. 	 * Writing into the rcr also makes sure the memory 	 * is turned on. 	 */
 name|addr
 operator|=
 operator|(
@@ -1141,7 +1141,14 @@ name|es
 operator|->
 name|es_oactive
 operator|=
-literal|1
+literal|0
+expr_stmt|;
+name|es
+operator|->
+name|es_mask
+operator|=
+operator|~
+literal|0
 expr_stmt|;
 name|es
 operator|->
@@ -1151,7 +1158,17 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
-name|ecxint
+if|if
+condition|(
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_snd
+operator|.
+name|ifq_head
+condition|)
+name|ecstart
 argument_list|(
 name|unit
 argument_list|)
