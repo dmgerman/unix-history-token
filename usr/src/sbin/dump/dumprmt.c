@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	5.2 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -404,17 +404,20 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+name|rmtstate
+operator|=
+name|TS_OPEN
+expr_stmt|;
+return|return
+operator|(
 name|rmtcall
 argument_list|(
 name|tape
 argument_list|,
 name|buf
 argument_list|)
-expr_stmt|;
-name|rmtstate
-operator|=
-name|TS_OPEN
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
