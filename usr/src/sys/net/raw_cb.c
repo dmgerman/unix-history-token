@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.19	83/06/19	*/
+comment|/*	raw_cb.c	4.19	83/06/20	*/
 end_comment
 
 begin_include
@@ -487,22 +487,17 @@ expr_stmt|;
 name|inpup
 operator|.
 name|sin_addr
-operator|.
-name|s_net
 operator|=
+name|if_makeaddr
+argument_list|(
 name|spup
 operator|->
 name|spup_net
-expr_stmt|;
-name|inpup
-operator|.
-name|sin_addr
-operator|.
-name|s_impno
-operator|=
+argument_list|,
 name|spup
 operator|->
 name|spup_host
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
