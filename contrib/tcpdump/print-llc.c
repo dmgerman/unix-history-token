@@ -994,6 +994,8 @@ condition|(
 name|caplen
 operator|>
 literal|0
+operator|!
+name|qflag
 condition|)
 block|{
 name|default_print_unaligned
