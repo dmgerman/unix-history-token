@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/tte.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/utrap.h>
 end_include
 
