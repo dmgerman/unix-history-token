@@ -798,12 +798,14 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-specifier|extern
-name|char
-name|ttytype
-index|[]
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* MYTINFO not have it */
+block|extern char ttytype[];
 comment|/* needed for backward compatibility */
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|tigetflag
