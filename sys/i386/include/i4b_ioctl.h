@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Fri Jul 30 08:53:47 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.150 1999/12/13 21:25:28 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:12:16 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|83
+value|90
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|STEP
-value|0
+value|1
 end_define
 
 begin_comment
@@ -119,6 +119,32 @@ end_define
 
 begin_comment
 comment|/* max number of controllers	*/
+end_comment
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	ISDN D-channel protocols   *---------------------------------------------------------------------------*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROTOCOL_DSS1
+value|0
+end_define
+
+begin_comment
+comment|/* default, Euro-ISDN/DSS1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROTOCOL_D64S
+value|1
+end_define
+
+begin_comment
+comment|/* 64k leased line, no protocol */
 end_comment
 
 begin_comment
@@ -864,6 +890,10 @@ define|#
 directive|define
 name|MSG_DIALOUTNUMBER_IND
 value|'p'
+define|#
+directive|define
+name|MSG_PACKET_IND
+value|'q'
 name|int
 name|cdid
 decl_stmt|;
@@ -1311,6 +1341,56 @@ decl_stmt|;
 comment|/* driver unit number	*/
 block|}
 name|msg_drvrdisc_req_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	connect packet logging  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|msg_hdr_t
+name|header
+decl_stmt|;
+comment|/* common header	*/
+name|int
+name|driver
+decl_stmt|;
+comment|/* driver type		*/
+name|int
+name|driver_unit
+decl_stmt|;
+comment|/* driver unit number	*/
+name|int
+name|direction
+decl_stmt|;
+comment|/* 0=in 1=out		*/
+define|#
+directive|define
+name|DIRECTION_IN
+value|0
+comment|/* sending packet to remote	*/
+define|#
+directive|define
+name|DIRECTION_OUT
+value|1
+comment|/* received packet from remote	*/
+define|#
+directive|define
+name|MAX_PACKET_LOG
+value|40
+comment|/* space for IP and TCP header	*/
+name|u_int8_t
+name|pktdata
+index|[
+name|MAX_PACKET_LOG
+index|]
+decl_stmt|;
+block|}
+name|msg_packet_ind_t
 typedef|;
 end_typedef
 
@@ -1831,6 +1911,34 @@ define|#
 directive|define
 name|I4B_VR_REQ
 value|_IOR('4', 9, msg_vr_req_t)
+end_define
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	set ISDN protocol used by a controller  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|controller
+decl_stmt|;
+comment|/* controller number		*/
+name|int
+name|protocol
+decl_stmt|;
+comment|/* ISDN D-channel protocol type	*/
+block|}
+name|msg_prot_ind_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|I4B_PROT_IND
+value|_IOW('4', 10, msg_prot_ind_t)
 end_define
 
 begin_comment
