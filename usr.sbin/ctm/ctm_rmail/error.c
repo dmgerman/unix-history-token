@@ -3,6 +3,32 @@ begin_comment
 comment|/*  * Routines for logging error messages or other informative messages.  *  * Log messages can easily contain the program name, a time stamp, system  * error messages, and arbitrary printf-style strings, and can be directed  * to stderr or a log file.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -153,6 +179,7 @@ begin_function
 name|void
 name|err
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
