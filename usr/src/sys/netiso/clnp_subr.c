@@ -680,7 +680,7 @@ name|ifp
 decl_stmt|;
 comment|/* ptr to outgoing interface */
 name|struct
-name|route
+name|route_iso
 name|route
 decl_stmt|;
 comment|/* filled in by clnp_route */
@@ -1303,7 +1303,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|route
+name|route_iso
 modifier|*
 name|ro
 decl_stmt|;
