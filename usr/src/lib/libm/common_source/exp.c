@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	5.7 (Berkeley) %G%"
+literal|"@(#)exp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -735,7 +735,7 @@ end_comment
 
 begin_function
 name|double
-name|exp__D
+name|__exp__D
 parameter_list|(
 name|x
 parameter_list|,
