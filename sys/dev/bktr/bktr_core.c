@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.61 1998/12/14 06:32:54 dillon Exp $ */
+comment|/* $Id: brooktree848.c,v 1.62 1999/01/23 11:32:06 roger Exp $ */
 end_comment
 
 begin_comment
@@ -13581,6 +13581,7 @@ call|(
 name|uintptr_t
 call|)
 argument_list|(
+specifier|volatile
 name|void
 operator|*
 argument_list|)
@@ -13746,6 +13747,7 @@ call|(
 name|uintptr_t
 call|)
 argument_list|(
+specifier|volatile
 name|void
 operator|*
 argument_list|)
@@ -13919,6 +13921,7 @@ call|(
 name|uintptr_t
 call|)
 argument_list|(
+specifier|volatile
 name|void
 operator|*
 argument_list|)
