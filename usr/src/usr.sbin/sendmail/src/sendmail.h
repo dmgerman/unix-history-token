@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.33	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.34	%G% */
 end_comment
 
 begin_include
@@ -625,17 +625,6 @@ end_define
 
 begin_comment
 comment|/* this field terminates header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H_DELETE
-value|00002
-end_define
-
-begin_comment
-comment|/* don't send this field */
 end_comment
 
 begin_define

@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.23	%G%"
+literal|"@(#)conf.c	3.24	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|M_NEEDFROM
 block|,
 literal|"original-from"
 block|,
-name|H_DELETE
+name|H_ACHECK
 block|,
 literal|0
 block|,
@@ -97,7 +97,7 @@ literal|"bcc"
 block|,
 name|H_ADDR
 operator||
-name|H_DELETE
+name|H_ACHECK
 operator||
 name|H_FORCE
 block|,

@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.30	%G%"
+literal|"@(#)deliver.c	3.31	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2086,18 +2086,6 @@ operator|->
 name|h_link
 control|)
 block|{
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|H_DELETE
-argument_list|,
-name|h
-operator|->
-name|h_flags
-argument_list|)
-condition|)
-continue|continue;
 if|if
 condition|(
 name|bitset
