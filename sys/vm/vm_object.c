@@ -2239,7 +2239,7 @@ operator|&
 name|MSYNC_FLUSH_HARDSEQ
 condition|)
 block|{
-name|vm_offset_t
+name|vm_pindex_t
 name|tscan
 decl_stmt|;
 name|int
