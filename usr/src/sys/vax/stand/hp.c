@@ -470,6 +470,10 @@ operator|-
 literal|1
 comment|/* eagle */
 block|,
+operator|-
+literal|1
+comment|/* 48 sect eagle*/
+block|,
 name|MBDT_RM02
 block|,
 literal|0
@@ -700,6 +704,19 @@ block|,
 name|hpfj_off
 block|,
 comment|/* Eagle */
+literal|48
+block|,
+literal|20
+block|,
+literal|48
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|hpfj_off
+block|,
+comment|/* modif. eagle */
 literal|1
 block|,
 literal|1
@@ -946,7 +963,7 @@ block|}
 break|break;
 block|}
 case|case
-literal|12
+literal|13
 case|:
 comment|/* rm02 */
 name|hpaddr
@@ -978,11 +995,36 @@ literal|10
 expr_stmt|;
 comment|/* ampex capricorn */
 else|else
+block|{
+name|hpaddr
+operator|->
+name|hphr
+operator|=
+name|HPHR_MAXSECT
+expr_stmt|;
+if|if
+condition|(
+name|MASKREG
+argument_list|(
+name|hpaddr
+operator|->
+name|hphr
+argument_list|)
+operator|==
+literal|47
+condition|)
+name|i
+operator|=
+literal|12
+expr_stmt|;
+comment|/* modified eagle */
+else|else
 name|i
 operator|=
 literal|11
 expr_stmt|;
 comment|/* eagle */
+block|}
 break|break;
 case|case
 literal|6
