@@ -4543,21 +4543,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|m
-operator|->
-name|queue
-operator|==
-name|PQ_NONE
-argument_list|,
-operator|(
-literal|"_pmap_allocpte: %p->queue != PQ_NONE"
-operator|,
-name|m
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Increment the hold count for the page table page 	 * (denoting a new mapping.) 	 */
 name|m
 operator|->
