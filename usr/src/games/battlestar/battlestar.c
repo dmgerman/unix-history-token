@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1983 Regents of the University of California,  * All rights reserved.  Redistribution permitted subject to  * the terms of the Berkeley Software License Agreement.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)battlestar.c	1.2 %G%"
+literal|"@(#)battlestar.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +23,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Battlestar - a stellar-tropical adventure game  *  * Originally written by His Lordship, Admiral David W. Horatio Riggle,  * on the Cory PDP-11/70, University of California, Berkeley.  */
+end_comment
 
 begin_include
 include|#
