@@ -3728,7 +3728,7 @@ comment|/* Allow newbus drivers to match "better" */
 name|error
 operator|=
 operator|-
-literal|1000
+literal|200
 expr_stmt|;
 block|}
 block|}
