@@ -2419,7 +2419,7 @@ name|hs
 condition|)
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 argument_list|,
@@ -3101,6 +3101,7 @@ block|{
 name|int
 name|kdumpsize
 decl_stmt|;
+comment|/* Number of pages in dump. */
 comment|/* Read the dump size. */
 name|DumpRead
 argument_list|(
