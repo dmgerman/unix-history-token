@@ -14243,6 +14243,12 @@ literal|3
 argument|])); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((cmd& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	uint32_t fun;  	device_printf(fc->dev,
 literal|"Initiate bus reset\n"
 argument|); 	sc = (struct fwohci_softc *)fc;
+comment|/* 	 * Make sure our cached values from the config rom are 	 * initialised. 	 */
+argument|OWRITE(sc, OHCI_CROMHDR, ntohl(sc->fc.config_rom[
+literal|0
+argument|])); 	OWRITE(sc, OHCI_BUS_OPT, ntohl(sc->fc.config_rom[
+literal|2
+argument|]));
 comment|/* 	 * Set root hold-off bit so that non cyclemaster capable node 	 * shouldn't became the root node. 	 */
 if|#
 directive|if
