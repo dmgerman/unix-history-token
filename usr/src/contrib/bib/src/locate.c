@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)locate.c	2.3	%G%"
+literal|"@(#)locate.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ end_struct
 begin_function_decl
 name|char
 modifier|*
-name|malloc
+name|calloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -102,7 +102,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  locate(keys, name, max_klen, common):         Returns a string containing all references pointed to by name         that contain all keys in keys.  Common is name of common word file.     Pointer returned comes from malloc.  Use free to return storage.     NB A zero length string returned if nothing is found.        A NULL pointer indicates an error accessing the file "name". */
+comment|/*  locate(keys, name, max_klen, common):         Returns a string containing all references pointed to by name         that contain all keys in keys.  Common is name of common word file.     Pointer returned comes from calloc.  Use free to return storage.     NB A zero length string returned if nothing is found.        A NULL pointer indicates an error accessing the file "name". */
 end_comment
 
 begin_decl_stmt
@@ -428,9 +428,18 @@ argument_list|)
 expr_stmt|;
 name|allrefs
 operator|=
-name|malloc
+operator|(
+name|char
+operator|*
+operator|)
+name|calloc
 argument_list|(
 literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -863,11 +872,20 @@ expr_stmt|;
 block|}
 name|allrefs
 operator|=
-name|malloc
+operator|(
+name|char
+operator|*
+operator|)
+name|calloc
 argument_list|(
 name|total
 operator|+
 literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
