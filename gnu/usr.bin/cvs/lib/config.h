@@ -27,14 +27,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define if using alloca.c.  */
-end_comment
-
-begin_comment
-comment|/* #undef C_ALLOCA */
-end_comment
-
-begin_comment
 comment|/* Define if type char is unsigned and you are not using gcc.  */
 end_comment
 
@@ -62,38 +54,11 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems.  */
-end_comment
-
-begin_comment
-comment|/* #undef CRAY_STACKSEG_END */
-end_comment
-
-begin_comment
 comment|/* Define to `int' if<sys/types.h> doesn't define.  */
 end_comment
 
 begin_comment
 comment|/* #undef gid_t */
-end_comment
-
-begin_comment
-comment|/* Define if you have alloca, as a function or macro.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ALLOCA
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have<alloca.h> and it should be used (not on Ultrix).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ALLOCA_H */
 end_comment
 
 begin_comment
@@ -197,14 +162,6 @@ comment|/* #undef size_t */
 end_comment
 
 begin_comment
-comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time. 	STACK_DIRECTION> 0 => grows toward higher addresses 	STACK_DIRECTION< 0 => grows toward lower addresses 	STACK_DIRECTION = 0 => direction of growth unknown  */
-end_comment
-
-begin_comment
-comment|/* #undef STACK_DIRECTION */
-end_comment
-
-begin_comment
 comment|/* Define if the `S_IS*' macros in<sys/stat.h> do not work properly.  */
 end_comment
 
@@ -273,14 +230,14 @@ value|1
 end_define
 
 begin_comment
-comment|/* the path to the gnu diff program on your system  */
+comment|/* Define if you want to use the password authenticated server.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DIFF
-value|"/usr/bin/diff -a"
+name|AUTH_SERVER_SUPPORT
+value|1
 end_define
 
 begin_comment

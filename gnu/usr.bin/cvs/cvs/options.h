@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* src/options.h.  Generated automatically by configure.  */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * This file holds (most of) the configuration tweaks that can be made to  * customize CVS for your site.  CVS comes configured for a typical SunOS 4.x  * environment.  The comments for each configurable item are intended to be  * self-explanatory.  All #defines are tested first to see if an over-riding  * option was specified on the "make" command line.  *   * If special libraries are needed, you will have to edit the Makefile.in file  * or the configure script directly.  Sorry.  */
 end_comment
 
@@ -65,7 +69,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The "diff" program to execute when creating patch output.  This "diff"  * must support the "-c" option for context diffing.  Specify a full  * pathname if your site wants to use a particular diff.  If you are  * using the GNU version of diff (version 1.15 or later), this should  * be "diff -a".    *   * NOTE: this program is only used for the ``patch'' sub-command (and  * for ``update'' if you are using the server).  The other commands  * use rcsdiff which will use whatever version of diff was specified  * when rcsdiff was built on your system.  */
+comment|/*  * The "diff" program to execute when creating patch output.  This "diff"  * must support the "-c" option for context diffing.  Specify a full  * pathname if your site wants to use a particular diff.  Note that unlike  * the diff used with RCS, you *must not* supply -a here (doing so will cause  * the server to generate patches which patch cannot handle in some cases).  *   * NOTE: this program is only used for the ``patch'' sub-command (and  * for ``update'' if you are using the server).  The other commands  * use rcsdiff which will use whatever version of diff was specified  * when rcsdiff was built on your system.  */
 end_comment
 
 begin_ifndef
@@ -78,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|DIFF
-value|"/usr/bin/diff -a"
+value|"diff"
 end_define
 
 begin_endif
@@ -109,50 +113,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The "rm" program to execute when pruning directories that are not part of  * a release.  This "rm" must support the "-fr" options.  Specify a full  * pathname if your site wants to use a particular rm.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RM
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RM
-value|"rm"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * The "sort" program to execute when displaying the module database. Specify  * a full pathname if your site wants to use a particular sort.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SORT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SORT
-value|"sort"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * The "patch" program to run when using the CVS server and accepting  * patches across the network.  Specify a full pathname if your site  * wants to use a particular patch.  */
 end_comment
 
@@ -175,7 +135,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * By default, RCS programs are executed with the shell or through execlp(),  * so the user's PATH environment variable is searched.  If you'd like to  * bind all RCS programs to a certain directory (perhaps one not in most  * people's PATH) then set the default in RCSBIN_DFLT.  Note that setting  * this here will cause all RCS programs to be executed from this directory,  * unless the user overrides the default with the RCSBIN environment variable  * or the "-b" option to CVS.  *   * This define should be either the empty string ("") or a full pathname to the  * directory containing all the installed programs from the RCS distribution.  */
+comment|/*  * By default, RCS programs are executed with the shell or through execlp(),  * so the user's PATH environment variable is searched.  If you'd like to  * bind all RCS programs to a certain directory (perhaps one not in most  * people's PATH) then set the default in RCSBIN_DFLT.  Note that setting  * this here will cause all RCS programs to be executed from this directory,  * unless the user overrides the default with the RCSBIN environment variable  * or the "-b" option to CVS.  *   * If you use the password-authenticating server, then you need to  * make sure that the server can find the RCS programs to invoke them.  * The authenticating server starts out running as root, and then  * switches to run as the appropriate user once authentication is  * complete.  But no actual shell is ever started by that user, so the  * PATH environment variable may not contain the directory with the  * RCS binaries, even though if that user logged in normally, PATH  * would include the directory.    *  * One way to solve this problem is to set RCSBIN_DFLT here.  An  * alternative is to make sure that root has the right directory in  * its path already.  Another, probably better alternative is to  * specify -b in /etc/inetd.conf.   *  * This define should be either the empty string ("") or a full  * pathname to the directory containing all the installed programs  * from the RCS distribution.  */
 end_comment
 
 begin_ifndef
@@ -341,25 +301,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The "cvs admin" command allows people to get around most of the logging  * and info procedures within CVS.  For exmaple, "cvs tag tagname filename"  * will perform some validity checks on the tag, while "cvs admin -Ntagname"  * will not perform those checks.  For this reason, some sites may wish to  * disable the admin function completely.  *  * To disable the admin function, uncomment the lines below.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CVS_NOADMIN
-end_ifndef
-
-begin_comment
-comment|/* #define CVS_NOADMIN */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * The "cvs diff" command accepts all the single-character options that GNU  * diff (1.15) accepts.  Except -D.  GNU diff uses -D as a way to put  * cpp-style #define's around the output differences.  CVS, by default, uses  * -D to specify a free-form date (like "cvs diff -D '1 week ago'").  If  * you would prefer that the -D option of "cvs diff" work like the GNU diff  * option, then comment out this define.  */
 end_comment
 
@@ -381,7 +322,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * define this to enable the SETXID support (see FAQ 4D.13)  */
+comment|/* Define this to enable the SETXID support.  The way to use this is    to create a group with no users in it (except perhaps cvs    administrators), set the cvs executable to setgid that group, chown    all the repository files to that group, and change all directory    permissions in the repository to 770.  The last person to modify a    file will own it, but as long as directory permissions are set    right that won't matter.  You'll need a system which inherits file    groups from the parent directory.  I don't know how carefully this    has been inspected for security holes.  */
 end_comment
 
 begin_ifndef
@@ -400,16 +341,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The authenticated client/server is under construction.  Don't  * define either of these unless you're testing them, in which case   * you're me and you already know that.  */
+comment|/* Should we build the password-authenticating client?  Whether to    include the password-authenticating _server_, on the other hand, is    set in config.h.  */
 end_comment
 
-begin_comment
-comment|/* #undef AUTH_CLIENT_SUPPORT */
-end_comment
-
-begin_comment
-comment|/* #undef AUTH_SERVER_SUPPORT */
-end_comment
+begin_define
+define|#
+directive|define
+name|AUTH_CLIENT_SUPPORT
+value|1
+end_define
 
 begin_comment
 comment|/*  * If you are working with a large remote repository and a 'cvs checkout' is  * swamping your network and memory, define these to enable flow control.  * You will end up with even less guarantees of a consistant checkout,  * but that may be better than no checkout at all.  The master server process  * will monitor how far it is getting behind, if it reaches the high water  * mark, it will signal the child process to stop generating data when  * convenient (ie: no locks are held, currently at the beginning of a   * new directory).  Once the buffer has drained sufficiently to reach the  * low water mark, it will be signalled to start again.  * -- EXPERIMENTAL! --  A better solution may be in the works.  * You may override the default hi/low watermarks here too.  */
