@@ -147,7 +147,7 @@ comment|/* X_fmt */
 literal|"%H:%M:%S"
 block|,
 comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, using locale's date format," anything goes. 	** Using just numbers (as here) makes Quakers happier; 	** it's also compatible with SVR4. 	*/
-literal|"%m/%d/%y"
+literal|"%m/%d/%Y"
 block|,
 comment|/* 	** c_fmt (ctime-compatible) 	*/
 literal|"%a %b %e %T %Y"
