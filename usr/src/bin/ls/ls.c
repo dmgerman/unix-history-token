@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.29 (Berkeley) %G%"
+literal|"@(#)ls.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2144,9 +2144,6 @@ name|maxentry
 operator|=
 name|DEFNUM
 expr_stmt|;
-operator|*
-name|s_stats
-operator|=
 name|stats
 operator|=
 operator|(
@@ -2166,9 +2163,6 @@ name|LS
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|*
-name|s_names
-operator|=
 name|names
 operator|=
 name|emalloc
@@ -2310,8 +2304,8 @@ name|maxentry
 condition|)
 block|{
 name|maxentry
-operator|+=
-name|DEFNUM
+operator|*=
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -2525,6 +2519,16 @@ operator|++
 name|cnt
 expr_stmt|;
 block|}
+operator|*
+name|s_stats
+operator|=
+name|stats
+expr_stmt|;
+operator|*
+name|s_names
+operator|=
+name|names
+expr_stmt|;
 name|stats
 index|[
 literal|0
