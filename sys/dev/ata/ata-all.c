@@ -3638,11 +3638,15 @@ name|running
 operator|=
 name|atapi_request
 expr_stmt|;
+if|if
+condition|(
 name|atapi_transfer
 argument_list|(
 name|atapi_request
 argument_list|)
-expr_stmt|;
+operator|==
+name|ATA_OP_CONTINUES
+condition|)
 return|return;
 block|}
 endif|#

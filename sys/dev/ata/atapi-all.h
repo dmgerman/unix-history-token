@@ -1134,6 +1134,10 @@ define|#
 directive|define
 name|ATPR_F_INTERNAL
 value|0x0008
+define|#
+directive|define
+name|ATPR_F_QUIET
+value|0x0010
 name|caddr_t
 name|data
 decl_stmt|;
@@ -1201,7 +1205,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|atapi_transfer
 parameter_list|(
 name|struct
