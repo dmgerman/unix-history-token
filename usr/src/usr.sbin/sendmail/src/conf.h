@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.75 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.76 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3174,6 +3174,68 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Cray Unicos ** **	Ported by David L. Kensiski, Sterling Sofware<kensiski@nas.nasa.gov> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNICOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_comment
+comment|/* include all the System V defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|PATHSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
 
 begin_endif
 endif|#
