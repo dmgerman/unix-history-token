@@ -123,22 +123,22 @@ end_comment
 begin_struct
 struct|struct
 block|{
-name|APIC_TABLE
+name|MULTIPLE_APIC_TABLE
 name|Header
 decl_stmt|;
-name|LOCAL_SAPIC
+name|MADT_LOCAL_SAPIC
 name|cpu0
 decl_stmt|;
-name|LOCAL_SAPIC
+name|MADT_LOCAL_SAPIC
 name|cpu1
 decl_stmt|;
-name|LOCAL_SAPIC
+name|MADT_LOCAL_SAPIC
 name|cpu2
 decl_stmt|;
-name|LOCAL_SAPIC
+name|MADT_LOCAL_SAPIC
 name|cpu3
 decl_stmt|;
-name|IO_SAPIC
+name|MADT_IO_SAPIC
 name|sapic
 decl_stmt|;
 block|}
@@ -146,7 +146,6 @@ name|apic
 init|=
 block|{
 comment|/* Header. */
-block|{
 block|{
 name|APIC_SIG
 block|,
@@ -176,27 +175,24 @@ literal|"FBSD"
 block|,
 comment|/* ASL compiler Id. */
 literal|0
-comment|/* ASL revision. */
-block|}
 block|,
+comment|/* ASL revision. */
 literal|0xfee00000
 block|, 	}
 block|,
 comment|/* cpu0. */
 block|{
-block|{
 name|APIC_LOCAL_SAPIC
 block|,
 comment|/* Type. */
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|apic
 operator|.
 name|cpu0
-operator|)
-comment|/* Length. */
-block|}
+argument_list|)
 block|,
+comment|/* Length. */
 literal|0
 block|,
 comment|/* ACPI processor id */
@@ -221,19 +217,17 @@ block|}
 block|,
 comment|/* cpu1. */
 block|{
-block|{
 name|APIC_LOCAL_SAPIC
 block|,
 comment|/* Type. */
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|apic
 operator|.
 name|cpu1
-operator|)
-comment|/* Length. */
-block|}
+argument_list|)
 block|,
+comment|/* Length. */
 literal|1
 block|,
 comment|/* ACPI processor id */
@@ -258,19 +252,17 @@ block|}
 block|,
 comment|/* cpu2. */
 block|{
-block|{
 name|APIC_LOCAL_SAPIC
 block|,
 comment|/* Type. */
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|apic
 operator|.
 name|cpu2
-operator|)
-comment|/* Length. */
-block|}
+argument_list|)
 block|,
+comment|/* Length. */
 literal|2
 block|,
 comment|/* ACPI processor id */
@@ -295,19 +287,17 @@ block|}
 block|,
 comment|/* cpu3. */
 block|{
-block|{
 name|APIC_LOCAL_SAPIC
 block|,
 comment|/* Type. */
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|apic
 operator|.
 name|cpu3
-operator|)
-comment|/* Length. */
-block|}
+argument_list|)
 block|,
+comment|/* Length. */
 literal|3
 block|,
 comment|/* ACPI processor id */
@@ -332,19 +322,17 @@ block|}
 block|,
 comment|/* sapic. */
 block|{
-block|{
 name|APIC_IO_SAPIC
 block|,
 comment|/* Type. */
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|apic
 operator|.
 name|sapic
-operator|)
-comment|/* Length. */
-block|}
+argument_list|)
 block|,
+comment|/* Length. */
 literal|4
 block|,
 comment|/* IO SAPIC id. */
