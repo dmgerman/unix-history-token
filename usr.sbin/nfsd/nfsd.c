@@ -3010,7 +3010,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-literal|' '
+literal|'\0'
 expr_stmt|;
 block|}
 end_function
