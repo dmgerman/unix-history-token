@@ -15817,19 +15817,19 @@ block|{
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|bp
 operator|->
 name|b_iocmd
-operator|!=
+operator|==
 name|BIO_WRITE
-condition|)
-return|return
+argument_list|,
 operator|(
-literal|0
+literal|"softdep_disk_prewrite on non-BIO_WRITE buffer"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
