@@ -70,7 +70,7 @@ specifier|static
 name|char
 operator|*
 name|liblist
-index|[ ]
+index|[]
 operator|=
 block|{
 literal|"-lU77"
@@ -83,6 +83,8 @@ literal|"-lm"
 block|,
 literal|"-lc"
 block|,
+literal|"-lcompat"
+block|,
 name|NULL
 block|}
 expr_stmt|;
@@ -93,7 +95,7 @@ specifier|static
 name|char
 modifier|*
 name|p_liblist
-index|[ ]
+index|[]
 init|=
 block|{
 literal|"-lU77_p"
@@ -105,6 +107,8 @@ block|,
 literal|"-lm_p"
 block|,
 literal|"-lc_p"
+block|,
+literal|"-lcompat_p"
 block|,
 name|NULL
 block|}
