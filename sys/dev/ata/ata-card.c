@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -43,18 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
 end_include
 
 begin_include
