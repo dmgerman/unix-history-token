@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)inet_network.c	4.1	%G%	*/
+comment|/*	@(#)inet_network.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -53,6 +53,10 @@ modifier|*
 name|pp
 init|=
 name|parts
+decl_stmt|;
+specifier|register
+name|int
+name|i
 decl_stmt|;
 name|again
 label|:
