@@ -606,7 +606,7 @@ name|bstart
 init|;
 name|curr_sec
 operator|<
-name|bend
+name|size
 condition|;
 name|curr_sec
 operator|++
@@ -1701,7 +1701,7 @@ literal|0
 operator|||
 name|sn
 operator|>=
-name|size
+name|bend
 condition|)
 block|{
 name|printf
@@ -1710,7 +1710,7 @@ literal|"%ld: out of range [0,%ld) for disk %s\n"
 argument_list|,
 name|sn
 argument_list|,
-name|size
+name|bend
 argument_list|,
 name|dp
 operator|->
