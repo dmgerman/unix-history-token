@@ -4,7 +4,7 @@ comment|/*********************************************************** 		Copyright
 end_comment
 
 begin_comment
-comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  */
+comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  *	@(#)eonvar.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -64,14 +64,18 @@ begin_struct
 struct|struct
 name|sockaddr_eon
 block|{
-name|short
+name|u_char
+name|seon_len
+decl_stmt|;
+comment|/* Length */
+name|u_char
 name|seon_family
 decl_stmt|;
 comment|/* AF_ISO */
-name|u_short
+name|u_char
 name|seon_status
 decl_stmt|;
-comment|/* overlays transport suffix */
+comment|/* overlays session suffixlen */
 define|#
 directive|define
 name|EON_ESLINK_UP
@@ -90,6 +94,13 @@ name|EON_ISLINK_DOWN
 value|0x20
 comment|/* no change is neither up or down */
 name|u_char
+name|seon_pad1
+decl_stmt|;
+comment|/* 0, overlays tsfxlen */
+name|u_char
+name|seon_adrlen
+decl_stmt|;
+name|u_char
 name|seon_afi
 decl_stmt|;
 comment|/* 47 */
@@ -104,6 +115,41 @@ name|u_char
 name|seon_vers
 decl_stmt|;
 comment|/* 03 */
+name|u_char
+name|seon_glbnum
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* see RFC 1069 */
+name|u_char
+name|seon_RDN
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* see RFC 1070 */
+name|u_char
+name|seon_pad2
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* see RFC 1070 */
+name|u_char
+name|seon_LAREA
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* see RFC 1070 */
+name|u_char
+name|seon_pad3
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* see RFC 1070 */
 comment|/* right now ip addr is  aligned  -- be careful -- 		 * future revisions may have it u_char[4] 		 */
 name|u_int
 name|seon_ipaddr
@@ -111,23 +157,17 @@ decl_stmt|;
 comment|/* a.b.c.d */
 name|u_char
 name|seon_protoid
-index|[
-literal|1
-index|]
 decl_stmt|;
-comment|/* */
-name|u_char
-name|seon_adrlen
-decl_stmt|;
-name|u_short
-name|seon_netype
-index|[
-literal|2
-index|]
-decl_stmt|;
+comment|/* NSEL */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EON_TEMPLATE
+end_ifdef
 
 begin_decl_stmt
 name|struct
@@ -135,9 +175,18 @@ name|sockaddr_eon
 name|eon_template
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|eon_template
+argument_list|)
+block|,
 name|AF_ISO
 block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0x14
 block|,
 literal|0x47
 block|,
@@ -148,15 +197,14 @@ block|,
 literal|0x3
 block|,
 literal|0
-block|,
-literal|0
-block|,
-literal|0xa
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -171,6 +219,28 @@ directive|define
 name|UPBITS
 value|( EON_ESLINK_UP | EON_ISLINK_UP )
 end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSEONCORE
+value|_IOWR('i',10, struct iso_ifreq)
+end_define
+
+begin_comment
+comment|/* EON core member */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGEONCORE
+value|_IOWR('i',11, struct iso_ifreq)
+end_define
+
+begin_comment
+comment|/* EON core member */
+end_comment
 
 begin_struct
 struct|struct
@@ -207,6 +277,13 @@ comment|/* osi checksum (choke)*/
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|EONIPLEN
+value|(sizeof(struct eon_hdr) + sizeof(struct ip))
+end_define
 
 begin_comment
 comment|/* stole these 2 fields of the flags for I-am-ES and I-am-IS */
@@ -290,6 +367,25 @@ name|xxx
 parameter_list|)
 value|eonstat.xxx++
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|qhdr
+block|{
+name|struct
+name|qhdr
+modifier|*
+name|link
+decl_stmt|,
+modifier|*
+name|rlink
+decl_stmt|;
+block|}
+typedef|*
+name|queue_t
+typedef|;
+end_typedef
 
 end_unit
 

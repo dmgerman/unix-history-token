@@ -57,32 +57,37 @@ decl_stmt|;
 comment|/* back pointer to socket */
 name|struct
 name|sockaddr_iso
+modifier|*
 name|isop_laddr
 decl_stmt|;
-define|#
-directive|define
-name|isop_lport
-value|isop_laddr.siso_tsuffix
-define|#
-directive|define
-name|isop_lportlen
-value|isop_laddr.siso_tsuffixlen
 name|struct
 name|sockaddr_iso
+modifier|*
 name|isop_faddr
 decl_stmt|;
 define|#
 directive|define
-name|isop_fport
-value|isop_faddr.siso_tsuffix
+name|isop_lportlen
+value|isop_laddr->siso_tsuffixlen
 define|#
 directive|define
 name|isop_fportlen
-value|isop_faddr.siso_tsuffixlen
+value|isop_faddr->siso_tsuffixlen
+struct|struct
+name|route_iso
+block|{
 name|struct
-name|route
-name|isop_route
+name|rtentry
+modifier|*
+name|ro_rt
 decl_stmt|;
+name|struct
+name|sockaddr_iso
+name|ro_dst
+decl_stmt|;
+block|}
+name|isop_route
+struct|;
 comment|/* CLNP routing entry */
 name|struct
 name|mbuf
@@ -110,6 +115,10 @@ name|u_int
 name|isop_negchanmask
 decl_stmt|;
 comment|/* which ones used - max 32 supported */
+name|u_short
+name|isop_lport
+decl_stmt|;
+comment|/* MISLEADLING work var */
 name|int
 name|isop_x25crud_len
 decl_stmt|;
@@ -121,14 +130,59 @@ name|MAXX25CRUDLEN
 index|]
 decl_stmt|;
 name|struct
-name|ifnet
+name|ifaddr
 modifier|*
-name|isop_ifp
+name|isop_ifa
 decl_stmt|;
 comment|/* ESIS interface assoc w/sock */
+name|struct
+name|sockaddr_iso
+name|isop_sladdr
+decl_stmt|,
+comment|/* preallocated laddr */
+name|isop_sfaddr
+decl_stmt|;
+comment|/* preallocated faddr */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sotorawcb
+end_ifdef
+
+begin_comment
+comment|/*  * Common structure pcb for raw clnp protocol access.  * Here are clnp specific extensions to the raw control block,  * and space is allocated to the necessary sockaddrs.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rawisopcb
+block|{
+name|struct
+name|rawcb
+name|risop_rcb
+decl_stmt|;
+comment|/* common control block prefix */
+name|int
+name|risop_flags
+decl_stmt|;
+comment|/* flags, e.g. raw sockopts */
+name|struct
+name|isopcb
+name|risop_isop
+decl_stmt|;
+comment|/* space for bound addresses, routes etc.*/
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -137,7 +191,17 @@ name|sotoisopcb
 parameter_list|(
 name|so
 parameter_list|)
-value|((struct isopcb *)(so)->so_npcb)
+value|((struct isopcb *)(so)->so_pcb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sotorawisopcb
+parameter_list|(
+name|so
+parameter_list|)
+value|((struct rawisopcb *)(so)->so_pcb)
 end_define
 
 begin_ifdef

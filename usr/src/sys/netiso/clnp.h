@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp.h,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp.h	7.3 (Berkeley) %G% */
+comment|/*	@(#)clnp.h	7.4 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -203,62 +203,11 @@ name|u_char
 name|cnf_ttl
 decl_stmt|;
 comment|/* lifetime (500 milliseconds) */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|u_char
 name|cnf_type
-range|:
-literal|5
-decl_stmt|,
-comment|/* type code */
-name|cnf_err_ok
-range|:
-literal|1
-decl_stmt|,
-comment|/* flag: error report */
-name|cnf_more_segs
-range|:
-literal|1
-decl_stmt|,
-comment|/* flag: more segments */
-name|cnf_seg_ok
-range|:
-literal|1
-decl_stmt|;
-comment|/* flag: segmentation permitted */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_char
-name|cnf_seg_ok
-range|:
-literal|1
-decl_stmt|,
-comment|/* flag: segmentation permitted */
-name|cnf_more_segs
-range|:
-literal|1
-decl_stmt|,
-comment|/* flag: more segments */
-name|cnf_err_ok
-range|:
-literal|1
-decl_stmt|,
-comment|/* flag: error report */
-name|cnf_type
-range|:
-literal|5
 decl_stmt|;
 comment|/* type code */
-endif|#
-directive|endif
+comment|/* Includes err_ok, more_segs, and seg_ok */
 name|u_char
 name|cnf_seglen_msb
 decl_stmt|;
@@ -278,6 +227,34 @@ comment|/* checksum low byte */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CNF_TYPE
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNF_ERR_OK
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNF_MORE_SEGS
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNF_SEG_OK
+value|0x80
+end_define
 
 begin_define
 define|#
@@ -457,6 +434,27 @@ name|u_char
 name|cni_er_reason
 decl_stmt|;
 comment|/* reason from ER pdu option */
+comment|/* ESIS options */
+name|u_short
+name|cni_esct
+decl_stmt|;
+comment|/* value from ISH ESCT option */
+name|u_short
+name|cni_netmaskp
+decl_stmt|;
+comment|/* ptr to beginning of netmask option */
+name|char
+name|cni_netmask_len
+decl_stmt|;
+comment|/* length of entire netmask option */
+name|u_short
+name|cni_snpamaskp
+decl_stmt|;
+comment|/* ptr to beginning of snpamask option */
+name|char
+name|cni_snpamask_len
+decl_stmt|;
+comment|/* length of entire snpamask option */
 block|}
 struct|;
 end_struct
@@ -486,7 +484,7 @@ parameter_list|,
 name|opt
 parameter_list|)
 define|\
-value|((u_short) (opts - mtod(m, caddr_t)))
+value|((u_short) (opt - mtod(m, caddr_t)))
 end_define
 
 begin_comment
@@ -1405,7 +1403,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|troll_output(clcp->clc_ifp, m, clcp->clc_firsthop)
+value|troll_output(clcp->clc_ifa->ia_ifp, m, clcp->clc_firsthop)
 end_define
 
 begin_define
@@ -1418,6 +1416,24 @@ parameter_list|)
 define|\
 value|(ifp->if_mtu - trollctl.tr_mtu_adj)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|float
+name|troll_random
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -1438,7 +1454,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|(*clcp->clc_ifp->if_output)(clcp->clc_ifp, m, clcp->clc_firsthop)
+value|(*clcp->clc_ifa->ia_ifp->if_output)(clcp->clc_ifa->ia_ifp, m, clcp->clc_firsthop)
 end_define
 
 begin_define
@@ -1474,7 +1490,7 @@ parameter_list|,
 name|hend
 parameter_list|)
 define|\
-value|{\ 		isoa.isoa_len = (u_char)*hoff;\ 		if ((((++hoff) + isoa.isoa_len)> hend) ||\ 			(isoa.isoa_len> 20) || (isoa.isoa_len == 0)) {\ 			hoff = (caddr_t)0;\ 		} else {\ 			(void) bcopy(hoff, (caddr_t)&isoa, isoa.isoa_len);\ 			hoff += isoa.isoa_len;\ 		}\ 	}
+value|{\ 		isoa.isoa_len = (u_char)*hoff;\ 		if ((((++hoff) + isoa.isoa_len)> hend) ||\ 			(isoa.isoa_len> 20) || (isoa.isoa_len == 0)) {\ 			hoff = (caddr_t)0;\ 		} else {\ 			(void) bcopy(hoff, (caddr_t)isoa.isoa_genaddr, isoa.isoa_len);\ 			hoff += isoa.isoa_len;\ 		}\ 	}
 end_define
 
 begin_comment
@@ -1488,10 +1504,10 @@ name|CLNP_INSERT_ADDR
 parameter_list|(
 name|hoff
 parameter_list|,
-name|isoap
+name|isoa
 parameter_list|)
 define|\
-value|*hoff++ = (isoap)->isoa_len;\ 	(void) bcopy((caddr_t)(isoap), hoff, (isoap)->isoa_len);\ 	hoff += (isoap)->isoa_len;
+value|*hoff++ = (isoa).isoa_len;\ 	(void) bcopy((caddr_t)((isoa).isoa_genaddr), hoff, (isoa).isoa_len);\ 	hoff += (isoa).isoa_len;
 end_define
 
 begin_comment
@@ -1530,9 +1546,9 @@ name|clc_firsthop
 decl_stmt|;
 comment|/* first hop of packet (points into 											the route structure) */
 name|struct
-name|ifnet
+name|iso_ifaddr
 modifier|*
-name|clc_ifp
+name|clc_ifa
 decl_stmt|;
 comment|/* ptr to interface (points into 											the route structure) */
 name|struct

@@ -106,31 +106,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_var.h"
+file|"iso_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp.h"
+file|"clnp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp_stat.h"
+file|"clnp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"argo_debug.h"
 end_include
 
 begin_comment
@@ -155,34 +155,6 @@ name|clnp_comp_pdu
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TROLL
-end_ifdef
-
-begin_function_decl
-name|float
-name|troll_random
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|int
-name|troll_cnt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|TROLL
-end_endif
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_fragment  *  * PURPOSE:			Fragment a datagram, and send the itty bitty pieces  *					out over an interface.  *  * RETURNS:			success - 0  *					failure - unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			If there is an error sending the packet, clnp_discard  *					is called to discard the packet and send an ER. If  *					clnp_fragment was called from clnp_output, then  *					we generated the packet, and should not send an   *					ER -- clnp_emit_er will check for this. Otherwise,  *					the packet was fragmented during forwarding. In this  *					case, we ought to send an ER back.  */
@@ -294,7 +266,9 @@ if|if
 condition|(
 name|clnp
 operator|->
-name|cnf_seg_ok
+name|cnf_type
+operator|&
+name|CNF_SEG_OK
 condition|)
 block|{
 name|struct
@@ -372,6 +346,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clnp
 operator|->
 name|cnf_hdr_len
@@ -398,6 +375,9 @@ name|m_adj
 argument_list|(
 name|m
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clnp
 operator|->
 name|cnf_hdr_len
@@ -607,6 +587,9 @@ name|hdr
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 operator|)
@@ -692,9 +675,9 @@ name|last_frag
 condition|)
 name|clnp
 operator|->
-name|cnf_more_segs
-operator|=
-literal|1
+name|cnf_type
+operator||=
+name|CNF_MORE_SEGS
 expr_stmt|;
 comment|/* link together */
 name|m_cat
@@ -785,6 +768,31 @@ name|cnf_seglen_lsb
 argument_list|,
 name|derived_len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|frag_hdr
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"clnp_frag:lost header"
+argument_list|)
+expr_stmt|;
+name|frag_hdr
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|derived_len
 expr_stmt|;
 block|}
 comment|/* compute clnp checksum (on header only) */
@@ -1354,6 +1362,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clnp
 operator|->
 name|cnf_hdr_len
@@ -1872,6 +1883,9 @@ operator|->
 name|cfr_data
 argument_list|,
 operator|-
+operator|(
+name|int
+operator|)
 name|overlap
 argument_list|)
 expr_stmt|;
@@ -1964,6 +1978,9 @@ argument_list|(
 name|m
 argument_list|,
 operator|-
+operator|(
+name|int
+operator|)
 name|overlap
 argument_list|)
 expr_stmt|;
@@ -2408,6 +2425,9 @@ name|cf_next_hdr
 operator|.
 name|cfr_data
 argument_list|,
+operator|(
+name|int
+operator|)
 name|cf_next_hdr
 operator|.
 name|cfr_bytes
@@ -2565,6 +2585,9 @@ name|m_adj
 argument_list|(
 name|data
 argument_list|,
+operator|(
+name|int
+operator|)
 name|cf
 operator|->
 name|cfr_bytes
@@ -2703,6 +2726,13 @@ ifdef|#
 directive|ifdef
 name|TROLL
 end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|troll_cnt
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -2844,6 +2874,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 decl_stmt|;

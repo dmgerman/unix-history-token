@@ -46,49 +46,49 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/types.h"
+file|"types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/domain.h"
+file|"domain.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socketvar.h"
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
@@ -106,25 +106,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp.h"
+file|"iso_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp_stat.h"
+file|"iso_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"clnp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clnp_stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"argo_debug.h"
 end_include
 
 begin_decl_stmt
@@ -146,44 +158,9 @@ comment|/* version */
 name|CLNP_TTL
 block|,
 comment|/* ttl */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|CLNP_ER
 block|,
 comment|/* type */
-literal|0
-block|,
-comment|/* error report */
-literal|0
-block|,
-comment|/* more segments */
-literal|0
-block|,
-comment|/* segmentation permitted */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-literal|0
-block|,
-comment|/* segmentation permitted */
-literal|0
-block|,
-comment|/* more segments */
-literal|0
-block|,
-comment|/* error report */
-name|CLNP_ER
-block|,
-comment|/* type */
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/* segment length */
@@ -233,7 +210,7 @@ comment|/* ptr to src of er */
 end_comment
 
 begin_decl_stmt
-name|char
+name|u_char
 name|reason
 decl_stmt|;
 end_decl_stmt
@@ -598,9 +575,13 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|clnp
 operator|->
 name|cnf_type
+operator|&
+name|CNF_TYPE
+operator|)
 operator|!=
 name|CLNP_ER
 operator|)
@@ -608,7 +589,9 @@ operator|&&
 operator|(
 name|clnp
 operator|->
-name|cnf_err_ok
+name|cnf_type
+operator|&
+name|CNF_ERR_OK
 operator|)
 condition|)
 block|{
@@ -690,7 +673,7 @@ modifier|*
 name|er
 decl_stmt|;
 name|struct
-name|route
+name|route_iso
 name|route
 decl_stmt|;
 name|struct
@@ -727,6 +710,13 @@ modifier|*
 name|m0
 decl_stmt|;
 comment|/* contains er pdu hdr */
+name|struct
+name|iso_ifaddr
+modifier|*
+name|ia
+init|=
+literal|0
+decl_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_DISCARD
@@ -910,12 +900,18 @@ name|m_adj
 argument_list|(
 name|m
 argument_list|,
+operator|(
+name|int
+operator|)
 operator|-
 operator|(
 name|m
 operator|->
 name|m_len
 operator|-
+operator|(
+name|int
+operator|)
 name|clnp
 operator|->
 name|cnf_hdr_len
@@ -940,7 +936,7 @@ operator|&
 name|first_hop
 argument_list|,
 operator|&
-name|ifp
+name|ia
 argument_list|)
 operator|!=
 literal|0
@@ -949,34 +945,29 @@ goto|goto
 name|bad
 goto|;
 comment|/* compute our address based upon firsthop/ifp */
-name|our_addr
-operator|=
-name|clnp_srcaddr
-argument_list|(
-name|ifp
-argument_list|,
-operator|&
-operator|(
-operator|(
-expr|struct
-name|sockaddr_iso
-operator|*
-operator|)
-name|first_hop
-operator|)
-operator|->
-name|siso_addr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|our_addr
-operator|==
-name|NULL
+name|ia
 condition|)
+name|our_addr
+operator|=
+operator|&
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_addr
+expr_stmt|;
+else|else
 goto|goto
 name|bad
 goto|;
+name|ifp
+operator|=
+name|ia
+operator|->
+name|ia_ifp
+expr_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_DISCARD
@@ -1120,7 +1111,6 @@ name|CLNP_INSERT_ADDR
 argument_list|(
 name|hoff
 argument_list|,
-operator|&
 name|src
 argument_list|)
 expr_stmt|;
@@ -1131,6 +1121,7 @@ name|CLNP_INSERT_ADDR
 argument_list|(
 name|hoff
 argument_list|,
+operator|*
 name|our_addr
 argument_list|)
 expr_stmt|;

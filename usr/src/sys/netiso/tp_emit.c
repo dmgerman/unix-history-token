@@ -90,67 +90,67 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"argo_debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_timer.h"
+file|"tp_timer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_param.h"
+file|"tp_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_stat.h"
+file|"tp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_pcb.h"
+file|"tp_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_tpdu.h"
+file|"tp_tpdu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_trace.h"
+file|"tp_trace.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_meas.h"
+file|"tp_meas.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_seq.h"
+file|"tp_seq.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_errno.h"
+file|"iso_errno.h"
 end_include
 
 begin_function_decl
@@ -248,7 +248,7 @@ argument|D_EMIT
 argument_list|)
 name|printf
 argument_list|(
-literal|"tp_emit dutype 0x%x, tpcb 0x%x, eot 0x%x, seq 0x%x, data 0x%x mfree 0x%x"
+literal|"tp_emit dutype 0x%x, tpcb 0x%x, eot 0x%x, seq 0x%x, data 0x%x"
 argument_list|,
 name|dutype
 argument_list|,
@@ -259,11 +259,82 @@ argument_list|,
 name|seq
 argument_list|,
 name|data
-argument_list|,
-name|mfree
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
+if|if
+condition|(
+name|dutype
+operator|==
+name|CR_TPDU
+operator|||
+name|dutype
+operator|==
+name|CC_TPDU
+condition|)
+block|{
+name|m
+operator|=
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+name|malloc
+argument_list|(
+operator|(
+name|u_long
+operator|)
+literal|256
+argument_list|,
+name|M_MBUF
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
+name|m
+operator|->
+name|m_type
+operator|=
+name|TPMT_TPHDR
+expr_stmt|;
+name|mbstat
+operator|.
+name|m_mtypes
+index|[
+name|TPMT_TPHDR
+index|]
+operator|++
+expr_stmt|;
+name|m
+operator|->
+name|m_next
+operator|=
+name|MNULL
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|=
+name|m
+operator|->
+name|m_dat
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|MGET
 argument_list|(
 name|m
@@ -272,7 +343,8 @@ name|M_DONTWAIT
 argument_list|,
 name|TPMT_TPHDR
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|m
@@ -333,6 +405,9 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|hdr
 argument_list|,
 sizeof|sizeof
@@ -633,6 +708,9 @@ argument_list|,
 name|tpcb
 operator|->
 name|tp_lsuffix
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|ADDOPTION
@@ -648,6 +726,9 @@ argument_list|,
 name|tpcb
 operator|->
 name|tp_fsuffix
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1153,37 +1234,7 @@ name|IFDEBUG
 argument_list|(
 argument|D_SIZE_CHECK
 argument_list|)
-if|if
-condition|(
-name|data
-operator|->
-name|m_len
-operator|<=
-literal|16
-operator|&&
-name|data
-operator|->
-name|m_off
-operator|<
-operator|(
-name|MLEN
-operator|-
-literal|18
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Sending too much data on XPD: 18 bytes\n"
-argument_list|)
-expr_stmt|;
-name|data
-operator|->
-name|m_len
-operator|=
-literal|18
-expr_stmt|;
-block|}
+comment|/*if(data->m_len<= 16&& data->m_off< (MLEN-18) ) { 					printf("Sending too much data on XPD: 18 bytes\n"); 					data->m_len = 18; 				}*/
 name|ENDDEBUG
 break|break;
 case|case
@@ -1485,7 +1536,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|ENDDEBUG
-comment|/* Are we about to reneg on credit?  				 * When might we do so? 				 *	a) when using optimistic credit (which we no longer do). 				 *  b) when drain() gets implemented (not in the plans). 				 *  c) when D_RENEG is on. 				 *  d) when DEC BIT response (PRC_QUENCH2) is implemented. 				 *	(not- when we do this, we'll need to implement flow control 				 *	confirmation) 				 */
+comment|/* Are we about to reneg on credit?  				 * When might we do so? 				 *	a) when using optimistic credit (which we no longer do). 				 *  b) when drain() gets implemented (not in the plans). 				 *  c) when D_RENEG is on. 				 *  d) when DEC BIT response is implemented. 				 *	(not- when we do this, we'll need to implement flow control 				 *	confirmation) 				 */
 if|if
 condition|(
 name|SEQ_LT
@@ -1887,6 +1938,9 @@ operator|)
 operator|&
 name|lwe
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|bogus
 index|[
@@ -1907,6 +1961,9 @@ operator|)
 operator|&
 name|subseq
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|bogus
 index|[
@@ -1927,6 +1984,9 @@ operator|)
 operator|&
 name|fcredit
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|bogus
 index|[
@@ -2161,7 +2221,7 @@ name|hdr
 operator|->
 name|tpdu_li
 operator|<
-name|MMAXOFF
+name|MLEN
 argument_list|)
 expr_stmt|;
 comment|/* leave this in */
@@ -2310,11 +2370,14 @@ argument_list|)
 expr_stmt|;
 name|dump_buf
 argument_list|(
+name|mtod
+argument_list|(
 name|m
 argument_list|,
+name|caddr_t
+argument_list|)
+argument_list|,
 name|datalen
-operator|+
-literal|12
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
@@ -2352,6 +2415,11 @@ name|tp_lref
 argument_list|,
 name|TPtime_to_ll
 argument_list|,
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|seq
@@ -2547,6 +2615,8 @@ block|{
 name|tp_quench
 argument_list|(
 name|tpcb
+argument_list|,
+name|PRC_QUENCH
 argument_list|)
 expr_stmt|;
 return|return
@@ -3002,7 +3072,7 @@ name|hdr
 operator|->
 name|tpdu_li
 operator|<
-name|MMAXOFF
+name|MLEN
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3187,6 +3257,10 @@ comment|/* returns the next mbuf on the chain */
 block|}
 end_if
 
+begin_comment
+comment|/* 		 * copy only up to the bad octet 		 * (or max that will fit in a header 		 */
+end_comment
+
 begin_expr_stmt
 name|m
 operator|->
@@ -3202,10 +3276,6 @@ name|erlen
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* copy only up to the 					bad octet (or max that will fit in a header */
-end_comment
 
 begin_expr_stmt
 name|hdr
@@ -3424,8 +3494,13 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-name|dump_isoaddr
+name|dump_addr
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|laddr
 argument_list|)
 expr_stmt|;
@@ -3440,8 +3515,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|dump_isoaddr
+name|dump_addr
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|faddr
 argument_list|)
 expr_stmt|;
@@ -3504,7 +3584,7 @@ operator|>
 literal|0
 include|#
 directive|include
-file|"../netiso/cons.h"
+file|"cons.h"
 comment|/* This is unfortunate... 				cons_send_on_vc(cons_channel, m, datalen); 			*/
 name|cons_netcmd
 argument_list|(
@@ -3554,7 +3634,7 @@ else|else
 block|{
 ifndef|#
 directive|ifndef
-name|nodef
+name|notdef
 name|IFDEBUG
 argument_list|(
 argument|D_ERROR_EMIT
@@ -3564,8 +3644,13 @@ argument_list|(
 literal|"tp_error_emit sending DG: Laddr\n"
 argument_list|)
 expr_stmt|;
-name|dump_isoaddr
+name|dump_addr
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|laddr
 argument_list|)
 expr_stmt|;
@@ -3574,9 +3659,14 @@ argument_list|(
 literal|"Faddr\n"
 argument_list|)
 expr_stmt|;
-name|dump_isoaddr
+name|dump_addr
 argument_list|(
-name|laddr
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|faddr
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
@@ -3612,7 +3702,7 @@ argument_list|)
 return|;
 else|#
 directive|else
-else|nodef
+else|notdef
 name|IFDEBUG
 argument_list|(
 argument|D_ERROR_EMIT
@@ -3640,7 +3730,7 @@ literal|0
 return|;
 endif|#
 directive|endif
-endif|nodef
+endif|notdef
 block|}
 block|}
 end_block

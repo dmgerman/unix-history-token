@@ -336,93 +336,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|tp_pcb_aux
-block|{
-comment|/* addressing */
-name|u_short
-name|tpa_domain
-decl_stmt|;
-comment|/* domain (INET, ISO) */
-comment|/* for compatibility with the *old* way and with INET, be sure that 	 * that lsuffix and fsuffix are aligned to a short addr. 	 * having them follow the u_short *suffixlen should suffice (choke) 	 */
-name|u_short
-name|tpa_fsuffixlen
-decl_stmt|;
-comment|/* foreign suffix */
-name|u_char
-name|tpa_fsuffix
-index|[
-name|MAX_TSAP_SEL_LEN
-index|]
-decl_stmt|;
-name|u_short
-name|tpa_lsuffixlen
-decl_stmt|;
-comment|/* local suffix */
-name|u_char
-name|tpa_lsuffix
-index|[
-name|MAX_TSAP_SEL_LEN
-index|]
-decl_stmt|;
-define|#
-directive|define
-name|SHORT_LSUFXP
-parameter_list|(
-name|tpcb
-parameter_list|)
-value|((short *)((tpcb)->tp_aux->tpa_lsuffix))
-define|#
-directive|define
-name|SHORT_FSUFXP
-parameter_list|(
-name|tpcb
-parameter_list|)
-value|((short *)((tpcb)->tp_aux->tpa_fsuffix))
-name|u_char
-name|tpa_vers
-decl_stmt|;
-comment|/* protocol version */
-name|u_char
-name|tpa_peer_acktime
-decl_stmt|;
-comment|/* used to compute DT retrans time */
-name|struct
-name|sockbuf
-name|tpa_Xsnd
-decl_stmt|;
-comment|/* for expedited data */
-name|struct
-name|sockbuf
-name|tpa_Xrcv
-decl_stmt|;
-comment|/* for expedited data */
-name|SeqNum
-name|tpa_Xsndnxt
-decl_stmt|;
-comment|/* next XPD seq # to send */
-name|SeqNum
-name|tpa_Xuna
-decl_stmt|;
-comment|/* seq # of unacked XPD */
-name|SeqNum
-name|tpa_Xrcvnxt
-decl_stmt|;
-comment|/* next XPD seq # expect to recv */
-comment|/* AK subsequencing */
-name|u_short
-name|tpa_s_subseq
-decl_stmt|;
-comment|/* next subseq to send */
-name|u_short
-name|tpa_r_subseq
-decl_stmt|;
-comment|/* highest recv subseq */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|tp_pcb
 block|{
 name|u_short
@@ -439,12 +352,6 @@ modifier|*
 name|tp_refp
 decl_stmt|;
 comment|/* rest of pcb	*/
-name|struct
-name|tp_pcb_aux
-modifier|*
-name|tp_aux
-decl_stmt|;
-comment|/* second half of the tpcb */
 name|caddr_t
 name|tp_npcb
 decl_stmt|;
@@ -461,14 +368,6 @@ modifier|*
 name|tp_sock
 decl_stmt|;
 comment|/* back ptr */
-define|#
-directive|define
-name|tp_Xsnd
-value|tp_aux->tpa_Xsnd
-define|#
-directive|define
-name|tp_Xrcv
-value|tp_aux->tpa_Xrcv
 name|RefNum
 name|tp_lref
 decl_stmt|;
@@ -489,14 +388,6 @@ name|u_int
 name|tp_seqhalf
 decl_stmt|;
 comment|/* half the seq space */
-define|#
-directive|define
-name|tp_vers
-value|tp_aux->tpa_vers
-define|#
-directive|define
-name|tp_peer_acktime
-value|tp_aux->tpa_peer_acktime
 comment|/* credit& sequencing info for SENDING */
 name|u_short
 name|tp_fcredit
@@ -506,14 +397,6 @@ name|u_short
 name|tp_cong_win
 decl_stmt|;
 comment|/* congestion window : set to 1 on 										 * source quench 										 * Minimizes the amount of retrans- 										 * missions (independently of the 										 * retrans strategy).  Increased 										 * by one for each good ack received. 										 * Minimizes the amount sent in a 										 * regular tp_send() also. 										 */
-define|#
-directive|define
-name|tp_Xsndnxt
-value|tp_aux->tpa_Xsndnxt
-define|#
-directive|define
-name|tp_Xuna
-value|tp_aux->tpa_Xuna
 name|SeqNum
 name|tp_snduna
 decl_stmt|;
@@ -538,6 +421,12 @@ name|int
 name|tp_Nwindow
 decl_stmt|;
 comment|/* for perf. measurement */
+name|struct
+name|mbuf
+modifier|*
+name|tp_ucddata
+decl_stmt|;
+comment|/* user connect/disconnect data */
 comment|/* credit& sequencing info for RECEIVING */
 name|SeqNum
 name|tp_sent_lcdt
@@ -565,30 +454,6 @@ modifier|*
 name|tp_rcvnxt_rtc
 decl_stmt|;
 comment|/* unacked stuff recvd out of order */
-define|#
-directive|define
-name|tp_Xrcvnxt
-value|tp_aux->tpa_Xrcvnxt
-define|#
-directive|define
-name|tp_domain
-value|tp_aux->tpa_domain
-define|#
-directive|define
-name|tp_fsuffix
-value|tp_aux->tpa_fsuffix
-define|#
-directive|define
-name|tp_fsuffixlen
-value|tp_aux->tpa_fsuffixlen
-define|#
-directive|define
-name|tp_lsuffix
-value|tp_aux->tpa_lsuffix
-define|#
-directive|define
-name|tp_lsuffixlen
-value|tp_aux->tpa_lsuffixlen
 comment|/* parameters per-connection controllable by user */
 name|struct
 name|tp_conn_param
@@ -793,14 +658,6 @@ name|tp_unused
 range|:
 literal|16
 decl_stmt|;
-define|#
-directive|define
-name|tp_s_subseq
-value|tp_aux->tpa_s_subseq
-define|#
-directive|define
-name|tp_r_subseq
-value|tp_aux->tpa_r_subseq
 ifdef|#
 directive|ifdef
 name|TP_PERF_MEAS
@@ -810,9 +667,93 @@ name|tp_pmeas
 modifier|*
 name|tp_p_meas
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|tp_p_mbuf
+decl_stmt|;
 endif|#
 directive|endif
 endif|TP_PERF_MEAS
+comment|/* addressing */
+name|u_short
+name|tp_domain
+decl_stmt|;
+comment|/* domain (INET, ISO) */
+comment|/* for compatibility with the *old* way and with INET, be sure that 	 * that lsuffix and fsuffix are aligned to a short addr. 	 * having them follow the u_short *suffixlen should suffice (choke) 	 */
+name|u_short
+name|tp_fsuffixlen
+decl_stmt|;
+comment|/* foreign suffix */
+name|char
+name|tp_fsuffix
+index|[
+name|MAX_TSAP_SEL_LEN
+index|]
+decl_stmt|;
+name|u_short
+name|tp_lsuffixlen
+decl_stmt|;
+comment|/* local suffix */
+name|char
+name|tp_lsuffix
+index|[
+name|MAX_TSAP_SEL_LEN
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|SHORT_LSUFXP
+parameter_list|(
+name|tpcb
+parameter_list|)
+value|((short *)((tpcb)->tp_lsuffix))
+define|#
+directive|define
+name|SHORT_FSUFXP
+parameter_list|(
+name|tpcb
+parameter_list|)
+value|((short *)((tpcb)->tp_fsuffix))
+name|u_char
+name|tp_vers
+decl_stmt|;
+comment|/* protocol version */
+name|u_char
+name|tp_peer_acktime
+decl_stmt|;
+comment|/* used to compute DT retrans time */
+name|struct
+name|sockbuf
+name|tp_Xsnd
+decl_stmt|;
+comment|/* for expedited data */
+comment|/*	struct sockbuf		tp_Xrcv;		/* for expedited data */
+define|#
+directive|define
+name|tp_Xrcv
+value|tp_sock->so_rcv
+name|SeqNum
+name|tp_Xsndnxt
+decl_stmt|;
+comment|/* next XPD seq # to send */
+name|SeqNum
+name|tp_Xuna
+decl_stmt|;
+comment|/* seq # of unacked XPD */
+name|SeqNum
+name|tp_Xrcvnxt
+decl_stmt|;
+comment|/* next XPD seq # expect to recv */
+comment|/* AK subsequencing */
+name|u_short
+name|tp_s_subseq
+decl_stmt|;
+comment|/* next subseq to send */
+name|u_short
+name|tp_r_subseq
+decl_stmt|;
+comment|/* highest recv subseq */
 block|}
 struct|;
 end_struct
@@ -841,57 +782,6 @@ name|tp_param
 name|tp_param
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|lint
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|sototpcb
-parameter_list|(
-name|so
-parameter_list|)
-value|((struct tp_pcb *)0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sototpref
-parameter_list|(
-name|so
-parameter_list|)
-value|((struct tp_ref *)0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|tpcbtoso
-parameter_list|(
-name|tp
-parameter_list|)
-value|((struct socket *)0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|tpcbtoref
-parameter_list|(
-name|tp
-parameter_list|)
-value|((struct tp_ref *)0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -932,11 +822,6 @@ name|tp
 parameter_list|)
 value|((struct tp_ref *)((tp)->tp_ref))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /usr/argo/sys/netiso/RCS/iso.h,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)iso.h	7.2 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -310,6 +314,12 @@ end_endif
 begin_comment
 comment|/*  *	Type 37 Address  *  *	This address is named for the value of its AFI (37). This format  *	supports an X.121 address. A type 37 address has the following format:  *  *<----- idp -------><- dsp ->  *<- afi -><- idi -><- dsp ->  *  | "37"   | 7 bytes | 9 bytes |  *  *	The idi contains 14 bcd digits of X.121 address.  *	The use of the dsp part is unknown.  *  *	The afi is considered the "network" portion of the address.  *  This means that you can't have multihoming in the x.25 environment.  *  Makes loopback a bear.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BIGSOCKADDRS
+end_define
 
 begin_ifdef
 ifdef|#
@@ -818,7 +828,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|iso_addr
+name|old_iso_addr
 block|{
 name|u_char
 name|isoa_afi
@@ -853,6 +863,29 @@ name|u_char
 name|isoa_len
 decl_stmt|;
 comment|/* length (in bytes) */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* The following looks like a sockaddr  * in case we decide to use tree routines */
+end_comment
+
+begin_struct
+struct|struct
+name|iso_addr
+block|{
+name|u_char
+name|isoa_len
+decl_stmt|;
+comment|/* length (in bytes) */
+name|char
+name|isoa_genaddr
+index|[
+literal|20
+index|]
+decl_stmt|;
+comment|/* general opaque address */
 block|}
 struct|;
 end_struct
@@ -914,22 +947,75 @@ begin_struct
 struct|struct
 name|sockaddr_iso
 block|{
-name|u_short
+name|u_char
+name|siso_len
+decl_stmt|;
+comment|/* length */
+name|u_char
 name|siso_family
 decl_stmt|;
 comment|/* family */
-name|u_short
-name|siso_tsuffix
+name|u_char
+name|siso_ssuffixlen
 decl_stmt|;
-comment|/* transport suffix */
+comment|/* session suffix len */
+name|u_char
+name|siso_tsuffixlen
+decl_stmt|;
+comment|/* transport suffix len */
+comment|/*  u_char				siso_nsaptype;		/* someday?? */
 name|struct
 name|iso_addr
 name|siso_addr
 decl_stmt|;
 comment|/* network address */
+name|u_char
+name|siso_pad
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* make multiple of sizeof long */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|siso_data
+value|siso_addr.isoa_genaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|siso_nlen
+value|siso_addr.isoa_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSEL
+parameter_list|(
+name|s
+parameter_list|)
+value|((caddr_t)((s)->siso_data + (s)->siso_nlen))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAME_ISOADDR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(bcmp((a)->siso_data, (b)->siso_data, (unsigned)(a)->siso_nlen)==0)
+end_define
 
 begin_define
 define|#
@@ -1085,6 +1171,18 @@ endif|#
 directive|endif
 endif|__ISO__
 end_endif
+
+begin_define
+define|#
+directive|define
+name|_offsetof
+parameter_list|(
+name|t
+parameter_list|,
+name|m
+parameter_list|)
+value|((int)((caddr_t)&((t *)0)->m))
+end_define
 
 end_unit
 

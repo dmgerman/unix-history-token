@@ -42,7 +42,7 @@ name|u_char
 name|sr_flags
 decl_stmt|;
 comment|/* true if entry is valid */
-name|short
+name|u_short
 name|sr_ht
 decl_stmt|;
 comment|/* holding time */
@@ -110,6 +110,11 @@ name|iso_addr
 name|sc_da
 decl_stmt|;
 comment|/* DA from RD */
+name|struct
+name|rtentry
+modifier|*
+name|sc_rt
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -133,6 +138,28 @@ comment|/* SNPA_ES or SNPA_IS */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCSSTYPE
+value|_IOW('a', 39, struct systype_req)
+end_define
+
+begin_comment
+comment|/* set system type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGSTYPE
+value|_IOW('a', 40, struct systype_req)
+end_define
+
+begin_comment
+comment|/* set system type */
+end_comment
 
 begin_ifdef
 ifdef|#

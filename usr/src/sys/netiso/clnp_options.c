@@ -106,25 +106,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp.h"
+file|"clnp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp_stat.h"
+file|"clnp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"argo_debug.h"
 end_include
 
 begin_comment

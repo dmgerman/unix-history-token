@@ -8,11 +8,11 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp_stat.h,v 4.3 88/09/10 18:31:38 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp_stat.h,v 5.1 89/02/09 16:20:42 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_stat.h,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp_stat.h,v $ */
 end_comment
 
 begin_ifndef
@@ -87,6 +87,14 @@ name|u_short
 name|cns_cachemiss
 decl_stmt|;
 comment|/* cache misses */
+name|u_short
+name|cns_congest_set
+decl_stmt|;
+comment|/* congestion experienced bit set */
+name|u_short
+name|cns_congest_rcvd
+decl_stmt|;
+comment|/* congestion experienced bit received */
 name|u_short
 name|er_protoerr
 decl_stmt|;

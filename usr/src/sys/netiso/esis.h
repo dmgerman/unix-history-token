@@ -147,32 +147,11 @@ name|u_char
 name|esis_res1
 decl_stmt|;
 comment|/* reserved */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|u_char
 name|esis_type
-range|:
-literal|5
-decl_stmt|,
-comment|/* type code */
-name|esis_res4
-range|:
-literal|1
-decl_stmt|,
-comment|/* reserved */
-name|esis_res3
-range|:
-literal|1
-decl_stmt|,
-comment|/* reserved */
-name|esis_res2
-range|:
-literal|1
 decl_stmt|;
-comment|/* reserved */
+comment|/* type code */
+comment|/* technically, type should be&='d 0x1f */
 define|#
 directive|define
 name|ESIS_ESH
@@ -188,51 +167,6 @@ directive|define
 name|ESIS_RD
 value|0x06
 comment|/* Redirect */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_char
-name|esis_res2
-range|:
-literal|1
-decl_stmt|,
-comment|/* reserved */
-name|esis_res3
-range|:
-literal|1
-decl_stmt|,
-comment|/* reserved */
-name|esis_res4
-range|:
-literal|1
-decl_stmt|,
-comment|/* reserved */
-name|esis_type
-range|:
-literal|5
-decl_stmt|;
-comment|/* type code */
-define|#
-directive|define
-name|ESIS_ESH
-value|0x02
-comment|/* End System Hello */
-define|#
-directive|define
-name|ESIS_ISH
-value|0x04
-comment|/* Intermediate System Hello */
-define|#
-directive|define
-name|ESIS_RD
-value|0x06
-comment|/* Redirect */
-endif|#
-directive|endif
 name|u_char
 name|esis_ht_msb
 decl_stmt|;
@@ -252,6 +186,43 @@ comment|/* checksum low byte */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Values for ESIS datagram options  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESISOVAL_NETMASK
+value|0xe1
+end_define
+
+begin_comment
+comment|/* address mask option, RD PDU only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESISOVAL_SNPAMASK
+value|0xe2
+end_define
+
+begin_comment
+comment|/* snpa mask option, RD PDU only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESISOVAL_ESCT
+value|0xc6
+end_define
+
+begin_comment
+comment|/* end system conf. timer, ISH PDU only */
+end_comment
 
 begin_define
 define|#

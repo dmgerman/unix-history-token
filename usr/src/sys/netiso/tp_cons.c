@@ -56,7 +56,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"param.h"
 end_include
 
 begin_include
@@ -98,43 +98,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_param.h"
+file|"tp_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"argo_debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_stat.h"
+file|"tp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_pcb.h"
+file|"tp_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_trace.h"
+file|"tp_trace.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_stat.h"
+file|"tp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_tpdu.h"
+file|"tp_tpdu.h"
 end_include
 
 begin_include
@@ -146,25 +146,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_pcb.h"
+file|"iso_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/cons.h"
+file|"cons.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_seq.h"
+file|"tp_seq.h"
 end_include
 
 begin_function_decl

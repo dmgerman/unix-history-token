@@ -78,55 +78,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_param.h"
+file|"tp_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_timer.h"
+file|"tp_timer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_stat.h"
+file|"tp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_param.h"
+file|"tp_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_ip.h"
+file|"tp_ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_pcb.h"
+file|"tp_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_tpdu.h"
+file|"tp_tpdu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"argo_debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_trace.h"
+file|"tp_trace.h"
 end_include
 
 begin_ifdef
@@ -301,6 +301,9 @@ name|tp
 operator|->
 name|tpt_ertpdu
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|MIN
 argument_list|(
 operator|(
@@ -338,6 +341,9 @@ name|tp
 operator|->
 name|tpt_str
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|MIN
 argument_list|(
 literal|1
@@ -511,6 +517,9 @@ name|tp
 operator|->
 name|tpt_tpdu
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|MIN
 argument_list|(
 operator|(

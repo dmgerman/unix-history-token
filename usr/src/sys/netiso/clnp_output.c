@@ -46,55 +46,55 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/types.h"
+file|"types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/domain.h"
+file|"domain.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socketvar.h"
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"time.h"
 end_include
 
 begin_include
@@ -112,31 +112,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_pcb.h"
+file|"iso_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp.h"
+file|"iso_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp_stat.h"
+file|"clnp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"clnp_stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"argo_debug.h"
 end_include
 
 begin_decl_stmt
@@ -158,44 +164,13 @@ comment|/* version */
 name|CLNP_TTL
 block|,
 comment|/* ttl */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|CLNP_DT
+operator||
+name|CNF_SEG_OK
+operator||
+name|CNF_ERR_OK
 block|,
 comment|/* type */
-literal|1
-block|,
-comment|/* error report */
-literal|0
-block|,
-comment|/* more segments */
-literal|1
-block|,
-comment|/* segmentation permitted */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-literal|1
-block|,
-comment|/* segmentation permitted */
-literal|0
-block|,
-comment|/* more segments */
-literal|1
-block|,
-comment|/* error report */
-name|CLNP_DT
-block|,
-comment|/* type */
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/* segment length */
@@ -224,44 +199,13 @@ comment|/* version */
 name|CLNP_TTL
 block|,
 comment|/* ttl */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|CLNP_RAW
+operator||
+name|CNF_SEG_OK
+operator||
+name|CNF_ERR_OK
 block|,
 comment|/* type */
-literal|1
-block|,
-comment|/* error report */
-literal|0
-block|,
-comment|/* more segments */
-literal|1
-block|,
-comment|/* segmentation permitted */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-literal|1
-block|,
-comment|/* segmentation permitted */
-literal|0
-block|,
-comment|/* more segments */
-literal|1
-block|,
-comment|/* error report */
-name|CLNP_RAW
-block|,
-comment|/* type */
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/* segment length */
@@ -290,44 +234,13 @@ comment|/* version */
 name|CLNP_TTL
 block|,
 comment|/* ttl */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|CLNP_EC
+operator||
+name|CNF_SEG_OK
+operator||
+name|CNF_ERR_OK
 block|,
 comment|/* type */
-literal|1
-block|,
-comment|/* error report */
-literal|0
-block|,
-comment|/* more segments */
-literal|1
-block|,
-comment|/* segmentation permitted */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-literal|1
-block|,
-comment|/* segmentation permitted */
-literal|0
-block|,
-comment|/* more segments */
-literal|1
-block|,
-comment|/* error report */
-name|CLNP_EC
-block|,
-comment|/* type */
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/* segment length */
@@ -391,8 +304,6 @@ argument|m0
 argument_list|,
 argument|isop
 argument_list|,
-argument|datalen
-argument_list|,
 argument|flags
 argument_list|)
 end_macro
@@ -423,16 +334,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|datalen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of bytes of data in m */
-end_comment
-
-begin_decl_stmt
-name|int
 name|flags
 decl_stmt|;
 end_decl_stmt
@@ -454,8 +355,14 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+init|=
+name|m0
 decl_stmt|;
 comment|/* mbuf for clnp header chain */
+name|int
+name|datalen
+decl_stmt|;
+comment|/* number of bytes of data in m */
 specifier|register
 name|struct
 name|clnp_fixed
@@ -508,7 +415,7 @@ operator|&
 name|isop
 operator|->
 name|isop_laddr
-operator|.
+operator|->
 name|siso_addr
 expr_stmt|;
 name|dst
@@ -517,8 +424,38 @@ operator|&
 name|isop
 operator|->
 name|isop_faddr
-operator|.
+operator|->
 name|siso_addr
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+name|datalen
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 expr_stmt|;
 name|IFDEBUG
 argument_list|(
@@ -776,6 +713,9 @@ name|clc_hdr
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 decl_stmt|;
@@ -1169,7 +1109,7 @@ operator|)
 return|;
 block|}
 comment|/* 		 *	Grab mbuf to contain header 		 */
-name|MGET
+name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
@@ -1263,9 +1203,10 @@ name|CLNP_NO_SEG
 condition|)
 name|clnp
 operator|->
-name|cnf_seg_ok
-operator|=
-literal|0
+name|cnf_type
+operator|&=
+operator|~
+name|CNF_SEG_OK
 expr_stmt|;
 if|if
 condition|(
@@ -1275,9 +1216,10 @@ name|CLNP_NO_ER
 condition|)
 name|clnp
 operator|->
-name|cnf_err_ok
-operator|=
-literal|0
+name|cnf_type
+operator|&=
+operator|~
+name|CNF_ERR_OK
 expr_stmt|;
 comment|/* 		 *	Route packet; special case for source rt 		 */
 if|if
@@ -1327,7 +1269,7 @@ argument_list|,
 operator|&
 name|clcp
 operator|->
-name|clc_ifp
+name|clc_ifa
 argument_list|,
 name|dst
 argument_list|)
@@ -1361,15 +1303,21 @@ argument_list|,
 operator|&
 name|clcp
 operator|->
-name|clc_ifp
+name|clc_ifa
 argument_list|)
 decl_stmt|;
 block|}
 if|if
 condition|(
 name|error
-operator|!=
+operator|||
+operator|(
+name|clcp
+operator|->
+name|clc_ifa
+operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|IFDEBUG
@@ -1443,42 +1391,17 @@ condition|)
 block|{
 name|src
 operator|=
-name|clnp_srcaddr
-argument_list|(
-name|clcp
-operator|->
-name|clc_ifp
-argument_list|,
 operator|&
 operator|(
-operator|(
-expr|struct
-name|sockaddr_iso
-operator|*
-operator|)
 name|clcp
 operator|->
-name|clc_firsthop
-operator|)
+name|clc_ifa
 operator|->
+name|ia_addr
+operator|.
 name|siso_addr
-argument_list|)
+operator|)
 expr_stmt|;
-if|if
-condition|(
-name|src
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENETDOWN
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|IFDEBUG
 argument_list|(
 argument|D_OUTPUT
@@ -1513,6 +1436,7 @@ name|CLNP_INSERT_ADDR
 argument_list|(
 name|hoff
 argument_list|,
+operator|*
 name|dst
 argument_list|)
 expr_stmt|;
@@ -1520,6 +1444,7 @@ name|CLNP_INSERT_ADDR
 argument_list|(
 name|hoff
 argument_list|,
+operator|*
 name|src
 argument_list|)
 expr_stmt|;
@@ -1528,7 +1453,9 @@ if|if
 condition|(
 name|clnp
 operator|->
-name|cnf_seg_ok
+name|cnf_type
+operator|&
+name|CNF_SEG_OK
 condition|)
 block|{
 name|clcp
@@ -1662,6 +1589,9 @@ name|isop_options
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 decl_stmt|;
@@ -1740,7 +1670,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|clcp
 operator|->
 name|clc_hdr
@@ -1751,36 +1680,21 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clnp
 operator|->
 name|cnf_hdr_len
 argument_list|)
-operator|)
-operator|!=
-name|NULL
 condition|)
 block|{
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|dst
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|clcp
 operator|->
 name|clc_dst
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|iso_addr
-argument_list|)
-argument_list|)
+operator|=
+operator|*
+name|dst
 expr_stmt|;
 name|clcp
 operator|->
@@ -1821,7 +1735,9 @@ name|SN_MTU
 argument_list|(
 name|clcp
 operator|->
-name|clc_ifp
+name|clc_ifa
+operator|->
+name|ia_ifp
 argument_list|)
 condition|)
 block|{
@@ -1829,7 +1745,9 @@ if|if
 condition|(
 name|clnp
 operator|->
-name|cnf_seg_ok
+name|cnf_type
+operator|&
+name|CNF_SEG_OK
 condition|)
 block|{
 name|struct
@@ -1904,6 +1822,14 @@ name|cnf_seglen_lsb
 argument_list|,
 name|total_len
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|total_len
 expr_stmt|;
 comment|/* 		 *	Compute clnp checksum (on header only) 		 */
 if|if
@@ -2011,7 +1937,9 @@ name|clnp_fragment
 argument_list|(
 name|clcp
 operator|->
-name|clc_ifp
+name|clc_ifa
+operator|->
+name|ia_ifp
 argument_list|,
 name|m
 argument_list|,

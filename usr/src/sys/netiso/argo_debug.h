@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * $Header: argo_debug.h,v 4.6 88/07/19 15:53:40 hagens Exp $  * $Source: /usr/argo/sys/netiso/RCS/argo_debug.h,v $  */
+comment|/*   * $Header: argo_debug.h,v 4.6 88/07/19 15:53:40 hagens Exp $  * $Source: /usr/argo/sys/netiso/RCS/argo_debug.h,v $  *	@(#)argo_debug.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -21,6 +21,18 @@ begin_define
 define|#
 directive|define
 name|__ARGO_DEBUG__
+end_define
+
+begin_define
+define|#
+directive|define
+name|dump_buf
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|Dump_buf((caddr_t)(a), (int)(b))
 end_define
 
 begin_comment
@@ -40,23 +52,15 @@ begin_comment
 comment|/*   * lint can't handle the flaky vacuous definitions   * of IFDEBUG, ENDDEBUG, etc.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TPPT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TPPT
-end_define
-
 begin_endif
 endif|#
 directive|endif
-endif|TPPT
+endif|defined(lint)
 end_endif
+
+begin_comment
+comment|/***********************************************  * DEBUG ON:  **********************************************/
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -76,21 +80,15 @@ directive|endif
 endif|ARGO_DEBUG
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-endif|defined(lint)
-end_endif
-
-begin_comment
-comment|/***********************************************  * DEBUG ON:  **********************************************/
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|ARGO_DEBUG
 end_ifdef
+
+begin_comment
+comment|/*     #ifndef TPPT     #define TPPT     #endif TPPT      #ifndef TP_PERF_MEAS     #define TP_PERF_MEAS     #endif TP_PERF_MEAS */
+end_comment
 
 begin_decl_stmt
 name|unsigned
@@ -820,13 +818,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/***********************************************  * New mbuf types for debugging w/ netstat -m  **********************************************/
+comment|/***********************************************  * New mbuf types for debugging w/ netstat -m  * This messes up 4.4 malloc for now. need bigger  * mbtypes array for now.  **********************************************/
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARGO_DEBUG
+name|notdef
 end_ifdef
 
 begin_define
@@ -954,15 +952,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TPMT_EOT
-value|MT_EOT
-end_define
-
-begin_define
-define|#
-directive|define
 name|TPMT_XPD
-value|MT_XPD
+value|MT_OOBDATA
 end_define
 
 begin_define

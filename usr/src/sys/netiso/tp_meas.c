@@ -48,7 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_meas.h"
+file|"argo_debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tp_meas.h"
 end_include
 
 begin_decl_stmt
@@ -89,7 +95,7 @@ end_comment
 
 begin_function
 name|void
-name|tpmeas
+name|Tpmeas
 parameter_list|(
 name|ref
 parameter_list|,

@@ -114,7 +114,7 @@ begin_struct
 struct|struct
 name|tpdu_fixed
 block|{
-name|unsigned
+name|u_char
 name|_tpduf_li
 range|:
 literal|8
@@ -133,7 +133,7 @@ comment|/* credit */
 name|_tpduf_type
 range|:
 literal|4
-decl_stmt|,
+decl_stmt|;
 comment|/* type of tpdu (DT, CR, etc.) */
 endif|#
 directive|endif
@@ -143,20 +143,19 @@ name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
 name|_tpduf_type
-range|:
+label|:
 literal|4
-decl_stmt|,
+operator|,
 comment|/* type of tpdu (DT, CR, etc.) */
 name|_tpduf_cdt
-range|:
+operator|:
 literal|4
-decl_stmt|,
+expr_stmt|;
 comment|/* credit */
 endif|#
 directive|endif
+name|u_short
 name|_tpduf_dref
-range|:
-literal|16
 decl_stmt|;
 comment|/* destination ref; not in DT in class 0 */
 block|}
@@ -195,10 +194,10 @@ begin_struct
 struct|struct
 name|tp0du
 block|{
-name|unsigned
-name|_tp0same
-range|:
-literal|16
+name|u_char
+name|_tp0_li
+decl_stmt|,
+name|_tp0_cdt_type
 decl_stmt|,
 comment|/* same as in tpdu_fixed */
 if|#
@@ -339,10 +338,8 @@ name|tpdu_fixed_rest
 block|{
 struct|struct
 block|{
-name|unsigned
+name|u_short
 name|_tpdufr_sref
-range|:
-literal|16
 decl_stmt|,
 comment|/* source reference */
 if|#

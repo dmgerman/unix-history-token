@@ -56,14 +56,14 @@ begin_define
 define|#
 directive|define
 name|TP_SOCKBUFSIZE
-value|4096
+value|((u_long)4096)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TP0_SOCKBUFSIZE
-value|512
+value|((u_long)512)
 end_define
 
 begin_define
@@ -1076,7 +1076,7 @@ parameter_list|,
 name|src
 parameter_list|)
 define|\
-value|{	register caddr_t P;\ 	P = (caddr_t)(DU) + (int)((DU)->tpdu_li);\ 	vbptr(P)->tpv_code = type;\ 	vbptr(P)->tpv_len = len;\ 	bcopy((caddr_t)&src, (caddr_t)&(vbptr(P)->tpv_val), (int)len);\ 	DU->tpdu_li += len+2;
+value|{	register caddr_t P;\ 	P = (caddr_t)(DU) + (int)((DU)->tpdu_li);\ 	vbptr(P)->tpv_code = type;\ 	vbptr(P)->tpv_len = len;\ 	bcopy((caddr_t)&src, (caddr_t)&(vbptr(P)->tpv_val), (unsigned)len);\ 	DU->tpdu_li += len+2;
 comment|/* 1 for code, 1 for length */
 value|\ }
 end_define

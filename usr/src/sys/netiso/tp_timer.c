@@ -54,49 +54,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_param.h"
+file|"malloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_timer.h"
+file|"tp_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_stat.h"
+file|"tp_timer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_pcb.h"
+file|"tp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_tpdu.h"
+file|"tp_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"tp_tpdu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_trace.h"
+file|"argo_debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_seq.h"
+file|"tp_trace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tp_seq.h"
 end_include
 
 begin_decl_stmt
@@ -304,6 +310,11 @@ init|;
 condition|;
 control|)
 block|{
+name|struct
+name|tp_pcb
+modifier|*
+name|tpcb
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -446,6 +457,8 @@ name|void
 operator|)
 name|tp_driver
 argument_list|(
+name|tpcb
+operator|=
 name|refp
 operator|->
 name|tpr_pcb
@@ -454,6 +467,31 @@ operator|&
 name|E
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|->
+name|c_func
+operator|==
+name|TM_reference
+operator|&&
+name|tpcb
+operator|->
+name|tp_state
+operator|==
+name|TP_CLOSED
+condition|)
+name|free
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|tpcb
+argument_list|,
+name|M_PCB
+argument_list|)
+expr_stmt|;
+comment|/* XXX wart; where else to do it? */
 block|}
 block|}
 end_function
@@ -1447,7 +1485,7 @@ argument|D_TIMER
 argument_list|)
 name|printf
 argument_list|(
-literal|"tp_cuntimeout(0x%x, %d) active\n"
+literal|"tp_cuntimeout(0x%x, %d) active %d\n"
 argument_list|,
 name|refp
 argument_list|,

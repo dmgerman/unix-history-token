@@ -41,49 +41,49 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/types.h"
+file|"types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/domain.h"
+file|"domain.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socketvar.h"
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
@@ -101,25 +101,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp.h"
+file|"clnp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp_stat.h"
+file|"clnp_stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/argo_debug.h"
+file|"argo_debug.h"
 end_include
 
 begin_comment
@@ -138,6 +138,8 @@ argument_list|,
 argument|nam
 argument_list|,
 argument|rights
+argument_list|,
+argument|control
 argument_list|)
 end_macro
 
@@ -197,6 +199,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* optional rights */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|control
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* optional control info */
 end_comment
 
 begin_block

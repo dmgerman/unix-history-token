@@ -507,7 +507,7 @@ name|IFPERF
 parameter_list|(
 name|tpcb
 parameter_list|)
-value|if (tpcb->tp_perf_on&&\ 					(tpcb->tp_p_meas != (struct tp_pmeas *)0 )) {
+value|if (tpcb->tp_perf_on&& tpcb->tp_p_meas) {
 end_define
 
 begin_define
