@@ -140,6 +140,10 @@ name|pfs_bitmap
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Filler callback  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -168,6 +172,48 @@ name|pfs_fill_t
 function_decl|)
 parameter_list|(
 name|PFS_FILL_ARGS
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * Attribute callback  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|vattr
+struct_decl|;
+end_struct_decl
+
+begin_define
+define|#
+directive|define
+name|PFS_ATTR_ARGS
+define|\
+value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	struct vattr *vap
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_ATTR_PROTO
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|int name(PFS_ATTR_ARGS);
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pfs_attr_t
+function_decl|)
+parameter_list|(
+name|PFS_ATTR_ARGS
 parameter_list|)
 function_decl|;
 end_typedef
@@ -233,23 +279,11 @@ decl_stmt|;
 name|pfs_type_t
 name|pn_type
 decl_stmt|;
-name|int
-name|pn_flags
-decl_stmt|;
-name|uid_t
-name|pn_uid
-decl_stmt|;
-name|gid_t
-name|pn_gid
-decl_stmt|;
-name|mode_t
-name|pn_mode
-decl_stmt|;
 union|union
 block|{
 name|void
 modifier|*
-name|_pn_data
+name|_pn_dummy
 decl_stmt|;
 name|pfs_fill_t
 name|_pn_func
@@ -264,16 +298,22 @@ name|u1
 union|;
 define|#
 directive|define
-name|pn_data
-value|u1._pn_data
-define|#
-directive|define
 name|pn_func
 value|u1._pn_func
 define|#
 directive|define
 name|pn_nodes
 value|u1._pn_nodes
+name|pfs_attr_t
+name|pn_attr
+decl_stmt|;
+name|void
+modifier|*
+name|pn_data
+decl_stmt|;
+name|int
+name|pn_flags
+decl_stmt|;
 comment|/* members below this line aren't initialized */
 name|struct
 name|pfs_node
@@ -296,18 +336,16 @@ name|name
 parameter_list|,
 name|type
 parameter_list|,
-name|flags
+name|fill
 parameter_list|,
-name|uid
-parameter_list|,
-name|gid
-parameter_list|,
-name|mode
+name|attr
 parameter_list|,
 name|data
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|{ (name), (type), (flags), (uid), (gid), (mode), { (data) } }
+value|{ (name), (type), { (fill) }, (attr), (data), (flags) }
 end_define
 
 begin_define
@@ -317,18 +355,16 @@ name|PFS_DIR
 parameter_list|(
 name|name
 parameter_list|,
-name|flags
-parameter_list|,
-name|uid
-parameter_list|,
-name|gid
-parameter_list|,
-name|mode
-parameter_list|,
 name|nodes
+parameter_list|,
+name|attr
+parameter_list|,
+name|data
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|PFS_NODE(name, pfstype_dir, flags, uid, gid, mode, nodes)
+value|PFS_NODE(name, pfstype_dir, nodes, attr, data, flags)
 end_define
 
 begin_define
@@ -339,7 +375,7 @@ parameter_list|(
 name|nodes
 parameter_list|)
 define|\
-value|PFS_NODE("/", pfstype_root, 0, 0, 0, 0555, nodes)
+value|PFS_NODE("/", pfstype_root, nodes, NULL, NULL, 0)
 end_define
 
 begin_define
@@ -347,7 +383,7 @@ define|#
 directive|define
 name|PFS_THIS
 define|\
-value|PFS_NODE(".", pfstype_this, 0, 0, 0, 0, NULL)
+value|PFS_NODE(".", pfstype_this, NULL, NULL, NULL, 0)
 end_define
 
 begin_define
@@ -355,7 +391,7 @@ define|#
 directive|define
 name|PFS_PARENT
 define|\
-value|PFS_NODE("..", pfstype_parent, 0, 0, 0, 0, NULL)
+value|PFS_NODE("..", pfstype_parent, NULL, NULL, NULL, 0)
 end_define
 
 begin_define
@@ -365,18 +401,16 @@ name|PFS_FILE
 parameter_list|(
 name|name
 parameter_list|,
-name|flags
-parameter_list|,
-name|uid
-parameter_list|,
-name|gid
-parameter_list|,
-name|mode
-parameter_list|,
 name|func
+parameter_list|,
+name|attr
+parameter_list|,
+name|data
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|PFS_NODE(name, pfstype_file, flags, uid, gid, mode, func)
+value|PFS_NODE(name, pfstype_file, func, attr, data, flags)
 end_define
 
 begin_define
@@ -386,18 +420,16 @@ name|PFS_SYMLINK
 parameter_list|(
 name|name
 parameter_list|,
-name|flags
-parameter_list|,
-name|uid
-parameter_list|,
-name|gid
-parameter_list|,
-name|mode
-parameter_list|,
 name|func
+parameter_list|,
+name|attr
+parameter_list|,
+name|data
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|PFS_NODE(name, pfstype_symlink, flags, uid, gid, mode, func)
+value|PFS_NODE(name, pfstype_symlink, func, attr, data, flags)
 end_define
 
 begin_define
@@ -405,18 +437,16 @@ define|#
 directive|define
 name|PFS_PROCDIR
 parameter_list|(
-name|flags
-parameter_list|,
-name|uid
-parameter_list|,
-name|gid
-parameter_list|,
-name|mode
-parameter_list|,
 name|nodes
+parameter_list|,
+name|attr
+parameter_list|,
+name|data
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|PFS_NODE("", pfstype_procdir, flags, uid, gid, mode, nodes)
+value|PFS_NODE("", pfstype_procdir, nodes, attr, data, flags)
 end_define
 
 begin_define
@@ -424,7 +454,7 @@ define|#
 directive|define
 name|PFS_LASTNODE
 define|\
-value|PFS_NODE("", pfstype_none, 0, 0, 0, 0, NULL)
+value|PFS_NODE("", pfstype_none, NULL, NULL, NULL, 0)
 end_define
 
 begin_comment
@@ -575,7 +605,7 @@ parameter_list|,
 name|version
 parameter_list|)
 define|\ 									\
-value|static struct pfs_info name##_info = {					\ 	#name,								\&(root)								\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, char *path, caddr_t data,		\ 	     struct nameidata *ndp, struct thread *td) {		\         return pfs_mount(&name##_info, mp, path, data, ndp, td);		\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\         return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\         return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	_##name##_mount,						\ 	vfs_stdstart,							\ 	pfs_unmount,							\ 	pfs_root,							\ 	vfs_stdquotactl,						\ 	pfs_statfs,							\ 	vfs_stdsync,							\ 	vfs_stdvget,							\ 	vfs_stdfhtovp,							\ 	vfs_stdcheckexp,						\ 	vfs_stdvptofh,							\ 	_##name##_init,							\ 	_##name##_uninit,						\ 	vfs_stdextattrctl,						\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 1, 1, 1);
+value|static struct pfs_info name##_info = {					\ 	#name,								\&(root)								\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, char *path, caddr_t data,		\ 	     struct nameidata *ndp, struct thread *td) {		\         return pfs_mount(&name##_info, mp, path, data, ndp, td);	\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\         return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\         return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	_##name##_mount,						\ 	vfs_stdstart,							\ 	pfs_unmount,							\ 	pfs_root,							\ 	vfs_stdquotactl,						\ 	pfs_statfs,							\ 	vfs_stdsync,							\ 	vfs_stdvget,							\ 	vfs_stdfhtovp,							\ 	vfs_stdcheckexp,						\ 	vfs_stdvptofh,							\ 	_##name##_init,							\ 	_##name##_uninit,						\ 	vfs_stdextattrctl,						\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 2, 2, 2);
 end_define
 
 begin_endif
