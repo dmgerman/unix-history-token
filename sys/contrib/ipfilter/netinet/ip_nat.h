@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 1.1.1.2 1997/04/03 10:11:19 darrenr Exp $  */
+comment|/*  * (C)opyright 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.0.2.12 1997/05/24 07:35:20 darrenr Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__IP_NAT_H_
+name|__IP_NAT_H__
 end_ifndef
 
 begin_define
@@ -14,6 +14,23 @@ define|#
 directive|define
 name|__IP_NAT_H__
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__IP_PROXY_H__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"netinet/ip_proxy.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -194,6 +211,11 @@ name|u_long
 name|nat_ipsumd
 decl_stmt|;
 name|struct
+name|ipfr
+modifier|*
+name|nat_frag
+decl_stmt|;
+name|struct
 name|in_addr
 name|nat_inip
 decl_stmt|;
@@ -206,6 +228,12 @@ name|in_addr
 name|nat_oip
 decl_stmt|;
 comment|/* other ip */
+name|U_QUAD_T
+name|nat_pkts
+decl_stmt|;
+name|U_QUAD_T
+name|nat_bytes
+decl_stmt|;
 name|u_short
 name|nat_oport
 decl_stmt|;
@@ -251,6 +279,13 @@ name|nat_hstart
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|void
+modifier|*
+name|nat_ifp
+decl_stmt|;
+name|int
+name|nat_dir
 decl_stmt|;
 block|}
 name|nat_t
@@ -307,6 +342,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|aproxy
+modifier|*
+name|in_apr
+decl_stmt|;
 name|int
 name|in_redir
 decl_stmt|;
@@ -316,6 +356,20 @@ name|in_ifname
 index|[
 name|IFNAMSIZ
 index|]
+decl_stmt|;
+name|char
+name|in_plabel
+index|[
+name|APR_LABELLEN
+index|]
+decl_stmt|;
+comment|/* proxy label */
+name|char
+name|in_p
+decl_stmt|;
+comment|/* protocol */
+name|u_short
+name|in_dport
 decl_stmt|;
 block|}
 name|ipnat_t
@@ -378,14 +432,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|NAT_INBOUND
+name|NAT_OUTBOUND
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|NAT_OUTBOUND
+name|NAT_INBOUND
 value|1
 end_define
 
@@ -393,14 +447,21 @@ begin_define
 define|#
 directive|define
 name|NAT_MAP
-value|0
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|NAT_REDIRECT
-value|1
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAT_BIMAP
+value|(NAT_MAP|NAT_REDIRECT)
 end_define
 
 begin_define
@@ -446,6 +507,9 @@ literal|2
 index|]
 decl_stmt|;
 name|u_long
+name|ns_rules
+decl_stmt|;
+name|u_long
 name|ns_added
 decl_stmt|;
 name|u_long
@@ -481,28 +545,35 @@ begin_define
 define|#
 directive|define
 name|IPN_ANY
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPN_TCP
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPN_UDP
-value|2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPN_TCPUDP
-value|3
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPN_DELETE
+value|0x04
 end_define
 
 begin_typedef
@@ -541,6 +612,12 @@ decl_stmt|;
 name|int
 name|nl_rule
 decl_stmt|;
+name|U_QUAD_T
+name|nl_pkts
+decl_stmt|;
+name|U_QUAD_T
+name|nl_bytes
+decl_stmt|;
 block|}
 name|natlog_t
 typedef|;
@@ -566,6 +643,13 @@ directive|define
 name|NL_EXPIRE
 value|0xffff
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_defnatage
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -602,10 +686,38 @@ begin_decl_stmt
 specifier|extern
 name|nat_t
 modifier|*
+name|nat_new
+name|__P
+argument_list|(
+operator|(
+name|ipnat_t
+operator|*
+operator|,
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
+operator|,
+name|u_short
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|nat_t
+modifier|*
 name|nat_outlookup
 name|__P
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|int
 operator|,
 expr|struct
@@ -630,6 +742,9 @@ name|nat_inlookup
 name|__P
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|int
 operator|,
 expr|struct
@@ -669,6 +784,9 @@ name|nat_lookupmapip
 name|__P
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|int
 operator|,
 expr|struct
@@ -756,6 +874,38 @@ name|nat
 operator|*
 operator|,
 name|u_short
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fix_incksum
+name|__P
+argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fix_outcksum
+name|__P
+argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|,
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
