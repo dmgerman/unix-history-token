@@ -766,9 +766,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: renice [priority | [-n incr]] [ [ -p ] pids ] [ [ -g ] pgrps ]"
+literal|"usage: renice [priority | [-n incr]] [[-p] pid ...] [[-g] pgrp ...]"
 argument_list|,
-literal|"              [ [ -u ] users ]"
+literal|"              [[-u] user ...]"
 argument_list|)
 expr_stmt|;
 name|exit
