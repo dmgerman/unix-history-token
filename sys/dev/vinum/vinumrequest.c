@@ -467,10 +467,6 @@ operator|->
 name|b_dev
 decl_stmt|;
 comment|/* decode device number */
-name|int
-name|s
-decl_stmt|;
-comment|/* spl */
 switch|switch
 condition|(
 name|device
@@ -603,21 +599,11 @@ operator|->
 name|b_bcount
 expr_stmt|;
 comment|/* transfer everything */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|vinumstart
 argument_list|(
 name|bp
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1544,6 +1530,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|rqg
@@ -1775,11 +1766,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* fire off the request */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 operator|(
 operator|*
 name|bdevsw
@@ -1803,15 +1789,15 @@ operator|->
 name|b
 operator|)
 expr_stmt|;
+block|}
+comment|/* XXX Do we need caching?  Think about this more */
+block|}
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* XXX Do we need caching?  Think about this more */
-block|}
-block|}
 return|return
 literal|0
 return|;
