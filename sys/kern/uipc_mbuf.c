@@ -1013,6 +1013,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|m_mballoc_wid
 operator|++
 expr_stmt|;
@@ -1036,6 +1041,11 @@ name|EWOULDBLOCK
 condition|)
 name|m_mballoc_wid
 operator|--
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that we (think) that we've got something, we will redo an 	 * MGET, but avoid getting into another instance of m_mballoc_wait() 	 * XXX: We retry to fetch _even_ if the sleep timed out. This is left 	 *      this way, purposely, in the [unlikely] case that an mbuf was 	 *      freed but the sleep was not awakened in time.  	 */
 name|p
