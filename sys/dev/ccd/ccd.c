@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.34 1998/07/04 20:45:29 julian Exp $ */
+comment|/* $Id: ccd.c,v 1.35 1998/07/04 22:30:13 julian Exp $ */
 end_comment
 
 begin_comment
@@ -4199,6 +4199,21 @@ operator|+
 name|cboff
 operator|+
 name|CCD_OFFSET
+expr_stmt|;
+name|cbp
+operator|->
+name|cb_buf
+operator|.
+name|b_offset
+operator|=
+name|dbtob
+argument_list|(
+name|cbn
+operator|+
+name|cboff
+operator|+
+name|CCD_OFFSET
+argument_list|)
 expr_stmt|;
 name|cbp
 operator|->
