@@ -393,6 +393,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Return true if a match is made.  *   * To find a match walk the chain of bus_dma_tag_t's looking for 'paddr'.  *   * If paddr is within the bounds of the dma tag then call the filter callback  * to check for a match, if there is no filter callback then assume a match.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1432,7 +1436,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  Make the same choice for free/contigfree.  */
 end_comment
 
 begin_function
@@ -1462,8 +1466,6 @@ argument_list|(
 literal|"bus_dmamem_free: Invalid map freed\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX There is no "contigfree" and "free" doesn't work */
-comment|/* There is too a contigfree, and we need to use it here. */
 if|if
 condition|(
 operator|(
@@ -2708,7 +2710,9 @@ end_function
 begin_function
 name|void
 name|busdma_swi
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|s
