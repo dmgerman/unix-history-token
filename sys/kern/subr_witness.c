@@ -7336,6 +7336,7 @@ name|lock
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|panic
 argument_list|(
 literal|"Lock (%s) %s is not sleep or spin!"
@@ -7351,6 +7352,8 @@ operator|->
 name|lo_name
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 switch|switch
 condition|(
 name|flags
@@ -7430,6 +7433,7 @@ name|instance
 operator|==
 name|NULL
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"Lock (%s) %s not locked @ %s:%d."
@@ -7449,6 +7453,8 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|(
