@@ -1169,6 +1169,28 @@ parameter_list|)
 value|do { if (ipsec_debug) printf x; } while (0)
 end_define
 
+begin_comment
+comment|/* XXX for KAME code compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ipsec_pcbconn
+parameter_list|(
+name|_x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipsec_pcbdisconn
+parameter_list|(
+name|_x
+parameter_list|)
+end_define
+
 begin_function_decl
 specifier|extern
 name|struct
