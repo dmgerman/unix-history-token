@@ -7587,11 +7587,25 @@ block|}
 else|else
 block|{
 comment|/* UTS caused a sync signal */
+name|p
+operator|->
+name|p_code
+operator|=
+name|code
+expr_stmt|;
+comment|/* XXX for core dump/debugger */
+name|p
+operator|->
+name|p_sig
+operator|=
+name|sig
+expr_stmt|;
+comment|/* XXX to verify code */
 name|sigexit
 argument_list|(
 name|td
 argument_list|,
-name|SIGILL
+name|sig
 argument_list|)
 expr_stmt|;
 block|}
