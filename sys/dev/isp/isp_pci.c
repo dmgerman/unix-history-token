@@ -1558,11 +1558,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"isp%d: using %s space register mapping\n"
+name|dev
 argument_list|,
-name|unit
+literal|"using %s space register mapping\n"
 argument_list|,
 operator|(
 name|rgd
@@ -2298,13 +2298,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not create master dma tag\n"
+name|dev
 argument_list|,
-name|isp
-operator|->
-name|isp_name
+literal|"could not create master dma tag\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -2765,6 +2763,8 @@ operator|->
 name|isp_dblev
 operator||=
 name|ISP_LOGCONFIG
+operator||
+name|ISP_LOGINFO
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4256,13 +4256,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: cannot create a dma tag for control spaces\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"cannot create a dma tag for control spaces"
 argument_list|)
 expr_stmt|;
 name|free
@@ -4316,15 +4316,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: cannot allocate %d bytes of CCB memory\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
 argument_list|,
-name|len
+name|ISP_LOGERR
+argument_list|,
+literal|"cannot allocate %d bytes of CCB memory"
 argument_list|)
 expr_stmt|;
 name|free
@@ -4406,13 +4404,13 @@ operator|.
 name|error
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: error %d loading dma map for DMA request queue\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"error %d loading dma map for DMA request queue"
 argument_list|,
 name|im
 operator|.
@@ -4506,13 +4504,13 @@ operator|.
 name|error
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: error %d loading dma map for DMA result queue\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"error %d loading dma map for DMA result queue"
 argument_list|,
 name|im
 operator|.
@@ -4589,13 +4587,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: error %d creating per-cmd DMA maps\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"error %d creating per-cmd DMA maps"
 argument_list|,
 name|error
 argument_list|)
@@ -4710,13 +4708,13 @@ operator|.
 name|error
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: error %d loading FC scratch area\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"error %d loading FC scratch area"
 argument_list|,
 name|im
 operator|.
@@ -5360,15 +5358,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: tdma_mk ran out of segments\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"tdma_mk ran out of segments"
 argument_list|)
 expr_stmt|;
 name|mp
@@ -5641,15 +5639,15 @@ operator|->
 name|optr
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: Queue Overflow in tdma_mk\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Queue Overflow in tdma_mk"
 argument_list|)
 expr_stmt|;
 name|mp
@@ -5928,16 +5926,16 @@ operator|!=
 name|CT2_FLAG_MODE1
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: dma2_tgt_fc, a status CTIO2 without MODE1 "
-literal|"set (0x%x)\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"dma2_tgt_fc, a status CTIO2 without MODE1 "
+literal|"set (0x%x)"
 argument_list|,
 name|cto
 operator|->
@@ -6103,16 +6101,16 @@ operator|!=
 name|CT2_FLAG_MODE0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: dma2_tgt_fc, a data CTIO2 without MODE0 set "
-literal|"(0x%x)\n\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"dma2_tgt_fc, a data CTIO2 without MODE0 set "
+literal|"(0x%x)"
 argument_list|,
 name|cto
 operator|->
@@ -6475,16 +6473,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: dma2_tgt_fc ran out of segments, "
-literal|"no SENSE DATA\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"dma2_tgt_fc ran out of segments, "
+literal|"no SENSE DATA"
 argument_list|)
 expr_stmt|;
 name|mp
@@ -6840,15 +6838,15 @@ operator|->
 name|optr
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: Queue Overflow in dma2_tgt_fc\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Queue Overflow in dma2_tgt_fc"
 argument_list|)
 expr_stmt|;
 name|mp
@@ -7094,15 +7092,15 @@ operator|<
 literal|1
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: bad segment count (%d)\n"
-argument_list|,
 name|mp
 operator|->
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad segment count (%d)"
 argument_list|,
 name|nseg
 argument_list|)
@@ -8025,14 +8023,13 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: deferred dma allocation not "
-literal|"supported\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"deferred dma allocation not supported"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8142,13 +8139,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: Physical segment pointers unsupported"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Physical segment pointers unsupported"
 argument_list|)
 expr_stmt|;
 name|mp
@@ -8174,13 +8171,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: Virtual segment addresses unsupported"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Virtual segment addresses unsupported"
 argument_list|)
 expr_stmt|;
 name|mp
