@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.40 (Berkeley) 7/23/92"
+literal|"@(#)fts.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -1595,7 +1595,7 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* If reached the top, load the paths for the next root. */
+comment|/* 		 * If reached the top, return to the original directory, and 		 * load the paths for the next root. 		 */
 if|if
 condition|(
 name|p
@@ -1605,6 +1605,35 @@ operator|==
 name|FTS_ROOTLEVEL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ISSET
+argument_list|(
+name|FTS_NOCHDIR
+argument_list|)
+operator|&&
+name|FCHDIR
+argument_list|(
+name|sp
+argument_list|,
+name|sp
+operator|->
+name|fts_rfd
+argument_list|)
+condition|)
+block|{
+name|SET
+argument_list|(
+name|FTS_STOP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|fts_load
 argument_list|(
 name|sp
@@ -2291,7 +2320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the tricky part -- do not casually change *anything* in here.  The  * idea is to build the linked list of entries that are used by fts_children  * and fts_read.  There are lots of special cases.  *  * The real slowdown in walking the tree is the stat calls.  If FTS_NOSTAT is  * set and it's a physical walk (so that symbolic links can't be directories),  * we assume that the number of subdirectories in a node is equal to the number  * of links to the parent.  This allows stat calls to be skipped in any leaf  * directories and for any nodes after the directories in the parent node have  * been found.  This empirically cuts the stat calls by about 2/3.  */
+comment|/*  * This is the tricky part -- do not casually change *anything* in here.  The  * idea is to build the linked list of entries that are used by fts_children  * and fts_read.  There are lots of special cases.  *  * The real slowdown in walking the tree is the stat calls.  If FTS_NOSTAT is  * set and it's a physical walk (so that symbolic links can't be directories),  * we can do things quickly.  First, if it's a 4.4BSD file system, the type  * of the file is in the directory entry.  Otherwise, we assume that the number  * of subdirectories in a node is equal to the number of links to the parent.  * The former skips all stat calls.  The latter skips stat calls in any leaf  * directories and for any files after the subdirectories in the directory have  * been found, cutting the stat calls by about 2/3.  */
 end_comment
 
 begin_function
@@ -2505,6 +2534,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * If we're going to need to stat anything or we want to descend 	 * and stay in the directory, chdir.  If this fails we keep going, 	 * but set a flag so we don't chdir after the post-order visit. 	 * We won't be able to stat anything, but we can still return the 	 * names themselves.  Note, that since fts_read won't be able to 	 * chdir into the directory, it will have to return different path 	 * names than before, i.e. "a/b" instead of "b".  Since the node 	 * has already been visited in pre-order, have to wait until the 	 * post-order visit to return the error.  There is a special case 	 * here, if there was nothing to stat then it's not an error to 	 * not be able to stat.  This is all fairly nasty.  If a program 	 * needed sorted entries or stat information, they had better be 	 * checking FTS_NS on the returned nodes. 	 */
+name|cderrno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|nlinks
@@ -2556,16 +2589,10 @@ name|errno
 expr_stmt|;
 block|}
 else|else
-block|{
 name|descend
 operator|=
 literal|1
 expr_stmt|;
-name|cderrno
-operator|=
-literal|0
-expr_stmt|;
-block|}
 else|else
 name|descend
 operator|=
@@ -2855,7 +2882,56 @@ elseif|else
 if|if
 condition|(
 name|nlinks
+operator|==
+literal|0
+ifdef|#
+directive|ifdef
+name|DT_DIR
+operator|||
+name|nlinks
+operator|>
+literal|0
+operator|&&
+name|dp
+operator|->
+name|d_type
+operator|!=
+name|DT_DIR
+operator|&&
+name|dp
+operator|->
+name|d_type
+operator|!=
+name|DT_UNKNOWN
+endif|#
+directive|endif
 condition|)
+block|{
+name|p
+operator|->
+name|fts_accpath
+operator|=
+name|ISSET
+argument_list|(
+name|FTS_NOCHDIR
+argument_list|)
+condition|?
+name|p
+operator|->
+name|fts_path
+else|:
+name|p
+operator|->
+name|fts_name
+expr_stmt|;
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_NSOK
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* Build a file name for fts_stat to stat. */
 if|if
@@ -2899,6 +2975,7 @@ name|p
 operator|->
 name|fts_name
 expr_stmt|;
+comment|/* Stat it. */
 name|p
 operator|->
 name|fts_info
@@ -2912,6 +2989,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Decrement link count if applicable. */
 if|if
 condition|(
 name|nlinks
@@ -2940,32 +3018,6 @@ operator|)
 condition|)
 operator|--
 name|nlinks
-expr_stmt|;
-block|}
-else|else
-block|{
-name|p
-operator|->
-name|fts_accpath
-operator|=
-name|ISSET
-argument_list|(
-name|FTS_NOCHDIR
-argument_list|)
-condition|?
-name|p
-operator|->
-name|fts_path
-else|:
-name|p
-operator|->
-name|fts_name
-expr_stmt|;
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_NSOK
 expr_stmt|;
 block|}
 comment|/* We walk in directory order so "ls -f" doesn't get upset. */
