@@ -2354,9 +2354,6 @@ decl_stmt|;
 name|int
 name|ste_tx_cons
 decl_stmt|;
-name|int
-name|ste_tx_cnt
-decl_stmt|;
 block|}
 struct|;
 end_struct
