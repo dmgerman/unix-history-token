@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.20 1995/06/11 19:29:34 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.21 1996/03/24 18:55:37 joerg Exp $  *  */
 end_comment
 
 begin_include
@@ -259,6 +259,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"open(%s) failed"
@@ -266,6 +269,8 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -310,6 +315,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"DIOCGSLICEINFO(%s) failed"
@@ -317,6 +325,8 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|fd
@@ -557,11 +567,19 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"Failed to add 'whole' chunk"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+block|{}
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -727,6 +745,9 @@ argument_list|,
 name|flags
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"failed to add chunk for slice %d"
@@ -736,6 +757,11 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+block|{}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ds
@@ -796,6 +822,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"open(%s)"
@@ -803,6 +832,8 @@ argument_list|,
 name|pname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 name|k
@@ -824,6 +855,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"ioctl(%s,DIOCGDINFO)"
@@ -831,6 +865,8 @@ argument_list|,
 name|pname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|j
@@ -1002,6 +1038,9 @@ name|j
 operator|!=
 literal|3
 condition|)
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|warn
 argument_list|(
 literal|"Failed to add chunk for partition %c [%lu,%lu]"
@@ -1029,6 +1068,11 @@ operator|.
 name|p_size
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+block|{}
+endif|#
+directive|endif
 block|}
 block|}
 block|}

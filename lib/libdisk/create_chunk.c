@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.22 1995/12/07 10:33:20 peter Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.23 1996/03/24 18:55:37 joerg Exp $  *  */
 end_comment
 
 begin_include
@@ -1311,11 +1311,6 @@ goto|goto
 name|found
 goto|;
 block|}
-name|warn
-argument_list|(
-literal|"Not enough unused space"
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1391,16 +1386,9 @@ if|if
 condition|(
 name|i
 condition|)
-block|{
-name|warn
-argument_list|(
-literal|"Didn't cut it"
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 name|Fixup_Names
 argument_list|(
 name|d
