@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwcache.c	5.5 (Berkeley) %G%"
+literal|"@(#)pwcache.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<grp.h>
 end_include
 
 begin_include
@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<grp.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<utmp.h>
 end_include
 
 begin_define
@@ -88,24 +88,6 @@ end_define
 begin_comment
 comment|/* bits to store with */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|pwopen
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|gropen
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|char
@@ -144,6 +126,10 @@ index|[
 name|NCACHE
 index|]
 struct|;
+specifier|static
+name|int
+name|pwopen
+decl_stmt|;
 specifier|static
 name|char
 name|nbuf
@@ -202,12 +188,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|pwopen
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|pw
 operator|=
@@ -216,6 +202,8 @@ argument_list|(
 name|uid
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -224,19 +212,20 @@ name|nouser
 condition|)
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|nbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nbuf
+argument_list|)
 argument_list|,
 literal|"%u"
 argument_list|,
@@ -329,6 +318,10 @@ name|NCACHE
 index|]
 struct|;
 specifier|static
+name|int
+name|gropen
+decl_stmt|;
+specifier|static
 name|char
 name|nbuf
 index|[
@@ -336,13 +329,11 @@ literal|15
 index|]
 decl_stmt|;
 comment|/* 32 bits == 10 digits */
-specifier|register
 name|struct
 name|group
 modifier|*
 name|gr
 decl_stmt|;
-specifier|register
 name|struct
 name|ncache
 modifier|*
@@ -386,12 +377,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|gropen
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|gr
 operator|=
@@ -400,6 +391,8 @@ argument_list|(
 name|gid
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -408,19 +401,20 @@ name|nogroup
 condition|)
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|nbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nbuf
+argument_list|)
 argument_list|,
 literal|"%u"
 argument_list|,
