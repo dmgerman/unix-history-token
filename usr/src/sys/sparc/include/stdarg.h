@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)stdarg.h	7.2 (Berkeley) %G%  *  * from: $Header: stdarg.h,v 1.5 92/06/17 06:10:29 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)stdarg.h	7.3 (Berkeley) %G%  *  * from: $Header: stdarg.h,v 1.6 92/10/02 00:08:01 torek Exp $  */
 end_comment
 
 begin_comment
@@ -56,8 +56,31 @@ begin_comment
 comment|/* empty */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|==
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|__extension__
+end_define
+
 begin_comment
-comment|/*  * va_arg picks up the next argument of type `t'.  Appending an  * asterisk to t must produce a pointer to t (i.e., t may not be,  * e.g., `int (*)()').  In addition, t must not be any type which  * undergoes promotion to some other type (e.g., char): it must  * be the promoted type instead.  */
+comment|/* hack for bootstrapping via gcc 1.x */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * va_arg picks up the next argument of type `ty'.  Appending an  * asterisk to ty must produce a pointer to ty (i.e., ty may not be,  * e.g., `int (*)()').  In addition, ty must not be any type which  * undergoes promotion to some other type (e.g., char): it must  * be the promoted type instead.  *  * Gcc-2.x tries to use ldd/std for double and quad_t values, but Sun's  * brain-damaged calling convention does not quad-align these.  Thus,  * for 8-byte arguments, we have to pick up the actual value four bytes  * at a time, and use type punning (i.e., a union) to produce the result.  * (We could also do this with a libc function, actually, by returning  * 8 byte integers in %o0+%o1 and the same 8 bytes as a double in %f0+%f1.)  */
 end_comment
 
 begin_define
@@ -67,9 +90,10 @@ name|va_arg
 parameter_list|(
 name|ap
 parameter_list|,
-name|t
+name|ty
 parameter_list|)
-value|(((t *)(ap += sizeof(t)))[-1])
+define|\
+value|(sizeof(ty) == 8 ? __extension__ ({ \ 	union { ty __d; int __i[2]; } __u; \ 	__u.__i[0] = ((int *)(ap))[0]; \ 	__u.__i[1] = ((int *)(ap))[1]; \ 	(ap) += 8; \ 	__u.__d; }) : \     ((ty *)(ap += sizeof(ty)))[-1])
 end_define
 
 begin_endif
