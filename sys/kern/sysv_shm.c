@@ -539,11 +539,11 @@ begin_define
 define|#
 directive|define
 name|SHMMAXPGS
-value|1024
+value|8192
 end_define
 
 begin_comment
-comment|/* XXX increase this, it's not in kva! */
+comment|/* note: sysv shared memory is swap backed */
 end_comment
 
 begin_endif
@@ -597,7 +597,7 @@ begin_define
 define|#
 directive|define
 name|SHMMNI
-value|96
+value|192
 end_define
 
 begin_endif
@@ -615,7 +615,7 @@ begin_define
 define|#
 directive|define
 name|SHMSEG
-value|64
+value|128
 end_define
 
 begin_endif
