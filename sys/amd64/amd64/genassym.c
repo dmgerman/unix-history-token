@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.22 1995/01/21 15:22:28 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.23 1995/01/25 21:40:13 bde Exp $  */
 end_comment
 
 begin_include
@@ -281,6 +281,7 @@ operator|)
 literal|0
 decl_stmt|;
 comment|/* XXX should use %p to print pointers.  About 80 lines are wrong. */
+comment|/* YF - fixed */
 name|printf
 argument_list|(
 literal|"#define\tUDOT_SZ %d\n"
@@ -294,7 +295,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_FORW %d\n"
+literal|"#define\tP_FORW %p\n"
 argument_list|,
 operator|&
 name|p
@@ -304,7 +305,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_BACK %d\n"
+literal|"#define\tP_BACK %p\n"
 argument_list|,
 operator|&
 name|p
@@ -314,7 +315,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_VMSPACE %d\n"
+literal|"#define\tP_VMSPACE %p\n"
 argument_list|,
 operator|&
 name|p
@@ -324,7 +325,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tVM_PMAP %d\n"
+literal|"#define\tVM_PMAP %p\n"
 argument_list|,
 operator|&
 name|vms
@@ -334,7 +335,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_ADDR %d\n"
+literal|"#define\tP_ADDR %p\n"
 argument_list|,
 operator|&
 name|p
@@ -344,7 +345,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_PRI %d\n"
+literal|"#define\tP_PRI %p\n"
 argument_list|,
 operator|&
 name|p
@@ -354,7 +355,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_RTPRIO_TYPE %d\n"
+literal|"#define\tP_RTPRIO_TYPE %p\n"
 argument_list|,
 operator|&
 name|p
@@ -366,7 +367,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_RTPRIO_PRIO %d\n"
+literal|"#define\tP_RTPRIO_PRIO %p\n"
 argument_list|,
 operator|&
 name|p
@@ -378,7 +379,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_STAT %d\n"
+literal|"#define\tP_STAT %p\n"
 argument_list|,
 operator|&
 name|p
@@ -388,7 +389,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_WCHAN %d\n"
+literal|"#define\tP_WCHAN %p\n"
 argument_list|,
 operator|&
 name|p
@@ -398,7 +399,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_FLAG %d\n"
+literal|"#define\tP_FLAG %p\n"
 argument_list|,
 operator|&
 name|p
@@ -408,7 +409,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_PID %d\n"
+literal|"#define\tP_PID %p\n"
 argument_list|,
 operator|&
 name|p
@@ -432,7 +433,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tV_TRAP %d\n"
+literal|"#define\tV_TRAP %p\n"
 argument_list|,
 operator|&
 name|vm
@@ -442,7 +443,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tV_SYSCALL %d\n"
+literal|"#define\tV_SYSCALL %p\n"
 argument_list|,
 operator|&
 name|vm
@@ -452,7 +453,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tV_INTR %d\n"
+literal|"#define\tV_INTR %p\n"
 argument_list|,
 operator|&
 name|vm
@@ -649,7 +650,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_LINK %d\n"
+literal|"#define\tPCB_LINK %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -661,7 +662,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ESP0 %d\n"
+literal|"#define\tPCB_ESP0 %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -673,7 +674,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SS0 %d\n"
+literal|"#define\tPCB_SS0 %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -685,7 +686,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ESP1 %d\n"
+literal|"#define\tPCB_ESP1 %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -697,7 +698,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SS1 %d\n"
+literal|"#define\tPCB_SS1 %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -709,7 +710,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ESP2 %d\n"
+literal|"#define\tPCB_ESP2 %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -721,7 +722,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SS2 %d\n"
+literal|"#define\tPCB_SS2 %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -733,7 +734,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_CR3 %d\n"
+literal|"#define\tPCB_CR3 %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -745,7 +746,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EIP %d\n"
+literal|"#define\tPCB_EIP %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -757,7 +758,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EFLAGS %d\n"
+literal|"#define\tPCB_EFLAGS %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -769,7 +770,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EAX %d\n"
+literal|"#define\tPCB_EAX %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -781,7 +782,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ECX %d\n"
+literal|"#define\tPCB_ECX %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -793,7 +794,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EDX %d\n"
+literal|"#define\tPCB_EDX %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -805,7 +806,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EBX %d\n"
+literal|"#define\tPCB_EBX %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -817,7 +818,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ESP %d\n"
+literal|"#define\tPCB_ESP %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -829,7 +830,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EBP %d\n"
+literal|"#define\tPCB_EBP %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -841,7 +842,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ESI %d\n"
+literal|"#define\tPCB_ESI %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -853,7 +854,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EDI %d\n"
+literal|"#define\tPCB_EDI %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -865,7 +866,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ES %d\n"
+literal|"#define\tPCB_ES %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -877,7 +878,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_CS %d\n"
+literal|"#define\tPCB_CS %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -889,7 +890,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SS %d\n"
+literal|"#define\tPCB_SS %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -901,7 +902,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_DS %d\n"
+literal|"#define\tPCB_DS %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -913,7 +914,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_FS %d\n"
+literal|"#define\tPCB_FS %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -925,7 +926,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_GS %d\n"
+literal|"#define\tPCB_GS %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -937,7 +938,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_LDT %d\n"
+literal|"#define\tPCB_LDT %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -949,7 +950,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_USERLDT %d\n"
+literal|"#define\tPCB_USERLDT %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -959,7 +960,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_IOOPT %d\n"
+literal|"#define\tPCB_IOOPT %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -971,7 +972,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_PROF %d\n"
+literal|"#define\tU_PROF %p\n"
 argument_list|,
 operator|&
 name|up
@@ -983,7 +984,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_PROFSCALE %d\n"
+literal|"#define\tU_PROFSCALE %p\n"
 argument_list|,
 operator|&
 name|up
@@ -997,7 +998,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_BASE %d\n"
+literal|"#define\tPR_BASE %p\n"
 argument_list|,
 operator|&
 name|uprof
@@ -1007,7 +1008,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_SIZE %d\n"
+literal|"#define\tPR_SIZE %p\n"
 argument_list|,
 operator|&
 name|uprof
@@ -1017,7 +1018,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_OFF %d\n"
+literal|"#define\tPR_OFF %p\n"
 argument_list|,
 operator|&
 name|uprof
@@ -1027,7 +1028,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_SCALE %d\n"
+literal|"#define\tPR_SCALE %p\n"
 argument_list|,
 operator|&
 name|uprof
@@ -1037,7 +1038,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tRU_MINFLT %d\n"
+literal|"#define\tRU_MINFLT %p\n"
 argument_list|,
 operator|&
 name|rup
@@ -1047,7 +1048,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_FLAGS %d\n"
+literal|"#define\tPCB_FLAGS %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -1057,7 +1058,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SAVEFPU %d\n"
+literal|"#define\tPCB_SAVEFPU %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -1074,7 +1075,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SAVEEMC %d\n"
+literal|"#define\tPCB_SAVEEMC %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -1084,7 +1085,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_INL %d\n"
+literal|"#define\tPCB_INL %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -1094,7 +1095,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ONFAULT %d\n"
+literal|"#define\tPCB_ONFAULT %p\n"
 argument_list|,
 operator|&
 name|pcb
@@ -1104,7 +1105,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ES %d\n"
+literal|"#define\tTF_ES %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1114,7 +1115,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_DS %d\n"
+literal|"#define\tTF_DS %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1124,7 +1125,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EDI %d\n"
+literal|"#define\tTF_EDI %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1134,7 +1135,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ESI %d\n"
+literal|"#define\tTF_ESI %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1144,7 +1145,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EBP %d\n"
+literal|"#define\tTF_EBP %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1154,7 +1155,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ISP %d\n"
+literal|"#define\tTF_ISP %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1164,7 +1165,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EBX %d\n"
+literal|"#define\tTF_EBX %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1174,7 +1175,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EDX %d\n"
+literal|"#define\tTF_EDX %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1184,7 +1185,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ECX %d\n"
+literal|"#define\tTF_ECX %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1194,7 +1195,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EAX %d\n"
+literal|"#define\tTF_EAX %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1204,7 +1205,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_TRAPNO %d\n"
+literal|"#define\tTF_TRAPNO %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1214,7 +1215,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ERR %d\n"
+literal|"#define\tTF_ERR %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1224,7 +1225,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EIP %d\n"
+literal|"#define\tTF_EIP %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1234,7 +1235,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_CS %d\n"
+literal|"#define\tTF_CS %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1244,7 +1245,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EFLAGS %d\n"
+literal|"#define\tTF_EFLAGS %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1254,7 +1255,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ESP %d\n"
+literal|"#define\tTF_ESP %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1264,7 +1265,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_SS %d\n"
+literal|"#define\tTF_SS %p\n"
 argument_list|,
 operator|&
 name|tf
@@ -1274,7 +1275,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_SIGNUM %d\n"
+literal|"#define\tSIGF_SIGNUM %p\n"
 argument_list|,
 operator|&
 name|sigf
@@ -1284,7 +1285,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_CODE %d\n"
+literal|"#define\tSIGF_CODE %p\n"
 argument_list|,
 operator|&
 name|sigf
@@ -1294,7 +1295,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_SCP %d\n"
+literal|"#define\tSIGF_SCP %p\n"
 argument_list|,
 operator|&
 name|sigf
@@ -1304,7 +1305,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_HANDLER %d\n"
+literal|"#define\tSIGF_HANDLER %p\n"
 argument_list|,
 operator|&
 name|sigf
@@ -1314,7 +1315,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_SC %d\n"
+literal|"#define\tSIGF_SC %p\n"
 argument_list|,
 operator|&
 name|sigf
@@ -1368,7 +1369,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_VERSION %d\n"
+literal|"#define\tBI_VERSION %p\n"
 argument_list|,
 operator|&
 name|bootinfo
@@ -1378,7 +1379,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_KERNELNAME %d\n"
+literal|"#define\tBI_KERNELNAME %p\n"
 argument_list|,
 operator|&
 name|bootinfo
@@ -1388,7 +1389,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_NFS_DISKLESS %d\n"
+literal|"#define\tBI_NFS_DISKLESS %p\n"
 argument_list|,
 operator|&
 name|bootinfo
@@ -1398,7 +1399,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_ENDCOMMON %d\n"
+literal|"#define\tBI_ENDCOMMON %p\n"
 argument_list|,
 operator|&
 name|bootinfo
@@ -1419,7 +1420,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_SIZE %d\n"
+literal|"#define\tBI_SIZE %p\n"
 argument_list|,
 operator|&
 name|bootinfo
@@ -1429,7 +1430,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_SYMTAB %d\n"
+literal|"#define\tBI_SYMTAB %p\n"
 argument_list|,
 operator|&
 name|bootinfo
@@ -1439,7 +1440,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_ESYMTAB %d\n"
+literal|"#define\tBI_ESYMTAB %p\n"
 argument_list|,
 operator|&
 name|bootinfo
