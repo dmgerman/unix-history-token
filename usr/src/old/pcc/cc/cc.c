@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.5 %G%"
+literal|"@(#)cc.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,8 +185,6 @@ name|cflag
 decl_stmt|,
 name|eflag
 decl_stmt|,
-name|gflag
-decl_stmt|,
 name|oflag
 decl_stmt|,
 name|pflag
@@ -200,6 +198,14 @@ decl_stmt|,
 name|exflag
 decl_stmt|,
 name|proflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|gflag
+decl_stmt|,
+name|Gflag
 decl_stmt|;
 end_decl_stmt
 
@@ -497,9 +503,31 @@ continue|continue;
 case|case
 literal|'g'
 case|:
+if|if
+condition|(
+name|argv
+index|[
+name|i
+index|]
+index|[
+literal|2
+index|]
+operator|==
+literal|'o'
+condition|)
+block|{
+name|Gflag
+operator|++
+expr_stmt|;
+comment|/* old format for -go */
+block|}
+else|else
+block|{
 name|gflag
 operator|++
 expr_stmt|;
+comment|/* new format for -g */
+block|}
 continue|continue;
 case|case
 literal|'w'
@@ -747,6 +775,8 @@ block|}
 if|if
 condition|(
 name|gflag
+operator|||
+name|Gflag
 condition|)
 block|{
 if|if
@@ -1207,6 +1237,7 @@ if|if
 condition|(
 name|gflag
 condition|)
+block|{
 name|av
 index|[
 name|na
@@ -1215,6 +1246,22 @@ index|]
 operator|=
 literal|"-Xg"
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Gflag
+condition|)
+block|{
+name|av
+index|[
+name|na
+operator|++
+index|]
+operator|=
+literal|"-XG"
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|wflag
@@ -1514,6 +1561,8 @@ expr_stmt|;
 if|if
 condition|(
 name|gflag
+operator|||
+name|Gflag
 condition|)
 name|av
 index|[
