@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ch2vft.c	1.5	85/01/31  *  * Font translation to vfont format from character format.  *  *	Use:	ch2vft  [ -i  -s ]  charfile> vfontfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to vfont format and writes it  *	to stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2vft to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2vft to include the whole bit-map that  *	defines the glyph.  Normally, it is trimmed of white space.  This is  *	usefull for making stipple patterns of fixed size.  */
+comment|/*	ch2vft.c	1.6	85/07/03  *  * Font translation to vfont format from character format.  *  *	Use:	ch2vft  [ -i  -s ]  charfile> vfontfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to vfont format and writes it  *	to stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2vft to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2vft to include the whole bit-map that  *	defines the glyph.  Normally, it is trimmed of white space.  This is  *	usefull for making stipple patterns of fixed size.  */
 end_comment
 
 begin_include
@@ -15,6 +15,28 @@ directive|include
 file|<vfont.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RES
+value|120
+end_define
+
+begin_comment
+comment|/* for SUN vfont, resolution is 120 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -25,6 +47,11 @@ end_define
 begin_comment
 comment|/* for vfont, resolution is 200 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -903,6 +930,40 @@ operator|-
 name|minh
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+name|g
+index|[
+name|codeindex
+index|]
+operator|.
+name|nbytes
+operator|=
+operator|(
+name|maxv
+operator|+
+literal|1
+operator|-
+name|minv
+operator|)
+operator|*
+operator|(
+operator|(
+name|maxh
+operator|+
+literal|16
+operator|-
+name|minh
+operator|)
+operator|/
+literal|16
+operator|)
+operator|*
+literal|2
+expr_stmt|;
+else|#
+directive|else
 name|g
 index|[
 name|codeindex
@@ -930,6 +991,8 @@ operator|>>
 literal|3
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* convert from characters to bits */
 name|bitp
 operator|=
@@ -1039,6 +1102,33 @@ operator|<<
 name|bitwidth
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|sun
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|bitp
+operator|-
+name|glyphs
+index|[
+name|codeindex
+index|]
+operator|)
+operator|&
+literal|1
+operator|)
+condition|)
+operator|*
+operator|++
+name|bitp
+operator|=
+literal|'\0'
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* for i */
 block|}
