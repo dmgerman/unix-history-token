@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cntrl.c	5.9 (Berkeley) %G%"
+literal|"@(#)cntrl.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1974,7 +1974,7 @@ name|mailopt
 argument_list|,
 name|W_USER
 argument_list|,
-name|W_FILE2
+name|W_FILE1
 argument_list|,
 name|Rmtname
 argument_list|,
@@ -2454,7 +2454,7 @@ name|mailopt
 argument_list|,
 name|W_USER
 argument_list|,
-name|W_FILE2
+name|W_FILE1
 argument_list|,
 name|Rmtname
 argument_list|,
@@ -3348,7 +3348,7 @@ name|mailopt
 argument_list|,
 name|W_USER
 argument_list|,
-name|W_FILE2
+name|W_FILE1
 argument_list|,
 name|Rmtname
 argument_list|,
@@ -4525,6 +4525,12 @@ return|return;
 block|}
 end_block
 
+begin_decl_stmt
+name|char
+name|UsingProtocol
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *	converse with the remote machine, agree upon a protocol (if possible)  *	and start the protocol.  *  *	return codes:  *		SUCCESS - successful protocol selection  *		FAIL - can't find common or open failed  */
 end_comment
@@ -4690,6 +4696,13 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+name|UsingProtocol
+operator|=
+name|str
+index|[
+literal|0
+index|]
+expr_stmt|;
 return|return
 name|SUCCESS
 return|;
@@ -4753,6 +4766,13 @@ literal|"Protocol %s\n"
 argument_list|,
 name|msg
 argument_list|)
+expr_stmt|;
+name|UsingProtocol
+operator|=
+name|msg
+index|[
+literal|1
+index|]
 expr_stmt|;
 return|return
 name|SUCCESS
