@@ -13534,6 +13534,14 @@ operator|!
 name|sc
 operator|->
 name|dc_link
+operator|&&
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_len
+operator|<
+literal|10
 condition|)
 block|{
 name|DC_UNLOCK
