@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.35 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,6 +474,8 @@ argument_list|(
 name|pvp
 argument_list|,
 name|a
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -4936,7 +4938,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  BUILDADDR -- build address from token vector. ** **	Parameters: **		tv -- token vector. **		a -- pointer to address descriptor to fill. **			If NULL, one will be allocated. ** **	Returns: **		NULL if there was an error. **		'a' otherwise. ** **	Side Effects: **		fills in 'a' */
+comment|/* **  BUILDADDR -- build address from token vector. ** **	Parameters: **		tv -- token vector. **		a -- pointer to address descriptor to fill. **			If NULL, one will be allocated. **		e -- the current envelope. ** **	Returns: **		NULL if there was an error. **		'a' otherwise. ** **	Side Effects: **		fills in 'a' */
 end_comment
 
 begin_struct
@@ -5010,6 +5012,8 @@ parameter_list|(
 name|tv
 parameter_list|,
 name|a
+parameter_list|,
+name|e
 parameter_list|)
 specifier|register
 name|char
@@ -5021,6 +5025,11 @@ specifier|register
 name|ADDRESS
 modifier|*
 name|a
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 name|struct
@@ -5338,6 +5347,23 @@ endif|#
 directive|endif
 comment|/* LOG */
 name|usrerr
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|)
+name|e
+operator|->
+name|e_message
+operator|=
+name|newstr
 argument_list|(
 name|buf
 argument_list|)
@@ -7134,6 +7160,8 @@ argument_list|(
 name|pvp
 argument_list|,
 name|NULL
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if

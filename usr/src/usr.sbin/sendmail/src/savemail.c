@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.28 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,14 +733,6 @@ argument_list|(
 name|e
 operator|->
 name|e_message
-operator|!=
-name|NULL
-condition|?
-name|e
-operator|->
-name|e_message
-else|:
-literal|"Unable to deliver mail"
 argument_list|,
 name|q
 argument_list|,
@@ -816,14 +808,6 @@ argument_list|(
 name|e
 operator|->
 name|e_message
-operator|!=
-name|NULL
-condition|?
-name|e
-operator|->
-name|e_message
-else|:
-literal|"Unable to deliver mail"
 argument_list|,
 name|q
 argument_list|,
@@ -1350,6 +1334,19 @@ modifier|*
 name|q
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|msg
+operator|==
+name|NULL
+condition|)
+name|msg
+operator|=
+literal|"Unable to deliver mail"
+expr_stmt|;
+end_if
 
 begin_if
 if|if
