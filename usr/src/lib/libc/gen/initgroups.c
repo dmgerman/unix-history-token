@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initgroups.c	5.4 (Berkeley) %G%"
+literal|"@(#)initgroups.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,12 +112,14 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * If installing primary group, duplicate it; 	 * the first element of groups is the effective gid 	 * and will be overwritten when a setgid file is executed. 	 */
 if|if
 condition|(
 name|agroup
 operator|>=
 literal|0
 condition|)
+block|{
 name|groups
 index|[
 name|ngroups
@@ -126,6 +128,15 @@ index|]
 operator|=
 name|agroup
 expr_stmt|;
+name|groups
+index|[
+name|ngroups
+operator|++
+index|]
+operator|=
+name|agroup
+expr_stmt|;
+block|}
 name|setgrent
 argument_list|()
 expr_stmt|;
