@@ -1818,6 +1818,11 @@ operator|.
 name|in_inval
 operator|++
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -3540,6 +3545,11 @@ name|ipsec6stat
 operator|.
 name|in_inval
 operator|++
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 goto|goto
 name|fail
