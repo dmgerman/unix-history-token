@@ -1704,6 +1704,12 @@ operator|)
 operator|==
 literal|0
 operator|||
+name|dst
+operator|->
+name|sin6_family
+operator|!=
+name|AF_INET6
+operator|||
 operator|!
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
