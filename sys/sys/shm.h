@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: shm.h,v 1.11 1997/02/22 09:45:52 peter Exp $ */
 end_comment
 
 begin_comment
@@ -180,6 +180,12 @@ modifier|*
 name|shmsegs
 decl_stmt|;
 end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 name|void
