@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t4.c	4.2 %G%"
+literal|"@(#)t4.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,6 +550,17 @@ case|:
 case|case
 literal|'a'
 case|:
+if|if
+condition|(
+name|icol
+operator|>=
+name|MAXCOL
+condition|)
+name|error
+argument_list|(
+literal|"too many columns in table"
+argument_list|)
+expr_stmt|;
 name|style
 index|[
 name|nclin
@@ -669,17 +680,6 @@ condition|)
 name|error
 argument_list|(
 literal|"first row can not contain vertical span"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|icol
-operator|>=
-name|MAXCOL
-condition|)
-name|error
-argument_list|(
-literal|"too many columns in table"
 argument_list|)
 expr_stmt|;
 name|sawchar
