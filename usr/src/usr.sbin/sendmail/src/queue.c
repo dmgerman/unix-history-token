@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.34 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.35 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.34 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.35 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,6 +1333,51 @@ name|e_flags
 argument_list|)
 condition|)
 continue|continue;
+comment|/* expand macros; if null, don't output header at all */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_DEFAULT
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+name|h
+operator|->
+name|h_value
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+index|]
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+block|}
 comment|/* output this header */
 name|fprintf
 argument_list|(
@@ -1435,36 +1480,6 @@ name|h_flags
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|expand
-argument_list|(
-name|h
-operator|->
-name|h_value
-argument_list|,
-name|buf
-argument_list|,
-operator|&
-name|buf
-index|[
-sizeof|sizeof
-name|buf
-index|]
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|buf
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
 name|fprintf
 argument_list|(
 name|tfp
