@@ -450,7 +450,7 @@ literal|"kM:N:"
 expr_stmt|;
 name|usagestr
 operator|=
-literal|"swapinfo [-k] [-M core] [-N system]"
+literal|"swapinfo [-k] [-M core [-N system]]"
 expr_stmt|;
 block|}
 else|else
@@ -461,7 +461,7 @@ literal|"TM:N:fknst"
 expr_stmt|;
 name|usagestr
 operator|=
-literal|"pstat [-Tfknst] [-M core] [-N system]"
+literal|"pstat [-Tfknst] [-M core [-N system]]"
 expr_stmt|;
 block|}
 while|while
