@@ -28,6 +28,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cdev.h"
 end_include
 
@@ -159,7 +171,10 @@ name|printf
 argument_list|(
 literal|"mydev_ioctl: dev_t=%d, cmd=%lx, arg=%p, mode=%x procp=%p\n"
 argument_list|,
+name|dev2udev
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|,

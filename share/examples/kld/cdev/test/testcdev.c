@@ -42,7 +42,15 @@ end_define
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
 block|{
 name|int
 name|kernel_fd

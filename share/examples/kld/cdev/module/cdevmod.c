@@ -34,23 +34,89 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cdev.h"
 end_include
 
-begin_function_decl
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|32
+end_define
+
+begin_decl_stmt
 specifier|static
-name|int
-name|cdev_load
-parameter_list|(
-name|module_t
-parameter_list|,
-name|modeventtype_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+name|struct
+name|cdevsw
+name|my_devsw
+init|=
+block|{
+comment|/* open */
+name|mydev_open
+block|,
+comment|/* close */
+name|mydev_close
+block|,
+comment|/* read */
+name|noread
+block|,
+comment|/* write */
+name|nowrite
+block|,
+comment|/* ioctl */
+name|mydev_ioctl
+block|,
+comment|/* stop */
+name|nostop
+block|,
+comment|/* reset */
+name|noreset
+block|,
+comment|/* devtotty */
+name|nodevtotty
+block|,
+comment|/* poll */
+name|nopoll
+block|,
+comment|/* mmap */
+name|nommap
+block|,
+comment|/* strategy */
+name|nostrategy
+block|,
+comment|/* name */
+literal|"cdev"
+block|,
+comment|/* parms */
+name|noparms
+block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+name|D_TTY
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * This function is called each time the module is loaded or unloaded.  * Since we are a miscellaneous module, we have to provide whatever  * code is necessary to patch ourselves into the area we are being  * loaded to change.  *  * The stat information is basically common to all modules, so there  * is no real issue involved with stat; we will leave it lkm_nullcmd(),  * since we don't have to do anything about it.  */
@@ -61,22 +127,16 @@ specifier|static
 name|int
 name|cdev_load
 parameter_list|(
-name|mod
-parameter_list|,
-name|cmd
-parameter_list|,
-name|arg
-parameter_list|)
 name|module_t
 name|mod
-decl_stmt|;
-name|modeventtype_t
+parameter_list|,
+name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|err
@@ -148,7 +208,7 @@ end_comment
 begin_expr_stmt
 name|DEV_MODULE
 argument_list|(
-name|cdev_mod
+name|cdev
 argument_list|,
 name|CDEV_MAJOR
 argument_list|,
