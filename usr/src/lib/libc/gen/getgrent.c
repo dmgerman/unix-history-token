@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getgrent.c	5.2 (Berkeley) %G%"
+literal|"@(#)getgrent.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,8 +52,8 @@ end_define
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|GROUP
-index|[]
 init|=
 literal|"/etc/group"
 decl_stmt|;
@@ -379,6 +379,29 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|setgrfile
+argument_list|(
+argument|file
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|GROUP
+operator|=
+name|file
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
