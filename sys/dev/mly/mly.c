@@ -75,6 +75,16 @@ directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
+begin_comment
+comment|/* XXX: This is not where we should get fldoff() from. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<struct.h>
+end_include
+
 begin_include
 include|#
 directive|include
