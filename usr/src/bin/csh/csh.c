@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.15 %G%"
+literal|"@(#)csh.c 4.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3529,9 +3529,9 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|whyles
 condition|)
+block|{
 for|for
 control|(
 name|cp
@@ -3591,8 +3591,9 @@ name|QUOTE
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
-comment|/*       * Prompt for forward reading loop      * body content.      */
+comment|/*  		 * Prompt for forward reading loop 		 * body content. 		 */
 name|printf
 argument_list|(
 literal|"? "
