@@ -63,6 +63,18 @@ directive|define
 name|SI_ALIAS
 value|0x0002
 comment|/* carrier of alias name */
+name|struct
+name|timespec
+name|si_atime
+decl_stmt|;
+name|struct
+name|timespec
+name|si_ctime
+decl_stmt|;
+name|struct
+name|timespec
+name|si_mtime
+decl_stmt|;
 name|udev_t
 name|si_udev
 decl_stmt|;
