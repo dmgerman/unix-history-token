@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1498,23 +1498,12 @@ name|tp
 operator|->
 name|rcv_wnd
 operator|=
-name|MAX
-argument_list|(
 name|sbspace
 argument_list|(
 operator|&
 name|so
 operator|->
 name|so_rcv
-argument_list|)
-argument_list|,
-name|tp
-operator|->
-name|rcv_adv
-operator|-
-name|tp
-operator|->
-name|rcv_nxt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1530,6 +1519,30 @@ operator|->
 name|rcv_wnd
 operator|=
 literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|rcv_wnd
+operator|=
+name|MAX
+argument_list|(
+name|tp
+operator|->
+name|rcv_wnd
+argument_list|,
+call|(
+name|short
+call|)
+argument_list|(
+name|tp
+operator|->
+name|rcv_adv
+operator|-
+name|tp
+operator|->
+name|rcv_nxt
+argument_list|)
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
