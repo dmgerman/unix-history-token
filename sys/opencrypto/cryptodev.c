@@ -2062,11 +2062,19 @@ operator|->
 name|tmp_mac
 expr_stmt|;
 block|}
+name|error
+operator|=
 name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|tsleep
@@ -2084,12 +2092,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-comment|/* XXX can this happen?  if so, how do we recover? */
 goto|goto
 name|bail
 goto|;
-block|}
 if|if
 condition|(
 name|crp
@@ -2297,7 +2302,7 @@ argument_list|(
 name|crp
 argument_list|)
 return|;
-name|wakeup
+name|wakeup_one
 argument_list|(
 name|cse
 argument_list|)
@@ -2332,7 +2337,7 @@ operator|*
 operator|)
 name|op
 decl_stmt|;
-name|wakeup
+name|wakeup_one
 argument_list|(
 name|krp
 argument_list|)
@@ -2756,10 +2761,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-goto|goto
-name|fail
-goto|;
 name|error
 operator|=
 name|tsleep
@@ -2777,12 +2781,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-comment|/* XXX can this happen?  if so, how do we recover? */
 goto|goto
 name|fail
 goto|;
-block|}
 if|if
 condition|(
 name|krp
