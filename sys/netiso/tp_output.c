@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_output.c	7.10 (Berkeley) 6/27/91  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From:	@(#)tp_output.c	7.10 (Berkeley) 6/27/91  *	$Id$  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_output.c,v 5.4 88/11/18 17:28:08 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_output.c,v $  *  * In here is tp_ctloutput(), the guy called by [sg]etsockopt(),  */
+comment|/*   * ARGO TP  *  * $Header: /a/cvs/386BSD/src/sys/netiso/tp_output.c,v 1.1.1.1 1993/06/12 14:57:18 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/sys/netiso/tp_output.c,v $  *  * In here is tp_ctloutput(), the guy called by [sg]etsockopt(),  */
 end_comment
 
 begin_include
@@ -342,6 +342,10 @@ name|class_to_use
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
+ifdef|#
+directive|ifdef
+name|XXXRWGXXX
+comment|/* this next line is questionable p_netservice is u_char, how can it 	 * ever be less than 0 ?? 	 */
 if|if
 condition|(
 operator|(
@@ -352,6 +356,20 @@ operator|<
 literal|0
 operator|)
 operator|||
+operator|(
+name|param
+operator|->
+name|p_netservice
+operator|>
+name|TP_MAX_NETSERVICES
+operator|)
+condition|)
+block|{
+endif|#
+directive|endif
+if|if
+condition|(
+comment|/*(param->p_netservice< 0) ||*/
 operator|(
 name|param
 operator|->
@@ -1216,13 +1234,7 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * NAME: 	tp_ctloutput()  *  * CALLED FROM:  * 	[sg]etsockopt(), via so[sg]etopt().   *  * FUNCTION and ARGUMENTS:  * 	Implements the socket options at transport level.  * 	(cmd) is either PRCO_SETOPT or PRCO_GETOPT (see ../sys/protosw.h).  * 	(so) is the socket.  * 	(level) is SOL_TRANSPORT (see ../sys/socket.h)  * 	(optname) is the particular command or option to be set.  * 	(**mp) is an mbuf structure.    *  * RETURN VALUE:  * 	ENOTSOCK if the socket hasn't got an associated tpcb  *  EINVAL if   * 		trying to set window too big  * 		trying to set illegal max tpdu size   * 		trying to set illegal credit fraction  * 		trying to use unknown or unimplemented class of TP  *		structure passed to set timer values is wrong size  *  	illegal combination of command/GET-SET option,   *			e.g., GET w/ TPOPT_CDDATA_CLEAR:   *  EOPNOTSUPP if the level isn't transport, or command is neither GET nor SET  *   or if the transport-specific command is not implemented  *  EISCONN if trying a command that isn't allowed after a connection  *   is established  *  ENOTCONN if trying a command that is allowed only if a connection is  *   established  *  EMSGSIZE if trying to give too much data on connect/disconnect  *  * SIDE EFFECTS:  *  * NOTES:  */
-end_comment
-
-begin_function
 name|ProtoHook
 name|tp_ctloutput
 parameter_list|(
