@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1067,9 +1067,9 @@ name|printf
 argument_list|(
 literal|" %.8s "
 argument_list|,
-name|U
+name|p
 operator|->
-name|u_comm
+name|p_comm
 argument_list|)
 expr_stmt|;
 undef|#
