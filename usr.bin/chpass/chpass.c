@@ -655,7 +655,7 @@ name|pw_passwd
 operator|=
 literal|"*"
 expr_stmt|;
-name|pw_copy
+name|pw_copy_insecure
 argument_list|(
 name|pfd
 argument_list|,
