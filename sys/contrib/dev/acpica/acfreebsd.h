@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 10 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -45,6 +45,27 @@ include|#
 directive|include
 file|<machine/acpica_machdep.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_OUTPUT
+end_define
+
+begin_comment
+comment|/* for backward compatibility */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -123,7 +144,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_ifdef
 
 begin_include
@@ -141,7 +162,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 end_define
 
 begin_endif
@@ -159,7 +180,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ACPI_DEBUG */
+comment|/* ACPI_DEBUG_OUTPUT */
 end_comment
 
 begin_else
