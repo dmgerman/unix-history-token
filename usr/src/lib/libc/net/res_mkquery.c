@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_if
@@ -24,7 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.16 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.17 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: res_mkquery.c,v 4.9.1.2 1993/05/17 10:00:01 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +102,7 @@ argument|data
 argument_list|,
 argument|datalen
 argument_list|,
-argument|newrr
+argument|newrr_in
 argument_list|,
 argument|buf
 argument_list|,
@@ -158,10 +168,9 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|struct
-name|rrec
+name|char
 modifier|*
-name|newrr
+name|newrr_in
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +215,18 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|struct
+name|rrec
+modifier|*
+name|newrr
+init|=
+operator|(
+expr|struct
+name|rrec
+operator|*
+operator|)
+name|newrr_in
+decl_stmt|;
 name|char
 modifier|*
 name|dnptrs
@@ -234,7 +255,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_mkquery(%d, %s, %d, %d)\n"
+literal|";; res_mkquery(%d, %s, %d, %d)\n"
 argument_list|,
 name|op
 argument_list|,
@@ -247,7 +268,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 comment|/* 	 * Initialize header fields. 	 */
 if|if
 condition|(
@@ -484,7 +504,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -502,7 +522,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|hp
@@ -598,7 +618,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -616,7 +636,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putlong
@@ -634,7 +654,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -652,7 +672,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|hp
@@ -707,7 +727,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -725,7 +745,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putlong
@@ -743,7 +763,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -761,7 +781,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 if|if
@@ -858,7 +878,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -872,7 +892,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putlong
@@ -886,7 +906,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -900,7 +920,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 if|if
@@ -1003,7 +1023,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -1019,7 +1039,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|__putlong
@@ -1033,7 +1053,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|__putshort
@@ -1049,7 +1069,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 if|if
@@ -1091,7 +1111,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|ALLOW_UPDATES
+comment|/* ALLOW_UPDATES */
 block|}
 return|return
 operator|(

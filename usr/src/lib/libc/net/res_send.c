@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_if
@@ -24,7 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.27 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.28 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: res_send.c,v 4.9.1.1 1993/05/02 22:43:03 vixie Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -305,6 +321,10 @@ operator|*
 operator|)
 name|answer
 decl_stmt|;
+name|u_int
+name|badns
+decl_stmt|;
+comment|/* XXX NSMAX can't exceed #/bits per this */
 name|struct
 name|iovec
 name|iov
@@ -328,16 +348,26 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
+operator|(
 name|_res
 operator|.
 name|options
 operator|&
 name|RES_DEBUG
+operator|)
+operator|||
+operator|(
+name|_res
+operator|.
+name|pfcode
+operator|&
+name|RES_PRF_QUERY
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"res_send()\n"
+literal|";; res_send()\n"
 argument_list|)
 expr_stmt|;
 name|__p_query
@@ -348,7 +378,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
 if|if
 condition|(
 operator|!
@@ -396,6 +425,10 @@ name|hp
 operator|->
 name|id
 expr_stmt|;
+name|badns
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Send request, RETRY times, or until successful 	 */
 for|for
 control|(
@@ -429,6 +462,17 @@ name|ns
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|badns
+operator|&
+operator|(
+literal|1
+operator|<<
+name|ns
+operator|)
+condition|)
+continue|continue;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -442,7 +486,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"Querying server (# %d) address = %s\n"
+literal|";; Querying server (# %d) address = %s\n"
 argument_list|,
 name|ns
 operator|+
@@ -463,7 +507,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 name|usevc
 label|:
 if|if
@@ -530,7 +573,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 continue|continue;
 block|}
 if|if
@@ -586,7 +628,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 operator|(
 name|void
 operator|)
@@ -702,7 +743,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 operator|(
 name|void
 operator|)
@@ -797,7 +837,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 operator|(
 name|void
 operator|)
@@ -870,12 +909,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"response truncated\n"
+literal|";; response truncated\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 name|len
 operator|=
 name|anslen
@@ -957,7 +995,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 operator|(
 name|void
 operator|)
@@ -1092,15 +1129,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 continue|continue;
 block|}
 block|}
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|43
 comment|/* 			 * I'm tired of answering this question, so: 			 * On a 4.3BSD+ machine (client and server, 			 * actually), sending to a nameserver datagram 			 * port with no nameserver will cause an 			 * ICMP port unreachable message to be returned. 			 * If our datagram socket is "connected" to the 			 * server, we get an ECONNREFUSED error on the next 			 * socket operation, and select returns if the 			 * error message is received.  We can thus detect 			 * the absence of a nameserver without timing out. 			 * If we have sent queries to at least two servers, 			 * however, we don't want to remain connected, 			 * as we wish to receive answers from the first 			 * server to respond. 			 */
 if|if
 condition|(
@@ -1176,7 +1207,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 continue|continue;
 block|}
 name|connected
@@ -1218,7 +1248,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 continue|continue;
 block|}
 block|}
@@ -1251,9 +1280,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|BSD
 if|if
 condition|(
 name|sendto
@@ -1307,17 +1333,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 continue|continue;
 block|}
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|43
 block|}
-endif|#
-directive|endif
 comment|/* 			 * Wait for reply 			 */
 name|timeout
 operator|.
@@ -1347,6 +1365,9 @@ name|nscount
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|long
+operator|)
 name|timeout
 operator|.
 name|tv_sec
@@ -1433,7 +1454,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 continue|continue;
 block|}
 if|if
@@ -1457,23 +1477,15 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"timeout\n"
+literal|";; timeout\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|43
 name|gotsomewhere
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -1514,7 +1526,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 continue|continue;
 block|}
 name|gotsomewhere
@@ -1536,16 +1547,26 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
+operator|(
 name|_res
 operator|.
 name|options
 operator|&
 name|RES_DEBUG
+operator|)
+operator|||
+operator|(
+name|_res
+operator|.
+name|pfcode
+operator|&
+name|RES_PRF_REPLY
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"old answer:\n"
+literal|";; old answer:\n"
 argument_list|)
 expr_stmt|;
 name|__p_query
@@ -1556,10 +1577,65 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
 goto|goto
 name|wait
 goto|;
+block|}
+if|if
+condition|(
+name|anhp
+operator|->
+name|rcode
+operator|==
+name|SERVFAIL
+operator|||
+name|anhp
+operator|->
+name|rcode
+operator|==
+name|NOTIMP
+operator|||
+name|anhp
+operator|->
+name|rcode
+operator|==
+name|REFUSED
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"server rejected query:\n"
+argument_list|)
+expr_stmt|;
+name|__p_query
+argument_list|(
+name|answer
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|badns
+operator||=
+operator|(
+literal|1
+operator|<<
+name|ns
+operator|)
+expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -1591,12 +1667,11 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"truncated answer\n"
+literal|";; truncated answer\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 operator|(
 name|void
 operator|)
@@ -1630,21 +1705,36 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"got answer:\n"
+literal|";; got answer:\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+operator|)
+operator|||
+operator|(
+name|_res
+operator|.
+name|pfcode
+operator|&
+name|RES_PRF_REPLY
+operator|)
+condition|)
 name|__p_query
 argument_list|(
 name|answer
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-endif|DEBUG
 comment|/* 		 * If using virtual circuits, we assume that the first server 		 * is preferred * over the rest (i.e. it is on the local 		 * machine) and only keep that one open. 		 * If we have temporarily opened a virtual circuit, 		 * or if we haven't been asked to keep a socket open, 		 * close the socket. 		 */
 if|if
 condition|(

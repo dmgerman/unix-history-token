@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_if
@@ -24,7 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_query.c	5.11 (Berkeley) %G%"
+literal|"@(#)res_query.c	5.12 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: res_query.c,v 1.1 1993/06/01 09:42:14 vixie Exp vixie $"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,7 +266,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_query(%s, %d, %d)\n"
+literal|";; res_query(%s, %d, %d)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -317,7 +327,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_query: mkquery failed\n"
+literal|";; res_query: mkquery failed\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -369,7 +379,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_query: send error\n"
+literal|";; res_query: send error\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -423,7 +433,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"rcode = %d, ancount=%d\n"
+literal|";; rcode = %d, ancount=%d\n"
 argument_list|,
 name|hp
 operator|->
@@ -505,66 +515,40 @@ begin_comment
 comment|/*  * Formulate a normal query, send, and retrieve answer in supplied buffer.  * Return the size of the response on success, -1 on error.  * If enabled, implement search rules until answer or unrecoverable failure  * is detected.  Error number is left in h_errno.  * Only useful for queries in the same name hierarchy as the local host  * (not, for example, for host address-to-name lookups in domain in-addr.arpa).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|res_search
-argument_list|(
-argument|name
-argument_list|,
-argument|class
-argument_list|,
-argument|type
-argument_list|,
-argument|answer
-argument_list|,
-argument|anslen
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|class
+parameter_list|,
+name|type
+parameter_list|,
+name|answer
+parameter_list|,
+name|anslen
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* domain name */
-end_comment
-
-begin_decl_stmt
 name|int
 name|class
 decl_stmt|,
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* class and type of query */
-end_comment
-
-begin_decl_stmt
 name|u_char
 modifier|*
 name|answer
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* buffer to put answer */
-end_comment
-
-begin_decl_stmt
 name|int
 name|anslen
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* size of answer */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -858,7 +842,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Perform a call on res_query on the concatenation of name and domain,  * removing a trailing dot from name if domain is NULL.  */
@@ -958,7 +942,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_querydomain(%s, %s, %d, %d)\n"
+literal|";; res_querydomain(%s, %s, %d, %d)\n"
 argument_list|,
 name|name
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1985, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_if
@@ -24,7 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.48 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.49 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: gethnamaddr.c,v 4.9.1.1 1993/05/02 22:43:03 vixie Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +281,7 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
-name|long
+name|int32_t
 name|al
 decl_stmt|;
 name|char
@@ -283,6 +293,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|h_errno
 decl_stmt|;
@@ -689,7 +700,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|class
@@ -703,12 +714,12 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|n
@@ -722,7 +733,7 @@ name|cp
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 if|if
@@ -969,7 +980,7 @@ argument_list|)
 operator|-
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 name|bp
 operator|%
@@ -1242,7 +1253,7 @@ name|h_length
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|h_addr_ptrs
@@ -1711,20 +1722,15 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|_sethtent
-argument_list|(
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|f
+parameter_list|)
 name|int
 name|f
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1752,14 +1758,12 @@ operator||=
 name|f
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|_endhtent
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1783,7 +1787,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -1939,7 +1943,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|host
@@ -1958,7 +1962,7 @@ name|h_length
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|host

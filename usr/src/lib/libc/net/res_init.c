@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_if
@@ -24,7 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	6.15 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.16 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: res_init.c,v 4.9.1.1 1993/05/02 22:43:03 vixie Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +113,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|state
+name|__res_state
 name|_res
 init|=
 block|{
@@ -174,6 +184,24 @@ name|havesearch
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USELOOPBACK
+name|_res
+operator|.
+name|nsaddr
+operator|.
+name|sin_addr
+operator|=
+name|inet_makeaddr
+argument_list|(
+name|IN_LOOPBACKNET
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|_res
 operator|.
 name|nsaddr
@@ -184,6 +212,8 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
+endif|#
+directive|endif
 name|_res
 operator|.
 name|nsaddr
@@ -208,6 +238,12 @@ operator|.
 name|nscount
 operator|=
 literal|1
+expr_stmt|;
+name|_res
+operator|.
+name|pfcode
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Allow user to override the local domain definition */
 if|if
@@ -242,6 +278,28 @@ operator|.
 name|defdname
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|strpbrk
+argument_list|(
+name|_res
+operator|.
+name|defdname
+argument_list|,
+literal|" \t\n"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
 expr_stmt|;
 name|haveenv
 operator|++
@@ -281,6 +339,24 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* skip comments */
+if|if
+condition|(
+operator|(
+operator|*
+name|buf
+operator|==
+literal|';'
+operator|)
+operator|||
+operator|(
+operator|*
+name|buf
+operator|==
+literal|'#'
+operator|)
+condition|)
+continue|continue;
 comment|/* read default domain name */
 if|if
 condition|(
@@ -375,13 +451,13 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strpbrk
 argument_list|(
 name|_res
 operator|.
 name|defdname
 argument_list|,
-literal|'\n'
+literal|" \t\n"
 argument_list|)
 operator|)
 operator|!=
@@ -651,6 +727,10 @@ operator|<
 name|MAXNS
 condition|)
 block|{
+name|struct
+name|in_addr
+name|a
+decl_stmt|;
 name|cp
 operator|=
 name|buf
@@ -682,43 +762,24 @@ condition|(
 operator|(
 operator|*
 name|cp
-operator|==
+operator|!=
 literal|'\0'
 operator|)
-operator|||
+operator|&&
 operator|(
 operator|*
 name|cp
-operator|==
+operator|!=
 literal|'\n'
 operator|)
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|(
-name|_res
-operator|.
-name|nsaddr_list
-index|[
-name|nserv
-index|]
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-operator|=
-name|inet_addr
+operator|&&
+name|inet_aton
 argument_list|(
 name|cp
+argument_list|,
+operator|&
+name|a
 argument_list|)
-operator|)
-operator|==
-operator|(
-name|unsigned
-operator|)
-operator|-
-literal|1
 condition|)
 block|{
 name|_res
@@ -729,13 +790,9 @@ name|nserv
 index|]
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
 operator|=
-name|INADDR_ANY
+name|a
 expr_stmt|;
-continue|continue;
-block|}
 name|_res
 operator|.
 name|nsaddr_list
@@ -764,6 +821,7 @@ expr_stmt|;
 name|nserv
 operator|++
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 block|}
