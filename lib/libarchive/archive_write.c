@@ -465,12 +465,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cleanup and free the archive object.  *  * Be careful: user might just call write_new and then write_finish.  * Don't assume we actually wrote anything or performed any non-trivial  * initialization.  */
+comment|/*  * Close out the archive.  *  * Be careful: user might just call write_new and then write_finish.  * Don't assume we actually wrote anything or performed any non-trivial  * initialization.  */
 end_comment
 
 begin_function
-name|void
-name|archive_write_finish
+name|int
+name|archive_write_close
 parameter_list|(
 name|struct
 name|archive
@@ -539,6 +539,56 @@ name|a
 operator|->
 name|compression_finish
 call|)
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|state
+operator|=
+name|ARCHIVE_STATE_CLOSED
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Destroy the archive structure.  */
+end_comment
+
+begin_function
+name|void
+name|archive_write_finish
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|)
+block|{
+name|archive_check_magic
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_WRITE_MAGIC
+argument_list|,
+name|ARCHIVE_STATE_ANY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|state
+operator|!=
+name|ARCHIVE_STATE_CLOSED
+condition|)
+name|archive_write_close
 argument_list|(
 name|a
 argument_list|)

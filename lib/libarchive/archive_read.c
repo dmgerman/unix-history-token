@@ -1572,12 +1572,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cleanup and free the archive object.  *  * Be careful: client might just call read_new and then read_finish.  * Don't assume we actually read anything or performed any non-trivial  * initialization.  */
+comment|/*  * Close the file and release most resources.  *  * Be careful: client might just call read_new and then read_finish.  * Don't assume we actually read anything or performed any non-trivial  * initialization.  */
 end_comment
 
 begin_function
-name|void
-name|archive_read_finish
+name|int
+name|archive_read_close
 parameter_list|(
 name|struct
 name|archive
@@ -1585,12 +1585,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|slots
-decl_stmt|;
 name|archive_check_magic
 argument_list|(
 name|a
@@ -1639,6 +1633,56 @@ name|a
 operator|->
 name|compression_finish
 call|)
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Release memory and other resources.  */
+end_comment
+
+begin_function
+name|void
+name|archive_read_finish
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|int
+name|slots
+decl_stmt|;
+name|archive_check_magic
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_READ_MAGIC
+argument_list|,
+name|ARCHIVE_STATE_ANY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|state
+operator|!=
+name|ARCHIVE_STATE_CLOSED
+condition|)
+name|archive_read_close
 argument_list|(
 name|a
 argument_list|)
