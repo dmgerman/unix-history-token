@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -422,6 +422,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* ip packet ctr, for ids */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ip_defttl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default IP ttl */
 end_comment
 
 begin_function_decl
