@@ -631,6 +631,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|cap_check_td
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|cap_value_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|cap_change_on_inherit
 parameter_list|(
 name|struct
@@ -1004,6 +1023,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Interpret the text relative to an existing cap_t. */
+end_comment
+
+begin_function_decl
+name|cap_t
+name|cap_from_text2_np
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|cap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Is the first cap set a subset of the second? */
 end_comment
 
@@ -1017,6 +1053,76 @@ name|cap_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Like cap_to_text, takes an additional flags argument.  Flags are defined  * below (CTT_*).  */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|cap_to_text2_np
+parameter_list|(
+name|cap_t
+parameter_list|,
+name|ssize_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|CTT_NOE
+value|1
+end_define
+
+begin_comment
+comment|/* Do not output caps with only E flag set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTT_NOI
+value|2
+end_define
+
+begin_comment
+comment|/* Do not output caps with only I flag set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTT_NOP
+value|4
+end_define
+
+begin_comment
+comment|/* Do not output caps with only P flag set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTT_ALL
+value|8
+end_define
+
+begin_comment
+comment|/* Do output caps with no flags set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTT_NOMSK
+value|(CTT_NOE | CTT_NOI | CTT_NOP)
+end_define
 
 begin_define
 define|#
