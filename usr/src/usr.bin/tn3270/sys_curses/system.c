@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	4.2 (Berkeley) %G%"
+literal|"@(#)system.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +378,13 @@ specifier|static
 name|struct
 name|SREGS
 name|inputSregs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|apitrace
 decl_stmt|;
 end_decl_stmt
 
@@ -1620,6 +1627,21 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|apitrace
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|'('
+argument_list|,
+name|local
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1719,6 +1741,21 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|apitrace
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|')'
+argument_list|,
+name|local
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+block|}
 name|storage_length
 operator|=
 name|length
