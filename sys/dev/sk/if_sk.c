@@ -2274,6 +2274,15 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sk_vpd_prodname
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -2314,9 +2323,12 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 name|pos
 operator|+=
-name|i
+name|res
+operator|.
+name|vr_len
 expr_stmt|;
 name|sk_vpd_read_res
 argument_list|(
@@ -7950,6 +7962,12 @@ argument_list|,
 literal|"%s rev. %s(0x%x)\n"
 argument_list|,
 name|pname
+operator|!=
+name|NULL
+condition|?
+name|pname
+else|:
+literal|"<unknown>"
 argument_list|,
 name|revstr
 argument_list|,
