@@ -7,12 +7,6 @@ begin_comment
 comment|/* This is experimental Host AP software for Prism 2 802.11b interfaces.  *  * Much of this is based upon the "Linux Host AP driver Host AP driver  * for Intersil Prism2" by Jouni Malinen<jkm@ssh.com> or<jkmaline@cc.hut.fi>.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -211,22 +205,11 @@ directive|include
 file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<dev/wi/wi_hostap.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -5201,15 +5184,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WI_HOSTAP */
-end_comment
 
 end_unit
 

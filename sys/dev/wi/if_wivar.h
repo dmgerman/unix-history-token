@@ -468,9 +468,6 @@ name|wi_nextitem
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 name|struct
 name|wihap_info
 name|wi_hostap_info
@@ -481,8 +478,6 @@ decl_stmt|;
 name|int
 name|wi_icv_flag
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|callout_handle
 name|wi_stat_ch

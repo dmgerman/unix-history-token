@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -179,28 +185,11 @@ directive|include
 file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<dev/wi/wi_hostap.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/random.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3226,9 +3215,6 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 if|if
 condition|(
 name|rx_frame
@@ -3379,9 +3365,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* WI_HOSTAP */
 if|if
 condition|(
 name|rx_frame
@@ -3695,9 +3678,6 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 if|if
 condition|(
 name|sc
@@ -3722,8 +3702,6 @@ argument_list|)
 condition|)
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* Receive packet. */
 name|m_adj
 argument_list|(
@@ -5543,9 +5521,6 @@ operator||
 name|EXCLUDE_UNENCRYPTED
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 if|if
 condition|(
 name|sc
@@ -5564,8 +5539,6 @@ argument_list|(
 name|HOST_ENCRYPT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|p2ltv
@@ -9255,9 +9228,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 case|case
 name|SIOCHOSTAP_ADD
 case|:
@@ -9289,8 +9259,6 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=
@@ -9829,32 +9797,11 @@ argument_list|,
 name|WI_INTRS
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 name|wihap_init
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Initialize ICV to something random.  XXX: this doesn't work 	 * if init happens in early boot-up.  Fix later. 	 */
-name|read_random
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|wi_icv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|wi_icv
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_flags
@@ -9891,12 +9838,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -10981,15 +10922,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WI_HOSTAP */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -11066,13 +10998,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 name|nextpkt
 label|:
-endif|#
-directive|endif
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -11138,9 +11065,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 if|if
 condition|(
 name|sc
@@ -11201,8 +11125,6 @@ name|nextpkt
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Use RFC1042 encoding for IP and ARP datagrams, 	 * 802.3 for anything else. 	 */
 if|if
 condition|(
@@ -11239,9 +11161,6 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 if|if
 condition|(
 name|sc
@@ -11326,8 +11245,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -11456,9 +11373,6 @@ name|eh
 operator|->
 name|ether_type
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 if|if
 condition|(
 name|sc
@@ -11611,8 +11525,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|m_copydata
 argument_list|(
@@ -11713,9 +11625,6 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 if|if
 condition|(
 name|sc
@@ -11737,8 +11646,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|eh
 operator|->
@@ -12165,16 +12072,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 name|wihap_shutdown
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|=
 operator|&
@@ -13326,9 +13228,6 @@ operator|->
 name|wi_ptype
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 case|case
 name|WI_PORTTYPE_AP
 case|:
@@ -13349,8 +13248,6 @@ name|IEEE80211_NWID_LEN
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|WI_PORTTYPE_ADHOC
 case|:
@@ -13643,11 +13540,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WI_HOSTAP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|IFM_IEEE80211_HOSTAP
 argument_list|)
 elseif|else
@@ -13842,11 +13734,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WI_HOSTAP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|IFM_IEEE80211_HOSTAP
 argument_list|)
 elseif|else
@@ -13985,9 +13872,6 @@ name|ifm_status
 operator||=
 name|IFM_ACTIVE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
 elseif|else
 if|if
 condition|(
@@ -14003,8 +13887,6 @@ name|ifm_status
 operator||=
 name|IFM_ACTIVE
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 block|{
 name|wreq

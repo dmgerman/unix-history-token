@@ -115,22 +115,11 @@ directive|include
 file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WI_HOSTAP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<dev/wi/wi_hostap.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
