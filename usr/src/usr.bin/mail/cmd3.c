@@ -1012,11 +1012,14 @@ name|NOSTR
 expr_stmt|;
 name|cp
 operator|=
+name|skin
+argument_list|(
 name|nameof
 argument_list|(
 name|mp
 argument_list|,
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1031,11 +1034,14 @@ name|cp
 expr_stmt|;
 name|cp
 operator|=
+name|skin
+argument_list|(
 name|hfield
 argument_list|(
 literal|"from"
 argument_list|,
 name|mp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1084,11 +1090,14 @@ else|else
 block|{
 name|cp
 operator|=
+name|skin
+argument_list|(
 name|hfield
 argument_list|(
 literal|"to"
 argument_list|,
 name|mp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1177,10 +1186,9 @@ name|detract
 argument_list|(
 name|np
 argument_list|,
-name|GCOMMA
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* do it with commas */
 if|if
 condition|(
 name|cp
@@ -1203,7 +1211,7 @@ name|strcat
 argument_list|(
 name|buf
 argument_list|,
-literal|", "
+literal|" "
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -3331,11 +3339,14 @@ condition|(
 operator|(
 name|cp
 operator|=
+name|skin
+argument_list|(
 name|hfield
 argument_list|(
 literal|"from"
 argument_list|,
 name|mp
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
@@ -3355,11 +3366,14 @@ name|s
 operator|+=
 name|strlen
 argument_list|(
+name|skin
+argument_list|(
 name|nameof
 argument_list|(
 name|mp
 argument_list|,
 literal|2
+argument_list|)
 argument_list|)
 argument_list|)
 operator|+
@@ -3423,11 +3437,14 @@ condition|(
 operator|(
 name|cp2
 operator|=
+name|skin
+argument_list|(
 name|hfield
 argument_list|(
 literal|"from"
 argument_list|,
 name|mp
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -3435,11 +3452,14 @@ name|NOSTR
 condition|)
 name|cp2
 operator|=
+name|skin
+argument_list|(
 name|nameof
 argument_list|(
 name|mp
 argument_list|,
 literal|2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cp
