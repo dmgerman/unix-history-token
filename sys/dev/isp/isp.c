@@ -5477,6 +5477,46 @@ name|icb_hardaddr
 operator|=
 name|loopid
 expr_stmt|;
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_hardaddr
+operator|>=
+literal|125
+condition|)
+block|{
+comment|/* 		 * We end up with a Loop ID of 255 for F-Port topologies 		 */
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_hardaddr
+operator|!=
+literal|255
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad hard address %u- resetting to zero"
+argument_list|,
+name|icbp
+operator|->
+name|icb_hardaddr
+argument_list|)
+expr_stmt|;
+block|}
+name|icbp
+operator|->
+name|icb_hardaddr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * Right now we just set extended options to prefer point-to-point 	 * over loop based upon some soft config options. 	 *  	 * NB: for the 2300, ICBOPT_EXTENDED is required. 	 */
 if|if
 condition|(
@@ -5891,6 +5931,25 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_rqstqlen
+operator|<
+literal|1
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad request queue length"
+argument_list|)
+expr_stmt|;
+block|}
 name|icbp
 operator|->
 name|icb_rsltqlen
@@ -5900,6 +5959,25 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_rsltqlen
+operator|<
+literal|1
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad result queue length"
+argument_list|)
+expr_stmt|;
+block|}
 name|icbp
 operator|->
 name|icb_rqstaddr
@@ -18745,7 +18823,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* 		 * Free any dma resources. As a side effect, this may 		 * also do any cache flushing necessary for data coherence.			 */
+comment|/* 		 * Free any DMA resources. As a side effect, this may 		 * also do any cache flushing necessary for data coherence.			 */
 if|if
 condition|(
 name|XS_XFRLEN
