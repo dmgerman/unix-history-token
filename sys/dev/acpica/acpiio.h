@@ -10,20 +10,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPIIO_ENABLE
-value|_IO('P', 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPIIO_DISABLE
-value|_IO('P', 2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPIIO_SETSLPSTATE
 value|_IOW('P', 3, int)
 end_define
