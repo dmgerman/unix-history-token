@@ -3640,6 +3640,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 name|hdr
 index|[]
