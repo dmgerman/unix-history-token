@@ -203,16 +203,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|EVENTHANDLER_FAST_DEFINE
-argument_list|(
-name|idle_event
-argument_list|,
-name|idle_eventhandler_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * setup per-cpu idle process contexts  */
 end_comment
@@ -422,14 +412,14 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* call out to any cpu-becoming-idle events */
-name|EVENTHANDLER_FAST_INVOKE
-argument_list|(
-name|idle_event
-argument_list|,
-literal|0
-argument_list|)
+ifdef|#
+directive|ifdef
+name|__i386__
+name|cpu_idle
+argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|mtx_enter
 argument_list|(

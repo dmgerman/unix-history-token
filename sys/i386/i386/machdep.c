@@ -4789,12 +4789,6 @@ begin_comment
 comment|/*  * Hook to idle the CPU when possible.  This currently only works in  * the !SMP case, as there is no clean way to ensure that a CPU will be  * woken when there is work available for it.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -4830,18 +4824,15 @@ comment|/*  * Note that we have to be careful here to avoid a race between check
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|cpu_idle
 parameter_list|(
 name|void
-modifier|*
-name|junk
-parameter_list|,
-name|int
-name|count
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|SMP
 if|if
 condition|(
 name|cpu_idle_hlt
@@ -4866,56 +4857,10 @@ expr_stmt|;
 asm|__asm __volatile("hlt");
 block|}
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|cpu_idle_register
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|)
-block|{
-name|EVENTHANDLER_FAST_REGISTER
-argument_list|(
-name|idle_event
-argument_list|,
-name|cpu_idle
-argument_list|,
-name|NULL
-argument_list|,
-name|IDLE_PRI_LAST
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|cpu_idle_register
-argument_list|,
-argument|SI_SUB_SCHED_IDLE
-argument_list|,
-argument|SI_ORDER_SECOND
-argument_list|,
-argument|cpu_idle_register
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* !SMP */
-end_comment
+block|}
+end_function
 
 begin_comment
 comment|/*  * Clear registers on exec  */
