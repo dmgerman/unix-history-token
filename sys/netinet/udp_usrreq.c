@@ -1335,6 +1335,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|else
+goto|goto
+name|bad
+goto|;
 return|return;
 block|}
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
