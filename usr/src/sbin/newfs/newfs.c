@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.8 %G%"
+literal|"@(#)newfs.c	4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1528,6 +1528,10 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|cp
 operator|=
 name|rindex
@@ -1552,12 +1556,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp
-index|[
-literal|1
-index|]
+name|stat
+argument_list|(
+name|special
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|sb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
 operator|==
-literal|'r'
+name|S_IFCHR
 condition|)
 name|cp
 operator|++
