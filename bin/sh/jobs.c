@@ -1583,7 +1583,7 @@ name|s
 argument_list|,
 literal|64
 argument_list|,
-literal|"     %c "
+literal|"    %c "
 argument_list|,
 name|c
 argument_list|)
