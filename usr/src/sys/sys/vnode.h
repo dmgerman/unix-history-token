@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -663,8 +663,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DOCLOSE
+name|WRITECLOSE
 value|0x0004
+end_define
+
+begin_comment
+comment|/* vflush: only close writeable files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOCLOSE
+value|0x0008
 end_define
 
 begin_comment
