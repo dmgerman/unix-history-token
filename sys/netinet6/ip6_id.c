@@ -232,6 +232,49 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|randomtab
+name|randomtab_20
+init|=
+block|{
+literal|20
+block|,
+comment|/* resulting bits */
+literal|180
+block|,
+comment|/* Time after wich will be reseeded */
+literal|200000
+block|,
+comment|/* Uniq cycle, avoid blackjack prediction */
+literal|2
+block|,
+comment|/* Starting generator */
+literal|524269
+block|,
+comment|/* RU_N-1 = 2^2*3^2*14563 */
+literal|7
+block|,
+comment|/* determine ru_a as RU_AGEN^(2*rand) */
+literal|279936
+block|,
+comment|/* RU_M = 2^7*3^7 - don't change */
+block|{
+literal|2
+block|,
+literal|3
+block|,
+literal|14563
+block|,
+literal|0
+block|}
+block|,
+comment|/* factors of ru_n */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|u_int32_t
