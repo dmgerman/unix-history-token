@@ -1164,9 +1164,9 @@ literal|0x1409
 block|,
 literal|0x7168
 block|,
-literal|0x0
+literal|0
 block|,
-literal|0x0
+literal|0
 block|}
 block|,
 block|{
@@ -1174,9 +1174,9 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0x0
+literal|0
 block|,
-literal|0x0
+literal|0
 block|}
 block|,
 block|{
@@ -3794,7 +3794,7 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
-comment|/* NEC PK-UG-X001 K56flex PCI Modem card. 	   NEC MARTH bridge chip and Rockwell RCVDL56ACF/SP using. */
+comment|/* 	 * NEC PK-UG-X001 K56flex PCI Modem card. 	 * Uses NEC MARTH bridge chip and Rockwell RCVDL56ACF/SP. 	 */
 block|{
 literal|"NEC PK-UG-X001 K56flex PCI Modem"
 block|,
@@ -4167,9 +4167,9 @@ literal|0x11c1
 block|,
 literal|0x0480
 block|,
-literal|0x0
+literal|0
 block|,
-literal|0x0
+literal|0
 block|}
 block|,
 block|{
@@ -4177,9 +4177,9 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0x0
+literal|0
 block|,
-literal|0x0
+literal|0
 block|}
 block|,
 block|{
@@ -4761,7 +4761,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|,	}
+block|}
 block|,
 block|{
 block|{
@@ -4838,7 +4838,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|,	}
+block|}
 block|,
 block|{
 block|{
@@ -4915,7 +4915,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|,	}
+block|}
 block|,
 block|{
 block|{
@@ -4992,7 +4992,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|,	}
+block|}
 block|,
 block|{
 block|{
@@ -5117,7 +5117,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|,	}
+block|}
 block|,
 block|{
 block|{
@@ -5557,7 +5557,7 @@ literal|0x38
 block|,
 name|COM_FREQ
 block|}
-block|}
+block|, 	    }
 block|,
 name|PUC_ILR_TYPE_DIGI
 block|,
@@ -5671,7 +5671,7 @@ literal|0x38
 block|,
 name|COM_FREQ
 block|}
-block|}
+block|, 	    }
 block|,
 name|PUC_ILR_TYPE_DIGI
 block|,
