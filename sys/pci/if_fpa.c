@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995, 1996 Matt Thomas<matt@3am-software.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_fpa.c,v 1.9 1996/07/31 21:38:44 thomas Exp $  *  */
+comment|/*-  * Copyright (c) 1995, 1996 Matt Thomas<matt@3am-software.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_fpa.c,v 1.1.1.1 1997/01/17 23:19:49 joerg Exp $  *  */
 end_comment
 
 begin_comment
@@ -60,21 +60,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|__bsdi__
 argument_list|)
 operator|||
@@ -82,7 +67,7 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-end_elif
+end_if
 
 begin_include
 include|#
@@ -758,6 +743,19 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
+begin_function_decl
+specifier|static
+name|void
+name|pdq_pci_shutdown
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * This is the PCI configuration support.  Since the PDQ is available  * on both EISA and PCI boards, one must be careful in how defines the  * PDQ in the config file.  */
 end_comment
@@ -1094,54 +1092,48 @@ operator|&
 name|net_imask
 argument_list|)
 expr_stmt|;
+name|at_shutdown
+argument_list|(
+name|pdq_pci_shutdown
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|,
+name|SHUTDOWN_POST_SYNC
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|pdq_pci_shutdown
 parameter_list|(
-name|struct
-name|kern_devconf
-modifier|*
-name|kdc
-parameter_list|,
 name|int
-name|force
+name|howto
+parameter_list|,
+name|void
+modifier|*
+name|sc
 parameter_list|)
 block|{
-if|if
-condition|(
-name|kdc
-operator|->
-name|kdc_unit
-operator|<
-name|NFPA
-condition|)
 name|pdq_hwreset
 argument_list|(
-name|PDQ_PCI_UNIT_TO_SOFTC
-argument_list|(
-name|kdc
-operator|->
-name|kdc_unit
-argument_list|)
+operator|(
+operator|(
+name|pdq_softc_t
+operator|*
+operator|)
+name|sc
+operator|)
 operator|->
 name|sc_pdq
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|dev_detach
-argument_list|(
-name|kdc
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -1167,8 +1159,8 @@ block|,
 operator|&
 name|pdq_pci_count
 block|,
-name|pdq_pci_shutdown
-block|, }
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
