@@ -1016,7 +1016,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|send
 argument_list|(
 name|s
 argument_list|,
@@ -1026,6 +1026,8 @@ name|strlen
 argument_list|(
 name|buffer
 argument_list|)
+argument_list|,
+name|MSG_EOF
 argument_list|)
 expr_stmt|;
 block|}
@@ -1456,7 +1458,7 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
-name|write
+name|send
 argument_list|(
 name|s
 argument_list|,
@@ -1466,6 +1468,8 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+name|MSG_EOF
 argument_list|)
 expr_stmt|;
 name|free
@@ -2901,7 +2905,7 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
-name|write
+name|send
 argument_list|(
 name|s
 argument_list|,
@@ -2911,6 +2915,8 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+name|MSG_EOF
 argument_list|)
 expr_stmt|;
 name|free
@@ -3163,7 +3169,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|send
 argument_list|(
 name|s
 argument_list|,
@@ -3178,6 +3184,8 @@ sizeof|sizeof
 argument_list|(
 name|result
 argument_list|)
+argument_list|,
+name|MSG_EOF
 argument_list|)
 expr_stmt|;
 block|}
