@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)input.c	1.8 (Berkeley) 83/06/14"
+literal|"@(#)input.c	1.9 (Berkeley) 84/05/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,8 +247,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|wordc
+operator|>
 literal|0
-operator|||
+operator|&&
+operator|(
 operator|(
 operator|(
 name|errorclass
@@ -390,6 +393,7 @@ argument_list|()
 operator|)
 operator|!=
 name|C_UNKNOWN
+operator|)
 operator|)
 condition|)
 empty_stmt|;
@@ -758,7 +762,7 @@ name|strcmp
 argument_list|(
 name|wordv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 literal|"Stop."
@@ -1215,6 +1219,9 @@ name|wordv
 operator|++
 expr_stmt|;
 comment|/*compensate*/
+name|wordc
+operator|--
+expr_stmt|;
 name|currentfilename
 operator|=
 name|wordv
