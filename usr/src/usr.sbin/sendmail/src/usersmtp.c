@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.12 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.13 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.12 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.13 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1384,9 +1384,6 @@ expr_stmt|;
 if|if
 condition|(
 name|Verbose
-operator|&&
-operator|!
-name|HoldErrs
 condition|)
 name|nmessage
 argument_list|(
@@ -2234,9 +2231,6 @@ comment|/* display the input for verbose mode */
 if|if
 condition|(
 name|Verbose
-operator|&&
-operator|!
-name|HoldErrs
 condition|)
 name|nmessage
 argument_list|(
@@ -2469,12 +2463,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|||
-operator|(
 name|Verbose
-operator|&&
-operator|!
-name|HoldErrs
-operator|)
 condition|)
 name|nmessage
 argument_list|(
