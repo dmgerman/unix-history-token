@@ -59,7 +59,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (c) locked by SOCKBUF_LOCK(&so->so_rcv).  * (d) locked by SOCKBUF_LOCK(&so->so_snd).  * (e) locked by ACCEPT_LOCK().  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  */
+comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (c) locked by SOCKBUF_LOCK(&so->so_rcv).  * (d) locked by SOCKBUF_LOCK(&so->so_snd).  * (e) locked by ACCEPT_LOCK().  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  * (h) locked by global mutex so_global_mtx.  */
 end_comment
 
 begin_struct
@@ -340,7 +340,7 @@ comment|/* NB: generation count must not be first; easiest to make it last. */
 name|so_gen_t
 name|so_gencnt
 decl_stmt|;
-comment|/* generation count */
+comment|/* (h) generation count */
 name|void
 modifier|*
 name|so_emuldata
