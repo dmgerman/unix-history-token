@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)networkdelta.c	1.1 (Berkeley) %G%"
+literal|"@(#)networkdelta.c	2.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,22 +41,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|machup
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|slvcount
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|host
-name|hp
-index|[]
 decl_stmt|;
 end_decl_stmt
 

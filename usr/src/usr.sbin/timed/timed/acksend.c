@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acksend.c	1.3 (Berkeley) %G%"
+literal|"@(#)acksend.c	2.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,38 +88,8 @@ name|answer
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sockaddr_in
-name|server
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|trace
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|fd
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * Acksend implements reliable datagram transmission by using sequence   * numbers and retransmission when necessary.  * `name' is set to name of destination whose address is in global   * variable `server'.  * If `name' is ANYADDR, this routine implements reliable broadcast.  */
+comment|/*  * Acksend implements reliable datagram transmission by using sequence   * numbers and retransmission when necessary.  * `name' is the name of the destination  * `addr' is the address to send to  * If `name' is ANYADDR, this routine implements reliable broadcast.  */
 end_comment
 
 begin_function
@@ -130,14 +100,23 @@ name|acksend
 parameter_list|(
 name|message
 parameter_list|,
+name|addr
+parameter_list|,
 name|name
 parameter_list|,
 name|ack
+parameter_list|,
+name|net
 parameter_list|)
 name|struct
 name|tsp
 modifier|*
 name|message
+decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|addr
 decl_stmt|;
 name|char
 modifier|*
@@ -145,6 +124,11 @@ name|name
 decl_stmt|;
 name|int
 name|ack
+decl_stmt|;
+name|struct
+name|netinfo
+modifier|*
+name|net
 decl_stmt|;
 block|{
 name|int
@@ -233,21 +217,6 @@ do|do
 block|{
 if|if
 condition|(
-name|name
-operator|==
-name|ANYADDR
-condition|)
-block|{
-name|broadcast
-argument_list|(
-name|message
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
 name|sendto
 argument_list|(
 name|sock
@@ -266,8 +235,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|server
+name|addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -292,7 +260,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|tout
 operator|.
 name|tv_sec
@@ -315,6 +282,8 @@ name|name
 argument_list|,
 operator|&
 name|tout
+argument_list|,
+name|net
 argument_list|)
 expr_stmt|;
 if|if
