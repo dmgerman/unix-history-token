@@ -2362,10 +2362,6 @@ operator|&&
 name|ostat0
 operator|!=
 literal|0xa5
-operator|&&
-name|ostat0
-operator|!=
-literal|0x7f
 condition|)
 block|{
 name|stat0
@@ -2428,10 +2424,6 @@ operator|&&
 name|ostat1
 operator|!=
 literal|0xa5
-operator|&&
-name|ostat1
-operator|!=
-literal|0x7f
 condition|)
 block|{
 name|stat1
@@ -3002,28 +2994,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|stat0
-operator|&
-name|ATA_S_BUSY
-condition|)
-name|mask
-operator|&=
-operator|~
-literal|0x01
-expr_stmt|;
-if|if
-condition|(
-name|stat1
-operator|&
-name|ATA_S_BUSY
-condition|)
-name|mask
-operator|&=
-operator|~
-literal|0x02
-expr_stmt|;
-if|if
-condition|(
 name|bootverbose
 condition|)
 name|ata_printf
@@ -3033,9 +3003,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|"reset tp2 mask=%02x stat0=%02x stat1=%02x devices=0x%b\n"
-argument_list|,
-name|mask
+literal|"reset tp2 stat0=%02x stat1=%02x devices=0x%b\n"
 argument_list|,
 name|stat0
 argument_list|,
