@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	8.5 (Berkeley) %G%"
+literal|"@(#)umount.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -989,6 +989,17 @@ operator|(
 literal|1
 operator|)
 return|;
+name|hp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|MOUNT_NFS
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1074,11 +1085,7 @@ operator|=
 literal|':'
 expr_stmt|;
 block|}
-else|else
-name|hp
-operator|=
-name|NULL
-expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
