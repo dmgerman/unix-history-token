@@ -288,11 +288,30 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"PC Card bus -- kludge version"
+literal|"PC Card bus (classic)"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|pccard_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1570,7 +1589,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|bus_generic_attach
+name|pccard_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1762,9 +1781,11 @@ literal|"pccard"
 block|,
 name|pccard_methods
 block|,
-literal|1
-block|,
-comment|/* no softc */
+expr|sizeof
+operator|(
+expr|struct
+name|slot
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1792,7 +1813,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pccard
 argument_list|,
-name|pc98pcic
+name|mecia
 argument_list|,
 name|pccard_driver
 argument_list|,
@@ -1810,7 +1831,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pccard
 argument_list|,
-name|cbb
+name|tcic
 argument_list|,
 name|pccard_driver
 argument_list|,

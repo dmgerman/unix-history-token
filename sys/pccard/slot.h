@@ -318,9 +318,37 @@ name|int
 name|pwr_off_pending
 decl_stmt|;
 comment|/* Power status of slot */
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* Config system device. */
+name|dev_t
+name|d
+decl_stmt|;
+comment|/* fs device */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PCCARD_DEVICE2SOFTC
+parameter_list|(
+name|d
+parameter_list|)
+value|((struct slot *) device_get_softc(d))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_DEV2SOFTC
+parameter_list|(
+name|d
+parameter_list|)
+value|((struct slot *) (d)->si_drv1)
+end_define
 
 begin_enum
 enum|enum
@@ -337,8 +365,10 @@ begin_function_decl
 name|struct
 name|slot
 modifier|*
-name|pccard_alloc_slot
+name|pccard_init_slot
 parameter_list|(
+name|device_t
+parameter_list|,
 name|struct
 name|slot_ctrl
 modifier|*
