@@ -95,6 +95,20 @@ literal|"PCI"
 argument_list|)
 end_macro
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|pcib
+argument_list|,
+literal|"ACPI PCI bus methods"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * For locking, we assume the caller is not concurrent since this is  * triggered by newbus methods.  */
+end_comment
+
 begin_function
 name|int
 name|acpi_pcib_attach
@@ -324,6 +338,11 @@ expr_stmt|;
 comment|/* ACPI numbers pins 0-3, not 1-4 like the BIOS. */
 name|pin
 operator|--
+expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|pcib
+argument_list|)
 expr_stmt|;
 comment|/* Look up the PRT entry for this device. */
 name|entry
@@ -681,6 +700,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|pcib
+argument_list|)
+expr_stmt|;
 name|return_VALUE
 argument_list|(
 name|interrupt
