@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_VJC_COOKIE
-value|868219209
+value|868219210
 end_define
 
 begin_comment
@@ -128,6 +128,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_VJC_CONFIG_TYPE_INFO
+value|{				\ 	{							\ 	  { "enableComp",&ng_parse_uint8_type	},	\ 	  { "enableDecomp",&ng_parse_uint8_type	},	\ 	  { "maxChannel",&ng_parse_uint8_type	},	\ 	  { "compressCID",&ng_parse_uint8_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/* Netgraph commands */
 end_comment
 
@@ -137,6 +148,9 @@ block|{
 name|NGM_VJC_SET_CONFIG
 block|,
 comment|/* Supply a struct ngm_vjc_config */
+name|NGM_VJC_GET_CONFIG
+block|,
+comment|/* Returns a struct ngm_vjc_config */
 name|NGM_VJC_GET_STATE
 block|,
 comment|/* Returns current struct slcompress */
