@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cchar.c	5.4 (Berkeley) %G%"
+literal|"@(#)cchar.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,7 +408,7 @@ name|CHK
 parameter_list|(
 name|s
 parameter_list|)
-value|(*name == s[0]&& !strcmp(name, s))
+value|(*arg == s[0]&& !strcmp(arg, s))
 if|if
 condition|(
 name|CHK
