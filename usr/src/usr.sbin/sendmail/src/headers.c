@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.8 (Berkeley) %G%"
+literal|"@(#)headers.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1310,6 +1310,35 @@ operator|->
 name|h_link
 control|)
 block|{
+if|if
+condition|(
+name|h
+operator|->
+name|h_value
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|32
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s:<NULL>\n"
+argument_list|,
+name|h
+operator|->
+name|h_field
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* do early binding */
 if|if
 condition|(
@@ -1321,12 +1350,6 @@ name|h
 operator|->
 name|h_flags
 argument_list|)
-operator|&&
-name|h
-operator|->
-name|h_value
-operator|!=
-name|NULL
 condition|)
 block|{
 name|expand
@@ -1514,12 +1537,6 @@ comment|/* save the message-id for logging */
 if|if
 condition|(
 name|full
-operator|&&
-name|h
-operator|->
-name|h_value
-operator|!=
-name|NULL
 operator|&&
 name|strcasecmp
 argument_list|(
