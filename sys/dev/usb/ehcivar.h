@@ -231,6 +231,17 @@ name|EHCI_COMPANION_MAX
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_DONEINIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* ehci_init() has been called. */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -241,6 +252,9 @@ name|usbd_bus
 name|sc_bus
 decl_stmt|;
 comment|/* base device */
+name|int
+name|sc_flags
+decl_stmt|;
 name|bus_space_tag_t
 name|iot
 decl_stmt|;
@@ -592,6 +606,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ehci_detach
+parameter_list|(
+name|ehci_softc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -605,18 +631,6 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 end_if
-
-begin_function_decl
-name|int
-name|ehci_detach
-parameter_list|(
-name|ehci_softc_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -634,6 +648,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|ehci_power
+parameter_list|(
+name|int
+name|state
+parameter_list|,
+name|void
+modifier|*
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

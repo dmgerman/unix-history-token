@@ -505,6 +505,13 @@ init|=
 block|{
 name|DEVMETHOD
 argument_list|(
+name|bus_child_detached
+argument_list|,
+name|uhub_child_detached
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|device_probe
 argument_list|,
 name|uhub_match
@@ -531,7 +538,13 @@ argument_list|,
 name|uhub_child_location_str
 argument_list|)
 block|,
-comment|/* detach is not allowed for a root hub */
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|uhub_detach
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|device_suspend
