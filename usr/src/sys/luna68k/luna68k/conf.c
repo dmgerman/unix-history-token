@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.16 (Berkeley) 4/28/93  *  *	@(#)conf.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	8.2 (Berkeley) 11/14/93  *  *	@(#)conf.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -653,8 +653,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|dev_type_map
+argument_list|(
+name|mmmap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* read/write */
+comment|/* read, write, mmap */
 end_comment
 
 begin_define
@@ -666,7 +674,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	(dev_type_open((*))) nullop, (dev_type_close((*))) nullop, mmrw, \ 	mmrw, (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, 0 }
+value|{ \ 	(dev_type_open((*))) nullop, (dev_type_close((*))) nullop, mmrw, \ 	mmrw, (dev_type_ioctl((*))) enodev, (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, seltrue, mmmap, 0 }
 end_define
 
 begin_comment
@@ -864,7 +872,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	dev_init(c,n,select), (dev_type_map((*))) nullop, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	ttselect, (dev_type_map((*))) nullop, 0 }
 end_define
 
 begin_expr_stmt
@@ -1187,8 +1195,8 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|major
 argument_list|(
 name|dev
@@ -1196,30 +1204,12 @@ argument_list|)
 operator|==
 literal|2
 operator|&&
-operator|(
 name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|==
-literal|0
-operator|||
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|1
-operator|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
+operator|<
+literal|2
 operator|)
 return|;
 block|}
