@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.50 1999/05/04 12:59:59 kato Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.51 1999/07/06 19:22:48 des Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -100,108 +100,6 @@ include|#
 directive|include
 file|<net/if_types.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPX code is not tested.  FIXME.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipx/ipx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipx/ipx_if.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* To be used with IPv6 package of INRIA.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_comment
-comment|/* IPv6 added by shin 96.2.6 */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* XNS code is not tested.  FIXME.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netns/ns.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netns/ns_if.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
