@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.4	84/01/31	*/
+comment|/*	gethostnamadr.c	4.5	84/08/28	*/
 end_comment
 
 begin_include
@@ -147,7 +147,7 @@ operator|)
 return|;
 name|key
 operator|=
-name|dbmfetch
+name|dbm_fetch
 argument_list|(
 name|_host_db
 argument_list|,
@@ -362,7 +362,7 @@ operator|(
 operator|(
 name|_host_db
 operator|=
-name|ndbmopen
+name|dbm_open
 argument_list|(
 name|HOSTDB
 argument_list|,
@@ -415,7 +415,7 @@ operator|!
 name|_host_stayopen
 condition|)
 block|{
-name|ndbmclose
+name|dbm_close
 argument_list|(
 name|_host_db
 argument_list|)
@@ -480,7 +480,7 @@ operator|(
 operator|(
 name|_host_db
 operator|=
-name|ndbmopen
+name|dbm_open
 argument_list|(
 name|HOSTDB
 argument_list|,
@@ -530,7 +530,7 @@ operator|!
 name|_host_stayopen
 condition|)
 block|{
-name|ndbmclose
+name|dbm_close
 argument_list|(
 name|_host_db
 argument_list|)
