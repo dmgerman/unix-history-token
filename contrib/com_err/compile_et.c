@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. All advertising materials mentioning features or use of this software   *    must display the following acknowledgement:   *      This product includes software developed by Kungliga Tekniska   *      Högskolan and its contributors.   *  * 4. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1998-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_undef
@@ -28,7 +32,7 @@ literal|0
 end_if
 
 begin_endif
-unit|RCSID("$Id: compile_et.c,v 1.12 1999/04/01 09:13:52 joda Exp $");
+unit|RCSID("$Id: compile_et.c,v 1.16 2002/08/20 12:44:51 joda Exp $");
 endif|#
 directive|endif
 end_endif
@@ -267,7 +271,9 @@ name|fprintf
 argument_list|(
 name|c_file
 argument_list|,
-literal|"static const char *text[] = {\n"
+literal|"static const char *%s_error_strings[] = {\n"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 for|for
@@ -359,6 +365,22 @@ name|fprintf
 argument_list|(
 name|c_file
 argument_list|,
+literal|"#define num_errors %d\n"
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|c_file
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|c_file
+argument_list|,
 literal|"void initialize_%s_error_table_r(struct et_list **list)\n"
 argument_list|,
 name|name
@@ -375,8 +397,8 @@ name|fprintf
 argument_list|(
 name|c_file
 argument_list|,
-literal|"    initialize_error_table_r(list, text, "
-literal|"%s_num_errors, ERROR_TABLE_BASE_%s);\n"
+literal|"    initialize_error_table_r(list, %s_error_strings, "
+literal|"num_errors, ERROR_TABLE_BASE_%s);\n"
 argument_list|,
 name|name
 argument_list|,
@@ -417,8 +439,8 @@ name|fprintf
 argument_list|(
 name|c_file
 argument_list|,
-literal|"    init_error_table(text, ERROR_TABLE_BASE_%s, "
-literal|"%s_num_errors);\n"
+literal|"    init_error_table(%s_error_strings, ERROR_TABLE_BASE_%s, "
+literal|"num_errors);\n"
 argument_list|,
 name|name
 argument_list|,
@@ -588,7 +610,7 @@ name|fprintf
 argument_list|(
 name|h_file
 argument_list|,
-literal|"#include<com_right.h>\n"
+literal|"struct et_list;\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -650,28 +672,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|h_file
-argument_list|,
-literal|"\tERROR_TABLE_BASE_%s = %ld,\n"
-argument_list|,
-name|name
-argument_list|,
-name|base
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|h_file
-argument_list|,
-literal|"\t%s_err_base = %ld,\n"
-argument_list|,
-name|name
-argument_list|,
-name|base
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|ec
@@ -691,7 +691,7 @@ name|fprintf
 argument_list|(
 name|h_file
 argument_list|,
-literal|"\t%s = %ld,\n"
+literal|"\t%s = %ld%s\n"
 argument_list|,
 name|ec
 operator|->
@@ -702,6 +702,18 @@ operator|+
 name|ec
 operator|->
 name|number
+argument_list|,
+operator|(
+name|ec
+operator|->
+name|next
+operator|!=
+name|NULL
+operator|)
+condition|?
+literal|","
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -709,20 +721,27 @@ name|fprintf
 argument_list|(
 name|h_file
 argument_list|,
-literal|"\t%s_num_errors = %d\n"
+literal|"} %s_error_number;\n"
 argument_list|,
 name|name
-argument_list|,
-name|number
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|h_file
 argument_list|,
-literal|"} %s_error_number;\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|h_file
+argument_list|,
+literal|"#define ERROR_TABLE_BASE_%s %ld\n"
 argument_list|,
 name|name
+argument_list|,
+name|base
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -866,6 +885,14 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
+name|setprogname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getarg
