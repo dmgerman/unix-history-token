@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	routed.h	82/06/09	4.5	*/
+comment|/*	routed.h	82/06/09	4.6	*/
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|RIPCMD_REQUEST
-value|0x1
+value|1
 end_define
 
 begin_comment
@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|RIPCMD_RESPONSE
-value|0x2
+value|2
 end_define
 
 begin_comment
@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|RIPCMD_TRACEON
-value|0x3
+value|3
 end_define
 
 begin_comment
@@ -108,12 +108,52 @@ begin_define
 define|#
 directive|define
 name|RIPCMD_TRACEOFF
-value|0x4
+value|4
 end_define
 
 begin_comment
 comment|/* turn it off */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RIPCMD_MAX
+value|5
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RIPCMDS
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ripcmds
+index|[
+name|RIPCMD_MAX
+index|]
+init|=
+block|{
+literal|"#0"
+block|,
+literal|"REQUEST"
+block|,
+literal|"RESPONSE"
+block|,
+literal|"TRACEON"
+block|,
+literal|"TRACEOFF"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
