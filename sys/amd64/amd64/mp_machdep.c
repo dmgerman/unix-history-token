@@ -9327,7 +9327,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Set up the idle context for the BSP.  Similar to above except 	 * that some was done by locore, some by pmap.c and some is implicit 	 * because the BSP is cpu#0 and the page is initially zero, and also 	 * because we can refer to variables by name on the BSP.. 	 */
+comment|/* 	 * Set up the idle context for the BSP.  Similar to above except 	 * that some was done by locore, some by pmap.c and some is implicit 	 * because the BSP is cpu#0 and the page is initially zero and also 	 * because we can refer to variables by name on the BSP.. 	 */
 comment|/* Allocate and setup BSP idle stack */
 name|stack
 operator|=
@@ -9742,7 +9742,7 @@ operator|&
 literal|0xff
 expr_stmt|;
 block|}
-comment|/*  * this function starts the AP (application processor) identified  * by the APIC ID 'physicalCpu'.  It does quite a "song and dance"  * to accomplish this.  This is necessary because of the nuances  * of the different hardware we might encounter.  It ain't pretty,  * but it seems to work.  */
+comment|/*  * This function starts the AP (application processor) identified  * by the APIC ID 'physicalCpu'.  It does quite a "song and dance"  * to accomplish this.  This is necessary because of the nuances  * of the different hardware we might encounter.  It isn't pretty,  * but it seems to work.  */
 specifier|static
 name|int
 name|start_ap
