@@ -3474,8 +3474,6 @@ argument_list|,
 name|runlen
 argument_list|,
 name|pagerflags
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 for|for
