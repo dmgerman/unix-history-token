@@ -5,12 +5,12 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reset.c	4.2 (Berkeley) %G%"
+literal|"@(#)reset.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * reset   */
+comment|/*  * reset - restore tty to sensible state after crapping out in raw mode.  */
 end_comment
 
 begin_include
@@ -295,6 +295,25 @@ name|TIOCSLTC
 argument_list|,
 operator|&
 name|ltbuf
+argument_list|)
+expr_stmt|;
+name|execlp
+argument_list|(
+literal|"tset"
+argument_list|,
+literal|"tset"
+argument_list|,
+literal|"-Q"
+argument_list|,
+literal|"-I"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* fix term dependent stuff */
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
