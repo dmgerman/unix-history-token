@@ -1,11 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.6 (Berkeley) %G%  */
 end_comment
 
-begin_comment
-comment|/*  * Header file for standalone package  */
-end_comment
+begin_include
+include|#
+directive|include
+file|"saioctl.h"
+end_include
 
 begin_include
 include|#
@@ -18,6 +20,13 @@ define|#
 directive|define
 name|UNIX
 value|"/vmunix"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0
 end_define
 
 begin_comment
@@ -122,13 +131,6 @@ define|#
 directive|define
 name|i_fs
 value|i_un.ui_fs
-end_define
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
 end_define
 
 begin_define
@@ -264,6 +266,24 @@ value|0xff00
 end_define
 
 begin_comment
+comment|/*  * Request codes. Must be the same as F_XXX above  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|READ
+value|F_READ
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE
+value|F_WRITE
+end_define
+
+begin_comment
 comment|/*  * Lseek call.  */
 end_comment
 
@@ -323,6 +343,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|devsw
 name|devsw
@@ -330,11 +351,20 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* device array */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|int
 name|ndevs
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* number of elements in devsw[] */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -380,52 +410,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Request codes. Must be the same as F_XXX above  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|READ
-value|F_READ
-end_define
-
-begin_define
-define|#
-directive|define
-name|WRITE
-value|F_WRITE
-end_define
-
-begin_define
-define|#
-directive|define
-name|NBUFS
-value|4
-end_define
-
-begin_decl_stmt
-name|char
-name|b
-index|[
-name|NBUFS
-index|]
-index|[
-name|MAXBSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|blknos
-index|[
-name|NBUFS
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -434,6 +418,7 @@ value|4
 end_define
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|iob
 name|iob
@@ -442,153 +427,6 @@ name|NFILES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* ioctl's -- for disks just now */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIOHDR
-value|(('d'<<8)|1)
-end_define
-
-begin_comment
-comment|/* next i/o includes header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIOCHECK
-value|(('d'<<8)|2)
-end_define
-
-begin_comment
-comment|/* next i/o checks data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIOHCHECK
-value|(('d'<<8)|3)
-end_define
-
-begin_comment
-comment|/* next i/o checks header& data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIONOBAD
-value|(('d'<<8)|4)
-end_define
-
-begin_comment
-comment|/* inhibit bad sector forwarding */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIODOBAD
-value|(('d'<<8)|5)
-end_define
-
-begin_comment
-comment|/* enable bad sector forwarding */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIOECCLIM
-value|(('d'<<8)|6)
-end_define
-
-begin_comment
-comment|/* set limit to ecc correction, bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIORETRIES
-value|(('d'<<8)|7)
-end_define
-
-begin_comment
-comment|/* set retry count for unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIODEVDATA
-value|(('d'<<8)|8)
-end_define
-
-begin_comment
-comment|/* get pointer to pack label */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIOSSI
-value|(('d'<<8)|9)
-end_define
-
-begin_comment
-comment|/* set skip sector inhibit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIONOSSI
-value|(('d'<<8)|10)
-end_define
-
-begin_comment
-comment|/* inhibit skip sector handling */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIOSSDEV
-value|(('d'<<8)|11)
-end_define
-
-begin_comment
-comment|/* is device skip sector type? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIODEBUG
-value|(('d'<<8)|12)
-end_define
-
-begin_comment
-comment|/* enable/disable debugging */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAIOGBADINFO
-value|(('d'<<8)|13)
-end_define
-
-begin_comment
-comment|/* get bad-sector table */
-end_comment
 
 end_unit
 
