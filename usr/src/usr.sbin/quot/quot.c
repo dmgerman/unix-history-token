@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.8 (Berkeley) 83/08/19"
+literal|"@(#)quot.c	4.9 (Berkeley) 83/09/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -1929,6 +1929,8 @@ operator|(
 name|outrangename
 operator|)
 return|;
+name|rescan
+label|:
 if|if
 condition|(
 name|init
@@ -2109,7 +2111,6 @@ name|pw_uid
 operator|==
 name|uid
 condition|)
-block|{
 return|return
 operator|(
 operator|&
@@ -2123,19 +2124,13 @@ index|]
 operator|)
 return|;
 block|}
-block|}
 name|init
 operator|=
 literal|2
 expr_stmt|;
-name|endpwent
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|rescan
+goto|;
 block|}
 end_function
 
