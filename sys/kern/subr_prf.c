@@ -508,6 +508,23 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* PANICWAIT */
+ifdef|#
+directive|ifdef
+name|PANICDELAY
+name|printf
+argument_list|(
+literal|"Waiting 20 secs....\n"
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|20000000
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PANICDELAY */
 endif|#
 directive|endif
 name|boot
