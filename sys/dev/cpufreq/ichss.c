@@ -944,6 +944,8 @@ name|dev
 parameter_list|)
 block|{
 name|device_t
+name|est_dev
+decl_stmt|,
 name|perf_dev
 decl_stmt|;
 name|int
@@ -951,7 +953,7 @@ name|error
 decl_stmt|,
 name|type
 decl_stmt|;
-comment|/* 	 * If the ACPI perf driver has attached and is not just offering 	 * info, let it manage things.   	 */
+comment|/* 	 * If the ACPI perf driver has attached and is not just offering 	 * info, let it manage things.  Also, if Enhanced SpeedStep is 	 * available, don't attach. 	 */
 name|perf_dev
 operator|=
 name|device_find_child
@@ -1007,6 +1009,35 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|est_dev
+operator|=
+name|device_find_child
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"est"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|est_dev
+operator|&&
+name|device_is_attached
+argument_list|(
+name|est_dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
