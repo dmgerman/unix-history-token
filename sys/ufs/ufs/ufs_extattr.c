@@ -1470,9 +1470,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|len
-decl_stmt|,
 name|flags
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 if|if
 condition|(
