@@ -9476,24 +9476,12 @@ operator|!=
 name|bsize
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"WARNING: Wrong block size on vnode: %d should be %d\n"
-argument_list|,
-name|vp
-operator|->
-name|v_bsize
-argument_list|,
-name|bsize
-argument_list|)
-expr_stmt|;
-name|vprint
-argument_list|(
-literal|"Please email phk@FreeBSD.org this info\n"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("WARNING: Wrong block size on vnode: %d should be %d\n", vp->v_bsize, bsize);
+endif|#
+directive|endif
 name|vp
 operator|->
 name|v_bsize
