@@ -3958,7 +3958,7 @@ name|sprintf
 argument_list|(
 name|red
 argument_list|,
-literal|"\n	  %cRED w_q %f min_th %d max_th %d max_p %f"
+literal|"\n\t  %cRED w_q %f min_th %d max_th %d max_p %f"
 argument_list|,
 operator|(
 name|fs
@@ -7425,7 +7425,7 @@ literal|1
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"rule %u: setsockopt(%s)"
+literal|"rule %u: setsockopt(IP_DUMMYNET_DEL)"
 argument_list|,
 name|do_pipe
 operator|==
@@ -7440,8 +7440,6 @@ operator|.
 name|fs
 operator|.
 name|fs_nr
-argument_list|,
-literal|"IP_DUMMYNET_DEL"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9734,7 +9732,7 @@ argument_list|(
 name|EX_DATAERR
 argument_list|,
 literal|"net.inet.ip.dummynet.red_lookup_depth"
-literal|" must greater than zero"
+literal|" must be greater than zero"
 argument_list|)
 expr_stmt|;
 name|len
@@ -9784,7 +9782,7 @@ argument_list|(
 name|EX_DATAERR
 argument_list|,
 literal|"net.inet.ip.dummynet.red_avg_pkt_size must"
-literal|"greater than zero"
+literal|" be greater than zero"
 argument_list|)
 expr_stmt|;
 name|len
