@@ -211,7 +211,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|dyn_sysctl
+literal|"dyn_sysctl"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -234,7 +234,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|dyn_sysctl
+literal|"dyn_sysctl"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -273,7 +273,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|long_a
+literal|"long_a"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -295,7 +295,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|int_b
+literal|"int_b"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -321,7 +321,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nextlevel
+literal|"nextlevel"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -342,7 +342,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|string_c
+literal|"string_c"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -376,7 +376,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|dyn_sysctl
+literal|"dyn_sysctl"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -415,7 +415,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|procedure
+literal|"procedure"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -453,7 +453,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nextlevel
+literal|"nextlevel"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -474,7 +474,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|string_c1
+literal|"string_c1"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -508,7 +508,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|bad
+literal|"bad"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -529,7 +529,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|string_c
+literal|"string_c"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
