@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.10 (Berkeley) %G%"
+literal|"@(#)disks.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,13 +28,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"systat.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
 end_include
 
 begin_include
@@ -48,6 +54,62 @@ include|#
 directive|include
 file|<paths.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dkselect
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|read_names
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -127,12 +189,38 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|dkinit
-argument_list|()
-end_macro
+begin_decl_stmt
+name|int
+name|dk_ndrive
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_decl_stmt
+name|int
+modifier|*
+name|dk_select
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
+modifier|*
+name|dk_mspw
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|dr_name
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|dkinit
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -165,11 +253,27 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
 name|kvm_nlist
+argument_list|(
+name|kd
+argument_list|,
+name|nlst
+argument_list|)
+condition|)
+block|{
+name|nlisterr
 argument_list|(
 name|nlst
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|nlst
@@ -466,26 +570,24 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|dkcmd
-argument_list|(
-argument|cmd
-argument_list|,
-argument|args
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|args
+parameter_list|)
 name|char
 modifier|*
 name|cmd
 decl_stmt|,
-modifier|*
+decl|*
 name|args
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -654,12 +756,11 @@ directive|include
 file|<vax/mba/mbavar.h>
 end_include
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|read_names
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|mba_device
@@ -933,7 +1034,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -952,12 +1053,11 @@ directive|include
 file|<sundev/mbvar.h>
 end_include
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|read_names
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|static
 name|int
@@ -1114,7 +1214,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1137,12 +1237,11 @@ begin_comment
 comment|/*  * Read the drive names out of kmem.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|read_names
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|vba_device
@@ -1190,18 +1289,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"vmstat: Disk init info not in namelist\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 for|for
 control|(
@@ -1286,8 +1383,13 @@ name|ui_unit
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1300,32 +1402,37 @@ directive|ifdef
 name|hp300
 end_ifdef
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|read_names
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
+parameter_list|()
+block|{
+comment|/* XXX */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_decl_stmt
+specifier|static
+name|void
 name|dkselect
 argument_list|(
-argument|args
+name|args
 argument_list|,
-argument|truefalse
+name|truefalse
 argument_list|,
-argument|selections
+name|selections
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|args
