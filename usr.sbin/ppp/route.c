@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.32 1997/12/15 20:21:15 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.33 1997/12/17 00:19:25 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -1538,10 +1538,8 @@ parameter_list|(
 name|u_long
 name|f
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|format
+name|int
+name|max
 parameter_list|)
 block|{
 if|if
@@ -1566,6 +1564,26 @@ name|p
 init|=
 name|bits
 decl_stmt|;
+if|if
+condition|(
+name|max
+operator|>
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+operator|-
+literal|1
+condition|)
+name|max
+operator|=
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|flags
@@ -1575,6 +1593,12 @@ init|;
 name|p
 operator|->
 name|b_mask
+operator|&&
+name|flags
+operator|-
+name|name
+operator|<
+name|max
 condition|;
 name|p
 operator|++
@@ -1604,7 +1628,11 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-name|format
+literal|"%-*.*s"
+argument_list|,
+name|max
+argument_list|,
+name|max
 argument_list|,
 name|name
 argument_list|)
@@ -2475,14 +2503,14 @@ name|rtm
 operator|->
 name|rtm_flags
 argument_list|,
-literal|"%-6.6s "
+literal|6
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|"%s\n"
+literal|" %s\n"
 argument_list|,
 name|Index2Nam
 argument_list|(
