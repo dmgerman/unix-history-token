@@ -185,7 +185,7 @@ expr_stmt|;
 block|}
 name|t
 operator|=
-name|wctype
+name|wctrans
 argument_list|(
 literal|"elephant"
 argument_list|)
@@ -318,7 +318,7 @@ expr_stmt|;
 block|}
 name|t
 operator|=
-name|wctype
+name|wctrans
 argument_list|(
 literal|"elephant"
 argument_list|)
