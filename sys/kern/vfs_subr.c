@@ -8328,6 +8328,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"interlock not released."
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
