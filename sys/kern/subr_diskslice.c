@@ -706,9 +706,6 @@ name|diskslice
 modifier|*
 name|sp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|blkno
 operator|=
 name|bp
