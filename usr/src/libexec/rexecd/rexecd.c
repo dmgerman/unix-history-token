@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	5.2 (Berkeley) %G%"
+literal|"@(#)rexecd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,8 +605,6 @@ argument_list|,
 name|SOCK_STREAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -633,8 +631,6 @@ sizeof|sizeof
 argument_list|(
 name|asin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
