@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c 1.4 %G%"
+literal|"@(#)start.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,10 +414,6 @@ end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-name|filename
-decl_stmt|;
 if|if
 condition|(
 name|ss_variables
@@ -436,26 +432,14 @@ name|curfunc
 operator|=
 name|program
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|filename
-operator|=
+name|skimsource
+argument_list|(
 name|srcfilename
 argument_list|(
 name|pc
 argument_list|)
-operator|)
-operator|!=
-name|cursource
-condition|)
-block|{
-name|skimsource
-argument_list|(
-name|filename
 argument_list|)
 expr_stmt|;
-block|}
 name|curline
 operator|=
 name|lastlinenum
@@ -520,6 +504,15 @@ argument_list|(
 name|p
 argument_list|,
 name|SIGILL
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|psigtrace
+argument_list|(
+name|p
+argument_list|,
+name|SIGBUS
 argument_list|,
 name|TRUE
 argument_list|)

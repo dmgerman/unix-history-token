@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)step.c 1.1 %G%"
+literal|"@(#)step.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,26 +353,6 @@ name|curline
 operator|=
 name|line
 expr_stmt|;
-name|filename
-operator|=
-name|srcfilename
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|filename
-operator|!=
-name|cursource
-condition|)
-block|{
-name|skimsource
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
