@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.11 92/01/21$  *  *      @(#)st.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.11 92/01/21$  *  *      @(#)st.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1352,7 +1352,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"st%d: %s %s rev %s\n"
+literal|"st%d: %s, %s rev %s\n"
 argument_list|,
 name|hd
 operator|->
@@ -1695,6 +1695,21 @@ literal|8
 index|]
 argument_list|,
 literal|11
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|bcmp
+argument_list|(
+literal|"OPEN REEL TAPE"
+argument_list|,
+operator|&
+name|idstr
+index|[
+literal|8
+index|]
+argument_list|,
+literal|14
 argument_list|)
 operator|==
 literal|0
