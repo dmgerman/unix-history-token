@@ -3790,7 +3790,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vap
+name|ap
+operator|->
+name|a_vap
 operator|->
 name|va_fsid
 operator|==
@@ -3798,7 +3800,9 @@ name|um
 operator|->
 name|um_upperdev
 condition|)
-name|vap
+name|ap
+operator|->
+name|a_vap
 operator|->
 name|va_fsid
 operator|=
