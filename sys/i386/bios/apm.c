@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.100 1999/08/21 06:24:11 msmith Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.101 1999/08/22 14:48:00 iwasaki Exp $  */
 end_comment
 
 begin_include
@@ -3593,6 +3593,53 @@ comment|/* device driver definitions */
 end_comment
 
 begin_comment
+comment|/*  * Create "connection point"  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|apm_identify
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|)
+block|{
+name|device_t
+name|child
+decl_stmt|;
+name|child
+operator|=
+name|BUS_ADD_CHILD
+argument_list|(
+name|parent
+argument_list|,
+literal|0
+argument_list|,
+literal|"apm"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|child
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"apm_identify"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * probe for APM BIOS  */
 end_comment
 
@@ -6293,6 +6340,13 @@ index|[]
 init|=
 block|{
 comment|/* Device interface */
+name|DEVMETHOD
+argument_list|(
+name|device_identify
+argument_list|,
+name|apm_identify
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
