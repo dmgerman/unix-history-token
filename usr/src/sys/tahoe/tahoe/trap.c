@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.7	86/12/15	*/
+comment|/*	trap.c	1.8	88/05/21	*/
 end_comment
 
 begin_include
@@ -347,7 +347,7 @@ block|{
 default|default:
 ifdef|#
 directive|ifdef
-name|KDB
+name|KADB
 if|if
 condition|(
 name|kdb_trap
