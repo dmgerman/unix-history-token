@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_sysvipc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_param.h"
 end_include
 
@@ -26,40 +20,6 @@ include|#
 directive|include
 file|<sys/param.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVSEM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/sem.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVMSG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/msg.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * System parameter formulae.  *  * This file is copied into each directory where we compile  * the kernel; it should be modified there to suit local taste  * if necessary.  *  * Compiled with -DMAXUSERS=xx  */
@@ -252,103 +212,6 @@ init|=
 name|NSFBUFS
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Values in support of System V compatible semaphores.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVSEM
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|seminfo
-name|seminfo
-init|=
-block|{
-name|SEMMAP
-block|,
-comment|/* # of entries in semaphore map */
-name|SEMMNI
-block|,
-comment|/* # of semaphore identifiers */
-name|SEMMNS
-block|,
-comment|/* # of semaphores in system */
-name|SEMMNU
-block|,
-comment|/* # of undo structures in system */
-name|SEMMSL
-block|,
-comment|/* max # of semaphores per id */
-name|SEMOPM
-block|,
-comment|/* max # of operations per semop call */
-name|SEMUME
-block|,
-comment|/* max # of undo entries per process */
-name|SEMUSZ
-block|,
-comment|/* size in bytes of undo structure */
-name|SEMVMX
-block|,
-comment|/* semaphore maximum value */
-name|SEMAEM
-comment|/* adjust on exit max value */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Values in support of System V compatible messages.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVMSG
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|msginfo
-name|msginfo
-init|=
-block|{
-name|MSGMAX
-block|,
-comment|/* max chars in a message */
-name|MSGMNI
-block|,
-comment|/* # of message queue identifiers */
-name|MSGMNB
-block|,
-comment|/* max chars in a queue */
-name|MSGTQL
-block|,
-comment|/* max messages in system */
-name|MSGSSZ
-block|,
-comment|/* size of a message segment */
-comment|/* (must be small power of 2 greater than 4) */
-name|MSGSEG
-comment|/* number of message segments */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * These may be set to nonzero here or by patching.  * If they are nonzero at bootstrap time then they are  * initialized to values dependent on the memory size.  */
