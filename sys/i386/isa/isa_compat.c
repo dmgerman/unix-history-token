@@ -119,6 +119,24 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
+begin_comment
+comment|/*  * The 'priv' field has been removed from 'struct driver' since the  * only remaining user of that field was this compatibility layer. We  * use this field to map from the newbus driver stub to the underlying  * old-style isa driver.  */
+end_comment
+
+begin_struct
+struct|struct
+name|isa_compat_driver
+block|{
+name|KOBJ_CLASS_FIELDS
+expr_stmt|;
+name|void
+modifier|*
+name|priv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|isa_compat_resources
@@ -623,6 +641,11 @@ name|dev
 parameter_list|)
 block|{
 name|struct
+name|isa_compat_driver
+modifier|*
+name|drv
+decl_stmt|;
+name|struct
 name|isa_device
 modifier|*
 name|dvp
@@ -666,14 +689,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill in the isa_device fields. 	 */
-name|dvp
-operator|->
-name|id_driver
+name|drv
 operator|=
+operator|(
+expr|struct
+name|isa_compat_driver
+operator|*
+operator|)
 name|device_get_driver
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|dvp
+operator|->
+name|id_driver
+operator|=
+name|drv
 operator|->
 name|priv
 expr_stmt|;
@@ -1316,7 +1348,8 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-name|driver_t
+name|struct
+name|isa_compat_driver
 modifier|*
 name|driver
 decl_stmt|;
@@ -1342,7 +1375,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|driver_t
+expr|struct
+name|isa_compat_driver
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -1419,6 +1453,9 @@ name|devclass_add_driver
 argument_list|(
 name|isa_devclass
 argument_list|,
+operator|(
+name|kobj_class_t
+operator|)
 name|driver
 argument_list|)
 expr_stmt|;
