@@ -265,7 +265,7 @@ modifier|*
 name|request
 parameter_list|)
 block|{
-comment|/* safety check, device might have been detached FIXME SOS */
+comment|/* safetybelt for HW that went away */
 if|if
 condition|(
 operator|!
@@ -274,6 +274,16 @@ operator|->
 name|device
 operator|->
 name|param
+operator|||
+name|request
+operator|->
+name|device
+operator|->
+name|channel
+operator|->
+name|flags
+operator|&
+name|ATA_HWGONE
 condition|)
 block|{
 name|request
