@@ -516,6 +516,8 @@ operator|->
 name|chunks
 operator|->
 name|part
+operator|->
+name|part
 init|;
 name|c1
 condition|;
