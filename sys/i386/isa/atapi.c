@@ -16,7 +16,7 @@ end_undef
 begin_include
 include|#
 directive|include
-file|"wd.h"
+file|"wdc.h"
 end_include
 
 begin_include
