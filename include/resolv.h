@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  *
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	From Id: resolv.h,v 8.12 1998/04/28 19:36:46 halley Exp $  *	$Id: resolv.h,v 1.15 1998/06/11 08:55:13 peter Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	From Id: resolv.h,v 8.12 1998/04/28 19:36:46 halley Exp $  *	$Id: resolv.h,v 1.16 1998/06/11 12:52:45 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -57,17 +57,6 @@ directive|define
 name|__RES
 value|19960801
 end_define
-
-begin_comment
-comment|/*  * This used to be defined in res_query.c, now it's in herror.c.  It was  * never extern'd by any *.h file before it was placed here.  herror.c is  * part of libresolv.a even though it might make more sense in libnetdb.a  * or even libnet.a.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * inital name server(s) to query and the domain search list.  */
