@@ -1301,6 +1301,15 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|tail
+operator|<
+name|result
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|brk
 argument_list|(
 name|tail
