@@ -1249,7 +1249,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"targenlun - Enable Lun Rejected for status 0x%x\n"
+literal|"targenlun - Enable Lun Rejected with status 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -2695,6 +2695,17 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|cam_periph_release
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
