@@ -515,6 +515,12 @@ define|\
 value|((*(tag)->intr_disestablish)((handle), (ih)))
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* Socket functions. */
 end_comment
@@ -544,6 +550,15 @@ parameter_list|)
 define|\
 value|((*(tag)->socket_disable)((handle)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_struct
 struct|struct

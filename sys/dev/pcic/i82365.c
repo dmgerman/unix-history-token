@@ -131,6 +131,12 @@ directive|include
 file|<dev/pcic/i82365var.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|PCICDEBUG
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -141,7 +147,7 @@ begin_decl_stmt
 name|int
 name|pcic_debug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -153,6 +159,16 @@ parameter_list|(
 name|arg
 parameter_list|)
 value|if (pcic_debug) printf arg;
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRINTF
+parameter_list|(
+name|arg
+parameter_list|)
+value|if (pcic_debug) device_printf arg;
 end_define
 
 begin_else
@@ -169,15 +185,6 @@ name|arg
 parameter_list|)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* To later turn into debug */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -185,8 +192,12 @@ name|DEVPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
-value|device_printf arg;
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1264,13 +1275,8 @@ index|[
 literal|0
 index|]
 operator|.
-name|ph_parent
+name|sc
 operator|=
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
 name|sc
 expr_stmt|;
 name|sc
@@ -1410,13 +1416,8 @@ index|[
 literal|1
 index|]
 operator|.
-name|ph_parent
+name|sc
 operator|=
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
 name|sc
 expr_stmt|;
 name|sc
@@ -1557,13 +1558,8 @@ index|[
 literal|2
 index|]
 operator|.
-name|ph_parent
+name|sc
 operator|=
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
 name|sc
 expr_stmt|;
 name|sc
@@ -1734,13 +1730,8 @@ index|[
 literal|3
 index|]
 operator|.
-name|ph_parent
+name|sc
 operator|=
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
 name|sc
 expr_stmt|;
 name|sc
@@ -2579,16 +2570,9 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-operator|(
 name|h
 operator|->
-name|ph_parent
-operator|)
+name|sc
 decl_stmt|;
 while|while
 condition|(
@@ -2819,16 +2803,14 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: insertion event\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"insertion event\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2955,16 +2937,14 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: removal event\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"removal event\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3033,16 +3013,9 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-operator|(
 name|h
 operator|->
-name|ph_parent
-operator|)
+name|sc
 decl_stmt|;
 comment|/* 	 * queue creation of a kernel thread to handle insert/removal events. 	 */
 operator|*
@@ -3121,16 +3094,14 @@ operator|&
 name|PCIC_CIRRUS_MISC_CTL_2_SUSPEND
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: socket %02x was suspended\n"
-operator|,
 name|sc
 operator|->
 name|dev
-operator|.
-name|dv_xname
+operator|,
+literal|"socket %02x was suspended\n"
 operator|,
 name|h
 operator|->
@@ -3314,16 +3285,14 @@ operator|&
 name|PCIC_CSC_GPI
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: %02x GPI\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"%02x GPI\n"
 operator|,
 name|h
 operator|->
@@ -3351,16 +3320,14 @@ argument_list|,
 name|PCIC_IF_STATUS
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: %02x CD %x\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"%02x CD %x\n"
 operator|,
 name|h
 operator|->
@@ -3390,16 +3357,14 @@ operator|!=
 name|PCIC_LASTSTATE_PRESENT
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: enqueing INSERTION event\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"enqueing INSERTION event\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3430,16 +3395,14 @@ name|PCIC_LASTSTATE_PRESENT
 condition|)
 block|{
 comment|/* Deactivate the card now. */
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: deactivating card\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"deactivating card\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3448,16 +3411,14 @@ argument_list|(
 name|h
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: enqueing REMOVAL event\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"enqueing REMOVAL event\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3496,16 +3457,14 @@ operator|&
 name|PCIC_CSC_READY
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: %02x READY\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"%02x READY\n"
 operator|,
 name|h
 operator|->
@@ -3522,16 +3481,14 @@ operator|&
 name|PCIC_CSC_BATTWARN
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: %02x BATTWARN\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"%02x BATTWARN\n"
 operator|,
 name|h
 operator|->
@@ -3547,16 +3504,14 @@ operator|&
 name|PCIC_CSC_BATTDEAD
 condition|)
 block|{
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: %02x BATTDEAD\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
+operator|,
+literal|"%02x BATTDEAD\n"
 operator|,
 name|h
 operator|->
@@ -3664,6 +3619,19 @@ modifier|*
 name|h
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"pcic_attach_card h %p h->dev %p\n"
+operator|,
+name|h
+operator|,
+name|h
+operator|->
+name|dev
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3677,7 +3645,13 @@ operator|)
 condition|)
 block|{
 comment|/* call the MI attach function */
-comment|/* XXX pccard_card_attach(h->pccard); */
+name|pccard_card_attach
+argument_list|(
+name|h
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|h
 operator|->
 name|flags
@@ -3728,7 +3702,15 @@ operator|~
 name|PCIC_FLAG_CARDP
 expr_stmt|;
 comment|/* call the MI detach function */
-comment|/* XXX pccard_card_detach(h->pccard, flags); */
+name|pccard_card_detach
+argument_list|(
+name|h
+operator|->
+name|dev
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3758,7 +3740,7 @@ name|pccard_card_deactivate
 argument_list|(
 name|h
 operator|->
-name|pccard
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* power down the socket */
@@ -3824,16 +3806,9 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-operator|(
 name|h
 operator|->
-name|ph_parent
-operator|)
+name|sc
 decl_stmt|;
 comment|/* out of sc->memh, allocate as many pages as necessary */
 comment|/* convert size to PCIC pages */
@@ -4026,16 +4001,9 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-operator|(
 name|h
 operator|->
-name|ph_parent
-operator|)
+name|sc
 decl_stmt|;
 name|sc
 operator|->
@@ -4623,16 +4591,9 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-operator|(
 name|h
 operator|->
-name|ph_parent
-operator|)
+name|sc
 decl_stmt|;
 name|win
 operator|=
@@ -4995,16 +4956,9 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-operator|(
 name|h
 operator|->
-name|ph_parent
-operator|)
+name|sc
 decl_stmt|;
 comment|/* 	 * Allocate some arbitrary I/O space. 	 */
 name|iot
@@ -5561,16 +5515,9 @@ name|pcic_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-operator|(
 name|h
 operator|->
-name|ph_parent
-operator|)
+name|sc
 decl_stmt|;
 comment|/* XXX Sanity check offset/size. */
 name|win
@@ -5960,16 +5907,24 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|pcic_chip_socket_enable
+name|int
+name|pcic_enable_socket
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
 name|struct
 name|pcic_handle
 modifier|*
 name|h
-parameter_list|)
-block|{
+init|=
+name|NULL
+decl_stmt|;
+comment|/* XXXIMPXXX */
 name|int
 name|cardtype
 decl_stmt|,
@@ -6218,7 +6173,7 @@ name|pccard_card_gettype
 argument_list|(
 name|h
 operator|->
-name|pccard
+name|dev
 argument_list|)
 expr_stmt|;
 name|reg
@@ -6270,20 +6225,14 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"%s: pcic_chip_socket_enable %02x cardtype %s %02x\n"
-operator|,
 name|h
 operator|->
-name|ph_parent
-operator|->
-name|dv_xname
+name|dev
 operator|,
-name|h
-operator|->
-name|sock
+literal|"pcic_chip_socket_enable cardtype %s %02x\n"
 operator|,
 operator|(
 operator|(
@@ -6366,20 +6315,31 @@ argument_list|,
 name|win
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|pcic_chip_socket_disable
+name|int
+name|pcic_disable_socket
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
 name|struct
 name|pcic_handle
 modifier|*
 name|h
-parameter_list|)
-block|{
+init|=
+name|NULL
+decl_stmt|;
+comment|/* XXXIMPXXX */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -6405,6 +6365,9 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -497,6 +497,9 @@ decl_stmt|;
 name|pccard_chipset_handle_t
 name|pch
 decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
 comment|/* this stuff is for the card */
 name|struct
 name|pccard_card
@@ -509,7 +512,7 @@ decl_stmt|;
 name|int
 name|sc_enabled_count
 decl_stmt|;
-comment|/* how many functions are 						   enabled */
+comment|/* num functions enabled */
 comment|/* 	 * These are passed down from the PCCARD chip, and exist only 	 * so that cards with Very Special address allocation needs 	 * know what range they should be dealing with. 	 */
 name|bus_addr_t
 name|iobase
@@ -560,30 +563,6 @@ name|struct
 name|pccard_config_entry
 modifier|*
 name|cfe
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|pccard_attach_args
-block|{
-name|int32_t
-name|manufacturer
-decl_stmt|;
-name|int32_t
-name|product
-decl_stmt|;
-name|struct
-name|pccard_card
-modifier|*
-name|card
-decl_stmt|;
-name|struct
-name|pccard_function
-modifier|*
-name|pf
 decl_stmt|;
 block|}
 struct|;

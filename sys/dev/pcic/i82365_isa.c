@@ -117,6 +117,12 @@ directive|include
 file|<dev/pcic/i82365var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"power_if.h"
+end_include
+
 begin_comment
 comment|/*****************************************************************************  * Configurable parameters.  *****************************************************************************/
 end_comment
@@ -1387,10 +1393,23 @@ directive|if
 literal|0
 comment|/* pccard/cardbus interface */
 block|DEVMETHOD(card_set_resource_attribute, pcic_set_resource_attribute), 	DEVMETHOD(card_get_resource_attribute, pcic_get_resource_attribute),
-comment|/* Power Interface */
-comment|/* Not yet */
 endif|#
 directive|endif
+comment|/* Power Interface */
+name|DEVMETHOD
+argument_list|(
+name|power_enable_socket
+argument_list|,
+name|pcic_enable_socket
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|power_disable_socket
+argument_list|,
+name|pcic_disable_socket
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
