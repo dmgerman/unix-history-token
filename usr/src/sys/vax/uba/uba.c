@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -555,12 +555,24 @@ name|ubinfo
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|VAX730
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX630
+argument_list|)
 if|if
 condition|(
 name|cpu
 operator|==
 name|VAX_730
+operator|||
+name|cpu
+operator|==
+name|VAX_630
 condition|)
 name|flags
 operator|&=
@@ -1644,9 +1656,20 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|defined
+argument_list|(
 name|VAX730
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX630
+argument_list|)
 case|case
 name|VAX_730
+case|:
+case|case
+name|VAX_630
 case|:
 break|break;
 endif|#
@@ -1922,6 +1945,14 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|VAX630
+case|case
+name|VAX_630
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
 name|defined
 argument_list|(
 name|VAX750
@@ -1930,6 +1961,11 @@ operator|||
 name|defined
 argument_list|(
 name|VAX730
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX630
 argument_list|)
 name|mtpr
 argument_list|(

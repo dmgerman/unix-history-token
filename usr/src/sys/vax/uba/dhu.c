@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	4.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	4.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1508,6 +1508,17 @@ name|overrun
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VAX630
+operator|(
+name|void
+operator|)
+name|spl5
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ui
 operator|=
 name|dhuinfo
@@ -2610,6 +2621,17 @@ decl_stmt|;
 name|u_short
 name|cntr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VAX630
+operator|(
+name|void
+operator|)
+name|spl5
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ui
 operator|=
 name|dhuinfo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -892,6 +892,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NBDP630
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAXNBDP
 value|15
 end_define
@@ -899,6 +906,24 @@ end_define
 begin_comment
 comment|/*  * Symbolic BUS addresses for UBAs.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX630
+end_if
+
+begin_define
+define|#
+directive|define
+name|UMEM630
+value|((u_short *)(0x1ffc2000))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
