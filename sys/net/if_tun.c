@@ -993,14 +993,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_lastchange
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifp
