@@ -3608,9 +3608,9 @@ condition|(
 operator|(
 name|i
 operator|=
-name|kldfind
+name|modfind
 argument_list|(
-name|GBDEMOD
+literal|"g_bde"
 argument_list|)
 operator|)
 operator|<
@@ -3627,9 +3627,9 @@ argument_list|)
 operator|<
 literal|0
 operator|||
-name|kldfind
+name|modfind
 argument_list|(
-name|GBDEMOD
+literal|"g_bde"
 argument_list|)
 operator|<
 literal|0
