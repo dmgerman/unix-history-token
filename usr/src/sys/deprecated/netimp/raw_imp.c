@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)raw_imp.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)raw_imp.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../netinet/in_pcb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"if_imp.h"
 end_include
 
@@ -140,11 +146,11 @@ name|sin
 decl_stmt|;
 specifier|register
 name|struct
-name|rawcb
+name|raw_inpcb
 modifier|*
 name|rp
 init|=
-name|sotorawcb
+name|sotorawinpcb
 argument_list|(
 name|so
 argument_list|)
@@ -163,12 +169,6 @@ comment|/* 	 * Verify user has supplied necessary space 	 * for the leader and c
 if|if
 condition|(
 operator|(
-name|m
-operator|->
-name|m_off
-operator|>
-name|MMAXOFF
-operator|||
 name|m
 operator|->
 name|m_len
@@ -378,9 +378,10 @@ expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-operator|&
 name|rp
 operator|->
+name|rinp_rcb
+operator|.
 name|rcb_faddr
 expr_stmt|;
 name|imp_addr_to_leader
