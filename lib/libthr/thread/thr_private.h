@@ -370,41 +370,73 @@ define|\
 value|{ PTHREAD_MUTEXATTR_STATIC_INITIALIZER, UMTX_INITIALIZER, NULL,	\ 	0, 0, TAILQ_INITIALIZER }
 end_define
 
+begin_union
+union|union
+name|pthread_mutex_data
+block|{
+name|void
+modifier|*
+name|m_ptr
+decl_stmt|;
+name|int
+name|m_count
+decl_stmt|;
+block|}
+union|;
+end_union
+
 begin_struct
 struct|struct
 name|pthread_mutex
 block|{
-name|struct
-name|pthread_mutex_attr
-name|m_attr
+name|enum
+name|pthread_mutextype
+name|m_type
 decl_stmt|;
-comment|/* Mutex attributes. */
-name|struct
-name|umtx
-name|m_mtx
+name|int
+name|m_protocol
 decl_stmt|;
-comment|/* Mutex. */
+name|TAILQ_HEAD
+argument_list|(
+argument|mutex_head
+argument_list|,
+argument|pthread
+argument_list|)
+name|m_queue
+expr_stmt|;
 name|struct
 name|pthread
 modifier|*
 name|m_owner
 decl_stmt|;
-comment|/* Current owner. */
-name|int
-name|m_count
+name|union
+name|pthread_mutex_data
+name|m_data
 decl_stmt|;
-comment|/* Recursion count. */
+name|long
+name|m_flags
+decl_stmt|;
 name|int
 name|m_refcount
 decl_stmt|;
-comment|/* Reference count. */
+comment|/*          * Used for priority inheritence and protection.          *          *   m_prio       - For priority inheritence, the highest active          *                  priority (threads locking the mutex inherit          *                  this priority).  For priority protection, the          *                  ceiling priority of this mutex.          *   m_saved_prio - mutex owners inherited priority before          *                  taking the mutex, restored when the owner          *                  unlocks the mutex.          */
+name|int
+name|m_prio
+decl_stmt|;
+name|int
+name|m_saved_prio
+decl_stmt|;
+comment|/*          * Link for list of all mutexes a thread currently owns.          */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pthread_mutex
 argument_list|)
 name|m_qe
 expr_stmt|;
-comment|/* All locks held. */
+comment|/*          * Lock for accesses to this structure.          */
+name|spinlock_t
+name|lock
+decl_stmt|;
 block|}
 struct|;
 end_struct
