@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -34,19 +28,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -77,6 +65,18 @@ begin_include
 include|#
 directive|include
 file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
