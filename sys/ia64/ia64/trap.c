@@ -718,6 +718,9 @@ parameter_list|(
 name|int
 name|vector
 parameter_list|,
+name|int
+name|imm
+parameter_list|,
 name|struct
 name|trapframe
 modifier|*
@@ -771,7 +774,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    iip         = 0x%lx\n"
+literal|"    cr.iip      = 0x%lx\n"
 argument_list|,
 name|framep
 operator|->
@@ -780,7 +783,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    ipsr        = 0x%lx\n"
+literal|"    cr.ipsr     = 0x%lx\n"
 argument_list|,
 name|framep
 operator|->
@@ -789,7 +792,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    isr         = 0x%lx\n"
+literal|"    cr.isr      = 0x%lx\n"
 argument_list|,
 name|framep
 operator|->
@@ -798,11 +801,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    ifa         = 0x%lx\n"
+literal|"    cr.ifa      = 0x%lx\n"
 argument_list|,
 name|framep
 operator|->
 name|tf_cr_ifa
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    cr.iim      = 0x%x\n"
+argument_list|,
+name|imm
 argument_list|)
 expr_stmt|;
 name|printf
@@ -854,19 +864,20 @@ parameter_list|(
 name|int
 name|vector
 parameter_list|,
+name|int
+name|imm
+parameter_list|,
 name|struct
 name|trapframe
 modifier|*
 name|framep
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1036,7 +1047,6 @@ goto|;
 case|case
 name|IA64_VEC_BREAK
 case|:
-comment|/* 		 * This should never happen. Breaks enter the kernel 		 * via break(). 		 */
 goto|goto
 name|dopanic
 goto|;
@@ -1525,6 +1535,8 @@ name|printtrap
 argument_list|(
 name|vector
 argument_list|,
+name|imm
+argument_list|,
 name|framep
 argument_list|,
 literal|1
@@ -1547,6 +1559,8 @@ name|DEBUG
 name|printtrap
 argument_list|(
 name|vector
+argument_list|,
+name|imm
 argument_list|,
 name|framep
 argument_list|,
@@ -1604,6 +1618,8 @@ name|printtrap
 argument_list|(
 name|vector
 argument_list|,
+name|imm
+argument_list|,
 name|framep
 argument_list|,
 literal|1
@@ -1633,25 +1649,25 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a system call.  *  * System calls are strange beasts.  They are passed the syscall number  * in v0, and the arguments in the registers (as normal).  They return  * an error flag in a3 (if a3 != 0 on return, the syscall had an error),  * and the return value (if any) in v0.  *  * The assembly stub takes care of moving the call number into a register  * we can get to, and moves all of the argument registers into their places  * in the trap frame.  On return, it restores the callee-saved registers,  * a3, and v0 from the frame before returning to the user process.  */
+comment|/*  * Process a system call.  *  * System calls are strange beasts.  They are passed the syscall number  * in r15, and the arguments in the registers (as normal).  They return  * an error flag in r10 (if r10 != 0 on return, the syscall had an error),  * and the return value (if any) in r8 and r9.  *  * The assembly stub takes care of moving the call number into a register  * we can get to, and moves all of the argument registers into a stack   * buffer.  On return, it restores r8-r10 from the frame before  * returning to the user process.   */
 end_comment
 
 begin_function
 name|void
 name|syscall
 parameter_list|(
+name|int
 name|code
 parameter_list|,
-name|framep
-parameter_list|)
 name|u_int64_t
-name|code
-decl_stmt|;
+modifier|*
+name|args
+parameter_list|,
 name|struct
 name|trapframe
 modifier|*
 name|framep
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sysent
@@ -1669,24 +1685,12 @@ init|=
 literal|0
 decl_stmt|;
 name|u_int64_t
-name|opc
+name|oldip
+decl_stmt|,
+name|oldri
 decl_stmt|;
 name|u_quad_t
 name|sticks
-decl_stmt|;
-name|u_int64_t
-name|args
-index|[
-literal|10
-index|]
-decl_stmt|;
-comment|/* XXX */
-name|u_int
-name|hidden
-init|=
-literal|0
-decl_stmt|,
-name|nargs
 decl_stmt|;
 name|mtx_enter
 argument_list|(
@@ -1696,29 +1700,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notdef
-comment|/* can't happen, ever. */
-if|if
-condition|(
-operator|(
-name|framep
-operator|->
-name|tf_cr_ipsr
-operator|&
-name|IA64_PSR_CPL
-operator|)
-operator|==
-name|IA64_PSR_CPL_KERN
-condition|)
-name|panic
-argument_list|(
-literal|"syscall"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|cnt
 operator|.
 name|v_syscall
@@ -1736,18 +1717,60 @@ name|md_tf
 operator|=
 name|framep
 expr_stmt|;
-name|opc
-operator|=
-name|framep
-operator|->
-name|tf_cr_iip
-expr_stmt|;
 name|sticks
 operator|=
 name|p
 operator|->
 name|p_sticks
 expr_stmt|;
+comment|/* 	 * Skip past the break instruction. Remember old address in case 	 * we have to restart. 	 */
+name|oldip
+operator|=
+name|framep
+operator|->
+name|tf_cr_iip
+expr_stmt|;
+name|oldri
+operator|=
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|&
+name|IA64_PSR_RI
+expr_stmt|;
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|+=
+name|IA64_PSR_RI_1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|&
+name|IA64_PSR_RI
+operator|)
+operator|>
+name|IA64_PSR_RI_2
+condition|)
+block|{
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|&=
+operator|~
+name|IA64_PSR_RI
+expr_stmt|;
+name|framep
+operator|->
+name|tf_cr_iip
+operator|+=
+literal|16
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1758,20 +1781,100 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|if (p->p_sysent->sv_prepsyscall) {
+if|if
+condition|(
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_prepsyscall
+condition|)
+block|{
 comment|/* (*p->p_sysent->sv_prepsyscall)(framep, args,&code,&params); */
-block|panic("prepsyscall"); 	} else {
+name|panic
+argument_list|(
+literal|"prepsyscall"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* 		 * syscall() and __syscall() are handled the same on 		 * the ia64, as everything is 64-bit aligned, anyway. 		 */
-block|if (code == SYS_syscall || code == SYS___syscall) {
+if|if
+condition|(
+name|code
+operator|==
+name|SYS_syscall
+operator|||
+name|code
+operator|==
+name|SYS___syscall
+condition|)
+block|{
 comment|/* 			 * Code is first argument, followed by actual args. 			 */
-block|code = framep->tf_regs[FRAME_A0]; 			hidden = 1; 		} 	}   	if (p->p_sysent->sv_mask)  		code&= p->p_sysent->sv_mask;   	if (code>= p->p_sysent->sv_size)  		callp =&p->p_sysent->sv_table[0];   	else  		callp =&p->p_sysent->sv_table[code];  	nargs = (callp->sy_narg& SYF_ARGMASK) + hidden; 	switch (nargs) { 	default: 		if (nargs> 10)
-comment|/* XXX */
-block|panic("syscall: too many args (%d)", nargs); 		error = copyin((caddr_t)(alpha_pal_rdusp()),&args[6], 		    (nargs - 6) * sizeof(u_int64_t)); 	case 6:	 		args[5] = framep->tf_regs[FRAME_A5]; 	case 5:	 		args[4] = framep->tf_regs[FRAME_A4]; 	case 4:	 		args[3] = framep->tf_regs[FRAME_A3]; 	case 3:	 		args[2] = framep->tf_regs[FRAME_A2]; 	case 2:	 		args[1] = framep->tf_regs[FRAME_A1]; 	case 1:	 		args[0] = framep->tf_regs[FRAME_A0]; 	case 0: 		break; 	}
-endif|#
-directive|endif
+name|code
+operator|=
+name|args
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|args
+operator|++
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_mask
+condition|)
+name|code
+operator|&=
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_mask
+expr_stmt|;
+if|if
+condition|(
+name|code
+operator|>=
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_size
+condition|)
+name|callp
+operator|=
+operator|&
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_table
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+name|callp
+operator|=
+operator|&
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_table
+index|[
+name|code
+index|]
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -1801,8 +1904,6 @@ name|SYF_ARGMASK
 operator|)
 argument_list|,
 name|args
-operator|+
-name|hidden
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1859,8 +1960,6 @@ argument_list|(
 name|p
 argument_list|,
 name|args
-operator|+
-name|hidden
 argument_list|)
 expr_stmt|;
 block|}
@@ -1917,7 +2016,22 @@ name|framep
 operator|->
 name|tf_cr_iip
 operator|=
-name|opc
+name|oldip
+expr_stmt|;
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|=
+operator|(
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|&
+operator|~
+name|IA64_PSR_RI
+operator|)
+operator||
+name|oldri
 expr_stmt|;
 break|break;
 case|case

@@ -60,7 +60,7 @@ name|u_int64_t
 name|tf_ar_rnat
 decl_stmt|;
 name|u_int64_t
-name|tf_ar_bsp
+name|tf_ndirty
 decl_stmt|;
 name|u_int64_t
 name|tf_ar_unat

@@ -2913,10 +2913,14 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Force verbose mode for a while. 	 */
+comment|/* 	 * Force verbose mode and single-user for a while. 	 */
 name|bootverbose
 operator|=
 literal|1
+expr_stmt|;
+name|boothowto
+operator||=
+name|RB_SINGLE
 expr_stmt|;
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
@@ -3415,9 +3419,15 @@ name|uc_mcontext
 operator|.
 name|mc_ar_bsp
 operator|=
+operator|(
 name|frame
 operator|->
-name|tf_ar_bsp
+name|tf_ar_bspstore
+operator|+
+name|frame
+operator|->
+name|tf_ndirty
+operator|)
 expr_stmt|;
 name|sf
 operator|.
@@ -4286,13 +4296,9 @@ name|md_bspstore
 expr_stmt|;
 name|frame
 operator|->
-name|tf_ar_bsp
+name|tf_ndirty
 operator|=
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_bspstore
+literal|0
 expr_stmt|;
 name|frame
 operator|->

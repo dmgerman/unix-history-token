@@ -784,7 +784,10 @@ name|syscall
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|,
 name|u_int64_t
+operator|*
 operator|,
 expr|struct
 name|trapframe
@@ -802,6 +805,9 @@ argument_list|(
 operator|(
 name|int
 name|vector
+operator|,
+name|int
+name|imm
 operator|,
 expr|struct
 name|trapframe
