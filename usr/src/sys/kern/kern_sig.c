@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.55 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -3343,14 +3343,15 @@ name|p_nice
 operator|>
 name|NZERO
 operator|&&
+name|action
+operator|==
+name|SIG_DFL
+operator|&&
 operator|(
-name|sig
-operator|==
-name|SIGKILL
-operator|||
-name|sig
-operator|==
-name|SIGTERM
+name|prop
+operator|&
+name|SA_KILL
+operator|)
 operator|&&
 operator|(
 name|p
@@ -3358,12 +3359,9 @@ operator|->
 name|p_flag
 operator|&
 name|STRC
-operator|||
-name|action
-operator|!=
-name|SIG_DFL
 operator|)
-operator|)
+operator|==
+literal|0
 condition|)
 name|p
 operator|->
@@ -3492,6 +3490,31 @@ condition|)
 goto|goto
 name|run
 goto|;
+comment|/* 		 * If SIGCONT is default (or ignored) and process is 		 * asleep, we are finished; the process should not 		 * be awakened. 		 */
+if|if
+condition|(
+operator|(
+name|prop
+operator|&
+name|SA_CONT
+operator|)
+operator|&&
+name|action
+operator|==
+name|SIG_DFL
+condition|)
+block|{
+name|p
+operator|->
+name|p_sig
+operator|&=
+operator|~
+name|mask
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 		 * When a sleeping process receives a stop 		 * signal, process immediately if possible. 		 * All other (caught or default) signals 		 * cause the process to run. 		 */
 if|if
 condition|(
