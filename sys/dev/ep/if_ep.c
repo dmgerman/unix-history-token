@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -161,6 +167,12 @@ end_decl_stmt
 begin_decl_stmt
 name|u_long
 name|ep_unit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|devclass_t
+name|ep_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -2210,6 +2222,13 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|gone
+condition|)
+return|return;
 name|ifp
 operator|=
 operator|&

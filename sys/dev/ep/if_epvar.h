@@ -49,6 +49,17 @@ name|int
 name|gone
 decl_stmt|;
 comment|/* adapter is not present (for PCCARD) */
+name|struct
+name|resource
+modifier|*
+name|irq
+decl_stmt|;
+comment|/* IRQ resource */
+name|void
+modifier|*
+name|ih
+decl_stmt|;
+comment|/* Interrupt handle cookie */
 define|#
 directive|define
 name|F_RX_FIRST

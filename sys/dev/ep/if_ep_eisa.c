@@ -1180,7 +1180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|devclass_t
 name|ep_devclass
 decl_stmt|;
