@@ -1054,9 +1054,6 @@ block|{
 case|case
 name|RELEASED
 case|:
-name|setdelayed
-argument_list|()
-expr_stmt|;
 break|break;
 case|case
 name|ACQUIRED
@@ -1081,9 +1078,6 @@ argument_list|(
 operator|&
 name|frame
 argument_list|)
-expr_stmt|;
-name|setdelayed
-argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -1160,9 +1154,6 @@ expr_stmt|;
 name|timer0_state
 operator|=
 name|ACQUIRED
-expr_stmt|;
-name|setdelayed
-argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1256,9 +1247,6 @@ argument_list|(
 operator|&
 name|frame
 argument_list|)
-expr_stmt|;
-name|setdelayed
-argument_list|()
 expr_stmt|;
 block|}
 break|break;

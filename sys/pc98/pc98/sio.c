@@ -1583,8 +1583,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|swihand_t
+name|void
 name|siopoll
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|dummy
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -17043,7 +17051,11 @@ comment|/* software interrupt handler for SWI_TTY */
 specifier|static
 name|void
 name|siopoll
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
 block|{
 name|int
 name|unit
