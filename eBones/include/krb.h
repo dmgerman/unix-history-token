@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id: krb.h,v 1.6 1995/09/13 17:23:47 markm Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id: krb.h,v 1.7 1995/10/05 21:29:26 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -2584,6 +2584,29 @@ operator|)
 argument_list|)
 argument_list|;
 comment|/* Internal routines */
+name|int
+name|des_set_key_krb
+name|__P
+argument_list|(
+operator|(
+name|des_cblock
+operator|*
+name|inkey
+operator|,
+name|des_key_schedule
+name|insched
+operator|)
+argument_list|)
+argument_list|;
+name|void
+name|des_clear_key_krb
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+argument_list|;
 name|int
 name|des_read
 name|__P
