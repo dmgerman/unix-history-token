@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.3 1995/03/11 15:18:37 amurai Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.5 1995/09/02 17:20:50 amurai Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -1717,6 +1717,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|str
+argument_list|,
+literal|"\\P"
+argument_list|)
+condition|)
+block|{
+comment|/* Do not log the password itself. */
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT
+argument_list|,
+literal|"sending: %s\n"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|LogPrintf
 argument_list|(
 name|LOG_CHAT
@@ -1728,6 +1751,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 name|cp
 operator|=
 name|buff

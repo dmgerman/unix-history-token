@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.3 1995/03/11 15:18:42 amurai Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.5 1995/09/17 16:14:46 amurai Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -491,6 +491,36 @@ operator|->
 name|action
 condition|)
 block|{
+comment|/* permit fragments on in and out filter */
+if|if
+condition|(
+operator|(
+name|direction
+operator|==
+name|FL_IN
+operator|||
+name|direction
+operator|==
+name|FL_OUT
+operator|)
+operator|&&
+operator|(
+name|pip
+operator|->
+name|ip_off
+operator|&
+name|IP_OFFMASK
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|A_PERMIT
+operator|)
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
