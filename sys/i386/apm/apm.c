@@ -2451,9 +2451,6 @@ return|return
 literal|0
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|APM_BROKEN_STATCLOCK
 if|if
 condition|(
 name|dvp
@@ -2462,8 +2459,6 @@ name|id_flags
 operator|&
 literal|0x20
 condition|)
-endif|#
-directive|endif
 name|statclock_disable
 operator|=
 literal|1
