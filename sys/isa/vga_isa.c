@@ -568,6 +568,8 @@ directive|endif
 comment|/* FB_INSTALL_CDEV */
 if|if
 condition|(
+literal|0
+operator|&&
 name|bootverbose
 condition|)
 operator|(
