@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FUNCTION_ALIGNMENT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|_MCOUNT_DECL
 value|void mcount
 end_define
@@ -25,8 +32,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_ALIGNMENT
-value|32
+name|MCOUNT
 end_define
 
 begin_typedef
@@ -36,26 +42,27 @@ name|fptrdiff_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|u_long
-name|uintfptr_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|MCOUNT
-define|\
-value|void \ _mcount() \ { \ }
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_DECL
+parameter_list|(
+name|s
+parameter_list|)
+value|register_t s;
+end_define
 
 begin_define
 define|#
@@ -64,6 +71,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
+value|s = rdpr(pil); wrpr(pil, 0, 14)
 end_define
 
 begin_define
@@ -73,15 +81,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_DECL
-parameter_list|(
-name|s
-parameter_list|)
+value|wrpr(pil, 0, s)
 end_define
 
 begin_ifdef
@@ -90,11 +90,59 @@ directive|ifdef
 name|GUPROF
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|CALIB_SCALE
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KCOUNT
+parameter_list|(
+name|p
+parameter_list|,
+name|index
+parameter_list|)
+define|\
+value|((p)->kcount[(index) / (HISTFRACTION * sizeof(HISTCOUNTER))])
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC_TO_I
+parameter_list|(
+name|p
+parameter_list|,
+name|pc
+parameter_list|)
+value|((uintfptr_t)(pc) - (uintfptr_t)(p)->lowpc)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|gmonparam
 struct_decl|;
 end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cputime_bias
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|cputime
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -143,6 +191,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* GUPROF */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -170,10 +222,90 @@ begin_comment
 comment|/* GUPROF */
 end_comment
 
+begin_function_decl
+name|void
+name|empty_loop
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kmupetext
+parameter_list|(
+name|uintfptr_t
+name|nhighpc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mcount
+parameter_list|(
+name|uintfptr_t
+name|frompc
+parameter_list|,
+name|uintfptr_t
+name|selfpc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mexitcount
+parameter_list|(
+name|uintfptr_t
+name|selfpc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nullfunc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nullfunc_loop
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|uintfptr_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
