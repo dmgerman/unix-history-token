@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpudata.c	4.1	81/03/13	*/
+comment|/*	cpudata.c	4.2	81/03/21	*/
 end_comment
 
 begin_include
@@ -136,11 +136,38 @@ end_endif
 begin_if
 if|#
 directive|if
+name|VAX730
+end_if
+
+begin_decl_stmt
+name|caddr_t
+name|umaddr730
+index|[
+literal|1
+index|]
+init|=
+block|{
+operator|(
+name|caddr_t
+operator|)
+name|UMEM730
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|VAX750
 end_if
 
 begin_comment
-comment|/*  * Information to patch around the stupidity of configuration  * registers not returning types on some of the 11/750 slots.  */
+comment|/*  * Information to patch around the stupidity of configuration  * registers not returning types on some of the processors.  */
 end_comment
 
 begin_decl_stmt
@@ -183,6 +210,33 @@ name|NEX_ANY
 block|,
 name|NEX_ANY
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|short
+name|nexty730
+index|[
+name|NNEX730
+index|]
+init|=
+block|{
+name|NEX_MEM16
+block|,
+name|NEX_ANY
+block|,
+name|NEX_ANY
+block|,
+name|NEX_ANY
+block|,
+name|NEX_ANY
+block|,
+name|NEX_ANY
+block|,
+name|NEX_ANY
+block|,
+name|NEX_ANY
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -233,6 +287,25 @@ block|,
 literal|0
 block|,
 name|nexty750
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX730
+name|VAX_730
+block|,
+name|NNEX730
+block|,
+name|NEX730
+block|,
+name|umaddr730
+block|,
+name|NBDP730
+block|,
+literal|0
+block|,
+name|nexty730
 block|,
 endif|#
 directive|endif
