@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	3.7	%G%	*/
+comment|/*	ioctl.h	3.8	%G%	*/
 end_comment
 
 begin_comment
@@ -312,6 +312,17 @@ begin_comment
 comment|/* retyping suspended input (LPENDIN) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LSCNTTB
+value|040
+end_define
+
+begin_comment
+comment|/* counting width of tab; leave LFLUSHO alone */
+end_comment
+
 begin_comment
 comment|/*  * tty ioctl commands  */
 end_comment
@@ -604,6 +615,17 @@ end_define
 
 begin_comment
 comment|/* number of chars in output queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSTI
+value|(('t'<<8)|114)
+end_define
+
+begin_comment
+comment|/* simulate a terminal in character */
 end_comment
 
 begin_define
