@@ -65,9 +65,7 @@ name|uint64_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copy faults */
-if|#
-directive|if
-name|IA32
+comment|/* IA32 specific registers. */
 name|uint64_t
 name|pcb_ia32_cflg
 decl_stmt|;
@@ -158,12 +156,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|IA32
-end_if
-
 begin_function_decl
 name|void
 name|ia32_restorectx
@@ -185,11 +177,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

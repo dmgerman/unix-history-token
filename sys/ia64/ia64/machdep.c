@@ -1382,7 +1382,7 @@ name|td_pcb
 expr_stmt|;
 if|#
 directive|if
-name|IA32
+name|COMPAT_IA32
 name|ia32_savectx
 argument_list|(
 name|oldpcb
@@ -1444,7 +1444,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|IA32
+name|COMPAT_IA32
 name|ia32_restorectx
 argument_list|(
 name|newpcb
@@ -1534,7 +1534,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|IA32
+name|COMPAT_IA32
 name|ia32_restorectx
 argument_list|(
 name|newpcb
