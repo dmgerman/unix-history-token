@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.7 1997/08/02 05:19:32 msmith Exp $ */
+comment|/* $Id: if_wl.c,v 1.8 1997/08/25 22:34:25 bde Exp $ */
 end_comment
 
 begin_comment
@@ -4671,84 +4671,6 @@ name|len
 operator|=
 name|clen
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOTYET
-comment|/* due to fact that controller does not support      * all multicast mode, we must filter out unicast packets      * that are not for us.       *      * if we are in all multicast mode and not promiscuous mode      * and packet is unicast and not for us,       * 		toss the packet       *      * TBD: also discard packets where NWID does not match.      */
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|mode
-operator|&
-name|MOD_ENAL
-operator|)
-operator|&&
-operator|(
-operator|(
-name|sc
-operator|->
-name|mode
-operator|&
-name|MOD_PROM
-operator|)
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
-name|eh
-operator|.
-name|ether_dhost
-index|[
-literal|0
-index|]
-operator|&
-literal|1
-operator|)
-operator|==
-literal|0
-operator|)
-comment|/* !mcast and !bcast */
-operator|&&
-operator|(
-name|bcmp
-argument_list|(
-name|eh
-operator|.
-name|ether_dhost
-argument_list|,
-name|sc
-operator|->
-name|wl_ac
-operator|.
-name|ac_enaddr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eh
-operator|.
-name|ether_dhost
-argument_list|)
-argument_list|)
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|NBPFILTER
@@ -4798,9 +4720,17 @@ operator|&
 name|m0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * point of this code is that even though we are in promiscuous 	 * mode, and due to fact that bpf got packet already, we 	 * do toss unicast packet not to us so that stacks upstairs 	 * do not need to weed it out 	 * 	 * logic: if promiscuous mode AND not multicast/bcast AND 	 *	not to us, throw away 	 */
+block|}
+endif|#
+directive|endif
+comment|/*      * If hw is in promiscuous mode (note that I said hardware, not if      * IFF_PROMISC is set in ifnet flags), then if this is a unicast      * packet and the MAC dst is not us, drop it.  This check was formerly      * inside the bpf if, above, but IFF_MULTI causes hw promisc without      * a bpf listener, so this is wrong.      *		Greg Troxel<gdt@ir.bbn.com>, 1998-08-07      */
+comment|/*      * TBD: also discard packets where NWID does not match.      * However, there does not appear to be a way to read the nwid      * for a received packet.  -gdt 1998-08-07      */
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|WL_USE_IFNET_PROMISC_CHECK
+comment|/* not defined */
 operator|(
 name|sc
 operator|->
@@ -4810,8 +4740,28 @@ name|ac_if
 operator|.
 name|if_flags
 operator|&
+operator|(
 name|IFF_PROMISC
+operator||
+name|IFF_ALLMULTI
 operator|)
+operator|)
+else|#
+directive|else
+comment|/* hw is in promisc mode if this is true */
+operator|(
+name|sc
+operator|->
+name|mode
+operator|&
+operator|(
+name|MOD_PROM
+operator||
+name|MOD_ENAL
+operator|)
+operator|)
+endif|#
+directive|endif
 operator|&&
 operator|(
 name|eh
@@ -4859,9 +4809,6 @@ return|return
 literal|1
 return|;
 block|}
-block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|WLDEBUG
