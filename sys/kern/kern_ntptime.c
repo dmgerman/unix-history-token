@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-1999			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name	       *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
+comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-2000			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name	       *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
 end_comment
 
 begin_comment
@@ -261,6 +261,28 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|long
+name|time_tai
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TAI offset (s) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|time_monitor
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last time offset scaled (ns) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
 name|time_constant
 decl_stmt|;
 end_decl_stmt
@@ -364,7 +386,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* resulting adjustment */
+comment|/* tick adjust (ns/s) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|l_fp
+name|time_phase
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time phase (ns) */
 end_comment
 
 begin_ifdef
@@ -472,23 +505,23 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|l_fp
-name|pps_offset
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time offset (ns) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|l_fp
 name|pps_freq
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* scaled frequency offset (ns/s) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|pps_lastfreq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last scaled freq offset (ns/s) */
 end_comment
 
 begin_decl_stmt
@@ -583,17 +616,6 @@ begin_comment
 comment|/* wander counter */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|pps_letgo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PLL frequency hold-off */
-end_comment
-
 begin_comment
 comment|/*  * PPS signal quality monitors  */
 end_comment
@@ -677,7 +699,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * ntp_gettime() - NTP user application interface  *  * See the timex.h header file for synopsis and API description.  */
+comment|/*  * ntp_gettime() - NTP user application interface  *  * See the timex.h header file for synopsis and API description. Note  * that the TAI offset is returned in the ntvtimeval.tai structure  * member.  */
 end_comment
 
 begin_function
@@ -738,9 +760,9 @@ name|time_esterror
 expr_stmt|;
 name|ntv
 operator|.
-name|time_state
+name|tai
 operator|=
-name|time_state
+name|time_tai
 expr_stmt|;
 comment|/* 	 * Status word error decode. If any of these conditions occur, 	 * an error is returned, instead of the status word. Most 	 * applications will care only about the fact the system clock 	 * may not be trusted, not about the details. 	 * 	 * Hardware or software error 	 */
 if|if
@@ -972,39 +994,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_OPAQUE
-argument_list|(
-name|_kern_ntp_pll
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pps_offset
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|pps_offset
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pps_offset
-argument_list|)
-argument_list|,
-literal|"I"
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ntp_adjtime() - NTP daemon application interface  *  * See the timex.h header file for synopsis and API description.  */
+comment|/*  * ntp_adjtime() - NTP daemon application interface  *  * See the timex.h header file for synopsis and API description. Note  * that the timex.constant structure member has a dual purpose to set  * the time constant and to set the TAI offset.  */
 end_comment
 
 begin_ifndef
@@ -1098,7 +1094,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Update selected clock variables - only the superuser can 	 * change anything. Note that there is no error checking here on 	 * the assumption the superuser should know what it is doing. 	 */
+comment|/* 	 * Update selected clock variables - only the superuser can 	 * change anything. Note that there is no error checking here on 	 * the assumption the superuser should know what it is doing. 	 * Note that either the time constant or TAI offset are loaded 	 * from the ntv.constant member, depending on the mode bits. 	 */
 name|modes
 operator|=
 name|ntv
@@ -1282,6 +1278,29 @@ operator|.
 name|constant
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|modes
+operator|&
+name|MOD_TAI
+condition|)
+block|{
+if|if
+condition|(
+name|ntv
+operator|.
+name|constant
+operator|>
+literal|0
+condition|)
+comment|/* XXX zero& negative numbers ? */
+name|time_tai
+operator|=
+name|ntv
+operator|.
+name|constant
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|PPS_SYNC
@@ -1401,7 +1420,7 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Retrieve all clock variables 	 */
+comment|/* 	 * Retrieve all clock variables. Note that the TAI offset is 	 * returned only by ntp_gettime(); 	 */
 if|if
 condition|(
 name|time_status
@@ -1412,23 +1431,18 @@ name|ntv
 operator|.
 name|offset
 operator|=
-name|L_GINT
-argument_list|(
-name|time_offset
-argument_list|)
+name|time_monitor
 expr_stmt|;
 else|else
 name|ntv
 operator|.
 name|offset
 operator|=
-name|L_GINT
-argument_list|(
-name|time_offset
-argument_list|)
+name|time_monitor
 operator|/
 literal|1000
 expr_stmt|;
+comment|/* XXX rounding ? */
 name|ntv
 operator|.
 name|freq
@@ -1711,6 +1725,10 @@ name|u_int32_t
 modifier|*
 name|newsec
 decl_stmt|;
+name|l_fp
+name|ftemp
+decl_stmt|;
+comment|/* 32/64-bit temporary */
 name|newsec
 operator|=
 operator|&
@@ -1839,6 +1857,9 @@ name|newsec
 operator|)
 operator|++
 expr_stmt|;
+name|time_tai
+operator|--
+expr_stmt|;
 name|time_state
 operator|=
 name|TIME_WAIT
@@ -1849,6 +1870,9 @@ comment|/* 		 * Insert second in progress. 		 */
 case|case
 name|TIME_OOP
 case|:
+name|time_tai
+operator|++
+expr_stmt|;
 name|time_state
 operator|=
 name|TIME_WAIT
@@ -1877,10 +1901,14 @@ name|TIME_OK
 expr_stmt|;
 block|}
 comment|/* 	 * Compute the total time adjustment for the next second 	 * in ns. The offset is reduced by a factor depending on 	 * whether the PPS signal is operating. Note that the 	 * value is in effect scaled by the clock frequency, 	 * since the adjustment is added at each tick interrupt. 	 */
+name|ftemp
+operator|=
+name|time_offset
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PPS_SYNC
-comment|/* XXX even if signal dies we should finish adjustment ? */
+comment|/* XXX even if PPS signal dies we should finish adjustment ? */
 if|if
 condition|(
 name|time_status
@@ -1891,74 +1919,48 @@ name|time_status
 operator|&
 name|STA_PPSSIGNAL
 condition|)
-block|{
-name|time_adj
-operator|=
-name|pps_offset
-expr_stmt|;
 name|L_RSHIFT
 argument_list|(
-name|time_adj
+name|ftemp
 argument_list|,
 name|pps_shift
 argument_list|)
 expr_stmt|;
-name|L_SUB
-argument_list|(
-name|pps_offset
-argument_list|,
-name|time_adj
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
-name|time_adj
-operator|=
-name|time_offset
-expr_stmt|;
 name|L_RSHIFT
 argument_list|(
-name|time_adj
+name|ftemp
 argument_list|,
 name|SHIFT_PLL
 operator|+
 name|time_constant
 argument_list|)
 expr_stmt|;
-name|L_SUB
-argument_list|(
-name|time_offset
-argument_list|,
-name|time_adj
-argument_list|)
-expr_stmt|;
-block|}
 else|#
 directive|else
-name|time_adj
-operator|=
-name|time_offset
-expr_stmt|;
 name|L_RSHIFT
 argument_list|(
-name|time_adj
+name|ftemp
 argument_list|,
 name|SHIFT_PLL
 operator|+
 name|time_constant
-argument_list|)
-expr_stmt|;
-name|L_SUB
-argument_list|(
-name|time_offset
-argument_list|,
-name|time_adj
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* PPS_SYNC */
+name|time_adj
+operator|=
+name|ftemp
+expr_stmt|;
+name|L_SUB
+argument_list|(
+name|time_offset
+argument_list|,
+name|ftemp
+argument_list|)
+expr_stmt|;
 name|L_ADD
 argument_list|(
 name|time_adj
@@ -2130,8 +2132,6 @@ decl_stmt|;
 comment|/* clock offset (ns) */
 block|{
 name|long
-name|ltemp
-decl_stmt|,
 name|mtemp
 decl_stmt|;
 name|l_fp
@@ -2148,33 +2148,6 @@ name|STA_PLL
 operator|)
 condition|)
 return|return;
-name|ltemp
-operator|=
-name|offset
-expr_stmt|;
-if|if
-condition|(
-name|ltemp
-operator|>
-name|MAXPHASE
-condition|)
-name|ltemp
-operator|=
-name|MAXPHASE
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ltemp
-operator|<
-operator|-
-name|MAXPHASE
-condition|)
-name|ltemp
-operator|=
-operator|-
-name|MAXPHASE
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2188,13 +2161,43 @@ operator|&
 name|STA_PPSSIGNAL
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|offset
+operator|>
+name|MAXPHASE
+condition|)
+name|time_monitor
+operator|=
+name|MAXPHASE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|offset
+operator|<
+operator|-
+name|MAXPHASE
+condition|)
+name|time_monitor
+operator|=
+operator|-
+name|MAXPHASE
+expr_stmt|;
+else|else
+name|time_monitor
+operator|=
+name|offset
+expr_stmt|;
 name|L_LINT
 argument_list|(
 name|time_offset
 argument_list|,
-name|ltemp
+name|time_monitor
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Select how the frequency is to be controlled and in which 	 * mode (PLL or FLL). If the PPS signal is present and enabled 	 * to discipline the frequency, the PPS frequency is used; 	 * otherwise, the argument offset is used to compute it. 	 */
 if|if
 condition|(
@@ -2237,7 +2240,7 @@ name|L_LINT
 argument_list|(
 name|ftemp
 argument_list|,
-name|ltemp
+name|time_monitor
 argument_list|)
 expr_stmt|;
 name|L_RSHIFT
@@ -2296,7 +2299,7 @@ argument_list|(
 name|ftemp
 argument_list|,
 operator|(
-name|ltemp
+name|time_monitor
 operator|<<
 literal|4
 operator|)
@@ -2374,7 +2377,7 @@ name|PPS_SYNC
 end_ifdef
 
 begin_comment
-comment|/*  * hardpps() - discipline CPU clock oscillator to external PPS signal  *  * This routine is called at each PPS interrupt in order to discipline  * the CPU clock oscillator to the PPS signal. It measures the PPS phase  * and leaves it in a handy spot for the hardclock() routine. It  * integrates successive PPS phase differences and calculates the  * frequency offset. This is used in hardclock() to discipline the CPU  * clock oscillator so that the intrinsic frequency error is cancelled  * out. The code requires the caller to capture the time and  * architecture-dependent hardware counter values in nanoseconds at the  * on-time PPS signal transition.  *  * Note that, on some Unix systems this routine runs at an interrupt  * priority level higher than the timer interrupt routine hardclock().  * Therefore, the variables used are distinct from the hardclock()  * variables, except for the actual time and frequency variables, which  * are determined by this routine and updated atomically.  */
+comment|/*  * hardpps() - discipline CPU clock oscillator to external PPS signal  *  * This routine is called at each PPS interrupt in order to discipline  * the CPU clock oscillator to the PPS signal. There are two independent  * first-order feedback loops, one for the phase, the other for the  * frequency. The phase loop measures and grooms the PPS phase offset  * and leaves it in a handy spot for the seconds overflow routine. The  * frequency loop averages successive PPS phase differences and  * calculates the PPS frequency offset, which is also processed by the  * seconds overflow routine. The code requires the caller to capture the  * time and architecture-dependent hardware counter values in  * nanoseconds at the on-time PPS signal transition.  *  * Note that, on some Unix systems this routine runs at an interrupt  * priority level higher than the timer interrupt routine hardclock().  * Therefore, the variables used are distinct from the hardclock()  * variables, except for the actual time and frequency variables, which  * are determined by this routine and updated atomically.  */
 end_comment
 
 begin_function
@@ -2402,14 +2405,12 @@ decl_stmt|,
 name|u_nsec
 decl_stmt|,
 name|v_nsec
-decl_stmt|,
-name|w_nsec
 decl_stmt|;
 comment|/* temps */
 name|l_fp
 name|ftemp
 decl_stmt|;
-comment|/* 	 * The signal is first processed by a frequency discriminator 	 * which rejects noise and input signals with frequencies 	 * outside the range 1 +-MAXFREQ PPS. If two hits occur in the 	 * same second, we ignore the later hit; if not and a hit occurs 	 * outside the range gate, keep the later hit but do not 	 * process it. 	 */
+comment|/* 	 * The signal is first processed by a range gate and frequency 	 * discriminator. The range gate rejects noise spikes outside 	 * the range +-500 us. The frequency discriminator rejects input 	 * signals with apparent frequency outside the range 1 +-500 	 * PPM. If two hits occur in the same second, we ignore the 	 * later hit; if not and a hit occurs outside the range gate, 	 * keep the later hit for later comparison, but do not process 	 * it. 	 */
 name|time_status
 operator||=
 name|STA_PPSSIGNAL
@@ -2471,6 +2472,7 @@ index|]
 operator|.
 name|tv_nsec
 expr_stmt|;
+comment|/* XXX: This test seems incomplete ? */
 if|if
 condition|(
 name|u_sec
@@ -2844,7 +2846,7 @@ name|tv_nsec
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Nominal jitter is due to PPS signal noise and  interrupt 	 * latency. If it exceeds the popcorn threshold, 	 * the sample is discarded. otherwise, if so enabled, the time 	 * offset is updated. We can tolerate a modest loss of data here 	 * without degrading time accuracy. 	 */
+comment|/* 	 * Nominal jitter is due to PPS signal noise and  interrupt 	 * latency. If it exceeds the popcorn threshold, the sample is 	 * discarded. otherwise, if so enabled, the time offset is 	 * updated. We can tolerate a modest loss of data here without 	 * much degrading time accuracy. 	 */
 if|if
 condition|(
 name|u_nsec
@@ -2872,96 +2874,18 @@ operator|&
 name|STA_PPSTIME
 condition|)
 block|{
+name|time_monitor
+operator|=
+operator|-
+name|v_nsec
+expr_stmt|;
 name|L_LINT
 argument_list|(
 name|time_offset
 argument_list|,
-operator|-
-name|v_nsec
+name|time_monitor
 argument_list|)
 expr_stmt|;
-name|L_LINT
-argument_list|(
-name|pps_offset
-argument_list|,
-operator|-
-name|v_nsec
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pps_letgo
-operator|>=
-literal|2
-condition|)
-block|{
-name|L_LINT
-argument_list|(
-name|ftemp
-argument_list|,
-operator|-
-name|v_nsec
-argument_list|)
-expr_stmt|;
-name|L_RSHIFT
-argument_list|(
-name|ftemp
-argument_list|,
-operator|(
-name|pps_shift
-operator|*
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-name|L_ADD
-argument_list|(
-name|ftemp
-argument_list|,
-name|time_freq
-argument_list|)
-expr_stmt|;
-name|w_nsec
-operator|=
-name|L_GINT
-argument_list|(
-name|ftemp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|w_nsec
-operator|>
-name|MAXFREQ
-condition|)
-name|L_LINT
-argument_list|(
-name|ftemp
-argument_list|,
-name|MAXFREQ
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|w_nsec
-operator|<
-operator|-
-name|MAXFREQ
-condition|)
-name|L_LINT
-argument_list|(
-name|ftemp
-argument_list|,
-operator|-
-name|MAXFREQ
-argument_list|)
-expr_stmt|;
-name|time_freq
-operator|=
-name|ftemp
-expr_stmt|;
-block|}
 block|}
 name|pps_jitter
 operator|+=
@@ -2995,7 +2919,7 @@ name|pps_shift
 operator|)
 condition|)
 return|return;
-comment|/* 	 * At the end of the calibration interval the difference between 	 * the first and last counter values becomes the scaled 	 * frequency. It will later be divided by the length of the 	 * interval to determine the frequency update. If the frequency 	 * exceeds a sanity threshold, or if the actual calibration 	 * interval is not equal to the expected length, the data are 	 * discarded. We can tolerate a modest loss of data here without 	 * degrading frequency ccuracy. 	 */
+comment|/* 	 * At the end of the calibration interval the difference between 	 * the first and last counter values becomes the scaled 	 * frequency. It will later be divided by the length of the 	 * interval to determine the frequency update. If the frequency 	 * exceeds a sanity threshold, or if the actual calibration 	 * interval is not equal to the expected length, the data are 	 * discarded. We can tolerate a modest loss of data here without 	 * much degrading frequency accuracy. 	 */
 name|pps_calcnt
 operator|++
 expr_stmt|;
@@ -3142,44 +3066,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
-name|time_status
-operator|&
-name|STA_PPSFREQ
-operator|)
-condition|)
-block|{
-name|pps_intcnt
-operator|=
-literal|0
-expr_stmt|;
-name|pps_shift
-operator|=
-name|PPS_FAVG
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|pps_shift
-operator|>
-name|pps_shiftmax
-condition|)
-block|{
-comment|/* If we lowered pps_shiftmax */
-name|pps_shift
-operator|=
-name|pps_shiftmax
-expr_stmt|;
-name|pps_intcnt
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|pps_intcnt
 operator|>=
 literal|4
@@ -3212,6 +3098,10 @@ name|pps_intcnt
 operator|<=
 operator|-
 literal|4
+operator|||
+name|pps_shift
+operator|>
+name|pps_shiftmax
 condition|)
 block|{
 name|pps_intcnt
@@ -3304,46 +3194,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|time_status
 operator|&
-operator|(
-name|STA_PPSFREQ
-operator||
-name|STA_PPSTIME
-operator|)
-operator|)
-operator|==
 name|STA_PPSFREQ
 condition|)
-block|{
-name|pps_letgo
-operator|=
-literal|0
-expr_stmt|;
 name|time_freq
 operator|=
 name|pps_freq
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|time_status
-operator|&
-name|STA_PPSTIME
-condition|)
-block|{
-if|if
-condition|(
-name|pps_letgo
-operator|<
-literal|2
-condition|)
-name|pps_letgo
-operator|++
-expr_stmt|;
-block|}
 block|}
 end_function
 
