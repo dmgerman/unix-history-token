@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.11 (Berkeley) %G%"
+literal|"@(#)gmon.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_endif
@@ -678,6 +684,17 @@ init|=
 operator|&
 name|_gmonparam
 decl_stmt|;
+name|int
+name|log
+decl_stmt|,
+name|len
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|200
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -722,15 +739,55 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|log
+operator|=
+name|open
 argument_list|(
-name|stderr
+literal|"gmon.log"
 argument_list|,
-literal|"[mcleanup] sbuf 0x%x ssiz %d\n"
+name|O_CREAT
+operator||
+name|O_TRUNC
+operator||
+name|O_WRONLY
+argument_list|,
+literal|0664
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|log
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"mcount: gmon.log"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|len
+operator|=
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"[mcleanup1] sbuf 0x%x ssiz %d\n"
 argument_list|,
 name|sbuf
 argument_list|,
 name|ssiz
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|log
+argument_list|,
+name|buf
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 endif|#
@@ -855,11 +912,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|len
+operator|=
+name|sprintf
 argument_list|(
-name|stderr
+name|buf
 argument_list|,
-literal|"[mcleanup] frompc 0x%x selfpc 0x%x count %d\n"
+literal|"[mcleanup2] frompc 0x%x selfpc 0x%x count %d\n"
 argument_list|,
 name|frompc
 argument_list|,
@@ -880,6 +939,15 @@ name|toindex
 index|]
 operator|.
 name|count
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|log
+argument_list|,
+name|buf
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 endif|#
