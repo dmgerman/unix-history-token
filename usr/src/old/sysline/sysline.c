@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.15 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1866,7 +1866,7 @@ else|else
 block|{
 name|chdir
 argument_list|(
-name|_PATH_MBOX
+name|_PATH_MAILDIR
 argument_list|)
 expr_stmt|;
 if|if
