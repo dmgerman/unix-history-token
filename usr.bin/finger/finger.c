@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"finger.h"
 end_include
 
@@ -352,6 +358,18 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+operator||
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* remove this line to get remote host */
 name|oflag
 operator|=
