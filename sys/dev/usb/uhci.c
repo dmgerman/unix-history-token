@@ -1691,7 +1691,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
-comment|/* NWH PR1 The 823C572 resets FLBASEADDR as well, moved busreset up */
 name|uhci_busreset
 argument_list|(
 name|sc
@@ -1764,7 +1763,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set frame list */
-comment|/* NWH PR1 moved uhci_busreset up */
 comment|/* Allocate the dummy QH where bulk traffic will be queued. */
 name|bsqh
 operator|=
@@ -3879,6 +3877,17 @@ return|return;
 block|}
 name|done
 label|:
+name|usb_untimeout
+argument_list|(
+name|uhci_timeout
+argument_list|,
+name|ii
+argument_list|,
+name|ii
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
 name|upipe
 operator|=
 operator|(
@@ -3909,17 +3918,6 @@ argument_list|(
 name|ii
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|usb_untimeout
-argument_list|(
-name|uhci_timeout
-argument_list|,
-name|ii
-argument_list|,
-name|ii
-operator|->
-name|timeout_handle
 argument_list|)
 expr_stmt|;
 block|}
