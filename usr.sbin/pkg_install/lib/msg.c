@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: msg.c,v 1.2 1993/09/03 23:01:15 jkh Exp $"
+literal|"$Id: msg.c,v 1.3 1994/04/05 14:08:47 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,6 +337,11 @@ else|:
 literal|'N'
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|tty
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ch
