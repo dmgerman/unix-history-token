@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -1019,7 +1019,6 @@ name|p
 operator|!=
 literal|' '
 condition|)
-operator|*
 name|p
 operator|++
 expr_stmt|;
@@ -1030,7 +1029,6 @@ name|p
 operator|==
 literal|' '
 condition|)
-operator|*
 name|p
 operator|++
 expr_stmt|;

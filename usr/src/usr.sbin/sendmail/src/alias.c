@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.4.1.1
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.4.1.1
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -1450,11 +1450,20 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
 operator|-
 literal|1
 index|]
-expr_stmt|;
+operator|==
+literal|'\n'
+condition|)
 operator|*
+operator|--
 name|p
 operator|=
 literal|'\0'
@@ -1498,9 +1507,6 @@ literal|'\t'
 condition|)
 break|break;
 comment|/* read continuation line */
-name|p
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|fgets

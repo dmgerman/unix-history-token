@@ -5,6 +5,23 @@ directive|include
 file|"conf.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -38,6 +55,13 @@ end_include
 begin_endif
 endif|#
 directive|endif
+endif|V6
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|USG
 end_endif
 
 begin_include
@@ -56,13 +80,49 @@ operator|)
 name|arpadate
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|V6
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OLDTIME
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|V6
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OLDTIME
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|USG
+end_endif
 
 begin_comment
 comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. ** **	Bugs: **		Timezone is computed from local time, rather than **		from whereever (and whenever) the message was sent. **		To do better is very hard. ** **		Some sites are now inserting the timezone into the **		local date.  This routine should figure out what **		the format is and work appropriately. */
@@ -122,17 +182,9 @@ parameter_list|()
 function_decl|;
 ifdef|#
 directive|ifdef
-name|V6
+name|OLDTIME
 name|long
 name|t
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|StdTimezone
-decl_stmt|,
-modifier|*
-name|DstTimezone
 decl_stmt|;
 specifier|extern
 name|long
@@ -141,6 +193,7 @@ parameter_list|()
 function_decl|;
 else|#
 directive|else
+else|OLDTIME
 name|struct
 name|timeb
 name|t
@@ -160,10 +213,39 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-comment|/* 	**  Get current time. 	**	This will be used if a null argument is passed and 	**	to resolve the timezone. 	*/
+endif|OLDTIME
 ifdef|#
 directive|ifdef
 name|V6
+specifier|extern
+name|char
+modifier|*
+name|StdTimezone
+decl_stmt|,
+modifier|*
+name|DstTimezone
+decl_stmt|;
+endif|#
+directive|endif
+endif|V6
+ifdef|#
+directive|ifdef
+name|USG
+specifier|extern
+name|char
+modifier|*
+name|tzname
+index|[
+literal|2
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+endif|USG
+comment|/* 	**  Get current time. 	**	This will be used if a null argument is passed and 	**	to resolve the timezone. 	*/
+ifdef|#
+directive|ifdef
+name|OLDTIME
 operator|(
 name|void
 operator|)
@@ -213,6 +295,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|OLDTIME
 comment|/* 	**  Crack the UNIX date line in a singularly unoriginal way. 	*/
 name|q
 operator|=
@@ -430,6 +513,36 @@ name|StdTimezone
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|USG
+if|if
+condition|(
+name|localtime
+argument_list|(
+operator|&
+name|t
+argument_list|)
+operator|->
+name|tm_isdst
+condition|)
+name|p
+operator|=
+name|tzname
+index|[
+literal|1
+index|]
+expr_stmt|;
+else|else
+name|p
+operator|=
+name|tzname
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|#
+directive|else
 name|p
 operator|=
 name|timezone
@@ -449,6 +562,9 @@ operator|->
 name|tm_isdst
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|USG
 endif|#
 directive|endif
 endif|V6
@@ -649,41 +765,41 @@ index|[]
 init|=
 block|{
 block|{
-literal|"eet"
+literal|"EET"
 block|,
 literal|" -0200"
 block|}
 block|,
 comment|/* eastern europe */
 block|{
-literal|"met"
+literal|"MET"
 block|,
 literal|" -0100"
 block|}
 block|,
 comment|/* middle europe */
 block|{
-literal|"wet"
+literal|"WET"
 block|,
 literal|" GMT"
 block|}
 block|,
 comment|/* western europe */
 block|{
-literal|"eet dst"
+literal|"EET DST"
 block|,
 literal|" -0300"
 block|}
 block|,
 comment|/* daylight saving times */
 block|{
-literal|"met dst"
+literal|"MET DST"
 block|,
 literal|" -0200"
 block|}
 block|,
 block|{
-literal|"wet dst"
+literal|"WET DST"
 block|,
 literal|" -0100"
 block|}
@@ -726,11 +842,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|makelower
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|euptr
@@ -749,7 +860,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|sameword
 argument_list|(
 name|euptr
 operator|->
@@ -757,8 +868,6 @@ name|f_from
 argument_list|,
 name|a
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|p

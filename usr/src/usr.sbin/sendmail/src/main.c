@@ -23,12 +23,6 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
 begin_expr_stmt
 name|SCCSID
 argument_list|(
@@ -39,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.11
+literal|4.12
 operator|%
 name|G
 operator|%
@@ -893,6 +887,22 @@ condition|)
 name|OpMode
 operator|=
 name|MD_PRINT
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"smtpd"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|OpMode
+operator|=
+name|MD_DAEMON
 expr_stmt|;
 end_if
 
@@ -3121,6 +3131,10 @@ operator|)
 operator|&
 name|edata
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|fhdr
 operator|.
 name|frzinfo
@@ -3130,8 +3144,12 @@ operator|-
 operator|&
 name|edata
 argument_list|)
+argument_list|)
 operator|!=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|fhdr
 operator|.
 name|frzinfo
@@ -3140,7 +3158,7 @@ name|frzbrk
 operator|-
 operator|&
 name|edata
-operator|)
+argument_list|)
 condition|)
 block|{
 name|syserr
@@ -3341,6 +3359,10 @@ operator|)
 operator|&
 name|edata
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|fhdr
 operator|.
 name|frzinfo
@@ -3350,8 +3372,12 @@ operator|-
 operator|&
 name|edata
 argument_list|)
+argument_list|)
 operator|!=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|fhdr
 operator|.
 name|frzinfo
@@ -3360,7 +3386,7 @@ name|frzbrk
 operator|-
 operator|&
 name|edata
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* oops!  we have trashed memory..... */
