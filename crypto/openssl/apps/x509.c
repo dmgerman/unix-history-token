@@ -4476,6 +4476,9 @@ argument_list|,
 literal|"Generating certificate request\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_DSA
 if|if
 condition|(
 name|pk
@@ -4489,6 +4492,8 @@ operator|=
 name|EVP_dss1
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|rq
 operator|=
 name|X509_to_X509_REQ

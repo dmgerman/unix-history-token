@@ -1022,7 +1022,7 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|buf
 parameter_list|,

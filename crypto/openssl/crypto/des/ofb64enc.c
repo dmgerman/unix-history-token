@@ -165,7 +165,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|ti
 argument_list|,

@@ -449,7 +449,7 @@ parameter_list|)
 function_decl|;
 comment|/* 	This is the DES encryption function that gets called by just about 	every other DES routine in the library.  You should not use this 	function except to implement 'modes' of DES.  I say this because the 	functions that call this routine do the conversion from 'char *' to 	long, and this needs to be done to make sure 'non-aligned' memory 	access do not occur.  The characters are loaded 'little endian'. 	Data is a pointer to 2 unsigned long's and ks is the 	des_key_schedule to use.  enc, is non zero specifies encryption, 	zero if decryption. */
 name|void
-name|des_encrypt
+name|des_encrypt1
 parameter_list|(
 name|DES_LONG
 modifier|*
@@ -462,7 +462,7 @@ name|int
 name|enc
 parameter_list|)
 function_decl|;
-comment|/* 	This functions is the same as des_encrypt() except that the DES 	initial permutation (IP) and final permutation (FP) have been left 	out.  As for des_encrypt(), you should not use this function. 	It is used by the routines in the library that implement triple DES. 	IP() des_encrypt2() des_encrypt2() des_encrypt2() FP() is the same 	as des_encrypt() des_encrypt() des_encrypt() except faster :-). */
+comment|/* 	This functions is the same as des_encrypt1() except that the DES 	initial permutation (IP) and final permutation (FP) have been left 	out.  As for des_encrypt1(), you should not use this function. 	It is used by the routines in the library that implement triple DES. 	IP() des_encrypt2() des_encrypt2() des_encrypt2() FP() is the same 	as des_encrypt1() des_encrypt1() des_encrypt1() except faster :-). */
 name|void
 name|des_encrypt2
 parameter_list|(

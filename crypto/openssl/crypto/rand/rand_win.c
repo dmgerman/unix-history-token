@@ -1998,7 +1998,8 @@ block|{
 name|__try
 block|{
 asm|__asm {
-asm|rdtsc
+asm|_emit 0x0f
+asm|_emit 0x31
 asm|mov cyclecount, eax
 asm|}
 name|RAND_add
@@ -2574,11 +2575,13 @@ name|DEVRANDOM
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
+else|#
+directive|else
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

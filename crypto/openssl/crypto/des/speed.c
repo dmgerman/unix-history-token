@@ -700,7 +700,7 @@ condition|;
 name|i
 operator|--
 control|)
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|data
 argument_list|,
@@ -941,7 +941,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|data
 argument_list|,

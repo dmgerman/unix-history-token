@@ -178,7 +178,7 @@ name|sin1
 operator|^
 name|xor1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG
@@ -289,7 +289,7 @@ index|]
 operator|=
 name|sin1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG

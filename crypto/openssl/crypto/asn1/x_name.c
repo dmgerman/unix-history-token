@@ -439,6 +439,14 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fe
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* SET OF needed only if entries is non empty */
 name|ret
 operator|+=
 name|ASN1_object_size
@@ -450,18 +458,13 @@ argument_list|,
 name|V_ASN1_SET
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fe
-operator|!=
-name|NULL
-condition|)
 name|fe
 operator|->
 name|size
 operator|=
 name|size
 expr_stmt|;
+block|}
 name|r
 operator|=
 name|ASN1_object_size

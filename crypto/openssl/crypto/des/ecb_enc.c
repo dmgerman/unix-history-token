@@ -292,7 +292,7 @@ index|]
 operator|=
 name|l
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 name|ll
 argument_list|,

@@ -1463,6 +1463,10 @@ name|done
 condition|)
 do|;
 block|}
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|err
 label|:
 name|ERR_print_errors
