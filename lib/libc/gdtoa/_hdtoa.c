@@ -1311,7 +1311,7 @@ operator|&=
 operator|~
 operator|(
 operator|~
-literal|0UL
+literal|0ULL
 operator|<<
 operator|(
 name|LDBL_MANH_SIZE
