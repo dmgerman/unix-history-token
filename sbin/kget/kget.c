@@ -27,12 +27,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<isa/isa_device.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -50,9 +44,68 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Per device structure.  This just happens to resemble the old isa_device  * but that is by accident.  It is NOT the same.  */
+end_comment
+
+begin_struct
+struct|struct
+name|uc_device
+block|{
+name|int
+name|id_id
+decl_stmt|;
+comment|/* device id */
+name|char
+modifier|*
+name|id_name
+decl_stmt|;
+comment|/* device name */
+name|int
+name|id_iobase
+decl_stmt|;
+comment|/* base i/o address */
+name|u_int
+name|id_irq
+decl_stmt|;
+comment|/* interrupt request */
+name|int
+name|id_drq
+decl_stmt|;
+comment|/* DMA request */
+name|caddr_t
+name|id_maddr
+decl_stmt|;
+comment|/* physical i/o memory address on bus (if any)*/
+name|int
+name|id_msize
+decl_stmt|;
+comment|/* size of i/o memory */
+name|int
+name|id_unit
+decl_stmt|;
+comment|/* unit number */
+name|int
+name|id_flags
+decl_stmt|;
+comment|/* flags */
+name|int
+name|id_enabled
+decl_stmt|;
+comment|/* is device enabled */
+name|struct
+name|uc_device
+modifier|*
+name|id_next
+decl_stmt|;
+comment|/* used in uc_devlist in userconfig() */
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 name|struct
-name|isa_device
+name|uc_device
 modifier|*
 name|id
 decl_stmt|;
@@ -285,7 +338,7 @@ name|id
 operator|=
 operator|(
 expr|struct
-name|isa_device
+name|uc_device
 operator|*
 operator|)
 operator|(
@@ -304,7 +357,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|isa_device
+name|uc_device
 argument_list|)
 operator|)
 expr_stmt|;
@@ -329,7 +382,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"di %s%d\n"
+literal|"disable %s%d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -345,7 +398,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"en %s%d\n"
+literal|"enable %s%d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -367,7 +420,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"po %s%d %#x\n"
+literal|"port %s%d %#x\n"
 argument_list|,
 name|name
 argument_list|,
@@ -394,7 +447,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"ir %s%d %d\n"
+literal|"irq %s%d %d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -426,7 +479,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"dr %s%d %d\n"
+literal|"drq %s%d %d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -453,7 +506,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"iom %s%d %#x\n"
+literal|"iomem %s%d %#x\n"
 argument_list|,
 name|name
 argument_list|,
@@ -480,7 +533,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"ios %s%d %d\n"
+literal|"iosize %s%d %d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -498,7 +551,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"f %s%d %#x\n"
+literal|"flags %s%d %#x\n"
 argument_list|,
 name|name
 argument_list|,
@@ -517,7 +570,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|isa_device
+name|uc_device
 argument_list|)
 operator|+
 literal|8
@@ -546,7 +599,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"q\n"
+literal|"quit\n"
 argument_list|)
 expr_stmt|;
 name|fclose
