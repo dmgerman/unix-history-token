@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.32.1.3 (Berkeley) %G%"
+literal|"@(#)login.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
 end_include
 
 begin_include
@@ -645,6 +651,9 @@ name|getuid
 argument_list|()
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -838,6 +847,9 @@ case|case
 literal|'?'
 case|:
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1307,6 +1319,9 @@ name|pw_passwd
 argument_list|)
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Login incorrect\n"
@@ -1428,6 +1443,9 @@ argument_list|,
 name|tty
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Login incorrect\n"
@@ -1469,6 +1487,9 @@ block|{
 case|case
 name|EUSERS
 case|:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1480,6 +1501,9 @@ break|break;
 case|case
 name|EPROCLIM
 case|:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1513,6 +1537,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"No directory %s!\n"
@@ -1540,6 +1567,9 @@ name|pw_dir
 operator|=
 literal|"/"
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Logging in with home = \"/\".\n"
@@ -1769,6 +1799,9 @@ operator|->
 name|pw_change
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Sorry -- your password has expired.\n"
@@ -1807,9 +1840,12 @@ operator|->
 name|pw_change
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"Warning: your password expires on %s %d, 19%d\n"
+literal|"Warning: your password expires on %s %d, %d\n"
 argument_list|,
 name|months
 index|[
@@ -1822,6 +1858,8 @@ name|ttp
 operator|->
 name|tm_mday
 argument_list|,
+name|TM_YEAR_BASE
+operator|+
 name|ttp
 operator|->
 name|tm_year
@@ -1845,6 +1883,9 @@ operator|->
 name|pw_expire
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Sorry -- your account has expired.\n"
@@ -1883,9 +1924,12 @@ operator|->
 name|pw_expire
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"Warning: your account expires on %s %d, 19%d\n"
+literal|"Warning: your account expires on %s %d, %d\n"
 argument_list|,
 name|months
 index|[
@@ -1898,6 +1942,8 @@ name|ttp
 operator|->
 name|tm_mday
 argument_list|,
+name|TM_YEAR_BASE
+operator|+
 name|ttp
 operator|->
 name|tm_year
@@ -2112,16 +2158,6 @@ operator|-
 literal|1
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|pwd
-operator|->
-name|pw_uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2379,6 +2415,9 @@ name|st_size
 operator|!=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"You have %smail.\n"
@@ -2474,6 +2513,17 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
+comment|/* discard permissions last so can't get killed and drop core */
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|pwd
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
 name|execlp
 argument_list|(
 name|pwd
@@ -2485,18 +2535,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"login: no shell: "
-argument_list|)
-expr_stmt|;
-name|perror
+literal|"login: no shell: %s.\n"
+argument_list|,
+name|strerror
 argument_list|(
-name|pwd
-operator|->
-name|pw_shell
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2538,6 +2589,9 @@ init|;
 condition|;
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"login: "
@@ -2608,6 +2662,9 @@ index|]
 operator|==
 literal|'-'
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -2639,6 +2696,9 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3032,6 +3092,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Last login: %.*s "
@@ -3062,6 +3125,9 @@ name|ll_host
 operator|!=
 literal|'\0'
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"from %.*s\n"
@@ -3079,6 +3145,9 @@ name|ll_host
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"on %.*s\n"
@@ -3406,6 +3475,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
