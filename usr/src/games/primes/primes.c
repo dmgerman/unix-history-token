@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)primes.c	5.2 (Berkeley) %G%"
+literal|"@(#)primes.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	primes [start [stop]]  *  *	Print primes>= start and<= stop.  If stop is omitted,  *	the value 4294967295 (2^32-1) is assumed.  If start is  *	omitted, start is read from standard input.  *  *	Prints "ouch" if start or stop is> 4294967295 (2^32-1)  *	or if a non-numeric is read on stdin.  *  * Validation check: there are 664579 primes between 0 and 10^7  */
+comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	primes [start [stop]]  *  *	Print primes>= start and< stop.  If stop is omitted,  *	the value 4294967295 (2^32-1) is assumed.  If start is  *	omitted, start is read from standard input.  *  *	Prints "ouch" if start or stop is bogus.  *  * validation check: there are 664579 primes between 0 and 10^7  */
 end_comment
 
 begin_include

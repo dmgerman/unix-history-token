@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)factor.c	4.2 (Berkeley) %G%"
+literal|"@(#)factor.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * factor - factor a number into primes  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	factor [number] ...  *  * With no args, reads numbers from stdin and factors them.  * With 1 or more args, factors such args.  Factors are printed  * in assending order, with a leading tab, one per line.  *  * When more than one arg is supplied, the argument value, left  * justified is printed before the set of factors.  This is not  * one for reading values from input for historical reasons.  */
+comment|/*  * factor - factor a number into primes  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	factor [number] ...  *  * The form of the output is:  *  *	number: factor1 factor1 factor2 factor3 factor3 factor3 ...  *  * where factor1< factor2< factor3< ...  *  * If no args are given, the list of numbers are read from stdin.  */
 end_comment
 
 begin_include
