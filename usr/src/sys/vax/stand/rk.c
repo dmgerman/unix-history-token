@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.7	82/12/17	*/
+comment|/*	rk.c	4.8	82/12/30	*/
 end_comment
 
 begin_comment
@@ -557,6 +557,51 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
+name|rkioctl
+argument_list|(
+argument|io
+argument_list|,
+argument|cmd
+argument_list|,
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|iob
+modifier|*
+name|io
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|ECMD
+operator|)
+return|;
 block|}
 end_block
 
