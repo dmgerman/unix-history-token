@@ -317,6 +317,10 @@ name|u_char
 name|system_map
 decl_stmt|;
 comment|/* Am I a system map? */
+name|u_char
+name|infork
+decl_stmt|;
+comment|/* Am I in fork processing? */
 name|vm_map_entry_t
 name|hint
 decl_stmt|;
