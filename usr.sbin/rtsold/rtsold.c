@@ -178,6 +178,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|Fflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force setting sysctl parameters */
+end_comment
+
+begin_decl_stmt
 name|int
 name|aflag
 init|=
@@ -481,13 +494,13 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"adDO:"
+literal|"adDFO:"
 expr_stmt|;
 block|}
 else|else
 name|opts
 operator|=
-literal|"adDfm1O:"
+literal|"adDfFm1O:"
 expr_stmt|;
 while|while
 condition|(
@@ -541,6 +554,14 @@ case|case
 literal|'f'
 case|:
 name|fflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|Fflag
 operator|=
 literal|1
 expr_stmt|;
@@ -719,6 +740,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|Fflag
+condition|)
+block|{
+name|setinet6sysctl
+argument_list|(
+name|IPV6CTL_ACCEPT_RTADV
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setinet6sysctl
+argument_list|(
+name|IPV6CTL_FORWARDING
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* warn if accept_rtadv is down */
 if|if
 condition|(
@@ -746,6 +789,7 @@ argument_list|(
 literal|"kernel is configured as a router, not a host"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* initialization to dump internal status to a file */
 name|signal
 argument_list|(
@@ -2941,14 +2985,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rtsol [-dD] interfaces...\n"
+literal|"usage: rtsol [-dDF] interfaces...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rtsol [-dD] -a\n"
+literal|"usage: rtsol [-dDF] -a\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2958,14 +3002,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rtsold [-adDfm1] interfaces...\n"
+literal|"usage: rtsold [-adDfFm1] interfaces...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rtsold [-dDfm1] -a\n"
+literal|"usage: rtsold [-dDfFm1] -a\n"
 argument_list|)
 expr_stmt|;
 block|}
