@@ -151,6 +151,12 @@ block|, }
 enum|;
 end_enum
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/* Structure for sockaddr tag */
 end_comment
@@ -184,6 +190,15 @@ end_define
 
 begin_comment
 comment|/* data is struct sockaddr */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_endif
