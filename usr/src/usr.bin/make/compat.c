@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compat.c	8.1 (Berkeley) %G%"
+literal|"@(#)compat.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,6 +395,24 @@ name|Boolean
 name|local
 decl_stmt|;
 comment|/* TRUE if command should be executed 				 * locally */
+comment|/*        * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
+if|#
+directive|if
+name|__GNUC__
+operator|(
+name|void
+operator|)
+operator|&
+name|av
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|errCheck
+expr_stmt|;
+endif|#
+directive|endif
 name|silent
 operator|=
 name|gn
@@ -584,6 +602,21 @@ name|cmd
 operator|++
 expr_stmt|;
 block|}
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|cmd
+argument_list|)
+condition|)
+name|cmd
+operator|++
+expr_stmt|;
 comment|/*      * Search for meta characters in the command. If there are no meta      * characters, there's no need to execute a shell to execute the      * command.      */
 for|for
 control|(
