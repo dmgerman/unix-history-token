@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,7 +17,7 @@ modifier|*
 name|s_leader
 decl_stmt|;
 comment|/* pointer to session leader */
-name|short
+name|int
 name|s_count
 decl_stmt|;
 comment|/* number of pgrps in session */
@@ -300,6 +300,16 @@ modifier|*
 name|p_quota
 decl_stmt|;
 comment|/* quotas for this process */
+name|int
+name|p_traceflag
+decl_stmt|;
+comment|/* kernel tracing flags (facilities) */
+name|struct
+name|inode
+modifier|*
+name|p_tracep
+decl_stmt|;
+comment|/* trace to inode */
 if|#
 directive|if
 name|defined
@@ -838,23 +848,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STRCSYS
+name|SKTR
 value|0x2000000
 end_define
 
 begin_comment
-comment|/* tracing system calls */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRCSYSI
-value|0x4000000
-end_define
-
-begin_comment
-comment|/* tracing system calls - inherited */
+comment|/* pass kernel tracing flags to children */
 end_comment
 
 begin_define
