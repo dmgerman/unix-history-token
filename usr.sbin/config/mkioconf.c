@@ -4408,12 +4408,32 @@ operator|->
 name|d_port
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|dp
+operator|->
+name|d_portn
+operator|>=
+literal|0
+condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
 literal|"   0x%04x,"
+argument_list|,
+name|dp
+operator|->
+name|d_portn
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"       %d,"
 argument_list|,
 name|dp
 operator|->
