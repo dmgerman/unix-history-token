@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c 4.8 %G%"
+literal|"@(#)print.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,7 +1056,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" = %X\n"
+literal|" = %x\n"
 argument_list|,
 name|var
 index|[
@@ -1439,7 +1439,7 @@ name|FI
 name|POOL
 name|printf
 argument_list|(
-literal|") from %X\n"
+literal|") from %x\n"
 argument_list|,
 name|callpc
 argument_list|)

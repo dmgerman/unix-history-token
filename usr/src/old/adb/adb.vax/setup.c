@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	4.8 (Berkeley) 84/08/05"
+literal|"@(#)setup.c	4.9 (Berkeley) 85/04/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -677,7 +677,7 @@ name|n_value
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbr %X slr %X\n"
+literal|"sbr %x slr %x\n"
 argument_list|,
 name|sbr
 argument_list|,
@@ -985,7 +985,7 @@ name|AST_CLR
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"p0br %X p0lr %X p1br %X p1lr %X\n"
+literal|"p0br %x p0lr %x p1br %x p1lr %x\n"
 argument_list|,
 name|pcb
 operator|.

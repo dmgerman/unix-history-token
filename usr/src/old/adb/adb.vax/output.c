@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	4.3 %G%"
+literal|"@(#)output.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1924,7 +1924,7 @@ name|base
 operator|==
 literal|16
 condition|?
-literal|"%X"
+literal|"%x"
 else|:
 literal|"%D"
 argument_list|,
