@@ -747,9 +747,16 @@ name|dostrip
 operator|&&
 name|dodir
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"-d and -s may not be specified together"
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* must have at least two arguments, except when creating directories */
 if|if
 condition|(
@@ -977,9 +984,16 @@ name|argc
 operator|!=
 literal|2
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"wrong number or types of arguments"
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
