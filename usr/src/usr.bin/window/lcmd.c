@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd.c	3.21 %G%"
+literal|"@(#)lcmd.c	3.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_debug
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_echo
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -198,6 +205,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_debug
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_echo
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -379,9 +394,17 @@ name|l_debug
 block|,
 name|arg_debug
 block|,
+literal|"echo"
+block|,
+literal|2
+block|,
+name|l_echo
+block|,
+name|arg_echo
+block|,
 literal|"escape"
 block|,
-literal|1
+literal|2
 block|,
 name|l_escape
 block|,
