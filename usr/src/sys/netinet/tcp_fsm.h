@@ -1,49 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_fsm.h	4.6	81/11/18	*/
+comment|/*	tcp_fsm.h	4.7	81/11/24	*/
 end_comment
 
 begin_comment
-comment|/*  * TCP FSM state definitions.  *  * This TCP machine has two more states than suggested in RFC 793,  * the extra states being L_SYN_RCVD and RCV_WAIT  *  * EXPLAIN THE EXTRA STATES.  */
-end_comment
-
-begin_comment
-comment|/*  * States  */
+comment|/*  * TCP FSM state definitions.  * Per RFC793, September, 1981.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCP_NSTATES
-value|14
+value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|EFAILEC
-value|-1
-end_define
-
-begin_comment
-comment|/* new state for failure, internally */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAME
+name|TCPS_CLOSED
 value|0
 end_define
 
 begin_comment
-comment|/* no state change, internally */
+comment|/* closed */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LISTEN
+name|TCPS_LISTEN
 value|1
 end_define
 
@@ -54,7 +39,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYN_SENT
+name|TCPS_SYN_SENT
 value|2
 end_define
 
@@ -65,22 +50,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYN_RCVD
+name|TCPS_SYN_RCVD
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|L_SYN_RCVD
-value|4
-end_define
+begin_comment
+comment|/* have send and received syn */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ESTAB
-value|5
+name|TCPS_ESTABLISHED
+value|4
 end_define
 
 begin_comment
@@ -90,30 +72,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FIN_W1
+name|TCPS_FIN_WAIT_1
+value|5
+end_define
+
+begin_comment
+comment|/* have closed, sent fin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPS_FIN_WAIT_2
 value|6
 end_define
 
 begin_comment
-comment|/* have closed and sent fin */
+comment|/* have closed, fin is acked */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FIN_W2
+name|TCPS_TIME_WAIT
 value|7
-end_define
-
-begin_comment
-comment|/* have closed and rcvd ack of fin */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIME_WAIT
-value|8
 end_define
 
 begin_comment
@@ -123,8 +105,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLOSE_WAIT
-value|9
+name|TCPS_CLOSE_WAIT
+value|8
 end_define
 
 begin_comment
@@ -134,8 +116,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLOSING
-value|10
+name|TCPS_CLOSING
+value|9
 end_define
 
 begin_comment
@@ -145,8 +127,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LAST_ACK
-value|11
+name|TCPS_LAST_ACK
+value|10
 end_define
 
 begin_comment
@@ -156,24 +138,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RCV_WAIT
-value|12
+name|TCPS_HAVERCVDSYN
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)>= TCPS_SYN_RCVD)
 end_define
-
-begin_comment
-comment|/* waiting for user to drain data */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CLOSED
-value|13
+name|TCPS_HAVERCVDFIN
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)>= TCPS_TIME_WAIT)
 end_define
-
-begin_comment
-comment|/* closed */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -211,7 +191,7 @@ name|tcpstates
 index|[]
 init|=
 block|{
-literal|"SAME"
+literal|"CLOSED"
 block|,
 literal|"LISTEN"
 block|,
@@ -219,13 +199,11 @@ literal|"SYN_SENT"
 block|,
 literal|"SYN_RCVD"
 block|,
-literal|"L_SYN_RCVD"
+literal|"ESTABLISHED"
 block|,
-literal|"ESTAB"
+literal|"FIN_WAIT1"
 block|,
-literal|"FIN_W1"
-block|,
-literal|"FIN_W2"
+literal|"FIN_WAIT2"
 block|,
 literal|"TIME_WAIT"
 block|,
@@ -234,31 +212,7 @@ block|,
 literal|"CLOSING"
 block|,
 literal|"LAST_ACK"
-block|,
-literal|"RCV_WAIT"
-block|,
-literal|"CLOSED"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tcptimers
-index|[]
-init|=
-block|{
-literal|"INIT"
-block|,
-literal|"REXMT"
-block|,
-literal|"REXMTTL"
-block|,
-literal|"PERSIST"
-block|,
-literal|"FINACK"
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

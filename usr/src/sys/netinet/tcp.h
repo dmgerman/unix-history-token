@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.17 81/11/18 */
+comment|/* tcp.h 1.18 81/11/24 */
 end_comment
 
 begin_comment
@@ -44,27 +44,27 @@ decl_stmt|;
 define|#
 directive|define
 name|TH_FIN
-value|001
+value|0x01
 define|#
 directive|define
 name|TH_SYN
-value|002
+value|0x02
 define|#
 directive|define
 name|TH_RST
-value|004
+value|0x04
 define|#
 directive|define
-name|TH_EOL
-value|010
+name|TH_PUSH
+value|0x08
 define|#
 directive|define
 name|TH_ACK
-value|020
+value|0x10
 define|#
 directive|define
 name|TH_URG
-value|040
+value|0x20
 name|u_short
 name|th_win
 decl_stmt|;

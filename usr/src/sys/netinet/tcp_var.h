@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.6	81/11/24	*/
+comment|/*	tcp_var.h	4.7	81/11/24	*/
 end_comment
 
 begin_comment
@@ -149,711 +149,8 @@ value|ti_t.th_urp
 end_define
 
 begin_comment
-comment|/*  * Tcp control block.  */
+comment|/*  * TCP sequence numbers are 32 bit integers operated  * on with modular arithmetic.  These macros can be  * used to compare such integers.  */
 end_comment
-
-begin_struct
-struct|struct
-name|tcpcb
-block|{
-name|struct
-name|tcpiphdr
-modifier|*
-name|seg_next
-decl_stmt|,
-modifier|*
-name|seg_prev
-decl_stmt|;
-comment|/* seq queue */
-name|struct
-name|tcpiphdr
-modifier|*
-name|t_template
-decl_stmt|;
-comment|/* skeletal packet for transmit */
-name|struct
-name|inpcb
-modifier|*
-name|t_inpcb
-decl_stmt|;
-name|seq_t
-name|iss
-decl_stmt|;
-comment|/* initial send seq # */
-name|seq_t
-name|irs
-decl_stmt|;
-comment|/* initial recv seq # */
-name|seq_t
-name|rcv_urp
-decl_stmt|;
-comment|/* rcv urgent pointer */
-name|seq_t
-name|rcv_nxt
-decl_stmt|;
-comment|/* next seq # to rcv */
-name|seq_t
-name|rcv_end
-decl_stmt|;
-comment|/* rcv eol pointer */
-name|seq_t
-name|snd_off
-decl_stmt|;
-comment|/* seq # of first datum in send buf */
-name|seq_t
-name|seq_fin
-decl_stmt|;
-comment|/* seq # of FIN sent */
-name|seq_t
-name|snd_end
-decl_stmt|;
-comment|/* send eol pointer */
-name|seq_t
-name|snd_urp
-decl_stmt|;
-comment|/* snd urgent pointer */
-name|seq_t
-name|snd_lst
-decl_stmt|;
-comment|/* seq # of last sent datum */
-name|seq_t
-name|snd_nxt
-decl_stmt|;
-comment|/* seq # of next datum to send */
-name|seq_t
-name|snd_una
-decl_stmt|;
-comment|/* seq # of first unacked datum */
-name|seq_t
-name|snd_wl
-decl_stmt|;
-comment|/* seq # of last sent window */
-name|seq_t
-name|snd_hi
-decl_stmt|;
-comment|/* highest seq # sent */
-name|seq_t
-name|snd_wnd
-decl_stmt|;
-comment|/* send window max */
-name|seq_t
-name|t_rexmt_val
-decl_stmt|;
-comment|/* val saved in rexmt timer */
-name|seq_t
-name|t_rtl_val
-decl_stmt|;
-comment|/* val saved in rexmt too long timer */
-name|seq_t
-name|t_xmt_val
-decl_stmt|;
-comment|/* seq # sent when xmt timer started */
-name|seq_t
-name|rcv_adv
-decl_stmt|;
-comment|/* advertised window */
-name|struct
-name|mbuf
-modifier|*
-name|seg_unack
-decl_stmt|;
-comment|/* unacked message queue */
-name|short
-name|seqcnt
-decl_stmt|;
-name|u_short
-name|tc_flags
-decl_stmt|;
-comment|/* flags and state; see below */
-name|u_short
-name|t_options
-decl_stmt|;
-define|#
-directive|define
-name|TO_EOL
-value|0x01
-comment|/* eol mode */
-define|#
-directive|define
-name|TO_URG
-value|0x02
-comment|/* urgent mode */
-name|u_char
-name|t_state
-decl_stmt|;
-comment|/* state of this connection */
-name|u_char
-name|t_xmtime
-decl_stmt|;
-comment|/* current rexmt time */
-comment|/* timers... must be in order */
-name|short
-name|t_init
-decl_stmt|;
-comment|/* init */
-name|short
-name|t_rexmt
-decl_stmt|;
-comment|/* retransmission */
-name|short
-name|t_rexmttl
-decl_stmt|;
-comment|/* retransmit too long */
-name|short
-name|t_persist
-decl_stmt|;
-comment|/* retransmit persistance */
-name|short
-name|t_finack
-decl_stmt|;
-comment|/* fin acknowledged */
-name|short
-name|t_xmt
-decl_stmt|;
-comment|/* round trip transmission time */
-comment|/* end timers */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* tc_flags values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_ACK_DUE
-value|0x0001
-end_define
-
-begin_comment
-comment|/* must we send ACK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_CANCELLED
-value|0x0002
-end_define
-
-begin_comment
-comment|/* retransmit timer cancelled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_FIN_RCVD
-value|0x0004
-end_define
-
-begin_comment
-comment|/* FIN received */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_FORCE_ONE
-value|0x0008
-end_define
-
-begin_comment
-comment|/* force sending of one byte */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_NEW_WINDOW
-value|0x0010
-end_define
-
-begin_comment
-comment|/* received new window size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_REXMT
-value|0x0020
-end_define
-
-begin_comment
-comment|/* this msg is a retransmission */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_SND_FIN
-value|0x0040
-end_define
-
-begin_comment
-comment|/* FIN should be sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_SND_RST
-value|0x0080
-end_define
-
-begin_comment
-comment|/* RST should be sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_SND_URG
-value|0x0100
-end_define
-
-begin_comment
-comment|/* urgent data to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_SYN_ACKED
-value|0x0200
-end_define
-
-begin_comment
-comment|/* SYN has been ACKed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_SYN_RCVD
-value|0x0400
-end_define
-
-begin_comment
-comment|/* SYN has been received */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_USR_CLOSED
-value|0x0800
-end_define
-
-begin_comment
-comment|/* user has closed connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_USR_ABORT
-value|0x1000
-end_define
-
-begin_comment
-comment|/* user has closed and does not expect 					   to receive any more data */
-end_comment
-
-begin_comment
-comment|/*  * TCP timers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TINIT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TREXMT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TREXMTTL
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|TPERSIST
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TFINACK
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|TNTIMERS
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|intotcpcb
-parameter_list|(
-name|ip
-parameter_list|)
-value|((struct tcpcb *)(ip)->inp_ppcb)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sototcpcb
-parameter_list|(
-name|so
-parameter_list|)
-value|(intotcpcb(sotoinpcb(so)))
-end_define
-
-begin_comment
-comment|/*  * Tcp machine predicates  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ack_ok
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|(((y)->ti_flags&TH_ACK)==0 || \       ((x)->iss< (y)->ti_ackno&& (y)->ti_ackno<= (x)->snd_hi))
-end_define
-
-begin_define
-define|#
-directive|define
-name|syn_ok
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|((y)->ti_flags&TH_SYN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ack_fin
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|((x)->seq_fin> (x)->iss&& (y)->ti_ackno> (x)->seq_fin)
-end_define
-
-begin_define
-define|#
-directive|define
-name|rcv_empty
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_inpcb->inp_socket->so_rcv.sb_mb == NULL&& \        (x)->seg_next == (x)->seg_prev))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISSINCR
-value|128
-end_define
-
-begin_comment
-comment|/* increment for iss each second */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPSIZE
-value|20
-end_define
-
-begin_comment
-comment|/* size of TCP leader (bytes) */
-end_comment
-
-begin_comment
-comment|/*  * THESE NEED TO BE JUSTIFIED!  *  * *2 here is because slow timeout routine called every 1/2 second.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_INIT
-value|(30*2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_2ML
-value|(10*2)
-end_define
-
-begin_comment
-comment|/* 2*maximum packet lifetime */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_PERS
-value|(5*2)
-end_define
-
-begin_comment
-comment|/* persist time */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_REXMT
-value|(1*2)
-end_define
-
-begin_comment
-comment|/* base for retransmission time */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_REXMTTL
-value|(30*2)
-end_define
-
-begin_comment
-comment|/* retransmit too long timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_REMAX
-value|(30*2)
-end_define
-
-begin_comment
-comment|/* maximum retransmission time */
-end_comment
-
-begin_struct
-struct|struct
-name|tcpstat
-block|{
-name|int
-name|tcps_badsum
-decl_stmt|;
-name|int
-name|tcps_badoff
-decl_stmt|;
-name|int
-name|tcps_hdrops
-decl_stmt|;
-name|int
-name|tcps_badsegs
-decl_stmt|;
-name|int
-name|tcps_unack
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCPDEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TDBSIZE
-value|50
-end_define
-
-begin_comment
-comment|/*  * Tcp debugging record.  */
-end_comment
-
-begin_struct
-struct|struct
-name|tcp_debug
-block|{
-name|long
-name|td_tod
-decl_stmt|;
-comment|/* time of day */
-name|struct
-name|tcbcb
-modifier|*
-name|td_tcb
-decl_stmt|;
-comment|/* -> tcb */
-name|char
-name|td_old
-decl_stmt|;
-comment|/* old state */
-name|char
-name|td_inp
-decl_stmt|;
-comment|/* input */
-name|char
-name|td_tim
-decl_stmt|;
-comment|/* timer id */
-name|char
-name|td_new
-decl_stmt|;
-comment|/* new state */
-name|seq_t
-name|td_sno
-decl_stmt|;
-comment|/* seq_t number */
-name|seq_t
-name|td_ano
-decl_stmt|;
-comment|/* acknowledgement */
-name|u_short
-name|td_wno
-decl_stmt|;
-comment|/* window */
-name|u_short
-name|td_lno
-decl_stmt|;
-comment|/* length */
-name|u_char
-name|td_flg
-decl_stmt|;
-comment|/* message flags */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|seq_t
-name|tcp_iss
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tcp initial send seq # */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|inpcb
-name|tcb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tcpstat
-name|tcpstat
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCPDEBUG
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|tcpconsdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to 1 traces on console */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|tcp_debug
-name|tcp_debug
-index|[
-name|TDBSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tdbx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* rotating index into tcp_debug */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|struct
-name|tcpiphdr
-modifier|*
-name|tcp_template
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -902,6 +199,556 @@ name|b
 parameter_list|)
 value|((int)((a)-(b))>= 0)
 end_define
+
+begin_comment
+comment|/*  * Definitions of the TCP timers.  These timers are counted  * down PR_SLOWHZ times a second.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_NTIMERS
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPT_INIT
+value|0
+end_define
+
+begin_comment
+comment|/* initialization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_REXMT
+value|1
+end_define
+
+begin_comment
+comment|/* retransmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_REXMTTL
+value|2
+end_define
+
+begin_comment
+comment|/* retransmit too long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_KEEP
+value|3
+end_define
+
+begin_comment
+comment|/* keep alive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_KEEPTTL
+value|4
+end_define
+
+begin_comment
+comment|/* keep alive too long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_PERSIST
+value|5
+end_define
+
+begin_comment
+comment|/* retransmit persistance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_2MSL
+value|6
+end_define
+
+begin_comment
+comment|/* 2*msl quiet time timer */
+end_comment
+
+begin_comment
+comment|/*  * Tcp control block.  */
+end_comment
+
+begin_struct
+struct|struct
+name|tcpcb
+block|{
+name|struct
+name|tcpiphdr
+modifier|*
+name|seg_next
+decl_stmt|,
+modifier|*
+name|seg_prev
+decl_stmt|;
+comment|/* seq queue */
+name|short
+name|seqcnt
+decl_stmt|;
+comment|/* count of chars in seq queue */
+name|u_char
+name|t_state
+decl_stmt|;
+comment|/* state of this connection */
+name|short
+name|t_timers
+index|[
+name|TCPT_NTIMERS
+index|]
+decl_stmt|;
+comment|/* tcp timers */
+name|u_char
+name|t_options
+decl_stmt|;
+comment|/* connection options: */
+define|#
+directive|define
+name|TO_PUSH
+value|0x01
+comment|/* push mode */
+define|#
+directive|define
+name|TO_URG
+value|0x02
+comment|/* urgent mode */
+define|#
+directive|define
+name|TO_KEEP
+value|0x04
+comment|/* use keep-alives */
+name|u_char
+name|t_flags
+decl_stmt|;
+define|#
+directive|define
+name|TF_OWEACK
+value|0x01
+comment|/* owe ack to peer */
+name|struct
+name|mbuf
+modifier|*
+name|seg_unack
+decl_stmt|;
+comment|/* unacked message queue */
+name|struct
+name|tcpiphdr
+modifier|*
+name|t_template
+decl_stmt|;
+comment|/* skeletal packet for transmit */
+name|struct
+name|inpcb
+modifier|*
+name|t_inpcb
+decl_stmt|;
+comment|/* back pointer to internet pcb */
+comment|/*  * The following fields are used as in the protocol specification.  * See RFC783, Dec. 1981, page 21.  */
+comment|/* send sequence variables */
+name|tcp_seq
+name|snd_una
+decl_stmt|;
+comment|/* send unacknowledged */
+name|tcp_seq
+name|snd_nxt
+decl_stmt|;
+comment|/* send next */
+name|u_short
+name|snd_wnd
+decl_stmt|;
+comment|/* send window */
+name|tcp_seq
+name|snd_up
+decl_stmt|;
+comment|/* send urgent pointer */
+name|tcp_seq
+name|snd_wl1
+decl_stmt|;
+comment|/* window update seg seq number */
+name|tcp_seq
+name|snd_wl2
+decl_stmt|;
+comment|/* window update seg ack number */
+name|tcp_seq
+name|iss
+decl_stmt|;
+comment|/* initial send sequence number */
+comment|/* receive sequence variables */
+name|tcp_seq
+name|rcv_nxt
+decl_stmt|;
+comment|/* receive next */
+name|u_short
+name|rcv_wnd
+decl_stmt|;
+comment|/* receive window */
+name|tcp_seq
+name|rcv_up
+decl_stmt|;
+comment|/* receive urgent pointer */
+name|tcp_seq
+name|irs
+decl_stmt|;
+comment|/* initial receive sequence number */
+comment|/*  * Additional variables for this implementation.  */
+comment|/* send variables */
+name|tcp_seq
+name|snd_off
+decl_stmt|;
+comment|/*??*/
+comment|/* seq # of first datum in send buf */
+name|tcp_seq
+name|seq_fin
+decl_stmt|;
+comment|/*??*/
+comment|/* seq # of FIN sent */
+name|tcp_seq
+name|snd_hi
+decl_stmt|;
+comment|/*??*/
+comment|/* highest seq # sent */
+name|tcp_seq
+name|snd_end
+decl_stmt|;
+comment|/*??*/
+comment|/* send eol pointer */
+name|tcp_seq
+name|snd_lst
+decl_stmt|;
+comment|/*??*/
+comment|/* seq # of last sent datum */
+name|tcp_seq
+name|snd_wl
+decl_stmt|;
+comment|/*??*/
+comment|/* seq # of last sent window */
+name|tcp_seq
+name|snd_wnd
+decl_stmt|;
+comment|/*??*/
+comment|/* send window max */
+comment|/* retransmit variables */
+name|tcp_seq
+name|t_rexmt_val
+decl_stmt|;
+comment|/*??*/
+comment|/* val saved in rexmt timer */
+name|tcp_seq
+name|t_rtl_val
+decl_stmt|;
+comment|/*??*/
+comment|/* val saved in rexmt too long timer */
+name|tcp_seq
+name|t_xmt_val
+decl_stmt|;
+comment|/*??*/
+comment|/* seq # sent when xmt timer started */
+name|u_char
+name|t_xmtime
+decl_stmt|;
+comment|/*??*/
+comment|/* current rexmt time */
+name|short
+name|t_xmt
+decl_stmt|;
+comment|/*??*/
+comment|/* round trip transmission time */
+comment|/* receive variables */
+name|tcp_seq
+name|rcv_end
+decl_stmt|;
+comment|/*??*/
+comment|/* rcv eol pointer */
+name|tcp_seq
+name|rcv_adv
+decl_stmt|;
+comment|/*??*/
+comment|/* advertised window */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|intotcpcb
+parameter_list|(
+name|ip
+parameter_list|)
+value|((struct tcpcb *)(ip)->inp_ppcb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sototcpcb
+parameter_list|(
+name|so
+parameter_list|)
+value|(intotcpcb(sotoinpcb(so)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISSINCR
+value|128
+end_define
+
+begin_comment
+comment|/* increment for iss each second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSIZE
+value|20
+end_define
+
+begin_comment
+comment|/* size of TCP leader (bytes) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_TTL
+value|30
+end_define
+
+begin_comment
+comment|/* time to live for TCP segs: 30s */
+end_comment
+
+begin_comment
+comment|/*  * TCPSC constants give various timeouts in ``slow-clock'' ticks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_MSL
+value|(TCP_TTL*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* max seg lifetime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_REXMT
+value|(1*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* base retransmit time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_REXMTTL
+value|(TCP_TTL*2*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* retransmit too long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_KEEP
+value|(TCP_TTL*4*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* keep alive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_KEEPTTL
+value|(4*TCPSC_KEEP)
+end_define
+
+begin_comment
+comment|/* keep alive too long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_PERSIST
+value|(5*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* retransmit persistance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_2MSL
+value|(TCP_TTL*2*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* 2*msl quiet time timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPSC_REMAX
+value|(TCP_TTL*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* maximum rexmt time */
+end_comment
+
+begin_struct
+struct|struct
+name|tcpstat
+block|{
+name|int
+name|tcps_badsum
+decl_stmt|;
+name|int
+name|tcps_badoff
+decl_stmt|;
+name|int
+name|tcps_hdrops
+decl_stmt|;
+name|int
+name|tcps_badsegs
+decl_stmt|;
+name|int
+name|tcps_unack
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|tcp_seq
+name|tcp_iss
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tcp initial send seq # */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|inpcb
+name|tcb
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head of queue of active tcpcb's */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tcpstat
+name|tcpstat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tcp statistics */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|struct
+name|tcpiphdr
+modifier|*
+name|tcp_template
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPTIMERS
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tcptimers
+index|[]
+init|=
+block|{
+literal|"INIT"
+block|,
+literal|"REXMT"
+block|,
+literal|"REXMTTL"
+block|,
+literal|"KEEP"
+block|,
+literal|"KEEPTTL"
+block|,
+literal|"PERSIST"
+block|,
+literal|"2MSL"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
