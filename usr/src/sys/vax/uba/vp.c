@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.8	81/03/10	*/
+comment|/*	vp.c	4.9	81/04/02	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Versatec matrix printer/plotter  * dma interface driver  */
+comment|/*  * Versatec matrix printer/plotter  * dma interface driver  *  * SETUP NOTES:  *	Set up both print and plot interrupts to go through the same vector  *	Give the address of the plcsr register in the config specification  */
 end_comment
 
 begin_include
@@ -435,7 +435,7 @@ literal|0
 expr_stmt|;
 name|vpaddr
 operator|->
-name|plbcr
+name|prbcr
 operator|=
 literal|1
 expr_stmt|;
@@ -450,6 +450,29 @@ name|prcsr
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ERNIE
+comment|/* UNTIL REWIRED, GET INTERRUPT AT 200 BUT WANT 174 */
+if|if
+condition|(
+name|cvec
+operator|==
+literal|0200
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vp reset vec from 200 to 174\n"
+argument_list|)
+expr_stmt|;
+name|cvec
+operator|=
+literal|0174
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_block
 
