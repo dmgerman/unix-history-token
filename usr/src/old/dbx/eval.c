@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.9 %G%"
+literal|"@(#)eval.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,15 @@ name|stack
 index|[
 literal|0
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|Boolean
+name|useInstLoc
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -1876,6 +1885,22 @@ block|}
 name|inst_tracing
 operator|=
 name|b
+expr_stmt|;
+name|useInstLoc
+operator|=
+operator|(
+name|Boolean
+operator|)
+operator|(
+name|not
+name|p
+operator|->
+name|value
+operator|.
+name|step
+operator|.
+name|source
+operator|)
 expr_stmt|;
 name|printnews
 argument_list|()
