@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.13 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,11 +560,11 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+comment|/* Set up stack. */
 name|sp
 operator|=
 name|s
 expr_stmt|;
-comment|/* Set up stack. */
 name|push
 argument_list|(
 name|a
@@ -788,6 +788,7 @@ name|cp
 operator|==
 literal|0
 condition|)
+comment|/* Find next non-empty pile. */
 name|cp
 operator|++
 expr_stmt|;
@@ -1048,7 +1049,6 @@ name|sp
 operator|=
 name|s
 expr_stmt|;
-comment|/* Set up stack. */
 name|push
 argument_list|(
 name|a
@@ -1202,12 +1202,10 @@ name|sp1
 operator|=
 name|sp
 expr_stmt|;
-comment|/* Stack position of biggest bin. */
 name|bigc
 operator|=
 literal|2
 expr_stmt|;
-comment|/* Size of biggest bin. */
 if|if
 condition|(
 name|endch
@@ -1215,7 +1213,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Special case: set top[eos]. */
 name|top
 index|[
 literal|0
@@ -1270,7 +1267,6 @@ operator|+
 name|bmin
 init|;
 name|nc
-operator|--
 operator|>
 literal|0
 condition|;
@@ -1344,6 +1340,10 @@ name|cp
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Reset count[]. */
+name|nc
+operator|--
+expr_stmt|;
 block|}
 name|swap
 argument_list|(
@@ -1356,7 +1356,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* Play it safe -- biggest bin last. */
 for|for
 control|(
 name|ak
@@ -1376,6 +1375,7 @@ operator|>
 name|ta
 condition|;
 control|)
+comment|/* Copy to temp. */
 operator|*
 operator|--
 name|ak
@@ -1398,6 +1398,7 @@ operator|>=
 name|ta
 condition|;
 control|)
+comment|/* Deal to piles. */
 operator|*
 operator|--
 name|top
