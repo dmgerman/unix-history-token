@@ -858,10 +858,6 @@ define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_long, "L", descr)
 end_define
 
-begin_comment
-comment|/* Oid for an unsigned long.  If ptr is NULL, val is returned. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -3005,6 +3001,26 @@ name|void
 operator|*
 operator|,
 name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sysctlnametomib
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|size_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
