@@ -446,7 +446,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|isa_driver
 name|trixdriver
@@ -462,7 +461,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|isa_driver
 name|trixsbdriver
@@ -583,7 +581,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|isa_driver
 name|gusxvidriver
@@ -599,7 +596,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|isa_driver
 name|gusmaxdriver
