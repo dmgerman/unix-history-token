@@ -1724,7 +1724,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|video_mode
 parameter_list|(
 name|int
@@ -2046,7 +2046,9 @@ name|name
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+name|EXIT_FAILURE
+return|;
 if|if
 condition|(
 name|ioctl
@@ -2060,11 +2062,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|warn
 argument_list|(
 literal|"cannot set videomode"
 argument_list|)
 expr_stmt|;
+return|return
+name|EXIT_FAILURE
+return|;
+block|}
 if|if
 condition|(
 name|mode
@@ -2226,6 +2233,9 @@ argument_list|,
 literal|"cannot activate raster display"
 argument_list|)
 expr_stmt|;
+return|return
+name|EXIT_FAILURE
+return|;
 block|}
 block|}
 operator|(
@@ -2235,7 +2245,9 @@ operator|)
 operator|++
 expr_stmt|;
 block|}
-return|return;
+return|return
+name|EXIT_SUCCESS
+return|;
 block|}
 end_function
 
@@ -4043,6 +4055,9 @@ name|dumpopt
 decl_stmt|,
 name|opt
 decl_stmt|;
+name|int
+name|reterr
+decl_stmt|;
 name|info
 operator|.
 name|size
@@ -4369,6 +4384,8 @@ argument_list|,
 name|dumpopt
 argument_list|)
 expr_stmt|;
+name|reterr
+operator|=
 name|video_mode
 argument_list|(
 name|argc
@@ -4432,7 +4449,7 @@ name|usage
 argument_list|()
 expr_stmt|;
 return|return
-literal|0
+name|reterr
 return|;
 block|}
 end_function
