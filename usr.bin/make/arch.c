@@ -326,7 +326,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|a
 operator|->
@@ -2182,7 +2182,7 @@ operator|->
 name|members
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|ar
 operator|->
@@ -3212,12 +3212,12 @@ argument_list|,
 literal|"r+"
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p2
 argument_list|)
@@ -3468,12 +3468,12 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p2
 argument_list|)

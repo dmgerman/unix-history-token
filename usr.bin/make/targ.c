@@ -480,7 +480,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|gn
 operator|->

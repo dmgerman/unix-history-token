@@ -889,7 +889,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)

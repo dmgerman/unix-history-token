@@ -5614,7 +5614,7 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)
@@ -6716,7 +6716,7 @@ operator|->
 name|refCount
 operator|++
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|gn
 operator|->
@@ -7063,7 +7063,7 @@ name|refCount
 operator|++
 expr_stmt|;
 comment|/*      * So Dir_MTime doesn't go questing for it...      */
-name|efree
+name|free
 argument_list|(
 name|gn
 operator|->

@@ -3775,7 +3775,7 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)

@@ -990,7 +990,7 @@ operator|&
 name|p1
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)
@@ -1427,7 +1427,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|efree
+name|free
 argument_list|(
 name|ptr
 argument_list|)
@@ -1629,7 +1629,7 @@ name|pgn
 argument_list|)
 expr_stmt|;
 block|}
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)
@@ -1746,7 +1746,7 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
-name|efree
+name|free
 argument_list|(
 name|p1
 argument_list|)

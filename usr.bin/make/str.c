@@ -287,7 +287,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|efree
+name|free
 argument_list|(
 name|s1
 argument_list|)
@@ -295,7 +295,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|efree
+name|free
 argument_list|(
 name|s2
 argument_list|)

@@ -296,17 +296,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* efree(x) works when x==NULL. STDC behavior, may need some different  * definition for cross-builds on deficient systems */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|efree
-value|free
-end_define
-
 begin_function_decl
 name|void
 modifier|*
