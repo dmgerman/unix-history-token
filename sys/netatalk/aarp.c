@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990,1991 Regents of The University of Michigan.  * All Rights Reserved.  */
+comment|/*  * Copyright (c) 1990,1991 Regents of The University of Michigan.  * All Rights Reserved.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2080,6 +2080,21 @@ operator|->
 name|aat_hold
 condition|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|mhold
+init|=
+name|aat
+operator|->
+name|aat_hold
+decl_stmt|;
+name|aat
+operator|->
+name|aat_hold
+operator|=
+name|NULL
+expr_stmt|;
 name|sat
 operator|.
 name|sat_len
@@ -2116,9 +2131,7 @@ name|ac
 operator|->
 name|ac_if
 argument_list|,
-name|aat
-operator|->
-name|aat_hold
+name|mhold
 argument_list|,
 operator|(
 expr|struct
@@ -2132,20 +2145,12 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|aat
-operator|->
-name|aat_hold
-operator|=
-literal|0
-expr_stmt|;
 block|}
 block|}
+elseif|else
 if|if
 condition|(
-name|aat
-operator|==
-literal|0
-operator|&&
+operator|(
 name|tpa
 operator|.
 name|s_net
@@ -2153,7 +2158,9 @@ operator|==
 name|ma
 operator|.
 name|s_net
+operator|)
 operator|&&
+operator|(
 name|tpa
 operator|.
 name|s_node
@@ -2161,14 +2168,15 @@ operator|==
 name|ma
 operator|.
 name|s_node
+operator|)
 operator|&&
+operator|(
 name|op
 operator|!=
 name|AARPOP_PROBE
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 operator|(
 name|aat
 operator|=
@@ -2180,6 +2188,7 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|)
 condition|)
 block|{
 name|bcopy
@@ -2212,7 +2221,6 @@ name|aat_flags
 operator||=
 name|ATF_COM
 expr_stmt|;
-block|}
 block|}
 comment|/*      * Don't respond to responses, and never respond if we're      * still probing.      */
 if|if
@@ -2583,7 +2591,7 @@ name|aat
 operator|->
 name|aat_hold
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|aat
 operator|->
@@ -3485,6 +3493,12 @@ name|aat
 operator|->
 name|aat_hold
 argument_list|)
+expr_stmt|;
+name|aat
+operator|->
+name|aat_hold
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
