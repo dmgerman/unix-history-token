@@ -1083,6 +1083,12 @@ name|caddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|n
+operator|->
+name|m_len
+operator|=
+name|len
+expr_stmt|;
 return|return
 name|n
 return|;
