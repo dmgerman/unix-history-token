@@ -1305,35 +1305,6 @@ name|cmd
 condition|)
 block|{
 case|case
-name|DIOCGMBR
-case|:
-comment|/* Return a copy of the disklabel to userland. */
-name|bcopy
-argument_list|(
-name|mp
-operator|->
-name|sec0
-argument_list|,
-name|gio
-operator|->
-name|data
-argument_list|,
-literal|512
-argument_list|)
-expr_stmt|;
-name|g_io_deliver
-argument_list|(
-name|bp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-case|case
 name|DIOCSMBR
 case|:
 comment|/* 		 * These we cannot do without the topology lock and some 		 * some I/O requests.  Ask the event-handler to schedule 		 * us in a less restricted environment. 		 */

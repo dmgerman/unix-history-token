@@ -233,13 +233,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIOCGMBR
-value|_IOR('M', 128, u_char[512])
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIOCSMBR
 value|_IOW('M', 129, u_char[512])
 end_define
