@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.14 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -100,24 +106,26 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_decl_stmt
-name|char
-modifier|*
-name|tmp
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|basename
-parameter_list|(
-name|cp
-parameter_list|)
-value|((tmp=rindex((cp), '/')) ? tmp+1 : (cp))
-end_define
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -133,10 +141,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|DB
 modifier|*
 name|db
@@ -145,6 +149,9 @@ name|int
 name|ch
 decl_stmt|;
 name|char
+modifier|*
+name|p
+decl_stmt|,
 modifier|*
 name|nlistpath
 decl_stmt|,
@@ -211,6 +218,24 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* If the existing db file matches the currently running kernel, exit */
+if|if
+condition|(
+name|testdb
+argument_list|()
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|basename
+parameter_list|(
+name|cp
+parameter_list|)
+value|((p = rindex((cp), '/')) != NULL ? p + 1 : (cp))
 name|nlistpath
 operator|=
 name|argc
@@ -234,13 +259,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|dbtemp
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dbtemp
+argument_list|)
+argument_list|,
 literal|"%skvm_%s.tmp"
 argument_list|,
-name|_PATH_VARRUN
+name|_PATH_VARDB
 argument_list|,
 name|nlistname
 argument_list|)
@@ -248,13 +278,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|dbname
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dbname
+argument_list|)
+argument_list|,
 literal|"%skvm_%s.db"
 argument_list|,
-name|_PATH_VARRUN
+name|_PATH_VARDB
 argument_list|,
 name|nlistname
 argument_list|)
@@ -275,9 +310,11 @@ name|dbtemp
 argument_list|,
 name|O_CREAT
 operator||
-name|O_WRONLY
+name|O_EXLOCK
 operator||
-name|O_EXCL
+name|O_TRUNC
+operator||
+name|O_WRONLY
 argument_list|,
 name|S_IRUSR
 operator||
@@ -383,21 +420,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|)
 name|char
 modifier|*
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|sverr
@@ -453,14 +485,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -478,7 +508,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
