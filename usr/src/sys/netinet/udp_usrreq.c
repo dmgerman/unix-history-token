@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.10	81/11/24	*/
+comment|/*	udp_usrreq.c	4.11	81/11/26	*/
 end_comment
 
 begin_include
@@ -48,19 +48,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_pcb.h"
+file|"../net/in_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_include
@@ -98,6 +98,11 @@ end_macro
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|UDP_INIT
+argument_list|)
+expr_stmt|;
 name|udb
 operator|.
 name|inp_next
@@ -169,6 +174,11 @@ name|len
 decl_stmt|,
 name|ulen
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|UDP_INPUT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Get ip and udp header together in first mbuf. 	 */
 name|m
 operator|=
@@ -381,7 +391,7 @@ name|ui
 operator|->
 name|ui_sum
 operator|=
-name|inet_cksum
+name|in_cksum
 argument_list|(
 name|m
 argument_list|,
@@ -547,6 +557,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|UDP_CTLINPUT
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"udp_ctlinput\n"
@@ -609,6 +624,11 @@ name|len
 init|=
 literal|0
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|UDP_OUTPUT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Calculate data length and get a mbuf 	 * for udp and ip headers. 	 */
 for|for
 control|(
@@ -775,7 +795,7 @@ name|ui
 operator|->
 name|ui_sum
 operator|=
-name|inet_cksum
+name|in_cksum
 argument_list|(
 name|m
 argument_list|,
@@ -823,6 +843,13 @@ expr_stmt|;
 name|ip_output
 argument_list|(
 name|m
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -896,6 +923,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|UDP_USRREQ
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -1221,6 +1253,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|COUNT
+argument_list|(
+name|UDP_SENSE
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"udp_sense\n"
