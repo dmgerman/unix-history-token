@@ -19,6 +19,11 @@ decl_stmt|;
 name|int
 name|stacknleft
 decl_stmt|;
+name|struct
+name|stackmark
+modifier|*
+name|marknext
+decl_stmt|;
 block|}
 struct|;
 end_struct

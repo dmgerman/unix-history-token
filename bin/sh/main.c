@@ -935,6 +935,12 @@ operator|&
 name|smark
 argument_list|)
 expr_stmt|;
+name|setstackmark
+argument_list|(
+operator|&
+name|smark
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|evalskip
@@ -955,7 +961,6 @@ operator|&
 name|smark
 argument_list|)
 expr_stmt|;
-comment|/* unnecessary */
 block|}
 end_function
 
