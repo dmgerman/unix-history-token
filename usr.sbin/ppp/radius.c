@@ -367,6 +367,11 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|stype
+decl_stmt|;
 name|r
 operator|->
 name|cx
@@ -377,6 +382,18 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Stop select()ing */
+name|stype
+operator|=
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+condition|?
+literal|"auth"
+else|:
+literal|"acct"
+expr_stmt|;
 switch|switch
 condition|(
 name|got
@@ -389,9 +406,32 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Radius: ACCEPT received\n"
+literal|"Radius(%s): ACCEPT received\n"
+argument_list|,
+name|stype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+condition|)
+block|{
+name|rad_close
+argument_list|(
+name|r
+operator|->
+name|cx
+operator|.
+name|rad
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 break|break;
 case|case
 name|RAD_ACCESS_REJECT
@@ -400,9 +440,19 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Radius: REJECT received\n"
+literal|"Radius(%s): REJECT received\n"
+argument_list|,
+name|stype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+condition|)
 name|auth_Failure
 argument_list|(
 name|r
@@ -433,6 +483,14 @@ argument_list|,
 literal|"Radius: CHALLENGE received (can't handle yet)\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+condition|)
 name|auth_Failure
 argument_list|(
 name|r
@@ -459,9 +517,29 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Radius: Accounting response received\n"
+literal|"Radius(%s): Accounting response received\n"
+argument_list|,
+name|stype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+condition|)
+name|auth_Failure
+argument_list|(
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+argument_list|)
+expr_stmt|;
+comment|/* unexpected !!! */
 comment|/* No further processing for accounting requests, please */
 name|rad_close
 argument_list|(
@@ -481,7 +559,9 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"radius: %s\n"
+literal|"radius(%s): %s\n"
+argument_list|,
+name|stype
 argument_list|,
 name|rad_strerror
 argument_list|(
@@ -493,6 +573,14 @@ name|rad
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+condition|)
 name|auth_Failure
 argument_list|(
 name|r
@@ -517,7 +605,9 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"rad_send_request: Failed %d: %s\n"
+literal|"rad_send_request(%s): Failed %d: %s\n"
+argument_list|,
+name|stype
 argument_list|,
 name|got
 argument_list|,
@@ -531,6 +621,14 @@ name|rad
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+condition|)
 name|auth_Failure
 argument_list|(
 name|r
@@ -2425,6 +2523,14 @@ name|endttyent
 argument_list|()
 expr_stmt|;
 block|}
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+operator|=
+name|authp
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2513,7 +2619,7 @@ name|timer
 operator|.
 name|name
 operator|=
-literal|"radius"
+literal|"radius auth"
 expr_stmt|;
 name|r
 operator|->
@@ -2524,14 +2630,6 @@ operator|.
 name|arg
 operator|=
 name|r
-expr_stmt|;
-name|r
-operator|->
-name|cx
-operator|.
-name|auth
-operator|=
-name|authp
 expr_stmt|;
 name|timer_Start
 argument_list|(
@@ -3526,6 +3624,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|r
+operator|->
+name|cx
+operator|.
+name|auth
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Not valid for accounting requests */
 if|if
 condition|(
 operator|(
@@ -3607,7 +3714,7 @@ name|timer
 operator|.
 name|name
 operator|=
-literal|"radius"
+literal|"radius acct"
 expr_stmt|;
 name|r
 operator|->
@@ -3619,15 +3726,6 @@ name|arg
 operator|=
 name|r
 expr_stmt|;
-name|r
-operator|->
-name|cx
-operator|.
-name|auth
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Not valid for accounting requests */
 name|timer_Start
 argument_list|(
 operator|&
@@ -3665,7 +3763,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|" Radius config: %s"
+literal|" Radius config:     %s"
 argument_list|,
 operator|*
 name|r
@@ -3694,7 +3792,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"\n            IP: %s\n"
+literal|"\n                IP: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3708,7 +3806,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"       Netmask: %s\n"
+literal|"           Netmask: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3722,7 +3820,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"           MTU: %lu\n"
+literal|"               MTU: %lu\n"
 argument_list|,
 name|r
 operator|->
@@ -3733,7 +3831,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"            VJ: %sabled\n"
+literal|"                VJ: %sabled\n"
 argument_list|,
 name|r
 operator|->
@@ -3758,7 +3856,7 @@ name|r
 operator|->
 name|routes
 argument_list|,
-literal|"        Routes"
+literal|"            Routes"
 argument_list|,
 literal|16
 argument_list|)
