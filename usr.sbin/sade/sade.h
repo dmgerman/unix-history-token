@@ -2098,6 +2098,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuSecurity
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* System security options menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuSecurityProfile
 decl_stmt|;
 end_decl_stmt

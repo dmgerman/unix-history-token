@@ -1314,7 +1314,7 @@ block|,
 block|{
 literal|" Security"
 block|,
-literal|"Select a default system security profile."
+literal|"Configure system security options"
 block|,
 name|NULL
 block|,
@@ -1323,7 +1323,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuSecurityProfile
+name|MenuSecurity
 block|}
 block|,
 block|{
@@ -7857,7 +7857,7 @@ block|,
 block|{
 literal|" Security"
 block|,
-literal|"Select default system security profile"
+literal|"Configure system security options"
 block|,
 name|NULL
 block|,
@@ -7866,7 +7866,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuSecurityProfile
+name|MenuSecurity
 block|}
 block|,
 block|{
@@ -12434,6 +12434,77 @@ block|,
 name|NULL
 block|,
 name|userAddGroup
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSecurity
+init|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"System Security Options Menu"
+block|,
+literal|"This menu allows you to configure aspects of the operating systme\n"
+literal|"policy.\n"
+block|,
+literal|"Configure system security options"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|" Security Profile"
+block|,
+literal|"Select a security profile for the system"
+block|,
+name|NULL
+block|,
+name|configSecurityProfile
+block|}
+block|,
+block|{
+literal|" LOMAC"
+block|,
+literal|"Use Low Watermark Mandatory Access Control at boot"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"lomac_enable=YES"
 block|}
 block|,
 block|{
