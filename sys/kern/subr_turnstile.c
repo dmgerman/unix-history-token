@@ -349,6 +349,12 @@ operator|->
 name|p_stat
 operator|==
 name|SZOMB
+operator|||
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SSTOP
 argument_list|)
 expr_stmt|;
 return|return;
