@@ -7174,6 +7174,20 @@ name|MAXPHYS
 operator|-
 literal|1
 expr_stmt|;
+comment|/* Prevent hostile input from being able to crash the system */
+if|if
+condition|(
+name|ifc
+operator|->
+name|ifc_len
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|again
 label|:
 if|if
