@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: join.c,v 1.3.2.2 1997/07/16 06:45:32 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2662,7 +2662,74 @@ block|{
 case|case
 literal|'a'
 case|:
-comment|/* 			 * The original join allowed "-a", which meant the 			 * same as -a1 plus -a2.  POSIX 1003.2, Draft 11.2 			 * only specifies this as "-a 1" and "a -2", so we 			 * have to use another option flag, one that is 			 * unlikely to ever be used or accidentally entered 			 * on the command line.  (Well, we could reallocate 			 * the argv array, but that hardly seems worthwhile.) 			 */
+comment|/* 			 * The original join allowed "-a", which meant the 			 * same as -a1 plus -a2.  POSIX 1003.2, Draft 11.2 		/* skip if not an option */
+if|if
+condition|(
+name|ap
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+condition|)
+continue|continue;
+operator|*
+name|only
+name|specifies
+name|this
+name|as
+literal|"-a 1"
+name|and
+literal|"a -2"
+operator|,
+name|so
+name|we
+operator|*
+name|have
+name|to
+name|use
+name|another
+name|option
+name|flag
+operator|,
+name|one
+name|that
+name|is
+operator|*
+name|unlikely
+name|to
+name|ever
+name|be
+name|used
+name|or
+name|accidentally
+name|entered
+operator|*
+name|on
+name|the
+name|command
+name|line
+operator|.
+expr|(
+name|Well
+operator|,
+name|we
+name|could
+name|reallocate
+operator|*
+name|the
+name|argv
+name|array
+operator|,
+name|but
+name|that
+name|hardly
+name|seems
+name|worthwhile
+operator|.
+expr|)
+operator|*
+operator|/
 if|if
 condition|(
 name|ap
