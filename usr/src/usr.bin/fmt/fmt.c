@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fmt.c	5.3 (Berkeley) %G%"
+literal|"@(#)fmt.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ end_comment
 begin_function_decl
 name|char
 modifier|*
-name|calloc
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1539,15 +1539,13 @@ name|top
 decl_stmt|;
 name|top
 operator|=
-name|calloc
+name|malloc
 argument_list|(
 name|strlen
 argument_list|(
 name|str
 argument_list|)
 operator|+
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1571,11 +1569,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|copy
+name|strcpy
 argument_list|(
-name|str
-argument_list|,
 name|top
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 return|return

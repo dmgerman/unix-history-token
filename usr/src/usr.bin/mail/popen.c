@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)popen.c	5.2 (Berkeley) %G%"
+literal|"@(#)popen.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -78,43 +90,6 @@ literal|20
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMUNIX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|vfork
-value|fork
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIGRETRO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|sigchild
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|FILE
@@ -202,9 +177,6 @@ literal|0
 condition|)
 block|{
 comment|/* myside and hisside reverse roles in child */
-name|sigchild
-argument_list|()
-expr_stmt|;
 name|close
 argument_list|(
 name|myside
@@ -303,9 +275,11 @@ operator|,
 name|r
 expr_stmt|;
 name|int
-name|status
-decl_stmt|,
 name|omask
+decl_stmt|;
+name|union
+name|wait
+name|status
 decl_stmt|;
 specifier|extern
 name|int
@@ -323,9 +297,6 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|omask
 operator|=
 name|sigblock
@@ -346,9 +317,6 @@ name|SIGHUP
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VMUNIX
 while|while
 condition|(
 operator|(
@@ -384,24 +352,22 @@ operator|-
 literal|1
 condition|)
 name|status
+operator|.
+name|w_status
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|sigsetmask
 argument_list|(
 name|omask
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VMUNIX
 return|return
 operator|(
 name|status
+operator|.
+name|w_status
 operator|)
 return|;
 block|}

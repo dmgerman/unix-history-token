@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)getname.c	5.2 (Berkeley) %G%"
+literal|"@(#)getname.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ file|"rcv.h"
 end_include
 
 begin_comment
-comment|/*  * Search the passwd file for a uid.  Return name through ref parameter  * if found, indicating success with 0 return.  Return -1 on error.  * If -1 is passed as the user id, close the passwd file.  */
+comment|/*  * Search the passwd file for a uid.  Return name through ref parameter  * if found, indicating success with 0 return.  Return -1 on error.  */
 end_comment
 
 begin_macro
@@ -70,20 +70,6 @@ name|pw
 decl_stmt|;
 if|if
 condition|(
-name|uid
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
 operator|(
 name|pw
 operator|=
@@ -96,10 +82,8 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 name|strcpy
 argument_list|(
@@ -117,7 +101,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Convert the passed name to a user id and return it.  Return -1  * on error.  Iff the name passed is -1 (yech) close the pwfile.  */
+comment|/*  * Convert the passed name to a user id and return it.  Return -1  * on error.  */
 end_comment
 
 begin_macro
@@ -143,24 +127,6 @@ name|pw
 decl_stmt|;
 if|if
 condition|(
-name|name
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-operator|-
-literal|1
-condition|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
 operator|(
 name|pw
 operator|=
@@ -173,7 +139,8 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 return|return
 name|pw

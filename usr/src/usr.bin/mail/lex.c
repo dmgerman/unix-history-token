@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.4 (Berkeley) %G%"
+literal|"@(#)lex.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +437,12 @@ name|msgvec
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|jmp_buf
+name|commjmp
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|commands
 argument_list|()
@@ -469,19 +475,13 @@ decl_stmt|,
 name|contin
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
-name|sigset
+name|signal
 argument_list|(
 name|SIGCONT
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VMUNIX
 if|if
 condition|(
 name|rcvmode
@@ -492,7 +492,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -501,7 +501,7 @@ argument_list|)
 operator|!=
 name|SIG_IGN
 condition|)
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -510,7 +510,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sigset
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -519,7 +519,7 @@ argument_list|)
 operator|!=
 name|SIG_IGN
 condition|)
-name|sigset
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -564,31 +564,24 @@ condition|(
 name|shudprompt
 condition|)
 block|{
-name|printf
+name|setjmp
 argument_list|(
-name|prompt
+name|commjmp
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
-name|sigset
+name|signal
 argument_list|(
 name|SIGCONT
 argument_list|,
 name|contin
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VMUNIX
+name|printf
+argument_list|(
+name|prompt
+argument_list|)
+expr_stmt|;
 block|}
-else|else
 name|fflush
 argument_list|(
 name|stdout
@@ -620,7 +613,7 @@ index|[
 name|n
 index|]
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -723,19 +716,13 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|VMUNIX
-name|sigset
+name|signal
 argument_list|(
 name|SIGCONT
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|VMUNIX
 if|if
 condition|(
 name|execute
@@ -818,23 +805,22 @@ decl_stmt|,
 name|e
 decl_stmt|;
 comment|/* 	 * Strip the white space away from the beginning 	 * of the command, then scan out a word, which 	 * consists of anything except digits and white space. 	 * 	 * Handle ! escapes differently to get the correct 	 * lexical conventions. 	 */
+for|for
+control|(
 name|cp
 operator|=
 name|linebuf
-expr_stmt|;
-while|while
-condition|(
-name|any
+init|;
+name|isspace
 argument_list|(
 operator|*
 name|cp
-argument_list|,
-literal|" \t"
 argument_list|)
-condition|)
+condition|;
 name|cp
 operator|++
-expr_stmt|;
+control|)
+empty_stmt|;
 if|if
 condition|(
 operator|*
@@ -911,12 +897,10 @@ if|if
 condition|(
 name|sourcing
 operator|&&
-name|equal
-argument_list|(
+operator|*
 name|word
-argument_list|,
-literal|""
-argument_list|)
+operator|==
+literal|'\0'
 condition|)
 return|return
 operator|(
@@ -1041,7 +1025,7 @@ operator|==
 name|edstop
 condition|)
 block|{
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -1394,12 +1378,10 @@ case|:
 comment|/* 		 * Just the straight string, with 		 * leading blanks removed. 		 */
 while|while
 condition|(
-name|any
+name|isspace
 argument_list|(
 operator|*
 name|cp
-argument_list|,
-literal|" \t"
 argument_list|)
 condition|)
 name|cp
@@ -1651,6 +1633,10 @@ begin_comment
 comment|/*  * When we wake up after ^Z, reprint the prompt.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|contin
 argument_list|(
@@ -1660,14 +1646,11 @@ end_macro
 
 begin_block
 block|{
-name|printf
+name|longjmp
 argument_list|(
-name|prompt
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
+name|commjmp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1677,9 +1660,15 @@ begin_comment
 comment|/*  * Branch here on hangup signal and simulate quit.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|hangup
-argument_list|()
+argument_list|(
+argument|s
+argument_list|)
 end_macro
 
 begin_block
@@ -1735,14 +1724,14 @@ if|if
 condition|(
 name|msgvec
 operator|!=
-operator|(
-name|int
-operator|*
-operator|)
 literal|0
 condition|)
 name|cfree
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|msgvec
 argument_list|)
 expr_stmt|;
@@ -1919,7 +1908,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * The following gets called on receipt of a rubout.  This is  * to abort printout of a command, mainly.  * Dispatching here when command() is inactive crashes rcv.  * Close all open files except 0, 1, 2, and the temporary.  * The special call to getuserid() is needed so it won't get  * annoyed about losing its open file.  * Also, unstack all source files.  */
+comment|/*  * The following gets called on receipt of an interrupt.  This is  * to abort printout of a command, mainly.  * Dispatching here when command() is inactive crashes rcv.  * Close all open files except 0, 1, 2, and the temporary.  * Also, unstack all source files.  */
 end_comment
 
 begin_decl_stmt
@@ -2056,6 +2045,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|stop
 argument_list|(
@@ -2065,21 +2058,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|VMUNIX
-name|s
-operator|=
-name|SIGINT
-expr_stmt|;
-endif|#
-directive|endif
-endif|VMUNIX
 name|noreset
 operator|=
 literal|0
@@ -2102,16 +2080,6 @@ name|sourcing
 condition|)
 name|unstack
 argument_list|()
-expr_stmt|;
-name|getuserid
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|-
-literal|1
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Walk through all the open FILEs, applying xclose() to them 	 */
 name|_fwalk
@@ -2144,18 +2112,6 @@ argument_list|,
 literal|"Interrupt\n"
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VMUNIX
-name|signal
-argument_list|(
-name|s
-argument_list|,
-name|stop
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|reset
 argument_list|(
 literal|0
@@ -2661,17 +2617,12 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|strace
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
-
 begin_comment
 comment|/*  * Print the current version number.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro

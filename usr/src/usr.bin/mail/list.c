@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)list.c	5.4 (Berkeley) %G%"
+literal|"@(#)list.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,14 +1915,14 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|copy
+name|strcpy
 argument_list|(
+name|lexstring
+argument_list|,
 name|stringstack
 index|[
 name|regretp
 index|]
-argument_list|,
-name|lexstring
 argument_list|)
 expr_stmt|;
 name|lexnumber

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmdtab.c	5.3 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,9 +74,6 @@ name|headers
 argument_list|()
 decl_stmt|,
 name|pdot
-argument_list|()
-decl_stmt|,
-name|strace
 argument_list|()
 decl_stmt|,
 name|respond

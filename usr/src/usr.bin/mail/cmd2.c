@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	5.3 (Berkeley) %G%"
+literal|"@(#)cmd2.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_comment
@@ -1259,14 +1265,15 @@ expr_stmt|;
 comment|/* 	 * Strip away trailing blanks. 	 */
 while|while
 condition|(
-operator|*
-name|cp
-operator|==
-literal|' '
-operator|&&
 name|cp
 operator|>
 name|linebuf
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|cp
+argument_list|)
 condition|)
 name|cp
 operator|--
@@ -1285,12 +1292,10 @@ operator|>
 name|linebuf
 operator|&&
 operator|!
-name|any
+name|isspace
 argument_list|(
 operator|*
 name|cp
-argument_list|,
-literal|"\t "
 argument_list|)
 condition|)
 name|cp
@@ -1317,12 +1322,10 @@ return|;
 block|}
 if|if
 condition|(
-name|any
+name|isspace
 argument_list|(
 operator|*
 name|cp
-argument_list|,
-literal|" \t"
 argument_list|)
 condition|)
 operator|*
@@ -1789,7 +1792,8 @@ specifier|register
 name|int
 name|pid
 decl_stmt|;
-name|int
+name|union
+name|wait
 name|status
 decl_stmt|;
 if|if
@@ -1823,9 +1827,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sigchild
-argument_list|()
-expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
@@ -1859,8 +1860,8 @@ empty_stmt|;
 if|if
 condition|(
 name|status
-operator|&
-literal|0200
+operator|.
+name|w_coredump
 condition|)
 name|printf
 argument_list|(
@@ -1873,6 +1874,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -2122,6 +2126,9 @@ name|i_field
 operator|=
 name|calloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|field
@@ -2337,6 +2344,10 @@ literal|0
 expr_stmt|;
 name|qsort
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ring
 argument_list|,
 name|count
@@ -2500,6 +2511,9 @@ name|i_field
 operator|=
 name|calloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|field
@@ -2712,6 +2726,10 @@ literal|0
 expr_stmt|;
 name|qsort
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ring
 argument_list|,
 name|count

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)def.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)def.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -34,23 +34,23 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"local.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|isalpha
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|isdigit
-end_undef
-
 begin_comment
-comment|/*  * Mail -- a mail program  *  * Commands are:  *	t<message list>		print out these messages  *	r<message list>		reply to messages  *	m<user list>			mail to users (analogous to send)  *	e<message list>		edit messages  *	c [directory]			chdir to dir or home if none  *	x				exit quickly  *	w<message list> file		save messages in file  *	q				quit, save remaining stuff in mbox  *	d<message list>		delete messages  *	u<message list>		undelete messages  *	h				print message headers  *  * Author: Kurt Shoens (UCB) March 25, 1978  */
+comment|/*  * Mail -- a mail program  *  * Author: Kurt Shoens (UCB) March 25, 1978  */
 end_comment
 
 begin_define
@@ -342,6 +342,42 @@ end_define
 begin_comment
 comment|/* Send this to mbox, regardless */
 end_comment
+
+begin_comment
+comment|/*  * Given a file address, determine the block number it represents.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|blockof
+parameter_list|(
+name|off
+parameter_list|)
+value|((int) ((off) / 4096))
+end_define
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|off
+parameter_list|)
+value|((int) ((off) % 4096))
+end_define
+
+begin_define
+define|#
+directive|define
+name|positionof
+parameter_list|(
+name|block
+parameter_list|,
+name|offset
+parameter_list|)
+value|((off_t)(block) * 4096 + (offset))
+end_define
 
 begin_comment
 comment|/*  * Format of the command description table.  * The actual table is declared and initialized  * in lex.c  */
@@ -1109,86 +1145,6 @@ value|longjmp(srbuf, x)
 end_define
 
 begin_comment
-comment|/*  * VM/UNIX has a vfork system call which is faster than forking.  If we  * don't have it, fork(2) will do . . .  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMUNIX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|vfork
-parameter_list|()
-value|fork()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIGRETRO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|sigchild
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * 4.2bsd signal interface help...  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|sigset
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
-value|signal(s, a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigsys
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
-value|signal(s, a)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Truncate a file to the last character written. This is  * useful just before closing an old file that was opened  * for read/write.  */
 end_comment
 
@@ -1346,14 +1302,6 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|name1
 parameter_list|()
 function_decl|;
@@ -1394,7 +1342,15 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|hcontents
+name|ishfield
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1434,23 +1390,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|rename
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|revarpa
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|rindex
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1498,15 +1438,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|strcat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strcpy
+name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1541,28 +1473,6 @@ name|fsize
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMUNIX
-end_ifndef
-
-begin_expr_stmt
-name|int
-argument_list|(
-operator|*
-name|sigset
-argument_list|()
-argument_list|)
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|struct
@@ -1691,13 +1601,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|icequal
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|cmpdomain
 parameter_list|()
 function_decl|;
 end_function_decl

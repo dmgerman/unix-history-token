@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pathnames.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pathnames.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -158,17 +158,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UIDMASK
-value|0177777
-end_define
-
-begin_comment
-comment|/* Significant uid bits */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MASTER
 value|"/usr/lib/Mail.rc"
 end_define
@@ -202,28 +191,6 @@ end_define
 begin_comment
 comment|/* System implements utime(2) */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMUNIX
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"sigretro.h"
-end_include
-
-begin_comment
-comment|/* Retrofit signal defs */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
 
 end_unit
 
