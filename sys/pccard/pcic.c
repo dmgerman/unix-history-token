@@ -1954,6 +1954,9 @@ literal|33
 expr_stmt|;
 comment|/* FALL THROUGH */
 case|case
+name|PCIC_I82365
+case|:
+case|case
 name|PCIC_PD672X
 case|:
 case|case
