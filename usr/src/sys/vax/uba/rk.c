@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.7	%G%	*/
+comment|/*	rk.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -20,17 +20,17 @@ end_if
 begin_decl_stmt
 name|int
 name|rkflags
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|rkerrs
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * RK11/RK07 disk driver  */
+comment|/* GROT */
+end_comment
+
+begin_comment
+comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  */
 end_comment
 
 begin_define
@@ -304,6 +304,8 @@ block|,
 literal|"hk"
 block|,
 name|rkminfo
+block|,
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -588,6 +590,13 @@ name|ui
 operator|->
 name|ui_slave
 expr_stmt|;
+name|rkwait
+argument_list|(
+name|rkaddr
+argument_list|)
+expr_stmt|;
+comment|/* SHOULD TRY THIS BY PULLING A PLUG */
+comment|/* A DELAY OR SOMETHING MAY BE NEEDED */
 if|if
 condition|(
 name|rkaddr
@@ -1975,16 +1984,19 @@ expr_stmt|;
 name|rkerrs
 operator|++
 expr_stmt|;
+comment|/* GROT */
 if|if
 condition|(
 name|rkflags
 operator|&
 literal|1
 condition|)
+comment|/* GROT */
 name|printf
 argument_list|(
 literal|"%d ds %o cs2 %o er %o\n"
 argument_list|,
+comment|/* GROT */
 name|um
 operator|->
 name|um_tab
@@ -1998,6 +2010,7 @@ argument_list|,
 name|er
 argument_list|)
 expr_stmt|;
+comment|/* GROT */
 if|if
 condition|(
 name|er
@@ -2014,6 +2027,9 @@ name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* THIS DOESN'T SEEM TO HAPPEN */
+comment|/* OR WAS SOMETHING BROKEN WHEN WE TRIED */
+comment|/* SPINNING A DRIVE DOWN ? */
 if|if
 condition|(
 name|ds
@@ -2087,7 +2103,7 @@ argument_list|,
 operator|(
 name|ds
 operator|<<
-literal|8
+literal|16
 operator|)
 operator||
 name|er
@@ -2964,6 +2980,17 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|notdef
+name|rk
+operator|->
+name|rkcs1
+operator||=
+name|RK_GO
+expr_stmt|;
+else|#
+directive|else
 name|rk
 operator|->
 name|rkcs1
@@ -3122,6 +3149,8 @@ name|rkcs1
 operator|=
 name|cmd
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
@@ -3129,10 +3158,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Reset driver after UBA init.  * Cancel software state of all pending transfers  * and restart all units and the controller.  */
-end_comment
 
 begin_macro
 name|rkreset
@@ -3382,10 +3407,6 @@ block|}
 block|}
 end_block
 
-begin_comment
-comment|/*  * Wake up every second and if an interrupt is pending  * but nothing has happened increment a counter.  * If nothing happens for 20 seconds, reset the controller  * and begin anew.  */
-end_comment
-
 begin_macro
 name|rkwatch
 argument_list|()
@@ -3490,6 +3511,13 @@ operator|++
 control|)
 if|if
 condition|(
+name|rkutab
+index|[
+name|unit
+index|]
+operator|.
+name|b_active
+operator|&&
 name|rkdinfo
 index|[
 name|unit
@@ -3498,13 +3526,6 @@ operator|->
 name|ui_mi
 operator|==
 name|um
-operator|&&
-name|rkutab
-index|[
-name|unit
-index|]
-operator|.
-name|b_active
 condition|)
 goto|goto
 name|active
