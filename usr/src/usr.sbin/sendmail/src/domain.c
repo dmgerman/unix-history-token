@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.43 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.44 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.43 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.44 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1800,6 +1800,8 @@ literal|0
 init|;
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 condition|;
 name|cp
 operator|++
@@ -1977,6 +1979,17 @@ operator|*
 name|dp
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* if we have a wildcard MX and no dots, try MX anyhow */
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|trymx
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* 	**  Now run through the search list for the name in question. 	*/
 name|mxmatch
@@ -2165,17 +2178,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-if|if
-condition|(
-name|mxmatch
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* we matched before -- use that one */
-break|break;
-block|}
-comment|/* otherwise, try the next name */
+comment|/* try the next name */
 name|dp
 operator|++
 expr_stmt|;
@@ -2405,6 +2408,9 @@ operator|*
 name|dp
 operator|!=
 literal|'\0'
+operator|||
+operator|!
+name|HasWildcardMX
 condition|)
 block|{
 comment|/* got a match -- save that info */
