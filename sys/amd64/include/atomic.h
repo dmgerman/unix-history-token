@@ -91,12 +91,22 @@ begin_comment
 comment|/* !KLD_MODULE */
 end_comment
 
+begin_comment
+comment|/*  * For userland, assume the SMP case and use lock prefixes so that  * the binaries will run on both types of systems.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|SMP
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
 argument_list|)
 end_if
 
@@ -147,7 +157,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !SMP */
+comment|/* SMP || !_KERNEL */
 end_comment
 
 begin_define
@@ -162,7 +172,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SMP */
+comment|/* SMP || !_KERNEL */
 end_comment
 
 begin_if
