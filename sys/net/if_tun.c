@@ -2293,7 +2293,9 @@ name|m0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EHOSTDOWN
+operator|)
 return|;
 block|}
 comment|/* BPF write needs to be handled specially */
@@ -2503,7 +2505,9 @@ name|if_oerrors
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 else|else
@@ -2546,7 +2550,9 @@ name|m0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 block|}
 block|}
@@ -2572,7 +2578,9 @@ name|if_collisions
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|ifp
@@ -2581,7 +2589,9 @@ name|if_opackets
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3292,7 +3302,9 @@ name|tun_flags
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EHOSTDOWN
+operator|)
 return|;
 block|}
 name|tp
@@ -3339,7 +3351,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EWOULDBLOCK
+operator|)
 return|;
 block|}
 name|tp
@@ -3383,7 +3397,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -3483,7 +3499,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3574,7 +3592,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -3609,7 +3629,9 @@ name|uio_resid
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 name|tlen
@@ -3635,7 +3657,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 name|mlen
 operator|=
@@ -3763,7 +3787,9 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|top
@@ -3818,7 +3844,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 operator|*
 name|mtod
@@ -3952,7 +3980,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 name|family
 operator|=
@@ -4000,12 +4030,14 @@ name|if_ipackets
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|family_enqueue
 argument_list|(
 name|family
 argument_list|,
 name|top
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
