@@ -21,6 +21,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/fnv_hash.h>
+end_include
+
 begin_comment
 comment|/*  * Interface address, Internet version.  One of these structures  * is allocated for each Internet address on an interface.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
 end_comment
@@ -64,13 +70,20 @@ name|in_addr
 name|ia_netbroadcast
 decl_stmt|;
 comment|/* to recognize net broadcasts */
+name|LIST_ENTRY
+argument_list|(
+argument|in_ifaddr
+argument_list|)
+name|ia_hash
+expr_stmt|;
+comment|/* entry in bucket of inet addresses */
 name|TAILQ_ENTRY
 argument_list|(
 argument|in_ifaddr
 argument_list|)
 name|ia_link
 expr_stmt|;
-comment|/* tailq macro glue */
+comment|/* list of internet addresses */
 name|struct
 name|sockaddr_in
 name|ia_addr
@@ -168,18 +181,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_extern
-extern|extern	TAILQ_HEAD(in_ifaddrhead
-operator|,
-extern|in_ifaddr
-end_extern
-
-begin_expr_stmt
-unit|)
-name|in_ifaddrhead
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -209,6 +210,81 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*   * Hash table for IP addresses.  */
+end_comment
+
+begin_extern
+extern|extern	LIST_HEAD(in_ifaddrhashhead
+operator|,
+extern|in_ifaddr
+end_extern
+
+begin_expr_stmt
+unit|)
+operator|*
+name|in_ifaddrhashtbl
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern	TAILQ_HEAD(in_ifaddrhead
+operator|,
+extern|in_ifaddr
+end_extern
+
+begin_expr_stmt
+unit|)
+name|in_ifaddrhead
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|in_ifaddrhmask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mask for hash table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_NHASH_LOG2
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|INADDR_NHASH
+value|(1<< INADDR_NHASH_LOG2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INADDR_HASHVAL
+parameter_list|(
+name|x
+parameter_list|)
+value|fnv_32_buf((&(x)), sizeof(x), FNV1_32_INIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INADDR_HASH
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(&in_ifaddrhashtbl[INADDR_HASHVAL(x)& in_ifaddrhmask])
+end_define
+
+begin_comment
 comment|/*  * Macro for finding the interface (ifnet structure) corresponding to one  * of our IP addresses.  */
 end_comment
 
@@ -226,7 +302,7 @@ comment|/* struct in_addr addr; */
 define|\
 comment|/* struct ifnet *ifp; */
 define|\
-value|{ \ 	struct in_ifaddr *ia; \ \ 	TAILQ_FOREACH(ia,&in_ifaddrhead, ia_link) \ 		if (IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
+value|{ \ 	struct in_ifaddr *ia; \ \ 	LIST_FOREACH(ia, INADDR_HASH((addr).s_addr), ia_hash) \ 		if (IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
 end_define
 
 begin_comment
