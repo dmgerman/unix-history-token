@@ -694,6 +694,9 @@ name|FILE
 modifier|*
 name|efp
 decl_stmt|;
+name|int
+name|oldhistnum
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__GNUC__
@@ -1439,6 +1442,12 @@ name|hist
 condition|)
 block|{
 comment|/* 					 *  XXX what about recursive and 					 *  relative histnums. 					 */
+name|oldhistnum
+operator|=
+name|he
+operator|.
+name|num
+expr_stmt|;
 name|history
 argument_list|(
 name|hist
@@ -1449,6 +1458,21 @@ argument_list|,
 name|H_ENTER
 argument_list|,
 name|s
+argument_list|)
+expr_stmt|;
+comment|/* 					 * XXX H_ENTER moves the internal 					 * cursor, set it back to the current 					 * entry. 					 */
+name|retval
+operator|=
+name|history
+argument_list|(
+name|hist
+argument_list|,
+operator|&
+name|he
+argument_list|,
+name|H_NEXT_EVENT
+argument_list|,
+name|oldhistnum
 argument_list|)
 expr_stmt|;
 block|}
