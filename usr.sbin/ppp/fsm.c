@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.35 1998/06/30 23:04:15 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.36 1998/08/01 01:02:41 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ua.h"
 end_include
 
 begin_include
@@ -4648,16 +4654,12 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|magic
-operator|=
-name|ntohl
+name|ua_ntohl
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 name|cp
+argument_list|,
+operator|&
+name|magic
 argument_list|)
 expr_stmt|;
 if|if
@@ -4695,18 +4697,14 @@ operator|==
 name|ST_OPENED
 condition|)
 block|{
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-name|cp
-operator|=
-name|htonl
+name|ua_htonl
 argument_list|(
+operator|&
 name|lcp
 operator|->
 name|want_magic
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 comment|/* local magic */
@@ -4777,19 +4775,15 @@ condition|(
 name|lcp
 condition|)
 block|{
-name|magic
-operator|=
-name|ntohl
+name|ua_ntohl
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 name|MBUF_CTOP
 argument_list|(
 name|bp
 argument_list|)
+argument_list|,
+operator|&
+name|magic
 argument_list|)
 expr_stmt|;
 comment|/* Tolerate echo replies with either magic number */
