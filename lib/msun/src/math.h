@@ -296,6 +296,35 @@ name|math_errhandling
 value|MATH_ERREXCEPT
 end_define
 
+begin_comment
+comment|/* XXX We need a<machine/math.h>. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FP_FAST_FMA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -305,7 +334,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|FP_FAST_FMA
+name|FP_FAST_FMAL
 end_define
 
 begin_endif
@@ -2553,17 +2582,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|long double	fmal(long double, long double, long double);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|long
+name|double
+name|fmal
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|long
@@ -2601,10 +2635,36 @@ directive|if
 literal|0
 end_if
 
+begin_endif
+unit|long double	fmodl(long double, long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|frexpl
+parameter_list|(
+name|long
+name|double
+name|value
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-unit|long double	fmodl(long double, long double); long double	frexpl(long double value, int *);
 comment|/* fundamentally !__pure2 */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_endif
 unit|long double	hypotl(long double, long double);
@@ -2623,6 +2683,19 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|long
+name|double
+name|ldexpl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -2630,12 +2703,114 @@ literal|0
 end_if
 
 begin_comment
-unit|long double	ldexpl(long double, int); long double	lgammal(long double); long long	llrintl(long double); long long	llroundl(long double); long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double); long double	logl(long double); long		lrintl(long double); long		lroundl(long double); long double	modfl(long double, long double *);
+unit|long double	lgammal(long double); long long	llrintl(long double); long long	llroundl(long double); long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double); long double	logl(long double); long		lrintl(long double); long		lroundl(long double); long double	modfl(long double, long double *);
 comment|/* fundamentally !__pure2 */
 end_comment
 
 begin_endif
-unit|long double	nanl(const char *) __pure2; long double	nearbyintl(long double); long double	nextafterl(long double, long double); double		nexttoward(double, long double); float		nexttowardf(float, long double); long double	nexttowardl(long double, long double); long double	powl(long double, long double); long double	remainderl(long double, long double); long double	remquol(long double, long double, int *); long double	rintl(long double); long double	roundl(long double); long double	scalblnl(long double, long); long double	scalbnl(long double, int); long double	sinhl(long double); long double	sinl(long double); long double	sqrtl(long double); long double	tanhl(long double); long double	tanl(long double); long double	tgammal(long double); long double	truncl(long double);
+unit|long double	nanl(const char *) __pure2; long double	nearbyintl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|nextafterl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
+name|nexttoward
+parameter_list|(
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|nexttowardf
+parameter_list|(
+name|float
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|nexttowardl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long double	powl(long double, long double); long double	remainderl(long double, long double); long double	remquol(long double, long double, int *); long double	rintl(long double); long double	roundl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|scalblnl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|scalbnl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long double	sinhl(long double); long double	sinl(long double); long double	sqrtl(long double); long double	tanhl(long double); long double	tanl(long double); long double	tgammal(long double); long double	truncl(long double);
 endif|#
 directive|endif
 end_endif
