@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sconv.c 1.1 %G%"
+literal|"@(#)sconv.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|"pcops.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pc.h"
 end_include
 
 begin_comment
@@ -146,11 +140,11 @@ return|return;
 block|}
 if|if
 condition|(
-name|thistype
+name|thisp2type
 operator|==
 name|P2CHAR
 operator|||
-name|thistype
+name|thisp2type
 operator|==
 name|P2SHORT
 condition|)
