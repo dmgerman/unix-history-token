@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vput.c	5.1 %G%"
+literal|"@(#)ex_vput.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2378,6 +2378,15 @@ condition|(
 name|dosync
 condition|)
 block|{
+name|int
+function_decl|(
+modifier|*
+name|Ooutchar
+function_decl|)
+parameter_list|()
+init|=
+name|Outchar
+function_decl|;
 name|Outchar
 operator|=
 name|vputchar
@@ -2391,7 +2400,7 @@ argument_list|)
 expr_stmt|;
 name|Outchar
 operator|=
-name|vinschar
+name|Ooutchar
 expr_stmt|;
 block|}
 block|}
