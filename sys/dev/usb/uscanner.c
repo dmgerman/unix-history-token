@@ -1118,6 +1118,16 @@ block|{
 block|{
 name|USB_VENDOR_UMAX
 block|,
+name|USB_PRODUCT_UMAX_ASTRA2100U
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_UMAX
+block|,
 name|USB_PRODUCT_UMAX_ASTRA2200U
 block|}
 block|,
