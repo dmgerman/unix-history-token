@@ -1403,31 +1403,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rman
-name|acpi_rman_io
-decl_stmt|,
-name|acpi_rman_mem
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|struct
-name|resource_list_entry
-modifier|*
-name|acpi_sysres_find
-parameter_list|(
-name|int
-name|type
-parameter_list|,
-name|u_long
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* ACPI event handling */
 end_comment
