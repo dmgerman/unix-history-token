@@ -812,15 +812,6 @@ modifier|*
 modifier|*
 name|names
 decl_stmt|;
-name|int
-name|supportSLIP
-init|=
-name|FALSE
-decl_stmt|,
-name|supportPPP
-init|=
-name|FALSE
-decl_stmt|;
 comment|/* Try and get the disks first */
 if|if
 condition|(
@@ -1190,7 +1181,7 @@ literal|3
 argument_list|)
 condition|)
 continue|continue;
-comment|/* If we have a slip device, don't register it but flag its support for later, when we do the serial devs */
+comment|/* If we have a slip device, don't register it */
 if|if
 condition|(
 operator|!
@@ -1206,10 +1197,6 @@ literal|2
 argument_list|)
 condition|)
 block|{
-name|supportSLIP
-operator|=
-name|TRUE
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* And the same for ppp */
@@ -1240,21 +1227,8 @@ literal|3
 argument_list|)
 condition|)
 block|{
-name|supportPPP
-operator|=
-name|TRUE
-expr_stmt|;
 continue|continue;
 block|}
-name|msgDebug
-argument_list|(
-literal|"SupportSLIP = %d, SupportPPP = %d\n"
-argument_list|,
-name|supportSLIP
-argument_list|,
-name|supportPPP
-argument_list|)
-expr_stmt|;
 comment|/* Try and find its description */
 for|for
 control|(
@@ -1776,11 +1750,6 @@ operator|.
 name|description
 expr_stmt|;
 comment|/* Serial devices get a slip and ppp device each, if supported */
-if|if
-condition|(
-name|supportSLIP
-condition|)
-block|{
 name|newdesc
 operator|=
 name|safe_malloc
@@ -1840,12 +1809,6 @@ argument_list|,
 name|try
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|supportPPP
-condition|)
-block|{
 name|newdesc
 operator|=
 name|safe_malloc
@@ -1905,7 +1868,6 @@ argument_list|,
 name|try
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 break|break;
 default|default:
