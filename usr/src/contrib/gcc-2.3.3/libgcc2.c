@@ -4755,6 +4755,12 @@ begin_comment
 comment|/* Like bcmp except the sign is meaningful.    Reult is negative if S1 is less than S2,    positive if S1 is greater, 0 if S1 and S2 are equal.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_function
 name|int
 name|__gcc_bcmp
@@ -5661,6 +5667,12 @@ directive|ifdef
 name|L_builtin_new
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|void
@@ -5765,6 +5777,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -6056,6 +6074,12 @@ ifdef|#
 directive|ifdef
 name|L_builtin_del
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_typedef
 typedef|typedef
