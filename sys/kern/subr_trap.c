@@ -169,6 +169,9 @@ name|ke
 decl_stmt|;
 endif|#
 directive|endif
+name|u_int64_t
+name|eticks
+decl_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_SYSC
@@ -284,7 +287,7 @@ operator|&
 name|PS_PROFIL
 condition|)
 block|{
-name|ticks
+name|eticks
 operator|=
 name|td
 operator|->
@@ -304,7 +307,7 @@ argument_list|,
 operator|(
 name|u_int
 operator|)
-name|ticks
+name|eticks
 operator|*
 name|psratio
 argument_list|)
