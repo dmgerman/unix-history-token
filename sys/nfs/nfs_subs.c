@@ -752,7 +752,9 @@ block|,
 name|NFSERR_IO
 block|,
 name|NFSERR_IO
-comment|/*<< Last is 86 */
+block|,
+name|NFSERR_IO
+comment|/*<< Last is 87 */
 block|}
 decl_stmt|;
 end_decl_stmt
