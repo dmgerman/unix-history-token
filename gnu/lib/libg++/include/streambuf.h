@@ -459,6 +459,16 @@ range|:
 name|public
 name|_ios_fields
 block|{
+name|ios
+operator|&
+name|operator
+operator|=
+operator|(
+name|ios
+operator|&
+operator|)
+block|;
+comment|/* Not allowed! */
 name|public
 operator|:
 typedef|typedef
@@ -1005,12 +1015,30 @@ block|;
 comment|/* TEMPORARY - for binary compatibility */
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|streambuf* rdbuf(streambuf *_s) {       streambuf *_old = _strbuf; _strbuf = _s; return _old; }
-endif|#
-directive|endif
+name|streambuf
+operator|*
+name|rdbuf
+argument_list|(
+argument|streambuf *_s
+argument_list|)
+block|{
+name|streambuf
+operator|*
+name|_old
+operator|=
+name|_strbuf
+block|;
+name|_strbuf
+operator|=
+name|_s
+block|;
+name|clear
+argument_list|()
+block|;
+return|return
+name|_old
+return|;
+block|}
 name|void
 name|clear
 argument_list|(

@@ -94,9 +94,11 @@ decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
-name|COERCE_FILE
+name|CHECK_FILE
 argument_list|(
 name|fp
+argument_list|,
+name|EOF
 argument_list|)
 expr_stmt|;
 name|_IO_va_start

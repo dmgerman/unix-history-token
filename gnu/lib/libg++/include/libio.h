@@ -290,7 +290,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|USE_DTOA
+name|_IO_USE_DTOA
 end_define
 
 begin_if
@@ -1024,6 +1024,20 @@ name|_fp
 parameter_list|)
 define|\
 value|(((_fp)->_IO_write_ptr>= (_fp)->_IO_write_end) \     ? __overflow(_fp, (unsigned char)(_ch)) \     : (unsigned char)(*(_fp)->_IO_write_ptr++ = (_ch)))
+define|#
+directive|define
+name|_IO_feof
+parameter_list|(
+name|__fp
+parameter_list|)
+value|(((__fp)->_flags& _IO_EOF_SEEN) != 0)
+define|#
+directive|define
+name|_IO_ferror
+parameter_list|(
+name|__fp
+parameter_list|)
+value|(((__fp)->_flags& _IO_ERR_SEEN) != 0)
 comment|/* This one is for Emacs. */
 define|#
 directive|define

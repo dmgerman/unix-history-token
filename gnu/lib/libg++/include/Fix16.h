@@ -113,28 +113,28 @@ begin_define
 define|#
 directive|define
 name|Fix32_fs
-value|((double)((unsigned long)(1<< 31)))
+value|((double)((_G_uint32_t)(1<< 31)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|Fix32_msb
-value|((unsigned long)(1<< 31))
+value|((_G_uint32_t)(1<< 31))
 end_define
 
 begin_define
 define|#
 directive|define
 name|Fix32_m_max
-value|((long)((1<< 31) - 1))
+value|((_G_int32_t)((1<< 31) - 1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|Fix32_m_min
-value|((long)(1<< 31))
+value|((_G_int32_t)(1<< 31))
 end_define
 
 begin_define
@@ -700,17 +700,17 @@ name|friend
 name|class
 name|Fix16
 decl_stmt|;
-name|long
+name|_G_int32_t
 name|m
 decl_stmt|;
-name|long
+name|_G_int32_t
 name|round
 parameter_list|(
 name|double
 name|d
 parameter_list|)
 function_decl|;
-name|long
+name|_G_int32_t
 name|assign
 parameter_list|(
 name|double
@@ -719,7 +719,7 @@ parameter_list|)
 function_decl|;
 name|Fix32
 argument_list|(
-argument|long i
+argument|_G_int32_t i
 argument_list|)
 empty_stmt|;
 name|operator
@@ -789,7 +789,7 @@ name|d
 operator|)
 decl_stmt|;
 name|friend
-name|long
+name|_G_int32_t
 modifier|&
 name|mantissa
 parameter_list|(
@@ -800,7 +800,7 @@ parameter_list|)
 function_decl|;
 name|friend
 specifier|const
-name|long
+name|_G_int32_t
 modifier|&
 name|mantissa
 parameter_list|(
@@ -1134,7 +1134,7 @@ expr_stmt|;
 name|void
 name|overflow
 argument_list|(
-name|long
+name|_G_int32_t
 operator|&
 name|i
 argument_list|)
@@ -1143,7 +1143,7 @@ decl_stmt|;
 name|void
 name|range_error
 argument_list|(
-name|long
+name|_G_int32_t
 operator|&
 name|i
 argument_list|)
@@ -1219,7 +1219,7 @@ modifier|*
 name|Fix32_peh
 function_decl|)
 parameter_list|(
-name|long
+name|_G_int32_t
 modifier|&
 parameter_list|)
 function_decl|;
@@ -1394,31 +1394,31 @@ specifier|extern
 name|void
 name|Fix32_ignore
 argument_list|(
-name|long
+name|_G_int32_t
 operator|&
 argument_list|)
 decl_stmt|,
 name|Fix32_overflow_saturate
 argument_list|(
-name|long
+name|_G_int32_t
 operator|&
 argument_list|)
 decl_stmt|,
 name|Fix32_overflow_warning_saturate
 argument_list|(
-name|long
+name|_G_int32_t
 operator|&
 argument_list|)
 decl_stmt|,
 name|Fix32_warning
 argument_list|(
-name|long
+name|_G_int32_t
 operator|&
 argument_list|)
 decl_stmt|,
 name|Fix32_abort
 argument_list|(
-name|long
+name|_G_int32_t
 operator|&
 argument_list|)
 decl_stmt|;
@@ -1613,7 +1613,7 @@ name|Fix32
 operator|::
 name|Fix32
 argument_list|(
-argument|long i
+argument|_G_int32_t i
 argument_list|)
 block|{
 name|m
@@ -1661,7 +1661,7 @@ argument_list|)
 block|{
 name|m
 operator|=
-name|long
+name|_G_int32_t
 argument_list|(
 name|f
 operator|.
@@ -1775,7 +1775,7 @@ operator|)
 block|{
 name|m
 operator|=
-name|long
+name|_G_int32_t
 argument_list|(
 name|f
 operator|.
@@ -2060,16 +2060,16 @@ block|{
 return|return
 name|Fix32
 argument_list|(
-name|long
+name|_G_int32_t
 argument_list|(
-name|long
+name|_G_int32_t
 argument_list|(
 name|f
 operator|.
 name|m
 argument_list|)
 operator|*
-name|long
+name|_G_int32_t
 argument_list|(
 name|g
 operator|.
@@ -2614,7 +2614,7 @@ name|Fix32
 argument_list|()
 block|{}
 specifier|inline
-name|long
+name|_G_int32_t
 name|Fix32
 operator|::
 name|round
@@ -2623,7 +2623,7 @@ argument|double d
 argument_list|)
 block|{
 return|return
-name|long
+name|_G_int32_t
 argument_list|(
 operator|(
 name|d
@@ -2645,7 +2645,7 @@ end_expr_stmt
 
 begin_function
 specifier|inline
-name|long
+name|_G_int32_t
 modifier|&
 name|mantissa
 parameter_list|(
@@ -2665,7 +2665,7 @@ end_function
 begin_function
 specifier|inline
 specifier|const
-name|long
+name|_G_int32_t
 modifier|&
 name|mantissa
 parameter_list|(
@@ -2755,7 +2755,7 @@ operator|&
 name|g
 operator|)
 block|{
-name|long
+name|_G_int32_t
 name|sum
 operator|=
 name|f
@@ -2818,7 +2818,7 @@ operator|&
 name|g
 operator|)
 block|{
-name|long
+name|_G_int32_t
 name|sum
 operator|=
 name|f
@@ -3326,7 +3326,7 @@ block|{
 return|return
 name|Fix32
 argument_list|(
-name|long
+name|_G_int32_t
 argument_list|(
 name|f
 operator|.

@@ -25,9 +25,11 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-name|COERCE_FILE
+name|CHECK_FILE
 argument_list|(
 name|fp
+argument_list|,
+name|EOF
 argument_list|)
 expr_stmt|;
 if|if

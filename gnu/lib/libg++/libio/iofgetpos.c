@@ -39,9 +39,11 @@ block|{
 name|_IO_fpos_t
 name|pos
 decl_stmt|;
-name|COERCE_FILE
+name|CHECK_FILE
 argument_list|(
 name|fp
+argument_list|,
+name|EOF
 argument_list|)
 expr_stmt|;
 name|pos
