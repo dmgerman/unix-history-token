@@ -157,22 +157,11 @@ directive|include
 file|<machine/psl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<machine/smp.h>
+file|<machine/apicvar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -441,6 +430,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|using_lapic_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|u_char
 name|rtc_statusa
 init|=
@@ -612,19 +608,16 @@ name|clock_lock
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|using_lapic_timer
+condition|)
 name|hardclock
 argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|forward_hardclock
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -774,14 +767,6 @@ argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|forward_statclock
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -2743,9 +2728,16 @@ block|{
 name|int
 name|diag
 decl_stmt|;
+name|using_lapic_timer
+operator|=
+name|lapic_setup_clock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|statclock_disable
+operator|||
+name|using_lapic_timer
 condition|)
 block|{
 comment|/* 		 * The stat interrupt mask is different without the 		 * statistics clock.  Also, don't set the interrupt 		 * flag which would normally cause the RTC to generate 		 * interrupts. 		 */
@@ -2829,6 +2821,9 @@ if|if
 condition|(
 operator|!
 name|statclock_disable
+operator|&&
+operator|!
+name|using_lapic_timer
 condition|)
 block|{
 name|diag
@@ -2900,6 +2895,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|using_lapic_timer
+condition|)
+return|return;
 name|rtc_statusa
 operator|=
 name|RTCSA_DIVIDER
@@ -2929,6 +2929,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|using_lapic_timer
+condition|)
+return|return;
 name|rtc_statusa
 operator|=
 name|RTCSA_DIVIDER
