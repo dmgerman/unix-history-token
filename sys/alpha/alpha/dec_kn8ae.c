@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/rpb.h>
 end_include
 
@@ -205,6 +211,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|boothowto
+operator||=
+name|RB_SERIAL
+expr_stmt|;
 name|zs_cnattach
 argument_list|(
 name|TLSB_GBUS_BASE
