@@ -563,6 +563,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|COREGA
+argument_list|,
+name|WIRELESS_LAN_PCCL_11
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|DLINK
 argument_list|,
 name|DWL650H
