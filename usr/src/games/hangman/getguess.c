@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getguess.c	5.5 (Berkeley) %G%"
+literal|"@(#)getguess.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,11 +329,11 @@ literal|0
 argument_list|,
 name|curscr
 operator|->
-name|_cury
+name|cury
 argument_list|,
 name|curscr
 operator|->
-name|_curx
+name|curx
 argument_list|)
 expr_stmt|;
 block|}
