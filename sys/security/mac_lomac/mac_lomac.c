@@ -12012,6 +12012,11 @@ operator|=
 name|mac_lomac_destroy_label
 block|,
 operator|.
+name|mpo_copy_mbuf_label
+operator|=
+name|mac_lomac_copy_label
+block|,
+operator|.
 name|mpo_copy_pipe_label
 operator|=
 name|mac_lomac_copy_label

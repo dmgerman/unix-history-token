@@ -11696,6 +11696,11 @@ operator|=
 name|mac_biba_destroy_label
 block|,
 operator|.
+name|mpo_copy_mbuf_label
+operator|=
+name|mac_biba_copy_label
+block|,
+operator|.
 name|mpo_copy_pipe_label
 operator|=
 name|mac_biba_copy_label
