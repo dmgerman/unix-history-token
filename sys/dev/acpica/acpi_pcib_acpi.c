@@ -232,10 +232,10 @@ name|int
 name|acpi_pcib_route_interrupt
 parameter_list|(
 name|device_t
-name|bus
+name|pcib
 parameter_list|,
-name|int
-name|device
+name|device_t
+name|dev
 parameter_list|,
 name|int
 name|pin
@@ -965,21 +965,37 @@ name|int
 name|acpi_pcib_route_interrupt
 parameter_list|(
 name|device_t
-name|bus
+name|pcib
 parameter_list|,
-name|int
-name|device
+name|device_t
+name|dev
 parameter_list|,
 name|int
 name|pin
 parameter_list|)
 block|{
+comment|/* XXX this is not the right way to do this! */
+name|pci_cfgregopen
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
-literal|255
+name|pci_cfgintr
+argument_list|(
+name|pci_get_bus
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|pin
+argument_list|)
 operator|)
 return|;
-comment|/* XXX implement */
 block|}
 end_function
 
