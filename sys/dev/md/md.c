@@ -4740,7 +4740,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vm_pager_deallocate
+name|vm_object_deallocate
 argument_list|(
 name|sc
 operator|->
@@ -4988,7 +4988,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vm_pager_deallocate
+name|vm_object_deallocate
 argument_list|(
 name|sc
 operator|->
