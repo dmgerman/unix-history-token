@@ -615,6 +615,15 @@ name|ata_find_dev
 argument_list|(
 name|dev
 argument_list|,
+literal|0x82311106
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
 literal|0x30741106
 argument_list|,
 literal|0
