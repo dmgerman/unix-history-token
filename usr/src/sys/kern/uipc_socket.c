@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.14	81/11/22	*/
+comment|/*	uipc_socket.c	4.15	81/11/26	*/
 end_comment
 
 begin_include
@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_comment
@@ -1468,11 +1468,11 @@ name|u
 operator|.
 name|u_count
 operator|>=
-name|PGSIZE
+name|CLBYTES
 operator|&&
 name|space
 operator|>=
-name|NMBPG
+name|CLBYTES
 condition|)
 block|{
 specifier|register
@@ -1481,7 +1481,7 @@ name|mbuf
 modifier|*
 name|p
 decl_stmt|;
-name|MPGET
+name|MCLGET
 argument_list|(
 name|p
 argument_list|,
@@ -1513,7 +1513,7 @@ name|m
 expr_stmt|;
 name|len
 operator|=
-name|PGSIZE
+name|CLBYTES
 expr_stmt|;
 block|}
 else|else
