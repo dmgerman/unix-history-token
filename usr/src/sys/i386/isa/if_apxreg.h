@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apxreg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apxreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/* SGS Thompson MK5205 structures and registers */
+comment|/*  * SGS Thompson MK5205 structures and registers  */
 end_comment
 
 begin_comment
-comment|/*   * Device Control Ports  * (Multiplexed CSR's)  */
+comment|/*   * Device Control Ports (Multiplexed CSR's)  */
 end_comment
 
 begin_struct
@@ -59,7 +59,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * common format for tx/rx descriptors  */
+comment|/*  * Common format for tx/rx descriptors  */
 end_comment
 
 begin_struct
@@ -83,7 +83,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * interpretation of reported errors   */
+comment|/*  * Interpretation of reported errors   */
 end_comment
 
 begin_struct
@@ -113,7 +113,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Status Buffer, paried bytes hi order low order  */
+comment|/*  * Status buffer, paired bytes hi order low order  */
 end_comment
 
 begin_struct
