@@ -413,13 +413,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CUE_CUTOFF
-value|1088
-end_define
-
-begin_define
-define|#
-directive|define
 name|CUE_MIN_FRAMELEN
 value|60
 end_define

@@ -885,9 +885,6 @@ modifier|*
 name|aue_mbuf
 decl_stmt|;
 name|int
-name|aue_accum
-decl_stmt|;
-name|int
 name|aue_idx
 decl_stmt|;
 block|}
@@ -1022,13 +1019,6 @@ define|#
 directive|define
 name|AUE_BUFSZ
 value|1536
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_CUTOFF
-value|1088
 end_define
 
 begin_define

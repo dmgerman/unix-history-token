@@ -443,13 +443,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KUE_CUTOFF
-value|1088
-end_define
-
-begin_define
-define|#
-directive|define
 name|KUE_MIN_FRAMELEN
 value|60
 end_define
