@@ -776,7 +776,6 @@ else|#
 directive|else
 name|arc4rand
 argument_list|(
-operator|&
 name|skey
 argument_list|,
 sizeof|sizeof
@@ -997,7 +996,6 @@ argument_list|)
 expr_stmt|;
 name|arc4rand
 argument_list|(
-operator|&
 name|skey
 argument_list|,
 sizeof|sizeof
