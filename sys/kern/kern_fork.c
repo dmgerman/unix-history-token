@@ -2866,15 +2866,18 @@ name|mtx_recurse
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock_spin
+comment|/* 	 * XXX: We really shouldn't have to do this. 	 */
+name|mtx_intr_enable
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: We really shouldn't have to do this. 	 */
-name|enable_intr
-argument_list|()
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
