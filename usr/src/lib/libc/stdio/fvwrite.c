@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fvwrite.c	5.1 (Berkeley) %G%"
+literal|"@(#)fvwrite.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,9 +172,20 @@ name|uio
 operator|->
 name|uio_iov
 expr_stmt|;
+name|p
+operator|=
+name|iov
+operator|->
+name|iov_base
+expr_stmt|;
 name|len
 operator|=
-literal|0
+name|iov
+operator|->
+name|iov_len
+expr_stmt|;
+name|iov
+operator|++
 expr_stmt|;
 define|#
 directive|define
@@ -470,6 +481,11 @@ name|nlknown
 operator|=
 literal|0
 expr_stmt|;
+name|nldist
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX just to keep gcc happy */
 do|do
 block|{
 name|GETIOV
