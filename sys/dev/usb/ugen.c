@@ -2839,7 +2839,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"%s: ugenwrite: %d\n"
+literal|"%s: ugen_do_write: %d\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -2888,7 +2888,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ugenwrite: no edesc\n"
+literal|"ugen_do_write: no edesc\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2908,7 +2908,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ugenwrite: no pipe\n"
+literal|"ugen_do_write: no pipe\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2992,7 +2992,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"ugenwrite: transfer %d bytes\n"
+literal|"ugen_do_write: transfer %d bytes\n"
 operator|,
 name|n
 operator|)
@@ -6265,7 +6265,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ugenwrite: no edesc\n"
+literal|"ugenpoll: no edesc\n"
 argument_list|)
 expr_stmt|;
 return|return
