@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwscroll.c	3.7 83/08/24"
+literal|"@(#)wwscroll.c	3.8 83/08/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,6 +420,7 @@ modifier|*
 modifier|*
 name|cqq
 decl_stmt|;
+comment|/* 		 * Don't worry about retain when scrolling down. 		 * But do worry when scrolling up.  For hp2621. 		 */
 if|if
 condition|(
 name|dir
@@ -455,10 +456,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|tt
-operator|.
-name|tt_retain
-operator|||
 name|erow1
 operator|+
 name|w
@@ -576,6 +573,10 @@ else|else
 block|{
 if|if
 condition|(
+name|tt
+operator|.
+name|tt_retain
+operator|||
 name|erow1
 operator|+
 name|w
