@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.14	81/06/11	*/
+comment|/*	kern_synch.c	4.15	81/11/08	*/
 end_comment
 
 begin_include
@@ -313,7 +313,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* 	 * If priority was low (>PZERO) and 	 * there has been a signal, 	 * execute non-local goto to 	 * the qsav location. 	 * (see trap1/trap.c) 	 */
+comment|/* 	 * If priority was low (>PZERO) and 	 * there has been a signal, execute non-local goto through 	 * u.u_qsav, aborting the system call in progress (see trap.c) 	 * (or finishing a tsleep, see below) 	 */
 name|psig
 label|:
 name|longjmp
@@ -328,7 +328,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Sleep on chan at pri.  * Return in no more than the indicated number of seconds.  * (If seconds==0, no timeout implied)  * Return	TS_OK if chan was awakened normally  *		TS_TIME if timeout occurred  *		TS_SIG if asynchronous signal occurred  */
+comment|/*  * Sleep on chan at pri.  * Return in no more than the indicated number of seconds.  * (If seconds==0, no timeout implied)  * Return	TS_OK if chan was awakened normally  *		TS_TIME if timeout occurred  *		TS_SIG if asynchronous signal occurred  *  * SHOULD HAVE OPTION TO SLEEP TO ABSOLUTE TIME OR AN  * INCREMENT IN MILLISECONDS!  */
 end_comment
 
 begin_macro
@@ -345,6 +345,14 @@ end_macro
 begin_decl_stmt
 name|caddr_t
 name|chan
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pri
+decl_stmt|,
+name|seconds
 decl_stmt|;
 end_decl_stmt
 
@@ -943,8 +951,9 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|s
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spl6
@@ -1094,8 +1103,9 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|p
-expr_stmt|;
+decl_stmt|;
 name|p
 operator|=
 operator|(
@@ -1191,6 +1201,12 @@ argument_list|(
 argument|isvfork
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|isvfork
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1301,7 +1317,7 @@ argument_list|(
 literal|"no procs"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * make proc entry for new proc 	 */
+comment|/* 	 * Make a proc table entry for the new process. 	 */
 name|rip
 operator|=
 name|u
@@ -1620,10 +1636,10 @@ name|rpp
 operator|-
 name|proc
 expr_stmt|;
-comment|/* 	 * make duplicate entries 	 * where needed 	 */
 name|multprog
 operator|++
 expr_stmt|;
+comment|/* 	 * Increase reference counts on shared objects. 	 */
 for|for
 control|(
 name|n
@@ -1648,7 +1664,6 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
 name|u
 operator|.
 name|u_ofile
@@ -1659,31 +1674,6 @@ operator|->
 name|f_count
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isvfork
-operator|&&
-name|u
-operator|.
-name|u_vrpages
-index|[
-name|n
-index|]
-condition|)
-name|u
-operator|.
-name|u_ofile
-index|[
-name|n
-index|]
-operator|->
-name|f_inode
-operator|->
-name|i_vfdcnt
-operator|++
-expr_stmt|;
-block|}
 name|u
 operator|.
 name|u_cdir
@@ -1704,14 +1694,13 @@ operator|->
 name|i_count
 operator|++
 expr_stmt|;
-comment|/* 	 * Partially simulate the environment 	 * of the new process so that when it is actually 	 * created (by copying) it will look right. 	 */
+comment|/* 	 * Partially simulate the environment 	 * of the new process so that when it is actually 	 * created (by copying) it will look right. 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
 name|rip
 operator|->
 name|p_flag
 operator||=
 name|SKEEP
 expr_stmt|;
-comment|/* prevent parent from being swapped */
 if|if
 condition|(
 name|procdup
@@ -1726,6 +1715,7 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* 	 * Make child runnable and add to run queue. 	 */
 operator|(
 name|void
 operator|)
@@ -1749,8 +1739,9 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-comment|/* SSWAP NOT NEEDED IN THIS CASE AS u.u_pcb.pcb_sswap SUFFICES */
+comment|/* 	 * Cause child to take a non-local goto as soon as it runs. 	 * On older systems this was done with SSWAP bit in proc 	 * table; on VAX we use u.u_pcb.pcb_sswap so don't need 	 * to do rpp->p_flag |= SSWAP.  Actually do nothing here. 	 */
 comment|/* rpp->p_flag |= SSWAP; */
+comment|/* 	 * Now can be swapped. 	 */
 name|rip
 operator|->
 name|p_flag
@@ -1758,6 +1749,7 @@ operator|&=
 operator|~
 name|SKEEP
 expr_stmt|;
+comment|/* 	 * If vfork make chain from parent process to child 	 * (where virtal memory is temporarily).  Wait for 	 * child to finish, steal virtual memory back, 	 * and wakeup child to let it die. 	 */
 if|if
 condition|(
 name|isvfork
@@ -1851,82 +1843,6 @@ argument_list|,
 name|Vfmap
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|n
-operator|=
-literal|0
-init|;
-name|n
-operator|<
-name|NOFILE
-condition|;
-name|n
-operator|++
-control|)
-if|if
-condition|(
-name|vfutl
-operator|.
-name|u_vrpages
-index|[
-name|n
-index|]
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|u
-operator|.
-name|u_vrpages
-index|[
-name|n
-index|]
-operator|=
-name|vfutl
-operator|.
-name|u_vrpages
-index|[
-name|n
-index|]
-operator|-
-literal|1
-operator|)
-operator|==
-literal|0
-condition|)
-if|if
-condition|(
-operator|--
-name|u
-operator|.
-name|u_ofile
-index|[
-name|n
-index|]
-operator|->
-name|f_inode
-operator|->
-name|i_vfdcnt
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"newproc i_vfdcnt"
-argument_list|)
-expr_stmt|;
-name|vfutl
-operator|.
-name|u_vrpages
-index|[
-name|n
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|u
 operator|.
 name|u_procp
@@ -1959,6 +1875,7 @@ name|rpp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * 0 return means parent. 	 */
 return|return
 operator|(
 literal|0
