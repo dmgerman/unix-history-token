@@ -536,6 +536,7 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
+operator|*
 operator|,
 name|int
 operator|,
@@ -3442,6 +3443,7 @@ if|if
 condition|(
 name|icmp6_notify_error
 argument_list|(
+operator|&
 name|m
 argument_list|,
 name|off
@@ -3508,7 +3510,7 @@ specifier|static
 name|int
 name|icmp6_notify_error
 parameter_list|(
-name|m
+name|mp
 parameter_list|,
 name|off
 parameter_list|,
@@ -3519,7 +3521,8 @@ parameter_list|)
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 decl_stmt|;
 name|int
 name|off
@@ -3529,6 +3532,14 @@ decl_stmt|,
 name|code
 decl_stmt|;
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+operator|*
+name|mp
+decl_stmt|;
 name|struct
 name|icmp6_hdr
 modifier|*
@@ -4437,7 +4448,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-comment|/* should be impossbile */
+comment|/* should be impossible */
 name|nd6log
 argument_list|(
 operator|(
@@ -4531,7 +4542,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-comment|/* should be impossbile */
+comment|/* should be impossible */
 name|nd6log
 argument_list|(
 operator|(
@@ -4721,6 +4732,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|mp
+operator|=
+name|m
+expr_stmt|;
 return|return
 operator|(
 literal|0
