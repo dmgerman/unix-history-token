@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quot.c	4.20 (Berkeley) %G%"
+literal|"@(#)quot.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,24 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/dinode.h>
 end_include
 
@@ -90,6 +72,18 @@ begin_include
 include|#
 directive|include
 file|<ufs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1007,7 +1001,7 @@ operator|<
 name|ROOTINO
 condition|)
 continue|continue;
-name|acct
+name|qacct
 argument_list|(
 operator|&
 name|itab
@@ -1032,7 +1026,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|acct
+name|qacct
 argument_list|(
 name|ip
 argument_list|)
