@@ -1240,51 +1240,6 @@ name|sc_miibus
 argument_list|)
 expr_stmt|;
 comment|/* 	 * From this point forward, the attachment cannot fail.  A failure 	 * before this point releases all resources that may have been 	 * allocated. 	 */
-comment|/* Announce ourselves. */
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"Ethernet address:"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|6
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%c%02x"
-argument_list|,
-name|i
-operator|>
-literal|0
-condition|?
-literal|':'
-else|:
-literal|' '
-argument_list|,
-name|sc
-operator|->
-name|sc_arpcom
-operator|.
-name|ac_enaddr
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* Get RX FIFO size */
 name|sc
 operator|->
