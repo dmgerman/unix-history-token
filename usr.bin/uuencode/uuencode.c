@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -33,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)uuencode.c	8.2 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)uuencode.c	8.2 (Berkeley) 4/2/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,8 +86,45 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_decl_stmt
+name|void
+name|encode
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -91,14 +143,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|struct
 name|stat
 name|sb
@@ -106,11 +150,6 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 name|getopt
@@ -169,31 +208,16 @@ operator|&
 name|sb
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"uuencode: %s: %s.\n"
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 define|#
 directive|define
 name|RWX
@@ -267,23 +291,13 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"uuencode: write error.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"write error"
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -310,12 +324,10 @@ begin_comment
 comment|/*  * copy from in to out, encoding as you go along.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|encode
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -336,6 +348,7 @@ index|]
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 name|fread
@@ -348,6 +361,7 @@ literal|45
 argument_list|,
 name|stdin
 argument_list|)
+operator|)
 condition|)
 block|{
 name|ch
@@ -535,23 +549,13 @@ argument_list|(
 name|stdin
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"uuencode: read error.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"read error"
 argument_list|)
 expr_stmt|;
-block|}
 name|ch
 operator|=
 name|ENC
@@ -576,14 +580,13 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -601,7 +604,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
