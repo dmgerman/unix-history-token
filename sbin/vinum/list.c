@@ -3993,7 +3993,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nTime\t\t Event\t     Buf\tDev\tOffset\t\tBytes\tSD\tSDoff\tDoffset\tGoffset\n\n"
+literal|"\nTime\t\t Event\t     Buf\tDev\t  Offset\tBytes\tSD\tSDoff\tDoffset\tGoffset\n\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4065,7 +4065,7 @@ case|:
 comment|/* this is the bp when strategy is called */
 name|printf
 argument_list|(
-literal|"%s 1VS %s %p\t%d.%d\t0x%-9x\t%ld\n"
+literal|"%s 1VS %s %p\t%d.%-6d 0x%-9x\t%ld\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4125,7 +4125,7 @@ case|:
 comment|/* and this is the bp at launch time */
 name|printf
 argument_list|(
-literal|"%s 2LR %s %p\t%d.%d\t0x%-9x\t%ld\n"
+literal|"%s 2LR %s %p\t%d.%-6d 0x%-9x\t%ld\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4185,7 +4185,7 @@ case|:
 comment|/* user RQE */
 name|printf
 argument_list|(
-literal|"%s 3RQ %s %p\t%d.%d\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 3RQ %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4283,7 +4283,7 @@ case|:
 comment|/* iodone called */
 name|printf
 argument_list|(
-literal|"%s 4DN %s %p\t%d.%d\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 4DN %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4381,7 +4381,7 @@ case|:
 comment|/* RAID-5 write data block */
 name|printf
 argument_list|(
-literal|"%s 5RD %s %p\t%d.%d\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 5RD %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4479,7 +4479,7 @@ case|:
 comment|/* RAID-5 write parity block */
 name|printf
 argument_list|(
-literal|"%s 6RP %s %p\t%d.%d\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 6RP %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4568,6 +4568,117 @@ operator|.
 name|rqe
 operator|.
 name|groupoffset
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|loginfo_lockwait
+case|:
+name|printf
+argument_list|(
+literal|"%s Lockwait  %p\t%d\t  0x%x\n"
+argument_list|,
+name|timetext
+argument_list|(
+operator|&
+name|rq
+operator|.
+name|timestamp
+argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|bp
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|plexno
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|stripe
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|loginfo_lock
+case|:
+name|printf
+argument_list|(
+literal|"%s Lock      %p\t%d\t  0x%x\n"
+argument_list|,
+name|timetext
+argument_list|(
+operator|&
+name|rq
+operator|.
+name|timestamp
+argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|bp
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|plexno
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|stripe
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|loginfo_unlock
+case|:
+name|printf
+argument_list|(
+literal|"%s Unlock\t  %p\t%d\t  0x%x\n"
+argument_list|,
+name|timetext
+argument_list|(
+operator|&
+name|rq
+operator|.
+name|timestamp
+argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|bp
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|plexno
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|stripe
 argument_list|)
 expr_stmt|;
 block|}
