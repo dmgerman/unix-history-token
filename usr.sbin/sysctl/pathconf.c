@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)pathconf.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)pathconf.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id: pathconf.c,v 1.3 1997/10/20 12:53:53 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -93,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -171,6 +197,78 @@ name|stdinflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|findname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+expr|struct
+name|list
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|listall
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|list
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|parse
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -188,15 +286,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|char
 modifier|*
 name|path
@@ -358,31 +447,23 @@ begin_comment
 comment|/*  * List all variables known to the system.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|listall
-argument_list|(
-argument|path
-argument_list|,
-argument|lp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|path
+parameter_list|,
+name|lp
+parameter_list|)
 name|char
 modifier|*
 name|path
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|list
 modifier|*
 name|lp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|lvl2
@@ -444,44 +525,33 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Parse a name into an index.  * Lookup and print out the attribute if it exists.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|parse
-argument_list|(
-argument|pathname
-argument_list|,
-argument|string
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pathname
+parameter_list|,
+name|string
+parameter_list|,
+name|flags
+parameter_list|)
 name|char
 modifier|*
 name|pathname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|indx
@@ -540,11 +610,9 @@ condition|(
 name|bufp
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"name %s in %s is unknown\n"
+literal|"name %s in %s is unknown"
 argument_list|,
 operator|*
 name|bufp
@@ -600,11 +668,9 @@ block|{
 case|case
 name|EOPNOTSUPP
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: value is not available\n"
+literal|"%s: value is not available"
 argument_list|,
 name|string
 argument_list|)
@@ -613,11 +679,9 @@ return|return;
 case|case
 name|ENOTDIR
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: specification is incomplete\n"
+literal|"%s: specification is incomplete"
 argument_list|,
 name|string
 argument_list|)
@@ -626,19 +690,19 @@ return|return;
 case|case
 name|ENOMEM
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: type is unknown to this program\n"
+literal|"%s: type is unknown to this program"
 argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
 return|return;
 default|default:
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
@@ -669,56 +733,42 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Scan a list of names searching for a particular name.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|findname
-argument_list|(
-argument|string
-argument_list|,
-argument|level
-argument_list|,
-argument|bufp
-argument_list|,
-argument|namelist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|string
+parameter_list|,
+name|level
+parameter_list|,
+name|bufp
+parameter_list|,
+name|namelist
+parameter_list|)
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|level
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|bufp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|list
 modifier|*
 name|namelist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -749,11 +799,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: incomplete specification\n"
+literal|"%s: incomplete specification"
 argument_list|,
 name|string
 argument_list|)
@@ -819,11 +867,9 @@ operator|->
 name|size
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s level name %s in %s is invalid\n"
+literal|"%s level name %s in %s is invalid"
 argument_list|,
 name|level
 argument_list|,
@@ -845,14 +891,13 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -861,13 +906,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\t%s\n\t%s\n\t%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"pathname [-n] variable ..."
+literal|"usage: pathname [-n] variable ..."
 argument_list|,
-literal|"pathname [-n] -a"
+literal|"       pathname [-n] -a"
 argument_list|,
-literal|"pathname [-n] -A"
+literal|"       pathname [-n] -A"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -876,7 +921,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

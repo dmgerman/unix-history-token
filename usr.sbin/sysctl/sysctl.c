@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "From: @(#)sysctl.c	8.1 (Berkeley) 6/6/93"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from: sysctl.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -45,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.10 1996/04/10 00:53:22 smpatel Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +94,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -109,13 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -222,12 +237,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\n%s"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"\tsysctl [-bnX] variable ...\n"
-literal|"\tsysctl [-bnX] -w variable=value ...\n"
-literal|"\tsysctl [-bnX] -a\n"
-literal|"\tsysctl [-bnX] -A\n"
+literal|"usage: sysctl [-bnX] variable ..."
+argument_list|,
+literal|"       sysctl [-bnX] -w variable=value ..."
+argument_list|,
+literal|"       sysctl [-bnX] -a"
+argument_list|,
+literal|"       sysctl [-bnX] -A"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -251,15 +269,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -506,20 +515,13 @@ condition|(
 operator|!
 name|wflag
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Must specify -w to set variables\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"must specify -w to set variables"
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|strchr
 argument_list|(
@@ -588,7 +590,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unknown oid '%s'"
+literal|"unknown oid '%s'"
 argument_list|,
 name|bufp
 argument_list|)
@@ -611,7 +613,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Couldn't find format of oid '%s'"
+literal|"couldn't find format of oid '%s'"
 argument_list|,
 name|bufp
 argument_list|)
@@ -831,7 +833,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: value is not available\n"
+literal|"%s: value is not available"
 argument_list|,
 name|string
 argument_list|)
@@ -843,7 +845,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: specification is incomplete\n"
+literal|"%s: specification is incomplete"
 argument_list|,
 name|string
 argument_list|)
@@ -855,14 +857,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: type is unknown to this program\n"
+literal|"%s: type is unknown to this program"
 argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
 default|default:
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
@@ -956,7 +960,6 @@ name|ci
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"S_clockinfo %d != %d"
@@ -1032,7 +1035,6 @@ name|tv
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"S_loadavg %d != %d"
@@ -1150,7 +1152,6 @@ name|tv
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"S_timeval %d != %d"
@@ -1260,7 +1261,6 @@ name|d
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"T_dev_T %d != %d"
@@ -1495,7 +1495,6 @@ name|i
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"sysctl fmt %d %d %d"
@@ -1774,7 +1773,6 @@ name|j
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"sysctl fmt %d %d %d"
@@ -1851,7 +1849,6 @@ name|j
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"sysctl name %d %d %d"
@@ -2248,7 +2245,6 @@ return|;
 else|else
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"sysctl(getnext) %d %d"
