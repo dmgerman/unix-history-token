@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.23 (Berkeley) %G%"
+literal|"@(#)function.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,8 +172,6 @@ name|option
 parameter_list|,
 name|str
 parameter_list|,
-name|nosign
-parameter_list|,
 name|endch
 parameter_list|)
 name|PLAN
@@ -191,12 +189,6 @@ modifier|*
 name|endch
 decl_stmt|;
 end_function
-
-begin_decl_stmt
-name|int
-name|nosign
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -218,19 +210,6 @@ block|{
 case|case
 literal|'+'
 case|:
-if|if
-condition|(
-name|nosign
-condition|)
-name|err
-argument_list|(
-literal|"%s: %s"
-argument_list|,
-name|option
-argument_list|,
-literal|"signed value not permitted"
-argument_list|)
-expr_stmt|;
 operator|++
 name|str
 expr_stmt|;
@@ -244,19 +223,6 @@ break|break;
 case|case
 literal|'-'
 case|:
-if|if
-condition|(
-name|nosign
-condition|)
-name|err
-argument_list|(
-literal|"%s: %s"
-argument_list|,
-name|option
-argument_list|,
-literal|"signed value not permitted"
-argument_list|)
-expr_stmt|;
 operator|++
 name|str
 expr_stmt|;
@@ -459,8 +425,6 @@ literal|"-atime"
 argument_list|,
 name|arg
 argument_list|,
-literal|0
-argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -572,8 +536,6 @@ argument_list|,
 literal|"-ctime"
 argument_list|,
 name|arg
-argument_list|,
-literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -2023,8 +1985,6 @@ literal|"-inum"
 argument_list|,
 name|arg
 argument_list|,
-literal|1
-argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2125,8 +2085,6 @@ argument_list|,
 literal|"-links"
 argument_list|,
 name|arg
-argument_list|,
-literal|1
 argument_list|,
 name|NULL
 argument_list|)
@@ -2323,8 +2281,6 @@ argument_list|,
 literal|"-mtime"
 argument_list|,
 name|arg
-argument_list|,
-literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -3276,8 +3232,6 @@ argument_list|,
 literal|"-size"
 argument_list|,
 name|arg
-argument_list|,
-literal|1
 argument_list|,
 operator|&
 name|endch
