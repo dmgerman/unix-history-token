@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.113		%G%"
+literal|"@(#)sendmail.h	3.114		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +234,7 @@ name|clrbitmap
 parameter_list|(
 name|map
 parameter_list|)
-value|bzero((char *) map, BITMAPBYTES / sizeof (int))
+value|bzero((char *) map, BITMAPBYTES)
 end_define
 
 begin_escape
