@@ -4341,6 +4341,18 @@ name|td
 operator|->
 name|td_pcb
 decl_stmt|;
+comment|/* Reset pc->pcb_gs and %gs before possibly invalidating it. */
+name|pcb
+operator|->
+name|pcb_gs
+operator|=
+name|_udatasel
+expr_stmt|;
+name|load_gs
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -4433,28 +4445,6 @@ operator|->
 name|tf_ebx
 operator|=
 name|ps_strings
-expr_stmt|;
-comment|/* reset %gs as well */
-if|if
-condition|(
-name|pcb
-operator|==
-name|PCPU_GET
-argument_list|(
-name|curpcb
-argument_list|)
-condition|)
-name|load_gs
-argument_list|(
-name|_udatasel
-argument_list|)
-expr_stmt|;
-else|else
-name|pcb
-operator|->
-name|pcb_gs
-operator|=
-name|_udatasel
 expr_stmt|;
 comment|/*          * Reset the hardware debug registers if they were in use.          * They won't have any meaning for the newly exec'd process.            */
 if|if
