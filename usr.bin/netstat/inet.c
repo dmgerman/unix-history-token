@@ -1189,7 +1189,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nflag
+name|numeric_port
 condition|)
 block|{
 if|if
@@ -3339,7 +3339,7 @@ name|port
 parameter_list|,
 name|proto
 parameter_list|,
-name|numeric
+name|numeric_port
 parameter_list|)
 specifier|register
 name|struct
@@ -3355,7 +3355,7 @@ modifier|*
 name|proto
 decl_stmt|;
 name|int
-name|numeric
+name|numeric_port
 decl_stmt|;
 block|{
 name|struct
@@ -3404,7 +3404,7 @@ operator|(
 name|Aflag
 operator|&&
 operator|!
-name|numeric
+name|numeric_port
 operator|)
 condition|?
 literal|12
@@ -3429,7 +3429,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|numeric
+name|numeric_port
 operator|&&
 name|port
 condition|)
@@ -3526,7 +3526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct an Internet address representation.  * If the nflag has been supplied, give  * numeric value, otherwise try for symbolic name.  */
+comment|/*  * Construct an Internet address representation.  * If numeric_addr has been supplied, give  * numeric value, otherwise try for symbolic name.  */
 end_comment
 
 begin_function
@@ -3571,7 +3571,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|nflag
+name|numeric_addr
 operator|&&
 name|inp
 operator|->

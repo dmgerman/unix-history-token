@@ -3435,7 +3435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pretty print an Internet address (net address + port).  * If the nflag was specified, use numbers instead of names.  */
+comment|/*  * Pretty print an Internet address (net address + port).  * Take numeric_addr and numeric_port into consideration.  */
 end_comment
 
 begin_define
@@ -3619,7 +3619,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct an Internet address representation.  * If the nflag has been supplied, give  * numeric value, otherwise try for symbolic name.  */
+comment|/*  * Construct an Internet address representation.  * If the numeric_addr has been supplied, give  * numeric value, otherwise try for symbolic name.  */
 end_comment
 
 begin_function
@@ -3670,7 +3670,7 @@ condition|(
 name|first
 operator|&&
 operator|!
-name|nflag
+name|numeric_addr
 condition|)
 block|{
 name|first
@@ -3727,7 +3727,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|nflag
+name|numeric_addr
 operator|&&
 operator|!
 name|IN6_IS_ADDR_UNSPECIFIED

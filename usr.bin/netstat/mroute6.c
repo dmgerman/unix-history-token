@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|WID_ORG
-value|(lflag ? 39 : (nflag ? 29 : 18))
+value|(lflag ? 39 : (numeric_addr ? 29 : 18))
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|WID_GRP
-value|(lflag ? 18 : (nflag ? 16 : 18))
+value|(lflag ? 18 : (numeric_addr ? 16 : 18))
 end_define
 
 begin_comment
@@ -199,7 +199,7 @@ name|banner_printed
 decl_stmt|;
 specifier|register
 name|int
-name|saved_nflag
+name|saved_numeric_addr
 decl_stmt|;
 name|mifi_t
 name|maxmif
@@ -229,11 +229,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|saved_nflag
+name|saved_numeric_addr
 operator|=
-name|nflag
+name|numeric_addr
 expr_stmt|;
-name|nflag
+name|numeric_addr
 operator|=
 literal|1
 expr_stmt|;
@@ -699,9 +699,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|nflag
+name|numeric_addr
 operator|=
-name|saved_nflag
+name|saved_numeric_addr
 expr_stmt|;
 block|}
 end_function
