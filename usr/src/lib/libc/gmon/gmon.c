@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.10 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,13 @@ specifier|static
 name|int
 modifier|*
 name|sbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|s_scale
 decl_stmt|;
 end_decl_stmt
 
@@ -438,10 +445,10 @@ argument_list|,
 name|tolimit
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	profiling is what mcount checks to see if 	 *	all the data structures are ready!!! 	 */
-name|profiling
-operator|=
-literal|0
+name|moncontrol
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -689,6 +696,10 @@ end_block
 
 begin_asm
 asm|asm(".text");
+end_asm
+
+begin_asm
+asm|asm(".align 2");
 end_asm
 
 begin_asm
@@ -1182,22 +1193,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|profiling
-operator|++
-expr_stmt|;
-comment|/* halt profiling */
-name|profil
+name|moncontrol
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1331,17 +1328,94 @@ name|o
 operator|=
 literal|65536
 expr_stmt|;
-name|profil
-argument_list|(
-name|buf
-argument_list|,
-name|bufsiz
-argument_list|,
-name|lowpc
-argument_list|,
+name|s_scale
+operator|=
 name|o
+expr_stmt|;
+name|moncontrol
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Control profiling  *	profiling is what mcount checks to see if  *	all the data structures are ready.  */
+end_comment
+
+begin_macro
+name|moncontrol
+argument_list|(
+argument|mode
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|mode
+condition|)
+block|{
+comment|/* start */
+name|profil
+argument_list|(
+name|sbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|phdr
+argument_list|)
+argument_list|,
+name|ssiz
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|phdr
+argument_list|)
+argument_list|,
+name|s_lowpc
+argument_list|,
+name|s_scale
+argument_list|)
+expr_stmt|;
+name|profiling
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* stop */
+name|profil
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|profiling
+operator|=
+literal|3
+expr_stmt|;
+block|}
 block|}
 end_block
 
