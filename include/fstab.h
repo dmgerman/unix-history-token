@@ -128,7 +128,7 @@ comment|/* dump frequency, in days */
 name|int
 name|fs_passno
 decl_stmt|;
-comment|/* pass number on parallel dump */
+comment|/* pass number on parallel fsck */
 block|}
 struct|;
 end_struct
