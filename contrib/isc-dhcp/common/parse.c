@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.2.2.1 1998/06/25 21:11:31 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: parse.c,v 1.2.2.3 1998/12/22 22:43:22 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -798,6 +798,16 @@ operator|=
 name|HTYPE_IEEE802
 expr_stmt|;
 break|break;
+case|case
+name|FDDI
+case|:
+name|hardware
+operator|->
+name|htype
+operator|=
+name|HTYPE_FDDI
+expr_stmt|;
+break|break;
 default|default:
 name|parse_warn
 argument_list|(
@@ -893,6 +903,37 @@ name|t
 argument_list|,
 name|hardware
 operator|->
+name|hlen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|<
+sizeof|sizeof
+name|hardware
+operator|->
+name|haddr
+condition|)
+name|memset
+argument_list|(
+operator|&
+name|hardware
+operator|->
+name|haddr
+index|[
+name|hlen
+index|]
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+sizeof|sizeof
+name|hardware
+operator|->
+name|haddr
+operator|)
+operator|-
 name|hlen
 argument_list|)
 expr_stmt|;

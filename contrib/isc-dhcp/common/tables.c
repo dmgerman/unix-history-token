@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: tables.c,v 1.13.2.1 1998/06/25 21:11:32 mellon Exp $ Copyright (c) 1995, 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: tables.c,v 1.13.2.3 1998/12/22 22:45:44 mellon Exp $ Copyright (c) 1995, 1996 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,7 +193,7 @@ block|,
 block|{
 literal|"host-name"
 block|,
-literal|"t"
+literal|"X"
 block|,
 operator|&
 name|dhcp_universe
@@ -3424,7 +3424,7 @@ literal|"token-ring"
 block|,
 literal|"unknown-7"
 block|,
-literal|"unknown-8"
+literal|"fddi"
 block|,
 literal|"unknown-9"
 block|,

@@ -223,6 +223,17 @@ begin_comment
 comment|/* IEEE 802.2 Token Ring...	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HTYPE_FDDI
+value|8
+end_define
+
+begin_comment
+comment|/* FDDI...			*/
+end_comment
+
 begin_comment
 comment|/* Magic cookie validating dhcp options field (and bootp vendor    extensions field). */
 end_comment

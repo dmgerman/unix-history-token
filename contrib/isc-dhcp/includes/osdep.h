@@ -86,6 +86,27 @@ expr|\
 operator|!
 name|defined
 argument_list|(
+name|USE_LPF
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|USE_LPF_SEND
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|USE_LPF_RECEIVE
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
 name|USE_NIT
 argument_list|)
 operator|&&
@@ -476,6 +497,29 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|USE_LPF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USE_LPF_SEND
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_LPF_RECEIVE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USE_NIT
 end_ifdef
 
@@ -569,6 +613,11 @@ name|defined
 argument_list|(
 name|USE_UPF_SEND
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_LPF_SEND
+argument_list|)
 end_if
 
 begin_define
@@ -621,6 +670,11 @@ name|defined
 argument_list|(
 name|USE_DLPI_SEND
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_LPF_SEND
+argument_list|)
 end_if
 
 begin_define
@@ -666,6 +720,11 @@ expr|\
 name|defined
 argument_list|(
 name|USE_DLPI_RECEIVE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_LPF_RECEIVE
 argument_list|)
 end_if
 

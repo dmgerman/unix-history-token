@@ -4,7 +4,7 @@ comment|/* bpf.c     BPF socket interface code, originally contributed by Archie
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996 The Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
+comment|/*  * Copyright (c) 1995, 1996, 1998, 1999  * The Internet Software Consortium.    All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: bpf.c,v 1.19 1997/10/20 21:47:13 mellon Exp $ Copyright (c) 1995, 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: bpf.c,v 1.19.2.6 1999/02/09 04:46:59 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,50 @@ name|defined
 argument_list|(
 name|USE_BPF_RECEIVE
 argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|USE_LPF_RECEIVE
+argument_list|)
 end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_LPF_RECEIVE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<asm/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/filter.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|bpf_insn
+value|sock_filter
+end_define
+
+begin_comment
+comment|/* Linux: dare to be gratuitously different. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -70,17 +113,25 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NEED_OSF_PFILT_HACKS
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<net/pfilt.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -110,6 +161,11 @@ include|#
 directive|include
 file|"includes/netinet/if_ether.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Reinitializes the specified interface after an address change.   This    is not required for packet-filter APIs. */
@@ -168,6 +224,20 @@ end_endif
 begin_comment
 comment|/* Called by get_interface_list for each interface that's discovered.    Opens a packet filter for each interface and adds it to the select    mask. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_BPF_SEND
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_BPF_RECEIVE
+argument_list|)
+end_if
 
 begin_function
 name|int
@@ -265,6 +335,22 @@ continue|continue;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|b
+condition|)
+name|error
+argument_list|(
+literal|"No bpf devices.%s%s%s"
+argument_list|,
+literal|"   Please read the README"
+argument_list|,
+literal|" section for your operating"
+argument_list|,
+literal|" system."
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Can't find free bpf: %m"
@@ -425,11 +511,19 @@ begin_comment
 comment|/* USE_BPF_SEND */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|USE_BPF_RECEIVE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_LPF_RECEIVE
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Packet filter program...    XXX Changes to the filter program may require changes to the constant    offsets used in if_register_send to patch the BPF program! XXX */
@@ -438,7 +532,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|bpf_insn
-name|filter
+name|dhcp_bpf_filter
 index|[]
 init|=
 block|{
@@ -589,6 +683,35 @@ argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dhcp_bpf_filter_len
+init|=
+sizeof|sizeof
+name|dhcp_bpf_filter
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bpf_insn
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_BPF_RECEIVE
+argument_list|)
+end_if
 
 begin_function
 name|void
@@ -841,23 +964,16 @@ name|p
 operator|.
 name|bf_len
 operator|=
-sizeof|sizeof
-name|filter
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bpf_insn
-argument_list|)
+name|dhcp_bpf_filter_len
 expr_stmt|;
 name|p
 operator|.
 name|bf_insns
 operator|=
-name|filter
+name|dhcp_bpf_filter
 expr_stmt|;
 comment|/* Patch the server port into the BPF  program... 	   XXX changes to filter program may require changes 	   to the insn number(s) used below! XXX */
-name|filter
+name|dhcp_bpf_filter
 index|[
 literal|8
 index|]
@@ -1027,6 +1143,36 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|interface
+operator|->
+name|name
+argument_list|,
+literal|"fallback"
+argument_list|)
+condition|)
+return|return
+name|send_fallback
+argument_list|(
+name|interface
+argument_list|,
+name|packet
+argument_list|,
+name|raw
+argument_list|,
+name|len
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|,
+name|hto
+argument_list|)
+return|;
 comment|/* Assemble the headers... */
 name|assemble_hw_header
 argument_list|(
@@ -1533,6 +1679,59 @@ do|;
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|can_unicast_without_arp
+parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|maybe_setup_fallback
+parameter_list|()
+block|{
+name|struct
+name|interface_info
+modifier|*
+name|fbi
+decl_stmt|;
+name|fbi
+operator|=
+name|setup_fallback
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|fbi
+condition|)
+block|{
+name|if_register_fallback
+argument_list|(
+name|fbi
+argument_list|)
+expr_stmt|;
+name|add_protocol
+argument_list|(
+literal|"fallback"
+argument_list|,
+name|fallback_interface
+operator|->
+name|wfdesc
+argument_list|,
+name|fallback_discard
+argument_list|,
+name|fallback_interface
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
