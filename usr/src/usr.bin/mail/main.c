@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	1.2 %G%"
+literal|"@(#)main.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,6 +450,14 @@ literal|'n'
 case|:
 comment|/* 			 * User doesn't want to source /usr/lib/Mail.rc 			 */
 name|nosrc
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+comment|/* 			 * Avoid initial header printing. 			 */
+name|noheader
 operator|++
 expr_stmt|;
 break|break;
