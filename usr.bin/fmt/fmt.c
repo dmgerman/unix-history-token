@@ -65,6 +65,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_comment
 comment|/*  * fmt -- format the concatenation of input files or standard input  * onto standard output.  Designed for use with Mail ~|  *  * Syntax : fmt [ goal [ max ] ] [ name ... ]  * Authors: Kurt Shoens (UCB) 12/7/78;  *          Liz Allen (UMCP) 2/24/83 [Addition of goal length concept].  */
 end_comment
@@ -217,6 +223,16 @@ name|int
 name|number
 decl_stmt|;
 comment|/* LIZ@UOM 6/18/85 */
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|goal_length
 operator|=
 name|GOAL_LENGTH

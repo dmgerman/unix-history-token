@@ -83,6 +83,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -567,6 +573,16 @@ name|opt
 decl_stmt|,
 name|warned
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|max_bufd_lines
 operator|=
 literal|128
