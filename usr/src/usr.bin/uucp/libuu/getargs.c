@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getargs.c	5.2 (Berkeley) %G%"
+literal|"@(#)getargs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,10 @@ include|#
 directive|include
 file|"uucp.h"
 end_include
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	getargs  -  this routine will generate a vector of  *	pointers (arps) to the substrings in string "s".  *	Each substring is separated by blanks and/or tabs.  *  *	If FANCYARGS is defined, you get the following:  *	Strings containing blanks may be specified by quoting,  *	in a manner similar to using the shell.  *	Control characters are entered by ^X where X is any  *	character; ^? gets you a rubout and ^^ is a real ^.  *	Warning (rti!trt): I doubt FANCYARGS is wise, since getargs  *	is used all over the place.  Its features may be useful  *	but a separate fancy_getargs() should be called instead.  *  *	return - the number of subfields, or -1 if>= maxargs.  */
