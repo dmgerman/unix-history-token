@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c	5.6 (Berkeley) %G%"
+literal|"@(#)symbols.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,7 +267,7 @@ end_define
 begin_typedef
 typedef|typedef
 name|unsigned
-name|integer
+name|int
 name|Storage
 typedef|;
 end_typedef
