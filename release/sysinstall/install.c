@@ -2920,6 +2920,8 @@ name|rootfs
 decl_stmt|;
 name|int
 name|kstat
+init|=
+literal|1
 decl_stmt|;
 comment|/* All of this is done only as init, just to be safe */
 if|if
@@ -3102,7 +3104,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"root_disk_unit=%d\n"
+literal|"root_disk_unit=\"%d\"\n"
 argument_list|,
 operator|*
 name|cp
