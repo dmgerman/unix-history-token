@@ -277,12 +277,49 @@ end_endif
 begin_define
 define|#
 directive|define
+name|_ALIGN_DATA
+value|.align 8
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_ALIGN_TEXT
+value|.align 32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_ALIGN_TEXT
+value|.align 16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|DATA
 parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.data ; \ 	.globl	name ; \ 	.type	name, @object ; \ name ## :
+value|.data ; \ 	_ALIGN_DATA ; \ 	.globl	name ; \ 	.type	name, @object ; \ name ## :
 end_define
 
 begin_define
@@ -299,7 +336,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.text ; \ 	.align	16 ; \ 	.globl	name ; \ 	.type	name, @function ; \ name ## :
+value|.text ; \ 	_ALIGN_TEXT ; \ 	.globl	name ; \ 	.type	name, @function ; \ name ## :
 end_define
 
 begin_define
