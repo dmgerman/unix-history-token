@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: tp_events.h,v 1.2 1994/08/02 07:51:05 davidg Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NETISO_TP_EVENTS_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NETISO_TP_EVENTS_H_
+end_define
 
 begin_struct
 struct|struct
@@ -317,6 +329,11 @@ end_define
 begin_comment
 comment|/**/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
