@@ -2063,7 +2063,7 @@ name|ifp
 operator|->
 name|if_baudrate
 operator|=
-literal|10000000
+literal|100000000
 expr_stmt|;
 name|ifp
 operator|->
@@ -2136,6 +2136,25 @@ name|sc
 operator|->
 name|bfe_stat_ch
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 comment|/* 	 * Hook interrupt last to avoid having to lock softc 	 */
 name|error
