@@ -220,6 +220,21 @@ begin_comment
 comment|/* force last short packet on write */
 end_comment
 
+begin_comment
+comment|/* XXX Temporary hack XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBD_NO_TSLEEP
+value|0x80
+end_define
+
+begin_comment
+comment|/* XXX use busy wait */
+end_comment
+
 begin_define
 define|#
 directive|define
