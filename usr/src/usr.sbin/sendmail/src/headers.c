@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.25 (Berkeley) %G%"
+literal|"@(#)headers.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2145,7 +2145,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-literal|".'@,;:[]"
+literal|".'@,;:\\[]<>()"
 argument_list|,
 name|c
 argument_list|)
