@@ -2943,6 +2943,12 @@ name|nmb_checkforhangsecs
 operator|=
 name|hangsecs
 expr_stmt|;
+name|block
+operator|->
+name|nmb_flags
+operator|=
+name|flags
+expr_stmt|;
 return|return
 operator|(
 name|NDIS_STATUS_SUCCESS
