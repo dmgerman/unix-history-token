@@ -3552,6 +3552,10 @@ name|fts_accpath
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOTEMPTY
 condition|)
 name|warn
 argument_list|(
