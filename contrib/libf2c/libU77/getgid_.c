@@ -59,25 +59,12 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_expr_stmt
+begin_function
 name|integer
 name|G77_getgid_0
-argument_list|()
-else|#
-directive|else
-name|integer
-name|G77_getgid_0
-argument_list|(
-argument|void
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -95,20 +82,14 @@ name|errno
 operator|=
 name|ENOSYS
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|-
 literal|1
 return|;
-end_return
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
-unit|}
 end_unit
 

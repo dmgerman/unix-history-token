@@ -54,26 +54,6 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_undef
 undef|#
 directive|undef
@@ -97,11 +77,6 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -133,7 +108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*unit table*/
+comment|/*unit table */
 end_comment
 
 begin_decl_stmt
@@ -143,7 +118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*bit 0: set after initializations; 		  bit 1: set during I/O involving returns to 		    caller of library (or calls to user code)*/
+comment|/*bit 0: set after initializations; 				   bit 1: set during I/O involving returns to 				   caller of library (or calls to user code) */
 end_comment
 
 begin_decl_stmt
@@ -154,7 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*active external io list*/
+comment|/*active external io list */
 end_comment
 
 begin_decl_stmt
@@ -165,7 +140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*active internal io list*/
+comment|/*active internal io list */
 end_comment
 
 begin_decl_stmt
@@ -175,7 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*1 if reading, 0 if writing*/
+comment|/*1 if reading, 0 if writing */
 end_comment
 
 begin_decl_stmt
@@ -208,83 +183,6 @@ end_decl_stmt
 begin_comment
 comment|/*1 if external io, 0 if internal */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|int
-argument_list|(
-operator|*
-name|f__doed
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|f__doned
-argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-argument_list|(
-operator|*
-name|f__doend
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|f__donewrec
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|f__dorevert
-argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|f__getn
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* for formatted input */
-end_comment
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|f__putn
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* for formatted output */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_function_decl
 name|int
@@ -375,11 +273,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|flag
 name|f__sequential
@@ -387,7 +280,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*1 if sequential io, 0 if direct*/
+comment|/*1 if sequential io, 0 if direct */
 end_comment
 
 begin_decl_stmt
@@ -397,7 +290,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*1 if formatted io, 0 if unformatted*/
+comment|/*1 if formatted io, 0 if unformatted */
 end_comment
 
 begin_decl_stmt
@@ -408,7 +301,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*current file*/
+comment|/*current file */
 end_comment
 
 begin_decl_stmt
@@ -419,7 +312,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*current unit*/
+comment|/*current unit */
 end_comment
 
 begin_decl_stmt
@@ -429,7 +322,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*place in current record*/
+comment|/*place in current record */
 end_comment
 
 begin_decl_stmt
@@ -569,52 +462,15 @@ name|MAXERR
 value|(sizeof(F_err)/sizeof(char *)+100)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_macro
+begin_function
+name|int
 name|f__canseek
-argument_list|(
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+parameter_list|)
 comment|/*SYSDEP*/
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|f__canseek
-argument_list|(
-argument|FILE *f
-argument_list|)
-end_macro
-
-begin_comment
-comment|/*SYSDEP*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -844,26 +700,11 @@ comment|/* who knows what it is? */
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|KR_headers
 name|f__fatal
-parameter_list|(
-name|n
-parameter_list|,
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-else|#
-directive|else
-function|f__fatal
 parameter_list|(
 name|int
 name|n
@@ -872,8 +713,6 @@ name|char
 modifier|*
 name|s
 parameter_list|)
-endif|#
-directive|endif
 block|{
 specifier|static
 name|int
@@ -1101,10 +940,10 @@ comment|/*initialization routine*/
 end_comment
 
 begin_function
-name|VOID
+name|void
 name|f_init
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 block|{
 name|unit
@@ -1236,44 +1075,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_macro
+begin_function
+name|int
 name|f__nowreading
-argument_list|(
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|unit
 modifier|*
 name|x
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|f__nowreading
-argument_list|(
-argument|unit *x
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 name|off_t
 name|loc
@@ -1425,46 +1234,16 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_macro
+begin_function
+name|int
 name|f__nowwriting
-argument_list|(
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|unit
 modifier|*
 name|x
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|f__nowwriting
-argument_list|(
-argument|unit *x
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 name|off_t
 name|loc
@@ -1647,34 +1426,12 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
-ifdef|#
-directive|ifdef
-name|KR_headers
 name|err__fl
 parameter_list|(
-name|f
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-name|int
-name|f
-decl_stmt|,
-name|m
-decl_stmt|;
-name|char
-modifier|*
-name|s
-decl_stmt|;
-else|#
-directive|else
-function|err__fl
-parameter_list|(
 name|int
 name|f
 parameter_list|,
@@ -1685,8 +1442,6 @@ name|char
 modifier|*
 name|s
 parameter_list|)
-endif|#
-directive|endif
 block|{
 if|if
 condition|(

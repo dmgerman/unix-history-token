@@ -48,34 +48,6 @@ begin_comment
 comment|/* fixme: bsd, svr1-3 use int, not pid_t */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|integer
-name|G77_kill_0
-argument_list|(
-name|pid
-argument_list|,
-name|signum
-argument_list|)
-name|integer
-modifier|*
-name|pid
-decl_stmt|,
-modifier|*
-name|signum
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 name|integer
 name|G77_kill_0
@@ -90,8 +62,6 @@ name|integer
 modifier|*
 name|signum
 parameter_list|)
-endif|#
-directive|endif
 block|{
 if|#
 directive|if

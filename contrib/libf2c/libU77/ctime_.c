@@ -120,50 +120,6 @@ begin_comment
 comment|/* may need sys/time.h& long arg for stime (bsd, svr1-3) */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_comment
-comment|/* Character */
-end_comment
-
-begin_decl_stmt
-name|void
-name|G77_ctime_0
-argument_list|(
-name|chtime
-argument_list|,
-name|Lchtime
-argument_list|,
-name|xstime
-argument_list|)
-name|char
-modifier|*
-name|chtime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|longint
-modifier|*
-name|xstime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ftnlen
-name|Lchtime
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Character */
 end_comment
@@ -184,14 +140,7 @@ name|longint
 modifier|*
 name|xstime
 parameter_list|)
-endif|#
-directive|endif
 block|{
-name|int
-name|i
-decl_stmt|,
-name|l
-decl_stmt|;
 name|int
 name|s_copy
 parameter_list|()

@@ -94,35 +94,6 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_comment
-comment|/* Subroutine */
-end_comment
-
-begin_decl_stmt
-name|int
-name|G77_itime_0
-argument_list|(
-name|tarray
-argument_list|)
-name|integer
-name|tarray
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Subroutine */
 end_comment
@@ -137,8 +108,6 @@ index|[
 literal|3
 index|]
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|struct
 name|tm

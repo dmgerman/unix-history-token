@@ -28,12 +28,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KR_headers
-end_ifndef
-
 begin_undef
 undef|#
 directive|undef
@@ -64,11 +58,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -81,66 +70,26 @@ directive|include
 file|"fp.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_macro
+begin_function
+name|int
 name|wrt_E
-argument_list|(
-argument|p
-argument_list|,
-argument|w
-argument_list|,
-argument|d
-argument_list|,
-argument|e
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|ufloat
 modifier|*
 name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|int
+name|w
+parameter_list|,
+name|int
+name|d
+parameter_list|,
+name|int
+name|e
+parameter_list|,
 name|ftnlen
 name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|wrt_E
-argument_list|(
-argument|ufloat *p
-argument_list|,
-argument|int w
-argument_list|,
-argument|int d
-argument_list|,
-argument|int e
-argument_list|,
-argument|ftnlen len
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -428,6 +377,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 literal|0
@@ -665,11 +618,11 @@ name|s
 operator|++
 control|)
 empty_stmt|;
-comment|/* Pedantic gives the behavior that Fortran 77 specifies,	*/
-comment|/* i.e., requires that E be specified for exponent fields	*/
-comment|/* of more than 3 digits.  With Pedantic undefined, we get	*/
-comment|/* the behavior that Cray displays -- you get a bigger		*/
-comment|/* exponent field if it fits.	*/
+comment|/* Pedantic gives the behavior that Fortran 77 specifies,       */
+comment|/* i.e., requires that E be specified for exponent fields       */
+comment|/* of more than 3 digits.  With Pedantic undefined, we get      */
+comment|/* the behavior that Cray displays -- you get a bigger          */
+comment|/* exponent field if it fits.   */
 else|#
 directive|else
 if|if
@@ -688,6 +641,7 @@ name|e1
 operator|=
 literal|2
 init|;
+operator|(
 name|s
 index|[
 literal|0
@@ -697,6 +651,7 @@ name|s
 index|[
 literal|1
 index|]
+operator|)
 condition|;
 name|s
 operator|++
@@ -996,64 +951,25 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_macro
+begin_function
+name|int
 name|wrt_F
-argument_list|(
-argument|p
-argument_list|,
-argument|w
-argument_list|,
-argument|d
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|ufloat
 modifier|*
 name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|int
+name|w
+parameter_list|,
+name|int
+name|d
+parameter_list|,
 name|ftnlen
 name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|wrt_F
-argument_list|(
-argument|ufloat *p
-argument_list|,
-argument|int w
-argument_list|,
-argument|int d
-argument_list|,
-argument|ftnlen len
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|d1
@@ -1163,10 +1079,13 @@ directive|endif
 block|}
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|f__scale
+operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|n
@@ -1200,6 +1119,7 @@ operator|<
 literal|0
 condition|)
 do|;
+block|}
 ifdef|#
 directive|ifdef
 name|USE_STRLEN
@@ -1414,11 +1334,13 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|b
 operator|++
+operator|)
 condition|)
 name|PUT
 argument_list|(
@@ -1441,7 +1363,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

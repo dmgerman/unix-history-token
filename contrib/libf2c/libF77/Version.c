@@ -1,24 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
-specifier|static
+specifier|const
 name|char
-name|junk
+name|__LIBF77_VERSION__
 index|[]
 init|=
-literal|"\n@(#)LIBF77 VERSION 20000929\n"
+literal|"@(#) LIBF77 VERSION 20000929\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* */
-end_comment
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|__LIBI77_VERSION__
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+specifier|const
 name|char
-name|__G77_LIBF77_VERSION__
+name|__LIBU77_VERSION__
 index|[]
-init|=
-literal|"3.2.2 20030205 (release)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,18 +42,48 @@ name|void
 name|g77__fvers__
 parameter_list|()
 block|{
+name|fputs
+argument_list|(
+literal|"GNU Fortran library.\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+name|__GNUC__
+operator|&&
+name|defined
+name|__VERSION__
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"__G77_LIBF77_VERSION__: %s"
+literal|"Compiled by GCC %s\n"
 argument_list|,
-name|__G77_LIBF77_VERSION__
+name|__VERSION__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|fputs
+argument_list|(
+name|__LIBF77_VERSION__
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-name|junk
+name|__LIBI77_VERSION__
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+name|__LIBU77_VERSION__
 argument_list|,
 name|stderr
 argument_list|)

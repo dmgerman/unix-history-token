@@ -132,27 +132,12 @@ end_endif
 
 begin_function
 name|double
-ifdef|#
-directive|ifdef
-name|KR_headers
 name|etime_
 parameter_list|(
-name|tarray
-parameter_list|)
-name|float
-modifier|*
-name|tarray
-decl_stmt|;
-else|#
-directive|else
-function|etime_
-parameter_list|(
 name|float
 modifier|*
 name|tarray
 parameter_list|)
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

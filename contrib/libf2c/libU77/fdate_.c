@@ -156,7 +156,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Allow a length other than 24 for compatibility with what other        systems do, despite it being documented as 24. */
+comment|/* Allow a length other than 24 for compatibility with what other      systems do, despite it being documented as 24. */
 name|s_copy
 argument_list|(
 name|ret_val

@@ -38,7 +38,7 @@ begin_function
 name|int
 name|x_wSL
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 block|{
 name|int
@@ -72,7 +72,7 @@ specifier|static
 name|int
 name|xw_end
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 block|{
 name|int
@@ -123,7 +123,7 @@ specifier|static
 name|int
 name|xw_rev
 parameter_list|(
-name|Void
+name|void
 parameter_list|)
 block|{
 name|int
@@ -162,33 +162,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|integer
-name|s_wsfe
-argument_list|(
-name|a
-argument_list|)
-name|cilist
-modifier|*
-name|a
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*start*/
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 name|integer
 name|s_wsfe
@@ -197,9 +170,7 @@ name|cilist
 modifier|*
 name|a
 parameter_list|)
-comment|/*start*/
-endif|#
-directive|endif
+comment|/*start */
 block|{
 name|int
 name|n
@@ -235,12 +206,14 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|c_sfe
 argument_list|(
 name|a
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

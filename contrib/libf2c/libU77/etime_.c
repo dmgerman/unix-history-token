@@ -165,44 +165,6 @@ directive|include
 file|"f2c.h"
 end_include
 
-begin_comment
-comment|/* For dtime, etime we store the clock tick parameter (clk_tck) the    first time either of them is invoked rather than each time.  This    approach probably speeds up each invocation by avoiding a system    call each time, but means that the overhead of the first call is    different to all others. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|long
-name|clk_tck
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_decl_stmt
-name|double
-name|G77_etime_0
-argument_list|(
-name|tarray
-argument_list|)
-name|real
-name|tarray
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 name|double
 name|G77_etime_0
@@ -213,8 +175,6 @@ index|[
 literal|2
 index|]
 parameter_list|)
-endif|#
-directive|endif
 block|{
 if|#
 directive|if
@@ -656,6 +616,13 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* HAVE_GETRUSAGE */
+comment|/* For dtime, etime we store the clock tick parameter (clk_tck) the      first time either of them is invoked rather than each time.  This      approach probably speeds up each invocation by avoiding a system      call each time, but means that the overhead of the first call is      different to all others. */
+specifier|static
+name|long
+name|clk_tck
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|tms
 name|buffer

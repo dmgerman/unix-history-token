@@ -92,25 +92,12 @@ begin_comment
 comment|/* As well as this external function some compilers have an intrinsic    subroutine which fills a character argument (which is the VMS way)    -- caveat emptor. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KR_headers
-end_ifdef
-
-begin_expr_stmt
+begin_function
 name|longint
 name|G77_time_0
-argument_list|()
-else|#
-directive|else
-name|longint
-name|G77_time_0
-argument_list|(
-argument|void
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* There are potential problems with the cast of the time_t here. */
 return|return
@@ -120,7 +107,7 @@ name|NULL
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 end_unit
 

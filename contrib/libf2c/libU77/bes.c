@@ -26,7 +26,7 @@ file|<math.h>
 end_include
 
 begin_endif
-unit|double G77_besj0_0 (const real *x) {     return j0 (*x); }  double G77_besj1_0 (const real *x) {     return j1 (*x); }  double G77_besjn_0 (const integer *n, real *x) {      return jn (*n, *x);  }  double G77_besy0_0 (const real *x) {     return y0 (*x); }  double G77_besy1_0 (const real *x) {     return y1 (*x); }  double G77_besyn_0 (const integer *n, real *x) {     return yn (*n, *x); }
+unit|double G77_besj0_0 (const real * x) {   return j0 (*x); }  double G77_besj1_0 (const real * x) {   return j1 (*x); }  double G77_besjn_0 (const integer * n, real * x) {   return jn (*n, *x); }  double G77_besy0_0 (const real * x) {   return y0 (*x); }  double G77_besy1_0 (const real * x) {   return y1 (*x); }  double G77_besyn_0 (const integer * n, real * x) {   return yn (*n, *x); }
 endif|#
 directive|endif
 end_endif
