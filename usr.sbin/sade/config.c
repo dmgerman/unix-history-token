@@ -2258,6 +2258,16 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+name|fchmod
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+literal|0755
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
