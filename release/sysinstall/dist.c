@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.128 1998/10/14 11:23:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.129 1998/10/15 10:03:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -4108,9 +4108,15 @@ name|self
 parameter_list|)
 block|{
 name|int
+name|old_dists
+decl_stmt|,
 name|retries
 init|=
 literal|0
+decl_stmt|,
+name|status
+init|=
+name|DITEM_SUCCESS
 decl_stmt|;
 name|char
 name|buf
@@ -4162,6 +4168,10 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
+name|old_dists
+operator|=
+name|Dists
+expr_stmt|;
 name|distVerifyFlags
 argument_list|()
 expr_stmt|;
@@ -4188,6 +4198,42 @@ argument_list|(
 name|NULL
 argument_list|,
 name|DistTable
+argument_list|)
+expr_stmt|;
+comment|/* Only do bin fixup if bin dist was successfully extracted */
+if|if
+condition|(
+operator|(
+name|old_dists
+operator|&
+name|DIST_BIN
+operator|)
+operator|&&
+operator|!
+operator|(
+name|Dists
+operator|&
+name|DIST_BIN
+operator|)
+condition|)
+name|status
+operator||=
+name|installFixupBin
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|old_dists
+operator|&
+name|DIST_XF86
+condition|)
+name|status
+operator||=
+name|installFixupXFree
+argument_list|(
+name|self
 argument_list|)
 expr_stmt|;
 if|if
@@ -4231,14 +4277,13 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-operator||
+name|status
+operator||=
 name|DITEM_RESTORE
-return|;
+expr_stmt|;
 block|}
 return|return
-name|DITEM_SUCCESS
+name|status
 return|;
 block|}
 end_function
