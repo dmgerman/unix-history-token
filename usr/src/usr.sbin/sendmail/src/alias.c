@@ -125,7 +125,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.36 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.37 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.36 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.37 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.36 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.37 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2595,13 +2595,14 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|IF_MAKEDBMFILES
+name|IF_MAKEDBMFILES
 name|store
-argument_list|(
+parameter_list|(
 name|key
-argument_list|,
+parameter_list|,
 name|key
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* restore the old signal */
