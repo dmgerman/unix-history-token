@@ -1342,23 +1342,12 @@ begin_comment
 comment|/*  * Maximum queue length specifiable by listen.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SOMAXCONN
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|SOMAXCONN
 value|128
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Message header for recvmsg and sendmsg calls.  * Used value-result for recvmsg, value only for sendmsg.  */
