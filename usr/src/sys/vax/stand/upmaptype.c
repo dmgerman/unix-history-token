@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	upmaptype.c	6.1	83/07/29	*/
+comment|/*	upmaptype.c	6.2	85/05/17	*/
 end_comment
 
 begin_comment
@@ -68,6 +68,7 @@ file|"savax.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|short
 name|up9300_off
 index|[]
@@ -96,6 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 name|fj_off
 index|[]
@@ -125,6 +127,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 name|upam_off
 index|[]
@@ -150,6 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 name|up980_off
 index|[]
@@ -174,6 +178,34 @@ literal|309
 block|,
 operator|-
 literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|short
+name|eagle_off
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|17
+block|,
+literal|0
+block|,
+literal|391
+block|,
+literal|408
+block|,
+literal|728
+block|,
+literal|391
+block|,
+literal|87
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -250,6 +282,19 @@ block|,
 name|up980_off
 block|,
 comment|/* DM980 */
+literal|48
+block|,
+literal|20
+block|,
+literal|48
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|eagle_off
+block|,
+comment|/* Fuji Eagle */
 literal|0
 block|,
 literal|0
