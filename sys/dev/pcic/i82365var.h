@@ -64,6 +64,12 @@ name|PCIC_EVENT_REMOVAL
 value|1
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|pcic_handle

@@ -86,25 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kthread.h>
+file|<sys/unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/kthread.h>
 end_include
 
 begin_comment
@@ -2529,6 +2523,8 @@ operator|&
 name|h
 operator|->
 name|event_thread
+argument_list|,
+name|RFTHREAD
 argument_list|,
 literal|"%s,%s"
 argument_list|,
