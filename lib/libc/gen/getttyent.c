@@ -920,25 +920,7 @@ block|{
 name|int
 name|rval
 decl_stmt|;
-if|if
-condition|(
-name|line
-condition|)
-block|{
-name|free
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
-name|line
-operator|=
-name|NULL
-expr_stmt|;
-name|lbsize
-operator|=
-literal|0
-expr_stmt|;
-block|}
+comment|/*          * NB: Don't free `line' because getttynam() 	 * may still be referencing it 	 */
 if|if
 condition|(
 name|tf
