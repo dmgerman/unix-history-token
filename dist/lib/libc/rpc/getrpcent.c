@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcent.c,v 1.1 1993/10/27 05:40:29 paul Exp $"
+literal|"$Id: getrpcent.c,v 1.6 1996/12/30 14:42:31 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -162,6 +168,18 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|_yp_check
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -448,10 +466,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|getrpcent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -492,6 +512,8 @@ name|struct
 name|rpcent
 modifier|*
 name|rpc
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -505,10 +527,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|rpc
 operator|=
 name|getrpcent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -524,11 +548,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|rpc
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 for|for
 control|(
 name|rp
@@ -558,19 +580,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|rpc
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 block|}
+name|done
+label|:
 name|endrpcent
 argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|rpc
 operator|)
 return|;
 block|}
@@ -796,14 +818,6 @@ modifier|*
 name|getrpcent
 parameter_list|()
 block|{
-name|struct
-name|rpcent
-modifier|*
-name|hp
-decl_stmt|;
-name|int
-name|reason
-decl_stmt|;
 specifier|register
 name|struct
 name|rpcdata
@@ -816,20 +830,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|YP
-name|char
+name|struct
+name|rpcent
 modifier|*
-name|key
-init|=
-name|NULL
-decl_stmt|,
+name|hp
+decl_stmt|;
+name|int
+name|reason
+decl_stmt|;
+name|char
 modifier|*
 name|val
 init|=
 name|NULL
 decl_stmt|;
 name|int
-name|keylen
-decl_stmt|,
 name|vallen
 decl_stmt|;
 endif|#
@@ -1032,6 +1047,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* -1 so there is room to append a \n below */
 if|if
 condition|(
 name|fgets
@@ -1041,6 +1057,8 @@ operator|->
 name|line
 argument_list|,
 name|BUFSIZ
+operator|-
+literal|1
 argument_list|,
 name|d
 operator|->
@@ -1137,8 +1155,17 @@ name|line
 argument_list|,
 name|val
 argument_list|,
-name|len
+name|BUFSIZ
 argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|line
+index|[
+name|BUFSIZ
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|p
 operator|=
@@ -1146,9 +1173,7 @@ name|d
 operator|->
 name|line
 expr_stmt|;
-name|d
-operator|->
-name|line
+name|p
 index|[
 name|len
 index|]

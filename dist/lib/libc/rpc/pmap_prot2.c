@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pmap_prot2.c,v 1.1 1993/10/27 05:40:39 paul Exp $"
+literal|"$Id: pmap_prot2.c,v 1.3 1996/06/10 20:13:05 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,7 @@ file|<rpc/pmap_prot.h>
 end_include
 
 begin_comment
-comment|/*   * What is going on with linked lists? (!)  * First recall the link list declaration from pmap_prot.h:  *  * struct pmaplist {  *	struct pmap pml_map;  *	struct pmaplist *pml_map;  * };  *  * Compare that declaration with a corresponding xdr declaration that   * is (a) pointer-less, and (b) recursive:  *  * typedef union switch (bool_t) {  *   *	case TRUE: struct {  *		struct pmap;  * 		pmaplist_t foo;  *	};  *  *	case FALSE: struct {};  * } pmaplist_t;  *  * Notice that the xdr declaration has no nxt pointer while  * the C declaration has no bool_t variable.  The bool_t can be  * interpreted as ``more data follows me''; if FALSE then nothing  * follows this bool_t; if TRUE then the bool_t is followed by  * an actual struct pmap, and then (recursively) by the   * xdr union, pamplist_t.    *  * This could be implemented via the xdr_union primitive, though this  * would cause a one recursive call per element in the list.  Rather than do  * that we can ``unwind'' the recursion  * into a while loop and do the union arms in-place.  *  * The head of the list is what the C programmer wishes to past around  * the net, yet is the data that the pointer points to which is interesting;  * this sounds like a job for xdr_reference!  */
+comment|/*  * What is going on with linked lists? (!)  * First recall the link list declaration from pmap_prot.h:  *  * struct pmaplist {  *	struct pmap pml_map;  *	struct pmaplist *pml_map;  * };  *  * Compare that declaration with a corresponding xdr declaration that  * is (a) pointer-less, and (b) recursive:  *  * typedef union switch (bool_t) {  *  *	case TRUE: struct {  *		struct pmap;  * 		pmaplist_t foo;  *	};  *  *	case FALSE: struct {};  * } pmaplist_t;  *  * Notice that the xdr declaration has no nxt pointer while  * the C declaration has no bool_t variable.  The bool_t can be  * interpreted as ``more data follows me''; if FALSE then nothing  * follows this bool_t; if TRUE then the bool_t is followed by  * an actual struct pmap, and then (recursively) by the  * xdr union, pamplist_t.  *  * This could be implemented via the xdr_union primitive, though this  * would cause a one recursive call per element in the list.  Rather than do  * that we can ``unwind'' the recursion  * into a while loop and do the union arms in-place.  *  * The head of the list is what the C programmer wishes to past around  * the net, yet is the data that the pointer points to which is interesting;  * this sounds like a job for xdr_reference!  */
 end_comment
 
 begin_function
@@ -110,6 +110,8 @@ name|pmaplist
 modifier|*
 modifier|*
 name|next
+init|=
+name|NULL
 decl_stmt|;
 while|while
 condition|(

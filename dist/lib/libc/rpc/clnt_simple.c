@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_simple.c,v 1.1 1993/10/27 05:40:23 paul Exp $"
+literal|"$Id: clnt_simple.c,v 1.6 1996/12/30 14:23:50 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,8 +42,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * clnt_simple.c  * Simplified front end to rpc.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
+comment|/*  * clnt_simple.c  * Simplified front end to rpc.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -110,51 +122,50 @@ name|callrpc_private
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|callrpc
-argument_list|(
-argument|host
-argument_list|,
-argument|prognum
-argument_list|,
-argument|versnum
-argument_list|,
-argument|procnum
-argument_list|,
-argument|inproc
-argument_list|,
-argument|in
-argument_list|,
-argument|outproc
-argument_list|,
-argument|out
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|host
+parameter_list|,
+name|prognum
+parameter_list|,
+name|versnum
+parameter_list|,
+name|procnum
+parameter_list|,
+name|inproc
+parameter_list|,
+name|in
+parameter_list|,
+name|outproc
+parameter_list|,
+name|out
+parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|int
+name|prognum
+decl_stmt|,
+name|versnum
+decl_stmt|,
+name|procnum
+decl_stmt|;
 name|xdrproc_t
 name|inproc
 decl_stmt|,
 name|outproc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|in
 decl_stmt|,
-modifier|*
+decl|*
 name|out
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -241,7 +252,7 @@ name|oldhost
 operator|=
 name|malloc
 argument_list|(
-literal|256
+name|MAXHOSTNAMELEN
 argument_list|)
 expr_stmt|;
 name|crp
@@ -300,6 +311,15 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|crp
+operator|->
+name|socket
+operator|!=
+operator|-
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
@@ -370,12 +390,21 @@ name|tv_sec
 operator|=
 literal|5
 expr_stmt|;
-name|bcopy
+name|memset
 argument_list|(
-name|hp
-operator|->
-name|h_addr
+operator|&
+name|server_addr
 argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|server_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
 operator|(
 name|char
 operator|*
@@ -387,7 +416,21 @@ name|sin_addr
 argument_list|,
 name|hp
 operator|->
+name|h_addr
+argument_list|,
+name|hp
+operator|->
 name|h_length
+argument_list|)
+expr_stmt|;
+name|server_addr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 name|server_addr
@@ -509,7 +552,7 @@ argument_list|,
 name|tottimeout
 argument_list|)
 expr_stmt|;
-comment|/*  	 * if call failed, empty cache 	 */
+comment|/* 	 * if call failed, empty cache 	 */
 if|if
 condition|(
 name|clnt_stat

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rpc_callmsg.c,v 1.1 1993/10/27 05:40:46 paul Exp $"
+literal|"$Id: rpc_callmsg.c,v 1.5 1996/12/30 14:55:38 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,18 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -82,7 +94,7 @@ name|cmsg
 decl_stmt|;
 block|{
 specifier|register
-name|long
+name|int32_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -311,16 +323,16 @@ operator|->
 name|oa_length
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
-name|oa
-operator|->
-name|oa_base
-argument_list|,
 operator|(
 name|caddr_t
 operator|)
 name|buf
+argument_list|,
+name|oa
+operator|->
+name|oa_base
 argument_list|,
 name|oa
 operator|->
@@ -338,7 +350,7 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -376,12 +388,8 @@ operator|->
 name|oa_length
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
-name|oa
-operator|->
-name|oa_base
-argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -389,10 +397,14 @@ name|buf
 argument_list|,
 name|oa
 operator|->
+name|oa_base
+argument_list|,
+name|oa
+operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
-comment|/* no real need.... 				buf += RNDUP(oa->oa_length) / sizeof (long); 				*/
+comment|/* no real need.... 				buf += RNDUP(oa->oa_length) / sizeof (int32_t); 				*/
 block|}
 return|return
 operator|(
@@ -648,8 +660,12 @@ block|}
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|oa
+operator|->
+name|oa_base
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -657,14 +673,10 @@ name|buf
 argument_list|,
 name|oa
 operator|->
-name|oa_base
-argument_list|,
-name|oa
-operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
-comment|/* no real need.... 					buf += RNDUP(oa->oa_length) / 						sizeof (long); 					*/
+comment|/* no real need.... 					buf += RNDUP(oa->oa_length) / 						sizeof (int32_t); 					*/
 block|}
 block|}
 name|oa
@@ -845,8 +857,12 @@ block|}
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|oa
+operator|->
+name|oa_base
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -854,14 +870,10 @@ name|buf
 argument_list|,
 name|oa
 operator|->
-name|oa_base
-argument_list|,
-name|oa
-operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
-comment|/* no real need... 					buf += RNDUP(oa->oa_length) / 						sizeof (long); 					*/
+comment|/* no real need... 					buf += RNDUP(oa->oa_length) / 						sizeof (int32_t); 					*/
 block|}
 block|}
 return|return
@@ -873,7 +885,7 @@ block|}
 block|}
 if|if
 condition|(
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -909,7 +921,7 @@ operator|==
 name|CALL
 operator|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -933,7 +945,7 @@ operator|==
 name|RPC_MSG_VERSION
 operator|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -947,7 +959,7 @@ name|cb_prog
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -961,7 +973,7 @@ name|cb_vers
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,

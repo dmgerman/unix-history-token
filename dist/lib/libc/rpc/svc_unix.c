@@ -19,11 +19,11 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*static char *sccsid = "from: @(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";*/
+comment|/*static char *sccsid = "from: @(#)svc_unix.c 1.21 87/08/11 Copyr 1984 Sun Micro";*/
 end_comment
 
 begin_comment
-comment|/*static char *sccsid = "from: @(#)svc_tcp.c	2.2 88/08/01 4.0 RPCSRC";*/
+comment|/*static char *sccsid = "from: @(#)svc_unix.c	2.2 88/08/01 4.0 RPCSRC";*/
 end_comment
 
 begin_decl_stmt
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_tcp.c,v 1.8 1996/12/30 15:19:08 peter Exp $"
+literal|"$Id: svc_unix.c,v 1.8 1996/12/30 15:19:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * svc_tcp.c, Server side for TCP/IP based RPC.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * Actually implements two flavors of transporter -  * a tcp rendezvouser (a listner and connection establisher)  * and a record/tcp stream.  */
+comment|/*  * svc_unix.c, Server side for TCP/IP based RPC.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * Actually implements two flavors of transporter -  * a unix rendezvouser (a listner and connection establisher)  * and a record/unix stream.  */
 end_comment
 
 begin_include
@@ -84,17 +84,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_comment
-comment|/*  * Ops vector for TCP/IP based rpc service handle  */
+comment|/*  * Ops vector for AF_UNIX based rpc service handle  */
 end_comment
 
 begin_function_decl
 specifier|static
 name|bool_t
-name|svctcp_recv
+name|svcunix_recv
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -103,7 +115,7 @@ begin_function_decl
 specifier|static
 name|enum
 name|xprt_stat
-name|svctcp_stat
+name|svcunix_stat
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -111,7 +123,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|bool_t
-name|svctcp_getargs
+name|svcunix_getargs
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -119,7 +131,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|bool_t
-name|svctcp_reply
+name|svcunix_reply
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -127,7 +139,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|bool_t
-name|svctcp_freeargs
+name|svcunix_freeargs
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -135,7 +147,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|svctcp_destroy
+name|svcunix_destroy
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -144,20 +156,20 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|xp_ops
-name|svctcp_op
+name|svcunix_op
 init|=
 block|{
-name|svctcp_recv
+name|svcunix_recv
 block|,
-name|svctcp_stat
+name|svcunix_stat
 block|,
-name|svctcp_getargs
+name|svcunix_getargs
 block|,
-name|svctcp_reply
+name|svcunix_reply
 block|,
-name|svctcp_freeargs
+name|svcunix_freeargs
 block|,
-name|svctcp_destroy
+name|svcunix_destroy
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -187,7 +199,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|xp_ops
-name|svctcp_rendezvous_op
+name|svcunix_rendezvous_op
 init|=
 block|{
 name|rendezvous_request
@@ -221,7 +233,7 @@ argument_list|()
 operator|)
 name|abort
 block|,
-name|svctcp_destroy
+name|svcunix_destroy
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -229,10 +241,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|readtcp
+name|readunix
 argument_list|()
 decl_stmt|,
-name|writetcp
+name|writeunix
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -248,7 +260,7 @@ end_function_decl
 
 begin_struct
 struct|struct
-name|tcp_rendezvous
+name|unix_rendezvous
 block|{
 comment|/* kept in xprt->xp_p1 */
 name|u_int
@@ -263,7 +275,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|tcp_conn
+name|unix_conn
 block|{
 comment|/* kept in xprt->xp_p1 */
 name|enum
@@ -286,20 +298,338 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|cmessage
+block|{
+name|struct
+name|cmsghdr
+name|cmsg
+decl_stmt|;
+name|struct
+name|cmsgcred
+name|cmcred
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cmessage
+name|cm
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|__msgread
+parameter_list|(
+name|sock
+parameter_list|,
+name|buf
+parameter_list|,
+name|cnt
+parameter_list|)
+name|int
+name|sock
+decl_stmt|;
+name|void
+modifier|*
+name|buf
+decl_stmt|;
+name|size_t
+name|cnt
+decl_stmt|;
+block|{
+name|struct
+name|iovec
+name|iov
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|struct
+name|msghdr
+name|msg
+decl_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|cm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|iov
+index|[
+literal|0
+index|]
+operator|.
+name|iov_base
+operator|=
+name|buf
+expr_stmt|;
+name|iov
+index|[
+literal|0
+index|]
+operator|.
+name|iov_len
+operator|=
+name|cnt
+expr_stmt|;
+name|msg
+operator|.
+name|msg_iov
+operator|=
+name|iov
+expr_stmt|;
+name|msg
+operator|.
+name|msg_iovlen
+operator|=
+literal|1
+expr_stmt|;
+name|msg
+operator|.
+name|msg_name
+operator|=
+name|NULL
+expr_stmt|;
+name|msg
+operator|.
+name|msg_namelen
+operator|=
+literal|0
+expr_stmt|;
+name|msg
+operator|.
+name|msg_control
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|cm
+expr_stmt|;
+name|msg
+operator|.
+name|msg_controllen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cmessage
+argument_list|)
+expr_stmt|;
+name|msg
+operator|.
+name|msg_flags
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|recvmsg
+argument_list|(
+name|sock
+argument_list|,
+operator|&
+name|msg
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|__msgwrite
+parameter_list|(
+name|sock
+parameter_list|,
+name|buf
+parameter_list|,
+name|cnt
+parameter_list|)
+name|int
+name|sock
+decl_stmt|;
+name|void
+modifier|*
+name|buf
+decl_stmt|;
+name|size_t
+name|cnt
+decl_stmt|;
+block|{
+name|struct
+name|iovec
+name|iov
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|struct
+name|msghdr
+name|msg
+decl_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|cm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|iov
+index|[
+literal|0
+index|]
+operator|.
+name|iov_base
+operator|=
+name|buf
+expr_stmt|;
+name|iov
+index|[
+literal|0
+index|]
+operator|.
+name|iov_len
+operator|=
+name|cnt
+expr_stmt|;
+name|cm
+operator|.
+name|cmsg
+operator|.
+name|cmsg_type
+operator|=
+name|SCM_CREDS
+expr_stmt|;
+name|cm
+operator|.
+name|cmsg
+operator|.
+name|cmsg_level
+operator|=
+name|SOL_SOCKET
+expr_stmt|;
+name|cm
+operator|.
+name|cmsg
+operator|.
+name|cmsg_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cmessage
+argument_list|)
+expr_stmt|;
+name|msg
+operator|.
+name|msg_iov
+operator|=
+name|iov
+expr_stmt|;
+name|msg
+operator|.
+name|msg_iovlen
+operator|=
+literal|1
+expr_stmt|;
+name|msg
+operator|.
+name|msg_name
+operator|=
+name|NULL
+expr_stmt|;
+name|msg
+operator|.
+name|msg_namelen
+operator|=
+literal|0
+expr_stmt|;
+name|msg
+operator|.
+name|msg_control
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|cm
+expr_stmt|;
+name|msg
+operator|.
+name|msg_controllen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cmessage
+argument_list|)
+expr_stmt|;
+name|msg
+operator|.
+name|msg_flags
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|sendmsg
+argument_list|(
+name|sock
+argument_list|,
+operator|&
+name|msg
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Usage:  *	xprt = svctcp_create(sock, send_buf_size, recv_buf_size);  *  * Creates, registers, and returns a (rpc) tcp based transporter.  * Once *xprt is initialized, it is registered as a transporter  * see (svc.h, xprt_register).  This routine returns  * a NULL if a problem occurred.  *  * If sock<0 then a socket is created, else sock is used.  * If the socket, sock is not bound to a port then svctcp_create  * binds it to an arbitrary port.  The routine then starts a tcp  * listener on the socket's associated port.  In any (successful) case,  * xprt->xp_sock is the registered socket number and xprt->xp_port is the  * associated port number.  *  * Since tcp streams do buffered io similar to stdio, the caller can specify  * how big the send and receive buffers are via the second and third parms;  * 0 => use the system default.  */
+comment|/*  * Usage:  *	xprt = svcunix_create(sock, send_buf_size, recv_buf_size);  *  * Creates, registers, and returns a (rpc) unix based transporter.  * Once *xprt is initialized, it is registered as a transporter  * see (svc.h, xprt_register).  This routine returns  * a NULL if a problem occurred.  *  * If sock<0 then a socket is created, else sock is used.  * If the socket, sock is not bound to a port then svcunix_create  * binds it to an arbitrary port.  The routine then starts a unix  * listener on the socket's associated port.  In any (successful) case,  * xprt->xp_sock is the registered socket number and xprt->xp_port is the  * associated port number.  *  * Since unix streams do buffered io similar to stdio, the caller can specify  * how big the send and receive buffers are via the second and third parms;  * 0 => use the system default.  */
 end_comment
 
 begin_function
 name|SVCXPRT
 modifier|*
-name|svctcp_create
+name|svcunix_create
 parameter_list|(
 name|sock
 parameter_list|,
 name|sendsize
 parameter_list|,
 name|recvsize
+parameter_list|,
+name|path
 parameter_list|)
 specifier|register
 name|int
@@ -310,6 +640,10 @@ name|sendsize
 decl_stmt|;
 name|u_int
 name|recvsize
+decl_stmt|;
+name|char
+modifier|*
+name|path
 decl_stmt|;
 block|{
 name|bool_t
@@ -324,12 +658,12 @@ name|xprt
 decl_stmt|;
 specifier|register
 name|struct
-name|tcp_rendezvous
+name|unix_rendezvous
 modifier|*
 name|r
 decl_stmt|;
 name|struct
-name|sockaddr_in
+name|sockaddr_un
 name|addr
 decl_stmt|;
 name|int
@@ -338,7 +672,7 @@ init|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_un
 argument_list|)
 decl_stmt|;
 if|if
@@ -355,11 +689,11 @@ name|sock
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|AF_UNIX
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
-name|IPPROTO_TCP
+literal|0
 argument_list|)
 operator|)
 operator|<
@@ -368,7 +702,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"svctcp_.c - udp socket creation problem"
+literal|"svc_unix.c - AF_UNIX socket creation problem"
 argument_list|)
 expr_stmt|;
 return|return
@@ -401,40 +735,50 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|.
-name|sin_len
+name|sun_family
 operator|=
+name|AF_UNIX
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|addr
+operator|.
+name|sun_path
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|addr
+operator|.
+name|sun_path
+argument_list|)
+operator|+
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sockaddr_in
-argument_list|)
-expr_stmt|;
 name|addr
 operator|.
-name|sin_family
-operator|=
-name|AF_INET
-expr_stmt|;
-if|if
-condition|(
-name|bindresvport
+name|sun_family
+argument_list|)
+operator|+
+sizeof|sizeof
 argument_list|(
-name|sock
-argument_list|,
-operator|&
-name|addr
-argument_list|)
-condition|)
-block|{
 name|addr
 operator|.
-name|sin_port
-operator|=
-literal|0
+name|sun_len
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|addr
+operator|.
+name|sun_len
+operator|=
+name|len
+expr_stmt|;
 name|bind
 argument_list|(
 name|sock
@@ -450,7 +794,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -487,7 +830,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"svctcp_.c - cannot getsockname or listen"
+literal|"svc_unix.c - cannot getsockname or listen"
 argument_list|)
 expr_stmt|;
 if|if
@@ -516,7 +859,7 @@ name|r
 operator|=
 operator|(
 expr|struct
-name|tcp_rendezvous
+name|unix_rendezvous
 operator|*
 operator|)
 name|mem_alloc
@@ -542,7 +885,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"svctcp_create: out of memory\n"
+literal|"svcunix_create: out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -591,7 +934,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"svctcp_create: out of memory\n"
+literal|"svcunix_create: out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -626,18 +969,15 @@ operator|->
 name|xp_ops
 operator|=
 operator|&
-name|svctcp_rendezvous_op
+name|svcunix_rendezvous_op
 expr_stmt|;
 name|xprt
 operator|->
 name|xp_port
 operator|=
-name|ntohs
-argument_list|(
-name|addr
-operator|.
-name|sin_port
-argument_list|)
+operator|-
+literal|1
+comment|/*ntohs(addr.sin_port)*/
 expr_stmt|;
 name|xprt
 operator|->
@@ -659,13 +999,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like svtcp_create(), except the routine takes any *open* UNIX file  * descriptor as its first input.  */
+comment|/*  * Like svunix_create(), except the routine takes any *open* UNIX file  * descriptor as its first input.  */
 end_comment
 
 begin_function
 name|SVCXPRT
 modifier|*
-name|svcfd_create
+name|svcunixfd_create
 parameter_list|(
 name|fd
 parameter_list|,
@@ -727,7 +1067,7 @@ name|xprt
 decl_stmt|;
 specifier|register
 name|struct
-name|tcp_conn
+name|unix_conn
 modifier|*
 name|cd
 decl_stmt|;
@@ -763,7 +1103,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"svc_tcp: makefd_xprt: out of memory\n"
+literal|"svc_unix: makefd_xprt: out of memory\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -774,7 +1114,7 @@ name|cd
 operator|=
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 name|mem_alloc
@@ -782,7 +1122,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -792,7 +1132,7 @@ name|cd
 operator|==
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 name|NULL
@@ -805,7 +1145,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"svc_tcp: makefd_xprt: out of memory\n"
+literal|"svc_unix: makefd_xprt: out of memory\n"
 argument_list|)
 expr_stmt|;
 name|mem_free
@@ -858,9 +1198,9 @@ name|caddr_t
 operator|)
 name|xprt
 argument_list|,
-name|readtcp
+name|readunix
 argument_list|,
-name|writetcp
+name|writeunix
 argument_list|)
 expr_stmt|;
 name|xprt
@@ -899,7 +1239,7 @@ operator|->
 name|xp_ops
 operator|=
 operator|&
-name|svctcp_op
+name|svcunix_op
 expr_stmt|;
 comment|/* truely deals with calls */
 name|xprt
@@ -947,13 +1287,17 @@ name|int
 name|sock
 decl_stmt|;
 name|struct
-name|tcp_rendezvous
+name|unix_rendezvous
 modifier|*
 name|r
 decl_stmt|;
 name|struct
-name|sockaddr_in
+name|sockaddr_un
 name|addr
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|in_addr
 decl_stmt|;
 name|int
 name|len
@@ -962,7 +1306,7 @@ name|r
 operator|=
 operator|(
 expr|struct
-name|tcp_rendezvous
+name|unix_rendezvous
 operator|*
 operator|)
 name|xprt
@@ -1021,29 +1365,28 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX careful for ftp bounce attacks. If discovered, close the 	 * socket and look for another connection. 	 */
-if|if
-condition|(
-name|addr
-operator|.
-name|sin_port
-operator|==
-name|htons
+comment|/* 	 * make a new transporter (re-uses xprt) 	 */
+name|bzero
 argument_list|(
-literal|20
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|in_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|in_addr
 argument_list|)
-condition|)
-block|{
-name|close
-argument_list|(
-name|sock
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
-block|}
-comment|/* 	 * make a new transporter (re-uses xprt) 	 */
+name|in_addr
+operator|.
+name|sin_family
+operator|=
+name|AF_UNIX
+expr_stmt|;
 name|xprt
 operator|=
 name|makefd_xprt
@@ -1063,7 +1406,7 @@ name|xprt
 operator|->
 name|xp_raddr
 operator|=
-name|addr
+name|in_addr
 expr_stmt|;
 name|xprt
 operator|->
@@ -1098,7 +1441,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|svctcp_destroy
+name|svcunix_destroy
 parameter_list|(
 name|xprt
 parameter_list|)
@@ -1110,13 +1453,13 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|tcp_conn
+name|unix_conn
 modifier|*
 name|cd
 init|=
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 name|xprt
@@ -1179,7 +1522,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1218,13 +1561,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * reads data from the tcp conection.  * any error is fatal and the connection is closed.  * (And a read of zero bytes is a half closed stream => error.)  */
+comment|/*  * reads data from the unix conection.  * any error is fatal and the connection is closed.  * (And a read of zero bytes is a half closed stream => error.)  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|readtcp
+name|readunix
 parameter_list|(
 name|xprt
 parameter_list|,
@@ -1480,7 +1823,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|read
+name|__msgread
 argument_list|(
 name|sock
 argument_list|,
@@ -1516,7 +1859,7 @@ label|:
 operator|(
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 operator|(
@@ -1552,13 +1895,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * writes data to the tcp connection.  * Any error is fatal and the connection is closed.  */
+comment|/*  * writes data to the unix connection.  * Any error is fatal and the connection is closed.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|writetcp
+name|writeunix
 parameter_list|(
 name|xprt
 parameter_list|,
@@ -1608,7 +1951,7 @@ condition|(
 operator|(
 name|i
 operator|=
-name|write
+name|__msgwrite
 argument_list|(
 name|xprt
 operator|->
@@ -1626,7 +1969,7 @@ block|{
 operator|(
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 operator|(
@@ -1660,7 +2003,7 @@ begin_function
 specifier|static
 name|enum
 name|xprt_stat
-name|svctcp_stat
+name|svcunix_stat
 parameter_list|(
 name|xprt
 parameter_list|)
@@ -1671,13 +2014,13 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|tcp_conn
+name|unix_conn
 modifier|*
 name|cd
 init|=
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 operator|(
@@ -1728,7 +2071,7 @@ end_function
 begin_function
 specifier|static
 name|bool_t
-name|svctcp_recv
+name|svcunix_recv
 parameter_list|(
 name|xprt
 parameter_list|,
@@ -1747,13 +2090,13 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|tcp_conn
+name|unix_conn
 modifier|*
 name|cd
 init|=
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 operator|(
@@ -1806,6 +2149,44 @@ name|msg
 operator|->
 name|rm_xid
 expr_stmt|;
+comment|/* set up verifiers */
+name|msg
+operator|->
+name|rm_call
+operator|.
+name|cb_verf
+operator|.
+name|oa_flavor
+operator|=
+name|AUTH_UNIX
+expr_stmt|;
+name|msg
+operator|->
+name|rm_call
+operator|.
+name|cb_verf
+operator|.
+name|oa_base
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|cm
+expr_stmt|;
+name|msg
+operator|->
+name|rm_call
+operator|.
+name|cb_verf
+operator|.
+name|oa_length
+operator|=
+sizeof|sizeof
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -1823,7 +2204,7 @@ end_function
 begin_function
 specifier|static
 name|bool_t
-name|svctcp_getargs
+name|svcunix_getargs
 parameter_list|(
 name|xprt
 parameter_list|,
@@ -1854,7 +2235,7 @@ operator|(
 operator|(
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 operator|(
@@ -1877,7 +2258,7 @@ end_function
 begin_function
 specifier|static
 name|bool_t
-name|svctcp_freeargs
+name|svcunix_freeargs
 parameter_list|(
 name|xprt
 parameter_list|,
@@ -1906,7 +2287,7 @@ operator|(
 operator|(
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 operator|(
@@ -1944,7 +2325,7 @@ end_function
 begin_function
 specifier|static
 name|bool_t
-name|svctcp_reply
+name|svcunix_reply
 parameter_list|(
 name|xprt
 parameter_list|,
@@ -1963,13 +2344,13 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|tcp_conn
+name|unix_conn
 modifier|*
 name|cd
 init|=
 operator|(
 expr|struct
-name|tcp_conn
+name|unix_conn
 operator|*
 operator|)
 operator|(

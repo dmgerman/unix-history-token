@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_perror.c,v 1.1 1993/10/27 05:40:20 paul Exp $"
+literal|"$Id: clnt_perror.c,v 1.6 1996/12/30 14:19:34 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -90,6 +96,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|CLNT_PERROR_BUFLEN
+value|256
+end_define
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -119,7 +132,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-literal|256
+name|CLNT_PERROR_BUFLEN
 argument_list|)
 expr_stmt|;
 return|return
@@ -156,10 +169,6 @@ name|struct
 name|rpc_err
 name|e
 decl_stmt|;
-name|void
-name|clnt_perrno
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|err
@@ -203,24 +212,9 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"%s: "
+literal|"%s: %s"
 argument_list|,
 name|s
-argument_list|)
-expr_stmt|;
-name|str
-operator|+=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|str
 argument_list|,
 name|clnt_sperrno
 argument_list|(
@@ -293,11 +287,19 @@ case|:
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"; errno = %s"
+name|CLNT_PERROR_BUFLEN
+operator|-
+operator|(
+name|str
+operator|-
+name|strstart
+operator|)
+argument_list|,
+literal|"; errno = %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -305,13 +307,6 @@ name|e
 operator|.
 name|re_errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|str
-operator|+=
-name|strlen
-argument_list|(
-name|str
 argument_list|)
 expr_stmt|;
 break|break;
@@ -325,7 +320,7 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"; low version = %lu, high version = %lu"
+literal|"; low version = %lu, high version = %lu\n"
 argument_list|,
 name|e
 operator|.
@@ -338,13 +333,6 @@ operator|.
 name|re_vers
 operator|.
 name|high
-argument_list|)
-expr_stmt|;
-name|str
-operator|+=
-name|strlen
-argument_list|(
-name|str
 argument_list|)
 expr_stmt|;
 break|break;
@@ -391,7 +379,7 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|err
 argument_list|)
@@ -406,7 +394,7 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"(unknown authentication error - %d)"
+literal|"(unknown authentication error - %d)\n"
 argument_list|,
 operator|(
 name|int
@@ -417,13 +405,6 @@ name|re_why
 argument_list|)
 expr_stmt|;
 block|}
-name|str
-operator|+=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|RPC_PROGVERSMISMATCH
@@ -435,7 +416,7 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"; low version = %lu, high version = %lu"
+literal|"; low version = %lu, high version = %lu\n"
 argument_list|,
 name|e
 operator|.
@@ -450,13 +431,6 @@ operator|.
 name|high
 argument_list|)
 expr_stmt|;
-name|str
-operator|+=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 comment|/* unknown */
@@ -467,7 +441,7 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"; s1 = %lu, s2 = %lu"
+literal|"; s1 = %lu, s2 = %lu\n"
 argument_list|,
 name|e
 operator|.
@@ -482,24 +456,25 @@ operator|.
 name|s2
 argument_list|)
 expr_stmt|;
-name|str
-operator|+=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|str
-argument_list|,
-literal|"\n"
-argument_list|)
+name|strstart
+index|[
+name|CLNT_PERROR_BUFLEN
+operator|-
+literal|2
+index|]
+operator|=
+literal|'\n'
+expr_stmt|;
+name|strstart
+index|[
+name|CLNT_PERROR_BUFLEN
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -533,7 +508,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|clnt_sperror
 argument_list|(
@@ -546,137 +521,69 @@ expr_stmt|;
 block|}
 end_function
 
-begin_struct
-struct|struct
-name|rpc_errtab
-block|{
-name|enum
-name|clnt_stat
-name|status
-decl_stmt|;
-name|char
-modifier|*
-name|message
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|static
-name|struct
-name|rpc_errtab
+specifier|const
+name|char
+modifier|*
+specifier|const
 name|rpc_errlist
 index|[]
 init|=
 block|{
-block|{
-name|RPC_SUCCESS
-block|,
 literal|"RPC: Success"
-block|}
 block|,
-block|{
-name|RPC_CANTENCODEARGS
-block|,
+comment|/*  0 - RPC_SUCCESS */
 literal|"RPC: Can't encode arguments"
-block|}
 block|,
-block|{
-name|RPC_CANTDECODERES
-block|,
+comment|/*  1 - RPC_CANTENCODEARGS */
 literal|"RPC: Can't decode result"
-block|}
 block|,
-block|{
-name|RPC_CANTSEND
-block|,
+comment|/*  2 - RPC_CANTDECODERES */
 literal|"RPC: Unable to send"
-block|}
 block|,
-block|{
-name|RPC_CANTRECV
-block|,
+comment|/*  3 - RPC_CANTSEND */
 literal|"RPC: Unable to receive"
-block|}
 block|,
-block|{
-name|RPC_TIMEDOUT
-block|,
+comment|/*  4 - RPC_CANTRECV */
 literal|"RPC: Timed out"
-block|}
 block|,
-block|{
-name|RPC_VERSMISMATCH
-block|,
+comment|/*  5 - RPC_TIMEDOUT */
 literal|"RPC: Incompatible versions of RPC"
-block|}
 block|,
-block|{
-name|RPC_AUTHERROR
-block|,
+comment|/*  6 - RPC_VERSMISMATCH */
 literal|"RPC: Authentication error"
-block|}
 block|,
-block|{
-name|RPC_PROGUNAVAIL
-block|,
+comment|/*  7 - RPC_AUTHERROR */
 literal|"RPC: Program unavailable"
-block|}
 block|,
-block|{
-name|RPC_PROGVERSMISMATCH
-block|,
+comment|/*  8 - RPC_PROGUNAVAIL */
 literal|"RPC: Program/version mismatch"
-block|}
 block|,
-block|{
-name|RPC_PROCUNAVAIL
-block|,
+comment|/*  9 - RPC_PROGVERSMISMATCH */
 literal|"RPC: Procedure unavailable"
-block|}
 block|,
-block|{
-name|RPC_CANTDECODEARGS
-block|,
+comment|/* 10 - RPC_PROCUNAVAIL */
 literal|"RPC: Server can't decode arguments"
-block|}
 block|,
-block|{
-name|RPC_SYSTEMERROR
-block|,
+comment|/* 11 - RPC_CANTDECODEARGS */
 literal|"RPC: Remote system error"
-block|}
 block|,
-block|{
-name|RPC_UNKNOWNHOST
-block|,
+comment|/* 12 - RPC_SYSTEMERROR */
 literal|"RPC: Unknown host"
-block|}
 block|,
-block|{
-name|RPC_UNKNOWNPROTO
-block|,
-literal|"RPC: Unknown protocol"
-block|}
-block|,
-block|{
-name|RPC_PMAPFAILURE
-block|,
+comment|/* 13 - RPC_UNKNOWNHOST */
 literal|"RPC: Port mapper failure"
-block|}
 block|,
-block|{
-name|RPC_PROGNOTREGISTERED
-block|,
+comment|/* 14 - RPC_PMAPFAILURE */
 literal|"RPC: Program not registered"
-block|}
 block|,
-block|{
-name|RPC_FAILED
-block|,
+comment|/* 15 - RPC_PROGNOTREGISTERED */
 literal|"RPC: Failed (unspecified error)"
-block|}
+block|,
+comment|/* 16 - RPC_FAILED */
+literal|"RPC: Unknown protocol"
+comment|/* 17 - RPC_UNKNOWNPROTO */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -697,17 +604,17 @@ name|clnt_stat
 name|stat
 decl_stmt|;
 block|{
+name|unsigned
 name|int
-name|i
+name|errnum
+init|=
+name|stat
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
+if|if
+condition|(
+name|errnum
 operator|<
+operator|(
 sizeof|sizeof
 argument_list|(
 name|rpc_errlist
@@ -715,38 +622,23 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|rpc_errtab
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
 name|rpc_errlist
 index|[
-name|i
+literal|0
 index|]
-operator|.
-name|status
-operator|==
-name|stat
+argument_list|)
+operator|)
 condition|)
-block|{
 return|return
 operator|(
+name|char
+operator|*
+operator|)
 name|rpc_errlist
 index|[
-name|i
+name|errnum
 index|]
-operator|.
-name|message
-operator|)
 return|;
-block|}
-block|}
 return|return
 operator|(
 literal|"RPC: (unknown error code)"
@@ -773,7 +665,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|clnt_sperrno
 argument_list|(
@@ -796,10 +688,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
 name|char
 modifier|*
 name|str
@@ -818,33 +706,6 @@ operator|(
 literal|0
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|str
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|str
-argument_list|,
-name|clnt_sperrno
-argument_list|(
-name|rpc_createerr
-operator|.
-name|cf_stat
-argument_list|)
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|rpc_createerr
@@ -858,19 +719,22 @@ case|:
 operator|(
 name|void
 operator|)
-name|strcat
+name|snprintf
 argument_list|(
 name|str
 argument_list|,
-literal|" - "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
+name|CLNT_PERROR_BUFLEN
+argument_list|,
+literal|"%s: %s - %s\n"
+argument_list|,
+name|s
+argument_list|,
+name|clnt_sperrno
 argument_list|(
-name|str
+name|rpc_createerr
+operator|.
+name|cf_stat
+argument_list|)
 argument_list|,
 name|clnt_sperrno
 argument_list|(
@@ -889,37 +753,22 @@ case|:
 operator|(
 name|void
 operator|)
-name|strcat
+name|snprintf
 argument_list|(
 name|str
 argument_list|,
-literal|" - "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rpc_createerr
-operator|.
-name|cf_error
-operator|.
-name|re_errno
-operator|>
-literal|0
-operator|&&
-name|rpc_createerr
-operator|.
-name|cf_error
-operator|.
-name|re_errno
-operator|<
-name|sys_nerr
-condition|)
-operator|(
-name|void
-operator|)
-name|strcat
+name|CLNT_PERROR_BUFLEN
+argument_list|,
+literal|"%s: %s - %s\n"
+argument_list|,
+name|s
+argument_list|,
+name|clnt_sperrno
 argument_list|(
-name|str
+name|rpc_createerr
+operator|.
+name|cf_stat
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -931,41 +780,48 @@ name|re_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+default|default:
 operator|(
 name|void
 operator|)
-name|sprintf
-argument_list|(
-operator|&
-name|str
-index|[
-name|strlen
+name|snprintf
 argument_list|(
 name|str
-argument_list|)
-index|]
 argument_list|,
-literal|"Error %d"
+name|CLNT_PERROR_BUFLEN
 argument_list|,
+literal|"%s: %s\n"
+argument_list|,
+name|s
+argument_list|,
+name|clnt_sperrno
+argument_list|(
 name|rpc_createerr
 operator|.
-name|cf_error
-operator|.
-name|re_errno
+name|cf_stat
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
 name|str
-argument_list|,
-literal|"\n"
-argument_list|)
+index|[
+name|CLNT_PERROR_BUFLEN
+operator|-
+literal|2
+index|]
+operator|=
+literal|'\n'
+expr_stmt|;
+name|str
+index|[
+name|CLNT_PERROR_BUFLEN
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -993,7 +849,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(
@@ -1004,78 +860,40 @@ expr_stmt|;
 block|}
 end_function
 
-begin_struct
-struct|struct
-name|auth_errtab
-block|{
-name|enum
-name|auth_stat
-name|status
-decl_stmt|;
-name|char
-modifier|*
-name|message
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|static
-name|struct
-name|auth_errtab
+specifier|const
+name|char
+modifier|*
+specifier|const
 name|auth_errlist
 index|[]
 init|=
 block|{
-block|{
-name|AUTH_OK
-block|,
 literal|"Authentication OK"
-block|}
 block|,
-block|{
-name|AUTH_BADCRED
-block|,
+comment|/* 0 - AUTH_OK */
 literal|"Invalid client credential"
-block|}
 block|,
-block|{
-name|AUTH_REJECTEDCRED
-block|,
+comment|/* 1 - AUTH_BADCRED */
 literal|"Server rejected credential"
-block|}
 block|,
-block|{
-name|AUTH_BADVERF
-block|,
+comment|/* 2 - AUTH_REJECTEDCRED */
 literal|"Invalid client verifier"
-block|}
 block|,
-block|{
-name|AUTH_REJECTEDVERF
-block|,
+comment|/* 3 - AUTH_BADVERF */
 literal|"Server rejected verifier"
-block|}
 block|,
-block|{
-name|AUTH_TOOWEAK
-block|,
+comment|/* 4 - AUTH_REJECTEDVERF */
 literal|"Client credential too weak"
-block|}
 block|,
-block|{
-name|AUTH_INVALIDRESP
-block|,
+comment|/* 5 - AUTH_TOOWEAK */
 literal|"Invalid server verifier"
-block|}
 block|,
-block|{
-name|AUTH_FAILED
-block|,
+comment|/* 6 - AUTH_INVALIDRESP */
 literal|"Failed (unspecified error)"
+comment|/* 7 - AUTH_FAILED */
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1092,17 +910,17 @@ name|auth_stat
 name|stat
 decl_stmt|;
 block|{
+name|unsigned
 name|int
-name|i
+name|errnum
+init|=
+name|stat
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
+if|if
+condition|(
+name|errnum
 operator|<
+operator|(
 sizeof|sizeof
 argument_list|(
 name|auth_errlist
@@ -1110,38 +928,23 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|auth_errtab
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
 name|auth_errlist
 index|[
-name|i
+literal|0
 index|]
-operator|.
-name|status
-operator|==
-name|stat
+argument_list|)
+operator|)
 condition|)
-block|{
 return|return
 operator|(
+name|char
+operator|*
+operator|)
 name|auth_errlist
 index|[
-name|i
+name|errnum
 index|]
-operator|.
-name|message
-operator|)
 return|;
-block|}
-block|}
 return|return
 operator|(
 name|NULL

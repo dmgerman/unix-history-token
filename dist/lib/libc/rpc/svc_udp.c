@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_udp.c,v 1.1 1993/10/27 05:41:03 paul Exp $"
+literal|"$Id: svc_udp.c,v 1.7 1996/12/30 15:21:19 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,18 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -148,6 +160,47 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|void
+name|cache_set
+name|__P
+argument_list|(
+operator|(
+name|SVCXPRT
+operator|*
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cache_get
+name|__P
+argument_list|(
+operator|(
+name|SVCXPRT
+operator|*
+operator|,
+expr|struct
+name|rpc_msg
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|xp_ops
 name|svcudp_op
@@ -165,13 +218,6 @@ name|svcudp_freeargs
 block|,
 name|svcudp_destroy
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -320,7 +366,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -329,10 +375,22 @@ operator|)
 operator|&
 name|addr
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|addr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|addr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 name|addr
@@ -741,11 +799,6 @@ decl_stmt|;
 name|u_long
 name|replylen
 decl_stmt|;
-specifier|static
-name|int
-name|cache_get
-parameter_list|()
-function_decl|;
 name|again
 label|:
 name|xprt
@@ -817,12 +870,17 @@ goto|;
 if|if
 condition|(
 name|rlen
+operator|==
+operator|-
+literal|1
+operator|||
+name|rlen
 operator|<
 literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 condition|)
 return|return
@@ -992,11 +1050,6 @@ name|stat
 init|=
 name|FALSE
 decl_stmt|;
-specifier|static
-name|void
-name|cache_set
-parameter_list|()
-function_decl|;
 name|xdrs
 operator|->
 name|x_op
@@ -1362,7 +1415,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|bzero((char *) addr, sizeof(type) * (int) (size))
+value|memset((char *) addr, 0, sizeof(type) * (int) (size))
 end_define
 
 begin_comment
@@ -1480,32 +1533,24 @@ value|(xid % (SPARSENESS*((struct udp_cache *) su_data(transp)->su_cache)->uc_si
 end_define
 
 begin_comment
-comment|/*  * Enable use of the cache.   * Note: there is no disable.  */
+comment|/*  * Enable use of the cache.  * Note: there is no disable.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|svcudp_enablecache
-argument_list|(
-argument|transp
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|transp
+parameter_list|,
+name|size
+parameter_list|)
 name|SVCXPRT
 modifier|*
 name|transp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|svcudp_data
@@ -1686,7 +1731,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set an entry in the cache  */
@@ -2035,48 +2080,37 @@ begin_comment
 comment|/*  * Try to get an entry from the cache  * return 1 if found, 0 if not found  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|cache_get
-argument_list|(
-argument|xprt
-argument_list|,
-argument|msg
-argument_list|,
-argument|replyp
-argument_list|,
-argument|replylenp
-argument_list|)
-name|SVCXPRT
-operator|*
+parameter_list|(
 name|xprt
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|msg
+parameter_list|,
+name|replyp
+parameter_list|,
+name|replylenp
+parameter_list|)
+name|SVCXPRT
+modifier|*
+name|xprt
+decl_stmt|;
 name|struct
 name|rpc_msg
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|replyp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 modifier|*
 name|replylenp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|u_int
 name|loc
@@ -2119,7 +2153,7 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
-value|(bcmp((char*)&a1, (char*)&a2, sizeof(a1)) == 0)
+value|(memcmp(&a1,&a2, sizeof(a1)) == 0)
 name|loc
 operator|=
 name|CACHE_LOC
@@ -2265,7 +2299,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: auth_unix.c,v 1.1 1993/10/27 05:40:11 paul Exp $"
+literal|"$Id: auth_unix.c,v 1.7 1996/12/30 14:14:39 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * auth_unix.c, Implements UNIX style authentication parameters.   *    * Copyright (C) 1984, Sun Microsystems, Inc.  *  * The system is very weak.  The client uses no encryption for it's  * credentials and only sends null verifiers.  The server sends backs  * null verifiers or optionally a verifier that suggests a new short hand  * for the credentials.  *  */
+comment|/*  * auth_unix.c, Implements UNIX style authentication parameters.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * The system is very weak.  The client uses no encryption for it's  * credentials and only sends null verifiers.  The server sends backs  * null verifiers or optionally a verifier that suggests a new short hand  * for the credentials.  *  */
 end_comment
 
 begin_include
@@ -55,6 +55,24 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -193,11 +211,39 @@ end_define
 
 begin_function_decl
 specifier|static
-name|bool_t
+name|void
 name|marshal_new_auth
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * This goop is here because some servers refuse to accept a  * credential with more than some number (usually 8) supplementary  * groups.  Blargh!  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|authunix_maxgrouplist
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|set_rpc_maxgrouplist
+parameter_list|(
+name|int
+name|num
+parameter_list|)
+block|{
+name|authunix_maxgrouplist
+operator|=
+name|num
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Create a unix style authenticator.  * Returns an auth handle with the given stuff in it.  */
@@ -428,6 +474,33 @@ name|aup_gid
 operator|=
 name|gid
 expr_stmt|;
+comment|/* GW: continuation of max group list hack */
+if|if
+condition|(
+name|authunix_maxgrouplist
+operator|!=
+literal|0
+condition|)
+block|{
+name|aup
+operator|.
+name|aup_len
+operator|=
+operator|(
+operator|(
+name|len
+operator|<
+name|authunix_maxgrouplist
+operator|)
+condition|?
+name|len
+else|:
+name|authunix_maxgrouplist
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|aup
 operator|.
 name|aup_len
@@ -437,6 +510,7 @@ name|u_int
 operator|)
 name|len
 expr_stmt|;
+block|}
 name|aup
 operator|.
 name|aup_gids
@@ -551,15 +625,15 @@ return|;
 block|}
 endif|#
 directive|endif
-name|bcopy
+name|memcpy
 argument_list|(
-name|mymem
-argument_list|,
 name|au
 operator|->
 name|au_origcred
 operator|.
 name|oa_base
+argument_list|,
+name|mymem
 argument_list|,
 operator|(
 name|u_int
@@ -625,6 +699,15 @@ index|[
 name|NGRPS
 index|]
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|gid_t
+name|real_gids
+index|[
+name|NGROUPS
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|gethostname
@@ -649,11 +732,17 @@ literal|0
 expr_stmt|;
 name|uid
 operator|=
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 expr_stmt|;
 name|gid
 operator|=
+operator|(
+name|int
+operator|)
 name|getegid
 argument_list|()
 expr_stmt|;
@@ -664,9 +753,9 @@ name|len
 operator|=
 name|getgroups
 argument_list|(
-name|NGRPS
+name|NGROUPS
 argument_list|,
-name|gids
+name|real_gids
 argument_list|)
 operator|)
 operator|<
@@ -675,6 +764,45 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|NGRPS
+condition|)
+name|len
+operator|=
+name|NGRPS
+expr_stmt|;
+comment|/* GW: turn `gid_t's into `int's */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|gids
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|int
+operator|)
+name|real_gids
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|authunix_create
@@ -1286,7 +1414,7 @@ end_comment
 
 begin_function
 specifier|static
-name|bool_t
+name|void
 name|marshal_new_auth
 parameter_list|(
 name|auth
