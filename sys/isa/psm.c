@@ -13,6 +13,10 @@ directive|include
 file|"psm.h"
 end_include
 
+begin_comment
+comment|/* #include "apm.h" */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -612,24 +616,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSM_CONFIG_FLAGS
-value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC)
+name|PSM_CONFIG_NOIDPROBE
+value|0x0200
 end_define
 
 begin_comment
-comment|/* other flags (flags) */
-end_comment
-
-begin_comment
-comment|/*  * Pass mouse data packet to the user land program `as is', even if   * the mouse has vendor-specific enhanced features and uses non-standard   * packet format.  Otherwise manipulate the mouse data packet so that   * it can be recognized by the programs which can only understand   * the standard packet format. */
+comment|/* disable mouse model probe */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PSM_FLAGS_NATIVEMODE
-value|0x0200
+name|PSM_CONFIG_NORESET
+value|0x0400
 end_define
+
+begin_comment
+comment|/* don't reset the mouse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_CONFIG_FORCETAP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* assume `tap' action exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_CONFIG_IGNPORTERROR
+value|0x1000
+end_define
+
+begin_comment
+comment|/* ignore error in aux port test */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_CONFIG_FLAGS
+value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC	\ 				    | PSM_CONFIG_NOIDPROBE	\ 				    | PSM_CONFIG_NORESET	\ 				    | PSM_CONFIG_FORCETAP	\ 				    | PSM_CONFIG_IGNPORTERROR)
+end_define
+
+begin_comment
+comment|/* other flags (flags) */
+end_comment
 
 begin_comment
 comment|/* for backward compatibility */
@@ -921,6 +958,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PSM_RESETAFTERSUSPEND
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -933,6 +976,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PSM_RESETAFTERSUSPEND */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -988,6 +1040,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PSM_RESETAFTERSUSPEND
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1003,6 +1061,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1241,6 +1304,13 @@ block|, }
 block|, }
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|GENERIC_MOUSE_ENTRY
+value|6
+end_define
 
 begin_comment
 comment|/* device driver declarateion */
@@ -1932,6 +2002,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PSM_RESETAFTERSUSPEND
+end_ifdef
+
 begin_comment
 comment|/*  * NOTE: once `set_mouse_mode()' is called, the mouse device must be  * re-enabled by calling `enable_aux_dev()'  */
 end_comment
@@ -1981,6 +2057,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PSM_RESETAFTERSUSPEND */
+end_comment
 
 begin_function
 specifier|static
@@ -2361,6 +2446,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PSM_RESETAFTERSUSPEND
+end_ifdef
+
 begin_comment
 comment|/*   * Re-initialize the aux port and device. The aux port must be enabled  * and its interrupt must be disabled before calling this routine.   * The aux device will be disabled before returning.  * The keyboard controller must be locked via `kbdc_lock()' before  * calling this routine.  */
 end_comment
@@ -2456,6 +2547,15 @@ argument_list|(
 name|kbdc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_IGNPORTERROR
+condition|)
+break|break;
 name|log
 argument_list|(
 name|LOG_ERR
@@ -2471,7 +2571,20 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/*       * NOTE: some controllers appears to hang the `keyboard' when      * the aux port doesn't exist and `PSMC_RESET_DEV' is issued.       */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NORESET
+condition|)
+block|{
+comment|/*  	 * Don't try to reset the pointing device.  It may possibly be 	 * left in the unknown state, though... 	 */
+block|}
+else|else
+block|{
+comment|/*  	 * NOTE: some controllers appears to hang the `keyboard' when 	 * the aux port doesn't exist and `PSMC_RESET_DEV' is issued.  	 */
 if|if
 condition|(
 operator|!
@@ -2498,6 +2611,7 @@ expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 comment|/*       * both the aux port and the aux device is functioning, see      * if the device can be enabled.       */
 if|if
@@ -2536,6 +2650,22 @@ literal|10
 argument_list|)
 expr_stmt|;
 comment|/* remove stray data if any */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NOIDPROBE
+condition|)
+block|{
+name|i
+operator|=
+name|GENERIC_MOUSE_ENTRY
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* FIXME: hardware ID, mouse buttons? */
 comment|/* other parameters */
 for|for
@@ -2599,6 +2729,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 name|sc
@@ -2797,6 +2928,15 @@ name|TRUE
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PSM_RESETAFTERSUSPEND */
+end_comment
 
 begin_function
 specifier|static
@@ -3275,6 +3415,15 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
+name|write_controller_command
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|,
+name|KBDC_ENABLE_AUX_PORT
+argument_list|)
+expr_stmt|;
 comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      *      * XXX: some controllers erroneously return the error code 1 when      * it has the perfectly functional aux port. We have to ignore this      * error code. Even if the controller HAS error with the aux port,      * it will be detected later...      * XXX: another incompatible controller returns PSM_ACK (0xfa)...      */
 switch|switch
 condition|(
@@ -3330,6 +3479,15 @@ operator|->
 name|kbdc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_IGNPORTERROR
+condition|)
+break|break;
 name|restore_controller
 argument_list|(
 name|sc
@@ -3358,7 +3516,20 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * NOTE: some controllers appears to hang the `keyboard' when the aux      * port doesn't exist and `PSMC_RESET_DEV' is issued.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NORESET
+condition|)
+block|{
+comment|/*  	 * Don't try to reset the pointing device.  It may possibly be 	 * left in the unknown state, though... 	 */
+block|}
+else|else
+block|{
+comment|/* 	 * NOTE: some controllers appears to hang the `keyboard' when the aux 	 * port doesn't exist and `PSMC_RESET_DEV' is issued. 	 */
 if|if
 condition|(
 operator|!
@@ -3403,6 +3574,7 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/*      * both the aux port and the aux device is functioning, see if the      * device can be enabled. NOTE: when enabled, the device will start      * sending data; we shall immediately disable the device once we know      * the device can be enabled.      */
 if|if
 condition|(
@@ -3424,6 +3596,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* MOUSE ERROR */
+name|recover_from_error
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+expr_stmt|;
 name|restore_controller
 argument_list|(
 name|sc
@@ -3652,6 +3831,30 @@ name|MOUSE_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NOIDPROBE
+condition|)
+block|{
+name|sc
+operator|->
+name|hw
+operator|.
+name|buttons
+operator|=
+literal|2
+expr_stmt|;
+name|i
+operator|=
+name|GENERIC_MOUSE_ENTRY
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* # of buttons */
 name|sc
 operator|->
@@ -3726,6 +3929,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 name|sc
@@ -3808,6 +4012,26 @@ name|i
 index|]
 operator|.
 name|syncmask
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_FORCETAP
+condition|)
+name|sc
+operator|->
+name|mode
+operator|.
+name|syncmask
+index|[
+literal|0
+index|]
+operator|&=
+operator|~
+name|MOUSE_PS2_TAP
 expr_stmt|;
 name|sc
 operator|->
@@ -8408,6 +8632,31 @@ operator|&
 name|MOUSE_PS2_BUTTONS
 index|]
 expr_stmt|;
+comment|/* `tapping' action */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_FORCETAP
+condition|)
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+operator|(
+name|c
+operator|&
+name|MOUSE_PS2_TAP
+operator|)
+operator|)
+condition|?
+literal|0
+else|:
+name|MOUSE_BUTTON4DOWN
+expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -8466,7 +8715,7 @@ name|sc
 operator|->
 name|ipacket
 index|[
-literal|1
+literal|2
 index|]
 operator|&
 name|MOUSE_PS2PLUS_ZNEG
@@ -9099,6 +9348,7 @@ operator||
 name|POLLRDNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|sc
@@ -9130,6 +9380,7 @@ operator|->
 name|rsel
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
