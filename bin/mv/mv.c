@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -150,6 +156,8 @@ name|int
 name|fflg
 decl_stmt|,
 name|iflg
+decl_stmt|,
+name|vflg
 decl_stmt|;
 end_decl_stmt
 
@@ -274,7 +282,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fi"
+literal|"fiv"
 argument_list|)
 operator|)
 operator|!=
@@ -308,6 +316,14 @@ expr_stmt|;
 name|iflg
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflg
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -855,11 +871,26 @@ argument_list|,
 name|to
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|vflg
+condition|)
+name|printf
+argument_list|(
+literal|"%s -> %s\n"
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|errno
@@ -1511,6 +1542,19 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|vflg
+condition|)
+name|printf
+argument_list|(
+literal|"%s -> %s\n"
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1561,6 +1605,10 @@ name|_PATH_CP
 argument_list|,
 literal|"mv"
 argument_list|,
+name|vflg
+condition|?
+literal|"-PRpv"
+else|:
 literal|"-PRp"
 argument_list|,
 name|from
@@ -1796,14 +1844,14 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: mv [-f | -i] source target"
+literal|"usage: mv [-f | -i] [-v] source target"
 argument_list|,
-literal|"       mv [-f | -i] source ... directory"
+literal|"       mv [-f | -i] [-v] source ... directory"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}

@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -746,6 +752,7 @@ name|st_uid
 operator|==
 name|myuid
 condition|)
+block|{
 if|if
 condition|(
 name|fstat
@@ -810,6 +817,7 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
@@ -1539,14 +1547,14 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i] [-p] src target"
+literal|"usage: cp [-R [-H | -L | -P]] [-f | -i] [-pv] src target"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i] [-p] src1 ... srcN directory"
+literal|"       cp [-R [-H | -L | -P]] [-f | -i] [-pv] src1 ... srcN directory"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}

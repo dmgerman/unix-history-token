@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -139,6 +145,8 @@ operator|.
 name|p_path
 block|,
 literal|""
+block|,
+literal|""
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -160,6 +168,8 @@ decl_stmt|,
 name|rflag
 decl_stmt|,
 name|fflag
+decl_stmt|,
+name|vflag
 decl_stmt|;
 end_decl_stmt
 
@@ -284,7 +294,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRfipr"
+literal|"HLPRfiprv"
 argument_list|)
 operator|)
 operator|!=
@@ -382,6 +392,14 @@ case|case
 literal|'r'
 case|:
 name|rflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
 operator|=
 literal|1
 expr_stmt|;
@@ -824,6 +842,8 @@ literal|0
 decl_stmt|,
 name|dne
 decl_stmt|,
+name|badcp
+decl_stmt|,
 name|nlen
 decl_stmt|,
 name|rval
@@ -861,6 +881,8 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|0
@@ -876,6 +898,9 @@ operator|)
 operator|!=
 name|NULL
 condition|;
+name|badcp
+operator|=
+literal|0
 control|)
 block|{
 switch|switch
@@ -910,6 +935,8 @@ name|fts_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -928,6 +955,8 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -956,6 +985,7 @@ name|fts_level
 operator|==
 name|FTS_ROOTLEVEL
 condition|)
+block|{
 if|if
 condition|(
 name|type
@@ -1025,6 +1055,7 @@ name|curr
 operator|->
 name|fts_pathlen
 expr_stmt|;
+block|}
 name|p
 operator|=
 operator|&
@@ -1099,6 +1130,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1196,6 +1229,8 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1258,6 +1293,8 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1293,6 +1330,8 @@ operator|!
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1331,6 +1370,8 @@ argument_list|,
 name|FTS_SKIP
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1416,6 +1457,8 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1465,6 +1508,8 @@ operator|!
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1481,6 +1526,8 @@ argument_list|,
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1507,6 +1554,8 @@ operator|!
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1523,6 +1572,8 @@ argument_list|,
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1539,12 +1590,37 @@ argument_list|,
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|vflag
+operator|&&
+operator|!
+name|badcp
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s -> %s\n"
+argument_list|,
+name|curr
+operator|->
+name|fts_path
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
