@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	8.2 (Berkeley) %G%"
+literal|"@(#)utility.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,7 +1175,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s: %s\r\n"
+literal|"%s: %s"
 argument_list|,
 name|msg
 argument_list|,
