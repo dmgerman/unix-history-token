@@ -144,9 +144,6 @@ argument_list|)
 name|int
 name|sc_iobase
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
