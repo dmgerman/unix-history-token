@@ -92,16 +92,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|MD5Pad
-parameter_list|(
-name|MD5_CTX
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|MD5Final
 parameter_list|(
 name|unsigned

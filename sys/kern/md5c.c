@@ -887,15 +887,14 @@ comment|/*  * MD5 padding. Adds padding followed by original length.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|MD5Pad
 parameter_list|(
-name|context
-parameter_list|)
 name|MD5_CTX
 modifier|*
 name|context
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
