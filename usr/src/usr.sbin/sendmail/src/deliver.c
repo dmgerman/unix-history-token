@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.17 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5300,6 +5300,11 @@ name|p
 operator|++
 control|)
 continue|continue;
+operator|*
+name|t
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 block|}
 comment|/* now send the data */
