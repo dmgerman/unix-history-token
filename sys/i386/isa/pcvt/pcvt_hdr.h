@@ -3466,7 +3466,7 @@ begin_struct
 struct|struct
 name|udkentry
 block|{
-name|u_char
+name|u_short
 name|first
 index|[
 name|MAXUDKEYS
@@ -3824,7 +3824,7 @@ name|MAXUDKDEF
 index|]
 decl_stmt|;
 comment|/* new definitions for vt220 FKeys */
-name|u_char
+name|u_short
 name|udk_defi
 decl_stmt|;
 comment|/* index for FKey definitions */
@@ -3955,7 +3955,7 @@ name|udkentry
 name|ukt
 decl_stmt|;
 comment|/* index& length for each udk */
-name|u_char
+name|u_short
 name|udkff
 decl_stmt|;
 comment|/* index into buffer first free entry*/
