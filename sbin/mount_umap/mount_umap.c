@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_umap.c,v 1.7 1996/09/14 02:59:13 bde Exp $"
+literal|"$Id: mount_umap.c,v 1.7.2.1 1997/12/04 07:36:14 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +198,7 @@ name|char
 name|not
 index|[]
 init|=
-literal|"; not mounted."
+literal|"; not mounted"
 decl_stmt|;
 name|struct
 name|stat
@@ -788,7 +788,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"nentries not found%s"
+literal|"%s: nentries not found%s"
 argument_list|,
 name|gmapfile
 argument_list|,
