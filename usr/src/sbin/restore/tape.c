@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.4 (Berkeley) %G%"
+literal|"@(#)tape.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,10 +1335,10 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"no memory for file removal list\n"
+literal|"no memory for active inode map\n"
 argument_list|)
 expr_stmt|;
-name|clrimap
+name|usedinomap
 operator|=
 name|map
 expr_stmt|;
@@ -5740,7 +5740,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Dump mask header"
+literal|"Dumped inodes map header"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5751,7 +5751,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Remove mask header"
+literal|"Used inodes map header"
 argument_list|)
 expr_stmt|;
 break|break;
