@@ -187,6 +187,8 @@ parameter_list|)
 block|{
 name|pthread_t
 name|pthread
+decl_stmt|,
+name|joiner
 decl_stmt|;
 name|int
 name|exitNow
@@ -302,14 +304,47 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
+name|retry
+label|:
+comment|/* 	 * Proper lock order, to minimize deadlocks, between joining 	 * and exiting threads is: DEAD_LIST, THREAD_LIST, exiting, joiner. 	 * In order to do this *and* protect from races, we must resort 	 * this test-and-retry loop. 	 */
+name|joiner
+operator|=
+name|curthread
+operator|->
+name|joiner
+expr_stmt|;
 comment|/* Lock the dead list first to maintain correct lock order */
 name|DEAD_LIST_LOCK
+expr_stmt|;
+name|THREAD_LIST_LOCK
 expr_stmt|;
 name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|joiner
+operator|!=
+name|curthread
+operator|->
+name|joiner
+condition|)
+block|{
+name|_thread_critical_exit
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
+name|DEAD_LIST_UNLOCK
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 comment|/* Check if there is a thread joining this one: */
 if|if
 condition|(
@@ -413,8 +448,6 @@ name|PTHREAD_DETACHED
 expr_stmt|;
 block|}
 comment|/* 	 * Add this thread to the list of dead threads, and 	 * also remove it from the active threads list. 	 */
-name|THREAD_LIST_LOCK
-expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
