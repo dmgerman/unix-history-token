@@ -43,7 +43,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Id: main.c,v 1.5 1993/12/15 15:22:02 alm Exp alm $"
+literal|"@(#)main.c,v 1.1 1994/02/01 00:34:42 alm Exp"
 decl_stmt|;
 end_decl_stmt
 

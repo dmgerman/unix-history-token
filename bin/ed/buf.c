@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Id: buf.c,v 1.3 1993/12/14 16:19:56 alm Exp $"
+literal|"@(#)buf.c,v 1.4 1994/02/01 00:34:35 alm Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -559,7 +565,7 @@ name|current_addr
 argument_list|)
 expr_stmt|;
 comment|/* this get_addressed_line_node last! */
-name|insque
+name|INSQUE
 argument_list|(
 name|lp
 argument_list|,
@@ -835,11 +841,21 @@ name|int
 name|open_sbuf
 parameter_list|()
 block|{
+name|int
+name|u
+decl_stmt|;
 name|isbinary
 operator|=
 name|newline_added
 operator|=
 literal|0
+expr_stmt|;
+name|u
+operator|=
+name|umask
+argument_list|(
+literal|077
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -892,10 +908,20 @@ argument_list|,
 literal|"cannot open temp file"
 argument_list|)
 expr_stmt|;
+name|umask
+argument_list|(
+name|u
+argument_list|)
+expr_stmt|;
 return|return
 name|ERR
 return|;
 block|}
+name|umask
+argument_list|(
+name|u
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
