@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.4 (Berkeley) %G%  *  * from: $Header: cpu.h,v 1.11 92/11/26 02:04:33 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	7.5 (Berkeley) %G%  *  * from: $Header: cpu.h,v 1.12 93/05/25 10:36:34 torek Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,38 @@ directive|define
 name|_CPU_H_
 end_define
 
+begin_comment
+comment|/*  * CTL_MACHDEP definitinos.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_MAXID
+value|1
+end_define
+
+begin_comment
+comment|/* no valid machdep ids */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_MACHDEP_NAMES
+value|{ \ 	{ 0, 0 }, \ }
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Exported definitions unique to SPARC cpu support.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -28,10 +60,6 @@ file|<sparc/sparc/intreg.h>
 end_include
 
 begin_comment
-comment|/*  * Exported definitions unique to SPARC cpu support.  */
-end_comment
-
-begin_comment
 comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
 end_comment
 
@@ -43,50 +71,6 @@ end_define
 
 begin_comment
 comment|/* copy sigcode above user stack in exec */
-end_comment
-
-begin_comment
-comment|/*  * function vs. inline configuration;  * these are defined to get generic functions  * rather than inline or machine-dependent implementations  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_MINMAX
-end_define
-
-begin_comment
-comment|/* need {,i,l,ul}{min,max} functions */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_FFS
-end_undef
-
-begin_comment
-comment|/* don't need ffs function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_BCMP
-end_define
-
-begin_comment
-comment|/* need bcmp function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_STRLEN
-end_define
-
-begin_comment
-comment|/* need strlen function */
 end_comment
 
 begin_define
@@ -433,8 +417,20 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|_CPU_H_
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _CPU_H_ */
+end_comment
 
 end_unit
 
