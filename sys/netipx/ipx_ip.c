@@ -1491,10 +1491,12 @@ operator|*
 operator|)
 name|ip_dst
 expr_stmt|;
-name|rtalloc
+name|rtalloc_ign
 argument_list|(
 operator|&
 name|ro
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -273,9 +273,11 @@ goto|goto
 name|gotif
 goto|;
 block|}
-name|rtalloc
+name|rtalloc_ign
 argument_list|(
 name|ro
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -309,9 +311,11 @@ name|ro_rt
 operator|=
 name|NULL
 expr_stmt|;
-name|rtalloc
+name|rtalloc_ign
 argument_list|(
 name|ro
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
