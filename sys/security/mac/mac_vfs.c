@@ -1531,11 +1531,6 @@ modifier|*
 name|tmpc
 decl_stmt|;
 name|struct
-name|mac_policy_ops
-modifier|*
-name|ops
-decl_stmt|;
-name|struct
 name|mac_policy_op_entry
 modifier|*
 name|mpe
@@ -1556,7 +1551,9 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|ops
+name|mpc
+operator|->
+name|mpc_ops
 argument_list|)
 argument_list|,
 name|M_MACOPVEC
