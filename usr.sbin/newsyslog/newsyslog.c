@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.15 1997/11/30 18:58:18 ache Exp $"
+literal|"$Id: newsyslog.c,v 1.16 1998/03/14 22:28:25 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,7 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Force the tim no matter what*/
+comment|/* Force the trim no matter what*/
 end_comment
 
 begin_decl_stmt
@@ -1239,7 +1239,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newsyslog [-nrv] [-f config-file]\n"
+literal|"usage: newsyslog [-nrvF] [-f config-file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
