@@ -2798,7 +2798,7 @@ name|ATPR_F_READ
 else|:
 literal|0
 argument_list|,
-literal|60
+literal|120
 argument_list|,
 name|ast_done
 argument_list|,
