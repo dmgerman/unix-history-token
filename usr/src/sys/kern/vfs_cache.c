@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -567,20 +567,13 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* insert at head of LRU list (first to grab) */
-name|ncp
-operator|->
-name|nc_nxt
+if|if
+condition|(
+name|ncq
 operator|=
 name|nchhead
-expr_stmt|;
-name|ncp
-operator|->
-name|nc_prev
-operator|=
-operator|&
-name|nchhead
-expr_stmt|;
-name|nchhead
+condition|)
+name|ncq
 operator|->
 name|nc_prev
 operator|=
@@ -589,9 +582,30 @@ name|ncp
 operator|->
 name|nc_nxt
 expr_stmt|;
+else|else
+name|nchtail
+operator|=
+operator|&
+name|ncp
+operator|->
+name|nc_nxt
+expr_stmt|;
 name|nchhead
 operator|=
 name|ncp
+expr_stmt|;
+name|ncp
+operator|->
+name|nc_nxt
+operator|=
+name|ncq
+expr_stmt|;
+name|ncp
+operator|->
+name|nc_prev
+operator|=
+operator|&
+name|nchhead
 expr_stmt|;
 return|return
 operator|(
@@ -1242,11 +1256,34 @@ operator|=
 name|nxtcp
 expr_stmt|;
 comment|/* cause rescan of list, it may have altered */
+comment|/* also put the now-free entry at head of LRU */
+if|if
+condition|(
 name|nxtcp
 operator|=
 name|nchhead
+condition|)
+name|nxtcp
+operator|->
+name|nc_prev
+operator|=
+operator|&
+name|ncp
+operator|->
+name|nc_nxt
 expr_stmt|;
-comment|/* put the now-free entry at head of LRU */
+else|else
+name|nchtail
+operator|=
+operator|&
+name|ncp
+operator|->
+name|nc_nxt
+expr_stmt|;
+name|nchhead
+operator|=
+name|ncp
+expr_stmt|;
 name|ncp
 operator|->
 name|nc_nxt
@@ -1259,19 +1296,6 @@ name|nc_prev
 operator|=
 operator|&
 name|nchhead
-expr_stmt|;
-name|nxtcp
-operator|->
-name|nc_prev
-operator|=
-operator|&
-name|ncp
-operator|->
-name|nc_nxt
-expr_stmt|;
-name|nchhead
-operator|=
-name|ncp
 expr_stmt|;
 block|}
 block|}
