@@ -776,6 +776,86 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|genvolname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|drive
+modifier|*
+name|create_drive
+parameter_list|(
+name|char
+modifier|*
+name|devicename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_concat
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_stripe
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_mirror
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vinum_label
 parameter_list|(
 name|int
@@ -915,6 +995,19 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|struct
+name|drive
+modifier|*
+name|find_drive_by_devname
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|make_devices
 parameter_list|(
@@ -997,6 +1090,19 @@ name|volume
 parameter_list|,
 name|int
 name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|drive
+modifier|*
+name|find_drive_by_devname
+parameter_list|(
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1171,7 +1277,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|stats
+name|sflag
 decl_stmt|;
 end_decl_stmt
 
@@ -1188,6 +1294,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* wait for children to exit */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|objectname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name for some functions */
 end_comment
 
 begin_decl_stmt
@@ -1305,6 +1423,18 @@ end_decl_stmt
 begin_comment
 comment|/* buffer to read in to */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|a< b? a: b
+end_define
 
 end_unit
 
