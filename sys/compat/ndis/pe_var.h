@@ -1624,6 +1624,62 @@ directive|define
 name|__stdcall
 end_define
 
+begin_define
+define|#
+directive|define
+name|__regcall
+end_define
+
+begin_define
+define|#
+directive|define
+name|__fastcall
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGARGS1
+parameter_list|(
+name|decl1
+parameter_list|)
+value|decl1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGARGS2
+parameter_list|(
+name|decl1
+parameter_list|,
+name|decl2
+parameter_list|)
+value|decl1, decl2
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGCALL1
+parameter_list|(
+name|arg1
+parameter_list|)
+value|arg1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGCALL2
+parameter_list|(
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+value|arg1, arg2
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1634,6 +1690,64 @@ define|#
 directive|define
 name|__stdcall
 value|__attribute__((__stdcall__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__regcall
+value|__attribute__((__regparm__(3)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__fastcall
+value|__stdcall __regcall
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGARGS1
+parameter_list|(
+name|decl1
+parameter_list|)
+value|int dummy1, int dummy2, decl1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGARGS2
+parameter_list|(
+name|decl1
+parameter_list|,
+name|decl2
+parameter_list|)
+value|int dummy1, decl2, decl1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGCALL1
+parameter_list|(
+name|arg1
+parameter_list|)
+value|0, 0, arg1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGCALL2
+parameter_list|(
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+value|0, arg2, arg1
 end_define
 
 begin_endif
@@ -1653,30 +1767,56 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
+name|__fastcall
 name|int
-function_decl|(
+typedef|(
 modifier|*
-name|fcall
-function_decl|)
+name|fcall1
+typedef|)
 parameter_list|(
-name|void
+typedef|REGARGS1
+parameter_list|(
+name|uint32_t
 parameter_list|)
-function_decl|;
+typedef|);
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdcall
+name|__fastcall
 name|int
-function_decl|(
+typedef|(
 modifier|*
 name|fcall2
-function_decl|)
+typedef|)
 parameter_list|(
-name|int
+typedef|REGARGS2
+parameter_list|(
+name|uint32_t
+parameter_list|,
+name|uint32_t
 parameter_list|)
-function_decl|;
+typedef|);
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__fastcall
+name|int
+typedef|(
+modifier|*
+name|fcall3
+typedef|)
+parameter_list|(
+typedef|REGARGS2
+parameter_list|(
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+typedef|,
+name|uint32_t
+typedef|);
 end_typedef
 
 begin_function
@@ -1685,20 +1825,22 @@ name|__inline
 name|uint32_t
 name|fastcall1
 parameter_list|(
-name|fcall
+name|fcall1
 name|f
 parameter_list|,
 name|uint32_t
 name|a
 parameter_list|)
 block|{
-asm|__asm__
-specifier|__volatile__
-asm|("movl %0,%%ecx" : : "r" (a));
 return|return
 operator|(
 name|f
-argument_list|()
+argument_list|(
+name|REGCALL1
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1710,7 +1852,7 @@ name|__inline
 name|uint32_t
 name|fastcall2
 parameter_list|(
-name|fcall
+name|fcall2
 name|f
 parameter_list|,
 name|uint32_t
@@ -1720,16 +1862,17 @@ name|uint32_t
 name|b
 parameter_list|)
 block|{
-asm|__asm__
-specifier|__volatile__
-asm|("movl %0,%%ecx" : : "r" (a));
-asm|__asm__
-specifier|__volatile__
-asm|("movl %0,%%edx" : : "r" (b));
 return|return
 operator|(
 name|f
-argument_list|()
+argument_list|(
+name|REGCALL2
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1741,7 +1884,7 @@ name|__inline
 name|uint32_t
 name|fastcall3
 parameter_list|(
-name|fcall2
+name|fcall3
 name|f
 parameter_list|,
 name|uint32_t
@@ -1754,16 +1897,17 @@ name|uint32_t
 name|c
 parameter_list|)
 block|{
-asm|__asm__
-specifier|__volatile__
-asm|("movl %0,%%ecx" : : "r" (a));
-asm|__asm__
-specifier|__volatile__
-asm|("movl %0,%%edx" : : "r" (b));
 return|return
 operator|(
 name|f
 argument_list|(
+name|REGCALL2
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+argument_list|,
 name|c
 argument_list|)
 operator|)
@@ -1781,7 +1925,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|fastcall1((fcall)(f), (uint32_t)(a))
+value|fastcall1((fcall1)(f), (uint32_t)(a))
 end_define
 
 begin_define
@@ -1796,7 +1940,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|fastcall2((fcall)(f), (uint32_t)(a), (uint32_t)(b))
+value|fastcall2((fcall2)(f), (uint32_t)(a), (uint32_t)(b))
 end_define
 
 begin_define
@@ -1813,7 +1957,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|fastcall3((fcall2)(f), (uint32_t)(a), (uint32_t)(b), (uint32_t)(c))
+value|fastcall3((fcall3)(f), (uint32_t)(a), (uint32_t)(b), (uint32_t)(c))
 end_define
 
 begin_else

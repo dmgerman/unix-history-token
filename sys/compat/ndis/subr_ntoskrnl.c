@@ -171,6 +171,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/ndis/ntoskrnl_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ndis/hal_var.h>
 end_include
 
@@ -178,12 +184,6 @@ begin_include
 include|#
 directive|include
 file|<compat/ndis/resource_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/ndis/ntoskrnl_var.h>
 end_include
 
 begin_include
@@ -301,29 +301,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|uint32_t
 name|ntoskrnl_iofcalldriver
-parameter_list|(
-comment|/*void *, void * */
+argument_list|(
+name|REGARGS2
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+name|dobj
+argument_list|,
+name|void
+operator|*
+name|irp
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|void
 name|ntoskrnl_iofcompletereq
-parameter_list|(
-comment|/*void *, uint8_t*/
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS2
+argument_list|(
+argument|void *irp
+argument_list|,
+argument|uint8_t prioboost
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|__stdcall
@@ -726,94 +738,139 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist
-parameter_list|(
-comment|/*slist_header *, 	slist_entry * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS2
+argument_list|(
+name|slist_header
+operator|*
+name|head
+argument_list|,
+name|slist_entry
+operator|*
+name|entry
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist
-parameter_list|(
-comment|/*slist_header * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+name|slist_header
+operator|*
+name|head
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist_ex
-parameter_list|(
-comment|/*slist_header *, 	slist_entry *,*/
+argument_list|(
+name|REGARGS2
+argument_list|(
+name|slist_header
+operator|*
+name|head
+argument_list|,
+name|slist_entry
+operator|*
+name|entry
+argument_list|)
+argument_list|,
 name|kspin_lock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+name|lock
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist_ex
-parameter_list|(
-comment|/*slist_header *, 	kspin_lock * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS2
+argument_list|(
+name|slist_header
+operator|*
+name|head
+argument_list|,
+name|kspin_lock
+operator|*
+name|lock
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|uint32_t
 name|ntoskrnl_interlock_inc
-parameter_list|(
-comment|/*volatile uint32_t * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+specifier|volatile
+name|uint32_t
+operator|*
+name|addend
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|uint32_t
 name|ntoskrnl_interlock_dec
-parameter_list|(
-comment|/*volatile uint32_t * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+specifier|volatile
+name|uint32_t
+operator|*
+name|addend
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|void
 name|ntoskrnl_interlock_addstat
-parameter_list|(
-comment|/*uint64_t, 	uint32_t*/
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS2
+argument_list|(
+argument|uint64_t *addend
+argument_list|,
+argument|uint32_t inc
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|__stdcall
@@ -1205,17 +1262,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|void
 name|ntoskrnl_objderef
-parameter_list|(
-comment|/*void * */
+argument_list|(
+name|REGARGS1
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+name|object
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|__stdcall
@@ -1908,56 +1969,49 @@ return|;
 block|}
 end_function
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|uint32_t
 name|ntoskrnl_iofcalldriver
-parameter_list|(
-comment|/*dobj, irp*/
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS2
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|dobj
-decl_stmt|;
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|irp
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (dobj), "=d" (irp));
+argument_list|)
+argument_list|)
+block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|void
 name|ntoskrnl_iofcompletereq
-parameter_list|(
-comment|/*irp, prioboost*/
-parameter_list|)
+argument_list|(
+name|REGARGS2
+argument_list|(
+argument|void *irp
+argument_list|,
+argument|uint8_t prioboost
+argument_list|)
+argument_list|)
 block|{
-name|void
-modifier|*
-name|irp
-decl_stmt|;
-name|uint8_t
-name|prioboost
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (irp), "=d" (prioboost));
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -4527,35 +4581,32 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: the interlocked slist push and pop routines are  * declared to be _fastcall in Windows. gcc 3.4 is supposed  * to have support for this calling convention, however we  * don't have that version available yet, so we kludge things  * up using some inline assembly.  */
+comment|/*  * Note: the interlocked slist push and pop routines are  * declared to be _fastcall in Windows. gcc 3.4 is supposed  * to have support for this calling convention, however we  * don't have that version available yet, so we kludge things  * up using __regparm__(3) and some argument shuffling.  */
 end_comment
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist
-parameter_list|(
-comment|/*head, entry*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS2
+argument_list|(
 name|slist_header
-modifier|*
+operator|*
 name|head
-decl_stmt|;
+argument_list|,
 name|slist_entry
-modifier|*
+operator|*
 name|entry
-decl_stmt|;
+argument_list|)
+argument_list|)
+block|{
 name|slist_entry
 modifier|*
 name|oldhead
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (head), "=d" (entry));
 name|oldhead
 operator|=
 operator|(
@@ -4580,30 +4631,27 @@ name|oldhead
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist
-parameter_list|(
-comment|/*head*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS1
+argument_list|(
 name|slist_header
-modifier|*
+operator|*
 name|head
-decl_stmt|;
+argument_list|)
+argument_list|)
+block|{
 name|slist_entry
 modifier|*
 name|first
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (head));
 name|first
 operator|=
 operator|(
@@ -4626,31 +4674,31 @@ name|first
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist_ex
-parameter_list|(
-comment|/*head, entry,*/
-name|lock
-parameter_list|)
-name|kspin_lock
-modifier|*
-name|lock
-decl_stmt|;
-block|{
+argument_list|(
+name|REGARGS2
+argument_list|(
 name|slist_header
-modifier|*
+operator|*
 name|head
-decl_stmt|;
+argument_list|,
 name|slist_entry
-modifier|*
+operator|*
 name|entry
-decl_stmt|;
+argument_list|)
+argument_list|,
+name|kspin_lock
+operator|*
+name|lock
+argument_list|)
+block|{
 name|slist_entry
 modifier|*
 name|oldhead
@@ -4658,9 +4706,6 @@ decl_stmt|;
 name|uint8_t
 name|irql
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (head), "=d" (entry));
 name|irql
 operator|=
 name|FASTCALL2
@@ -4696,27 +4741,27 @@ name|oldhead
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist_ex
-parameter_list|(
-comment|/*head, lock*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS2
+argument_list|(
 name|slist_header
-modifier|*
+operator|*
 name|head
-decl_stmt|;
+argument_list|,
 name|kspin_lock
-modifier|*
+operator|*
 name|lock
-decl_stmt|;
+argument_list|)
+argument_list|)
+block|{
 name|slist_entry
 modifier|*
 name|first
@@ -4724,9 +4769,6 @@ decl_stmt|;
 name|uint8_t
 name|irql
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (head), "=d" (lock));
 name|irql
 operator|=
 name|FASTCALL2
@@ -4760,24 +4802,21 @@ name|first
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 name|void
 name|ntoskrnl_lock_dpc
-parameter_list|(
-comment|/*lock*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS1
+argument_list|(
 name|kspin_lock
-modifier|*
+operator|*
 name|lock
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (lock));
+argument_list|)
+argument_list|)
+block|{
 while|while
 condition|(
 name|atomic_cmpset_acq_int
@@ -4800,24 +4839,21 @@ comment|/* sit and spin */
 empty_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 name|void
 name|ntoskrnl_unlock_dpc
-parameter_list|(
-comment|/*lock*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS1
+argument_list|(
 name|kspin_lock
-modifier|*
+operator|*
 name|lock
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (lock));
+argument_list|)
+argument_list|)
+block|{
 name|atomic_store_rel_int
 argument_list|(
 operator|(
@@ -4832,26 +4868,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|uint32_t
 name|ntoskrnl_interlock_inc
-parameter_list|(
-comment|/*addend*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS1
+argument_list|(
 specifier|volatile
 name|uint32_t
-modifier|*
+operator|*
 name|addend
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (addend));
+argument_list|)
+argument_list|)
+block|{
 name|atomic_add_long
 argument_list|(
 operator|(
@@ -4871,26 +4904,23 @@ name|addend
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|uint32_t
 name|ntoskrnl_interlock_dec
-parameter_list|(
-comment|/*addend*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS1
+argument_list|(
 specifier|volatile
 name|uint32_t
-modifier|*
+operator|*
 name|addend
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (addend));
+argument_list|)
+argument_list|)
+block|{
 name|atomic_subtract_long
 argument_list|(
 operator|(
@@ -4910,30 +4940,25 @@ name|addend
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|void
 name|ntoskrnl_interlock_addstat
-parameter_list|(
-comment|/*addend, inc*/
-parameter_list|)
+argument_list|(
+name|REGARGS2
+argument_list|(
+argument|uint64_t *addend
+argument_list|,
+argument|uint32_t inc
+argument_list|)
+argument_list|)
 block|{
-name|uint64_t
-modifier|*
-name|addend
-decl_stmt|;
-name|uint32_t
-name|inc
-decl_stmt|;
 name|uint8_t
 name|irql
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (addend), "=d" (inc));
 name|irql
 operator|=
 name|FASTCALL2
@@ -4963,7 +4988,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
@@ -6704,27 +6729,24 @@ return|;
 block|}
 end_function
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|static
 name|void
 name|ntoskrnl_objderef
-parameter_list|(
-comment|/*object*/
+argument_list|(
+name|REGARGS1
+argument_list|(
 name|void
-parameter_list|)
-block|{
-name|void
-modifier|*
+operator|*
 name|object
-decl_stmt|;
+argument_list|)
+argument_list|)
+block|{
 name|nt_objref
 modifier|*
 name|nr
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (object));
 name|nr
 operator|=
 name|object
@@ -6748,7 +6770,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|__stdcall

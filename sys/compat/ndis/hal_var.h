@@ -67,54 +67,65 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|__BEGIN_DECLS
-name|__stdcall
+name|__fastcall
 specifier|extern
 name|uint8_t
 name|hal_lock
-parameter_list|(
-comment|/*kspin_lock * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+name|kspin_lock
+operator|*
+name|lock
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
-specifier|extern
+begin_decl_stmt
+name|__fastcall
 name|void
 name|hal_unlock
-parameter_list|(
-comment|/*kspin_lock *, uint8_t*/
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS2
+argument_list|(
+argument|kspin_lock *lock
+argument_list|,
+argument|uint8_t newirql
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|extern
 name|uint8_t
 name|hal_raise_irql
-parameter_list|(
-comment|/*uint8_t*/
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+argument|uint8_t irql
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|extern
 name|void
 name|hal_lower_irql
-parameter_list|(
-comment|/*uint8_t*/
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+argument|uint8_t oldirql
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|__stdcall

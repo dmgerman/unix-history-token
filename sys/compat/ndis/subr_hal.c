@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/ndis/hal_var.h>
+file|<compat/ndis/ntoskrnl_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ndis/ntoskrnl_var.h>
+file|<compat/ndis/hal_var.h>
 end_include
 
 begin_define
@@ -851,25 +851,22 @@ begin_comment
 comment|/*  * The spinlock implementation in Windows differs from that of FreeBSD.  * The basic operation of spinlocks involves two steps: 1) spin in a  * tight loop while trying to acquire a lock, 2) after obtaining the  * lock, disable preemption. (Note that on uniprocessor systems, you're  * allowed to skip the first step and just lock out pre-emption, since  * it's not possible for you to be in contention with another running  * thread.) Later, you release the lock then re-enable preemption.  * The difference between Windows and FreeBSD lies in how preemption  * is disabled. In FreeBSD, it's done using critical_enter(), which on  * the x86 arch translates to a cli instruction. This masks off all  * interrupts, and effectively stops the scheduler from ever running  * so _nothing_ can execute except the current thread. In Windows,  * preemption is disabled by raising the processor IRQL to DISPATCH_LEVEL.  * This stops other threads from running, but does _not_ block device  * interrupts. This means ISRs can still run, and they can make other  * threads runable, but those other threads won't be able to execute  * until the current thread lowers the IRQL to something less than  * DISPATCH_LEVEL.  *  * In FreeBSD, ISRs run in interrupt threads, so to duplicate the  * Windows notion of IRQLs, we use the following rules:  *  * PASSIVE_LEVEL == normal kernel thread priority  * DISPATCH_LEVEL == lowest interrupt thread priotity (PI_SOFT)  * DEVICE_LEVEL == highest interrupt thread priority  (PI_REALTIME)  * HIGH_LEVEL == interrupts disabled (critical_enter())  *  * Be aware that, at least on the x86 arch, the Windows spinlock  * functions are divided up in peculiar ways. The actual spinlock  * functions are KfAcquireSpinLock() and KfReleaseSpinLock(), and  * they live in HAL.dll. Meanwhile, KeInitializeSpinLock(),  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * live in ntoskrnl.exe. Most Windows source code will call  * KeAcquireSpinLock() and KeReleaseSpinLock(), but these are just  * macros that call KfAcquireSpinLock() and KfReleaseSpinLock().  * KefAcquireSpinLockAtDpcLevel() and KefReleaseSpinLockFromDpcLevel()  * perform the lock aquisition/release functions without doing the  * IRQL manipulation, and are used when one is already running at  * DISPATCH_LEVEL. Make sense? Good.  *  * According to the Microsoft documentation, any thread that calls  * KeAcquireSpinLock() must be running at IRQL<= DISPATCH_LEVEL. If  * we detect someone trying to acquire a spinlock from DEVICE_LEVEL  * or HIGH_LEVEL, we panic.  */
 end_comment
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 name|uint8_t
 name|hal_lock
-parameter_list|(
-comment|/*lock*/
-name|void
-parameter_list|)
-block|{
+argument_list|(
+name|REGARGS1
+argument_list|(
 name|kspin_lock
-modifier|*
+operator|*
 name|lock
-decl_stmt|;
+argument_list|)
+argument_list|)
+block|{
 name|uint8_t
 name|oldirql
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (lock));
 comment|/* I am so going to hell for this. */
 if|if
 condition|(
@@ -905,27 +902,21 @@ name|oldirql
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 name|void
 name|hal_unlock
-parameter_list|(
-comment|/*lock, newirql*/
-name|void
-parameter_list|)
+argument_list|(
+name|REGARGS2
+argument_list|(
+argument|kspin_lock *lock
+argument_list|,
+argument|uint8_t newirql
+argument_list|)
+argument_list|)
 block|{
-name|kspin_lock
-modifier|*
-name|lock
-decl_stmt|;
-name|uint8_t
-name|newirql
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (lock), "=d" (newirql));
 name|FASTCALL1
 argument_list|(
 name|ntoskrnl_unlock_dpc
@@ -942,7 +933,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|__stdcall
@@ -1007,24 +998,20 @@ return|;
 block|}
 end_function
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 name|uint8_t
 name|hal_raise_irql
-parameter_list|(
-comment|/*irql*/
-name|void
-parameter_list|)
+argument_list|(
+name|REGARGS1
+argument_list|(
+argument|uint8_t irql
+argument_list|)
+argument_list|)
 block|{
-name|uint8_t
-name|irql
-decl_stmt|;
 name|uint8_t
 name|oldirql
 decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (irql));
 if|if
 condition|(
 name|irql
@@ -1086,23 +1073,19 @@ name|oldirql
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 name|void
 name|hal_lower_irql
-parameter_list|(
-comment|/*oldirql*/
-name|void
-parameter_list|)
+argument_list|(
+name|REGARGS1
+argument_list|(
+argument|uint8_t oldirql
+argument_list|)
+argument_list|)
 block|{
-name|uint8_t
-name|oldirql
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("" : "=c" (oldirql));
 if|if
 condition|(
 name|oldirql
@@ -1149,7 +1132,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|__stdcall

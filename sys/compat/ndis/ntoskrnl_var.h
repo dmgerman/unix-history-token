@@ -1746,29 +1746,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|extern
 name|void
 name|ntoskrnl_lock_dpc
-parameter_list|(
-comment|/*kspin_lock * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+name|kspin_lock
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|__stdcall
+begin_decl_stmt
+name|__fastcall
 specifier|extern
 name|void
 name|ntoskrnl_unlock_dpc
-parameter_list|(
-comment|/*kspin_lock * */
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|REGARGS1
+argument_list|(
+name|kspin_lock
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * On the Windows x86 arch, KeAcquireSpinLock() and KeReleaseSpinLock()  * routines live in the HAL. We try to imitate this behavior.  */
