@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savenl.c 1.2 %G%"
+literal|"@(#)savenl.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,6 +1066,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|OBJLINE
+name|info
+decl_stmt|;
 if|if
 condition|(
 name|line
@@ -1080,22 +1083,36 @@ operator|++
 expr_stmt|;
 name|nlsize
 operator|+=
-literal|2
-expr_stmt|;
-name|putc
+sizeof|sizeof
 argument_list|(
+name|OBJLINE
+argument_list|)
+expr_stmt|;
+name|info
+operator|.
+name|separate
+operator|.
+name|lineincr
+operator|=
 name|line
 operator|-
 name|oline
-argument_list|,
-name|linesfp
-argument_list|)
 expr_stmt|;
-name|putc
-argument_list|(
+name|info
+operator|.
+name|separate
+operator|.
+name|addrincr
+operator|=
 name|lc
 operator|-
 name|olc
+expr_stmt|;
+name|putw
+argument_list|(
+name|info
+operator|.
+name|together
 argument_list|,
 name|linesfp
 argument_list|)
