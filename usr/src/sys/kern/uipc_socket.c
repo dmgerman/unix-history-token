@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.3	84/04/24	*/
+comment|/*	uipc_socket.c	6.4	84/04/30	*/
 end_comment
 
 begin_include
@@ -2025,6 +2025,11 @@ name|so_options
 operator||=
 name|SO_DONTROUTE
 expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -2056,6 +2061,11 @@ operator|)
 name|nam
 argument_list|,
 name|rights
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
