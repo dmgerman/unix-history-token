@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.23	81/03/06	*/
+comment|/*	hp.c	4.24	81/03/07	*/
 end_comment
 
 begin_include
@@ -78,7 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mba.h"
+file|"../h/mbareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mbavar.h"
 end_include
 
 begin_include
@@ -356,7 +362,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|hpinfo
 index|[
@@ -367,7 +373,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|hpdkinit
+name|hpattach
 argument_list|()
 decl_stmt|,
 name|hpustart
@@ -387,7 +393,9 @@ name|mba_driver
 name|hpdriver
 init|=
 block|{
-name|hpdkinit
+name|hpattach
+block|,
+literal|0
 block|,
 name|hpustart
 block|,
@@ -398,6 +406,10 @@ block|,
 literal|0
 block|,
 name|hptypes
+block|,
+literal|"hp"
+block|,
+literal|0
 block|,
 name|hpinfo
 block|}
@@ -578,16 +590,22 @@ name|hpseek
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
-name|hpdkinit
+name|hpattach
 argument_list|(
 argument|mi
+argument_list|,
+argument|slave
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -656,7 +674,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -863,7 +881,7 @@ name|mi
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -1179,7 +1197,7 @@ name|mi
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -1358,7 +1376,7 @@ name|mbasr
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -1847,7 +1865,7 @@ name|rm80sse
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -2388,7 +2406,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -2465,7 +2483,7 @@ name|unit
 index|]
 argument_list|,
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 argument_list|)
 expr_stmt|;
