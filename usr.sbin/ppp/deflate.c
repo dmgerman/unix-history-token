@@ -139,12 +139,8 @@ begin_define
 define|#
 directive|define
 name|DEFLATE_CHUNK_LEN
-value|1600
+value|(1536 - sizeof(struct mbuf))
 end_define
-
-begin_comment
-comment|/* Allocate mbufs this size */
-end_comment
 
 begin_function
 specifier|static
