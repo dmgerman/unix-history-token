@@ -1777,7 +1777,9 @@ name|kbd_wait
 argument_list|()
 expr_stmt|;
 return|return
-literal|1
+operator|(
+name|IO_KBDSIZE
+operator|)
 return|;
 block|}
 end_function
