@@ -1206,6 +1206,10 @@ name|char
 name|line
 index|[
 literal|10240
+operator|+
+literal|2048
+operator|*
+literal|7
 index|]
 decl_stmt|;
 name|char
@@ -1491,6 +1495,8 @@ decl_stmt|,
 name|deps
 index|[
 literal|2048
+operator|*
+literal|8
 index|]
 decl_stmt|;
 name|int
@@ -3586,6 +3592,8 @@ name|char
 name|t
 index|[
 literal|2048
+operator|*
+literal|8
 index|]
 decl_stmt|,
 modifier|*
@@ -3824,6 +3832,8 @@ name|char
 name|depends
 index|[
 literal|1024
+operator|*
+literal|16
 index|]
 decl_stmt|,
 modifier|*
