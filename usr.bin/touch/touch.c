@@ -854,7 +854,7 @@ name|t
 operator|->
 name|tm_year
 operator|*=
-literal|1000
+literal|100
 expr_stmt|;
 name|yearset
 operator|=
