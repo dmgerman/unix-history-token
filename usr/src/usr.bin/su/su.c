@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.9 (Berkeley) %G%"
+literal|"@(#)su.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,7 +315,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: su [-fl] [login]\n"
+literal|"usage: su [-flm] [login]\n"
 argument_list|)
 expr_stmt|;
 name|exit
