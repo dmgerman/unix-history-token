@@ -16,7 +16,7 @@ comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translato
 end_comment
 
 begin_comment
-comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - EAI_RESNULL support  * - AI_ADDRCONFIG support is supplied  * - EDNS0 support is not available due to resolver differences  * - some of FreeBSD style (#define tabify and others)  * - classful IPv4 numeric (127.1) is allowed.  */
+comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - AI_ADDRCONFIG support is supplied  * - EDNS0 support is not available due to resolver differences  * - some of FreeBSD style (#define tabify and others)  * - classful IPv4 numeric (127.1) is allowed.  */
 end_comment
 
 begin_include
@@ -1347,14 +1347,6 @@ comment|/* EAI_BADHINTS	  */
 literal|"Resolved protocol is unknown"
 block|,
 comment|/* EAI_PROTOCOL   */
-ifdef|#
-directive|ifdef
-name|EAI_RESNULL
-literal|"Argument res is NULL"
-block|,
-comment|/* EAI_RESNULL	  */
-endif|#
-directive|endif
 literal|"Unknown error"
 block|,
 comment|/* EAI_MAX        */
@@ -1783,21 +1775,6 @@ condition|)
 return|return
 name|EAI_NONAME
 return|;
-ifdef|#
-directive|ifdef
-name|EAI_RESNULL
-if|if
-condition|(
-name|res
-operator|==
-name|NULL
-condition|)
-return|return
-name|EAI_RESNULL
-return|;
-comment|/* xxx */
-endif|#
-directive|endif
 if|if
 condition|(
 name|hints
