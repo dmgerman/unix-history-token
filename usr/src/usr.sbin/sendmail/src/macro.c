@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	3.1	%G%"
+literal|"@(#)macro.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,10 @@ condition|(
 name|q
 operator|==
 name|NULL
+operator|&&
+name|c
+operator|!=
+literal|'$'
 condition|)
 continue|continue;
 block|}
