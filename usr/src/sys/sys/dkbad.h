@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dkbad.h	4.2	81/05/09	*/
+comment|/*	dkbad.h	4.3	81/05/10	*/
 end_comment
 
 begin_comment
-comment|/*  * Definitions needed to perform bad block  * revectoring ala DEC STD 144.  *  * The bad block information is located in the  * first 5 even numbered sectors of the last  * track of the disk pack.  There are five  * identical copies of the information, described  * by the dkbad structure.  *  * Replacement blocks are allocated starting with  * the first block before the bad block information  * and working backwards towards the beginning of  * the disk.  A maximum of 126 bad blocks are supported.  * The position of the bad block in the bad block table  * determines which replacement block it corresponds to.  *  * The bad block information and replacement blocks  * are conventionally only accessable through the  * 'c' file system partition of the disk.  If that  * partition is used for a file system, the user is  * responsible for making sure that it does not overlap  * the bad block information or any replacement blocks.  */
+comment|/*  * Definitions needed to perform bad sector  * revectoring ala DEC STD 144.  *  * The bad sector information is located in the  * first 5 even numbered sectors of the last  * track of the disk pack.  There are five  * identical copies of the information, described  * by the dkbad structure.  *  * Replacement sectors are allocated starting with  * the first sector before the bad sector information  * and working backwards towards the beginning of  * the disk.  A maximum of 126 bad sectors are supported.  * The position of the bad sector in the bad sector table  * determines which replacement sector it corresponds to.  *  * The bad sector information and replacement sectors  * are conventionally only accessible through the  * 'c' file system partition of the disk.  If that  * partition is used for a file system, the user is  * responsible for making sure that it does not overlap  * the bad sector information or any replacement sector.s  */
 end_comment
 
 begin_struct
@@ -16,18 +16,9 @@ name|bt_csn
 decl_stmt|;
 comment|/* cartridge serial number */
 name|u_short
-name|bt_magic
+name|bt_mbz
 decl_stmt|;
-comment|/* magic number for sanity check */
-ifdef|#
-directive|ifdef
-name|notdef
-define|#
-directive|define
-name|BADMAGIC
-value|0122155
-endif|#
-directive|endif
+comment|/* unused; should be 0 */
 name|u_short
 name|bt_flag
 decl_stmt|;
@@ -38,7 +29,7 @@ block|{
 name|u_short
 name|bt_cyl
 decl_stmt|;
-comment|/* cylinder number of bad block */
+comment|/* cylinder number of bad sector */
 name|u_short
 name|bt_trksec
 decl_stmt|;
