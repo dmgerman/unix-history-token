@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.25 (Berkeley) %G%"
+literal|"@(#)glob.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1869,6 +1869,22 @@ name|match
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|vl
+operator|||
+operator|!
+name|vl
+index|[
+literal|0
+index|]
+condition|)
+return|return
+operator|(
+name|vl
+operator|)
+return|;
 name|globv
 operator|.
 name|gl_offs
