@@ -3059,6 +3059,7 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	     * XXX: We just trust they come in right order ?? 	     */
 name|segs
 index|[
 name|nsegs
@@ -3116,6 +3117,26 @@ block|{
 name|link_elf_error
 argument_list|(
 literal|"Object is not dynamically-linked"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|nsegs
+operator|!=
+literal|2
+condition|)
+block|{
+name|link_elf_error
+argument_list|(
+literal|"Too few sections"
 argument_list|)
 expr_stmt|;
 name|error
