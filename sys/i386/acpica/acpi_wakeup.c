@@ -921,6 +921,9 @@ block|}
 block|}
 name|out
 label|:
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|pm
@@ -935,6 +938,9 @@ name|acpi_wakephys
 operator|+
 name|PAGE_SIZE
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
