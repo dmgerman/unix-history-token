@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyid.c 1.3 %G%"
+literal|"@(#)yyid.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,7 +774,7 @@ name|yyisvar
 argument_list|(
 name|p
 argument_list|,
-name|class
+name|varclass
 argument_list|)
 specifier|register
 expr|struct
@@ -786,7 +786,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|class
+name|varclass
 decl_stmt|;
 end_decl_stmt
 
@@ -820,7 +820,7 @@ name|FFUNC
 case|:
 return|return
 operator|(
-name|class
+name|varclass
 operator|==
 name|NIL
 operator|||
@@ -837,7 +837,7 @@ name|type
 operator|->
 name|class
 operator|==
-name|class
+name|varclass
 operator|)
 operator|)
 return|;
@@ -849,7 +849,7 @@ name|FPROC
 case|:
 return|return
 operator|(
-name|class
+name|varclass
 operator|==
 name|NIL
 operator|)
