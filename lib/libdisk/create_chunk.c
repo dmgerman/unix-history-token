@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.3 1995/04/29 07:21:10 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.4 1995/04/30 06:09:25 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -752,17 +752,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|;
-name|u_long
-name|l1
-decl_stmt|,
-name|l2
-decl_stmt|,
-name|end
-init|=
-name|offset
-operator|+
-name|size
 decl_stmt|;
 name|i
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.2 1995/04/30 06:09:29 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.3 1995/04/30 07:30:45 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -393,6 +393,19 @@ name|c1
 operator|->
 name|offset
 expr_stmt|;
+name|dl
+operator|->
+name|d_partitions
+index|[
+name|j
+index|]
+operator|.
+name|p_fstype
+operator|=
+name|c2
+operator|->
+name|subtype
+expr_stmt|;
 block|}
 name|dl
 operator|->
@@ -410,6 +423,12 @@ name|c1
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+name|dl
+operator|->
+name|d_secsize
+operator|=
+literal|512
 expr_stmt|;
 name|dl
 operator|->
@@ -468,6 +487,18 @@ else|:
 name|new
 operator|->
 name|bios_sect
+expr_stmt|;
+name|dl
+operator|->
+name|d_secpercyl
+operator|=
+name|dl
+operator|->
+name|d_ntracks
+operator|*
+name|dl
+operator|->
+name|d_nsectors
 expr_stmt|;
 name|dl
 operator|->
@@ -608,11 +639,6 @@ block|{
 name|printf
 argument_list|(
 literal|"--> Write_Extended()\n"
-argument_list|)
-expr_stmt|;
-name|Print_Chunk
-argument_list|(
-name|c1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1204,6 +1230,8 @@ name|c1
 operator|->
 name|subtype
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 block|}
