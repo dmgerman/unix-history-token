@@ -5458,17 +5458,13 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|(
 name|tcp_seq_genscheme
 operator|>
 literal|1
-operator|)
 operator|||
-operator|(
 name|tcp_seq_genscheme
 operator|<
 literal|0
-operator|)
 condition|)
 name|tcp_seq_genscheme
 operator|=
@@ -5482,7 +5478,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 			 * Random positive increments 			 */
+comment|/* Random positive increments */
 name|tcp_iss
 operator|+=
 name|TCP_ISSINCR
@@ -5495,11 +5491,17 @@ return|;
 case|case
 literal|1
 case|:
-comment|/* 			 * OpenBSD randomized scheme 			 */
+comment|/* OpenBSD randomized scheme */
 return|return
 name|tcp_rndiss_next
 argument_list|()
 return|;
+default|default:
+name|panic
+argument_list|(
+literal|"cannot happen"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
