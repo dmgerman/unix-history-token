@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prompt.c	5.2 (Berkeley) %G%"
+literal|"@(#)prompt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +295,9 @@ name|POSITION
 name|pos
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|mp
@@ -328,6 +331,9 @@ name|int
 name|n
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|mp
