@@ -1071,6 +1071,9 @@ comment|/* For 82544 PCIX Workaround */
 name|boolean_t
 name|pcix_82544
 decl_stmt|;
+name|boolean_t
+name|in_detach
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DBG_STATS

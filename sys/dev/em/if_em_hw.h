@@ -1558,18 +1558,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int32_t
-name|em_igp_ttl_workaround
-parameter_list|(
-name|struct
-name|em_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -5604,9 +5592,6 @@ name|uint16_t
 name|phy_spd_default
 decl_stmt|;
 name|uint16_t
-name|dsp_reset_counter
-decl_stmt|;
-name|uint16_t
 name|autoneg_advertised
 decl_stmt|;
 name|uint16_t
@@ -5683,9 +5668,6 @@ name|disable_polarity_correction
 decl_stmt|;
 name|boolean_t
 name|speed_downgraded
-decl_stmt|;
-name|boolean_t
-name|ttl_wa_activation
 decl_stmt|;
 name|em_dsp_config
 name|dsp_config_state
@@ -13392,16 +13374,6 @@ end_define
 begin_comment
 comment|/* 10Mbps Full& Half speeds*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TANAX_TTL_WA_RESET
-parameter_list|(
-name|hw
-parameter_list|)
-value|{                                       \     if((hw)->dsp_reset_counter) {                                      \         em_write_phy_reg((hw), IGP01E1000_PHY_DSP_RESET, 0x0000);   \         (hw)->dsp_reset_counter = 0;                                   \     }                                                                  \ }
-end_define
 
 begin_endif
 endif|#
