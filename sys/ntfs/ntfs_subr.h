@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ntfs_subr.h,v 1.2 1999/02/19 12:31:02 semenu Exp $  */
+comment|/*	$NetBSD: ntfs_subr.h,v 1.2 1999/05/06 15:43:20 christos Exp $	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1998, 1999 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ntfs_subr.h,v 1.4 1999/05/12 09:43:02 semenu Exp $  */
 end_comment
 
 begin_define
@@ -21,11 +25,12 @@ begin_struct
 struct|struct
 name|ntvattr
 block|{
-name|struct
-name|ntvattr
-modifier|*
-name|va_nextp
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|ntvattr
+argument_list|)
+name|va_list
+expr_stmt|;
 name|u_int32_t
 name|va_vflag
 decl_stmt|;
@@ -515,11 +520,13 @@ expr|struct
 name|ntfsmount
 operator|*
 operator|,
+specifier|const
 name|wchar
 operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -539,11 +546,13 @@ expr|struct
 name|ntfsmount
 operator|*
 operator|,
+specifier|const
 name|wchar
 operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -665,7 +674,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ntfs_ntlookup
+name|ntfs_ntlookupfile
 name|__P
 argument_list|(
 operator|(
@@ -754,7 +763,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ntfs_ntget
+name|ntfs_ntlookup
 name|__P
 argument_list|(
 operator|(
@@ -774,8 +783,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|ntfs_ntget
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ntnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|ntfs_ntrele
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ntnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ntfs_ntput
 name|__P
 argument_list|(
 operator|(
@@ -813,6 +850,7 @@ name|struct
 name|ntfsmount
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
