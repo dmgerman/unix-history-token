@@ -496,16 +496,6 @@ block|,
 block|{
 name|JUST_COPY
 block|,
-literal|"modems"
-block|,
-name|TRUE
-block|,
-name|NULL
-block|}
-block|,
-block|{
-name|JUST_COPY
-block|,
 literal|"motd"
 block|,
 name|TRUE
