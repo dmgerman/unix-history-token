@@ -226,6 +226,17 @@ name|PTE_RO
 value|PTE_BR
 end_define
 
+begin_define
+define|#
+directive|define
+name|PTE_EXEC
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* pseudo bit in attrs; page is exec */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
