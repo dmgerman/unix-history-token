@@ -2079,7 +2079,7 @@ end_endif
 
 begin_function
 name|void
-name|dialog_clear
+name|dialog_clear_norefresh
 parameter_list|(
 name|void
 parameter_list|)
@@ -2099,6 +2099,19 @@ name|touchwin
 argument_list|(
 name|stdscr
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dialog_clear
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
 expr_stmt|;
 name|refresh
 argument_list|()
