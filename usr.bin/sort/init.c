@@ -1751,7 +1751,7 @@ operator|>=
 literal|'A'
 operator|&&
 name|REC_D
-operator|<
+operator|<=
 literal|'Z'
 operator|&&
 name|i
@@ -1840,6 +1840,18 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|isalnum
+argument_list|(
+name|i
+argument_list|)
+operator|||
+operator|(
+name|isspace
+argument_list|(
+name|i
+argument_list|)
+operator|&&
+operator|(
 name|i
 operator|==
 literal|'\n'
@@ -1848,14 +1860,12 @@ name|i
 operator|==
 literal|'\t'
 operator|||
-name|i
-operator|==
-literal|' '
-operator|||
-name|isalnum
+name|isprint
 argument_list|(
 name|i
 argument_list|)
+operator|)
+operator|)
 condition|)
 name|dtable
 index|[
