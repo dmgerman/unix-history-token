@@ -1718,6 +1718,35 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * NetBSD>= 1.3H uses vaddr_t instead of vm_offset_t  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|103080000
+end_if
+
+begin_typedef
+typedef|typedef
+name|vaddr_t
+name|vm_offset_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * BrookTree 848  info structure, one per bt848 card installed.  */
 end_comment
 
@@ -1763,6 +1792,10 @@ name|device
 name|bktr_dev
 decl_stmt|;
 comment|/* base device */
+name|bus_dma_tag_t
+name|dmat
+decl_stmt|;
+comment|/* DMA tag */
 name|bus_space_tag_t
 name|memt
 decl_stmt|;
@@ -1792,10 +1825,23 @@ decl_stmt|;
 name|bus_dmamap_t
 name|dm_vbibuffer
 decl_stmt|;
+if|#
+directive|if
+name|__NetBSD_Version__
+operator|>=
+literal|103080000
+name|paddr_t
+name|phys_base
+decl_stmt|;
+comment|/* Bt848 register physical address */
+else|#
+directive|else
 name|vm_offset_t
 name|phys_base
 decl_stmt|;
 comment|/* Bt848 register physical address */
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|#
