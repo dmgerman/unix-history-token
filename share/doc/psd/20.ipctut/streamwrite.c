@@ -24,7 +24,7 @@ operator|:
 name|unknown
 name|host
 operator|\
-name|en
+name|n
 literal|", argv[1]); 		exit(2); 	} 	bcopy(hp->h_addr,&server.sin_addr, hp->h_length); 	server.sin_port = htons(atoi(argv[2]));  	if (connect(sock,&server, sizeof(server))< 0) { 		perror("
 name|connecting
 name|stream
