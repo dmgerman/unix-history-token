@@ -1228,6 +1228,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Check for some impossible frequencies that some systems 		 * use to indicate they don't actually support Px states. 		 */
 name|p
 operator|=
 operator|&
@@ -1240,6 +1241,22 @@ index|]
 operator|.
 name|core_freq
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|9999
+operator|||
+operator|*
+name|p
+operator|==
+literal|0xffff
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* Parse the rest of the package into the struct. */
 for|for
 control|(
 name|j
