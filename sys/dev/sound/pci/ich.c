@@ -2978,6 +2978,19 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+literal|0x01b110de
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Nvidia nForce AC97 controller"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 return|return
 name|ENXIO
