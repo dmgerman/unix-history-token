@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.53 1999/04/06 23:05:57 brian Exp $"
+literal|"$Id: ftpd.c,v 1.54 1999/04/07 08:27:40 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2051,6 +2051,7 @@ name|fd
 operator|<
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|errno
@@ -2076,6 +2077,7 @@ argument_list|,
 name|pid_file
 argument_list|)
 expr_stmt|;
+block|}
 name|snprintf
 argument_list|(
 name|buf

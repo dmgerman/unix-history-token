@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rlogind.c,v 1.21 1999/04/06 23:05:58 brian Exp $"
+literal|"$Id: rlogind.c,v 1.22 1999/04/07 08:27:42 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1940,15 +1940,15 @@ decl_stmt|,
 modifier|*
 name|fbp
 decl_stmt|;
-specifier|register
+name|int
 name|pcc
-operator|=
+init|=
 literal|0
-operator|,
+decl_stmt|,
 name|fcc
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|int
 name|cc
 decl_stmt|,
@@ -2101,6 +2101,7 @@ name|pcc
 operator|>=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|pcc
@@ -2129,6 +2130,7 @@ operator|&
 name|ibits
 argument_list|)
 expr_stmt|;
+block|}
 name|FD_SET
 argument_list|(
 name|p

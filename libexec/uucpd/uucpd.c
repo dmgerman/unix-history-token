@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uucpd.c,v 1.17 1999/04/06 23:06:00 brian Exp $"
+literal|"$Id: uucpd.c,v 1.18 1999/04/07 08:27:45 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,7 +389,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int
