@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390 based ethernet  * 
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.9  93/06/23  03:48:14  davidg  * fixed minor typo introduced when cleaning up probe routine  *   * Revision 1.8  93/06/23  03:37:19  davidg  * cleaned up/added some comments. Also improved readability of a part of  * the probe routine.  *   * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
+comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.10  93/06/25  19:23:19  davidg  * fixed bug that caused erroneous 'Invalid irq configuration' message when  * no board is present (during autoconfiguration).  *   * Revision 1.9  93/06/23  03:48:14  davidg  * fixed minor typo introduced when cleaning up probe routine  *   * Revision 1.8  93/06/23  03:37:19  davidg  * cleaned up/added some comments. Also improved readability of a part of  * the probe routine.  *   * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
 end_comment
 
 begin_include
@@ -1569,6 +1569,12 @@ literal|0
 operator|)
 return|;
 break|break;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Verify that the kernel shared memory address matches the 	 *	board configured address. 	 */
 switch|switch
@@ -1660,6 +1666,12 @@ literal|0
 operator|)
 return|;
 break|break;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Reset NIC and ASIC 	 */
 name|outb
