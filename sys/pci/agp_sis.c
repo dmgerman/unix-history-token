@@ -23,23 +23,6 @@ directive|include
 file|"opt_bus.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"opt_agp.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -367,42 +350,8 @@ operator|(
 literal|"SiS 760 host to AGP bridge"
 operator|)
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|AGP_AMD64_GART
-argument_list|)
-case|case
-literal|0x10221039
-case|:
-comment|/* AMD64 */
-return|return
-name|NULL
-return|;
-endif|#
-directive|endif
 block|}
 empty_stmt|;
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x1039
-condition|)
-return|return
-operator|(
-literal|"SIS Generic host to PCI bridge"
-operator|)
-return|;
 return|return
 name|NULL
 return|;
