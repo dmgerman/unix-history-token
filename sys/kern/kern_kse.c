@@ -5683,18 +5683,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-name|mtx_owned
+name|mtx_assert
 argument_list|(
 operator|&
 name|Giant
-argument_list|)
 argument_list|,
-operator|(
-literal|"dying thread owns giant"
-operator|)
+name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 if|if
