@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.23 (Berkeley) %G%"
+literal|"@(#)fts.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,17 +440,14 @@ operator|=
 name|FTS_ROOTPARENTLEVEL
 expr_stmt|;
 comment|/* Allocate/initialize root(s). */
-name|maxlen
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|root
 operator|=
 name|NULL
 operator|,
+name|maxlen
+operator|=
 name|nitems
 operator|=
 literal|0
@@ -465,6 +462,7 @@ operator|++
 name|nitems
 control|)
 block|{
+comment|/* Don't allow zero-length paths. */
 if|if
 condition|(
 operator|!
@@ -622,7 +620,7 @@ argument_list|,
 name|nitems
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate a dummy pointer and make fts_read think that we've just 	 * finished the node before the root(s); set p->fts_info to FTS_NS 	 * so that everything about the "current" node is ignored. 	 */
+comment|/* 	 * Allocate a dummy pointer and make fts_read think that we've just 	 * finished the node before the root(s); set p->fts_info to FTS_INIT 	 * so that everything about the "current" node is ignored. 	 */
 if|if
 condition|(
 operator|(
@@ -659,9 +657,9 @@ name|fts_cur
 operator|->
 name|fts_info
 operator|=
-name|FTS_NS
+name|FTS_INIT
 expr_stmt|;
-comment|/* Start out with at least 1K+ of path space. */
+comment|/* 	 * Start out with at least 1K+ of path space, but enough, in any 	 * case, to hold the user's paths. 	 */
 if|if
 condition|(
 operator|!
@@ -672,6 +670,8 @@ argument_list|,
 name|MAX
 argument_list|(
 name|maxlen
+operator|+
+literal|1
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -1088,7 +1088,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Special case a root of "/" so that slashes aren't appended causing  * paths to be written as "//foo".  */
+comment|/*  * Special case a root of "/" so that slashes aren't appended which would  * cause paths to be written as "//foo".  */
 end_comment
 
 begin_define
@@ -1329,7 +1329,7 @@ name|p
 operator|->
 name|fts_parent
 operator|->
-name|fts_cderr
+name|fts_errno
 operator|=
 name|errno
 expr_stmt|;
@@ -1688,18 +1688,18 @@ if|if
 condition|(
 name|p
 operator|->
-name|fts_cderr
+name|fts_errno
 condition|)
 block|{
 name|errno
 operator|=
 name|p
 operator|->
-name|fts_cderr
+name|fts_errno
 expr_stmt|;
 name|p
 operator|->
-name|fts_cderr
+name|fts_errno
 operator|=
 literal|0
 expr_stmt|;
@@ -1812,18 +1812,43 @@ name|sp
 operator|->
 name|fts_cur
 expr_stmt|;
-comment|/* 	 * Set errno to 0 so that user can tell the difference between an 	 * error and a directory without entries.  If not a directory being 	 * visited in *pre-order*, or we've already had fatal errors, return 	 * immediately. 	 */
+comment|/* 	 * Errno set to 0 so user can distinguish empty directory from 	 * an error. 	 */
 name|errno
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Fatal errors stop here. */
 if|if
 condition|(
 name|ISSET
 argument_list|(
 name|FTS_STOP
 argument_list|)
-operator|||
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* Return logical hierarchy of user's arguments. */
+if|if
+condition|(
+name|p
+operator|->
+name|fts_info
+operator|==
+name|FTS_INIT
+condition|)
+return|return
+operator|(
+name|p
+operator|->
+name|fts_link
+operator|)
+return|;
+comment|/* If not a directory being visited in pre-order, stop here. */
+if|if
+condition|(
 name|p
 operator|->
 name|fts_info
@@ -2138,7 +2163,7 @@ name|BREAD
 condition|)
 name|cur
 operator|->
-name|fts_cderr
+name|fts_errno
 operator|=
 name|errno
 expr_stmt|;
@@ -2697,10 +2722,23 @@ name|int
 name|follow
 decl_stmt|;
 block|{
+specifier|register
+name|FTSENT
+modifier|*
+name|t
+decl_stmt|;
+specifier|register
+name|dev_t
+name|dev
+decl_stmt|;
+specifier|register
+name|ino_t
+name|ino
+decl_stmt|;
 name|int
 name|saved_errno
 decl_stmt|;
-comment|/* 	 * If doing a logical walk, or application requested FTS_FOLLOW, do 	 * a stat(2).  If that fails, check for a non-existent symlink.  If 	 * fail, return the errno from the stat call. 	 */
+comment|/* 	 * If doing a logical walk, or application requested FTS_FOLLOW, do 	 * a stat(2).  If that fails, check for a non-existent symlink.  If 	 * fail, set the errno from the stat call. 	 */
 if|if
 condition|(
 name|ISSET
@@ -2756,7 +2794,9 @@ name|FTS_SLNONE
 operator|)
 return|;
 block|}
-name|errno
+name|p
+operator|->
+name|fts_errno
 operator|=
 name|saved_errno
 expr_stmt|;
@@ -2797,6 +2837,12 @@ name|fts_statb
 argument_list|)
 condition|)
 block|{
+name|p
+operator|->
+name|fts_errno
+operator|=
+name|errno
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -2830,19 +2876,6 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-specifier|register
-name|FTSENT
-modifier|*
-name|t
-decl_stmt|;
-specifier|register
-name|dev_t
-name|dev
-decl_stmt|;
-specifier|register
-name|ino_t
-name|ino
-decl_stmt|;
 name|dev
 operator|=
 name|p
@@ -3252,7 +3285,7 @@ name|FTS_NOINSTR
 expr_stmt|;
 name|p
 operator|->
-name|fts_cderr
+name|fts_errno
 operator|=
 literal|0
 expr_stmt|;
