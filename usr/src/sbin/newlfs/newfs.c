@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.1 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2371,7 +2371,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newfs [ -fsoptions ] special-device%s\n"
+literal|"usage: newlfs [ -fsoptions ] special-device%s\n"
 argument_list|,
 ifdef|#
 directive|ifdef
