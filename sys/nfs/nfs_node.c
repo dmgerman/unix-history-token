@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_node.c	8.6 (Berkeley) 5/22/95  * $Id: nfs_node.c,v 1.25 1998/05/13 06:10:13 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_node.c	8.6 (Berkeley) 5/22/95  * $Id: nfs_node.c,v 1.26 1998/05/13 07:49:08 peter Exp $  */
 end_comment
 
 begin_include
@@ -81,18 +81,12 @@ directive|include
 file|<nfs/nfsmount.h>
 end_include
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_NFSNODE
-argument_list|,
-literal|"NFS node"
-argument_list|,
-literal|"NFS vnode private part"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+name|vm_zone_t
+name|nfsnode_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 specifier|static
@@ -137,48 +131,32 @@ name|void
 name|nfs_nhinit
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|lint
-if|if
-condition|(
-operator|(
-sizeof|sizeof
+name|nfsnode_zone
+operator|=
+name|zinit
 argument_list|(
-expr|struct
-name|nfsnode
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|&
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nfsnode
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"nfs_nhinit: bad size %d\n"
+literal|"NFSNODE"
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|nfsnode
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* not lint */
 name|nfsnodehashtbl
 operator|=
 name|hashinit
 argument_list|(
 name|desiredvnodes
 argument_list|,
-name|M_NFSNODE
+name|M_NFSHASH
 argument_list|,
 operator|&
 name|nfsnodehash
@@ -476,22 +454,12 @@ name|nfs_node_hash_lock
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
-name|MALLOC
+comment|/* 	 * Allocate before getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if zalloc should block. 	 */
+name|np
+operator|=
+name|zalloc
 argument_list|(
-name|np
-argument_list|,
-expr|struct
-name|nfsnode
-operator|*
-argument_list|,
-sizeof|sizeof
-expr|*
-name|np
-argument_list|,
-name|M_NFSNODE
-argument_list|,
-name|M_WAITOK
+name|nfsnode_zone
 argument_list|)
 expr_stmt|;
 name|error
@@ -534,11 +502,11 @@ name|npp
 operator|=
 literal|0
 expr_stmt|;
-name|FREE
+name|zfree
 argument_list|(
-name|np
+name|nfsnode_zone
 argument_list|,
-name|M_NFSNODE
+name|np
 argument_list|)
 expr_stmt|;
 return|return
@@ -1098,13 +1066,13 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|zfree
 argument_list|(
+name|nfsnode_zone
+argument_list|,
 name|vp
 operator|->
 name|v_data
-argument_list|,
-name|M_NFSNODE
 argument_list|)
 expr_stmt|;
 name|vp
