@@ -544,6 +544,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|so
+operator|->
+name|so_pcb
+operator|=
+name|NULL
+expr_stmt|;
 name|free
 argument_list|(
 name|rp
