@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	4.2 (Berkeley, from Melbourne) %G%"
+literal|"@(#)quota.c	4.3 (Berkeley, from Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -603,7 +603,7 @@ name|open
 argument_list|(
 name|qfilename
 argument_list|,
-name|FRDONLY
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -629,7 +629,7 @@ name|dqblk
 argument_list|)
 argument_list|)
 argument_list|,
-name|FSEEK_ABSOLUTE
+name|L_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -944,11 +944,10 @@ name|dqblk
 operator|.
 name|dqb_curblocks
 operator|/
-operator|(
+name|btodb
+argument_list|(
 literal|1024
-operator|/
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|)
 argument_list|,
 operator|(
@@ -970,27 +969,21 @@ name|dqblk
 operator|.
 name|dqb_bsoftlimit
 operator|/
-operator|(
+name|btodb
+argument_list|(
 literal|1024
-operator|/
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|)
 argument_list|,
-operator|(
 operator|(
 name|dqblk
 operator|.
 name|dqb_bhardlimit
-operator|-
-literal|1
-operator|)
 operator|/
-operator|(
+name|btodb
+argument_list|(
 literal|1024
-operator|/
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|)
 argument_list|,
 name|dwarn
@@ -1020,8 +1013,6 @@ argument_list|,
 name|dqblk
 operator|.
 name|dqb_ihardlimit
-operator|-
-literal|1
 argument_list|,
 name|iwarn
 argument_list|)
