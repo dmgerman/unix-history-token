@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.16 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2947,6 +2947,7 @@ argument_list|()
 condition|)
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
