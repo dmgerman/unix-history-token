@@ -741,8 +741,6 @@ name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|done
-label|:
 comment|/*      * Correctly set the buf to indicate a completed transfer      */
 name|bp
 operator|->
