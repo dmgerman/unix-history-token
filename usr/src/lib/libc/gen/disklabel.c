@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.8 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,9 +105,21 @@ name|disk
 decl_stmt|;
 specifier|static
 name|char
+name|boot
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|char
 name|localbuf
 index|[
-literal|100
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|char
@@ -117,6 +129,7 @@ decl_stmt|,
 modifier|*
 name|cq
 decl_stmt|;
+comment|/* can't be register */
 specifier|register
 name|struct
 name|disklabel
@@ -162,12 +175,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 name|u_long
 modifier|*
 name|dx
@@ -208,6 +215,7 @@ name|disk
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * typename 	 */
 name|cq
 operator|=
 name|dp
@@ -263,6 +271,35 @@ operator|*
 name|cq
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* 	 * boot name (optional)  xxboot, bootxx 	 */
+name|cp
+operator|=
+name|boot
+expr_stmt|;
+name|dp
+operator|->
+name|d_boot0
+operator|=
+name|dgetstr
+argument_list|(
+literal|"b0"
+argument_list|,
+operator|&
+name|cp
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|d_boot1
+operator|=
+name|dgetstr
+argument_list|(
+literal|"b1"
+argument_list|,
+operator|&
+name|cp
+argument_list|)
 expr_stmt|;
 name|cp
 operator|=
