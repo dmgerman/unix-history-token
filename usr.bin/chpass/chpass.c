@@ -287,6 +287,8 @@ init|=
 name|NULL
 decl_stmt|,
 name|lpw
+decl_stmt|,
+name|old_pw
 decl_stmt|;
 name|char
 modifier|*
@@ -571,6 +573,7 @@ name|op
 operator|==
 name|NEWEXP
 condition|)
+block|{
 switch|switch
 condition|(
 name|argc
@@ -682,6 +685,24 @@ break|break;
 default|default:
 name|usage
 argument_list|()
+expr_stmt|;
+block|}
+comment|/* Make a copy for later verification */
+name|old_pw
+operator|=
+operator|*
+name|pw
+expr_stmt|;
+name|old_pw
+operator|.
+name|pw_gecos
+operator|=
+name|strdup
+argument_list|(
+name|old_pw
+operator|.
+name|pw_gecos
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -860,13 +881,8 @@ operator|=
 name|arg
 expr_stmt|;
 block|}
-comment|/* 	 * The temporary file/file descriptor usage is a little tricky here. 	 * 1:	We start off with two fd's, one for the master password 	 *	file (used to lock everything), and one for a temporary file. 	 * 2:	Display() gets an fp for the temporary file, and copies the 	 *	user's information into it.  It then gives the temporary file 	 *	to the user and closes the fp, closing the underlying fd. 	 * 3:	The user edits the temporary file some number of times. 	 * 4:	Verify() gets an fp for the temporary file, and verifies the 	 *	contents.  It can't use an fp derived from the step #2 fd, 	 *	because the user's editor may have created a new instance of 	 *	the file.  Once the file is verified, its contents are stored 	 *	in a password structure.  The verify routine closes the fp, 	 *	closing the underlying fd. 	 * 5:	Delete the temporary file. 	 * 6:	Get a new temporary file/fd.  Pw_copy() gets an fp for it 	 *	file and copies the master password file into it, replacing 	 *	the user record with a new one.  We can't use the first 	 *	temporary file for this because it was owned by the user. 	 *	Pw_copy() closes its fp, flushing the data and closing the 	 *	underlying file descriptor.  We can't close the master 	 *	password fp, or we'd lose the lock. 	 * 7:	Call pw_mkdb() (which renames the temporary file) and exit. 	 *	The exit closes the master passwd fp/fd. 	 */
+comment|/* 	 * The temporary file/file descriptor usage is a little tricky here. 	 * 1:	Create a temporary file called tempname, get descriptor tfd. 	 * 2:	Display() gets an fp for the temporary file, and copies the 	 *	user's information into it.  It then gives the temporary file 	 *	to the user and closes the fp, closing the underlying fd. 	 * 3:	The user edits the temporary file some number of times. 	 *	The results are stored in pw by edit(). 	 * 4:	Delete the temporary file. 	 * 5:	Make a new temporary file, descriptor tfd. 	 * 6:	Get a descriptor for the master.passwd file, pfd, and 	 *	lock master.passwd. 	 * 7:	Pw_copy() gets descriptors for master.passwd and the  	 *	temporary file and copies the master password file into it, 	 *	replacing the modified user's record with a new one.  We can't 	 *	use the first temporary file for this because it was owned 	 *	by the user.  Pass the new and old user info.  Check the 	 *	entry for our user has not been changed by someone else by 	 *	while the user was editing by comparing the old info to 	 *	the entry freshly read from master.passwd. Pw_copy() closes 	 *	its fp, flushing the data and closing the underlying file 	 *	descriptor.  We can't close the master password fp, or we'd 	 *	lose the lock. 	 * 8:	Call pw_mkdb() (which renames the temporary file) and exit. 	 *	The exit closes the master passwd fp/fd. 	 */
 name|pw_init
-argument_list|()
-expr_stmt|;
-name|pfd
-operator|=
-name|pw_lock
 argument_list|()
 expr_stmt|;
 name|tfd
@@ -934,6 +950,11 @@ block|{
 endif|#
 directive|endif
 comment|/* YP */
+name|pfd
+operator|=
+name|pw_lock
+argument_list|()
+expr_stmt|;
 name|pw_copy
 argument_list|(
 name|pfd
@@ -941,6 +962,17 @@ argument_list|,
 name|tfd
 argument_list|,
 name|pw
+argument_list|,
+operator|(
+name|op
+operator|==
+name|LOADENTRY
+operator|)
+condition|?
+name|NULL
+else|:
+operator|&
+name|old_pw
 argument_list|)
 expr_stmt|;
 if|if
