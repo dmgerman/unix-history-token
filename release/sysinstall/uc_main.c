@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***************************************************  * file: userconfig/uc_main.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  * library functions for userconfig library  *  * $Id: uc_main.c,v 1.4 1996/10/04 14:25:23 jkh Exp $  */
+comment|/***************************************************  * file: userconfig/uc_main.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  * library functions for userconfig library  *  * $Id: uc_main.c,v 1.5 1996/10/05 02:12:35 jkh Exp $  */
 end_comment
 
 begin_include
@@ -111,6 +111,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nlist
 name|nl
@@ -234,19 +235,15 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|incore
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
 name|incore
 operator|=
 literal|0
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|incore
@@ -262,7 +259,6 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 name|strncpy
 argument_list|(
 name|kname
@@ -273,9 +269,7 @@ argument_list|,
 literal|79
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|strncpy
 argument_list|(
 name|kname
@@ -285,7 +279,6 @@ argument_list|,
 literal|79
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|isDebug
@@ -336,8 +329,8 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-else|#
-directive|else
+endif|#
+directive|endif
 name|i
 operator|=
 name|nlist
@@ -347,8 +340,6 @@ argument_list|,
 name|nl
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|i
@@ -466,9 +457,7 @@ literal|"uc_open: Unable to open /dev/kmem.\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|kern
-operator|)
 return|;
 block|}
 name|kern
@@ -531,9 +520,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|kern
-operator|)
 return|;
 block|}
 name|kern
@@ -585,9 +572,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|kern
-operator|)
 return|;
 block|}
 if|if
@@ -643,9 +628,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|kern
-operator|)
 return|;
 block|}
 name|fchflags
@@ -736,9 +719,7 @@ name|kname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|kern
-operator|)
 return|;
 block|}
 block|}
@@ -809,9 +790,7 @@ name|kern
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|kern
-operator|)
 return|;
 block|}
 name|int
@@ -832,7 +811,6 @@ name|kern
 operator|->
 name|isa_devp
 condition|)
-block|{
 name|isa_free
 argument_list|(
 name|kern
@@ -840,14 +818,12 @@ argument_list|,
 name|writeback
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kern
 operator|->
 name|eisa_devp
 condition|)
-block|{
 name|eisa_free
 argument_list|(
 name|kern
@@ -856,14 +832,12 @@ name|writeback
 argument_list|)
 expr_stmt|;
 comment|/* `writeback' isn't really useful here */
-block|}
 if|if
 condition|(
 name|kern
 operator|->
 name|pci_devp
 condition|)
-block|{
 name|pci_free
 argument_list|(
 name|kern
@@ -872,14 +846,12 @@ name|writeback
 argument_list|)
 expr_stmt|;
 comment|/* or here */
-block|}
 if|if
 condition|(
 name|kern
 operator|->
 name|scsi_devp
 condition|)
-block|{
 name|scsi_free
 argument_list|(
 name|kern
@@ -887,7 +859,6 @@ argument_list|,
 name|writeback
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -895,7 +866,6 @@ name|kern
 operator|->
 name|incore
 condition|)
-block|{
 name|munmap
 argument_list|(
 name|kern
@@ -907,7 +877,6 @@ operator|->
 name|size
 argument_list|)
 expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|kern
@@ -928,9 +897,7 @@ name|kern
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|struct
@@ -992,7 +959,6 @@ name|kern
 operator|->
 name|isa_devp
 condition|)
-block|{
 name|list_append
 argument_list|(
 name|list
@@ -1000,14 +966,12 @@ argument_list|,
 literal|"isa"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kern
 operator|->
 name|eisa_devp
 condition|)
-block|{
 name|list_append
 argument_list|(
 name|list
@@ -1015,14 +979,12 @@ argument_list|,
 literal|"eisa"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kern
 operator|->
 name|pci_devp
 condition|)
-block|{
 name|list_append
 argument_list|(
 name|list
@@ -1030,14 +992,12 @@ argument_list|,
 literal|"pci"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kern
 operator|->
 name|scsi_devp
 condition|)
-block|{
 name|list_append
 argument_list|(
 name|list
@@ -1045,7 +1005,6 @@ argument_list|,
 literal|"scsi"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1059,7 +1018,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|list
 operator|=
 name|get_isa_devlist
@@ -1067,7 +1025,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1080,7 +1037,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|list
 operator|=
 name|get_eisa_devlist
@@ -1088,7 +1044,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1101,7 +1056,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|list
 operator|=
 name|get_pci_devlist
@@ -1109,7 +1063,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1122,7 +1075,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|list
 operator|=
 name|get_scsi_devlist
@@ -1130,7 +1082,6 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -1365,10 +1316,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of userconfig/uc_main.c */
-end_comment
 
 end_unit
 
