@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -457,7 +457,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|lfs_vfree
 name|__P
 argument_list|(
@@ -597,16 +597,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_function_decl
 name|__END_DECLS
 specifier|extern
-expr|struct
-name|vnodeops
-name|lfs_vnodeops
-operator|,
-name|lfs_specops
-expr_stmt|;
-end_expr_stmt
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|lfs_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|lfs_specop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
