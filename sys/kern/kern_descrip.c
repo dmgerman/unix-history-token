@@ -9358,6 +9358,9 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|NET_ASSERT_GIANT
+argument_list|()
+expr_stmt|;
 name|sorele
 argument_list|(
 name|so
