@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.3	%H%	*/
+comment|/*	kern_proc.c	3.4	%H%	*/
 end_comment
 
 begin_include
@@ -1797,7 +1797,7 @@ name|u
 operator|.
 name|u_procp
 argument_list|,
-name|SIGTRC
+name|SIGTRAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1848,9 +1848,13 @@ begin_block
 block|{
 specifier|register
 name|int
+function_decl|(
+modifier|*
 modifier|*
 name|rp
-decl_stmt|;
+function_decl|)
+parameter_list|()
+function_decl|;
 specifier|register
 name|i
 expr_stmt|;
@@ -1882,6 +1886,9 @@ control|)
 if|if
 condition|(
 operator|(
+operator|(
+name|int
+operator|)
 operator|*
 name|rp
 operator|&
@@ -2155,7 +2162,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|1
+name|SIG_IGN
 expr_stmt|;
 comment|/* 	 * Release virtual memory.  If we resulted from 	 * a vfork(), instead give the resources back to 	 * the parent. 	 */
 if|if
