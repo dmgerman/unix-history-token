@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)send.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)send.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +63,7 @@ end_comment
 
 begin_function
 name|int
-name|send
+name|sendmessage
 parameter_list|(
 name|mp
 parameter_list|,
@@ -233,7 +246,10 @@ name|fgets
 argument_list|(
 name|line
 argument_list|,
-name|LINESIZE
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 name|ibuf
 argument_list|)
@@ -544,6 +560,7 @@ name|prefix
 operator|!=
 name|NOSTR
 condition|)
+block|{
 if|if
 condition|(
 name|length
@@ -574,6 +591,7 @@ argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -633,7 +651,10 @@ name|fgets
 argument_list|(
 name|line
 argument_list|,
-name|LINESIZE
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 name|ibuf
 argument_list|)
@@ -1214,6 +1235,7 @@ argument_list|)
 operator|!=
 name|NOSTR
 condition|)
+block|{
 if|if
 condition|(
 name|value
@@ -1246,6 +1268,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|fsize
@@ -1255,6 +1278,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|hp
@@ -1274,6 +1298,7 @@ argument_list|(
 literal|"Null message body; hope that's ok\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Now, take the user names from the combined 	 * to and cc lists and do all the alias 	 * processing. 	 */
 name|senderr
 operator|=
@@ -1490,7 +1515,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -1584,8 +1609,10 @@ argument_list|,
 name|namelist
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -1824,11 +1851,6 @@ modifier|*
 name|fi
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|tempMail
-decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
@@ -1841,14 +1863,49 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|char
+name|tempname
+index|[
+name|PATHSIZE
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|tempname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tempname
+argument_list|)
+argument_list|,
+literal|"%s/mail.RsXXXXXXXXXX"
+argument_list|,
+name|tmpdir
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
+name|fd
+operator|=
+name|mkstemp
+argument_list|(
+name|tempname
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+operator|||
+operator|(
 name|nfo
 operator|=
-name|Fopen
+name|Fdopen
 argument_list|(
-name|tempMail
+name|fd
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1857,9 +1914,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-name|tempMail
+literal|"%s"
+argument_list|,
+name|tempname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1875,7 +1934,7 @@ name|nfi
 operator|=
 name|Fopen
 argument_list|(
-name|tempMail
+name|tempname
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1884,9 +1943,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-name|tempMail
+literal|"%s"
+argument_list|,
+name|tempname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1895,6 +1956,14 @@ operator|)
 name|Fclose
 argument_list|(
 name|nfo
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rm
+argument_list|(
+name|tempname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1908,7 +1977,7 @@ name|void
 operator|)
 name|rm
 argument_list|(
-name|tempMail
+name|tempname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1977,7 +2046,7 @@ name|fi
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warnx
 argument_list|(
 literal|"read"
 argument_list|)
@@ -2009,9 +2078,11 @@ name|nfo
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-name|tempMail
+literal|"%s"
+argument_list|,
+name|tempname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2542,8 +2613,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -2637,8 +2710,10 @@ argument_list|(
 name|fo
 argument_list|)
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;

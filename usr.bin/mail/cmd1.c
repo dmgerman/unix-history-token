@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cmd1.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1297,8 +1310,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warnx
 argument_list|(
+literal|"%s"
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -1378,7 +1393,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|send
+name|sendmessage
 argument_list|(
 name|mp
 argument_list|,
@@ -1653,7 +1668,10 @@ name|ibuf
 argument_list|,
 name|linebuf
 argument_list|,
-name|LINESIZE
+sizeof|sizeof
+argument_list|(
+name|linebuf
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1666,7 +1684,14 @@ argument_list|)
 expr_stmt|;
 name|lineb
 operator|=
-name|blankline
+name|strspn
+argument_list|(
+name|linebuf
+argument_list|,
+literal|" \t"
+argument_list|)
+operator|==
+name|strlen
 argument_list|(
 name|linebuf
 argument_list|)
@@ -1831,7 +1856,7 @@ block|{
 name|char
 name|dirname
 index|[
-name|BUFSIZ
+name|PATHSIZE
 index|]
 decl_stmt|;
 name|char
@@ -1843,6 +1868,11 @@ condition|(
 name|getfold
 argument_list|(
 name|dirname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dirname
+argument_list|)
 argument_list|)
 operator|<
 literal|0

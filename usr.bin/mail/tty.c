@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tty.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tty.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,7 +231,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"tcgetattr(stdin)"
 argument_list|)
@@ -758,24 +771,23 @@ name|src
 operator|!=
 name|NOSTR
 condition|)
-name|cp
-operator|=
-name|copy
+name|strlcpy
 argument_list|(
+name|canonb
+argument_list|,
 name|src
 argument_list|,
+sizeof|sizeof
+argument_list|(
 name|canonb
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|cp
-operator|=
-name|copy
-argument_list|(
-literal|""
-argument_list|,
+operator|*
 name|canonb
-argument_list|)
+operator|=
+literal|'\0'
 expr_stmt|;
 name|fputs
 argument_list|(
@@ -858,7 +870,7 @@ expr_stmt|;
 operator|*
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
@@ -878,7 +890,7 @@ operator|*
 name|cp2
 operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|cp2
 operator|=

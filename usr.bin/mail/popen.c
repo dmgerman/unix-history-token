@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)popen.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)popen.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,8 +124,7 @@ decl_stmt|;
 name|char
 name|free
 decl_stmt|;
-name|union
-name|wait
+name|int
 name|status
 decl_stmt|;
 name|struct
@@ -157,6 +169,20 @@ argument_list|(
 operator|(
 expr|struct
 name|child
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|file_pid
+name|__P
+argument_list|(
+operator|(
+name|FILE
 operator|*
 operator|)
 argument_list|)
@@ -701,8 +727,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|panic
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"Out of memory"
 argument_list|)
 expr_stmt|;
@@ -803,29 +831,27 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|panic
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Invalid file pointer"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|file_pid
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|fp
@@ -861,14 +887,16 @@ operator|->
 name|pid
 operator|)
 return|;
-name|panic
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Invalid file pointer"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Run a command without a shell, with optional arguments and splicing  * of stdin and stdout.  The command name can be a sequence of words.  * Signals must be handled by the caller.  * "Mask" contains the signals to ignore in the new process.  * SIGINT is enabled unless it's in the mask.  */
@@ -1024,7 +1052,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -1129,8 +1157,10 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|0
@@ -1376,6 +1406,20 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cpp
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|cpp
@@ -1494,8 +1538,7 @@ block|{
 name|int
 name|pid
 decl_stmt|;
-name|union
-name|wait
+name|int
 name|status
 decl_stmt|;
 specifier|register
@@ -1509,23 +1552,18 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|wait3
+name|waitpid
 argument_list|(
 operator|(
-name|int
-operator|*
+name|pid_t
 operator|)
+operator|-
+literal|1
+argument_list|,
 operator|&
 name|status
 argument_list|,
 name|WNOHANG
-argument_list|,
-operator|(
-expr|struct
-name|rusage
-operator|*
-operator|)
-literal|0
 argument_list|)
 operator|)
 operator|>
@@ -1570,8 +1608,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|union
-name|wait
+name|int
 name|wait_status
 decl_stmt|;
 end_decl_stmt
@@ -1641,14 +1678,24 @@ name|mask
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+operator|(
+name|WIFEXITED
+argument_list|(
 name|wait_status
-operator|.
-name|w_status
+argument_list|)
+operator|&&
+name|WEXITSTATUS
+argument_list|(
+name|wait_status
+argument_list|)
+operator|)
 condition|?
 operator|-
 literal|1
 else|:
 literal|0
+operator|)
 return|;
 block|}
 end_function

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)getname.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)getname.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +64,7 @@ comment|/* Getname / getuserid for those with hashed passwd data base). */
 end_comment
 
 begin_comment
-comment|/*  * Search the passwd file for a uid.  Return name through ref parameter  * if found, indicating success with 0 return.  Return -1 on error.  */
+comment|/*  * Search the passwd file for a uid. Return name on success,  * NOSTR on failure  */
 end_comment
 
 begin_function

@@ -34,13 +34,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|"rcv.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -248,9 +255,15 @@ condition|(
 operator|(
 name|i
 operator|=
-name|creat
+name|open
 argument_list|(
 name|Tflag
+argument_list|,
+name|O_CREAT
+operator||
+name|O_TRUNC
+operator||
+name|O_WRONLY
 argument_list|,
 literal|0600
 argument_list|)
@@ -258,18 +271,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|Tflag
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|i
@@ -442,11 +452,24 @@ break|break;
 case|case
 literal|'?'
 case|:
-name|fputs
+name|fprintf
 argument_list|(
-literal|"\ Usage: mail [-iInv] [-s subject] [-c cc-addr] [-b bcc-addr] to-addr ...\n\             [- sendmail-options ...]\n\        mail [-iInNv] -f [name]\n\        mail [-iInNv] [-u user]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"\ Usage: %s [-iInv] [-s subject] [-c cc-addr] [-b bcc-addr] to-addr ...\n\        %*s [- sendmail-options ...]\n\        %s [-iInNv] -f [name]\n\        %s [-iInNv] [-u user]\n"
+argument_list|,
+name|__progname
+argument_list|,
+name|strlen
+argument_list|(
+name|__progname
+argument_list|)
+argument_list|,
+literal|""
+argument_list|,
+name|__progname
+argument_list|,
+name|__progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -548,20 +571,13 @@ operator|!=
 name|NIL
 operator|)
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"You must specify direct recipients with -s, -c, or -b.\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"You must specify direct recipients with -s, -c, or -b."
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ef
@@ -572,20 +588,13 @@ name|to
 operator|!=
 name|NIL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot give -f and people to send to.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Cannot give -f and people to send to."
 argument_list|)
 expr_stmt|;
-block|}
 name|tinit
 argument_list|()
 expr_stmt|;
@@ -617,6 +626,9 @@ decl_stmt|,
 modifier|*
 name|path_rc
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|path_rc
 operator|=
 name|malloc
@@ -626,14 +638,11 @@ argument_list|(
 name|_PATH_MASTER_RC
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|path_rc
+operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
