@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)stdarg.h	8.1 (Berkeley) %G%  *  * from: $Header: stdarg.h,v 1.8 93/05/07 18:10:14 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)stdarg.h	8.2 (Berkeley) %G%  *  * from: $Header: stdarg.h,v 1.9 93/09/27 21:12:38 torek Exp $  */
 end_comment
 
 begin_comment
@@ -31,6 +31,16 @@ begin_comment
 comment|/*  * va_start sets ap to point to the first variable argument.  * The `last fixed argument' parameter l is ignored (and should  * never have been included in the ANSI standard!).  *  * va_end cleans up after va_start.  There is nothing to do there.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GCC_NEW_VARARGS__
+end_ifdef
+
+begin_comment
+comment|/* gcc 2.4.5 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -40,8 +50,34 @@ name|ap
 parameter_list|,
 name|l
 parameter_list|)
-value|(__builtin_saveregs(), \ 			 ap = (char *)__builtin_next_arg())
+value|((ap) = (char *)__builtin_saveregs())
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* gcc 2.3.3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|ap
+parameter_list|,
+name|l
+parameter_list|)
+value|(__builtin_saveregs(), \ 			 (ap) = (char *)__builtin_next_arg())
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)varargs.h	8.1 (Berkeley) %G%  *  * from: $Header: varargs.h,v 1.7 93/05/07 18:10:36 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)varargs.h	8.2 (Berkeley) %G%  *  * from: $Header: varargs.h,v 1.8 93/09/27 00:53:20 torek Exp $  */
 end_comment
 
 begin_ifndef
@@ -54,7 +54,40 @@ directive|else
 end_else
 
 begin_comment
-comment|/* gcc2 wants to see the '...' token */
+comment|/* gcc2 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GCC_NEW_VARARGS__
+end_ifdef
+
+begin_comment
+comment|/* gcc 2.4.5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|va_alist
+value|__builtin_va_alist
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_dcl
+value|int __builtin_va_alist;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* gcc 2.3.3 */
 end_comment
 
 begin_define
@@ -69,6 +102,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GCC_NEW_VARARGS__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|ap
+parameter_list|)
+value|((ap) = (char *)__builtin_saveregs())
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -78,6 +137,11 @@ name|ap
 parameter_list|)
 value|(__builtin_saveregs(), (ap) = (char *)&va_alist)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
