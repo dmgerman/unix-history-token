@@ -540,6 +540,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sse2_pagezero
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|init_AMD_Elan_sc520
 parameter_list|(
 name|void
