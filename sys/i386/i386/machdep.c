@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -331,12 +337,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -1238,19 +1238,21 @@ name|cpuhead
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(,
 name|sched_lock
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(,
 name|Giant
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1993,6 +1995,8 @@ argument_list|,
 literal|"sched lock"
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8856,9 +8860,11 @@ argument_list|(
 operator|&
 name|clock_lock
 argument_list|,
-literal|"clk interrupt lock"
+literal|"clk"
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
@@ -8887,6 +8893,8 @@ argument_list|,
 literal|"Giant"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 ifdef|#
