@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * dummy swapgeneric.c: not used in new config system.  *  *	@(#)swapgeneric.c	7.1 (Berkeley) %G%  */
+comment|/*  * dummy swapgeneric.c: not used in new config system.  *  *	@(#)swapgeneric.c	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
