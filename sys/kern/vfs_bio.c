@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.166 1998/07/08 01:04:27 julian Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.167 1998/07/13 07:05:55 bde Exp $  */
 end_comment
 
 begin_comment
@@ -9458,6 +9458,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -9582,10 +9584,20 @@ name|b_npages
 argument_list|)
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 operator|--
 name|obj
 operator|->
 name|paging_in_progress
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|m
 operator|->
@@ -10187,10 +10199,20 @@ operator|==
 literal|0
 condition|)
 block|{
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|obj
 operator|->
 name|paging_in_progress
 operator|++
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|m
 operator|->
