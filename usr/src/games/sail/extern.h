@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)extern.h	1.3 83/05/20";  */
+comment|/*  * sccsid = "@(#)extern.h	1.4 83/05/20";  */
 end_comment
 
 begin_include
@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|NUMOFSCENES
-value|31
+value|32
 end_define
 
 begin_define
@@ -205,7 +205,6 @@ struct|;
 end_struct
 
 begin_struct
-specifier|extern
 struct|struct
 name|BP
 block|{
@@ -221,7 +220,6 @@ struct|;
 end_struct
 
 begin_struct
-specifier|extern
 struct|struct
 name|snag
 block|{
@@ -251,7 +249,6 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
 name|postype
 name|pos
 index|[
@@ -261,7 +258,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
-specifier|extern
 struct|struct
 name|File
 block|{
@@ -411,7 +407,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|scenario
 name|scene
@@ -469,7 +464,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|shipspecs
 name|specs
@@ -478,7 +472,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
-specifier|extern
 struct|struct
 name|windeffects
 block|{
@@ -492,6 +485,12 @@ decl_stmt|,
 name|D
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|windeffects
 name|WET
 index|[
 literal|7
@@ -499,11 +498,10 @@ index|]
 index|[
 literal|6
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
-specifier|extern
 struct|struct
 name|Tables
 block|{
@@ -517,6 +515,12 @@ decl_stmt|,
 name|R
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|Tables
 name|RigTable
 index|[
 literal|11
@@ -524,11 +528,10 @@ index|]
 index|[
 literal|6
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|Tables
 name|HullTable
@@ -542,7 +545,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|AMMO
 index|[
@@ -555,7 +557,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|HDT
 index|[
@@ -568,7 +569,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|HDTrake
 index|[
@@ -581,7 +581,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|QUAL
 index|[
@@ -594,7 +593,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|MT
 index|[
@@ -607,7 +605,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|loaded
 decl_stmt|,
@@ -626,14 +623,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|long
 name|lastsync
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|winddir
 decl_stmt|,
@@ -648,7 +643,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|player
 decl_stmt|,
@@ -664,14 +658,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|MIGHTYCAPTAIN
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|char
 name|Outbuf
 index|[
@@ -691,7 +683,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|FILE
 modifier|*
 name|syncfile
