@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	4.6	82/09/04	*/
+comment|/*	clock.h	4.7	82/09/12	*/
 end_comment
 
 begin_comment
@@ -112,8 +112,8 @@ define|#
 directive|define
 name|clkstart
 parameter_list|()
-value|{\ 	mtpr(NICR, -16667);
-comment|/* 16.667 milli-seconds */
+value|{\ 	mtpr(NICR, -1000000/hz);
+comment|/* 10 milli-seconds */
 value|\ 	mtpr(ICCS, ICCS_RUN+ICCS_IE+ICCS_TRANS+ICCS_INT+ICCS_ERR);\ }
 end_define
 
