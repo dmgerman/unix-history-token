@@ -395,7 +395,7 @@ name|error
 decl_stmt|;
 name|MAC_EXTERNALIZE
 argument_list|(
-name|pipe_label
+name|pipe
 argument_list|,
 name|label
 argument_list|,
@@ -433,7 +433,7 @@ name|error
 decl_stmt|;
 name|MAC_INTERNALIZE
 argument_list|(
-name|pipe_label
+name|pipe
 argument_list|,
 name|label
 argument_list|,

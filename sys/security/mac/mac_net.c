@@ -1336,7 +1336,7 @@ name|error
 decl_stmt|;
 name|MAC_EXTERNALIZE
 argument_list|(
-name|ifnet_label
+name|ifnet
 argument_list|,
 name|label
 argument_list|,
@@ -1385,7 +1385,7 @@ name|error
 decl_stmt|;
 name|MAC_EXTERNALIZE
 argument_list|(
-name|socket_label
+name|socket
 argument_list|,
 name|label
 argument_list|,
@@ -1434,7 +1434,7 @@ name|error
 decl_stmt|;
 name|MAC_EXTERNALIZE
 argument_list|(
-name|socket_peer_label
+name|socket_peer
 argument_list|,
 name|label
 argument_list|,
@@ -1473,7 +1473,7 @@ name|error
 decl_stmt|;
 name|MAC_INTERNALIZE
 argument_list|(
-name|ifnet_label
+name|ifnet
 argument_list|,
 name|label
 argument_list|,
@@ -1508,7 +1508,7 @@ name|error
 decl_stmt|;
 name|MAC_INTERNALIZE
 argument_list|(
-name|socket_label
+name|socket
 argument_list|,
 name|label
 argument_list|,

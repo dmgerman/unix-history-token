@@ -590,7 +590,7 @@ name|error
 decl_stmt|;
 name|MAC_EXTERNALIZE
 argument_list|(
-name|cred_label
+name|cred
 argument_list|,
 name|label
 argument_list|,
@@ -628,7 +628,7 @@ name|error
 decl_stmt|;
 name|MAC_INTERNALIZE
 argument_list|(
-name|cred_label
+name|cred
 argument_list|,
 name|label
 argument_list|,

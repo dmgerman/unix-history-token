@@ -722,7 +722,7 @@ name|error
 decl_stmt|;
 name|MAC_EXTERNALIZE
 argument_list|(
-name|vnode_label
+name|vnode
 argument_list|,
 name|label
 argument_list|,
@@ -760,7 +760,7 @@ name|error
 decl_stmt|;
 name|MAC_INTERNALIZE
 argument_list|(
-name|vnode_label
+name|vnode
 argument_list|,
 name|label
 argument_list|,

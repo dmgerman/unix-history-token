@@ -630,7 +630,7 @@ name|outbuflen
 parameter_list|)
 value|do {							\ 	int claimed, first, ignorenotfound, savedlen;			\ 	char *element_name, *element_temp;				\ 	struct sbuf sb;							\ 									\ 	error = 0;							\ 	first = 1;							\ 	sbuf_new(&sb, outbuf, outbuflen, SBUF_FIXEDLEN);		\ 	element_temp = elementlist;					\ 	while ((element_name = strsep(&element_temp, ",")) != NULL) {	\ 		if (element_name[0] == '?') {				\ 			element_name++;					\ 			ignorenotfound = 1;				\ 		 } else							\ 			ignorenotfound = 0;				\ 		savedlen = sbuf_len(&sb);				\ 		if (first)						\ 			error = sbuf_printf(&sb, "%s/", element_name);	\ 		else							\ 			error = sbuf_printf(&sb, ",%s/", element_name);	\ 		if (error == -1) {					\ 			error = EINVAL;
 comment|/* XXX: E2BIG? */
-value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(externalize_ ## type, label, element_name,	\&sb,&claimed);					\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
+value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(externalize_ ## type ## _label, label,	\ 		    element_name,&sb,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
 comment|/* Revert last label name. */
 value|\ 			sbuf_setpos(&sb, savedlen);			\ 		} else if (claimed != 1) {				\ 			error = EINVAL;
 comment|/* XXX: ENOLABEL? */
@@ -648,7 +648,7 @@ name|label
 parameter_list|,
 name|instring
 parameter_list|)
-value|do {			\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(internalize_ ## type, label, element_name,	\ 		    element_data,&claimed);				\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
+value|do {			\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(internalize_ ## type ## _label, label,	\ 		    element_name, element_data,&claimed);		\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
 comment|/* XXXMAC: Another error here? */
 value|\ 			error = EINVAL;					\ 			break;						\ 		}							\ 	}								\ } while (0)
 end_define
