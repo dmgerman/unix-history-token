@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -571,6 +577,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|devfs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|transition
 name|__P
@@ -1063,7 +1075,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sf"
+literal|"dsf"
 argument_list|)
 operator|)
 operator|!=
@@ -1075,6 +1087,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+name|devfs
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'s'
 case|:
@@ -1112,6 +1132,26 @@ argument_list|(
 literal|"ignoring excess arguments"
 argument_list|)
 expr_stmt|;
+comment|/* Mount devfs on /dev */
+if|if
+condition|(
+name|devfs
+condition|)
+block|{
+name|mount
+argument_list|(
+name|MOUNT_DEVFS
+argument_list|,
+literal|"/dev"
+argument_list|,
+name|MNT_NOEXEC
+operator||
+name|MNT_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * We catch or block signals rather than ignore them, 	 * so that they get reset on exec. 	 */
 name|handle
 argument_list|(
