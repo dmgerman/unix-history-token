@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.63 (Berkeley) %G%"
+literal|"@(#)ls.c	5.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1155,7 +1155,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fts_open: %s"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
