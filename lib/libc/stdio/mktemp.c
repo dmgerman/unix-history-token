@@ -737,7 +737,7 @@ operator|||
 operator|*
 operator|++
 name|pad
-operator|!=
+operator|==
 literal|'\0'
 condition|)
 operator|*
