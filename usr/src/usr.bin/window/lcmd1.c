@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.10 83/12/06"
+literal|"@(#)lcmd1.c	3.11 83/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ literal|"row"
 block|,
 literal|1
 block|,
-name|ARG_NUM
+name|ARG_ANY
 block|}
 block|,
 block|{
@@ -64,7 +64,7 @@ literal|"column"
 block|,
 literal|1
 block|,
-name|ARG_NUM
+name|ARG_ANY
 block|}
 block|,
 block|{
@@ -72,7 +72,7 @@ literal|"nrows"
 block|,
 literal|2
 block|,
-name|ARG_NUM
+name|ARG_ANY
 block|}
 block|,
 block|{
@@ -80,7 +80,7 @@ literal|"ncols"
 block|,
 literal|2
 block|,
-name|ARG_NUM
+name|ARG_ANY
 block|}
 block|,
 block|{
@@ -167,8 +167,8 @@ operator|=
 name|a
 operator|->
 name|arg_vtype
-operator|==
-name|V_ERR
+operator|!=
+name|V_NUM
 condition|?
 literal|1
 else|:
@@ -184,8 +184,8 @@ name|a
 operator|)
 operator|->
 name|arg_vtype
-operator|==
-name|V_ERR
+operator|!=
+name|V_NUM
 condition|?
 literal|0
 else|:
@@ -201,8 +201,8 @@ name|a
 operator|)
 operator|->
 name|arg_vtype
-operator|==
-name|V_ERR
+operator|!=
+name|V_NUM
 condition|?
 name|wwnrow
 operator|-
@@ -220,8 +220,8 @@ name|a
 operator|)
 operator|->
 name|arg_vtype
-operator|==
-name|V_ERR
+operator|!=
+name|V_NUM
 condition|?
 name|wwncol
 operator|-
