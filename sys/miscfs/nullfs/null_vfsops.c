@@ -1894,7 +1894,7 @@ name|VFS_SET
 argument_list|(
 name|null_vfsops
 argument_list|,
-name|null
+name|nullfs
 argument_list|,
 name|VFCF_LOOPBACK
 argument_list|)

@@ -360,7 +360,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"null"
+literal|"nullfs"
 argument_list|,
 operator|&
 name|vfc
@@ -372,7 +372,7 @@ name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
-literal|"null"
+literal|"nullfs"
 argument_list|)
 condition|)
 block|{
@@ -380,14 +380,14 @@ if|if
 condition|(
 name|vfsload
 argument_list|(
-literal|"null"
+literal|"nullfs"
 argument_list|)
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"vfsload(null)"
+literal|"vfsload(nullfs)"
 argument_list|)
 expr_stmt|;
 name|endvfsent
@@ -397,7 +397,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"null"
+literal|"nullfs"
 argument_list|,
 operator|&
 name|vfc
