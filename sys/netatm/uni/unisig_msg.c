@@ -837,6 +837,8 @@ argument_list|(
 name|unisig_msg_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -924,7 +926,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-literal|0
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1091,6 +1093,8 @@ argument_list|(
 name|unisig_msg_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1113,6 +1117,8 @@ argument_list|(
 name|unisig_ie_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1307,6 +1313,8 @@ argument_list|(
 name|unisig_msg_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1329,6 +1337,8 @@ argument_list|(
 name|unisig_ie_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1564,6 +1574,8 @@ argument_list|(
 name|unisig_msg_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1586,6 +1598,8 @@ argument_list|(
 name|unisig_ie_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1615,6 +1629,8 @@ argument_list|(
 name|unisig_ie_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2109,7 +2125,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_msg_zone
 argument_list|,
-literal|0
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2378,6 +2394,8 @@ argument_list|(
 name|unisig_vc_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2554,6 +2572,8 @@ argument_list|(
 name|unisig_msg_zone
 argument_list|,
 name|M_ZERO
+operator||
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

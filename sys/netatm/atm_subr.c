@@ -1125,6 +1125,8 @@ name|uma_zalloc
 argument_list|(
 name|atm_stackq_zone
 argument_list|,
+name|M_NOWAIT
+operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
