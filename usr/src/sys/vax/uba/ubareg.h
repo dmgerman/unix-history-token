@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.11	81/02/23	*/
+comment|/*	ubareg.h	4.12	81/02/23	*/
 end_comment
 
 begin_comment
@@ -835,10 +835,6 @@ begin_struct
 struct|struct
 name|uba_hd
 block|{
-name|int
-name|uh_active
-decl_stmt|;
-comment|/* bit per device transferring */
 name|struct
 name|uba_regs
 modifier|*
