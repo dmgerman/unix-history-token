@@ -63,6 +63,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|u_long
 name|raw_sendspace
@@ -72,6 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|u_long
 name|raw_recvspace
