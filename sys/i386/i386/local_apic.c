@@ -745,7 +745,7 @@ decl_stmt|;
 if|if
 condition|(
 name|apic_id
-operator|>
+operator|>=
 name|MAX_APICID
 condition|)
 block|{
