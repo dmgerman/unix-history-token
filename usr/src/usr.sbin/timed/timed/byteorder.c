@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)byteorder.c	2.1 (Berkeley) %G%"
+literal|"@(#)byteorder.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,15 @@ operator|->
 name|tsp_seq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|->
+name|tsp_type
+operator|!=
+name|TSP_LOOP
+condition|)
+block|{
 name|ptr
 operator|->
 name|tsp_time
@@ -109,6 +118,7 @@ name|tv_usec
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_block
 
 begin_macro
@@ -142,6 +152,15 @@ operator|->
 name|tsp_seq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|->
+name|tsp_type
+operator|!=
+name|TSP_LOOP
+condition|)
+block|{
 name|ptr
 operator|->
 name|tsp_time
@@ -178,6 +197,7 @@ operator|.
 name|tv_usec
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
