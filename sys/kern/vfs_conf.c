@@ -1309,7 +1309,7 @@ operator|<=
 literal|'9'
 condition|)
 name|unit
-operator|+=
+operator|=
 literal|10
 operator|*
 name|unit
