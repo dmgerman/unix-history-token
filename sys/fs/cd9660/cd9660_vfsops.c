@@ -3280,12 +3280,6 @@ name|vp
 expr_stmt|;
 name|ip
 operator|->
-name|i_dev
-operator|=
-name|dev
-expr_stmt|;
-name|ip
-operator|->
 name|i_number
 operator|=
 name|ino

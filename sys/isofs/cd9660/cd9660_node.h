@@ -82,12 +82,6 @@ name|u_long
 name|i_flag
 decl_stmt|;
 comment|/* see below */
-name|struct
-name|cdev
-modifier|*
-name|i_dev
-decl_stmt|;
-comment|/* device where inode resides */
 name|ino_t
 name|i_number
 decl_stmt|;

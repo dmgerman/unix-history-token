@@ -652,18 +652,6 @@ argument_list|)
 decl_stmt|;
 name|vap
 operator|->
-name|va_fsid
-operator|=
-name|dev2udev
-argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|)
-expr_stmt|;
-comment|/* XXX WRONG! */
-name|vap
-operator|->
 name|va_fileid
 operator|=
 name|ip
