@@ -4826,7 +4826,7 @@ name|rp
 operator|=
 name|data
 expr_stmt|;
-comment|/* If we're not outputting the discriptors free them. */
+comment|/* If we're not outputting the descriptors free them. */
 if|if
 condition|(
 name|error
