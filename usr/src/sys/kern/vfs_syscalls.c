@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.96 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.97 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -10383,6 +10383,7 @@ name|mnt_maxsymlinklen
 operator|<=
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|VOP_READDIR
@@ -10397,6 +10398,15 @@ operator|->
 name|f_cred
 argument_list|)
 expr_stmt|;
+name|fp
+operator|->
+name|f_offset
+operator|=
+name|auio
+operator|.
+name|uio_offset
+expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
@@ -10460,6 +10470,14 @@ name|fp
 operator|->
 name|f_cred
 argument_list|)
+expr_stmt|;
+name|fp
+operator|->
+name|f_offset
+operator|=
+name|kuio
+operator|.
+name|uio_offset
 expr_stmt|;
 if|if
 condition|(
@@ -10606,14 +10624,6 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-name|fp
-operator|->
-name|f_offset
-operator|=
-name|auio
-operator|.
-name|uio_offset
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
