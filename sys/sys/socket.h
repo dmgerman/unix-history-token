@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_types.h>
 end_include
 
@@ -47,6 +53,89 @@ begin_comment
 comment|/*  * Data types.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__gid_t
+name|gid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_GID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OFF_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__off_t
+name|off_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_OFF_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__pid_t
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_PID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -74,6 +163,30 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__size_t
+name|size_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_SOCKLEN_T_DECLARED
 end_ifndef
 
@@ -89,6 +202,65 @@ define|#
 directive|define
 name|_SOCKLEN_T_DECLARED
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SSIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__ssize_t
+name|ssize_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SSIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uid_t
+name|uid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -132,6 +304,12 @@ begin_comment
 comment|/* raw-protocol interface */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -142,6 +320,11 @@ end_define
 begin_comment
 comment|/* reliably-delivered message */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -224,6 +407,12 @@ begin_comment
 comment|/* permit sending of broadcast msgs */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -234,6 +423,11 @@ end_define
 begin_comment
 comment|/* bypass hardware when possible */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -256,6 +450,12 @@ end_define
 begin_comment
 comment|/* leave received OOB data in line */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -300,6 +500,11 @@ end_define
 begin_comment
 comment|/* there is an accept filter */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Additional options, not kept in so_options.  */
@@ -393,6 +598,12 @@ begin_comment
 comment|/* get socket type */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -415,6 +626,11 @@ begin_comment
 comment|/* socket's peer's MAC label */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Structure used for manipulating linger option.  */
 end_comment
@@ -434,6 +650,12 @@ comment|/* linger time */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_struct
 struct|struct
@@ -456,6 +678,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Level number for (get/set)sockopt() to apply to socket itself.  */
@@ -487,6 +714,12 @@ begin_comment
 comment|/* unspecified */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -497,6 +730,11 @@ end_define
 begin_comment
 comment|/* local to host (pipes, portals) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -519,6 +757,12 @@ end_define
 begin_comment
 comment|/* internetwork: UDP, TCP, etc. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -813,6 +1057,11 @@ begin_comment
 comment|/* Internal key-management function */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -823,6 +1072,12 @@ end_define
 begin_comment
 comment|/* IPv6 */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -897,6 +1152,11 @@ name|AF_MAX
 value|35
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Structure used by kernel to store most  * addresses.  */
 end_comment
@@ -905,7 +1165,8 @@ begin_struct
 struct|struct
 name|sockaddr
 block|{
-name|u_char
+name|unsigned
+name|char
 name|sa_len
 decl_stmt|;
 comment|/* total length */
@@ -923,6 +1184,12 @@ comment|/* actually longer; address value */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -943,17 +1210,24 @@ begin_struct
 struct|struct
 name|sockproto
 block|{
-name|u_short
+name|unsigned
+name|short
 name|sp_family
 decl_stmt|;
 comment|/* address family */
-name|u_short
+name|unsigned
+name|short
 name|sp_protocol
 decl_stmt|;
 comment|/* protocol */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * RFC 2553: protocol-independent placeholder for socket addresses  */
@@ -970,28 +1244,29 @@ begin_define
 define|#
 directive|define
 name|_SS_ALIGNSIZE
-value|(sizeof(int64_t))
+value|(sizeof(__int64_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|_SS_PAD1SIZE
-value|(_SS_ALIGNSIZE - sizeof(u_char) - sizeof(sa_family_t))
+value|(_SS_ALIGNSIZE - sizeof(unsigned char) - \ 			    sizeof(sa_family_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|_SS_PAD2SIZE
-value|(_SS_MAXSIZE - sizeof(u_char) - sizeof(sa_family_t) - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
+value|(_SS_MAXSIZE - sizeof(unsigned char) - \ 			    sizeof(sa_family_t) - _SS_PAD1SIZE - _SS_ALIGNSIZE)
 end_define
 
 begin_struct
 struct|struct
 name|sockaddr_storage
 block|{
-name|u_char
+name|unsigned
+name|char
 name|ss_len
 decl_stmt|;
 comment|/* address length */
@@ -1005,10 +1280,10 @@ index|[
 name|_SS_PAD1SIZE
 index|]
 decl_stmt|;
-name|int64_t
+name|__int64_t
 name|__ss_align
 decl_stmt|;
-comment|/* force desired structure storage alignment */
+comment|/* force desired struct alignment */
 name|char
 name|__ss_pad2
 index|[
@@ -1018,6 +1293,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Protocol families, same as address families for now.  */
@@ -1367,6 +1648,15 @@ name|CTL_NET_RT_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "dump", CTLTYPE_STRUCT }, \ 	{ "flags", CTLTYPE_STRUCT }, \ 	{ "iflist", CTLTYPE_STRUCT }, \ }
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
 begin_comment
 comment|/*  * Maximum queue length specifiable by listen.  */
 end_comment
@@ -1377,6 +1667,40 @@ directive|define
 name|SOMAXCONN
 value|128
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STRUCT_IOVEC_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_STRUCT_IOVEC_DECLARED
+end_define
+
+begin_struct
+struct|struct
+name|iovec
+block|{
+name|void
+modifier|*
+name|iov_base
+decl_stmt|;
+comment|/* Base address. */
+name|size_t
+name|iov_len
+decl_stmt|;
+comment|/* Length. */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Message header for recvmsg and sendmsg calls.  * Used value-result for recvmsg, value only for sendmsg.  */
@@ -1499,6 +1823,12 @@ begin_comment
 comment|/* wait for full request or error */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1532,6 +1862,11 @@ begin_comment
 comment|/* used in sendit() */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Header for ancillary data objects in msg_control buffer.  * Used for additional information with/about a datagram  * not expressible by flags.  The format is a sequence  * of message elements headed by cmsghdr structures.  */
 end_comment
@@ -1556,6 +1891,12 @@ comment|/* followed by	u_char  cmsg_data[]; */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * While we may have more groups than this, the cmsgcred struct must  * be able to fit in an mbuf, and NGROUPS_MAX is too large to allow  * this. */
@@ -1607,6 +1948,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
 begin_comment
 comment|/* given pointer to struct cmsghdr, return pointer to data */
 end_comment
@@ -1618,7 +1968,7 @@ name|CMSG_DATA
 parameter_list|(
 name|cmsg
 parameter_list|)
-value|((u_char *)(cmsg) + \ 				 _ALIGN(sizeof(struct cmsghdr)))
+value|((unsigned char *)(cmsg) + \ 				 _ALIGN(sizeof(struct cmsghdr)))
 end_define
 
 begin_comment
@@ -1635,7 +1985,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|(((caddr_t)(cmsg) + _ALIGN((cmsg)->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (caddr_t)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + _ALIGN((cmsg)->cmsg_len)))
+value|(((char *)(cmsg) + _ALIGN((cmsg)->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (char *)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((char *)(cmsg) + _ALIGN((cmsg)->cmsg_len)))
 end_define
 
 begin_define
@@ -1647,6 +1997,12 @@ name|mhdr
 parameter_list|)
 value|((struct cmsghdr *)(mhdr)->msg_control)
 end_define
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/* RFC 2292 additions */
@@ -1671,6 +2027,11 @@ name|l
 parameter_list|)
 value|(_ALIGN(sizeof(struct cmsghdr)) + (l))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1708,6 +2069,12 @@ begin_comment
 comment|/* access rights (array of int) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1730,6 +2097,17 @@ begin_comment
 comment|/* process creds (struct cmsgcred) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_comment
 comment|/*  * 4.3 compat sockaddr, move to compat file later  */
 end_comment
@@ -1738,7 +2116,8 @@ begin_struct
 struct|struct
 name|osockaddr
 block|{
-name|u_short
+name|unsigned
+name|short
 name|sa_family
 decl_stmt|;
 comment|/* address family */
@@ -1761,7 +2140,8 @@ begin_struct
 struct|struct
 name|omsghdr
 block|{
-name|caddr_t
+name|char
+modifier|*
 name|msg_name
 decl_stmt|;
 comment|/* optional address */
@@ -1779,7 +2159,8 @@ name|int
 name|msg_iovlen
 decl_stmt|;
 comment|/* # elements in msg_iov */
-name|caddr_t
+name|char
+modifier|*
 name|msg_accrights
 decl_stmt|;
 comment|/* access rights sent/received */
@@ -1789,6 +2170,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * howto arguments for shutdown(2), specified by Posix.1g.  */
@@ -1827,6 +2213,12 @@ begin_comment
 comment|/* shut down both sides */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_comment
 comment|/*  * sendfile(2) header/trailer struct  */
 end_comment
@@ -1859,6 +2251,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1873,6 +2270,7 @@ end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
+comment|/*  * XXX functions missing restrict type-qualifiers.  */
 name|int
 name|accept
 parameter_list|(
@@ -2093,6 +2491,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_function_decl
 name|int
 name|sendfile
@@ -2116,6 +2520,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -2175,6 +2584,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * XXX missing sockatmark().  */
+end_comment
 
 begin_macro
 name|__END_DECLS
