@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: milter.c,v 8.50.4.44 2001/01/23 19:43:57 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 8.50.4.46 2001/05/11 18:11:36 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,9 +228,9 @@ define|#
 directive|define
 name|MILTER_CHECK_REPLYCODE
 parameter_list|(
-define|default) \ 	if (response == NULL || \ 	    strlen(response) + 1 != (size_t) rlen || \ 	    rlen< 3 || \ 	    (response[0] != '4'&& response[0] != '5') || \ 	    !isascii(response[1]) || !isdigit(response[1]) || \ 	    !isascii(response[2]) || !isdigit(response[2])) \ 	{ \ 		if (response != NULL) \ 			free(response); \ 		response = newstr(default); \ 	} \ 	else \ 	{ \ 		char *ptr = response; \  \
+define|default) \ 	if (response == NULL || \ 	    strlen(response) + 1 != (size_t) rlen || \ 	    rlen< 3 || \ 	    (response[0] != '4'&& response[0] != '5') || \ 	    !isascii(response[1]) || !isdigit(response[1]) || \ 	    !isascii(response[2]) || !isdigit(response[2])) \ 	{ \ 		if (response != NULL) \ 			sm_free(response); \ 		response = newstr(default); \ 	} \ 	else \ 	{ \ 		char *ptr = response; \  \
 comment|/* Check for unprotected %'s in the string */
-define|\ 		while (*ptr != '\0') \ 		{ \ 			if (*ptr == '%'&& *++ptr != '%') \ 			{ \ 				free(response); \ 				response = newstr(default); \ 				break; \ 			} \ 			ptr++; \ 		} \ 	}
+define|\ 		while (*ptr != '\0') \ 		{ \ 			if (*ptr == '%'&& *++ptr != '%') \ 			{ \ 				sm_free(response); \ 				response = newstr(default); \ 				break; \ 			} \ 			ptr++; \ 		} \ 	}
 end_define
 
 begin_define
@@ -972,7 +972,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -3933,11 +3933,16 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"X%s: error connecting to filter\n"
+literal|"X%s: error connecting to filter: %s\n"
 argument_list|,
 name|m
 operator|->
 name|mf_name
+argument_list|,
+name|errstring
+argument_list|(
+name|save_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3954,11 +3959,16 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: error connecting to filter"
+literal|"X%s: error connecting to filter: %s"
 argument_list|,
 name|m
 operator|->
 name|mf_name
+argument_list|,
+name|errstring
+argument_list|(
+name|save_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|milter_error
@@ -6568,7 +6578,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -7031,7 +7041,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -7585,7 +7595,7 @@ name|response
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -7657,7 +7667,7 @@ name|response
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -7743,7 +7753,7 @@ name|response
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -7800,7 +7810,7 @@ argument_list|,
 name|MILTER_LEN_BYTES
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -8434,7 +8444,7 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -8794,7 +8804,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -9732,7 +9742,7 @@ operator|->
 name|h_value
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|h
 operator|->
@@ -11049,7 +11059,7 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -11111,7 +11121,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -11565,7 +11575,7 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -11810,7 +11820,7 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -12735,7 +12745,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -12833,7 +12843,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -12943,7 +12953,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)

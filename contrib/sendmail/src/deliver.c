@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.66 2001/02/25 23:30:35 gshapiro Exp $"
+literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.81 2001/05/23 02:15:42 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -543,6 +543,39 @@ operator|>
 name|MaxHopCount
 condition|)
 block|{
+name|char
+modifier|*
+name|recip
+decl_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_sendqueue
+operator|!=
+name|NULL
+operator|&&
+name|e
+operator|->
+name|e_sendqueue
+operator|->
+name|q_paddr
+operator|!=
+name|NULL
+condition|)
+name|recip
+operator|=
+name|e
+operator|->
+name|e_sendqueue
+operator|->
+name|q_paddr
+expr_stmt|;
+else|else
+name|recip
+operator|=
+literal|"(nobody)"
+expr_stmt|;
 name|errno
 operator|=
 literal|0
@@ -582,7 +615,7 @@ name|EX_UNAVAILABLE
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"554 5.0.0 Too many hops %d (%d max): from %s via %s, to %s"
+literal|"554 5.4.6 Too many hops %d (%d max): from %s via %s, to %s"
 argument_list|,
 name|e
 operator|->
@@ -604,11 +637,7 @@ literal|"localhost"
 else|:
 name|RealHostName
 argument_list|,
-name|e
-operator|->
-name|e_sendqueue
-operator|->
-name|q_paddr
+name|recip
 argument_list|)
 expr_stmt|;
 for|for
@@ -651,6 +680,12 @@ operator|->
 name|q_status
 operator|=
 literal|"5.4.6"
+expr_stmt|;
+name|q
+operator|->
+name|q_rstatus
+operator|=
+literal|"554 5.4.6 Too many hops"
 expr_stmt|;
 block|}
 return|return;
@@ -2714,6 +2749,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Reset global flags */
+name|RestartRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|ShutdownRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|PendingSignal
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		**  Since we have accepted responsbility for the message, 		**  change the SIGTERM handler.  intsig() (the old handler) 		**  would remove the envelope if this was a command line 		**  message submission. 		*/
 operator|(
 name|void
@@ -3633,7 +3681,7 @@ comment|/* **  DOFORK -- simple fork interface to DOFORK. ** **	Parameters: **		
 end_comment
 
 begin_function
-name|int
+name|pid_t
 name|dofork
 parameter_list|()
 block|{
@@ -5787,7 +5835,7 @@ name|tobuf
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|tobuf
 argument_list|)
@@ -6981,6 +7029,12 @@ expr_stmt|;
 block|}
 name|mci
 operator|->
+name|mci_errno
+operator|=
+name|errno
+expr_stmt|;
+name|mci
+operator|->
 name|mci_lastuse
 operator|=
 name|curtime
@@ -6997,12 +7051,6 @@ operator|->
 name|mci_exitstat
 operator|=
 name|i
-expr_stmt|;
-name|mci
-operator|->
-name|mci_errno
-operator|=
-name|errno
 expr_stmt|;
 if|#
 directive|if
@@ -7905,6 +7953,19 @@ specifier|extern
 name|int
 name|DtableSize
 decl_stmt|;
+comment|/* Reset global flags */
+name|RestartRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|ShutdownRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|PendingSignal
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -10554,8 +10615,14 @@ argument_list|,
 name|e
 argument_list|)
 argument_list|,
+name|result
+operator|==
+name|SASL_OK
+condition|?
 operator|*
 name|ssf
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 				**  only switch to encrypted connection 				**  if a security layer has been negotiated 				*/
@@ -12544,6 +12611,7 @@ name|void
 name|endwaittimeout
 parameter_list|()
 block|{
+comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 name|errno
 operator|=
 name|ETIMEDOUT
@@ -12609,56 +12677,6 @@ argument_list|(
 name|mci
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|SASL
-comment|/* shutdown SASL */
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|MCIF_AUTHACT
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
-condition|)
-block|{
-name|sasl_dispose
-argument_list|(
-operator|&
-name|mci
-operator|->
-name|mci_conn
-argument_list|)
-expr_stmt|;
-name|mci
-operator|->
-name|mci_flags
-operator|&=
-operator|~
-name|MCIF_AUTHACT
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SASL */
-if|#
-directive|if
-name|STARTTLS
-comment|/* shutdown TLS */
-operator|(
-name|void
-operator|)
-name|endtlsclt
-argument_list|(
-name|mci
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* STARTTLS */
 comment|/* close output to mailer */
 if|if
 condition|(
@@ -12735,6 +12753,56 @@ name|e_xfp
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|SASL
+comment|/* shutdown SASL */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MCIF_AUTHACT
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
+name|sasl_dispose
+argument_list|(
+operator|&
+name|mci
+operator|->
+name|mci_conn
+argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_AUTHACT
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* SASL */
+if|#
+directive|if
+name|STARTTLS
+comment|/* shutdown TLS */
+operator|(
+name|void
+operator|)
+name|endtlsclt
+argument_list|(
+name|mci
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* STARTTLS */
 comment|/* now close the input */
 if|if
 condition|(
@@ -13949,7 +14017,7 @@ name|e_message
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|e
 operator|->
@@ -18150,6 +18218,19 @@ name|O_WRONLY
 operator||
 name|O_APPEND
 decl_stmt|;
+comment|/* Reset global flags */
+name|RestartRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|ShutdownRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|PendingSignal
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -19720,7 +19801,7 @@ name|fflush
 argument_list|(
 name|f
 argument_list|)
-operator|<
+operator|!=
 literal|0
 operator|||
 operator|(
@@ -19926,6 +20007,11 @@ name|void
 name|mailfiletimeout
 parameter_list|()
 block|{
+comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|CtxMailfileTimeout
@@ -20063,7 +20149,13 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-comment|/* 	**  If local delivery, just return a constant. 	*/
+comment|/* 	**  If local delivery (and not remote), just return a constant. 	*/
+name|p
+operator|=
+name|m
+operator|->
+name|m_mailer
+expr_stmt|;
 if|if
 condition|(
 name|bitnset
@@ -20074,17 +20166,29 @@ name|m
 operator|->
 name|m_flags
 argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"[IPC]"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"[TCP]"
+argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 literal|"localhost"
 return|;
 comment|/* 	**  Check to see if this uses IPC -- if not, it can't have MX records. 	*/
-name|p
-operator|=
-name|m
-operator|->
-name|m_mailer
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -20577,7 +20681,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|s
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: rmail.c,v 8.39.4.11 2001/02/14 04:07:25 gshapiro Exp $"
+literal|"@(#)$Id: rmail.c,v 8.39.4.12 2001/05/07 22:06:39 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 

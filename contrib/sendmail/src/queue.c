@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.44 2001/02/22 00:55:35 ca Exp $ (with queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.55 2001/05/03 23:37:11 gshapiro Exp $ (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.44 2001/02/22 00:55:35 ca Exp $ (without queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.55 2001/05/03 23:37:11 gshapiro Exp $ (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2686,7 +2686,7 @@ name|fflush
 argument_list|(
 name|tfp
 argument_list|)
-operator|<
+operator|!=
 literal|0
 operator|||
 operator|(
@@ -3715,6 +3715,19 @@ name|TRUE
 return|;
 block|}
 comment|/* child -- clean up signals */
+comment|/* Reset global flags */
+name|RestartRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|ShutdownRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|PendingSignal
+operator|=
+literal|0
+expr_stmt|;
 name|clrcontrol
 argument_list|()
 expr_stmt|;
@@ -3756,6 +3769,16 @@ operator|)
 name|setsignal
 argument_list|(
 name|SIGHUP
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGTERM
 argument_list|,
 name|intsig
 argument_list|)
@@ -3801,6 +3824,9 @@ argument_list|(
 name|queuedir
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|,
@@ -4248,7 +4274,7 @@ name|pid
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|sm_free
 argument_list|(
 name|w
 operator|->
@@ -4261,14 +4287,14 @@ name|w
 operator|->
 name|w_host
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|w
 operator|->
 name|w_host
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 operator|(
 name|char
@@ -4304,7 +4330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  RUNQUEUEEVENT -- stub for use in setevent */
+comment|/* **  RUNQUEUEEVENT -- stub for use in setevent ** **	Parameters: **		none. ** **	Returns: **		none. ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
 end_comment
 
 begin_function
@@ -4627,7 +4653,7 @@ name|WorkQ
 operator|=
 name|nw
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|w
 operator|->
@@ -4642,14 +4668,14 @@ name|w_host
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|w
 operator|->
 name|w_host
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 operator|(
 name|char
@@ -5702,7 +5728,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|w
 operator|->
@@ -5715,7 +5741,7 @@ name|w
 operator|->
 name|w_host
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|w
 operator|->
@@ -6120,7 +6146,7 @@ name|WorkList
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|WorkList
 argument_list|)
@@ -6291,7 +6317,7 @@ operator|(
 name|WORK
 operator|*
 operator|)
-name|realloc
+name|xrealloc
 argument_list|(
 operator|(
 name|char
@@ -7063,6 +7089,19 @@ literal|0
 condition|)
 block|{
 comment|/* 		**  CHILD 		**	Lock the control file to avoid duplicate deliveries. 		**		Then run the file as though we had just read it. 		**	We save an idea of the temporary name so we 		**		can recover on interrupt. 		*/
+comment|/* Reset global flags */
+name|RestartRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|ShutdownRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|PendingSignal
+operator|=
+literal|0
+expr_stmt|;
 comment|/* set basic modes, etc. */
 operator|(
 name|void
@@ -7172,6 +7211,9 @@ name|e_id
 argument_list|,
 literal|"dowork, pid=%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -7337,6 +7379,8 @@ decl_stmt|;
 name|struct
 name|stat
 name|st
+decl_stmt|,
+name|stf
 decl_stmt|;
 name|char
 modifier|*
@@ -7546,9 +7590,19 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* 	**  Check the queue file for plausibility to avoid attacks. 	*/
+comment|/* 	**  Prevent locking race condition. 	** 	**  Process A: readqf(): qfp = fopen(qffile) 	**  Process B: queueup(): rename(tf, qf) 	**  Process B: unlocks(tf) 	**  Process A: lockfile(qf); 	** 	**  Process A (us) has the old qf file (before the rename deleted 	**  the directory entry) and will be delivering based on old data. 	**  This can lead to multiple deliveries of the same recipients. 	** 	**  Catch this by checking if the underlying qf file has changed 	**  *after* acquiring our lock and if so, act as though the file 	**  was still locked (i.e., just return like the lockfile() case 	**  above. 	*/
 if|if
 condition|(
+name|stat
+argument_list|(
+name|qf
+argument_list|,
+operator|&
+name|stf
+argument_list|)
+operator|<
+literal|0
+operator|||
 name|fstat
 argument_list|(
 name|fileno
@@ -7575,7 +7629,7 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"readqf(%s): fstat failure (%s)\n"
+literal|"readqf(%s): [f]stat failure (%s)\n"
 argument_list|,
 name|qf
 argument_list|,
@@ -7597,6 +7651,136 @@ return|return
 name|FALSE
 return|;
 block|}
+if|if
+condition|(
+name|st
+operator|.
+name|st_nlink
+operator|!=
+name|stf
+operator|.
+name|st_nlink
+operator|||
+name|st
+operator|.
+name|st_dev
+operator|!=
+name|stf
+operator|.
+name|st_dev
+operator|||
+name|st
+operator|.
+name|st_ino
+operator|!=
+name|stf
+operator|.
+name|st_ino
+operator|||
+if|#
+directive|if
+name|HAS_ST_GEN
+operator|&&
+literal|0
+comment|/* AFS returns garbage in st_gen */
+name|st
+operator|.
+name|st_gen
+operator|!=
+name|stf
+operator|.
+name|st_gen
+operator|||
+endif|#
+directive|endif
+comment|/* HAS_ST_GEN&& 0 */
+name|st
+operator|.
+name|st_uid
+operator|!=
+name|stf
+operator|.
+name|st_uid
+operator|||
+name|st
+operator|.
+name|st_gid
+operator|!=
+name|stf
+operator|.
+name|st_gid
+operator|||
+name|st
+operator|.
+name|st_size
+operator|!=
+name|stf
+operator|.
+name|st_size
+condition|)
+block|{
+comment|/* changed after opened */
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s: changed\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"%s: changed\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|19
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"changed"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+comment|/* 	**  Check the queue file for plausibility to avoid attacks. 	*/
 name|qsafe
 operator|=
 name|S_IWOTH
@@ -9008,7 +9192,7 @@ name|bp
 operator|!=
 name|buf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bp
 argument_list|)
@@ -9347,6 +9531,14 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|StopRequest
+condition|)
+name|stop_sendmail
+argument_list|()
+expr_stmt|;
 name|nrequests
 operator|+=
 name|print_single_queue
@@ -9354,6 +9546,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|NumQueues
@@ -9814,6 +10007,13 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|StopRequest
+condition|)
+name|stop_sendmail
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%12s"
@@ -10015,6 +10215,13 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|StopRequest
+condition|)
+name|stop_sendmail
+argument_list|()
+expr_stmt|;
 name|fixcrlf
 argument_list|(
 name|buf
@@ -10700,13 +10907,21 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|Base60Code
+name|QueueIdChars
 index|[]
 init|=
 literal|"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx"
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|QIC_LEN
+value|60
+end_define
 
 begin_function
 name|void
@@ -10763,7 +10978,7 @@ if|if
 condition|(
 name|cX
 operator|>=
-literal|60
+name|QIC_LEN
 operator|||
 name|LastQueueTime
 operator|==
@@ -10850,7 +11065,7 @@ operator|+
 name|random_offset
 argument_list|)
 operator|%
-literal|60
+name|QIC_LEN
 argument_list|)
 expr_stmt|;
 name|tm
@@ -10866,13 +11081,13 @@ index|[
 literal|0
 index|]
 operator|=
-name|Base60Code
+name|QueueIdChars
 index|[
 name|tm
 operator|->
 name|tm_year
 operator|%
-literal|60
+name|QIC_LEN
 index|]
 expr_stmt|;
 name|idbuf
@@ -10880,7 +11095,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|Base60Code
+name|QueueIdChars
 index|[
 name|tm
 operator|->
@@ -10892,7 +11107,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|Base60Code
+name|QueueIdChars
 index|[
 name|tm
 operator|->
@@ -10904,7 +11119,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|Base60Code
+name|QueueIdChars
 index|[
 name|tm
 operator|->
@@ -10916,7 +11131,7 @@ index|[
 literal|4
 index|]
 operator|=
-name|Base60Code
+name|QueueIdChars
 index|[
 name|tm
 operator|->
@@ -10928,7 +11143,7 @@ index|[
 literal|5
 index|]
 operator|=
-name|Base60Code
+name|QueueIdChars
 index|[
 name|tm
 operator|->
@@ -10940,7 +11155,7 @@ index|[
 literal|6
 index|]
 operator|=
-name|Base60Code
+name|QueueIdChars
 index|[
 operator|(
 operator|(
@@ -10952,7 +11167,7 @@ operator|+
 name|random_offset
 operator|)
 operator|%
-literal|60
+name|QIC_LEN
 index|]
 expr_stmt|;
 operator|(
@@ -12155,14 +12370,14 @@ operator|||
 operator|(
 name|name
 index|[
-literal|2
+literal|1
 index|]
 operator|==
 literal|'.'
 operator|&&
 name|name
 index|[
-literal|3
+literal|2
 index|]
 operator|==
 literal|'\0'
@@ -12473,10 +12688,7 @@ name|qp_name
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|free
+name|sm_free
 argument_list|(
 name|QPaths
 index|[
@@ -12487,10 +12699,7 @@ name|qp_name
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|free
+name|sm_free
 argument_list|(
 operator|(
 name|char
@@ -12924,7 +13133,7 @@ operator|(
 name|QPATHS
 operator|*
 operator|)
-name|realloc
+name|xrealloc
 argument_list|(
 operator|(
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: vacation.c,v 8.68.4.16 2001/02/14 05:02:21 gshapiro Exp $"
+literal|"@(#)$Id: vacation.c,v 8.68.4.21 2001/05/07 22:06:41 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,17 @@ name|exclude
 decl_stmt|;
 if|#
 directive|if
+name|_FFR_BLACKBOX
+name|bool
+name|runasuser
+init|=
+name|FALSE
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_BLACKBOX */
+if|#
+directive|if
 name|_FFR_LISTDB
 name|bool
 name|lflag
@@ -617,13 +628,13 @@ name|char
 modifier|*
 name|dbfilename
 init|=
-name|VDB
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
 name|msgfilename
 init|=
-name|VMSG
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -896,51 +907,10 @@ name|From
 operator|=
 literal|'\0'
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_DEBUG
-operator|&&
-name|_FFR_LISTDB
 define|#
 directive|define
 name|OPTIONS
-value|"a:df:Iilm:r:s:t:xz"
-else|#
-directive|else
-comment|/* _FFR_DEBUG&& _FFR_LISTDB */
-if|#
-directive|if
-name|_FFR_DEBUG
-define|#
-directive|define
-name|OPTIONS
-value|"a:df:Iim:r:s:t:xz"
-else|#
-directive|else
-comment|/* _FFR_DEBUG */
-if|#
-directive|if
-name|_FFR_LISTDB
-define|#
-directive|define
-name|OPTIONS
-value|"a:f:Iilm:r:s:t:xz"
-else|#
-directive|else
-comment|/* _FFR_LISTDB */
-define|#
-directive|define
-name|OPTIONS
-value|"a:f:Iim:r:s:t:xz"
-endif|#
-directive|endif
-comment|/* _FFR_LISTDB */
-endif|#
-directive|endif
-comment|/* _FFR_DEBUG */
-endif|#
-directive|endif
-comment|/* _FFR_DEBUG&& _FFR_LISTDB */
+value|"a:df:Iilm:r:s:t:Uxz"
 while|while
 condition|(
 name|mfail
@@ -1154,6 +1124,21 @@ literal|'t'
 case|:
 comment|/* SunOS: -t1d (default expire) */
 break|break;
+if|#
+directive|if
+name|_FFR_BLACKBOX
+case|case
+literal|'U'
+case|:
+comment|/* run as single user mode */
+name|runasuser
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_BLACKBOX */
 case|case
 literal|'x'
 case|:
@@ -1275,17 +1260,147 @@ name|EX_NOUSER
 argument_list|)
 expr_stmt|;
 block|}
+name|name
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+name|user_info
+operator|.
+name|smdbu_id
+operator|=
+name|pw
+operator|->
+name|pw_uid
+expr_stmt|;
+name|user_info
+operator|.
+name|smdbu_group_id
+operator|=
+name|pw
+operator|->
+name|pw_gid
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|user_info
+operator|.
+name|smdbu_name
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|SMDB_MAX_USER_NAME_LEN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|msglog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"vacation: no such directory %s.\n"
+argument_list|,
+name|pw
+operator|->
+name|pw_dir
+argument_list|)
+expr_stmt|;
+name|EXITM
+argument_list|(
+name|EX_NOINPUT
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|#
 directive|if
 name|_FFR_BLACKBOX
+elseif|else
+if|if
+condition|(
+name|runasuser
+condition|)
+block|{
 name|name
 operator|=
 operator|*
 name|argv
 expr_stmt|;
-else|#
-directive|else
+if|if
+condition|(
+name|dbfilename
+operator|==
+name|NULL
+operator|||
+name|msgfilename
+operator|==
+name|NULL
+condition|)
+block|{
+name|msglog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"vacation: -U requires setting both -f and -m\n"
+argument_list|)
+expr_stmt|;
+name|EXITM
+argument_list|(
+name|EX_NOINPUT
+argument_list|)
+expr_stmt|;
+block|}
+name|user_info
+operator|.
+name|smdbu_id
+operator|=
+name|pw
+operator|->
+name|pw_uid
+expr_stmt|;
+name|user_info
+operator|.
+name|smdbu_group_id
+operator|=
+name|pw
+operator|->
+name|pw_gid
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|user_info
+operator|.
+name|smdbu_name
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|SMDB_MAX_USER_NAME_LEN
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* _FFR_BLACKBOX */
 elseif|else
 if|if
@@ -1319,6 +1434,8 @@ name|EX_NOUSER
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|name
 operator|=
 name|pw
@@ -1354,9 +1471,6 @@ name|EX_NOINPUT
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_BLACKBOX */
 name|user_info
 operator|.
 name|smdbu_id
@@ -1389,6 +1503,27 @@ argument_list|,
 name|SMDB_MAX_USER_NAME_LEN
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|dbfilename
+operator|==
+name|NULL
+condition|)
+name|dbfilename
+operator|=
+name|VDB
+expr_stmt|;
+if|if
+condition|(
+name|msgfilename
+operator|==
+name|NULL
+condition|)
+name|msgfilename
+operator|=
+name|VMSG
+expr_stmt|;
 name|sff
 operator|=
 name|SFF_CREAT
@@ -1404,6 +1539,8 @@ operator|!=
 name|getgid
 argument_list|()
 condition|)
+block|{
+comment|/* Allow a set-group-id vacation binary */
 name|RunAsGid
 operator|=
 name|user_info
@@ -1419,6 +1556,7 @@ name|SFF_NOPATHCHECK
 operator||
 name|SFF_OPENASROOT
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* _FFR_BLACKBOX */
@@ -3571,6 +3709,13 @@ literal|2
 index|]
 decl_stmt|;
 name|char
+modifier|*
+name|pv
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|char
 name|buf
 index|[
 name|MAXLINE
@@ -3656,6 +3801,67 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
+name|pv
+index|[
+literal|0
+index|]
+operator|=
+literal|"sendmail"
+expr_stmt|;
+name|pv
+index|[
+literal|1
+index|]
+operator|=
+literal|"-oi"
+expr_stmt|;
+name|pv
+index|[
+literal|2
+index|]
+operator|=
+literal|"-f"
+expr_stmt|;
+if|if
+condition|(
+name|emptysender
+condition|)
+name|pv
+index|[
+literal|3
+index|]
+operator|=
+literal|"<>"
+expr_stmt|;
+else|else
+name|pv
+index|[
+literal|3
+index|]
+operator|=
+name|myname
+expr_stmt|;
+name|pv
+index|[
+literal|4
+index|]
+operator|=
+literal|"--"
+expr_stmt|;
+name|pv
+index|[
+literal|5
+index|]
+operator|=
+name|From
+expr_stmt|;
+name|pv
+index|[
+literal|6
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|i
 operator|=
 name|fork
@@ -3736,34 +3942,14 @@ argument_list|(
 name|mfp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|emptysender
-condition|)
-name|myname
-operator|=
-literal|"<>"
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|execl
+name|execv
 argument_list|(
 name|_PATH_SENDMAIL
 argument_list|,
-literal|"sendmail"
-argument_list|,
-literal|"-oi"
-argument_list|,
-literal|"-f"
-argument_list|,
-name|myname
-argument_list|,
-literal|"--"
-argument_list|,
-name|From
-argument_list|,
-name|NULL
+name|pv
 argument_list|)
 expr_stmt|;
 name|msglog
@@ -3913,7 +4099,7 @@ name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"uid %u: usage: vacation [-i] [-a alias]%s [-f db]%s [-m msg] [-r interval] [-s sender] [-t time] [-x] [-z] login\n"
+literal|"uid %u: usage: vacation [-a alias]%s [-f db] [-i]%s [-m msg] [-r interval] [-s sender] [-t time]%s [-x] [-z] login\n"
 argument_list|,
 name|getuid
 argument_list|()
@@ -3935,13 +4121,26 @@ if|#
 directive|if
 name|_FFR_LISTDB
 literal|" [-l]"
+argument_list|,
 else|#
 directive|else
 comment|/* _FFR_LISTDB */
 literal|""
+argument_list|,
 endif|#
 directive|endif
 comment|/* _FFR_LISTDB */
+if|#
+directive|if
+name|_FFR_BLACKBOX
+literal|" [-U]"
+else|#
+directive|else
+comment|/* _FFR_BLACKBOX */
+literal|""
+endif|#
+directive|endif
+comment|/* _FFR_BLACKBOX */
 argument_list|)
 expr_stmt|;
 name|exit

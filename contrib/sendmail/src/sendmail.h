@@ -44,7 +44,7 @@ name|char
 name|SmailId
 index|[]
 init|=
-literal|"@(#)$Id: sendmail.h,v 8.517.4.50 2001/02/22 18:56:24 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.517.4.64 2001/05/23 17:49:13 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5045,6 +5045,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MF_CLOSING
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* map is being closed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DYNOPENMAP
 parameter_list|(
 name|map
@@ -5573,6 +5584,11 @@ name|LDAPMessage
 modifier|*
 name|ldap_res
 decl_stmt|;
+comment|/* Linked list of maps sharing the same LDAP binding */
+name|MAP
+modifier|*
+name|ldap_next
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -6059,11 +6075,11 @@ comment|/* service switch */
 ifdef|#
 directive|ifdef
 name|LDAPMAP
-name|LDAP
+name|MAP
 modifier|*
-name|sv_ldap
+name|sv_lmap
 decl_stmt|;
-comment|/* LDAP connection */
+comment|/* Maps for LDAP connection */
 endif|#
 directive|endif
 comment|/* LDAPMAP */
@@ -6250,12 +6266,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ST_LDAP
+name|ST_LMAP
 value|13
 end_define
 
 begin_comment
-comment|/* LDAP connection */
+comment|/* List head of maps for LDAP connection */
 end_comment
 
 begin_endif
@@ -6404,8 +6420,8 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|s_ldap
-value|s_value.sv_ldap
+name|s_lmap
+value|s_value.sv_lmap
 end_define
 
 begin_endif
@@ -6543,7 +6559,7 @@ name|int
 name|ev_arg
 decl_stmt|;
 comment|/* argument to ev_func */
-name|int
+name|pid_t
 name|ev_pid
 decl_stmt|;
 comment|/* pid that set this event */
@@ -6601,6 +6617,28 @@ specifier|extern
 name|EVENT
 modifier|*
 name|setevent
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|,
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|EVENT
+modifier|*
+name|sigsafe_setevent
 name|__P
 argument_list|(
 operator|(
@@ -9100,6 +9138,169 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  Critical signal sections */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PEND_SIGHUP
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PEND_SIGINT
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PEND_SIGTERM
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PEND_SIGUSR1
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTER_CRITICAL
+parameter_list|()
+value|InCriticalSection++
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAVE_CRITICAL
+parameter_list|()
+define|\
+value|do									\ {									\ 	if (InCriticalSection> 0)					\ 		InCriticalSection--;					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK_CRITICAL
+parameter_list|(
+name|sig
+parameter_list|)
+define|\
+value|{									\ 	if (InCriticalSection> 0&& (sig) != 0)			\ 	{								\ 		pend_signal((sig));					\ 		return SIGFUNC_RETURN;					\ 	}								\ }
+end_define
+
+begin_comment
+comment|/* reset signal in case System V semantics */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS5SIGNALS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FIX_SYSV_SIGNAL
+parameter_list|(
+name|sig
+parameter_list|,
+name|handler
+parameter_list|)
+define|\
+value|{									\ 	if ((sig) != 0)							\ 		(void) setsignal((sig), (handler));			\ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SYS5SIGNALS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIX_SYSV_SIGNAL
+parameter_list|(
+name|sig
+parameter_list|,
+name|handler
+parameter_list|)
+value|{
+comment|/* EMPTY */
+value|}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS5SIGNALS */
+end_comment
+
+begin_comment
+comment|/* variables */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|u_int
+specifier|volatile
+name|InCriticalSection
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*>0 if in a critical section */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+specifier|volatile
+name|PendingSignal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pending signal to resend */
+end_comment
+
+begin_comment
+comment|/* functions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pend_signal
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  Miscellaneous information. */
 end_comment
 
@@ -9250,6 +9451,7 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+specifier|volatile
 name|DataProgress
 decl_stmt|;
 end_decl_stmt
@@ -9272,6 +9474,7 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+specifier|volatile
 name|DoQueueRun
 decl_stmt|;
 end_decl_stmt
@@ -9591,6 +9794,18 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+specifier|volatile
+name|StopRequest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* stop sending output */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
 name|SuperSafe
 decl_stmt|;
 end_decl_stmt
@@ -9749,6 +9964,7 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+specifier|volatile
 name|CurChildren
 decl_stmt|;
 end_decl_stmt
@@ -10879,6 +11095,19 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
+specifier|volatile
+name|RestartRequest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* a sendmail restart has been requested */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
 name|RunAsUserName
 decl_stmt|;
 end_decl_stmt
@@ -10909,6 +11138,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* backup service switch */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+specifier|volatile
+name|ShutdownRequest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* a sendmail shutdown has been requested */
 end_comment
 
 begin_decl_stmt
@@ -11012,6 +11254,19 @@ end_comment
 
 begin_comment
 comment|/* saved user environment */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+modifier|*
+name|SaveArgv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* argument vector for re-execing */
 end_comment
 
 begin_decl_stmt
@@ -11142,18 +11397,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* envelope currently being processed */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|EVENT
-modifier|*
-name|EventQueue
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* head of event queue */
 end_comment
 
 begin_decl_stmt
@@ -11575,6 +11818,19 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|init_tls_library
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12908,6 +13164,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|allsignals
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|arpadate
@@ -13314,7 +13583,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|pid_t
 name|dofork
 name|__P
 argument_list|(
@@ -13534,6 +13803,53 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|NETINET6
+operator|&&
+name|NEEDSGETIPNODE
+end_if
+
+begin_if
+if|#
+directive|if
+name|_FFR_FREEHOSTENT
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|freehostent
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|hostent
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_FREEHOSTENT */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEEDSGETIPNODE&& NETINET6 */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -13751,19 +14067,6 @@ argument_list|(
 operator|(
 name|ENVELOPE
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|SIGFUNC_DECL
-name|intindebug
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14070,7 +14373,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|pid_t
 name|prog_open
 name|__P
 argument_list|(
@@ -14141,19 +14444,6 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|SIGFUNC_DECL
-name|quiesce
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14494,25 +14784,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|SIGFUNC_DECL
-name|sigusr1
+name|void
+name|shutdown_daemon
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|SIGFUNC_DECL
-name|sighup
-name|__P
-argument_list|(
-operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14533,6 +14810,20 @@ name|char
 operator|*
 operator|,
 name|va_list
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sm_free
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14664,6 +14955,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|stop_sendmail
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|bool
 name|strcontainedin
 name|__P
@@ -14755,19 +15059,6 @@ name|int
 operator|,
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|SIGFUNC_DECL
-name|tick
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14931,6 +15222,39 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|xcalloc
+name|__P
+argument_list|(
+operator|(
+name|size_t
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|xrealloc
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;

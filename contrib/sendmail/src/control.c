@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: control.c,v 8.44.14.15 2001/01/22 19:00:22 gshapiro Exp $"
+literal|"@(#)$Id: control.c,v 8.44.14.20 2001/05/03 17:24:03 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,123 @@ include|#
 directive|include
 file|<sendmail.h>
 end_include
+
+begin_comment
+comment|/* values for cmd_code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDERROR
+value|0
+end_define
+
+begin_comment
+comment|/* bad command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDRESTART
+value|1
+end_define
+
+begin_comment
+comment|/* restart daemon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDSHUTDOWN
+value|2
+end_define
+
+begin_comment
+comment|/* end daemon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDHELP
+value|3
+end_define
+
+begin_comment
+comment|/* help */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDSTATUS
+value|4
+end_define
+
+begin_comment
+comment|/* daemon status */
+end_comment
+
+begin_struct
+struct|struct
+name|cmd
+block|{
+name|char
+modifier|*
+name|cmd_name
+decl_stmt|;
+comment|/* command name */
+name|int
+name|cmd_code
+decl_stmt|;
+comment|/* internal code, see below */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cmd
+name|CmdTab
+index|[]
+init|=
+block|{
+block|{
+literal|"help"
+block|,
+name|CMDHELP
+block|}
+block|,
+block|{
+literal|"restart"
+block|,
+name|CMDRESTART
+block|}
+block|,
+block|{
+literal|"shutdown"
+block|,
+name|CMDSHUTDOWN
+block|}
+block|,
+block|{
+literal|"status"
+block|,
+name|CMDSTATUS
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|CMDERROR
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -609,123 +726,6 @@ begin_comment
 comment|/* **  CONTROL_COMMAND -- read and process command from named socket ** **	Read and process the command from the opened socket. **	Exits when done since it is running in a forked child. ** **	Parameters: **		sock -- the opened socket from getrequests() **		e -- the current envelope ** **	Returns: **		none. */
 end_comment
 
-begin_struct
-struct|struct
-name|cmd
-block|{
-name|char
-modifier|*
-name|cmd_name
-decl_stmt|;
-comment|/* command name */
-name|int
-name|cmd_code
-decl_stmt|;
-comment|/* internal code, see below */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* values for cmd_code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDERROR
-value|0
-end_define
-
-begin_comment
-comment|/* bad command */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDRESTART
-value|1
-end_define
-
-begin_comment
-comment|/* restart daemon */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDSHUTDOWN
-value|2
-end_define
-
-begin_comment
-comment|/* end daemon */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDHELP
-value|3
-end_define
-
-begin_comment
-comment|/* help */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDSTATUS
-value|4
-end_define
-
-begin_comment
-comment|/* daemon status */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cmd
-name|CmdTab
-index|[]
-init|=
-block|{
-block|{
-literal|"help"
-block|,
-name|CMDHELP
-block|}
-block|,
-block|{
-literal|"restart"
-block|,
-name|CMDRESTART
-block|}
-block|,
-block|{
-literal|"shutdown"
-block|,
-name|CMDSHUTDOWN
-block|}
-block|,
-block|{
-literal|"status"
-block|,
-name|CMDSTATUS
-block|}
-block|,
-block|{
-name|NULL
-block|,
-name|CMDERROR
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|jmp_buf
@@ -744,6 +744,11 @@ name|time_t
 name|timeout
 decl_stmt|;
 block|{
+comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|CtxControlTimeout

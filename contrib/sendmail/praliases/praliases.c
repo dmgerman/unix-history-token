@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: praliases.c,v 8.59.4.18 2001/01/22 19:00:18 gshapiro Exp $"
+literal|"@(#)$Id: praliases.c,v 8.59.4.19 2001/02/28 02:37:57 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1512,6 +1512,9 @@ operator|++
 name|argv
 control|)
 block|{
+name|int
+name|get_res
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1550,11 +1553,9 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
-if|if
-condition|(
+name|get_res
+operator|=
 name|database
 operator|->
 name|smdb_get
@@ -1569,6 +1570,40 @@ name|db_value
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|get_res
+operator|==
+name|SMDBE_NOT_FOUND
+condition|)
+block|{
+name|db_key
+operator|.
+name|size
+operator|++
+expr_stmt|;
+name|get_res
+operator|=
+name|database
+operator|->
+name|smdb_get
+argument_list|(
+name|database
+argument_list|,
+operator|&
+name|db_key
+argument_list|,
+operator|&
+name|db_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|get_res
 operator|==
 name|SMDBE_OK
 condition|)

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: recipient.c,v 8.231.14.10 2001/02/14 04:07:30 gshapiro Exp $"
+literal|"@(#)$Id: recipient.c,v 8.231.14.11 2001/05/03 17:24:14 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -689,7 +689,7 @@ name|bufp
 operator|!=
 name|buf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bufp
 argument_list|)
@@ -1140,7 +1140,7 @@ name|bufp
 operator|!=
 name|buf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bufp
 argument_list|)
@@ -3286,7 +3286,7 @@ name|buf
 operator|!=
 name|buf0
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -6442,6 +6442,11 @@ name|void
 name|includetimeout
 parameter_list|()
 block|{
+comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|CtxIncludeTimeout
