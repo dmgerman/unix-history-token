@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.14 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3954,11 +3954,12 @@ name|sblock
 operator|.
 name|fs_cpg
 expr_stmt|;
-comment|/* 	 * Notify parent process of success. 	 */
+comment|/* 	 * Notify parent process of success. 	 * Dissociate from session and tty. 	 */
 if|if
 condition|(
 name|mfs
 condition|)
+block|{
 name|kill
 argument_list|(
 name|ppid
@@ -3966,6 +3967,45 @@ argument_list|,
 name|SIGUSR1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsid
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chdir
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
