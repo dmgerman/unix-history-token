@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.23 1997/02/22 09:36:21 peter Exp $  */
+comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.24 1998/10/08 17:04:47 kato Exp $  */
 end_comment
 
 begin_comment
@@ -2348,58 +2348,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_comment
-comment|/*  * SMC EtherEZ98(SMC8498BTA)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_WD_NIC_OFFSET
-value|0x100
-end_define
-
-begin_comment
-comment|/* I/O base offset to NIC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_WD_ASIC_OFFSET
-value|0
-end_define
-
-begin_comment
-comment|/* I/O base offset to ASIC */
-end_comment
-
-begin_comment
-comment|/*  * XXX - The I/O address range is fragmented in the EtherEZ98;  *	this is the number of regs at iobase.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_WD_IO_PORTS
-value|16
-end_define
-
-begin_comment
-comment|/* # of i/o addresses used */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -2431,15 +2379,6 @@ end_define
 
 begin_comment
 comment|/* # of i/o addresses used */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PC98 */
 end_comment
 
 begin_define
