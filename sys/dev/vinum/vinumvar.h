@@ -19,6 +19,12 @@ begin_comment
 comment|/*  * Some configuration maxima.  They're an enum because  * we can't define global constants.  Sorry about that.  *  * These aren't as bad as they look: most of them are soft limits.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VINUMROOT
+end_define
+
 begin_enum
 enum|enum
 name|constants
@@ -324,7 +330,7 @@ block|,
 comment|/* maximum revive block size */
 name|DEFAULT_REVIVE_BLOCKSIZE
 init|=
-literal|16384
+literal|65536
 block|,
 comment|/* default revive block size */
 name|VINUMHOSTNAMELEN
