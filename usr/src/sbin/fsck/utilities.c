@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.8 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,20 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|int
+name|cont
+init|=
+operator|(
+name|strcmp
+argument_list|(
+name|s
+argument_list|,
+literal|"CONTINUE"
+argument_list|)
+operator|==
+literal|0
+operator|)
+decl_stmt|;
 if|if
 condition|(
 name|preen
@@ -185,6 +199,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|cont
+operator|&&
+operator|(
 name|nflag
 operator|||
 name|dfile
@@ -192,6 +210,7 @@ operator|.
 name|wfdes
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 name|printf
@@ -208,6 +227,12 @@ block|}
 if|if
 condition|(
 name|yflag
+operator|||
+operator|(
+name|cont
+operator|&&
+name|nflag
+operator|)
 condition|)
 block|{
 name|printf
@@ -545,7 +570,23 @@ literal|0
 condition|)
 name|pfatal
 argument_list|(
-literal|"WRITING ZERO'ED BLOCK %d TO DISK\n"
+literal|"WRITING %sZERO'ED BLOCK %d TO DISK\n"
+argument_list|,
+operator|(
+name|bp
+operator|->
+name|b_errs
+operator|==
+name|bp
+operator|->
+name|b_size
+operator|/
+name|dev_bsize
+operator|)
+condition|?
+literal|""
+else|:
+literal|"PARTIALLY "
 argument_list|,
 name|bp
 operator|->
@@ -765,6 +806,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dev_bsize
+operator|&&
 name|sblk
 operator|.
 name|b_bno
@@ -983,9 +1026,9 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|pfatal
+name|printf
 argument_list|(
-literal|"THE FOLLOWING SECTORS COULD NOT BE READ:"
+literal|"THE FOLLOWING DISK SECTORS COULD NOT BE READ:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1004,11 +1047,11 @@ name|size
 condition|;
 name|i
 operator|+=
-name|dev_bsize
+name|secsize
 operator|,
 name|cp
 operator|+=
-name|dev_bsize
+name|secsize
 control|)
 block|{
 if|if
@@ -1021,7 +1064,7 @@ name|rfdes
 argument_list|,
 name|cp
 argument_list|,
-name|dev_bsize
+name|secsize
 argument_list|)
 operator|<
 literal|0
@@ -1039,11 +1082,39 @@ name|dev_bsize
 operator|+
 name|i
 operator|+
-name|dev_bsize
+name|secsize
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|secsize
+operator|!=
+name|dev_bsize
+condition|)
+name|printf
+argument_list|(
+literal|" %d (%d),"
+argument_list|,
+operator|(
+name|blk
+operator|*
+name|dev_bsize
+operator|+
+name|i
+operator|)
+operator|/
+name|secsize
+argument_list|,
+name|blk
+operator|+
+name|i
+operator|/
+name|dev_bsize
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" %d,"
@@ -1212,7 +1283,7 @@ argument_list|,
 name|blk
 argument_list|)
 expr_stmt|;
-name|pfatal
+name|printf
 argument_list|(
 literal|"THE FOLLOWING SECTORS COULD NOT BE WRITTEN:"
 argument_list|)
