@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.202 2001/11/05 22:12:17 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.204 2002/02/22 18:24:57 ca Exp $"
 argument_list|)
 end_macro
 
@@ -470,7 +470,7 @@ operator|->
 name|mci_lastuse
 operator|+
 name|MciCacheTimeout
-operator|<
+operator|<=
 name|now
 operator|||
 operator|(
@@ -1359,13 +1359,13 @@ decl_stmt|;
 comment|/* if this info is stale, ignore it */
 if|if
 condition|(
-name|now
-operator|>
 name|mci
 operator|->
 name|mci_lastuse
 operator|+
 name|MciInfoTimeout
+operator|<=
+name|now
 condition|)
 block|{
 name|mci
@@ -1744,12 +1744,6 @@ block|{
 name|MCIF_7BIT
 block|,
 literal|"7BIT"
-block|}
-block|,
-block|{
-name|MCIF_MULTSTAT
-block|,
-literal|"MULTSTAT"
 block|}
 block|,
 block|{
@@ -4950,7 +4944,7 @@ operator|-
 name|statbuf
 operator|.
 name|st_mtime
-operator|<
+operator|<=
 name|MciInfoTimeout
 condition|)
 return|return

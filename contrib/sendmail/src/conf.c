@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.939 2002/01/09 17:26:28 gshapiro Exp $"
+literal|"@(#)$Id: conf.c,v 8.961 2002/04/04 21:32:14 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2105,6 +2105,31 @@ name|NAMED_BIND
 if|#
 directive|if
 name|DNSMAP
+if|#
+directive|if
+name|_FFR_DNSMAP_ALIASABLE
+name|MAPDEF
+argument_list|(
+literal|"dns"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_ALIASOK
+argument_list|,
+name|dns_map_parseargs
+argument_list|,
+name|dns_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|dns_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* _FFR_DNSMAP_ALIASABLE */
 name|MAPDEF
 argument_list|(
 literal|"dns"
@@ -2124,6 +2149,9 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DNSMAP_ALIASABLE */
 endif|#
 directive|endif
 comment|/* DNSMAP */
@@ -11965,6 +11993,7 @@ block|,
 comment|/* key shell (extended Korn shell) */
 literal|"/bin/posix/sh"
 block|,
+literal|"/sbin/sh"
 endif|#
 directive|endif
 comment|/* V4FS */
@@ -13600,32 +13629,25 @@ block|{
 name|int
 name|omode
 init|=
-operator|-
-literal|1
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|F_GETFL
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 name|fd
 argument_list|,
 name|F_GETFL
 argument_list|,
-operator|&
-name|omode
+literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|uid_t
+name|euid
+init|=
+name|geteuid
+argument_list|()
+decl_stmt|;
 name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* F_GETFL */
 name|syserr
 argument_list|(
 literal|"cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%d)"
@@ -13640,8 +13662,7 @@ name|type
 argument_list|,
 name|omode
 argument_list|,
-name|geteuid
-argument_list|()
+name|euid
 argument_list|)
 expr_stmt|;
 name|dumpfd
@@ -13773,32 +13794,25 @@ block|{
 name|int
 name|omode
 init|=
-operator|-
-literal|1
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|F_GETFL
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 name|fd
 argument_list|,
 name|F_GETFL
 argument_list|,
-operator|&
-name|omode
+literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|uid_t
+name|euid
+init|=
+name|geteuid
+argument_list|()
+decl_stmt|;
 name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* F_GETFL */
 name|syserr
 argument_list|(
 literal|"cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%d)"
@@ -13813,8 +13827,7 @@ name|type
 argument_list|,
 name|omode
 argument_list|,
-name|geteuid
-argument_list|()
+name|euid
 argument_list|)
 expr_stmt|;
 name|dumpfd
@@ -20663,7 +20676,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|writeln
+name|writelen
 operator|<
 literal|0
 condition|)
@@ -21093,6 +21106,14 @@ block|,
 endif|#
 directive|endif
 comment|/* USERDB */
+if|#
+directive|if
+name|USE_LDAP_INIT
+literal|"USE_LDAP_INIT"
+block|,
+endif|#
+directive|endif
+comment|/* USE_LDAP_INIT */
 if|#
 directive|if
 name|XDEBUG
@@ -21680,6 +21701,14 @@ directive|endif
 comment|/* _FFR_ALLOW_SASLINFO */
 if|#
 directive|if
+name|_FFR_ALLOW_S0_ERROR_4XX
+literal|"_FFR_ALLOW_S0_ERROR_4XX"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_ALLOW_S0_ERROR_4XX */
+if|#
+directive|if
 name|_FFR_BESTMX_BETTER_TRUNCATION
 literal|"_FFR_BESTMX_BETTER_TRUNCATION"
 block|,
@@ -21703,6 +21732,14 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_CATCH_BROKEN_MTAS */
+if|#
+directive|if
+name|_FFR_CATCH_LONG_STRINGS
+literal|"_FFR_CATCH_LONG_STRINGS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CATCH_LONG_STRINGS */
 if|#
 directive|if
 name|_FFR_CHECK_EOM
@@ -21737,6 +21774,24 @@ directive|endif
 comment|/* _FFR_DEPRECATE_MAILER_FLAG_I */
 if|#
 directive|if
+name|_FFR_DIGUNIX_SAFECHOWN
+comment|/* Problem noted by Anne Bennett of Concordia University */
+literal|"_FFR_DIGUNIX_SAFECHOWN"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DIGUNIX_SAFECHOWN */
+if|#
+directive|if
+name|_FFR_DNSMAP_ALIASABLE
+comment|/* Don Lewis of TDK */
+literal|"_FFR_DNSMAP_ALIASABLE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DNSMAP_ALIASABLE */
+if|#
+directive|if
 name|_FFR_DNSMAP_BASE
 literal|"_FFR_DNSMAP_BASE"
 block|,
@@ -21767,6 +21822,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_DONTLOCKFILESFORREAD_OPTION */
+if|#
+directive|if
+name|_FFR_DONT_STOP_LOOKING
+comment|/* Noted by Neil Rickert of Northern Illinois University */
+literal|"_FFR_DONT_STOP_LOOKING"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DONT_STOP_LOOKING */
 if|#
 directive|if
 name|_FFR_DOTTED_USERNAMES
@@ -21817,6 +21881,15 @@ directive|endif
 comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
 if|#
 directive|if
+name|_FFR_HANDLE_ISO8859_GECOS
+comment|/* Peter Eriksson of Linkopings universitet */
+literal|"_FFR_HANDLE_ISO8859_GECOS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_HANDLE_ISO8859_GECOS */
+if|#
+directive|if
 name|_FFR_HDR_TYPE
 literal|"_FFR_HDR_TYPE"
 block|,
@@ -21842,11 +21915,28 @@ comment|/* _FFR_IGNORE_EXT_ON_HELO */
 if|#
 directive|if
 name|_FFR_LDAP_RECURSION
+comment|/* Andrew Baucom */
 literal|"_FFR_LDAP_RECURSION"
 block|,
 endif|#
 directive|endif
 comment|/* _FFR_LDAP_RECURSION */
+if|#
+directive|if
+name|_FFR_LDAP_SETVERSION
+literal|"_FFR_LDAP_SETVERSION"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SETVERSION */
+if|#
+directive|if
+name|_FFR_LDAP_URI
+literal|"_FFR_LDAP_URI"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_URI */
 if|#
 directive|if
 name|_FFR_MAX_FORWARD_ENTRIES
@@ -21905,12 +21995,29 @@ directive|endif
 comment|/* _FFR_QUEUEDELAY */
 if|#
 directive|if
+name|_FFR_QUEUE_GROUP_SORTORDER
+comment|/* XXX: Still need to actually use qgrp->qg_sortorder */
+literal|"_FFR_QUEUE_GROUP_SORTORDER"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_GROUP_SORTORDER */
+if|#
+directive|if
 name|_FFR_QUEUE_MACRO
 literal|"_FFR_QUEUE_MACRO"
 block|,
 endif|#
 directive|endif
 comment|/* _FFR_QUEUE_MACRO */
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+literal|"_FFR_QUEUE_RUN_PARANOIA"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
 if|#
 directive|if
 name|_FFR_QUEUE_SCHED_DBG
@@ -21943,6 +22050,14 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_RHS */
+if|#
+directive|if
+name|_FFR_SELECT_SHM
+literal|"_FFR_SELECT_SHM"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SELECT_SHM */
 if|#
 directive|if
 name|_FFR_SHM_STATUS
@@ -21991,6 +22106,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_TRUSTED_QF */
+if|#
+directive|if
+name|_FFR_USE_SETLOGIN
+comment|/* Peter Philipp */
+literal|"_FFR_USE_SETLOGIN"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_USE_SETLOGIN */
 name|NULL
 block|}
 decl_stmt|;
