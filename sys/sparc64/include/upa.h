@@ -29,6 +29,37 @@ name|UPA_MEMEND
 value|0x1ffffffffffUL
 end_define
 
+begin_define
+define|#
+directive|define
+name|UPA_CR_MID_SHIFT
+value|(17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPA_CR_MID_SIZE
+value|(5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPA_CR_MID_MASK
+value|(((1<< UPA_CR_MID_SIZE) - 1)<< UPA_CR_MID_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPA_CR_GET_MID
+parameter_list|(
+name|cr
+parameter_list|)
+value|((cr& UPA_CR_MID_MASK)>> UPA_CR_MID_SHIFT)
+end_define
+
 begin_endif
 endif|#
 directive|endif
