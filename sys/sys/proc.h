@@ -2356,7 +2356,7 @@ begin_define
 define|#
 directive|define
 name|P_PROTECTED
-value|0x20000
+value|0x100000
 end_define
 
 begin_comment
@@ -2450,13 +2450,6 @@ end_define
 begin_comment
 comment|/* Should be moved to machine-dependent areas. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|P_UNUSED100000
-value|0x100000
-end_define
 
 begin_define
 define|#
