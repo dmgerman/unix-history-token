@@ -500,7 +500,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|ex_stop
 name|__P
@@ -2683,7 +2682,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ex_stop
 parameter_list|(
