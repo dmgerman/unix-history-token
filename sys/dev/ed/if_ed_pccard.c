@@ -319,7 +319,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|ed_probe_WD80x3
+name|ed_probe_Novell
 argument_list|(
 name|dev
 argument_list|)
@@ -340,7 +340,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ed_probe_Novell
+name|ed_probe_WD80x3
 argument_list|(
 name|dev
 argument_list|)
