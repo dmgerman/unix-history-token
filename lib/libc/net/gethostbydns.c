@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbydns.c,v 1.8 1996/01/13 09:03:40 peter Exp $"
+literal|"$Id: gethostbydns.c,v 1.4.4.4 1996/06/06 00:05:42 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1313,11 +1313,6 @@ comment|/* XXX - had_error++ ? */
 block|}
 if|if
 condition|(
-name|haveanswer
-condition|)
-block|{
-if|if
-condition|(
 name|n
 operator|!=
 name|host
@@ -1331,8 +1326,11 @@ name|n
 expr_stmt|;
 continue|continue;
 block|}
-block|}
-else|else
+if|if
+condition|(
+operator|!
+name|haveanswer
+condition|)
 block|{
 specifier|register
 name|int
