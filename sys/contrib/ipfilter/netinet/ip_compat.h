@@ -1029,6 +1029,17 @@ comment|/* header length */
 name|int
 name|qf_sap
 decl_stmt|;
+if|#
+directive|if
+name|SOLARIS2
+operator|>=
+literal|8
+name|int
+name|qf_tunoff
+decl_stmt|;
+comment|/* tunnel offset */
+endif|#
+directive|endif
 name|size_t
 name|qf_incnt
 decl_stmt|;

@@ -175,8 +175,6 @@ operator|*
 operator|,
 name|fr_info_t
 operator|*
-operator|,
-name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -194,8 +192,6 @@ operator|*
 operator|,
 name|fr_info_t
 operator|*
-operator|,
-name|u_int
 operator|,
 expr|struct
 name|nat

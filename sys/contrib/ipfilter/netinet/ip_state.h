@@ -347,6 +347,9 @@ decl_stmt|;
 block|}
 name|is_ps
 union|;
+name|u_32_t
+name|is_group
+decl_stmt|;
 name|char
 name|is_ifname
 index|[
@@ -610,6 +613,12 @@ name|isl_state
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|u_32_t
+name|isl_rulen
+decl_stmt|;
+name|u_32_t
+name|isl_group
 decl_stmt|;
 block|}
 name|ipslog_t

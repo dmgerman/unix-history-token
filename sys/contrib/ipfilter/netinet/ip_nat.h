@@ -356,6 +356,12 @@ decl_stmt|;
 name|U_QUAD_T
 name|nat_bytes
 decl_stmt|;
+name|u_int
+name|nat_drop
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|u_short
 name|nat_oport
 decl_stmt|;

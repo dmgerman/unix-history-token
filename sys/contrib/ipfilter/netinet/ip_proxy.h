@@ -486,6 +486,9 @@ name|ftps_wptr
 decl_stmt|;
 name|u_32_t
 name|ftps_seq
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|u_32_t
 name|ftps_len
