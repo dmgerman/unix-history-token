@@ -935,6 +935,13 @@ name|fpr
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * Protect us against races when two protocol registrations for 	 * the same protocol happen at the same time. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* The new protocol must not yet exist. */
 for|for
 control|(
@@ -976,12 +983,20 @@ operator|->
 name|pr_protocol
 operator|)
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EEXIST
 operator|)
 return|;
 comment|/* XXX: Check only protocol? */
+block|}
 comment|/* While here, remember the first free spacer. */
 if|if
 condition|(
@@ -1011,11 +1026,19 @@ name|fpr
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 comment|/* Copy the new struct protosw over the spacer. */
 name|bcopy
 argument_list|(
@@ -1028,6 +1051,13 @@ argument_list|(
 operator|*
 name|fpr
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Job is done, no more protection required. */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* Initialize and activate the protocol. */
@@ -1160,6 +1190,13 @@ name|dpr
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Lock out everyone else while we are manipulating the protosw. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* The protocol must exist and only once. */
 for|for
 control|(
@@ -1204,12 +1241,20 @@ name|dpr
 operator|!=
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EMLINK
 operator|)
 return|;
 comment|/* Should not happen! */
+block|}
 else|else
 name|dpr
 operator|=
@@ -1224,11 +1269,19 @@ name|dpr
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPROTONOSUPPORT
 operator|)
 return|;
+block|}
 comment|/* De-orbit the protocol and make the slot available again. */
 name|dpr
 operator|->
@@ -1314,6 +1367,13 @@ name|pr_usrreqs
 operator|=
 operator|&
 name|nousrreqs
+expr_stmt|;
+comment|/* Job is done, not more protection required. */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
