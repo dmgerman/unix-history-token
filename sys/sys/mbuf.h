@@ -866,7 +866,7 @@ value|do {						\ 	int _ms = splimp();						\ 									\ 	{ code }							\ 	splx
 end_define
 
 begin_comment
-comment|/*  * mbuf allocation/deallocation macros:  *  *	MGET(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain internal data.  *  *	MGETHDR(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain a packet header  * and internal data.  */
+comment|/*  * mbuf allocation/deallocation macros:  *  *	MGET(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain internal data.  *  *	MGETHDR(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain a packet header  * and internal data.  *  * Warning: MGETHDR() does *not* initialize m->m_pkthdr.rcvif.  */
 end_comment
 
 begin_define
