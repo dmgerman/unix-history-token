@@ -1239,6 +1239,12 @@ parameter_list|)
 value|atomic_add_int((m)->m_ext.ref_cnt, 1)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1248,6 +1254,25 @@ name|how
 parameter_list|)
 value|do {					\ 	if (how == M_WAITOK)						\ 		WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK, NULL,		\ 		    "Sleeping in \"%s\"", __func__);			\ } while(0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MBUF_CHECKSLEEP
+parameter_list|(
+name|how
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Network buffer allocation API  *  * The rest of it is defined in kern/subr_mbuf.c  */
