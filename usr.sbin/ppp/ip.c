@@ -1016,7 +1016,6 @@ operator|->
 name|ip6_plen
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Wrong ? */
 name|payload
 operator|=
 name|packet
@@ -1025,7 +1024,6 @@ sizeof|sizeof
 expr|*
 name|pip6
 expr_stmt|;
-comment|/* XXX: Wrong ? */
 name|cproto
 operator|=
 name|pip6
@@ -2912,7 +2910,7 @@ name|tos
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX: ??? */
+comment|/* XXX: pip6->ip6_vfc>> 4 ? */
 name|frag
 operator|=
 literal|0
