@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.27 1995/01/07 23:23:40 ats Exp $  */
+comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.28 1995/03/16 18:12:06 bde Exp $  */
 end_comment
 
 begin_include
@@ -1272,6 +1272,29 @@ name|int
 name|scratch
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|EISA_MAX_SLOTS
+value|16
+end_define
+
+begin_comment
+comment|/* XXX This should go into a comon header */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|uha_slot
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* slot last board was found in */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -4164,9 +4187,9 @@ decl_stmt|,
 name|haid
 decl_stmt|;
 name|int
-name|slot
-decl_stmt|,
 name|port
+init|=
+literal|0
 decl_stmt|,
 name|irq
 decl_stmt|,
@@ -4208,19 +4231,15 @@ name|unit
 index|]
 decl_stmt|;
 comment|/* Search for the 24F's product ID */
-for|for
-control|(
-name|slot
-operator|=
-literal|1
-init|;
-name|slot
-operator|<
-literal|15
-condition|;
-name|slot
+name|uha_slot
 operator|++
-control|)
+expr_stmt|;
+while|while
+condition|(
+name|uha_slot
+operator|<
+name|EISA_MAX_SLOTS
+condition|)
 block|{
 comment|/* 	 *  Prepare to use a 24F. 	 */
 name|port
@@ -4228,7 +4247,7 @@ operator|=
 name|EISA_CONFIG
 operator||
 operator|(
-name|slot
+name|uha_slot
 operator|<<
 literal|12
 operator|)
@@ -4396,7 +4415,7 @@ name|icm_ack
 operator|=
 name|U24_ICM_ACK
 expr_stmt|;
-comment|/* Make sure an EISA card is installed in this slot. */
+comment|/* 	 * Make sure an EISA card is installed in this slot,  	 * and if it is make sure that the card is enabled. 	 */
 name|outb
 argument_list|(
 name|ur
@@ -4417,10 +4436,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p0
 operator|==
 literal|0xff
+operator|)
 operator|||
+operator|(
 operator|(
 name|p0
 operator|&
@@ -4428,11 +4450,9 @@ literal|0x80
 operator|)
 operator|!=
 literal|0
-condition|)
-continue|continue;
-comment|/* It's EISA, so make sure the card is enabled. */
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 operator|(
 name|inb
 argument_list|(
@@ -4445,8 +4465,14 @@ name|EISA_DISABLE
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
+name|uha_slot
+operator|++
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* Found an enabled card.  Grab the product ID. */
 name|p1
 operator|=
@@ -4607,12 +4633,15 @@ literal|"USC024"
 argument_list|)
 condition|)
 break|break;
+name|uha_slot
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
-name|slot
+name|uha_slot
 operator|==
-literal|15
+name|EISA_MAX_SLOTS
 condition|)
 return|return
 operator|(
