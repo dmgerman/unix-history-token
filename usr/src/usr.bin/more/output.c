@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.2 (Berkeley) %G%"
+literal|"@(#)output.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,23 +486,6 @@ name|screen_trashed
 operator|=
 literal|1
 expr_stmt|;
-name|ob
-operator|=
-name|obuf
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Discard buffered output.  */
-end_comment
-
-begin_function
-name|public
-name|void
-name|dropout
-parameter_list|()
-block|{
 name|ob
 operator|=
 name|obuf
