@@ -767,7 +767,6 @@ argument_list|)
 operator|!=
 literal|421
 condition|)
-block|)
 comment|/* Timeout? */
 name|variable_unset
 argument_list|(
@@ -899,23 +898,20 @@ break|break;
 block|}
 block|}
 block|}
-end_function
-
-begin_return
 return|return
 name|fp
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}  void
+begin_function
+name|void
 name|mediaShutdownFTP
-argument_list|(
-argument|Device *dev
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -952,7 +948,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
