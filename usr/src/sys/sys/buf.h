@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.19	82/12/17	*/
+comment|/*	buf.h	4.20	83/01/16	*/
 end_comment
 
 begin_comment
@@ -280,6 +280,20 @@ name|int
 name|nbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* number of buffer headers */
+end_comment
+
+begin_decl_stmt
+name|int
+name|bufpages
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of memory pages in the buffer pool */
+end_comment
 
 begin_decl_stmt
 name|struct
