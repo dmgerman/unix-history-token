@@ -292,6 +292,7 @@ operator|(
 name|EIO
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|fill_fpregs
@@ -303,6 +304,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|procfs_write_fpregs
 parameter_list|(
@@ -375,6 +379,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|procfs_sstep
 parameter_list|(
@@ -392,7 +399,13 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Placeholders  */
+end_comment
+
+begin_function
 name|int
 name|procfs_read_dbregs
 parameter_list|(
@@ -417,6 +430,9 @@ name|EIO
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|procfs_write_dbregs
 parameter_list|(

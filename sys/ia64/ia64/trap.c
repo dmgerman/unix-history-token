@@ -477,6 +477,7 @@ condition|(
 operator|!
 name|mtx_owned
 argument_list|(
+operator|&
 name|Giant
 argument_list|)
 condition|)
