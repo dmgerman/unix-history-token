@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.6 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,11 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
+specifier|extern
+name|void
+name|_mcleanup
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -255,6 +260,11 @@ endif|paranoid
 ifdef|#
 directive|ifdef
 name|MCRT0
+name|atexit
+argument_list|(
+name|_mcleanup
+argument_list|)
+expr_stmt|;
 name|monstartup
 argument_list|(
 operator|&
@@ -287,47 +297,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MCRT0
-end_ifdef
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_expr_stmt
-name|exit
-argument_list|(
-name|code
-argument_list|)
-specifier|register
-name|int
-name|code
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|_mcleanup
-argument_list|()
-expr_stmt|;
-name|_cleanup
-argument_list|()
-expr_stmt|;
-asm|asm("pushl 8(%ebp)") ;
-asm|asm("movl $1,%eax");
-asm|asm(".byte 0x9a; .long 0; .word 0");
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|MCRT0
-end_endif
 
 begin_ifdef
 ifdef|#
