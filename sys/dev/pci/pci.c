@@ -195,48 +195,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PCI_MFCTR_CHAR0
-parameter_list|(
-name|ID
-parameter_list|)
-value|(char)(((ID>>10)& 0x1F) | '@')
-end_define
-
-begin_comment
-comment|/* Bits 10-14 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_MFCTR_CHAR1
-parameter_list|(
-name|ID
-parameter_list|)
-value|(char)(((ID>>5 )& 0x1F) | '@')
-end_define
-
-begin_comment
-comment|/* Bits 5-9   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_MFCTR_CHAR2
-parameter_list|(
-name|ID
-parameter_list|)
-value|(char)(( ID& 0x1F) | '@')
-end_define
-
-begin_comment
-comment|/* Bits 0-4   */
-end_comment
-
 begin_comment
 comment|/* return base address of memory or port map */
 end_comment
@@ -5041,32 +4999,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unknown card %c%c%c%04x (vendor=0x%04x, dev=0x%04x) at %d.%d"
-argument_list|,
-name|PCI_MFCTR_CHAR0
-argument_list|(
-name|cfg
-operator|->
-name|vendor
-argument_list|)
-argument_list|,
-name|PCI_MFCTR_CHAR1
-argument_list|(
-name|cfg
-operator|->
-name|vendor
-argument_list|)
-argument_list|,
-name|PCI_MFCTR_CHAR2
-argument_list|(
-name|cfg
-operator|->
-name|vendor
-argument_list|)
-argument_list|,
-name|cfg
-operator|->
-name|device
+literal|"unknown card (vendor=0x%04x, dev=0x%04x) at %d.%d"
 argument_list|,
 name|cfg
 operator|->
