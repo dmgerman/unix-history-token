@@ -402,7 +402,6 @@ name|struct
 name|nameidata
 name|ndp
 decl_stmt|;
-comment|/* 	 * Use NULL path to flag a root mount 	 */
 if|if
 condition|(
 name|mp
