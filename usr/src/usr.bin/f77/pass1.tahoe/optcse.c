@@ -1753,7 +1753,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -1765,7 +1765,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 condition|)
@@ -1839,7 +1839,7 @@ name|ep1
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 expr_stmt|;
 name|bp
 operator|=
@@ -1848,7 +1848,7 @@ name|ep2
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 expr_stmt|;
 switch|switch
 condition|(

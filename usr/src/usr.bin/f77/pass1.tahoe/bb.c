@@ -2576,7 +2576,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|)
@@ -2609,7 +2609,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -2632,7 +2632,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2651,7 +2651,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2662,7 +2662,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[

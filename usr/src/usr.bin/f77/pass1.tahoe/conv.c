@@ -242,7 +242,7 @@ name|bits
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 expr_stmt|;
@@ -254,7 +254,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -498,7 +498,7 @@ name|bytes
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 expr_stmt|;
@@ -510,7 +510,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -697,7 +697,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -735,7 +735,7 @@ name|value
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -764,7 +764,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -835,7 +835,7 @@ operator|&
 operator|(
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -939,7 +939,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -1053,7 +1053,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -1194,7 +1194,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -1228,13 +1228,13 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -1291,7 +1291,7 @@ operator|&
 operator|(
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1395,7 +1395,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -1509,7 +1509,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -1654,7 +1654,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1700,7 +1700,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1709,7 +1709,7 @@ index|]
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -1752,7 +1752,7 @@ operator|&
 operator|(
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1823,7 +1823,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1881,7 +1881,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2004,7 +2004,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2135,7 +2135,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2193,7 +2193,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2202,7 +2202,7 @@ index|]
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -2239,7 +2239,7 @@ operator|&
 operator|(
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2259,7 +2259,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2375,7 +2375,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2546,7 +2546,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2604,7 +2604,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2613,7 +2613,7 @@ index|]
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -2660,7 +2660,7 @@ operator|&
 operator|(
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -2916,7 +2916,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -3052,7 +3052,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -3195,7 +3195,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -3273,7 +3273,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -3282,7 +3282,7 @@ index|]
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -3319,7 +3319,7 @@ operator|&
 operator|(
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -3339,7 +3339,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -3475,7 +3475,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -3648,7 +3648,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -3687,7 +3687,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -3828,7 +3828,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -3867,7 +3867,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -4103,34 +4103,25 @@ end_function
 begin_escape
 end_escape
 
-begin_decl_stmt
+begin_function
 name|expptr
 name|convconst
-argument_list|(
+parameter_list|(
 name|type
-argument_list|,
+parameter_list|,
 name|len
-argument_list|,
-specifier|const
-argument_list|)
+parameter_list|,
+name|constant
+parameter_list|)
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|Constp
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+name|constant
+decl_stmt|;
 block|{
 specifier|register
 name|expptr
@@ -4148,7 +4139,7 @@ name|p
 operator|=
 name|cshort
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4159,7 +4150,7 @@ name|p
 operator|=
 name|clong
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4170,7 +4161,7 @@ name|p
 operator|=
 name|creal
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4181,7 +4172,7 @@ name|p
 operator|=
 name|cdreal
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4192,7 +4183,7 @@ name|p
 operator|=
 name|ccomplex
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4203,7 +4194,7 @@ name|p
 operator|=
 name|cdcomplex
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4214,7 +4205,7 @@ name|p
 operator|=
 name|clogical
 argument_list|(
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4227,7 +4218,7 @@ name|cchar
 argument_list|(
 name|len
 argument_list|,
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4258,7 +4249,7 @@ name|p
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1316,7 +1316,7 @@ name|lb
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1347,7 +1347,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1388,7 +1388,7 @@ name|ub
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1419,7 +1419,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1503,7 +1503,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)

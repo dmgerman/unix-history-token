@@ -451,18 +451,18 @@ directive|endif
 argument|}
 argument|putx(p) expptr p; { char *memname(); int opc; int ncomma; int type
 argument_list|,
-argument|k;  if (!p) 	return;  switch(p->tag) 	{ 	case TERROR: 		free( (charptr) p ); 		break;  	case TCONST: 		switch(type = p->constblock.vtype) 			{ 			case TYLOGICAL: 				type = tyint; 			case TYLONG: 			case TYSHORT: 				p2icon(p->constblock.const.ci, types2[type]); 				free( (charptr) p ); 				break;  			case TYADDR: 				p2triple(PCC_ICON,
+argument|k;  if (!p) 	return;  switch(p->tag) 	{ 	case TERROR: 		free( (charptr) p ); 		break;  	case TCONST: 		switch(type = p->constblock.vtype) 			{ 			case TYLOGICAL: 				type = tyint; 			case TYLONG: 			case TYSHORT: 				p2icon(p->constblock.constant.ci, types2[type]); 				free( (charptr) p ); 				break;  			case TYADDR: 				p2triple(PCC_ICON,
 literal|1
 argument|, PCCT_INT|PCCTM_PTR); 				p2word(
 literal|0L
-argument|); 				p2name(memname(STGCONST, 					(int) p->constblock.const.ci) ); 				free( (charptr) p ); 				break;  			default: 				putx( putconst(p) ); 				break; 			} 		break;  	case TEXPR: 		switch(opc = p->exprblock.opcode) 			{ 			case OPCALL: 			case OPCCALL: 				if( ISCOMPLEX(p->exprblock.vtype) ) 					putcxop(p); 				else	putcall(p); 				break;  			case OPMIN: 			case OPMAX: 				putmnmx(p); 				break;   			case OPASSIGN: 				if(ISCOMPLEX(p->exprblock.leftp->headblock.vtype) 				|| ISCOMPLEX(p->exprblock.rightp->headblock.vtype) ) 					frexpr( putcxeq(p) ); 				else if( ISCHAR(p) ) 					putcheq(p); 				else 					goto putopp; 				break;  			case OPEQ: 			case OPNE: 				if( ISCOMPLEX(p->exprblock.leftp->headblock.vtype) || 				    ISCOMPLEX(p->exprblock.rightp->headblock.vtype) ) 					{ 					putcxcmp(p); 					break; 					} 			case OPLT: 			case OPLE: 			case OPGT: 			case OPGE: 				if(ISCHAR(p->exprblock.leftp)) 					{ 					putchcmp(p); 					break; 					} 				goto putopp;  			case OPPOWER: 				putpower(p); 				break;  			case OPSTAR:
+argument|); 				p2name(memname(STGCONST, 					(int) p->constblock.constant.ci) ); 				free( (charptr) p ); 				break;  			default: 				putx( putconst(p) ); 				break; 			} 		break;  	case TEXPR: 		switch(opc = p->exprblock.opcode) 			{ 			case OPCALL: 			case OPCCALL: 				if( ISCOMPLEX(p->exprblock.vtype) ) 					putcxop(p); 				else	putcall(p); 				break;  			case OPMIN: 			case OPMAX: 				putmnmx(p); 				break;   			case OPASSIGN: 				if(ISCOMPLEX(p->exprblock.leftp->headblock.vtype) 				|| ISCOMPLEX(p->exprblock.rightp->headblock.vtype) ) 					frexpr( putcxeq(p) ); 				else if( ISCHAR(p) ) 					putcheq(p); 				else 					goto putopp; 				break;  			case OPEQ: 			case OPNE: 				if( ISCOMPLEX(p->exprblock.leftp->headblock.vtype) || 				    ISCOMPLEX(p->exprblock.rightp->headblock.vtype) ) 					{ 					putcxcmp(p); 					break; 					} 			case OPLT: 			case OPLE: 			case OPGT: 			case OPGE: 				if(ISCHAR(p->exprblock.leftp)) 					{ 					putchcmp(p); 					break; 					} 				goto putopp;  			case OPPOWER: 				putpower(p); 				break;  			case OPSTAR:
 if|#
 directive|if
 name|FAMILY
 operator|==
 name|PCC
 comment|/*   m * (2**k) -> m<<k   */
-argument|if(INT(p->exprblock.leftp->headblock.vtype)&& 				   ISICON(p->exprblock.rightp)&& 				   ( (k = log2(p->exprblock.rightp->constblock.const.ci))>
+argument|if(INT(p->exprblock.leftp->headblock.vtype)&& 				   ISICON(p->exprblock.rightp)&& 				   ( (k = log2(p->exprblock.rightp->constblock.constant.ci))>
 literal|0
 argument|) ) 					{ 					p->exprblock.opcode = OPLSHIFT; 					frexpr(p->exprblock.rightp); 					p->exprblock.rightp = ICON(k); 					goto putopp; 					}
 endif|#
@@ -533,11 +533,11 @@ name|TARGET
 operator|==
 name|TAHOE
 comment|/* take advantage of a glitch in the code generator that does not check    the type clash in an assignment or comparison of an integer zero and    a floating left operand, and generates optimal code for the correct    type.  (The PCC has no floating-constant node to encode this correctly.) */
-argument|case OPASSIGN: 	case OPLT: 	case OPLE: 	case OPGT: 	case OPGE: 	case OPEQ: 	case OPNE: 		if(ISREAL(p->exprblock.leftp->headblock.vtype)&& 		   ISREAL(p->exprblock.rightp->headblock.vtype)&& 		   ISCONST(p->exprblock.rightp)&& 		   p->exprblock.rightp->constblock.const.cd[
+argument|case OPASSIGN: 	case OPLT: 	case OPLE: 	case OPGT: 	case OPGE: 	case OPEQ: 	case OPNE: 		if(ISREAL(p->exprblock.leftp->headblock.vtype)&& 		   ISREAL(p->exprblock.rightp->headblock.vtype)&& 		   ISCONST(p->exprblock.rightp)&& 		   p->exprblock.rightp->constblock.constant.cd[
 literal|0
 argument|]==
 literal|0
-argument|) 			{ 			p->exprblock.rightp->constblock.vtype = TYINT; 			p->exprblock.rightp->constblock.const.ci =
+argument|) 			{ 			p->exprblock.rightp->constblock.vtype = TYINT; 			p->exprblock.rightp->constblock.constant.ci =
 literal|0
 argument|; 			}
 endif|#
@@ -614,7 +614,7 @@ name|rightp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|)
@@ -2428,7 +2428,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|!=
@@ -5365,7 +5365,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|*
@@ -5377,7 +5377,7 @@ name|rightp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -5389,7 +5389,7 @@ name|rightp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -5397,7 +5397,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -5405,7 +5405,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|=
@@ -5461,7 +5461,7 @@ name|rp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -5498,7 +5498,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;

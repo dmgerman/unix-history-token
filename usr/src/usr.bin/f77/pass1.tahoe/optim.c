@@ -2680,7 +2680,7 @@ name|rightp
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;

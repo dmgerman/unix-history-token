@@ -1606,7 +1606,7 @@ name|vleng
 decl_stmt|;
 name|union
 name|Constant
-decl|const
+name|constant
 decl_stmt|;
 block|}
 struct|;

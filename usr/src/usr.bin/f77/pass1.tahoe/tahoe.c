@@ -1586,7 +1586,7 @@ name|shrt
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -1625,7 +1625,7 @@ operator|)
 operator|&
 name|cp
 operator|->
-expr|const
+name|constant
 operator|)
 return|;
 case|case
@@ -1646,7 +1646,7 @@ index|]
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1660,7 +1660,7 @@ index|]
 operator|=
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1699,7 +1699,7 @@ operator|)
 operator|&
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|,
@@ -1733,7 +1733,7 @@ operator|*
 operator|)
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 argument_list|,
@@ -1763,7 +1763,7 @@ operator|*
 operator|)
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 argument_list|,
@@ -1782,7 +1782,7 @@ operator|&
 operator|(
 name|cp
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -4067,7 +4067,7 @@ name|memoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|+
@@ -4566,7 +4566,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -4716,7 +4716,7 @@ name|baseoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|!=
@@ -4740,7 +4740,7 @@ name|baseoffset
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|*

@@ -529,7 +529,7 @@ name|p
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -822,7 +822,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|)
@@ -1038,7 +1038,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|>
@@ -1128,7 +1128,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 operator|!=
@@ -1155,13 +1155,13 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|,
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|,
@@ -1202,7 +1202,7 @@ if|if
 condition|(
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1226,7 +1226,7 @@ if|if
 condition|(
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 operator|==
@@ -1287,7 +1287,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -1306,7 +1306,7 @@ name|litclen
 argument_list|,
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|,
@@ -1331,7 +1331,7 @@ name|litdval
 operator|=
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1350,7 +1350,7 @@ name|litival
 operator|=
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 expr_stmt|;
@@ -1409,7 +1409,7 @@ name|type
 argument_list|,
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1469,7 +1469,7 @@ name|type
 argument_list|,
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|cd
 index|[
@@ -1487,7 +1487,7 @@ name|asmfile
 argument_list|,
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ccp
 argument_list|,
@@ -1501,7 +1501,7 @@ name|vleng
 operator|->
 name|constblock
 operator|.
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
@@ -1517,7 +1517,7 @@ name|asmfile
 argument_list|,
 name|p
 operator|->
-expr|const
+name|constant
 operator|.
 name|ci
 argument_list|)
