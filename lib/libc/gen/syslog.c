@@ -555,6 +555,11 @@ name|fmt_cpy
 index|[
 literal|1024
 index|]
+decl_stmt|,
+name|timbuf
+index|[
+literal|26
+index|]
 decl_stmt|;
 name|FILE
 modifier|*
@@ -704,10 +709,12 @@ name|fp
 argument_list|,
 literal|"%.15s "
 argument_list|,
-name|ctime
+name|ctime_r
 argument_list|(
 operator|&
 name|now
+argument_list|,
+name|timbuf
 argument_list|)
 operator|+
 literal|4
