@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vnops.c	8.11 (Berkeley) 5/22/95  * $Id: mfs_vnops.c,v 1.17 1997/02/22 09:47:33 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vnops.c	8.11 (Berkeley) 5/22/95  * $Id: mfs_vnops.c,v 1.18 1997/08/02 14:33:23 bde Exp $  */
 end_comment
 
 begin_include
@@ -255,6 +255,7 @@ name|mfs_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -267,6 +268,7 @@ name|mfs_create
 block|}
 block|,
 comment|/* create */
+comment|/* XXX: vop_whiteout */
 block|{
 operator|&
 name|vop_mknod_desc
@@ -363,6 +365,7 @@ name|mfs_write
 block|}
 block|,
 comment|/* write */
+comment|/* XXX: vop_lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -377,16 +380,16 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|mfs_select
+name|mfs_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
 block|{
 operator|&
 name|vop_revoke_desc
@@ -687,6 +690,7 @@ name|mfs_valloc
 block|}
 block|,
 comment|/* valloc */
+comment|/* XXX: vop_reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
@@ -723,6 +727,8 @@ name|mfs_update
 block|}
 block|,
 comment|/* update */
+comment|/* XXX: vop_getpages */
+comment|/* XXX: vop_putpages */
 block|{
 operator|&
 name|vop_bwrite_desc

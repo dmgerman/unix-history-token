@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.37 1997/08/25 20:31:00 phk Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.38 1997/08/27 02:58:40 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -5466,8 +5466,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|devfs_select
-value|((int (*) __P((struct  vop_select_args *)))devfs_enotsupp)
+name|devfs_poll
+value|vop_nopoll
 end_define
 
 begin_define
@@ -5639,6 +5639,7 @@ name|devfs_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -5651,6 +5652,7 @@ name|devfs_create
 block|}
 block|,
 comment|/* create */
+comment|/* XXX: vop_whiteout */
 block|{
 operator|&
 name|vop_mknod_desc
@@ -5747,6 +5749,7 @@ name|devfs_write
 block|}
 block|,
 comment|/* write */
+comment|/* XXX: vop_lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -5761,16 +5764,17 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|devfs_select
+name|devfs_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
+comment|/* XXX: vop_revoke */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -6059,6 +6063,7 @@ name|devfs_valloc
 block|}
 block|,
 comment|/* valloc */
+comment|/* XXX: vop_reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
@@ -6095,6 +6100,8 @@ name|devfs_update
 block|}
 block|,
 comment|/* update */
+comment|/* XXX: vop_getpages */
+comment|/* XXX: vop_putpages */
 block|{
 operator|&
 name|vop_bwrite_desc
@@ -6190,6 +6197,7 @@ name|spec_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -6202,6 +6210,7 @@ name|spec_create
 block|}
 block|,
 comment|/* create */
+comment|/* XXX: vop_whiteout */
 block|{
 operator|&
 name|vop_mknod_desc
@@ -6298,6 +6307,7 @@ name|devfs_write
 block|}
 block|,
 comment|/* write */
+comment|/* XXX: vop_lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -6312,16 +6322,17 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_select
+name|spec_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
+comment|/* XXX: vop_revoke */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -6610,6 +6621,7 @@ name|spec_valloc
 block|}
 block|,
 comment|/* valloc */
+comment|/* XXX: vop_reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
@@ -6646,6 +6658,19 @@ name|spec_update
 block|}
 block|,
 comment|/* update */
+block|{
+operator|&
+name|vop_getpages_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|spec_getpages
+block|}
+block|,
+comment|/* getpages */
+comment|/* XXX: vop_putpages */
 block|{
 operator|&
 name|vop_bwrite_desc

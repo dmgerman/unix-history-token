@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.13 1997/02/22 09:40:13 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.14 1997/09/02 20:06:08 bde Exp $  */
 end_comment
 
 begin_include
@@ -195,20 +195,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|dead_select
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_select_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|dead_poll
+value|vop_nopoll
+end_define
 
 begin_define
 define|#
@@ -477,6 +469,7 @@ name|dead_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -489,6 +482,7 @@ name|dead_create
 block|}
 block|,
 comment|/* create */
+comment|/* XXX: vop_whiteout */
 block|{
 operator|&
 name|vop_mknod_desc
@@ -585,6 +579,7 @@ name|dead_write
 block|}
 block|,
 comment|/* write */
+comment|/* XXX: vop_lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -599,16 +594,17 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_select
+name|dead_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
+comment|/* XXX: vop_revoke */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -897,6 +893,7 @@ name|dead_valloc
 block|}
 block|,
 comment|/* valloc */
+comment|/* XXX: vop_reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
@@ -933,6 +930,8 @@ name|dead_update
 block|}
 block|,
 comment|/* update */
+comment|/* XXX: vop_getpages */
+comment|/* XXX: vop_putpages */
 block|{
 operator|&
 name|vop_bwrite_desc
@@ -1210,33 +1209,6 @@ argument_list|)
 argument_list|,
 name|ap
 argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|dead_select
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_select_args
-comment|/* { 		struct vnode *a_vp; 		int  a_which; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-comment|/* 	 * Let the user find out that the descriptor is gone. 	 */
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}

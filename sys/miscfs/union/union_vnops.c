@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)union_vnops.c	8.32 (Berkeley) 6/23/95  * $Id: union_vnops.c,v 1.40 1997/09/04 03:14:49 kato Exp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)union_vnops.c	8.32 (Berkeley) 6/23/95  * $Id: union_vnops.c,v 1.41 1997/09/07 06:46:34 bde Exp $  */
 end_comment
 
 begin_include
@@ -650,12 +650,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|union_select
+name|union_poll
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vop_select_args
+name|vop_poll_args
 operator|*
 name|ap
 operator|)
@@ -4237,13 +4237,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|union_select
+name|union_poll
 parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_select_args
-comment|/* { 		struct vnode *a_vp; 		int  a_which; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+name|vop_poll_args
+comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4275,7 +4275,7 @@ name|ovp
 argument_list|,
 name|VOFFSET
 argument_list|(
-name|vop_select
+name|vop_poll
 argument_list|)
 argument_list|,
 name|ap
@@ -7745,6 +7745,7 @@ name|union_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -7891,16 +7892,16 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|union_select
+name|union_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
 block|{
 operator|&
 name|vop_revoke_desc
@@ -8204,6 +8205,7 @@ name|union_valloc
 block|}
 block|,
 comment|/* valloc */
+comment|/* XXX: vop_reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
@@ -8240,6 +8242,8 @@ name|union_update
 block|}
 block|,
 comment|/* update */
+comment|/* XXX: vop_getpages */
+comment|/* XXX: vop_putpages */
 block|{
 operator|&
 name|vop_bwrite_desc

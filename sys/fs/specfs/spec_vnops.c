@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.40 1997/05/29 13:29:13 tegge Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.41 1997/09/02 20:06:12 bde Exp $  */
 end_comment
 
 begin_include
@@ -207,6 +207,7 @@ name|spec_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -219,6 +220,7 @@ name|spec_create
 block|}
 block|,
 comment|/* create */
+comment|/* XXX: vop_whiteout */
 block|{
 operator|&
 name|vop_mknod_desc
@@ -341,16 +343,16 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_select
+name|spec_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
 block|{
 operator|&
 name|vop_revoke_desc
@@ -651,6 +653,7 @@ name|spec_valloc
 block|}
 block|,
 comment|/* valloc */
+comment|/* XXX: vop_reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
@@ -689,18 +692,6 @@ block|,
 comment|/* update */
 block|{
 operator|&
-name|vop_bwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vn_bwrite
-block|}
-block|,
-comment|/* bwrite */
-block|{
-operator|&
 name|vop_getpages_desc
 block|,
 operator|(
@@ -711,6 +702,19 @@ name|spec_getpages
 block|}
 block|,
 comment|/* getpages */
+comment|/* XXX: vop_putpages */
+block|{
+operator|&
+name|vop_bwrite_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|vn_bwrite
+block|}
+block|,
+comment|/* bwrite */
 block|{
 name|NULL
 block|,
@@ -2403,13 +2407,13 @@ end_comment
 
 begin_function
 name|int
-name|spec_select
+name|spec_poll
 parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_select_args
-comment|/* { 		struct vnode *a_vp; 		int  a_which; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+name|vop_poll_args
+comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2427,13 +2431,6 @@ operator|->
 name|v_type
 condition|)
 block|{
-default|default:
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* XXX */
 case|case
 name|VCHR
 case|:
@@ -2456,18 +2453,27 @@ name|dev
 argument_list|)
 index|]
 operator|->
-name|d_select
+name|d_poll
 operator|)
 operator|(
 name|dev
 operator|,
 name|ap
 operator|->
-name|a_which
+name|a_events
 operator|,
 name|ap
 operator|->
 name|a_p
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|vop_nopoll
+argument_list|(
+name|ap
+argument_list|)
 operator|)
 return|;
 block|}

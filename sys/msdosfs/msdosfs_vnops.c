@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.42 1997/05/17 18:32:40 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.43 1997/08/26 07:32:39 phk Exp $ */
 end_comment
 
 begin_comment
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -316,12 +322,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|msdosfs_select
+name|msdosfs_poll
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vop_select_args
+name|vop_poll_args
 operator|*
 operator|)
 argument_list|)
@@ -3906,21 +3912,35 @@ end_function
 begin_function
 specifier|static
 name|int
-name|msdosfs_select
+name|msdosfs_poll
 parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_select_args
-comment|/* { 		struct vnode *a_vp; 		int a_which; 		int a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+name|vop_poll_args
+comment|/* { 		struct vnode *a_vp; 		int a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-return|return
-literal|1
-return|;
 comment|/* DOS filesystems never block? */
+return|return
+operator|(
+name|ap
+operator|->
+name|a_events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLOUT
+operator||
+name|POLLRDNORM
+operator||
+name|POLLWRNORM
+operator|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -8355,6 +8375,7 @@ name|msdosfs_create
 block|}
 block|,
 comment|/* create */
+comment|/* XXX: vop_whiteout */
 block|{
 operator|&
 name|vop_mknod_desc
@@ -8451,6 +8472,7 @@ name|msdosfs_write
 block|}
 block|,
 comment|/* write */
+comment|/* XXX: vop_lease */
 block|{
 operator|&
 name|vop_ioctl_desc
@@ -8465,16 +8487,17 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|msdosfs_select
+name|msdosfs_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
+comment|/* XXX: vop_revoke */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -8739,6 +8762,8 @@ name|msdosfs_advlock
 block|}
 block|,
 comment|/* advlock */
+comment|/* XXX: vop_blkatoff */
+comment|/* XXX: vop_valloc */
 block|{
 operator|&
 name|vop_reallocblks_desc
@@ -8751,6 +8776,11 @@ name|msdosfs_reallocblks
 block|}
 block|,
 comment|/* reallocblks */
+comment|/* XXX: vop_vfree */
+comment|/* XXX: vop_truncate */
+comment|/* XXX: vop_update */
+comment|/* XXX: vop_getpages */
+comment|/* XXX: vop_putpages */
 block|{
 operator|&
 name|vop_bwrite_desc

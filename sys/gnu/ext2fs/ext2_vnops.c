@@ -420,16 +420,16 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|ufs_select
+name|ufs_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -841,6 +841,7 @@ name|spec_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -963,16 +964,16 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_select
+name|spec_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
 block|{
 operator|&
 name|vop_mmap_desc
@@ -1384,6 +1385,7 @@ name|fifo_lookup
 block|}
 block|,
 comment|/* lookup */
+comment|/* XXX: vop_cachedlookup */
 block|{
 operator|&
 name|vop_create_desc
@@ -1506,16 +1508,16 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_select_desc
+name|vop_poll_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_select
+name|fifo_poll
 block|}
 block|,
-comment|/* select */
+comment|/* poll */
 block|{
 operator|&
 name|vop_mmap_desc
