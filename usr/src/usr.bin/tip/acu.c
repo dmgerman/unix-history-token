@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acu.c	4.7	82/07/29	*/
+comment|/*	acu.c	4.8	83/06/15	*/
 end_comment
 
 begin_include
@@ -14,6 +14,16 @@ include|#
 directive|include
 file|<setjmp.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)acu.c	4.8 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -104,7 +114,7 @@ name|CM
 operator|!=
 name|NOSTR
 condition|)
-name|write
+name|pwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -266,7 +276,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|,
-literal|"0123456789-*=&%"
+literal|"0123456789-*=K"
 argument_list|)
 condition|;
 name|cp
@@ -493,7 +503,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|,
-literal|"0123456789-*=&%"
+literal|"0123456789-*="
 argument_list|)
 condition|;
 name|cp
@@ -596,6 +606,15 @@ name|acu_name
 argument_list|,
 literal|"missing phone number"
 argument_list|)
+expr_stmt|;
+else|else
+call|(
+modifier|*
+name|acu
+operator|->
+name|acu_abort
+call|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
