@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -104,6 +104,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_valloc_args
+comment|/* { 		struct vnode *a_pvp; 		int a_mode; 		struct ucred *a_cred; 		struct vnode **a_vpp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -496,6 +497,12 @@ name|a_vpp
 operator|=
 name|vp
 expr_stmt|;
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VDIROP
+expr_stmt|;
 name|ip
 operator|=
 name|VTOI
@@ -710,15 +717,6 @@ name|v_data
 operator|=
 name|ip
 expr_stmt|;
-operator|(
-operator|*
-name|vpp
-operator|)
-operator|->
-name|v_flag
-operator||=
-name|VDIROP
-expr_stmt|;
 name|ip
 operator|->
 name|i_vnode
@@ -843,6 +841,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_vfree_args
+comment|/* { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
 modifier|*
 name|ap
 decl_stmt|;
