@@ -231,16 +231,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|char
-name|blank
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|force_old
 init|=
@@ -2100,13 +2090,19 @@ operator|->
 name|pw_class
 argument_list|)
 else|:
-name|blank
+name|strdup
+argument_list|(
+literal|""
+argument_list|)
 expr_stmt|;
 name|master_yppasswd
 operator|.
 name|oldpass
 operator|=
-name|blank
+name|strdup
+argument_list|(
+literal|""
+argument_list|)
 expr_stmt|;
 comment|/* not really needed */
 name|master_yppasswd
@@ -2207,7 +2203,10 @@ name|yppasswd
 operator|.
 name|oldpass
 operator|=
-name|blank
+name|strdup
+argument_list|(
+literal|""
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the user's password for authentication purposes. */
