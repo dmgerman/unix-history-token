@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	4.1	(Berkeley)	%G%"
+literal|"@(#)mkproto.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1055,7 +1055,7 @@ literal|0377
 expr_stmt|;
 name|in
 operator|.
-name|i_dev
+name|i_rdev
 operator|=
 operator|(
 name|i
