@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	4.5 (Berkeley) %G%"
+literal|"@(#)ctime.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,8 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This routine converts time as follows.  * The epoch is 0000 Jan 1 1970 GMT.  * The argument time is in seconds since then.  * The localtime(t) entry returns a pointer to an array  * containing  *  seconds (0-59)  *  minutes (0-59)  *  hours (0-23)  *  day of month (1-31)  *  month (0-11)  *  year-1970  *  weekday (0-6, Sun is 0)  *  day of the year  *  daylight savings flag  *  * The routine calls the system to determine the local  * timezone and whether Daylight Saving Time is permitted locally.  * (DST is then determined by the current local rules)  *  * The routine does not work  * in Saudi Arabia which runs on Solar time.  *  * asctime(tvec))  * where tvec is produced by localtime  * returns a ptr to a character string  * that has the ascii time in the form  *	Thu Jan 01 00:00:00 1970n0
-comment|\\  *	01234567890123456789012345  *	0	  1	    2  *  * ctime(t) just calls localtime, then asctime.  */
+comment|/*  * This routine converts time as follows.  * The epoch is 0000 Jan 1 1970 GMT.  * The argument time is in seconds since then.  * The localtime(t) entry returns a pointer to an array  * containing  *  seconds (0-59)  *  minutes (0-59)  *  hours (0-23)  *  day of month (1-31)  *  month (0-11)  *  year-1970  *  weekday (0-6, Sun is 0)  *  day of the year  *  daylight savings flag  *  * The routine calls the system to determine the local  * timezone and whether Daylight Saving Time is permitted locally.  * (DST is then determined by the current local rules)  *  * The routine does not work  * in Saudi Arabia which runs on Solar time.  *  * asctime(tvec))  * where tvec is produced by localtime  * returns a ptr to a character string  * that has the ascii time in the form  *	Thu Jan 01 00:00:00 1970\n\0  *	0123456789012345678901234 5  *	0	  1	    2  *  * ctime(t) just calls localtime, then asctime.  */
 end_comment
 
 begin_include
@@ -404,8 +403,7 @@ name|ctime
 parameter_list|(
 name|t
 parameter_list|)
-name|unsigned
-name|long
+name|time_t
 modifier|*
 name|t
 decl_stmt|;
@@ -432,8 +430,7 @@ name|localtime
 parameter_list|(
 name|tim
 parameter_list|)
-name|unsigned
-name|long
+name|time_t
 modifier|*
 name|tim
 decl_stmt|;
@@ -468,8 +465,7 @@ decl_stmt|;
 name|int
 name|year
 decl_stmt|;
-name|unsigned
-name|long
+name|time_t
 name|copyt
 decl_stmt|;
 name|struct
@@ -495,8 +491,7 @@ operator|*
 name|tim
 operator|-
 operator|(
-name|unsigned
-name|long
+name|time_t
 operator|)
 name|zone
 operator|.
@@ -841,8 +836,7 @@ name|gmtime
 parameter_list|(
 name|tim
 parameter_list|)
-name|unsigned
-name|long
+name|time_t
 modifier|*
 name|tim
 decl_stmt|;
@@ -1303,11 +1297,15 @@ index|]
 operator|=
 literal|'0'
 operator|+
+operator|(
 name|t
 operator|->
 name|tm_year
-operator|>=
-literal|200
+operator|-
+literal|100
+operator|)
+operator|/
+literal|100
 expr_stmt|;
 block|}
 name|cp
