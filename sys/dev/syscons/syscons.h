@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.43 1998/09/29 02:00:57 ache Exp $  */
+comment|/*-  * Copyright (c) 1995-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.44 1998/10/01 11:39:18 yokota Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_ISA_SYSCONS_H_
+name|_DEV_SYSCONS_SYSCONS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_ISA_SYSCONS_H_
+name|_DEV_SYSCONS_SYSCONS_H_
 end_define
 
 begin_comment
@@ -93,36 +93,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOCK_KEY_MASK
-value|0x0000F
-end_define
-
-begin_define
-define|#
-directive|define
-name|LED_MASK
-value|0x00007
-end_define
-
-begin_define
-define|#
-directive|define
 name|UNKNOWN_MODE
 value|0x00010
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBD_RAW_MODE
-value|0x00020
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBD_CODE_MODE
-value|0x00040
 end_define
 
 begin_define
@@ -227,6 +199,16 @@ name|CHAR_CURSOR
 value|0x00004
 end_define
 
+begin_comment
+comment|/* these options are now obsolete; use corresponding options for kbd driver */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -248,6 +230,11 @@ name|KBD_NORESET
 value|0x00020
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -260,6 +247,13 @@ define|#
 directive|define
 name|VESA800X600
 value|0x00080
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTODETECT_KBD
+value|0x00100
 end_define
 
 begin_comment
@@ -536,9 +530,14 @@ struct|struct
 name|scr_stat
 block|{
 name|int
-name|adp
+name|ad
 decl_stmt|;
 comment|/* video adapter index */
+name|video_adapter_t
+modifier|*
+name|adp
+decl_stmt|;
+comment|/* video adapter structure */
 name|u_short
 modifier|*
 name|scr_buf
@@ -604,6 +603,10 @@ name|int
 name|status
 decl_stmt|;
 comment|/* status (bitfield) */
+name|int
+name|kbd_mode
+decl_stmt|;
+comment|/* keyboard I/O mode */
 name|u_short
 modifier|*
 name|cursor_pos
@@ -690,10 +693,6 @@ name|border
 decl_stmt|;
 comment|/* border color */
 name|int
-name|initial_mode
-decl_stmt|;
-comment|/* initial mode */
-name|int
 name|mode
 decl_stmt|;
 comment|/* mode */
@@ -741,9 +740,6 @@ name|apmhook
 name|r_hook
 decl_stmt|;
 comment|/* reconfiguration support */
-ifdef|#
-directive|ifdef
-name|SC_SPLASH_SCREEN
 name|int
 name|splash_save_mode
 decl_stmt|;
@@ -752,8 +748,6 @@ name|int
 name|splash_save_status
 decl_stmt|;
 comment|/* saved status for splash screen */
-endif|#
-directive|endif
 block|}
 name|scr_stat
 typedef|;
@@ -945,11 +939,12 @@ define|#
 directive|define
 name|save_palette
 parameter_list|(
-name|scp
+name|adp
 parameter_list|,
 name|pal
 parameter_list|)
-value|(*biosvidsw.save_palette)((scp)->adp, pal)
+define|\
+value|(*vidsw[(adp)->va_index]->save_palette)((adp), (pal))
 end_define
 
 begin_define
@@ -957,51 +952,19 @@ define|#
 directive|define
 name|load_palette
 parameter_list|(
-name|scp
+name|adp
 parameter_list|,
 name|pal
 parameter_list|)
-value|(*biosvidsw.load_palette)((scp)->adp, pal)
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_adapter
-parameter_list|(
-name|scp
-parameter_list|)
-value|(*biosvidsw.adapter)((scp)->adp)
+define|\
+value|(*vidsw[(adp)->va_index]->load_palette)((adp), (pal))
 end_define
 
 begin_function_decl
-name|int
-name|add_scrn_saver
+name|void
+name|sc_touch_scrn_saver
 parameter_list|(
 name|void
-function_decl|(
-modifier|*
-name|this
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|remove_scrn_saver
-parameter_list|(
-name|void
-function_decl|(
-modifier|*
-name|this
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1210,59 +1173,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SC_SPLASH_SCREEN
-end_ifdef
-
-begin_comment
-comment|/* splash.c */
-end_comment
-
-begin_function_decl
-name|void
-name|scsplash
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|scsplash_load
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|scsplash_unload
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !_I386_ISA_SYSCONS_H_ */
+comment|/* !_DEV_SYSCONS_SYSCONS_H_ */
 end_comment
 
 end_unit

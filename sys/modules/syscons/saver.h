@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: saver.h,v 1.13 1998/11/04 03:49:38 peter Exp $  */
+comment|/*-  * Copyright (c) 1995-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: saver.h,v 1.14 1998/12/31 13:40:26 des Exp $  */
 end_comment
 
 begin_include
@@ -18,14 +18,52 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/videoio.h>
+file|<dev/fb/fbreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/syscons.h>
+file|<dev/fb/splashreg.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/syscons/syscons.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|set_video_mode
+parameter_list|(
+name|adp
+parameter_list|,
+name|mode
+parameter_list|,
+name|pal
+parameter_list|,
+name|border
+parameter_list|)
+define|\
+value|{								\ 		(*vidsw[(adp)->va_index]->set_mode)((adp), (mode));	\ 		(*vidsw[(adp)->va_index]->load_palette)((adp), (pal));	\ 		(*vidsw[(adp)->va_index]->set_border)((adp), (border));	\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_mode_info
+parameter_list|(
+name|adp
+parameter_list|,
+name|mode
+parameter_list|,
+name|buf
+parameter_list|)
+define|\
+value|(*vidsw[(adp)->va_index]->get_info)((adp), (mode), (buf))
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -37,80 +75,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_short
-modifier|*
-name|Crtat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|crtc_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|crtc_type
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|char
 name|scr_map
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|scrn_blanked
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fonts_loaded
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|font_8
-index|[]
-decl_stmt|,
-name|font_14
-index|[]
-decl_stmt|,
-name|font_16
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|palette
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|SAVER_MODULE
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch ((modeventtype_t)type) { \ 		case MOD_LOAD: \ 			return name ## _load(); \ 		case MOD_UNLOAD: \ 			return name ## _unload(); \ 		default: \ 			break; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		NULL \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_PSEUDO, SI_ORDER_MIDDLE)
-end_define
 
 end_unit
 

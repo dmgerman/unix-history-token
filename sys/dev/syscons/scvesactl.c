@@ -1,12 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: scvesactl.c,v 1.7 1998/12/07 21:58:22 archie Exp $  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"sc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vga.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_syscons.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_vga.h"
 end_include
 
 begin_include
@@ -21,11 +39,32 @@ directive|include
 file|"opt_vm86.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VGA_NO_MODE_CHANGE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|VESA
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
 operator|(
 name|NSC
+operator|>
+literal|0
+operator|&&
+name|NVGA
 operator|>
 literal|0
 operator|&&
@@ -97,13 +136,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/videoio.h>
+file|<dev/fb/fbreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/syscons.h>
+file|<dev/syscons/syscons.h>
 end_include
 
 begin_decl_stmt
@@ -145,10 +184,6 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|video_adapter_t
-modifier|*
-name|adp
 decl_stmt|;
 name|int
 name|mode
@@ -198,17 +233,12 @@ case|:
 case|case
 name|SW_TEXT_132x60
 case|:
-name|adp
-operator|=
-name|get_adapter
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
+name|scp
+operator|->
 name|adp
 operator|->
 name|va_flags
@@ -253,17 +283,12 @@ case|:
 case|case
 name|SW_VESA_C132x60
 case|:
-name|adp
-operator|=
-name|get_adapter
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
+name|scp
+operator|->
 name|adp
 operator|->
 name|va_flags
@@ -370,17 +395,12 @@ case|:
 case|case
 name|SW_VESA_FULL_1280
 case|:
-name|adp
-operator|=
-name|get_adapter
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
+name|scp
+operator|->
 name|adp
 operator|->
 name|va_flags
@@ -504,7 +524,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (NSC> 0&& VESA&& VM86) || KLD_MODULE */
+comment|/* (NSC> 0&& NVGA> 0&& VESA&& VM86) || KLD_MODULE */
 end_comment
 
 end_unit
