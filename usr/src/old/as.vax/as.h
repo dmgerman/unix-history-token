@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)as.h 4.6 %G%" */
+comment|/* "@(#)as.h 4.7 %G%" */
 end_comment
 
 begin_ifdef
@@ -583,7 +583,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AMASK
+name|ACCESSMASK
 value|(ACCA | ACCR | ACCW | ACCB)
 end_define
 
@@ -592,7 +592,7 @@ comment|/* the mask */
 end_comment
 
 begin_comment
-comment|/*  * Argument data types  */
+comment|/*  *	Argument data types  *	Also used to tell outrel what it is relocating  *	(possibly in combination with RELOC_PCREL and TYPNONE)  */
 end_comment
 
 begin_define
@@ -664,12 +664,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TYPNONE
+value|6
+end_define
+
+begin_comment
+comment|/* when nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RELOC_PCREL
+value|8
+end_define
+
+begin_comment
+comment|/* implicit argument to outrel; ==> PCREL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TYPMASK
 value|7
 end_define
 
 begin_comment
-comment|/* reference types for loader */
+comment|/*  *	reference types for loader  */
 end_comment
 
 begin_define
@@ -707,10 +729,6 @@ name|LEN8
 value|8
 end_define
 
-begin_comment
-comment|/* 	 *	reflen table converts between LEN* and PCREL to numbers 	 *		of bytes. 	 *	lgreflen table is the lg base 2 of the values in reflen. 	 */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -720,7 +738,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* reference lengths */
+comment|/* {LEN*+PCREL} ==> number of bytes */
 end_comment
 
 begin_decl_stmt
@@ -732,7 +750,91 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lg reference lengths */
+comment|/* {LEN*+PCREL} ==> lg number of bytes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|len124
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {1,2,4,8} ==> {LEN1, LEN2, LEN4, LEN8} */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|mod124
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {1,2,4,8} ==> {bits to construct operands */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|type_124
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {1,2,4,8} ==> {TYPB, TYPW, TYPL, TYPQ} */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ty_NORELOC
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {TYPB..TYPD} ==> {1 if relocation not OK */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ty_LEN
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {TYPB..TYPD} ==> {LEN1..LEN8} */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ty_nbyte
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {TYPB..TYPD} ==> {1,2,4,8} */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ty_nlg
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {TYPB..TYPD} ==> lg{1,2,4,8} */
 end_comment
 
 begin_define

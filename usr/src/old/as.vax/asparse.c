@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.5 %G%"
+literal|"@(#)asparse.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,6 +368,10 @@ name|ptrall
 name|stabstart
 decl_stmt|;
 comment|/*where the stab starts in the buffer*/
+name|int
+name|reloc_how
+decl_stmt|;
+comment|/* how to relocate expressions */
 name|xp
 operator|=
 name|explist
@@ -768,11 +772,13 @@ argument|); 			field_width = locxp->e_xvalue; 			locxp = pval; 			if (bitoff + f
 literal|"Expression crosses field boundary"
 argument|); 		} else { 			field_width = curlen; 			flushfield(curlen); 		}  		 if ((locxp->e_xtype&XTYPE)!=XABS) { 			if (bitoff) 				yyerror(
 literal|"Illegal relocation in field"
-argument|); 			field_width=LEN1; 			if (curlen==NBPW) 				field_width = LEN4; 			if (curlen==NBPW/
+argument|); 			switch(curlen){ 				case NBPW/
+literal|4
+argument|:	reloc_how = TYPB; break; 				case NBPW/
 literal|2
-argument|) 				field_width = LEN2; 			if (passno ==
+argument|:	reloc_how = TYPW; break; 				case NBPW:	reloc_how = TYPL; break; 			} 			if (passno ==
 literal|1
-argument|){ 				dotp->e_xvalue += reflen[field_width]; 			} else { 				outrel(&locxp->e_xvalue, 					field_width, 					locxp->e_xtype, 					locxp->e_xname); 			} 		} else { 			field_value = locxp->e_xvalue& ( (
+argument|){ 				dotp->e_xvalue += ty_nbyte[reloc_how]; 			} else { 				outrel(locxp, reloc_how); 			} 		} else { 			field_value = locxp->e_xvalue& ( (
 literal|1L
 argument|<< field_width)-
 literal|1
@@ -939,7 +945,7 @@ literal|0
 argument|) 		yyerror(
 literal|"Backwards 'org'"
 argument|); 	goto ospace; 	break;
-comment|/*  *  *	Process stabs.  Stabs are created only by the f77  *	and the C compiler with the -g flag set.  *	We only look at the stab ONCE, during pass 1, and  *	virtually remove the stab from the intermediate file  *	so it isn't seen during pass2.  This makes for some  *	hairy processing to handle labels occuring in  *	stab entries, but since most expressions in the  *	stab are integral we save lots of time in the second  *	pass by not looking at the stabs.  *	A stab that is tagged floating will be bumped during  *	the jxxx resolution phase.  A stab tagged fixed will  *	not be be bumped.  *  *	.stab:	Old fashioned stabs  *	.stabn: For stabs without names  *	.stabs:	For stabs with string names  *	.stabd: For stabs for line numbers or bracketing,  *		without a string name, without  *		a final expression.  The value of the  *		final expression is taken to be  the current  *		location counter, and is patched by the 2nd pass  *  *	.stab{<expr>,}*8,<expr>,<expr>,<expr>,<expr>  *	.stabn<expr>,<expr>,<expr>,<expr>  *	.stabs   STRING,<expr>,<expr>,<expr>,<expr>  *	.stabd<expr>,<expr>,<expr> # .   */
+comment|/*  *  *	Process stabs.  Stabs are created only by the f77  *	and the C compiler with the -g flag set.  *	We only look at the stab ONCE, during pass 1, and  *	virtually remove the stab from the intermediate file  *	so it isn't seen during pass2.  This makes for some  *	hairy processing to handle labels occuring in  *	stab entries, but since most expressions in the  *	stab are integral we save lots of time in the second  *	pass by not looking at the stabs.  *	A stab that is tagged floating will be bumped during  *	the jxxx resolution phase.  A stab tagged fixed will  *	not be be bumped.  *  *	.stab:	Old fashioned stabs  *	.stabn: For stabs without names  *	.stabs:	For stabs with string names  *	.stabd: For stabs for line numbers or bracketing,  *		without a string name, without  *		a final expression.  The value of the  *		final expression is taken to be  the current  *		location counter, and is patched by the 2nd pass  *  *	.stab{<expr>,}*NCPS,<expr>,<expr>,<expr>,<expr>  *	.stabn<expr>,<expr>,<expr>,<expr>  *	.stabs   STRING,<expr>,<expr>,<expr>,<expr>  *	.stabd<expr>,<expr>,<expr> # .   */
 argument|case ISTAB:
 ifndef|#
 directive|ifndef
@@ -952,9 +958,7 @@ argument|)	goto errorfix; 	stpt = (struct symtab *)yylval;
 comment|/* 	 *	Make a pointer to the .stab slot. 	 *	There is a pointer in the way (stpt), and 	 *	tokptr points to the next token. 	 */
 argument|stabstart = tokptr; 	(char *)stabstart -= sizeof(struct symtab *); 	(char *)stabstart -= sizeof(toktype); 	shift; 	for (argcnt =
 literal|0
-argument|; argcnt<
-literal|8
-argument|; argcnt++){ 		expr(locxp, val); 		stpt->s_name[argcnt] = locxp->e_xvalue; 		xp = explist; 		shiftover(CM); 	} 	goto tailstab;
+argument|; argcnt< NCPS; argcnt++){ 		expr(locxp, val); 		stpt->s_name[argcnt] = locxp->e_xvalue; 		xp = explist; 		shiftover(CM); 	} 	goto tailstab;
 else|#
 directive|else
 else|FLEXNAMES
