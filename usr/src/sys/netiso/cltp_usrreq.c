@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)cltp_usrreq.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)cltp_usrreq.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1304,8 +1304,6 @@ argument|m
 argument_list|,
 argument|nam
 argument_list|,
-argument|rights
-argument_list|,
 argument|control
 argument_list|)
 end_macro
@@ -1332,9 +1330,6 @@ name|m
 decl_stmt|,
 modifier|*
 name|nam
-decl_stmt|,
-modifier|*
-name|rights
 decl_stmt|,
 modifier|*
 name|control
@@ -1387,27 +1382,10 @@ expr|struct
 name|ifnet
 operator|*
 operator|)
-name|rights
+name|control
 argument_list|)
 operator|)
 return|;
-if|if
-condition|(
-name|rights
-operator|&&
-name|rights
-operator|->
-name|m_len
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|release
-goto|;
-block|}
 if|if
 condition|(
 name|isop
