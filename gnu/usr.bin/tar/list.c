@@ -1881,7 +1881,6 @@ name|int
 name|digs
 decl_stmt|;
 specifier|register
-name|unsigned
 name|char
 modifier|*
 name|where

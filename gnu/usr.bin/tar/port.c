@@ -2865,8 +2865,6 @@ operator|=
 operator|*
 name|from_here
 operator|++
-operator|&
-literal|0xff
 expr_stmt|;
 if|if
 condition|(
