@@ -2397,10 +2397,12 @@ block|{
 name|int
 name|count
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|escapes
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|p
 decl_stmt|;
@@ -3101,6 +3103,7 @@ name|SPACE
 modifier|*
 name|sp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p

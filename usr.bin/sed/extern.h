@@ -112,6 +112,7 @@ parameter_list|(
 name|SPACE
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
