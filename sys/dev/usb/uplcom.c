@@ -763,6 +763,12 @@ block|,
 name|USB_PRODUCT_ELECOM_UCSGT
 block|}
 block|,
+block|{
+name|USB_VENDOR_ELECOM
+block|,
+name|USB_PRODUCT_ELECOM_UCSGT0
+block|}
+block|,
 comment|/* Sony Ericsson USB Cable */
 block|{
 name|USB_VENDOR_SONYERICSSON
