@@ -8739,7 +8739,7 @@ name|mss
 operator|->
 name|irq
 argument_list|,
-name|INTR_MPSAFE
+literal|0
 argument_list|,
 name|opti931_intr
 argument_list|,
@@ -8761,7 +8761,7 @@ name|mss
 operator|->
 name|irq
 argument_list|,
-name|INTR_MPSAFE
+literal|0
 argument_list|,
 name|mss_intr
 argument_list|,

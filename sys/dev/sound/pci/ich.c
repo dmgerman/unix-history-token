@@ -3613,7 +3613,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_MPSAFE
+literal|0
 argument_list|,
 name|ich_intr
 argument_list|,

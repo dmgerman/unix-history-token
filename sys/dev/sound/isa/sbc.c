@@ -2415,7 +2415,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|INTR_MPSAFE
+literal|0
 argument_list|,
 name|sbc_intr
 argument_list|,
