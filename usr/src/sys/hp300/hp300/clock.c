@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -70,6 +70,12 @@ name|clkstd
 index|[
 literal|1
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|profhz
 decl_stmt|;
 end_decl_stmt
 
@@ -275,6 +281,22 @@ operator|->
 name|clk_cr1
 operator|=
 name|CLK_IENAB
+expr_stmt|;
+name|tick
+operator|=
+name|CLK_INTERVAL
+operator|*
+name|CLK_RESOLUTION
+expr_stmt|;
+name|hz
+operator|=
+literal|1000000
+operator|/
+operator|(
+name|CLK_INTERVAL
+operator|*
+name|CLK_RESOLUTION
+operator|)
 expr_stmt|;
 block|}
 end_block
@@ -1299,6 +1321,12 @@ operator|=
 name|CLK_INTERVAL
 operator|/
 name|profint
+expr_stmt|;
+name|profhz
+operator|=
+name|hz
+operator|*
+name|profscale
 expr_stmt|;
 block|}
 end_block
