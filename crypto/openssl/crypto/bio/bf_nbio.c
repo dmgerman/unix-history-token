@@ -264,6 +264,10 @@ name|NBIO_TEST
 modifier|*
 name|nt
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|nt
 operator|=
 operator|(
@@ -277,7 +281,13 @@ argument_list|(
 name|NBIO_TEST
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|nt
 operator|->
 name|lrn

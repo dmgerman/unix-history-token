@@ -1302,6 +1302,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p8inf
+condition|)
+goto|goto
+name|p8err
+goto|;
 name|ret
 operator|=
 operator|(

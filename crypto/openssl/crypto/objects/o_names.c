@@ -318,6 +318,19 @@ name|NAME_FUNCS
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|MemCheck_on
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|name_funcs
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|name_funcs
 operator|->
 name|hash_func
@@ -344,6 +357,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* NULL is often declared to 					    * ((void *)0), which according 					    * to Compaq C is not really 					    * compatible with a function 					    * pointer.  -- Richard Levitte*/
+name|MemCheck_off
+argument_list|()
+expr_stmt|;
 name|sk_NAME_FUNCS_push
 argument_list|(
 name|name_funcs_stack

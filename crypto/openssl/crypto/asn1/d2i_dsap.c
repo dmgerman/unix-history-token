@@ -224,6 +224,10 @@ argument_list|(
 name|bs
 argument_list|)
 expr_stmt|;
+name|bs
+operator|=
+name|NULL
+expr_stmt|;
 name|M_ASN1_D2I_Finish_2
 argument_list|(
 name|a

@@ -31,6 +31,12 @@ directive|include
 file|"ssl_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -669,6 +675,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|die
+argument_list|(
+name|s
+operator|->
+name|sid_ctx_length
+operator|<=
+sizeof|sizeof
+name|ss
+operator|->
+name|sid_ctx
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|ss

@@ -2439,6 +2439,11 @@ name|defined
 argument_list|(
 name|__VMS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_DARWIN
+argument_list|)
 end_if
 
 begin_decl_stmt

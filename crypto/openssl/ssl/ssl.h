@@ -988,6 +988,17 @@ define|#
 directive|define
 name|SSL_OP_TLS_ROLLBACK_BUG
 value|0x00000400L
+comment|/* Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added  * in OpenSSL 0.9.6d.  Usually (depending on the application protocol)  * the workaround is not needed.  Unfortunately some broken SSL/TLS  * implementations cannot handle it at all, which is why we include  * it in SSL_OP_ALL. */
+define|#
+directive|define
+name|SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS
+value|0x00000800L
+comment|/* added in 0.9.6e */
+comment|/* SSL_OP_ALL: various bug workarounds that should be rather harmless */
+define|#
+directive|define
+name|SSL_OP_ALL
+value|0x000FFFFFL
 comment|/* If set, always create a new key when using tmp_dh parameters */
 define|#
 directive|define
@@ -998,6 +1009,18 @@ define|#
 directive|define
 name|SSL_OP_EPHEMERAL_RSA
 value|0x00200000L
+define|#
+directive|define
+name|SSL_OP_NO_SSLv2
+value|0x01000000L
+define|#
+directive|define
+name|SSL_OP_NO_SSLv3
+value|0x02000000L
+define|#
+directive|define
+name|SSL_OP_NO_TLSv1
+value|0x04000000L
 comment|/* The next flag deliberately changes the ciphertest, this is a check  * for the PKCS#1 attack */
 define|#
 directive|define
@@ -1020,22 +1043,6 @@ define|#
 directive|define
 name|SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG
 value|0x80000000L
-define|#
-directive|define
-name|SSL_OP_ALL
-value|0x000FFFFFL
-define|#
-directive|define
-name|SSL_OP_NO_SSLv2
-value|0x01000000L
-define|#
-directive|define
-name|SSL_OP_NO_SSLv3
-value|0x02000000L
-define|#
-directive|define
-name|SSL_OP_NO_TLSv1
-value|0x04000000L
 comment|/* Allow SSL_write(..., n) to return r with 0< r< n (i.e. report success  * when just a single record has been written): */
 define|#
 directive|define
@@ -6135,6 +6142,10 @@ name|SSL_R_INVALID_TRUST
 value|279
 define|#
 directive|define
+name|SSL_R_KEY_ARG_TOO_LONG
+value|1112
+define|#
+directive|define
 name|SSL_R_LENGTH_MISMATCH
 value|159
 define|#
@@ -6405,6 +6416,10 @@ define|#
 directive|define
 name|SSL_R_SSL23_DOING_SESSION_ID_REUSE
 value|221
+define|#
+directive|define
+name|SSL_R_SSL3_SESSION_ID_TOO_LONG
+value|1113
 define|#
 directive|define
 name|SSL_R_SSL3_SESSION_ID_TOO_SHORT

@@ -313,7 +313,7 @@ name|BN_BITS4
 value|16
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_MSC_VER
 comment|/* VC++ doesn't like the LL suffix */
 define|#
 directive|define

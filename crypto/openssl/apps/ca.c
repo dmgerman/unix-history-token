@@ -5860,7 +5860,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"cannot lookup how long until the next CRL is issuer\n"
+literal|"cannot lookup how long until the next CRL is issued\n"
 argument_list|)
 expr_stmt|;
 goto|goto

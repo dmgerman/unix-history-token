@@ -518,6 +518,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|p
 operator|=
 operator|(
@@ -529,7 +532,13 @@ name|OPENSSL_malloc
 argument_list|(
 name|i
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 name|pp
 operator|=
 name|p

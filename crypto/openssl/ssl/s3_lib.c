@@ -96,6 +96,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
@@ -127,6 +129,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
@@ -988,6 +992,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
@@ -1019,6 +1025,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
