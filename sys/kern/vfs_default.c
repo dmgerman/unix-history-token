@@ -170,7 +170,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|lease_check
+name|vop_null
 block|}
 block|,
 block|{
