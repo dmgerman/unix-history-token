@@ -544,7 +544,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* suppress attach message for neatness */
-comment|/* 	 * IRQ's are on the mainboard on old systems, but on the ISA part 	 * of PCI->ISA bridges.  There would be multiple sets of IRQs on 	 * multi-ISA-bus systems.  PCI interrupts are routed to the ISA 	 * component, so in a way, PCI can be a partial child of an ISA bus(!). 	 * APIC interrupts are global though. 	 * In the non-APIC case, disallow the use of IRQ 2. 	 */
+comment|/* 	 * IRQ's are on the mainboard on old systems, but on the ISA part 	 * of PCI->ISA bridges.  There would be multiple sets of IRQs on 	 * multi-ISA-bus systems.  PCI interrupts are routed to the ISA 	 * component, so in a way, PCI can be a partial child of an ISA bus(!). 	 * APIC interrupts are global though. 	 * 	 * XXX We depend on the AT PIC driver correctly claiming IRQ 2 	 *     to prevent its reuse elsewhere in the !APIC_IO case. 	 */
 name|irq_rman
 operator|.
 name|rm_start
@@ -574,33 +574,6 @@ name|APIC_INTMAPSIZE
 operator|-
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|rman_init
-argument_list|(
-operator|&
-name|irq_rman
-argument_list|)
-operator|||
-name|rman_manage_region
-argument_list|(
-operator|&
-name|irq_rman
-argument_list|,
-name|irq_rman
-operator|.
-name|rm_start
-argument_list|,
-name|irq_rman
-operator|.
-name|rm_end
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"nexus_probe irq_rman"
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 name|irq_rman
@@ -609,9 +582,8 @@ name|rm_end
 operator|=
 literal|15
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
+endif|#
+directive|endif
 if|if
 condition|(
 name|rman_init
@@ -639,50 +611,6 @@ argument_list|(
 literal|"nexus_probe irq_rman"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|rman_init
-argument_list|(
-operator|&
-name|irq_rman
-argument_list|)
-operator|||
-name|rman_manage_region
-argument_list|(
-operator|&
-name|irq_rman
-argument_list|,
-name|irq_rman
-operator|.
-name|rm_start
-argument_list|,
-literal|1
-argument_list|)
-operator|||
-name|rman_manage_region
-argument_list|(
-operator|&
-name|irq_rman
-argument_list|,
-literal|3
-argument_list|,
-name|irq_rman
-operator|.
-name|rm_end
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"nexus_probe irq_rman"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PC98 */
-endif|#
-directive|endif
 comment|/* 	 * ISA DMA on PCI systems is implemented in the ISA part of each 	 * PCI->ISA bridge and the channels can be duplicated if there are 	 * multiple bridges.  (eg: laptops with docking stations) 	 */
 name|drq_rman
 operator|.
