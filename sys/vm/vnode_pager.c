@@ -882,7 +882,6 @@ name|numafter
 operator|=
 name|OFF_TO_IDX
 argument_list|(
-operator|(
 name|object
 operator|->
 name|un_pager
@@ -890,13 +889,9 @@ operator|.
 name|vnp
 operator|.
 name|vnp_size
+argument_list|)
 operator|-
-name|IDX_TO_OFF
-argument_list|(
 name|pindex
-argument_list|)
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 operator|*
@@ -2147,7 +2142,7 @@ comment|/*  * generic vnode pager input routine  */
 end_comment
 
 begin_comment
-comment|/*  * Local media VFS's that do not implement their own VOP_GETPAGES  * should have their VOP_GETPAGES should call to  * vnode_pager_generic_getpages() to implement the previous behaviour.  *  * All other FS's should use the bypass to get to the local media  * backing vp's VOP_GETPAGES.  */
+comment|/*  * Local media VFS's that do not implement their own VOP_GETPAGES  * should have their VOP_GETPAGES call to vnode_pager_generic_getpages()  * to implement the previous behaviour.  *  * All other FS's should use the bypass to get to the local media  * backing vp's VOP_GETPAGES.  */
 end_comment
 
 begin_function
