@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	6.16	85/02/22	*/
+comment|/*	lfs_vnops.c	6.17	85/03/19	*/
 end_comment
 
 begin_include
@@ -542,6 +542,19 @@ operator|&
 name|FCREAT
 condition|)
 block|{
+if|if
+condition|(
+name|mode
+operator|&
+name|FEXCL
+condition|)
+name|ndp
+operator|->
+name|ni_nameiop
+operator|=
+name|CREATE
+expr_stmt|;
+else|else
 name|ndp
 operator|->
 name|ni_nameiop
