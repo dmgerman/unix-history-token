@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.7 (Berkeley) %G%"
+literal|"@(#)popen.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|uid_t
+name|pid_t
 modifier|*
 name|pids
 decl_stmt|;
@@ -137,8 +137,9 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|pids
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -159,12 +160,11 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 operator|(
 name|pids
 operator|=
 operator|(
-name|uid_t
+name|pid_t
 operator|*
 operator|)
 name|malloc
@@ -177,11 +177,13 @@ name|fds
 operator|*
 sizeof|sizeof
 argument_list|(
-name|uid_t
+name|int
 argument_list|)
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -190,13 +192,17 @@ operator|)
 return|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|pids
 argument_list|,
 name|fds
 operator|*
 sizeof|sizeof
 argument_list|(
-name|uid_t
+name|pid_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -475,7 +481,7 @@ specifier|register
 name|int
 name|fdes
 decl_stmt|;
-name|long
+name|int
 name|omask
 decl_stmt|;
 name|int
@@ -488,6 +494,10 @@ function_decl|;
 comment|/* 	 * pclose returns -1 if stream is not associated with a 	 * `popened' command, or, if already `pclosed'. 	 */
 if|if
 condition|(
+name|pids
+operator|==
+name|NULL
+operator|||
 name|pids
 index|[
 name|fdes
