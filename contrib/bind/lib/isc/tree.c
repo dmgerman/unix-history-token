@@ -7,11 +7,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|RCSid
+name|rcsid
 index|[]
 init|=
-literal|"$Id: tree.c,v 8.6 1997/09/26 17:56:11 halley Exp $"
+literal|"$Id: tree.c,v 8.9 1999/01/08 19:25:47 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +30,7 @@ comment|/*  * This program text was created by Paul Vixie using examples from th
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996,1997 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -105,30 +106,10 @@ name|ENTER
 parameter_list|(
 name|proc
 parameter_list|)
-value|{ \ 			debugFuncs[debugDepth] = proc; \ 			fprintf(stderr, "ENTER(%d:%s.%s)\n", \ 				debugDepth, DEBUG,
+value|{ \ 			debugFuncs[debugDepth] = proc; \ 			fprintf(stderr, "ENTER(%d:%s.%s)\n", \ 				debugDepth, DEBUG, \ 				debugFuncs[debugDepth]); \ 			debugDepth++; \ 		}
 end_define
 
-begin_expr_stmt
-name|debugFuncs
-index|[
-name|debugDepth
-index|]
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-unit|\
-name|debugDepth
-operator|++
-expr_stmt|;
-end_expr_stmt
-
 begin_define
-unit|\ 		}
 define|#
 directive|define
 name|RET
@@ -228,7 +209,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-unit|static
+specifier|static
 name|tree
 modifier|*
 name|sprout

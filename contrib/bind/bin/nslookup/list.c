@@ -15,6 +15,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -25,11 +26,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: list.c,v 8.13 1997/11/18 00:32:33 halley Exp $"
+literal|"$Id: list.c,v 8.21 1999/10/15 19:49:08 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,19 +149,6 @@ include|#
 directive|include
 file|"res.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_res_resultcodes
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* res_debug.c */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -287,24 +276,91 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|j
+decl_stmt|,
 name|qtype
 decl_stmt|,
 name|result
 decl_stmt|;
 comment|/* 	 * Parse the command line. It maybe of the form "ls -t domain" 	 * or "ls -t type domain". 	 */
+comment|/* simulate sscanf(string, " ls -t %s %s", option, name) */
 name|i
 operator|=
-name|sscanf
+name|matchString
+argument_list|(
+literal|" ls -t "
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|pickString
 argument_list|(
 name|string
-argument_list|,
-literal|" ls -t %s %s"
+operator|+
+name|i
 argument_list|,
 name|option
 argument_list|,
+sizeof|sizeof
+name|option
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|pickString
+argument_list|(
+name|string
+operator|+
+name|i
+operator|+
+name|j
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+literal|0
+condition|)
+name|i
+operator|=
+literal|2
+expr_stmt|;
+else|else
+name|i
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|i
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|putToFile
@@ -452,24 +508,91 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|j
+decl_stmt|,
 name|qtype
 decl_stmt|,
 name|result
 decl_stmt|;
 comment|/* 	 *  Parse the command line. It maybe of the form "ls domain", 	 *  "ls -X domain". 	 */
+comment|/* simulate i = sscanf(string, " ls %s %s", option, name) */
 name|i
 operator|=
-name|sscanf
+name|matchString
+argument_list|(
+literal|" ls "
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|pickString
 argument_list|(
 name|string
-argument_list|,
-literal|" ls %s %s"
+operator|+
+name|i
 argument_list|,
 name|option
 argument_list|,
+sizeof|sizeof
+name|option
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|pickString
+argument_list|(
+name|string
+operator|+
+name|i
+operator|+
+name|j
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+literal|0
+condition|)
+name|i
+operator|=
+literal|2
+expr_stmt|;
+else|else
+name|i
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|i
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|putToFile
@@ -773,7 +896,7 @@ index|]
 decl_stmt|,
 name|file
 index|[
-name|NAME_LEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 enum|enum
@@ -793,8 +916,11 @@ enum|;
 comment|/* 	 * Create a query packet for the requested domain name. 	 */
 name|msglen
 operator|=
-name|res_mkquery
+name|res_nmkquery
 argument_list|(
+operator|&
+name|res
+argument_list|,
 name|QUERY
 argument_list|,
 name|domain
@@ -836,7 +962,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"*** ls: res_mkquery failed\n"
+literal|"*** ls: res_nmkquery failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1132,6 +1258,9 @@ name|OpenFile
 argument_list|(
 name|cmd
 argument_list|,
+name|file
+argument_list|,
+sizeof|sizeof
 name|file
 argument_list|)
 expr_stmt|;
@@ -1599,7 +1728,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|numAnswers
+name|numRecords
 operator|++
 expr_stmt|;
 name|fputs
@@ -1650,7 +1779,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strcasecmp
+name|ns_samename
 argument_list|(
 name|soaname
 index|[
@@ -1663,12 +1792,25 @@ literal|1
 index|]
 argument_list|)
 operator|==
-literal|0
+literal|1
 condition|)
 block|{
 name|soacnt
 operator|=
 literal|2
+expr_stmt|;
+comment|/* This means we're finished. 					 * But we've to reset origin and 					 * name_ctx now !  */
+name|origin
+index|[
+literal|0
+index|]
+operator|=
+name|name_ctx
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 block|}
@@ -1848,12 +1990,12 @@ name|stderr
 argument_list|,
 literal|"  result: %s, answers = %d, authority = %d, additional = %d\n"
 argument_list|,
-name|_res_resultcodes
-index|[
+name|p_rcode
+argument_list|(
 name|headerPtr
 operator|->
 name|rcode
-index|]
+argument_list|)
 argument_list|,
 name|ntohs
 argument_list|(
@@ -1896,21 +2038,14 @@ begin_comment
 comment|/*  *******************************************************************************  *  *  ViewList --  *  *	A hack to view the output of the ls command in sorted  *	order using more.  *  *******************************************************************************  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ViewList
-argument_list|(
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|string
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|file
@@ -1924,15 +2059,92 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
-name|sscanf
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|char
+name|soafile
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+comment|/* sscanf(string, " view %s", file); */
+name|i
+operator|=
+name|matchString
+argument_list|(
+literal|" view "
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|pickString
 argument_list|(
 name|string
+operator|+
+name|i
 argument_list|,
-literal|" view %s"
+name|file
 argument_list|,
+sizeof|sizeof
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** invalid file name: %s\n"
+argument_list|,
+name|string
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|mktemp
+argument_list|(
+name|strcpy
+argument_list|(
+name|soafile
+argument_list|,
+literal|"/var/tmp/nslookup_tmpXXXXXX"
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** cannot create temp file\n"
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
 operator|(
 name|void
 operator|)
@@ -1940,9 +2152,15 @@ name|sprintf
 argument_list|(
 name|command
 argument_list|,
-literal|"grep \"^ \" %s | sort | %s"
+literal|"sed '\ /^$/,${\ /@/,$d\ }\ /^[^	]/{\ h\ s/^\\([^	]*	*\\).*/\\1/\ x\ }\ 1,/^$/{\ w %s\ d\ }\ /^	/{\ G\ s/^	*//\ s/^\\(.*\\)\\n\\(.*\\)$/\\2\\1/\ }' %s | sort | (cat %s -; rm %s) | %s"
+argument_list|,
+name|soafile
 argument_list|,
 name|file
+argument_list|,
+name|soafile
+argument_list|,
+name|soafile
 argument_list|,
 name|pager
 argument_list|)
@@ -1953,7 +2171,7 @@ name|command
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2014,8 +2232,11 @@ decl_stmt|;
 name|char
 name|file
 index|[
-name|NAME_LEN
+name|PATH_MAX
 index|]
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* 	 *  We need a valid current host info to get an inet address. 	 */
 if|if
@@ -2037,16 +2258,54 @@ name|ERROR
 operator|)
 return|;
 block|}
+comment|/* simulate: sscanf("finger %s") ; */
+name|i
+operator|=
+name|matchString
+argument_list|(
+literal|" finger "
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|sscanf
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|i
+operator|=
+name|pickString
 argument_list|(
 name|string
-argument_list|,
-literal|" finger %s"
+operator|+
+name|i
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|i
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* note that if the argument to the finger command is 		   bigger than sizeof name it will be treated as if there 		   was no argument. */
+block|}
+if|if
+condition|(
+name|i
 operator|==
 literal|1
 condition|)
@@ -2264,6 +2523,9 @@ name|OpenFile
 argument_list|(
 name|string
 argument_list|,
+name|file
+argument_list|,
+sizeof|sizeof
 name|file
 argument_list|)
 expr_stmt|;
@@ -2484,12 +2746,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|ListHost_close
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2514,7 +2774,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

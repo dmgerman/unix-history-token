@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ++Copyright++ 1983, 1990, 1993  * -  * Copyright (c) 1983, 1990, 1993  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
+comment|/*  * Copyright (c) 1983, 1990, 1993  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -20,6 +28,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -30,11 +39,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_addr.c,v 8.7 1996/11/18 09:09:07 vixie Exp $"
+literal|"$Id: inet_addr.c,v 8.11 1999/10/13 16:39:25 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,10 +100,6 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/* these are compatibility routines, not needed on recent BSD releases */
-end_comment
-
-begin_comment
 comment|/*  * Ascii internet address interpretation routine.  * The value returned is in network order.  */
 end_comment
 
@@ -101,14 +107,11 @@ begin_function
 name|u_long
 name|inet_addr
 parameter_list|(
-name|cp
-parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|in_addr
@@ -147,48 +150,42 @@ begin_function
 name|int
 name|inet_aton
 parameter_list|(
-name|cp
-parameter_list|,
-name|addr
-parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in_addr
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|u_long
 name|val
 decl_stmt|;
-specifier|register
 name|int
 name|base
 decl_stmt|,
 name|n
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
-name|u_int
+name|u_int8_t
 name|parts
 index|[
 literal|4
 index|]
 decl_stmt|;
-specifier|register
-name|u_int
+name|u_int8_t
 modifier|*
 name|pp
 init|=
 name|parts
+decl_stmt|;
+name|int
+name|digit
 decl_stmt|;
 name|c
 operator|=
@@ -222,6 +219,10 @@ expr_stmt|;
 name|base
 operator|=
 literal|10
+expr_stmt|;
+name|digit
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -257,10 +258,16 @@ operator|++
 name|cp
 expr_stmt|;
 else|else
+block|{
 name|base
 operator|=
 literal|8
 expr_stmt|;
+name|digit
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 for|for
 control|(
@@ -281,6 +288,27 @@ name|c
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|base
+operator|==
+literal|8
+operator|&&
+operator|(
+name|c
+operator|==
+literal|'8'
+operator|||
+name|c
+operator|==
+literal|'9'
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|val
 operator|=
 operator|(
@@ -300,6 +328,10 @@ operator|=
 operator|*
 operator|++
 name|cp
+expr_stmt|;
+name|digit
+operator|=
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -351,6 +383,10 @@ operator|*
 operator|++
 name|cp
 expr_stmt|;
+name|digit
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 break|break;
@@ -370,6 +406,10 @@ operator|>=
 name|parts
 operator|+
 literal|3
+operator|||
+name|val
+operator|>
+literal|0xff
 condition|)
 return|return
 operator|(
@@ -418,6 +458,17 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Did we get a valid digit? 	 */
+if|if
+condition|(
+operator|!
+name|digit
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Concoct the address according to 	 * the number of parts specified. 	 */
 name|n
 operator|=
@@ -432,15 +483,6 @@ condition|(
 name|n
 condition|)
 block|{
-case|case
-literal|0
-case|:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* initial nondigit */
 case|case
 literal|1
 case|:
@@ -556,6 +598,8 @@ block|}
 if|if
 condition|(
 name|addr
+operator|!=
+name|NULL
 condition|)
 name|addr
 operator|->

@@ -17,11 +17,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dnsquery.c,v 8.7 1997/05/21 19:51:22 halley Exp $"
+literal|"$Id: dnsquery.c,v 8.13 1999/10/13 16:38:59 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +36,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996,1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -107,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -136,6 +143,13 @@ name|char
 modifier|*
 name|h_errlist
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|__res_state
+name|res
 decl_stmt|;
 end_decl_stmt
 
@@ -288,7 +302,8 @@ literal|"c:dh:n:p:r:st:u:v"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -299,7 +314,7 @@ block|{
 case|case
 literal|'r'
 case|:
-name|_res
+name|res
 operator|.
 name|retry
 operator|=
@@ -312,7 +327,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|_res
+name|res
 operator|.
 name|retrans
 operator|=
@@ -456,7 +471,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -465,8 +480,11 @@ operator|)
 condition|)
 if|if
 condition|(
-name|res_init
-argument_list|()
+name|res_ninit
+argument_list|(
+operator|&
+name|res
+argument_list|)
 operator|==
 operator|-
 literal|1
@@ -476,7 +494,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_init() failed\n"
+literal|"res_ninit() failed\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -628,19 +646,11 @@ argument_list|(
 name|answer
 argument_list|)
 expr_stmt|;
-comment|/*  	 * set these here so they aren't set for a possible call to 	 * gethostbyname above 	*/
-if|if
-condition|(
-name|debug
-operator|||
-name|stream
-condition|)
-block|{
 if|if
 condition|(
 operator|!
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -649,8 +659,11 @@ operator|)
 condition|)
 if|if
 condition|(
-name|res_init
-argument_list|()
+name|res_ninit
+argument_list|(
+operator|&
+name|res
+argument_list|)
 operator|==
 operator|-
 literal|1
@@ -660,7 +673,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"res_init() failed\n"
+literal|"res_ninit() failed\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -670,11 +683,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  	 * set these here so they aren't set for a possible call to 	 * gethostbyname above 	*/
 if|if
 condition|(
 name|debug
 condition|)
-name|_res
+name|res
 operator|.
 name|options
 operator||=
@@ -684,13 +698,12 @@ if|if
 condition|(
 name|stream
 condition|)
-name|_res
+name|res
 operator|.
 name|options
 operator||=
 name|RES_USEVC
 expr_stmt|;
-block|}
 comment|/* if the -n flag was used, add them to the resolver's list */
 if|if
 condition|(
@@ -699,7 +712,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_res
+name|res
 operator|.
 name|nscount
 operator|=
@@ -721,7 +734,7 @@ name|i
 operator|--
 control|)
 block|{
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -739,7 +752,7 @@ index|]
 operator|.
 name|s_addr
 expr_stmt|;
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -750,7 +763,7 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|_res
+name|res
 operator|.
 name|nsaddr_list
 index|[
@@ -784,8 +797,11 @@ condition|)
 block|{
 name|n
 operator|=
-name|res_query
+name|res_nquery
 argument_list|(
+operator|&
+name|res
+argument_list|,
 name|name
 argument_list|,
 name|class
@@ -832,8 +848,11 @@ condition|(
 operator|(
 name|n
 operator|=
-name|res_search
+name|res_nsearch
 argument_list|(
+operator|&
+name|res
+argument_list|,
 name|name
 argument_list|,
 name|class
@@ -870,8 +889,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|fp_nquery
+name|res_pquery
 argument_list|(
+operator|&
+name|res
+argument_list|,
 name|answer
 argument_list|,
 name|n

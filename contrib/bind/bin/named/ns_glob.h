@@ -1,23 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.35 1998/05/05 19:44:20 halley Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.51 1999/10/15 21:53:32 vixie Exp $  */
 end_comment
 
 begin_comment
-comment|/* Copyright (c) 1986  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1986  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/* Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* Portions Copyright (c) 1996, 1997 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
 comment|/*  * Global variables for the name server.  */
 end_comment
+
+begin_comment
+comment|/* original argv[] from main() */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|char
+modifier|*
+modifier|*
+name|saved_argv
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -60,6 +73,18 @@ begin_decl_stmt
 name|DECL
 name|evContext
 name|ev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* global resolver context. */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|struct
+name|__res_state
+name|res
 decl_stmt|;
 end_decl_stmt
 
@@ -216,34 +241,25 @@ begin_comment
 comment|/* default configuration file */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|DECL
 name|char
 modifier|*
 name|conffile
-name|INIT
-parameter_list|(
-name|NULL
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* default debug output file */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|DECL
-specifier|const
 name|char
 modifier|*
 name|debugfile
-name|INIT
-parameter_list|(
-name|_PATH_DEBUG
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* zone information */
@@ -259,13 +275,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of zones in use */
+comment|/* number of zones allocated */
 end_comment
 
 begin_decl_stmt
 name|DECL
 name|int
 name|nzones
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* free list of unused zones[] elements. */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|LIST
+argument_list|(
+expr|struct
+name|zoneinfo
+argument_list|)
+name|freezones
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of zones that have a reload pending. */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|LIST
+argument_list|(
+expr|struct
+name|zoneinfo
+argument_list|)
+name|reloadingzones
 decl_stmt|;
 end_decl_stmt
 
@@ -621,9 +667,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* These will disappear some day in favour of "struct nameser". */
-end_comment
+begin_function_decl
+name|DECL
+name|key_info_list
+name|secretkey_info
+name|INIT
+parameter_list|(
+name|NULL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|DECL
+name|int
+name|main_needs_exit
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|DECL
@@ -1074,12 +1138,17 @@ block|,
 literal|"packet"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
 block|{
 name|ns_log_notify
 block|,
 literal|"notify"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|ns_log_cname
 block|,
@@ -1120,6 +1189,12 @@ block|{
 name|ns_log_resp_checks
 block|,
 literal|"response-checks"
+block|}
+block|,
+block|{
+name|ns_log_control
+block|,
+literal|"control"
 block|}
 block|,
 block|{
@@ -1205,6 +1280,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|DECL
+name|evTimerID
+name|heartbeat_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DECL
 name|int
 name|active_timers
 name|INIT
@@ -1268,6 +1350,39 @@ begin_decl_stmt
 name|DECL
 name|int
 name|loading
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DECL
+name|int
+name|xfers_running
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DECL
+name|int
+name|xfers_deferred
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DECL
+name|int
+name|qserials_running
 name|INIT
 argument_list|(
 literal|0

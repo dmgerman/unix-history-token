@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996,1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_ng.c,v 1.9 1997/12/04 04:57:50 halley Exp $"
+literal|"$Id: gen_ng.c,v 1.14 1999/10/13 16:39:29 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +54,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -66,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/memcluster.h>
 end_include
 
 begin_include
@@ -260,7 +285,7 @@ operator|!
 operator|(
 name|ng
 operator|=
-name|malloc
+name|memget
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -296,7 +321,7 @@ operator|!
 operator|(
 name|pvt
 operator|=
-name|malloc
+name|memget
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -305,8 +330,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|free
+name|memput
 argument_list|(
+name|ng
+argument_list|,
+sizeof|sizeof
+expr|*
 name|ng
 argument_list|)
 expr_stmt|;
@@ -423,6 +452,11 @@ name|this
 operator|->
 name|private
 decl_stmt|;
+name|ng_minimize
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pvt
@@ -436,13 +470,21 @@ operator|->
 name|curgroup
 argument_list|)
 expr_stmt|;
-name|free
+name|memput
 argument_list|(
+name|pvt
+argument_list|,
+sizeof|sizeof
+expr|*
 name|pvt
 argument_list|)
 expr_stmt|;
-name|free
+name|memput
 argument_list|(
+name|this
+argument_list|,
+sizeof|sizeof
+expr|*
 name|this
 argument_list|)
 expr_stmt|;

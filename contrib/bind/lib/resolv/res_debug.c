@@ -12,7 +12,7 @@ comment|/*  * Portions Copyright (c) 1995 by International Business Machines, In
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -32,6 +32,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -42,11 +43,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 8.20 1998/02/13 01:11:34 halley Exp $"
+literal|"$Id: res_debug.c,v 8.32 1999/10/13 16:39:39 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,16 +216,6 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|_res_resultcodes
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
 name|_res_sectioncodes
 index|[]
 decl_stmt|;
@@ -237,9 +229,8 @@ begin_function
 name|void
 name|fp_resstat
 parameter_list|(
-name|struct
-name|__res_state
-modifier|*
+specifier|const
+name|res_state
 name|statp
 parameter_list|,
 name|FILE
@@ -256,16 +247,6 @@ name|file
 argument_list|,
 literal|";; res options:"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|statp
-condition|)
-name|statp
-operator|=
-operator|&
-name|_res
 expr_stmt|;
 for|for
 control|(
@@ -316,6 +297,10 @@ specifier|static
 name|void
 name|do_section
 parameter_list|(
+specifier|const
+name|res_state
+name|statp
+parameter_list|,
 name|ns_msg
 modifier|*
 name|handle
@@ -355,8 +340,8 @@ comment|/* 	 * Print answer records. 	 */
 name|sflag
 operator|=
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 name|pflag
@@ -364,8 +349,8 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&&
 operator|!
@@ -374,6 +359,9 @@ condition|)
 return|return;
 name|opcode
 operator|=
+operator|(
+name|ns_opcode
+operator|)
 name|ns_msg_getflag
 argument_list|(
 operator|*
@@ -437,8 +425,8 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 name|RES_PRF_HEAD1
@@ -464,8 +452,8 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 name|RES_PRF_HEAD1
@@ -583,60 +571,18 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|p_query
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|fp_query
-argument_list|(
-name|msg
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|fp_query
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-name|msg
-parameter_list|,
-name|FILE
-modifier|*
-name|file
-parameter_list|)
-block|{
-name|fp_nquery
-argument_list|(
-name|msg
-argument_list|,
-name|PACKETSZ
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Print the contents of a query.  * This is intended to be primarily a debugging routine.  */
 end_comment
 
 begin_function
 name|void
-name|fp_nquery
+name|res_pquery
 parameter_list|(
+specifier|const
+name|res_state
+name|statp
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -654,8 +600,6 @@ name|ns_msg
 name|handle
 decl_stmt|;
 name|int
-name|n
-decl_stmt|,
 name|qdcount
 decl_stmt|,
 name|ancount
@@ -671,25 +615,6 @@ name|rcode
 decl_stmt|,
 name|id
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_INIT
-operator|)
-operator|==
-literal|0
-operator|&&
-name|res_init
-argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-return|return;
 if|if
 condition|(
 name|ns_initparse
@@ -785,14 +710,14 @@ if|if
 condition|(
 operator|(
 operator|!
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|)
 operator|||
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 name|RES_PRF_HEADX
@@ -811,10 +736,10 @@ index|[
 name|opcode
 index|]
 argument_list|,
-name|_res_resultcodes
-index|[
+name|p_rcode
+argument_list|(
 name|rcode
-index|]
+argument_list|)
 argument_list|,
 name|id
 argument_list|)
@@ -823,14 +748,14 @@ if|if
 condition|(
 operator|(
 operator|!
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|)
 operator|||
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 name|RES_PRF_HEADX
@@ -847,14 +772,14 @@ if|if
 condition|(
 operator|(
 operator|!
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|)
 operator|||
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 name|RES_PRF_HEAD2
@@ -1001,14 +926,14 @@ if|if
 condition|(
 operator|(
 operator|!
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|)
 operator|||
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 name|RES_PRF_HEAD1
@@ -1084,14 +1009,14 @@ if|if
 condition|(
 operator|(
 operator|!
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|)
 operator|||
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|pfcode
 operator|&
 operator|(
@@ -1115,6 +1040,8 @@ block|}
 comment|/* 	 * Print the various sections. 	 */
 name|do_section
 argument_list|(
+name|statp
+argument_list|,
 operator|&
 name|handle
 argument_list|,
@@ -1127,6 +1054,8 @@ argument_list|)
 expr_stmt|;
 name|do_section
 argument_list|(
+name|statp
+argument_list|,
 operator|&
 name|handle
 argument_list|,
@@ -1139,6 +1068,8 @@ argument_list|)
 expr_stmt|;
 name|do_section
 argument_list|(
+name|statp
+argument_list|,
 operator|&
 name|handle
 argument_list|,
@@ -1151,6 +1082,8 @@ argument_list|)
 expr_stmt|;
 name|do_section
 argument_list|(
+name|statp
+argument_list|,
 operator|&
 name|handle
 argument_list|,
@@ -1698,6 +1631,124 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|struct
+name|res_sym
+name|__p_key_syms
+index|[]
+init|=
+block|{
+block|{
+name|NS_ALG_MD5RSA
+block|,
+literal|"RSA"
+block|,
+literal|"RSA KEY with MD5 hash"
+block|}
+block|,
+block|{
+name|NS_ALG_DH
+block|,
+literal|"DH"
+block|,
+literal|"Diffie Hellman"
+block|}
+block|,
+block|{
+name|NS_ALG_DSA
+block|,
+literal|"DSA"
+block|,
+literal|"Digital Signature Algorithm"
+block|}
+block|,
+block|{
+name|NS_ALG_EXPIRE_ONLY
+block|,
+literal|"EXPIREONLY"
+block|,
+literal|"No algorithm"
+block|}
+block|,
+block|{
+name|NS_ALG_PRIVATE_OID
+block|,
+literal|"PRIVATE"
+block|,
+literal|"Algorithm obtained from OID"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|res_sym
+name|__p_cert_syms
+index|[]
+init|=
+block|{
+block|{
+name|cert_t_pkix
+block|,
+literal|"PKIX"
+block|,
+literal|"PKIX (X.509v3) Certificate"
+block|}
+block|,
+block|{
+name|cert_t_spki
+block|,
+literal|"SPKI"
+block|,
+literal|"SPKI certificate"
+block|}
+block|,
+block|{
+name|cert_t_pgp
+block|,
+literal|"PGP"
+block|,
+literal|"PGP certificate"
+block|}
+block|,
+block|{
+name|cert_t_url
+block|,
+literal|"URL"
+block|,
+literal|"URL Private"
+block|}
+block|,
+block|{
+name|cert_t_oid
+block|,
+literal|"OID"
+block|,
+literal|"OID Private"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Names of RR types and qtypes.  Types and qtypes are the same, except  * that T_ANY is a qtype but not a type.  (You can ask for records of type  * T_ANY, but you can't have any records of that type in the database.)  */
 end_comment
@@ -1711,7 +1762,7 @@ index|[]
 init|=
 block|{
 block|{
-name|T_A
+name|ns_t_a
 block|,
 literal|"A"
 block|,
@@ -1719,7 +1770,7 @@ literal|"address"
 block|}
 block|,
 block|{
-name|T_NS
+name|ns_t_ns
 block|,
 literal|"NS"
 block|,
@@ -1727,7 +1778,7 @@ literal|"name server"
 block|}
 block|,
 block|{
-name|T_MD
+name|ns_t_md
 block|,
 literal|"MD"
 block|,
@@ -1735,7 +1786,7 @@ literal|"mail destination (deprecated)"
 block|}
 block|,
 block|{
-name|T_MF
+name|ns_t_mf
 block|,
 literal|"MF"
 block|,
@@ -1743,7 +1794,7 @@ literal|"mail forwarder (deprecated)"
 block|}
 block|,
 block|{
-name|T_CNAME
+name|ns_t_cname
 block|,
 literal|"CNAME"
 block|,
@@ -1751,7 +1802,7 @@ literal|"canonical name"
 block|}
 block|,
 block|{
-name|T_SOA
+name|ns_t_soa
 block|,
 literal|"SOA"
 block|,
@@ -1759,7 +1810,7 @@ literal|"start of authority"
 block|}
 block|,
 block|{
-name|T_MB
+name|ns_t_mb
 block|,
 literal|"MB"
 block|,
@@ -1767,7 +1818,7 @@ literal|"mailbox"
 block|}
 block|,
 block|{
-name|T_MG
+name|ns_t_mg
 block|,
 literal|"MG"
 block|,
@@ -1775,7 +1826,7 @@ literal|"mail group member"
 block|}
 block|,
 block|{
-name|T_MR
+name|ns_t_mr
 block|,
 literal|"MR"
 block|,
@@ -1783,7 +1834,7 @@ literal|"mail rename"
 block|}
 block|,
 block|{
-name|T_NULL
+name|ns_t_null
 block|,
 literal|"NULL"
 block|,
@@ -1791,7 +1842,7 @@ literal|"null"
 block|}
 block|,
 block|{
-name|T_WKS
+name|ns_t_wks
 block|,
 literal|"WKS"
 block|,
@@ -1799,7 +1850,7 @@ literal|"well-known service (deprecated)"
 block|}
 block|,
 block|{
-name|T_PTR
+name|ns_t_ptr
 block|,
 literal|"PTR"
 block|,
@@ -1807,7 +1858,7 @@ literal|"domain name pointer"
 block|}
 block|,
 block|{
-name|T_HINFO
+name|ns_t_hinfo
 block|,
 literal|"HINFO"
 block|,
@@ -1815,7 +1866,7 @@ literal|"host information"
 block|}
 block|,
 block|{
-name|T_MINFO
+name|ns_t_minfo
 block|,
 literal|"MINFO"
 block|,
@@ -1823,7 +1874,7 @@ literal|"mailbox information"
 block|}
 block|,
 block|{
-name|T_MX
+name|ns_t_mx
 block|,
 literal|"MX"
 block|,
@@ -1831,7 +1882,7 @@ literal|"mail exchanger"
 block|}
 block|,
 block|{
-name|T_TXT
+name|ns_t_txt
 block|,
 literal|"TXT"
 block|,
@@ -1839,7 +1890,7 @@ literal|"text"
 block|}
 block|,
 block|{
-name|T_RP
+name|ns_t_rp
 block|,
 literal|"RP"
 block|,
@@ -1847,7 +1898,7 @@ literal|"responsible person"
 block|}
 block|,
 block|{
-name|T_AFSDB
+name|ns_t_afsdb
 block|,
 literal|"AFSDB"
 block|,
@@ -1855,7 +1906,7 @@ literal|"DCE or AFS server"
 block|}
 block|,
 block|{
-name|T_X25
+name|ns_t_x25
 block|,
 literal|"X25"
 block|,
@@ -1863,7 +1914,7 @@ literal|"X25 address"
 block|}
 block|,
 block|{
-name|T_ISDN
+name|ns_t_isdn
 block|,
 literal|"ISDN"
 block|,
@@ -1871,7 +1922,7 @@ literal|"ISDN address"
 block|}
 block|,
 block|{
-name|T_RT
+name|ns_t_rt
 block|,
 literal|"RT"
 block|,
@@ -1879,7 +1930,7 @@ literal|"router"
 block|}
 block|,
 block|{
-name|T_NSAP
+name|ns_t_nsap
 block|,
 literal|"NSAP"
 block|,
@@ -1887,7 +1938,7 @@ literal|"nsap address"
 block|}
 block|,
 block|{
-name|T_NSAP_PTR
+name|ns_t_nsap_ptr
 block|,
 literal|"NSAP_PTR"
 block|,
@@ -1895,7 +1946,7 @@ literal|"domain name pointer"
 block|}
 block|,
 block|{
-name|T_SIG
+name|ns_t_sig
 block|,
 literal|"SIG"
 block|,
@@ -1903,7 +1954,7 @@ literal|"signature"
 block|}
 block|,
 block|{
-name|T_KEY
+name|ns_t_key
 block|,
 literal|"KEY"
 block|,
@@ -1911,7 +1962,7 @@ literal|"key"
 block|}
 block|,
 block|{
-name|T_PX
+name|ns_t_px
 block|,
 literal|"PX"
 block|,
@@ -1919,7 +1970,7 @@ literal|"mapping information"
 block|}
 block|,
 block|{
-name|T_GPOS
+name|ns_t_gpos
 block|,
 literal|"GPOS"
 block|,
@@ -1927,7 +1978,7 @@ literal|"geographical position (withdrawn)"
 block|}
 block|,
 block|{
-name|T_AAAA
+name|ns_t_aaaa
 block|,
 literal|"AAAA"
 block|,
@@ -1935,7 +1986,7 @@ literal|"IPv6 address"
 block|}
 block|,
 block|{
-name|T_LOC
+name|ns_t_loc
 block|,
 literal|"LOC"
 block|,
@@ -1943,7 +1994,7 @@ literal|"location"
 block|}
 block|,
 block|{
-name|T_NXT
+name|ns_t_nxt
 block|,
 literal|"NXT"
 block|,
@@ -1951,7 +2002,7 @@ literal|"next valid name (unimplemented)"
 block|}
 block|,
 block|{
-name|T_EID
+name|ns_t_eid
 block|,
 literal|"EID"
 block|,
@@ -1959,7 +2010,7 @@ literal|"endpoint identifier (unimplemented)"
 block|}
 block|,
 block|{
-name|T_NIMLOC
+name|ns_t_nimloc
 block|,
 literal|"NIMLOC"
 block|,
@@ -1967,7 +2018,7 @@ literal|"NIMROD locator (unimplemented)"
 block|}
 block|,
 block|{
-name|T_SRV
+name|ns_t_srv
 block|,
 literal|"SRV"
 block|,
@@ -1975,7 +2026,7 @@ literal|"server selection"
 block|}
 block|,
 block|{
-name|T_ATMA
+name|ns_t_atma
 block|,
 literal|"ATMA"
 block|,
@@ -1983,7 +2034,15 @@ literal|"ATM address (unimplemented)"
 block|}
 block|,
 block|{
-name|T_IXFR
+name|ns_t_tsig
+block|,
+literal|"TSIG"
+block|,
+literal|"transaction signature"
+block|}
+block|,
+block|{
+name|ns_t_ixfr
 block|,
 literal|"IXFR"
 block|,
@@ -1991,7 +2050,7 @@ literal|"incremental zone transfer"
 block|}
 block|,
 block|{
-name|T_AXFR
+name|ns_t_axfr
 block|,
 literal|"AXFR"
 block|,
@@ -1999,7 +2058,15 @@ literal|"zone transfer"
 block|}
 block|,
 block|{
-name|T_MAILB
+name|ns_t_zxfr
+block|,
+literal|"ZXFR"
+block|,
+literal|"compressed zone transfer"
+block|}
+block|,
+block|{
+name|ns_t_mailb
 block|,
 literal|"MAILB"
 block|,
@@ -2007,7 +2074,7 @@ literal|"mailbox-related data (deprecated)"
 block|}
 block|,
 block|{
-name|T_MAILA
+name|ns_t_maila
 block|,
 literal|"MAILA"
 block|,
@@ -2015,7 +2082,7 @@ literal|"mail agent (deprecated)"
 block|}
 block|,
 block|{
-name|T_NAPTR
+name|ns_t_naptr
 block|,
 literal|"NAPTR"
 block|,
@@ -2023,11 +2090,170 @@ literal|"URN Naming Authority"
 block|}
 block|,
 block|{
-name|T_ANY
+name|ns_t_kx
+block|,
+literal|"KX"
+block|,
+literal|"Key Exchange"
+block|}
+block|,
+block|{
+name|ns_t_cert
+block|,
+literal|"CERT"
+block|,
+literal|"Certificate"
+block|}
+block|,
+block|{
+name|ns_t_any
 block|,
 literal|"ANY"
 block|,
 literal|"\"any\""
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Names of DNS rcodes.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|res_sym
+name|__p_rcode_syms
+index|[]
+init|=
+block|{
+block|{
+name|ns_r_noerror
+block|,
+literal|"NOERROR"
+block|,
+literal|"no error"
+block|}
+block|,
+block|{
+name|ns_r_formerr
+block|,
+literal|"FORMERR"
+block|,
+literal|"format error"
+block|}
+block|,
+block|{
+name|ns_r_servfail
+block|,
+literal|"SERVFAIL"
+block|,
+literal|"server failed"
+block|}
+block|,
+block|{
+name|ns_r_nxdomain
+block|,
+literal|"NXDOMAIN"
+block|,
+literal|"no such domain name"
+block|}
+block|,
+block|{
+name|ns_r_notimpl
+block|,
+literal|"NOTIMP"
+block|,
+literal|"not implemented"
+block|}
+block|,
+block|{
+name|ns_r_refused
+block|,
+literal|"REFUSED"
+block|,
+literal|"refused"
+block|}
+block|,
+block|{
+name|ns_r_yxdomain
+block|,
+literal|"YXDOMAIN"
+block|,
+literal|"domain name exists"
+block|}
+block|,
+block|{
+name|ns_r_yxrrset
+block|,
+literal|"YXRRSET"
+block|,
+literal|"rrset exists"
+block|}
+block|,
+block|{
+name|ns_r_nxrrset
+block|,
+literal|"NXRRSET"
+block|,
+literal|"rrset doesn't exist"
+block|}
+block|,
+block|{
+name|ns_r_notauth
+block|,
+literal|"NOTAUTH"
+block|,
+literal|"not authoritative"
+block|}
+block|,
+block|{
+name|ns_r_notzone
+block|,
+literal|"NOTZONE"
+block|,
+literal|"Not in zone"
+block|}
+block|,
+block|{
+name|ns_r_max
+block|,
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+name|ns_r_badsig
+block|,
+literal|"BADSIG"
+block|,
+literal|"bad signature"
+block|}
+block|,
+block|{
+name|ns_r_badkey
+block|,
+literal|"BADKEY"
+block|,
+literal|"bad key"
+block|}
+block|,
+block|{
+name|ns_r_badtime
+block|,
+literal|"BADTIME"
+block|,
+literal|"bad time"
 block|}
 block|,
 block|{
@@ -2210,6 +2436,7 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
+comment|/* XXX nonreentrant */
 if|if
 condition|(
 name|success
@@ -2307,6 +2534,7 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
+comment|/* XXX nonreentrant */
 if|if
 condition|(
 name|success
@@ -2550,6 +2778,7 @@ case|:
 return|return
 literal|"insecure2"
 return|;
+comment|/* XXX nonreentrant */
 default|default:
 name|sprintf
 argument_list|(
@@ -2593,6 +2822,7 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+comment|/* XXX nonreentrant */
 if|if
 condition|(
 name|ns_format_ttl
@@ -2619,6 +2849,39 @@ expr_stmt|;
 return|return
 operator|(
 name|nbuf
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return a string for the rcode.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|p_rcode
+parameter_list|(
+name|int
+name|rcode
+parameter_list|)
+block|{
+return|return
+operator|(
+name|sym_ntos
+argument_list|(
+name|__p_rcode_syms
+argument_list|,
+name|rcode
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2685,6 +2948,7 @@ index|[
 sizeof|sizeof
 expr|"90000000.00"]
 expr_stmt|;
+comment|/* XXX nonreentrant */
 name|unsigned
 name|long
 name|val
@@ -4028,6 +4292,13 @@ name|error
 init|=
 literal|"?"
 decl_stmt|;
+specifier|static
+name|char
+name|tmpbuf
+index|[
+sizeof|sizeof
+expr|"1000 60 60.000 N 1000 60 60.000 W -12345678.00m 90000000.00m 90000000.00m 90000000.00m"]
+expr_stmt|;
 specifier|const
 name|u_char
 modifier|*
@@ -4107,6 +4378,16 @@ operator|=
 operator|*
 name|cp
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ascii
+operator|==
+name|NULL
+condition|)
+name|ascii
+operator|=
+name|tmpbuf
 expr_stmt|;
 if|if
 condition|(
@@ -4628,6 +4909,7 @@ name|u_long
 name|secs
 parameter_list|)
 block|{
+comment|/* XXX nonreentrant */
 specifier|static
 name|char
 name|output
@@ -4646,6 +4928,20 @@ name|tm
 modifier|*
 name|time
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_TIME_R
+name|gmtime_r
+argument_list|(
+operator|&
+name|clock
+argument_list|,
+operator|&
+name|time
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|time
 operator|=
 name|gmtime
@@ -4654,6 +4950,8 @@ operator|&
 name|clock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|time
 operator|->
 name|tm_year

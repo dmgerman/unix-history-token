@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1995, 1996, 1997, 1998 by Internet Software Consortium  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_files.c,v 1.15 1998/02/06 01:53:52 halley Exp $"
+literal|"$Id: ev_files.c,v 1.19 1999/10/07 20:44:04 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,8 +201,10 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|>=
-name|FD_SETSIZE
+operator|>
+name|ctx
+operator|->
+name|highestFD
 condition|)
 name|ERR
 argument_list|(
@@ -247,7 +249,7 @@ if|if
 condition|(
 name|mode
 operator|&
-name|O_NONBLOCK
+name|PORT_NONBLOCK
 condition|)
 name|FD_SET
 argument_list|(
@@ -271,7 +273,7 @@ name|F_SETFL
 argument_list|,
 name|mode
 operator||
-name|O_NONBLOCK
+name|PORT_NONBLOCK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -587,9 +589,6 @@ name|opaque
 decl_stmt|;
 name|evFile
 modifier|*
-name|old
-decl_stmt|,
-modifier|*
 name|cur
 decl_stmt|;
 name|int
@@ -820,7 +819,7 @@ argument_list|,
 name|mode
 operator|&
 operator|~
-name|O_NONBLOCK
+name|PORT_NONBLOCK
 argument_list|)
 expr_stmt|;
 block|}

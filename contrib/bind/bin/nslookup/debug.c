@@ -15,6 +15,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -25,11 +26,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: debug.c,v 8.11 1998/03/19 19:30:54 halley Exp $"
+literal|"$Id: debug.c,v 8.15 1999/10/13 16:39:16 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,15 +117,6 @@ end_include
 begin_comment
 comment|/*  *  Imported from res_debug.c  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_res_resultcodes
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -241,7 +234,7 @@ condition|(
 name|printHeader
 operator|||
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -290,12 +283,12 @@ name|file
 argument_list|,
 literal|", rcode = %s\n"
 argument_list|,
-name|_res_resultcodes
-index|[
+name|p_rcode
+argument_list|(
 name|hp
 operator|->
 name|rcode
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1170,7 +1163,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 operator|=
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1187,7 +1180,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -3216,8 +3209,14 @@ name|msg
 argument_list|,
 literal|"?"
 argument_list|,
+operator|(
+name|ns_class
+operator|)
 name|class
 argument_list|,
+operator|(
+name|ns_type
+operator|)
 name|type
 argument_list|,
 name|rrttl
@@ -3270,7 +3269,7 @@ block|}
 block|}
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
