@@ -230,6 +230,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|symlink
+argument_list|(
+literal|"../h"
+argument_list|,
+name|path
+argument_list|(
+literal|"sys"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* make genassym.c work */
 name|makefile
 argument_list|()
 expr_stmt|;
