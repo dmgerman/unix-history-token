@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.57	82/07/15	*/
+comment|/*	machdep.c	4.58	82/07/22	*/
 end_comment
 
 begin_include
@@ -183,6 +183,12 @@ directive|include
 file|"../h/msgbuf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/quota.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|icode
@@ -230,6 +236,65 @@ name|icode
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|MUSH
+end_if
+
+begin_decl_stmt
+name|int
+name|mcode
+index|[]
+init|=
+block|{
+literal|0x9f19af9f
+block|,
+comment|/* pushab [&"mush",0]; pushab */
+literal|0x02dd09af
+block|,
+comment|/* "/etc/mush"; pushl $2 */
+literal|0xbc5c5ed0
+block|,
+comment|/* movl sp,ap; chmk */
+literal|0x2f01bc0b
+block|,
+comment|/* $exec; chmk $exit; "/ */
+literal|0x2f637465
+block|,
+comment|/* etc/ */
+literal|0x6873756d
+block|,
+comment|/* mush" */
+literal|0x00000000
+block|,
+comment|/* \0\0\0";  0 */
+literal|0x00000014
+block|,
+comment|/* [&"mush", */
+literal|0x00000000
+block|,
+comment|/* 0] */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|szmcode
+init|=
+sizeof|sizeof
+argument_list|(
+name|mcode
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
@@ -636,6 +701,35 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|QUOTA
+name|valloclim
+argument_list|(
+name|quota
+argument_list|,
+expr|struct
+name|quota
+argument_list|,
+name|nquota
+argument_list|,
+name|quotaNQUOTA
+argument_list|)
+expr_stmt|;
+name|valloclim
+argument_list|(
+name|dquot
+argument_list|,
+expr|struct
+name|dquot
+argument_list|,
+name|ndquot
+argument_list|,
+name|dquotNDQUOT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Now allocate space for core map 	 */
 name|ncmap
 operator|=
