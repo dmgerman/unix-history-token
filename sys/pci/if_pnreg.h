@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_pnreg.h,v 1.21 1999/03/27 20:08:53 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_pnreg.h,v 1.23 1999/04/10 18:22:22 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -274,6 +274,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PN_CACHEALIGN_NONE
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PN_CACHEALIGN_8LONG
 value|0x00004000
 end_define
@@ -529,6 +536,13 @@ end_define
 begin_comment
 comment|/* rx watchdog timeo */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PN_ISR_LINKFAIL
+value|0x00001000
+end_define
 
 begin_define
 define|#
@@ -1485,7 +1499,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* 1 == on, 0 == off */
+comment|/* 0 == on, 1 == off */
 end_comment
 
 begin_define
@@ -1603,6 +1617,65 @@ define|#
 directive|define
 name|PN_NWAY_LPAR100T4
 value|0x80000000
+end_define
+
+begin_comment
+comment|/*  * Nway register bits that must be set to turn on to initiate  * an autoneg session with all modes advertized and AUI disabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PN_NWAY_AUTOENB
+define|\
+value|(PN_NWAY_AUILOWCUR|PN_NWAY_TPEXTEND|PN_NWAY_POLARITY|PN_NWAY_TP	\ 	 |PN_NWAY_NWAY_ENB|PN_NWAY_CAP10HALF|PN_NWAY_CAP10FULL|		\ 	 PN_NWAY_CAP100FULL|PN_NWAY_CAP100HALF|PN_NWAY_CAP100T4|	\ 	 PN_NWAY_AUTONEGRSTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_NWAY_MODE_10HD
+define|\
+value|(PN_NWAY_CAP10HALF|PN_NWAY_CAP10FULL|		\ 	 PN_NWAY_CAP100FULL|PN_NWAY_CAP100HALF|PN_NWAY_CAP100T4|	\ 	 PN_NWAY_AUILOWCUR|PN_NWAY_TPEXTEND|PN_NWAY_POLARITY|		\ 	 PN_NWAY_TP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_NWAY_MODE_10FD
+define|\
+value|(PN_NWAY_CAP10HALF|PN_NWAY_CAP10FULL|		\ 	 PN_NWAY_CAP100FULL|PN_NWAY_CAP100HALF|PN_NWAY_CAP100T4|	\ 	 PN_NWAY_AUILOWCUR|PN_NWAY_TPEXTEND|PN_NWAY_POLARITY|		\ 	 PN_NWAY_TP|PN_NWAY_DUPLEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_NWAY_MODE_100HD
+define|\
+value|(PN_NWAY_CAP10HALF|PN_NWAY_CAP10FULL|		\ 	 PN_NWAY_CAP100FULL|PN_NWAY_CAP100HALF|PN_NWAY_CAP100T4|	\ 	 PN_NWAY_AUILOWCUR|PN_NWAY_TPEXTEND|PN_NWAY_POLARITY|		\ 	 PN_NWAY_TP|PN_NWAY_SPEEDSEL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_NWAY_MODE_100FD
+define|\
+value|(PN_NWAY_CAP10HALF|PN_NWAY_CAP10FULL|		\ 	 PN_NWAY_CAP100FULL|PN_NWAY_CAP100HALF|PN_NWAY_CAP100T4|	\ 	 PN_NWAY_AUILOWCUR|PN_NWAY_TPEXTEND|PN_NWAY_POLARITY|		\ 	 PN_NWAY_TP|PN_NWAY_SPEEDSEL|PN_NWAY_DUPLEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_NWAY_MODE_100T4
+value|PN_NWAY_MODE_100HD
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_NWAY_LPAR
+define|\
+value|(PN_NWAY_LPAR10HALF|PN_NWAY_LPAR10FULL|PN_NWAY_LPAR100HALF|	\ 	 PN_NWAY_LPAR100FULL|PN_NWAY_LPAR100T4)
 end_define
 
 begin_comment
@@ -2412,6 +2485,9 @@ value|33
 name|u_int8_t
 name|pn_promisc_war
 decl_stmt|;
+name|u_int8_t
+name|pn_cachesize
+decl_stmt|;
 name|struct
 name|pn_chain_onefrag
 modifier|*
@@ -2562,6 +2638,31 @@ value|0xc115
 end_define
 
 begin_comment
+comment|/*  * The 82c168 chip has the same PCI vendor/device ID as the  * 82c169, but a different revision. Assume that any revision  * between 0x10 an 0x1F is an 82c168.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PN_REVMASK
+value|0xF0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_REVID_82C168
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_REVID_82C169
+value|0x20
+end_define
+
+begin_comment
 comment|/*  * Texas Instruments PHY identifiers  */
 end_comment
 
@@ -2702,6 +2803,13 @@ define|#
 directive|define
 name|PN_PCI_CLASSCODE
 value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|PN_PCI_CACHELEN
+value|0x0C
 end_define
 
 begin_define
