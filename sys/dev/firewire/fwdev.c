@@ -675,7 +675,7 @@ name|dvbuf
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|sc
@@ -718,7 +718,7 @@ name|dvbuf
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|sc
@@ -782,7 +782,7 @@ name|dvbuf
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -833,7 +833,7 @@ name|dvbuf
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -850,7 +850,7 @@ index|]
 operator|->
 name|dvbuf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|sc
@@ -898,7 +898,7 @@ index|]
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|sc
@@ -927,7 +927,7 @@ index|]
 operator|->
 name|bulkxfer
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1013,7 +1013,7 @@ index|]
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1042,7 +1042,7 @@ index|]
 operator|->
 name|bulkxfer
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1296,7 +1296,7 @@ name|free
 argument_list|(
 name|fwb
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -2891,7 +2891,7 @@ name|uio
 operator|->
 name|uio_resid
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3516,7 +3516,7 @@ expr|struct
 name|fw_isobufreq
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3639,7 +3639,7 @@ name|free
 argument_list|(
 name|ibufreq
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 comment|/* reserve a buffer space */
@@ -3713,7 +3713,7 @@ argument_list|)
 operator|*
 name|NDVCHUNK
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3794,7 +3794,7 @@ index|]
 operator|->
 name|dvpacket
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4005,7 +4005,7 @@ name|rx
 operator|.
 name|nchunk
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4048,7 +4048,7 @@ name|tx
 operator|.
 name|nchunk
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4102,7 +4102,7 @@ operator|~
 literal|3
 operator|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4122,7 +4122,7 @@ name|ir
 operator|->
 name|bulkxfer
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
@@ -4131,7 +4131,7 @@ name|it
 operator|->
 name|bulkxfer
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|ir
@@ -4192,7 +4192,7 @@ operator|~
 literal|3
 operator|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4212,7 +4212,7 @@ name|ir
 operator|->
 name|bulkxfer
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
@@ -4221,7 +4221,7 @@ name|it
 operator|->
 name|bulkxfer
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
@@ -4230,7 +4230,7 @@ name|ir
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|ir
@@ -4942,7 +4942,7 @@ name|send
 operator|.
 name|len
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -5205,7 +5205,7 @@ name|free
 argument_list|(
 name|fwb
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5259,7 +5259,7 @@ expr|struct
 name|fw_bind
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)

@@ -2446,7 +2446,7 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -2503,7 +2503,7 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}

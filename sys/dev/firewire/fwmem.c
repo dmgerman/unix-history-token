@@ -360,7 +360,7 @@ name|malloc
 argument_list|(
 name|len
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||

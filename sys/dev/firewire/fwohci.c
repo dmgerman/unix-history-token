@@ -4133,7 +4133,7 @@ name|CROMSIZE
 operator|*
 literal|2
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4315,7 +4315,7 @@ name|malloc
 argument_list|(
 name|OHCI_SIDSIZE
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4843,7 +4843,7 @@ name|fc
 operator|.
 name|sid_buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 if|if
@@ -4864,7 +4864,7 @@ name|sc
 operator|->
 name|cromptr
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|fwohci_db_free
@@ -7099,7 +7099,7 @@ name|db_tr
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|db_tr
@@ -7151,14 +7151,14 @@ index|[
 name|i
 index|]
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|db_tr
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -7249,7 +7249,7 @@ name|dbch
 operator|->
 name|ndb
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -7374,7 +7374,7 @@ name|malloc
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -7420,14 +7420,14 @@ index|[
 name|j
 index|]
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|db_tr
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7904,7 +7904,7 @@ index|]
 operator|.
 name|dummy
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -10345,7 +10345,7 @@ name|dbch
 operator|->
 name|ndb
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -12080,7 +12080,7 @@ name|malloc
 argument_list|(
 name|OHCI_SIDSIZE
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -14121,7 +14121,7 @@ argument|]; 	int dsiz[
 literal|2
 argument|];  	if(buf ==
 literal|0
-argument|){ 		buf = malloc(size, M_DEVBUF, M_NOWAIT); 		if(buf == NULL) return
+argument|){ 		buf = malloc(size, M_FW, M_NOWAIT); 		if(buf == NULL) return
 literal|0
 argument|; 		db_tr->buf = buf; 		db_tr->dbcnt =
 literal|1
@@ -14191,7 +14191,7 @@ argument|]); 		plen = sizeof(struct fw_isohdr) 			+ ntohs(fp->mode.stream.len) +
 literal|0x1f
 argument|; 		spd =  reg&
 literal|0x3
-argument|; 		switch(stat){ 			case FWOHCIEV_ACKCOMPL: 			case FWOHCIEV_ACKPEND: 				fw_rcv(&sc->fc, buf, plen - sizeof(u_int32_t), dmach, sizeof(u_int32_t), spd); 				break; 			default: 				free(buf, M_DEVBUF); 				device_printf(sc->fc.dev,
+argument|; 		switch(stat){ 			case FWOHCIEV_ACKCOMPL: 			case FWOHCIEV_ACKPEND: 				fw_rcv(&sc->fc, buf, plen - sizeof(u_int32_t), dmach, sizeof(u_int32_t), spd); 				break; 			default: 				free(buf, M_FW); 				device_printf(sc->fc.dev,
 literal|"Isochronous receive err %02x\n"
 argument|, stat); 				break; 		} 		i++; 		fwohci_add_rx_buf(db_tr, dbch->xferq.psize,  					dbch->xferq.flag,
 literal|0
@@ -14304,9 +14304,9 @@ argument|; 					len -= plen; 				} else { 					plen = -hlen; 					len -= hlen; 	
 literal|0
 argument||| len>
 literal|0
-argument|){ 					buf = malloc( dbch->xferq.psize, 							M_DEVBUF, M_NOWAIT); 					if(buf == NULL){ 						printf(
+argument|){ 					buf = malloc( dbch->xferq.psize, 							M_FW, M_NOWAIT); 					if(buf == NULL){ 						printf(
 literal|"cannot malloc!\n"
-argument|); 						free(db_tr->buf, M_DEVBUF); 						goto out; 					} 					bcopy(ld, buf, plen); 					poff =
+argument|); 						free(db_tr->buf, M_FW); 						goto out; 					} 					bcopy(ld, buf, plen); 					poff =
 literal|0
 argument|; 					dbch->frag.buf = NULL; 					dbch->frag.plen =
 literal|0
@@ -14351,7 +14351,7 @@ argument|); 					fw_rcv(&sc->fc, buf, plen - sizeof(struct fwohci_trailer),
 literal|0
 argument|,
 literal|0
-argument|, spd); 					break; 				case FWOHCIEV_BUSRST: 					free(buf, M_DEVBUF); 					if (sc->fc.status != FWBUSRESET)  						printf(
+argument|, spd); 					break; 				case FWOHCIEV_BUSRST: 					free(buf, M_FW); 					if (sc->fc.status != FWBUSRESET)  						printf(
 literal|"got BUSRST packet!?\n"
 argument|); 					break; 				default: 					device_printf(sc->fc.dev,
 literal|"Async DMA Receive error err = %02x %s\n"

@@ -1878,5 +1878,13 @@ begin_comment
 comment|/* __alpha__ */
 end_comment
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FW
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

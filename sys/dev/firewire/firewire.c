@@ -197,6 +197,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FW
+argument_list|,
+literal|"firewire"
+argument_list|,
+literal|"FireWire"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -2159,7 +2171,7 @@ name|fc
 operator|->
 name|topology_map
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
@@ -2170,7 +2182,7 @@ name|fc
 operator|->
 name|speed_map
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|bus_generic_detach
@@ -3263,7 +3275,7 @@ expr|struct
 name|fw_topology_map
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3287,7 +3299,7 @@ expr|struct
 name|fw_speed_map
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3400,7 +3412,7 @@ expr|struct
 name|csrdir
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3501,7 +3513,7 @@ expr|struct
 name|fw_bind
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4168,7 +4180,7 @@ name|free
 argument_list|(
 name|tl
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4324,7 +4336,7 @@ expr|struct
 name|fw_xfer
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -4603,7 +4615,7 @@ name|send
 operator|.
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -4626,7 +4638,7 @@ name|recv
 operator|.
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -4653,7 +4665,7 @@ name|free
 argument_list|(
 name|xfer
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -4781,7 +4793,7 @@ argument_list|(
 name|u_int32_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -5830,7 +5842,7 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 if|if
@@ -6021,7 +6033,7 @@ name|free
 argument_list|(
 name|fwdev
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -6404,7 +6416,7 @@ expr|struct
 name|fw_device
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -6692,7 +6704,7 @@ name|malloc
 argument_list|(
 literal|16
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -6987,7 +6999,7 @@ name|malloc
 argument_list|(
 literal|16
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -8960,7 +8972,7 @@ expr|struct
 name|tlabel
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -9458,7 +9470,7 @@ argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				f
 literal|"fw_rcv: cannot response(bus reset)!\n"
 argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
 literal|16
-argument|, M_DEVBUF, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
 literal|12
 argument|; 				break; 			case FWTCODE_RREQQ: 				resfp->mode.hdr.tcode = FWTCODE_RRESQ; 				xfer->send.len =
 literal|16
@@ -9503,7 +9515,7 @@ endif|#
 directive|endif
 argument|selwakeup(&xferq->rsel); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	} 	default: 		printf(
 literal|"fw_rcv: unknow tcode\n"
-argument|); 		break; 	} err: 	free(buf, M_DEVBUF); }
+argument|); 		break; 	} err: 	free(buf, M_FW); }
 comment|/*  * Post process for Bus Manager election process.  */
 argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct fw_pkt *rfp; 	struct firewire_comm *fc; 	int bmr;  	if (xfer == NULL) 		return; 	fc = xfer->fc; 	if (xfer->resp !=
 literal|0
@@ -9529,7 +9541,7 @@ argument|; 	xfer->spd =
 literal|0
 argument|; 	xfer->send.buf = malloc(
 literal|24
-argument|, M_DEVBUF, M_NOWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
+argument|, M_FW, M_NOWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
 literal|0
 argument|;  	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.lreq.dest_hi = htons(
 literal|0xffff
@@ -9584,19 +9596,19 @@ argument|){ 		fw_xfer_free( xfer); 		return; 	} 	if(xfer->recv.buf == NULL){ 		f
 comment|/* XXX need fix for 64bit arch */
 argument|case FWTCODE_WREQB: 			xfer->send.buf = malloc(
 literal|12
-argument|, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|12
 argument|; 			sfp = (struct fw_pkt *)xfer->send.buf; 			bcopy(rfp->mode.wreqb.payload, 				(caddr_t)ntohl(rfp->mode.wreqb.dest_lo), ntohs(rfp->mode.wreqb.len)); 			sfp->mode.wres.tcode = FWTCODE_WRES; 			sfp->mode.wres.rtcode =
 literal|0
 argument|; 			break; 		case FWTCODE_WREQQ: 			xfer->send.buf = malloc(
 literal|12
-argument|, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|12
 argument|; 			sfp->mode.wres.tcode = FWTCODE_WRES; 			*((u_int32_t *)(ntohl(rfp->mode.wreqb.dest_lo))) = rfp->mode.wreqq.data; 			sfp->mode.wres.rtcode =
 literal|0
 argument|; 			break; 		case FWTCODE_RREQB: 			xfer->send.buf = malloc(
 literal|16
-argument|+ rfp->mode.rreqb.len, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|+ rfp->mode.rreqb.len, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|16
 argument|+ ntohs(rfp->mode.rreqb.len); 			sfp = (struct fw_pkt *)xfer->send.buf; 			bcopy((caddr_t)ntohl(rfp->mode.rreqb.dest_lo), 				sfp->mode.rresb.payload, (u_int16_t)ntohs(rfp->mode.rreqb.len)); 			sfp->mode.rresb.tcode = FWTCODE_RRESB; 			sfp->mode.rresb.len = rfp->mode.rreqb.len; 			sfp->mode.rresb.rtcode =
 literal|0
@@ -9604,7 +9616,7 @@ argument|; 			sfp->mode.rresb.extcode =
 literal|0
 argument|; 			break; 		case FWTCODE_RREQQ: 			xfer->send.buf = malloc(
 literal|16
-argument|, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|16
 argument|; 			sfp = (struct fw_pkt *)xfer->send.buf; 			sfp->mode.rresq.data = *(u_int32_t *)(ntohl(rfp->mode.rreqq.dest_lo)); 			sfp->mode.wres.tcode = FWTCODE_RRESQ; 			sfp->mode.rresb.rtcode =
 literal|0
