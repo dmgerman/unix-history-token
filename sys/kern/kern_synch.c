@@ -2664,19 +2664,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make all processes sleeping on the specified identifier runnable.  */
+comment|/*  * Make all processes sleeping on the specified identifier runnable.  If  * non-NULL, the specified mutex is dropped before any processes are made  * runnable.  */
 end_comment
 
 begin_function
 name|void
-name|wakeup
+name|mwakeup
 parameter_list|(
 name|ident
+parameter_list|,
+name|mtx
 parameter_list|)
 specifier|register
 name|void
 modifier|*
 name|ident
+decl_stmt|;
+specifier|register
+name|struct
+name|mtx
+modifier|*
+name|mtx
 decl_stmt|;
 block|{
 specifier|register
@@ -2695,6 +2703,19 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtx
+operator|!=
+name|NULL
+condition|)
+name|mtx_unlock_flags
+argument_list|(
+name|mtx
+argument_list|,
+name|MTX_NOSWITCH
 argument_list|)
 expr_stmt|;
 name|qp
@@ -2850,19 +2871,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a process sleeping on the specified identifier runnable.  * May wake more than one process if a target process is currently  * swapped out.  */
+comment|/*  * Make a process sleeping on the specified identifier runnable.  * May wake more than one process if a target process is currently  * swapped out.  If non-NULL, the specified mutex is dropped before  * a process is made runnable.  */
 end_comment
 
 begin_function
 name|void
-name|wakeup_one
+name|mwakeup_one
 parameter_list|(
 name|ident
+parameter_list|,
+name|mtx
 parameter_list|)
 specifier|register
 name|void
 modifier|*
 name|ident
+decl_stmt|;
+specifier|register
+name|struct
+name|mtx
+modifier|*
+name|mtx
 decl_stmt|;
 block|{
 specifier|register
@@ -2881,6 +2910,19 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtx
+operator|!=
+name|NULL
+condition|)
+name|mtx_unlock_flags
+argument_list|(
+name|mtx
+argument_list|,
+name|MTX_NOSWITCH
 argument_list|)
 expr_stmt|;
 name|qp
