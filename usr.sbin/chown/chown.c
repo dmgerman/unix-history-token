@@ -217,6 +217,8 @@ decl_stmt|,
 name|ischown
 decl_stmt|,
 name|fflag
+decl_stmt|,
+name|hflag
 decl_stmt|;
 end_decl_stmt
 
@@ -397,7 +399,6 @@ break|break;
 case|case
 literal|'h'
 case|:
-comment|/* 			 * In System V (and probably POSIX.2) the -h option 			 * causes chown/chgrp to change the owner/group of 			 * the symbolic link.  4.4BSD's symbolic links don't 			 * have owners/groups, so it's an undocumented noop. 			 * Do syntax checking, though. 			 */
 name|hflag
 operator|=
 literal|1
@@ -693,10 +694,53 @@ case|case
 name|FTS_SLNONE
 case|:
 comment|/* 			 * The only symlinks that end up here are ones that 			 * don't point to anything and ones that we found 			 * doing a physical walk. 			 */
+if|if
+condition|(
+name|hflag
+condition|)
+break|break;
+else|else
 continue|continue;
 default|default:
 break|break;
 block|}
+if|if
+condition|(
+name|hflag
+condition|)
+block|{
+if|if
+condition|(
+name|lchown
+argument_list|(
+name|p
+operator|->
+name|fts_accpath
+argument_list|,
+name|uid
+argument_list|,
+name|gid
+argument_list|)
+operator|&&
+operator|!
+name|fflag
+condition|)
+block|{
+name|chownerr
+argument_list|(
+name|p
+operator|->
+name|fts_path
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|chown
@@ -725,6 +769,7 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -1107,7 +1152,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-R [-H | -L | -P]] [-f] %s file ...\n"
+literal|"usage: %s [-R [-H | -L | -P]] [-f] [-h] %s file ...\n"
 argument_list|,
 name|myname
 argument_list|,
