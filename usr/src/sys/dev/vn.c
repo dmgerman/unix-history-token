@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.8 92/12/20$  *  *	@(#)vn.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.8 92/12/20$  *  *	@(#)vn.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -919,6 +919,47 @@ name|bp
 operator|->
 name|b_validend
 expr_stmt|;
+comment|/* 		 * There is a hole in the file...punt. 		 * Note that we deal with this after the nbp allocation. 		 * This ensures that we properly clean up any operations 		 * that we have already fired off. 		 * 		 * XXX we could deal with this but it would be 		 * a hassle (in the write case). 		 */
+if|if
+condition|(
+operator|(
+name|long
+operator|)
+name|nbn
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|nbp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+name|nbp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|bp
+operator|->
+name|b_resid
+operator|-=
+operator|(
+name|resid
+operator|-
+name|sz
+operator|)
+expr_stmt|;
+name|biodone
+argument_list|(
+name|nbp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 		 * Just sort by block number 		 */
 name|nbp
 operator|->
