@@ -221,7 +221,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   JID  IP Address   Hostname                      Path\n"
+literal|"   JID  IP Address      Hostname                      Path\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -257,7 +257,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6d  %-12.12s %-29.29s %.77s\n"
+literal|"%6d  %-15.15s %-29.29s %.74s\n"
 argument_list|,
 name|xp
 operator|->
