@@ -160,28 +160,6 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NI_WITHSCOPEID
-end_ifdef
-
-begin_decl_stmt
-specifier|const
-name|int
-name|niflags
-init|=
-name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|const
 name|int
@@ -190,11 +168,6 @@ init|=
 name|NI_NUMERICHOST
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

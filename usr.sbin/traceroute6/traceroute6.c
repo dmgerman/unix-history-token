@@ -900,40 +900,6 @@ begin_comment
 comment|/* print both numerical address& hostname */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KAME_SCOPEID
-end_ifdef
-
-begin_decl_stmt
-specifier|const
-name|int
-name|niflag
-init|=
-name|NI_WITHSCOPEID
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|const
-name|int
-name|niflag
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|main
@@ -3208,8 +3174,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|niflag
 argument_list|)
 condition|)
 block|{
@@ -3389,8 +3353,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|niflag
 argument_list|)
 condition|)
 name|strlcpy
@@ -4770,8 +4732,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|niflag
 argument_list|)
 operator|!=
 literal|0
@@ -4866,8 +4826,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|niflag
 argument_list|)
 operator|!=
 literal|0
@@ -5246,8 +5204,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|niflag
 argument_list|)
 operator|!=
 literal|0
@@ -5700,8 +5656,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|niflag
 argument_list|)
 operator|!=
 literal|0
@@ -6107,8 +6061,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|niflag
 argument_list|)
 operator|!=
 literal|0
