@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.5	82/03/05	*/
+comment|/*	raw_pup.c	4.6	82/03/05	*/
 end_comment
 
 begin_include
@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../errno.h"
 end_include
 
@@ -100,22 +106,20 @@ begin_comment
 comment|/*  * Encapsulate packet in PUP header which is supplied by the  * user.  This is done to allow user to specify PUP identifier.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|rpup_output
 argument_list|(
-argument|m0
+name|m
 argument_list|,
-argument|so
+name|so
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+specifier|register
+expr|struct
 name|mbuf
-modifier|*
-name|m0
-decl_stmt|;
-end_decl_stmt
+operator|*
+name|m
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -201,10 +205,10 @@ expr|struct
 name|pup_header
 argument_list|)
 argument_list|)
+operator|)
 operator|==
 literal|0
-operator|)
-block|{
+condition|)
 goto|goto
 name|bad
 goto|;
@@ -306,11 +310,14 @@ expr|struct
 name|sockadrr_pup
 operator|*
 operator|)
+operator|&
+operator|(
 name|rp
 operator|->
 name|rcb_socket
 operator|->
 name|so_addr
+operator|)
 expr_stmt|;
 name|pup
 operator|->

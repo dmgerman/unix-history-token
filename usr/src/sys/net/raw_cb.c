@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.3	82/02/12	*/
+comment|/*	raw_cb.c	4.4	82/03/05	*/
 end_comment
 
 begin_include
@@ -66,11 +66,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/include/errno.h"
+file|"../errno.h"
 end_include
 
 begin_comment
-comment|/*  * Routines to manage the raw protocol control blocks.   *  * TODO:  *	hash lookups by protocol family/protocol + address family  *	take care of unique address problems per AF  */
+comment|/*  * Routines to manage the raw protocol control blocks.   *  * TODO:  *	hash lookups by protocol family/protocol + address family  *	take care of unique address problems per AF  *	redo address binding to allow wildcards  */
 end_comment
 
 begin_comment
@@ -188,6 +188,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|AF_PUP
+case|:
+name|ifp
+operator|=
+name|ifnet
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(

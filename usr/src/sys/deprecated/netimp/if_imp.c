@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.10	82/02/27	*/
+comment|/*	if_imp.c	4.11	82/03/05	*/
 end_comment
 
 begin_include
@@ -288,8 +288,6 @@ comment|/* the host and imp fields will be filled in by the imp */
 name|ifp
 operator|->
 name|if_addr
-operator|.
-name|s_addr
 operator|=
 name|if_makeaddr
 argument_list|(
@@ -777,7 +775,7 @@ argument_list|)
 expr_stmt|;
 block|}
 goto|goto
-name|drop
+name|rawlinkin
 goto|;
 comment|/* 	 * IMP going down.  Print message, and if not immediate, 	 * set off a timer to insure things will be reset at the 	 * appropriate time. 	 */
 case|case
@@ -831,7 +829,7 @@ index|]
 argument_list|)
 expr_stmt|;
 goto|goto
-name|drop
+name|rawlinkin
 goto|;
 comment|/* 	 * A NOP usually seen during the initialization sequence. 	 * Compare the local address with that in the message. 	 * Reset the local address notion if it doesn't match. 	 */
 case|case
@@ -875,7 +873,7 @@ operator|!=
 name|IMPS_INIT
 condition|)
 goto|goto
-name|drop
+name|rawlinkin
 goto|;
 if|if
 condition|(
@@ -887,7 +885,7 @@ operator|>
 literal|0
 condition|)
 goto|goto
-name|drop
+name|rawlinkin
 goto|;
 name|sc
 operator|->
@@ -965,7 +963,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 goto|goto
-name|drop
+name|rawlinkin
 goto|;
 block|}
 comment|/* 	 * RFNM or INCOMPLETE message, record in 	 * host table and prime output routine. 	 * 	 * SHOULD NOTIFY PROTOCOL ABOUT INCOMPLETES. 	 */
@@ -1094,7 +1092,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 goto|goto
-name|drop
+name|rawlinkin
 goto|;
 default|default:
 name|sc
@@ -1106,7 +1104,7 @@ operator|++
 expr_stmt|;
 comment|/* XXX */
 goto|goto
-name|drop
+name|rawlinkin
 goto|;
 block|}
 comment|/* 	 * Queue on protocol's input queue. 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.9 82/02/27 */
+comment|/* in.h 4.10 82/03/05 */
 end_comment
 
 begin_comment
@@ -306,6 +306,16 @@ directive|define
 name|s_imp
 value|S_un.S_un_w.s_w2
 comment|/* imp */
+define|#
+directive|define
+name|s_impno
+value|S_un.S_un_b.s_b4
+comment|/* imp # */
+define|#
+directive|define
+name|s_lh
+value|S_un.S_un_b.s_b3
+comment|/* logical host */
 endif|#
 directive|endif
 block|}

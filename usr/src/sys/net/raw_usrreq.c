@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.7	82/02/02	*/
+comment|/*	raw_usrreq.c	4.8	82/03/05	*/
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/include/errno.h"
+file|"../errno.h"
 end_include
 
 begin_comment
@@ -428,6 +428,11 @@ name|sp
 operator|->
 name|sp_family
 operator|||
+operator|(
+name|pr
+operator|->
+name|pr_protocol
+operator|&&
 name|pr
 operator|->
 name|pr_protocol
@@ -435,10 +440,17 @@ operator|!=
 name|sp
 operator|->
 name|sp_protocol
+operator|)
 condition|)
 continue|continue;
 if|if
 condition|(
+name|so
+operator|->
+name|so_addr
+operator|.
+name|sa_family
+operator|&&
 name|sa
 operator|->
 name|sa_family
@@ -581,9 +593,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rawintr: sbappendaddr failed\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
+block|}
 operator|(
 name|void
 operator|)
