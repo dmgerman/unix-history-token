@@ -2966,7 +2966,7 @@ literal|0xff
 operator|&&
 name|timeout
 operator|>
-literal|20
+literal|5
 operator|)
 condition|)
 break|break;
@@ -2993,7 +2993,7 @@ literal|0xff
 operator|&&
 name|timeout
 operator|>
-literal|20
+literal|5
 operator|)
 condition|)
 break|break;
@@ -3030,7 +3030,7 @@ literal|0xff
 operator|&&
 name|timeout
 operator|>
-literal|20
+literal|5
 condition|)
 name|mask
 operator|&=
@@ -3045,7 +3045,7 @@ literal|0xff
 operator|&&
 name|timeout
 operator|>
-literal|20
+literal|5
 condition|)
 name|mask
 operator|&=
