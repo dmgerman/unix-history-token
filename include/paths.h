@@ -202,6 +202,13 @@ name|_PATH_VARTMP
 value|"/var/tmp/"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_YP
+value|"/var/yp/"
+end_define
+
 begin_comment
 comment|/* How to get the correct name of the kernel. */
 end_comment
