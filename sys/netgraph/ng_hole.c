@@ -455,9 +455,7 @@ name|header
 operator|.
 name|arglen
 operator|!=
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 condition|)
 block|{
 name|error
