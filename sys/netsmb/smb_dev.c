@@ -727,11 +727,6 @@ name|scred
 argument_list|)
 expr_stmt|;
 comment|/* 	smb_flushq(&sdp->sd_rqlist); 	smb_flushq(&sdp->sd_rplist); */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|400001
 name|dev
 operator|->
 name|si_drv1
@@ -750,17 +745,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sdp
-operator|->
-name|sd_flags
-operator|&=
-operator|~
-name|NSMBFL_OPEN
-expr_stmt|;
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -1765,24 +1749,12 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|400001
 name|cdevsw_add
 argument_list|(
 operator|&
 name|nsmb_cdevsw
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
 name|nsmb_dev_tag
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -1796,8 +1768,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"netsmb_dev: loaded\n"
@@ -1819,11 +1789,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -1831,21 +1796,12 @@ argument_list|,
 name|nsmb_dev_tag
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|400001
 name|cdevsw_remove
 argument_list|(
 operator|&
 name|nsmb_cdevsw
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"netsmb_dev: unloaded\n"
@@ -1865,14 +1821,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|400000
-end_if
-
 begin_expr_stmt
 name|DEV_MODULE
 argument_list|(
@@ -1884,32 +1832,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|CDEV_MODULE
-argument_list|(
-name|dev_netsmb
-argument_list|,
-name|NSMB_MAJOR
-argument_list|,
-name|nsmb_cdevsw
-argument_list|,
-name|nsmb_dev_load
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Convert a file descriptor to appropriate smb_share pointer  */
