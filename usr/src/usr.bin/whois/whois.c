@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	4.2 83/06/10"
+literal|"@(#)whois.c	4.3 85/03/25"
 decl_stmt|;
 end_decl_stmt
 
