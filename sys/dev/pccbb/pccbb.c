@@ -4279,7 +4279,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-comment|/* 	 * You aren't allowed to have fast interrupts for pccard/cardbus 	 * things since those interrupts are PCI and shared.  Since we use 	 * the PCI interrupt for the status change interrupts, it can't be 	 * free for use by the driver.  Fast interrupts must not be shared. 	 */
+comment|/* 	 * You aren't allowed to have fast interrupts for pccard/cardbus 	 * things since those interrupts are PCI and shared.  Since we use 	 * the PCI interrupt for the status change interrupts, it can't be 	 * free for use by the driver.  Fast interrupts must not be shared. 	 * Well, this is no longer strictly true.  You can have multiple 	 * FAST ISRs, but can't mix fast and slow, so we have to assume 	 * least common denominator until the base system supports mixing 	 * and matching better. 	 */
 if|if
 condition|(
 operator|(
