@@ -80,6 +80,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ALTDATA
+value|2
+end_define
+
+begin_comment
+comment|/*<20>Read - data on non Creative bds.*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SELECT
 value|3
 end_define
