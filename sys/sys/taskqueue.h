@@ -262,6 +262,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * This queue is serviced by a kernel thread.  To enqueue a task, call  * taskqueue_enqueue(taskqueue_thread,&task).  */
+end_comment
+
+begin_expr_stmt
+name|TASKQUEUE_DECLARE
+argument_list|(
+name|thread
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
