@@ -3484,6 +3484,8 @@ operator|(
 name|B_VMIO
 operator||
 name|B_NEEDCOMMIT
+operator||
+name|B_NOWDRAIN
 operator|)
 operator|)
 expr_stmt|;

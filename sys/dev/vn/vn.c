@@ -1589,7 +1589,7 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-literal|0
+name|IO_NOWDRAIN
 argument_list|,
 name|vn
 operator|->
