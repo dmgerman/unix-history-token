@@ -789,19 +789,11 @@ modifier|*
 name|p_ru
 decl_stmt|;
 comment|/* Exit information. XXX */
-name|int
-name|p_nthreads
-decl_stmt|;
-comment|/* number of threads (only in leader) */
 name|void
 modifier|*
 name|p_aioinfo
 decl_stmt|;
 comment|/* ASYNC I/O info */
-name|int
-name|p_wakeup
-decl_stmt|;
-comment|/* thread id */
 name|struct
 name|proc
 modifier|*
@@ -1167,10 +1159,6 @@ begin_comment
 comment|/* Swapin request due to wakeup */
 end_comment
 
-begin_comment
-comment|/* Marked a kernel thread */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1180,17 +1168,6 @@ end_define
 
 begin_comment
 comment|/* dirty buffers flush is in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_KTHREADP
-value|0x200000
-end_define
-
-begin_comment
-comment|/* Process is really a kernel thread */
 end_comment
 
 begin_define

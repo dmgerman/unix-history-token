@@ -3586,8 +3586,6 @@ operator|->
 name|p_flag
 operator||=
 name|P_SYSTEM
-operator||
-name|P_KTHREADP
 expr_stmt|;
 comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * creating to many daemons.) 	 */
 name|wakeup

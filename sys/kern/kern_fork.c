@@ -1003,12 +1003,6 @@ expr_stmt|;
 block|}
 name|newproc
 operator|->
-name|p_wakeup
-operator|=
-literal|0
-expr_stmt|;
-name|newproc
-operator|->
 name|p_vmspace
 operator|=
 name|NULL
