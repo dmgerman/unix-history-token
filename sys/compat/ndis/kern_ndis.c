@@ -1033,7 +1033,7 @@ name|np_p
 argument_list|,
 name|RFHIGHPID
 argument_list|,
-literal|0
+name|NDIS_KSTACK_PAGES
 argument_list|,
 literal|"ndis taskqueue"
 argument_list|)
@@ -1075,7 +1075,7 @@ name|np_p
 argument_list|,
 name|RFHIGHPID
 argument_list|,
-literal|0
+name|NDIS_KSTACK_PAGES
 argument_list|,
 literal|"ndis swi"
 argument_list|)

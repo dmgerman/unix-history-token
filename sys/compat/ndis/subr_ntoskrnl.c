@@ -358,6 +358,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|void
+name|ntoskrnl_timersched
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__stdcall
 specifier|static
 name|void
@@ -7029,7 +7040,7 @@ name|p
 argument_list|,
 name|RFHIGHPID
 argument_list|,
-literal|0
+name|NDIS_KSTACK_PAGES
 argument_list|,
 name|tname
 argument_list|)
@@ -7185,6 +7196,35 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * We run all timer callouts in the ndis swi thread to take  * advantage of its larger stack size. If we don't do this,  * the callout will run in the clock ithread context.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ntoskrnl_timersched
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+name|ndis_sched
+argument_list|(
+name|ntoskrnl_timercall
+argument_list|,
+name|arg
+argument_list|,
+name|NDIS_SWI
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -7253,7 +7293,7 @@ name|k_handle
 operator|=
 name|timeout
 argument_list|(
-name|ntoskrnl_timercall
+name|ntoskrnl_timersched
 argument_list|,
 name|timer
 argument_list|,
@@ -7568,7 +7608,7 @@ condition|)
 block|{
 name|untimeout
 argument_list|(
-name|ntoskrnl_timercall
+name|ntoskrnl_timersched
 argument_list|,
 name|timer
 argument_list|,
@@ -7723,7 +7763,7 @@ name|k_handle
 operator|=
 name|timeout
 argument_list|(
-name|ntoskrnl_timercall
+name|ntoskrnl_timersched
 argument_list|,
 name|timer
 argument_list|,
@@ -7838,7 +7878,7 @@ name|FALSE
 expr_stmt|;
 name|untimeout
 argument_list|(
-name|ntoskrnl_timercall
+name|ntoskrnl_timersched
 argument_list|,
 name|timer
 argument_list|,

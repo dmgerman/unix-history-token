@@ -1433,6 +1433,17 @@ name|STATUS_WAIT_0
 value|0x00000000
 end_define
 
+begin_comment
+comment|/*  * FreeBSD's kernel stack is 2 pages in size by default. The  * Windows stack is larger, so we need to give our threads more  * stack pages. 4 should be enough, we use 8 just to extra safe.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_KSTACK_PAGES
+value|8
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|image_patch_table
