@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_options.c,v 1.39 2000/03/12 00:19:11 tom Exp $"
+literal|"$Id: lib_options.c,v 1.40 2000/09/02 18:02:05 tom Exp $"
 argument_list|)
 end_macro
 
@@ -692,11 +692,11 @@ begin_comment
 comment|/* **      has_key() ** **      Return TRUE if the current terminal has the given key ** */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NCURSES_EXT_FUNCS
-end_ifdef
+end_if
 
 begin_function
 specifier|static

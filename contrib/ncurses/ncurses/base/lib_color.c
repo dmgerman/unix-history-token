@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_color.c,v 1.51 2000/05/20 20:09:22 tom Exp $"
+literal|"$Id: lib_color.c,v 1.53 2000/09/02 18:02:15 tom Exp $"
 argument_list|)
 end_macro
 
@@ -252,11 +252,11 @@ begin_comment
 comment|/* *INDENT-ON* */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NCURSES_EXT_FUNCS
-end_ifdef
+end_if
 
 begin_comment
 comment|/*  * These are called from _nc_do_color(), which in turn is called from  * vidattr - so we have to assume that SP may be null.  */
@@ -1233,8 +1233,8 @@ argument_list|(
 name|ERR
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NCURSES_EXT_FUNCS
 if|if
 condition|(
@@ -2323,8 +2323,8 @@ name|C_MASK
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NCURSES_EXT_FUNCS
 comment|/* 	     * A minor optimization - but extension.  If "AX" is specified in 	     * the terminal description, treat it as screen's indicator of ECMA 	     * SGR 39 and SGR 49, and assume the two sequences are independent. 	     */
 if|if
@@ -2399,8 +2399,8 @@ literal|0
 condition|)
 return|return;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NCURSES_EXT_FUNCS
 if|if
 condition|(
@@ -2445,8 +2445,10 @@ operator|=
 name|xx
 expr_stmt|;
 block|}
-name|T
+name|TR
 argument_list|(
+name|TRACE_ATTRS
+argument_list|,
 operator|(
 literal|"setting colors: pair = %d, fg = %d, bg = %d"
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,10 +32,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|SVR4_ACTION
-argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -58,7 +55,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.21 2000/05/20 23:28:56 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.22 2000/09/02 18:33:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -146,7 +143,7 @@ literal|"tstp() called"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The user may have changed the prog_mode tty bits, so save them. 	 * 	 * But first try to detect whether we still are in the foreground 	 * process group - if not, an interactive shell may already have 	 * taken ownership of the tty and modified the settings when our 	 * parent was stopped before us, and we would likely pick up the 	 * settings already modified by the shell. 	 */
+comment|/*      * The user may have changed the prog_mode tty bits, so save them.      *      * But first try to detect whether we still are in the foreground      * process group - if not, an interactive shell may already have      * taken ownership of the tty and modified the settings when our      * parent was stopped before us, and we would likely pick up the      * settings already modified by the shell.      */
 if|if
 condition|(
 name|SP
@@ -177,7 +174,7 @@ directive|endif
 name|def_prog_mode
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Block window change and timer signals.  The latter 	 * is because applications use timers to decide when 	 * to repaint the screen. 	 */
+comment|/*      * Block window change and timer signals.  The latter      * is because applications use timers to decide when      * to repaint the screen.      */
 operator|(
 name|void
 operator|)
@@ -283,7 +280,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * End window mode, which also resets the terminal state to the 	 * original (pre-curses) modes. 	 */
+comment|/*      * End window mode, which also resets the terminal state to the      * original (pre-curses) modes.      */
 name|endwin
 argument_list|()
 expr_stmt|;
@@ -418,11 +415,11 @@ expr_stmt|;
 name|flushinp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If the user modified the tty state while suspended, he wants 	 * those changes to stick.  So save the new "default" terminal state. 	 */
+comment|/*      * If the user modified the tty state while suspended, he wants      * those changes to stick.  So save the new "default" terminal state.      */
 name|def_shell_mode
 argument_list|()
 expr_stmt|;
-comment|/* 	 * This relies on the fact that doupdate() will restore the 	 * program-mode tty state, and issue enter_ca_mode if need be. 	 */
+comment|/*      * This relies on the fact that doupdate() will restore the      * program-mode tty state, and issue enter_ca_mode if need be.      */
 name|doupdate
 argument_list|()
 expr_stmt|;
@@ -465,7 +462,7 @@ specifier|static
 name|int
 name|nested
 decl_stmt|;
-comment|/* 	 * Actually, doing any sort of I/O from within an signal handler is 	 * "unsafe".  But we'll _try_ to clean up the screen and terminal 	 * settings on the way out. 	 */
+comment|/*      * Actually, doing any sort of I/O from within an signal handler is      * "unsafe".  But we'll _try_ to clean up the screen and terminal      * settings on the way out.      */
 if|if
 condition|(
 operator|!
@@ -949,8 +946,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/*initialize */
 block|{
+comment|/*initialize */
 name|sigemptyset
 argument_list|(
 operator|&

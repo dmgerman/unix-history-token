@@ -30,17 +30,14 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_raw.c,v 1.7 2000/02/13 01:01:26 tom Exp $"
+literal|"$Id: lib_raw.c,v 1.8 2000/09/02 18:08:48 tom Exp $"
 argument_list|)
 end_macro
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|SVR4_TERMIO
-argument_list|)
 operator|&&
 operator|!
 name|defined

@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_hline.c,v 1.5 2000/04/29 21:14:30 tom Exp $"
+literal|"$Id: lib_hline.c,v 1.6 2000/07/04 14:08:09 Philippe.Blain Exp $"
 argument_list|)
 end_macro
 
@@ -167,6 +167,11 @@ name|end
 operator|--
 expr_stmt|;
 block|}
+name|_nc_synchook
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
 name|code
 operator|=
 name|OK

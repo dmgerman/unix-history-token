@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.4 2000/03/19 01:34:00 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
+comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.5 2000/09/09 19:08:32 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
 end_comment
 
 begin_include
@@ -194,10 +194,12 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|skip
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|buffer
@@ -425,6 +427,7 @@ name|CARD
 modifier|*
 name|card
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|content

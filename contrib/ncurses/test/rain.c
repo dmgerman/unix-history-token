@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: rain.c,v 1.14 1999/11/13 23:39:07 tom Exp $  */
+comment|/*  * $Id: rain.c,v 1.15 2000/09/02 18:41:22 tom Exp $  */
 end_comment
 
 begin_include
@@ -208,8 +208,8 @@ decl_stmt|;
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(

@@ -481,8 +481,8 @@ block|{
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(

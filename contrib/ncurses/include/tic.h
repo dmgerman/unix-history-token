@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	tic.h - Global variables and structures for the terminfo  *			compiler.  *  */
+comment|/*  * $Id: tic.h,v 1.35 2000/09/09 19:47:16 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
 end_comment
 
 begin_ifndef
@@ -620,6 +620,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* access.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|_nc_basename
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* comp_hash.c: name lookup */

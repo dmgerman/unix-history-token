@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Knight's Tour - a brain game  *  * The original of this game was anonymous.  It had an unbelievably bogus  * interface, you actually had to enter square coordinates!  Redesign by  * Eric S. Raymond<esr@snark.thyrsus.com> July 22 1995.  Mouse support  * added September 20th 1995.  *  * $Id: knight.c,v 1.15 1999/11/13 23:39:10 tom Exp $  */
+comment|/*  * Knight's Tour - a brain game  *  * The original of this game was anonymous.  It had an unbelievably bogus  * interface, you actually had to enter square coordinates!  Redesign by  * Eric S. Raymond<esr@snark.thyrsus.com> July 22 1995.  Mouse support  * added September 20th 1995.  *  * $Id: knight.c,v 1.17 2000/09/02 18:48:19 tom Exp $  */
 end_comment
 
 begin_include
@@ -562,8 +562,8 @@ decl_stmt|;
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
@@ -656,7 +656,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NCURSES_MOUSE_VERSION*/
+comment|/* NCURSES_MOUSE_VERSION */
 name|oldch
 operator|=
 name|minus

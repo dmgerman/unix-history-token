@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * view.c -- a silly little viewer program  *  * written by Eric S. Raymond<esr@snark.thyrsus.com> December 1994  * to test the scrolling code in ncurses.  *  * modified by Thomas Dickey<dickey@clark.net> July 1995 to demonstrate  * the use of 'resizeterm()', and May 2000 to illustrate wide-character  * handling.  *  * Takes a filename argument.  It's a simple file-viewer with various  * scroll-up and scroll-down commands.  *  * n	-- scroll one line forward  * p	-- scroll one line back  *  * Either command accepts a numeric prefix interpreted as a repeat count.  * Thus, typing `5n' should scroll forward 5 lines in the file.  *  * The way you can tell this is working OK is that, in the trace file,  * there should be one scroll operation plus a small number of line  * updates, as opposed to a whole-page update.  This means the physical  * scroll operation worked, and the refresh() code only had to do a  * partial repaint.  *  * $Id: view.c,v 1.29 2000/05/21 01:43:03 tom Exp $  */
+comment|/*  * view.c -- a silly little viewer program  *  * written by Eric S. Raymond<esr@snark.thyrsus.com> December 1994  * to test the scrolling code in ncurses.  *  * modified by Thomas Dickey<dickey@clark.net> July 1995 to demonstrate  * the use of 'resizeterm()', and May 2000 to illustrate wide-character  * handling.  *  * Takes a filename argument.  It's a simple file-viewer with various  * scroll-up and scroll-down commands.  *  * n	-- scroll one line forward  * p	-- scroll one line back  *  * Either command accepts a numeric prefix interpreted as a repeat count.  * Thus, typing `5n' should scroll forward 5 lines in the file.  *  * The way you can tell this is working OK is that, in the trace file,  * there should be one scroll operation plus a small number of line  * updates, as opposed to a whole-page update.  This means the physical  * scroll operation worked, and the refresh() code only had to do a  * partial repaint.  *  * $Id: view.c,v 1.31 2000/09/02 18:14:52 tom Exp $  */
 end_comment
 
 begin_include
@@ -152,10 +152,7 @@ argument_list|(
 name|TIOCGWINSZ
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HAVE_RESIZETERM
-argument_list|)
 end_if
 
 begin_define
@@ -1899,15 +1896,18 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"%3d:"
+literal|"%3ld:"
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|lptr
 operator|+
 name|i
 operator|-
 name|lines
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|clrtoeol

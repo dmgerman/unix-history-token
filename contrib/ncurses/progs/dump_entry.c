@@ -48,7 +48,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: dump_entry.c,v 1.53 2000/04/15 21:23:30 tom Exp $"
+literal|"$Id: dump_entry.c,v 1.54 2000/10/01 01:34:06 tom Exp $"
 argument_list|)
 end_macro
 
@@ -2978,6 +2978,28 @@ operator|==
 name|F_TCONVERR
 condition|)
 block|{
+name|int
+name|params
+init|=
+operator|(
+name|i
+operator|<
+operator|(
+name|int
+operator|)
+name|SIZEOF
+argument_list|(
+name|parametrized
+argument_list|)
+operator|)
+condition|?
+name|parametrized
+index|[
+name|i
+index|]
+else|:
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|srccap
@@ -3006,10 +3028,7 @@ name|name
 argument_list|,
 name|srccap
 argument_list|,
-name|parametrized
-index|[
-name|i
-index|]
+name|params
 argument_list|)
 decl_stmt|;
 if|if
