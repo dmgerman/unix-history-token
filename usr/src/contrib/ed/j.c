@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)j.c	5.1 (Berkeley) %G%"
+literal|"@(#)j.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -62,14 +110,14 @@ decl_stmt|,
 modifier|*
 name|l_temp_line
 decl_stmt|;
-name|char
-modifier|*
-name|l_temp1
-decl_stmt|;
 name|long
 name|l_ttl
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|l_temp1
 decl_stmt|;
 if|if
 condition|(
@@ -148,7 +196,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|BSD
-comment|/* for BSD a 'j' with one address sets "current" to that line */
+comment|/* 				 * For BSD a 'j' with one address sets 				 * "current" to that line 				 */
 if|if
 condition|(
 name|start
@@ -232,7 +280,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* set for d */
-comment|/* figure out what the length of the joined lines will be */
+comment|/* Figure out what the length of the joined lines will be. */
 for|for
 control|(
 name|l_ptr
@@ -270,7 +318,7 @@ operator|>
 name|nn_max
 condition|)
 block|{
-comment|/* the new line is bigger than any so far, so make more space */
+comment|/* 		 * The new line is bigger than any so far, so make more 		 * space. 		 */
 name|free
 argument_list|(
 name|text
@@ -282,10 +330,6 @@ name|l_ttl
 expr_stmt|;
 name|text
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_ttl
@@ -329,10 +373,6 @@ name|SIGINT_ACTION
 expr_stmt|;
 name|l_temp1
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_ttl
@@ -378,12 +418,13 @@ name|l_ptr
 operator|=
 name|start
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-comment|/* get each line and catenate */
+comment|/* Get each line and catenate. */
 if|if
 condition|(
 name|sigint_flag
@@ -427,10 +468,6 @@ break|break;
 block|}
 name|l_temp_line
 operator|=
-operator|(
-name|LINE
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -469,7 +506,7 @@ operator|)
 operator|=
 name|l_ttl
 expr_stmt|;
-comment|/* add the new line to the buffer */
+comment|/* Add the new line to the buffer. */
 operator|(
 name|l_temp_line
 operator|->
@@ -571,7 +608,7 @@ argument_list|,
 name|inputt
 argument_list|)
 expr_stmt|;
-comment|/* delete the lines used to make the joined line */
+comment|/* Delete the lines used to make the joined line. */
 name|d
 argument_list|(
 name|inputt
@@ -614,10 +651,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-j */
-end_comment
 
 end_unit
 

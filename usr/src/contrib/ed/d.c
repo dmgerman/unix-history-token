@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)d.c	5.1 (Berkeley) %G%"
+literal|"@(#)d.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,8 +31,73 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|d_add
+name|__P
+argument_list|(
+operator|(
+name|LINE
+operator|*
+operator|,
+name|LINE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * This removes lines in the buffer from user access. The specified  * lines are not really deleted yet(!) as they might be called back  * by an undo. So the pointers from start, End, and neighbours are placed  * in a stack for deletion later when no undo can be performed on these lines.  * The lines in the buffer are freed then as well.  */
@@ -153,8 +218,8 @@ operator|==
 name|NULL
 operator|)
 condition|)
-comment|/* nothing to do... */
 block|{
+comment|/* nothing to do... */
 operator|*
 name|errnum
 operator|=
@@ -176,7 +241,7 @@ name|End
 argument_list|)
 expr_stmt|;
 comment|/* for buffer clearing later(!) */
-comment|/* now change preserve the pointers in case of undo and then adjust    * them.    */
+comment|/* 	 * Now change preserve the pointers in case of undo and then adjust 	 * them. 	 */
 if|if
 condition|(
 name|start
@@ -297,7 +362,7 @@ operator|=
 name|l_temp2
 expr_stmt|;
 block|}
-comment|/* to keep track of the marks */
+comment|/* To keep track of the marks. */
 name|ku_chk
 argument_list|(
 name|start
@@ -341,14 +406,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* end-d */
-end_comment
-
-begin_comment
 comment|/*  * This keeps a stack of the start and end lines deleted for clean-up  * later (in d_do()). A stack is used because of the global commands.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|d_add
 parameter_list|(
@@ -374,11 +436,6 @@ name|l_temp
 decl_stmt|;
 name|l_temp
 operator|=
-operator|(
-expr|struct
-name|d_layer
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -420,11 +477,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* end-d_add */
-end_comment
-
-begin_comment
-comment|/*  * This cleans up the LINE structures deleted and no longer accessible  * to undo. It performs garbage clean-up on the now non-referenced  * text in the buffer. All three buffer methods here #ifdef'd  */
+comment|/*  * This cleans up the LINE structures deleted and no longer accessible  * to undo. It performs garbage clean-up on the now non-referenced  * text in the buffer.  */
 end_comment
 
 begin_function
@@ -437,6 +490,9 @@ name|d_layer
 modifier|*
 name|l_temp
 decl_stmt|;
+name|DBT
+name|l_db_key
+decl_stmt|;
 name|LINE
 modifier|*
 name|l_temp2
@@ -447,14 +503,6 @@ decl_stmt|;
 name|int
 name|l_flag
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DBI
-name|DBT
-name|l_db_key
-decl_stmt|;
-endif|#
-directive|endif
 name|l_temp
 operator|=
 name|d_stk
@@ -477,16 +525,7 @@ name|l_temp3
 operator|=
 name|l_temp2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STDIO
-comment|/* no garbage collection done currently */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DBI
-comment|/* we do it, but db(3) says it doesn't really do it yet */
+comment|/* 			 * We do it, but db(3) says it doesn't really do it 			 * yet. 			 */
 name|l_db_key
 operator|.
 name|size
@@ -524,20 +563,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MEMORY
-name|free
-argument_list|(
-name|l_temp2
-operator|->
-name|handle
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -599,10 +624,6 @@ expr_stmt|;
 comment|/* just to be sure */
 block|}
 end_function
-
-begin_comment
-comment|/* end-d_do */
-end_comment
 
 end_unit
 

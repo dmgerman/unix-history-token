@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)i.c	5.1 (Berkeley) %G%"
+literal|"@(#)i.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -139,7 +181,7 @@ name|sigint_flag
 condition|)
 name|SIGINT_ACTION
 expr_stmt|;
-comment|/* 'i' is just a variation on 'a': completely true with BSD; with POSIX we    * have to fake the location of "current" in a special case.    */
+comment|/* 	 * 'i' is just a variation on 'a': completely true with BSD; with 	 * POSIX we have to fake the location of "current" in a special case. 	 */
 name|a
 argument_list|(
 name|inputt
@@ -166,10 +208,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_comment
-comment|/* end-i */
-end_comment
 
 end_unit
 

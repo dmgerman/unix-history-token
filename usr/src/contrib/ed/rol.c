@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rol.c	5.1 (Berkeley) %G%"
+literal|"@(#)rol.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -66,7 +108,7 @@ name|printsfx
 operator|=
 literal|0
 expr_stmt|;
-comment|/* only one of the suffix is allowed */
+comment|/* Only one of the suffix is allowed. */
 if|if
 condition|(
 name|ss
@@ -107,10 +149,11 @@ argument_list|,
 name|inputt
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|ss
 operator|=
@@ -175,18 +218,14 @@ operator|)
 condition|)
 break|break;
 block|}
+comment|/* Rest-of-line was okay. */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* rest-of-line was okay */
 block|}
 end_function
-
-begin_comment
-comment|/* end-rol */
-end_comment
 
 end_unit
 

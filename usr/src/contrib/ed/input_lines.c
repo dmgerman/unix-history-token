@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input_lines.c	5.1 (Berkeley) %G%"
+literal|"@(#)input_lines.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -55,11 +103,6 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
-name|long
-name|l_ttl
-init|=
-literal|0
-decl_stmt|;
 specifier|register
 name|long
 name|l_nn
@@ -72,13 +115,6 @@ name|l_ss
 init|=
 name|ss
 decl_stmt|;
-name|LINE
-modifier|*
-name|l_temp_line
-decl_stmt|,
-modifier|*
-name|l_temp1
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -86,14 +122,26 @@ name|l_text
 init|=
 name|text
 decl_stmt|;
-name|char
+name|LINE
 modifier|*
-name|l_text2
+name|l_temp_line
+decl_stmt|,
+modifier|*
+name|l_temp1
+decl_stmt|;
+name|long
+name|l_ttl
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|l_nn_max
 init|=
 name|nn_max
+decl_stmt|;
+name|char
+modifier|*
+name|l_text2
 decl_stmt|;
 if|if
 condition|(
@@ -114,7 +162,7 @@ name|End_default
 operator|=
 literal|0
 expr_stmt|;
-comment|/* start==NULL means line 0 which is legal for this function only */
+comment|/* start == NULL means line 0 which is legal for this function only. */
 name|nn_max_end
 operator|=
 name|l_temp_line
@@ -162,11 +210,13 @@ operator|->
 name|below
 expr_stmt|;
 block|}
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
+comment|/* If NULL or bit-8 high not text; chuck. */
 if|if
 condition|(
 operator|(
@@ -181,7 +231,6 @@ operator|==
 name|EOF
 condition|)
 break|break;
-comment|/* if NULL or bit-8 high not text; chuck */
 if|if
 condition|(
 operator|(
@@ -252,10 +301,6 @@ condition|)
 break|break;
 name|nn_max_end
 operator|=
-operator|(
-name|LINE
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -385,10 +430,6 @@ name|l_text
 operator|=
 name|text
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_nn_max
@@ -443,7 +484,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* end-while */
 name|point
 label|:
 name|current
@@ -457,7 +497,7 @@ operator|==
 name|NULL
 condition|)
 name|current
-operator|==
+operator|=
 name|top
 expr_stmt|;
 if|if
@@ -525,10 +565,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-input_lines */
-end_comment
 
 end_unit
 

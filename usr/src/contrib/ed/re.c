@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)re.c	5.1 (Berkeley) %G%"
+literal|"@(#)re.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,11 +31,59 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
-comment|/*  * This finds the n-th occurrence of an RE in a line. If '^' was at the start  * of the RE then look once (in case n=1). There is no standard RE  * interface to do this. returns 0 for success.  * NOTE: the #ifdef REG_STARTEND is if the regex package has the BSD  * extensions to it.  */
+comment|/*  * This finds the n-th occurrence of an RE in a line. If '^' was at the start  * of the RE then look once (in case n=1). There is no standard RE interface  * to do this.  Returns 0 for success.  NOTE: the #ifdef REG_STARTEND is if  * the regex package has the BSD extensions to it.  */
 end_comment
 
 begin_function
@@ -120,7 +168,7 @@ directive|endif
 name|int
 name|pass
 decl_stmt|;
-comment|/* if pass==0 .rm_so user set, else set default */
+comment|/* if pass == 0 .rm_so user set, else set default */
 block|{
 name|int
 name|l_cnt
@@ -315,99 +363,75 @@ block|}
 end_function
 
 begin_comment
-comment|/* end-regexec_n */
-end_comment
-
-begin_comment
 comment|/*  * Replace in the line specified at the found locations with the  * specified replacement. There is no standard RE interface to do  * this.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|char
+modifier|*
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
-modifier|*
 name|re_replace
-argument_list|(
+parameter_list|(
 name|line
-argument_list|,
+parameter_list|,
 name|num_subexp
-argument_list|,
+parameter_list|,
 name|repmatch
-argument_list|,
+parameter_list|,
 name|replacer
-argument_list|)
+parameter_list|)
 else|#
 directive|else
-modifier|*
-name|re_replace
-argument_list|(
+function|re_replace
+parameter_list|(
 name|line
-argument_list|,
+parameter_list|,
 name|num_subexp
-argument_list|,
+parameter_list|,
 name|repmatch
-argument_list|,
+parameter_list|,
 name|replacer
-argument_list|,
+parameter_list|,
 name|offset
-argument_list|)
+parameter_list|)
 endif|#
 directive|endif
 name|char
 modifier|*
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|num_subexp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|regmatch_t
 name|repmatch
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|replacer
 decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|REG_STARTEND
-end_ifndef
-
-begin_decl_stmt
 name|size_t
 name|offset
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
-name|int
-name|l_cnt
-decl_stmt|,
-name|l_len_new
+specifier|static
+name|char
+modifier|*
+name|l_prev_r
 init|=
-literal|0
-decl_stmt|,
-name|l_new_rm_eo
+name|NULL
+decl_stmt|;
+specifier|static
+name|int
+name|l_prev_r_flag
 init|=
 literal|0
 decl_stmt|;
@@ -421,25 +445,23 @@ index|[
 name|RE_SEC
 index|]
 decl_stmt|;
+name|int
+name|l_cnt
+decl_stmt|,
+name|l_len_new
+init|=
+literal|0
+decl_stmt|,
+name|l_new_rm_eo
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|l_string
 decl_stmt|,
 modifier|*
 name|l_head
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|l_prev_r
-init|=
-name|NULL
-decl_stmt|;
-specifier|static
-name|int
-name|l_prev_r_flag
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -461,6 +483,7 @@ name|l_head
 operator|=
 name|replacer
 expr_stmt|;
+comment|/* Length of what stays the same before. */
 name|l_len_before
 operator|=
 operator|(
@@ -472,7 +495,6 @@ operator|.
 name|rm_so
 operator|)
 expr_stmt|;
-comment|/* length of what stays the same before */
 name|l_len_whole
 operator|=
 name|strlen
@@ -530,8 +552,7 @@ operator|.
 name|rm_so
 operator|)
 expr_stmt|;
-comment|/* l_slen[0] == len of what is to be replaced */
-comment|/* l_slen[1-9] == len of each backref */
+comment|/* 	 * l_slen[0] == len of what is to be replaced. 	 * l_slen[1-9] == len of each backref. 	 */
 if|if
 condition|(
 operator|(
@@ -553,10 +574,6 @@ condition|)
 block|{
 name|l_string
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_len_whole
@@ -588,7 +605,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* *errnum = -1;*/
+comment|/* *errnum = -1; */
 name|strcpy
 argument_list|(
 name|help_msg
@@ -712,7 +729,7 @@ name|l_string
 operator|)
 return|;
 block|}
-comment|/* figure out length of new line first */
+comment|/* Figure out length of new line first. */
 while|while
 condition|(
 operator|*
@@ -721,7 +738,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* add in the length of the RE match */
+comment|/* Add in the length of the RE match. */
 if|if
 condition|(
 operator|*
@@ -738,7 +755,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* add in the length of a backref */
+comment|/* Add in the length of a backref. */
 elseif|else
 if|if
 condition|(
@@ -786,6 +803,7 @@ operator|-
 literal|1
 operator|)
 condition|)
+comment|/* -1 - -1 = 0 */
 name|l_len_new
 operator|=
 name|l_len_new
@@ -798,7 +816,6 @@ operator|-
 literal|'0'
 index|]
 expr_stmt|;
-comment|/* -1 - -1 = 0 */
 else|else
 name|l_len_new
 operator|++
@@ -812,13 +829,9 @@ name|replacer
 operator|++
 expr_stmt|;
 block|}
-comment|/* create the line of an appropriate length */
+comment|/* Create the line of an appropriate length. */
 name|l_string
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_len_whole
@@ -871,10 +884,6 @@ argument_list|)
 expr_stmt|;
 name|l_prev_r
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_len_new
@@ -907,7 +916,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* copy over what doesn't change before the chars to be replaced */
+comment|/* Copy over what doesn't change before the chars to be replaced. */
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
@@ -968,7 +977,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* make the replacement */
+comment|/* Make the replacement. */
 name|replacer
 operator|=
 name|l_head
@@ -981,7 +990,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* put what matched the RE into the replacement */
+comment|/* Put what matched the RE into the replacement. */
 if|if
 condition|(
 operator|*
@@ -1017,6 +1026,30 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|strncat
+argument_list|(
+name|l_prev_r
+argument_list|,
+operator|&
+name|line
+index|[
+name|repmatch
+index|[
+literal|0
+index|]
+operator|.
+name|rm_so
+index|]
+argument_list|,
+operator|(
+name|int
+operator|)
+name|l_slen
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|strncat
@@ -1045,37 +1078,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|REG_STARTEND
-name|strncat
-argument_list|(
-name|l_prev_r
-argument_list|,
-operator|&
-name|line
-index|[
-name|repmatch
-index|[
-literal|0
-index|]
-operator|.
-name|rm_so
-index|]
-argument_list|,
-operator|(
-name|int
-operator|)
-name|l_slen
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|strncat
 argument_list|(
 name|l_prev_r
@@ -1114,7 +1116,7 @@ operator|==
 literal|'\\'
 condition|)
 block|{
-comment|/* likely a backref to be included */
+comment|/* Likely a backref to be included. */
 name|replacer
 operator|++
 expr_stmt|;
@@ -1187,6 +1189,36 @@ literal|'0'
 index|]
 argument_list|)
 expr_stmt|;
+name|strncat
+argument_list|(
+name|l_prev_r
+argument_list|,
+operator|&
+name|line
+index|[
+name|repmatch
+index|[
+operator|*
+name|replacer
+operator|-
+literal|'0'
+index|]
+operator|.
+name|rm_so
+index|]
+argument_list|,
+operator|(
+name|int
+operator|)
+name|l_slen
+index|[
+operator|*
+name|replacer
+operator|-
+literal|'0'
+index|]
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|strncat
@@ -1221,43 +1253,6 @@ literal|'0'
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|REG_STARTEND
-name|strncat
-argument_list|(
-name|l_prev_r
-argument_list|,
-operator|&
-name|line
-index|[
-name|repmatch
-index|[
-operator|*
-name|replacer
-operator|-
-literal|'0'
-index|]
-operator|.
-name|rm_so
-index|]
-argument_list|,
-operator|(
-name|int
-operator|)
-name|l_slen
-index|[
-operator|*
-name|replacer
-operator|-
-literal|'0'
-index|]
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|strncat
 argument_list|(
 name|l_prev_r
@@ -1293,7 +1288,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* put the replacement in */
+comment|/* Put the replacement in. */
 else|else
 block|{
 name|strncat
@@ -1316,7 +1311,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* put the replacement in */
+comment|/* Put the replacement in. */
 else|else
 block|{
 name|strncat
@@ -1349,7 +1344,7 @@ argument_list|(
 name|l_string
 argument_list|)
 expr_stmt|;
-comment|/* copy over what was after the chars to be replaced to the new line */
+comment|/* Copy over what was after the chars to be replaced to the new line. */
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
@@ -1400,7 +1395,7 @@ name|rm_eo
 operator|=
 name|l_new_rm_eo
 expr_stmt|;
-comment|/* update rm_eo */
+comment|/* Update rm_eo. */
 ifndef|#
 directive|ifndef
 name|REG_STARTEND
@@ -1408,7 +1403,7 @@ name|offset
 operator|+=
 name|l_new_rm_eo
 expr_stmt|;
-comment|/* update offset */
+comment|/* Update offset. */
 endif|#
 directive|endif
 return|return
@@ -1416,13 +1411,9 @@ operator|(
 name|l_string
 operator|)
 return|;
-comment|/* return the new line */
+comment|/* Return the new line. */
 block|}
-end_block
-
-begin_comment
-comment|/* end-re_replace */
-end_comment
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)get_pattern.c	5.1 (Berkeley) %G%"
+literal|"@(#)get_pattern.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -53,28 +101,33 @@ name|flag
 parameter_list|)
 name|int
 name|delim
-decl_stmt|;
-name|FILE
-modifier|*
-name|inputt
-decl_stmt|;
-name|int
-modifier|*
+decl_stmt|,
+decl|*
 name|errnum
 decl_stmt|,
 name|flag
 decl_stmt|;
-block|{
-name|int
-name|l_cnt
-init|=
-literal|1
+end_function
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|inputt
 decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|static
 name|int
 name|l_max
 init|=
 literal|510
+decl_stmt|;
+name|int
+name|l_cnt
+init|=
+literal|1
 decl_stmt|;
 name|char
 modifier|*
@@ -86,10 +139,6 @@ decl_stmt|;
 comment|/* get a "reasonable amount of space for the RE */
 name|l_pat
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_max
@@ -182,10 +231,11 @@ name|l_pat
 operator|)
 return|;
 block|}
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|ss
 operator|=
@@ -246,7 +296,7 @@ index|]
 operator|=
 literal|'\\'
 expr_stmt|;
-comment|/*ungetc(ss, inputt);*/
+comment|/* ungetc(ss, inputt); */
 name|l_pat
 index|[
 operator|++
@@ -296,6 +346,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* This is done for s's backward compat. */
 name|l_pat
 index|[
 name|l_cnt
@@ -303,7 +354,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* this is done for 's's backward compat. */
 return|return
 operator|(
 name|l_pat
@@ -333,7 +383,7 @@ operator|>
 name|l_max
 condition|)
 block|{
-comment|/* the RE is really long; get more space for it */
+comment|/* The RE is really long; get more space for it. */
 name|l_max
 operator|=
 name|l_max
@@ -346,10 +396,6 @@ name|l_pat
 expr_stmt|;
 name|l_pat
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|l_max
@@ -419,18 +465,14 @@ name|errnum
 operator|=
 literal|0
 expr_stmt|;
-comment|/* send back the pattern. l_pat[0] has the delimiter in it so the RE    * really starts at l_pat[1]. It's done this way for the special forms    * of 's' (substitute).    */
+comment|/* 	 * Send back the pattern.  l_pat[0] has the delimiter in it so the RE 	 * really starts at l_pat[1]. It's done this way for the special forms 	 * of 's' (substitute). 	 */
 return|return
 operator|(
 name|l_pat
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/* end-get_pattern */
-end_comment
+end_block
 
 end_unit
 

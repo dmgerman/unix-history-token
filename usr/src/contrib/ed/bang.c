@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bang.c	5.1 (Berkeley) %G%"
+literal|"@(#)bang.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -56,13 +104,18 @@ name|errnum
 decl_stmt|;
 block|{
 specifier|static
+name|int
+name|l_cnt_last_pos
+decl_stmt|;
+comment|/* "!!", l_shellcmd offset */
+specifier|static
 name|char
 name|l_shellcmd
 index|[
 name|FILENAME_LEN
 index|]
 decl_stmt|;
-comment|/* static for "!!" */
+comment|/* "!!" */
 name|int
 name|l_cnt
 init|=
@@ -72,15 +125,11 @@ name|l_esc
 init|=
 literal|0
 decl_stmt|;
-specifier|static
-name|int
-name|l_cnt_last_pos
-decl_stmt|;
-comment|/* for "!!", offset in _static_ l_shellcmd */
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -274,7 +323,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* end-while(1) */
 name|system
 argument_list|(
 name|l_shellcmd
@@ -303,10 +351,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-bang */
-end_comment
 
 end_unit
 

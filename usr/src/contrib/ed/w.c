@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.1 (Berkeley) %G%"
+literal|"@(#)w.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -55,6 +103,10 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|int
 name|l_ttl
 init|=
@@ -65,14 +117,6 @@ init|=
 literal|0
 decl_stmt|,
 name|l_sl
-decl_stmt|;
-name|FILE
-modifier|*
-name|fopen
-argument_list|()
-decl_stmt|,
-modifier|*
-name|fp
 decl_stmt|;
 name|char
 modifier|*
@@ -344,7 +388,7 @@ condition|)
 goto|goto
 name|point
 goto|;
-comment|/* write it out and get a report on the number of bytes written */
+comment|/* Write it out and get a report on the number of bytes written. */
 name|l_ttl
 operator|=
 name|edwrite
@@ -362,7 +406,7 @@ name|explain_flag
 operator|!=
 literal|0
 condition|)
-comment|/* for -s option */
+comment|/* For -s option. */
 name|printf
 argument_list|(
 literal|"%d\n"
@@ -407,8 +451,8 @@ if|if
 condition|(
 name|l_q_flag
 condition|)
-comment|/* for "wq" */
 block|{
+comment|/* For "wq". */
 name|ungetc
 argument_list|(
 literal|'\n'
@@ -431,7 +475,6 @@ name|errnum
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -470,10 +513,11 @@ name|l_ttl
 init|=
 literal|0
 decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|get_line
 argument_list|(
@@ -486,7 +530,7 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* fwrite is about 20+% faster than fprintf -- no surprise */
+comment|/* Fwrite is about 20+% faster than fprintf -- no surprise. */
 name|fwrite
 argument_list|(
 name|text
@@ -553,10 +597,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* end-write */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)search.c	5.1 (Berkeley) %G%"
+literal|"@(#)search.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -73,7 +121,7 @@ name|current
 operator|->
 name|below
 expr_stmt|;
-comment|/* get the RE */
+comment|/* Get the RE. */
 name|l_patt
 operator|=
 name|get_pattern
@@ -188,7 +236,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-comment|/* compile it up */
+comment|/* Compile it up. */
 if|if
 condition|(
 operator|(
@@ -268,13 +316,14 @@ name|sigint_flag
 condition|)
 name|SIGINT_ACTION
 expr_stmt|;
-comment|/* find a line that has the RE in it */
-while|while
-condition|(
-literal|1
-condition|)
-comment|/*(l_temp != current)*/
+comment|/* Find a line that has the RE in it. */
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
+comment|/* (l_temp != current) */
 if|if
 condition|(
 name|l_temp
@@ -364,7 +413,6 @@ condition|)
 name|SIGINT_ACTION
 expr_stmt|;
 block|}
-comment|/* end-while */
 name|strcpy
 argument_list|(
 name|help_msg
@@ -385,10 +433,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-search */
-end_comment
 
 begin_comment
 comment|/*  * Searches backward through the buffer (wrapping if necessary) to find  * a line that contains a match to the RE.  */
@@ -429,7 +473,7 @@ name|current
 operator|->
 name|above
 expr_stmt|;
-comment|/* get the RE */
+comment|/* Get the RE. */
 name|l_patt
 operator|=
 name|get_pattern
@@ -544,7 +588,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-comment|/* compile up the RE */
+comment|/* Compile up the RE. */
 if|if
 condition|(
 operator|(
@@ -624,13 +668,14 @@ name|sigint_flag
 condition|)
 name|SIGINT_ACTION
 expr_stmt|;
-comment|/* search for a line that has the RE in it */
-while|while
-condition|(
-literal|1
-condition|)
-comment|/*(l_temp != (current->above))*/
+comment|/* Search for a line that has the RE in it. */
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
+comment|/* (l_temp != (current->above)) */
 if|if
 condition|(
 name|l_temp
@@ -720,7 +765,6 @@ condition|)
 name|SIGINT_ACTION
 expr_stmt|;
 block|}
-comment|/* end-while */
 name|strcpy
 argument_list|(
 name|help_msg
@@ -741,10 +785,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-search */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edhup.c	5.1 (Berkeley) %G%"
+literal|"@(#)edhup.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,72 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
-comment|/*  * If a SIGHUP is received then user contact is severed. Try, if  * possible, to save the buffer. But be nice and don't save over  * remembered filename (you can figure out why, can't you?).  * The buffer is saved in a file named "ed.hup" in the directory that  * ed was started-up in. If a write cannot be made to that directory (say  * because it is read-only) then try writting "ed.hup" in the user's $HOME  * direcory. Then exit.  */
+comment|/*  * If a SIGHUP is received then user contact is severed. Try, if possible,  * to save the buffer. But be nice and don't save over remembered filename  * (you can figure out why, can't you?).  The buffer is saved in a file  * named "ed.hup" in the directory that ed was started-up in.  If a write  * cannot be made to that directory (say because it is read-only) then try  * writting "ed.hup" in the user's $HOME directory. Then exit.  */
 end_comment
 
-begin_macro
+begin_function
+name|__dead
+name|void
 name|do_hup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|l_filename
@@ -69,7 +122,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* no need to save buffer contents */
+comment|/* No need to save buffer contents. */
 if|if
 condition|(
 operator|(
@@ -86,7 +139,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* try writting ed.hup to the $HOME directory instead */
+comment|/* Try writting ed.hup to the $HOME directory instead. */
 name|l_temp
 operator|=
 name|getenv
@@ -154,7 +207,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* we tried... */
+comment|/* We tried... */
 block|}
 name|edwrite
 argument_list|(
@@ -170,24 +223,6 @@ argument_list|(
 name|l_fp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STDIO
-name|fclose
-argument_list|(
-name|fhtmp
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|template
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DBI
 call|(
 name|dbhtmp
 operator|->
@@ -202,20 +237,14 @@ argument_list|(
 name|template
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* hangup */
+comment|/* Hangup */
 block|}
-end_block
-
-begin_comment
-comment|/* end-do_hup */
-end_comment
+end_function
 
 end_unit
 

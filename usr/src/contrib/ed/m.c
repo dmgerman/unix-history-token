@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)m.c	5.1 (Berkeley) %G%"
+literal|"@(#)m.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -65,7 +107,7 @@ decl_stmt|,
 modifier|*
 name|l_old_bottom
 decl_stmt|;
-comment|/* set l_dest here */
+comment|/* Set l_dest here. */
 if|if
 condition|(
 operator|(
@@ -88,10 +130,11 @@ name|EOF
 operator|)
 condition|)
 block|{
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -168,7 +211,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* end-if */
 operator|*
 name|errnum
 operator|=
@@ -239,7 +281,7 @@ name|sigint_flag
 condition|)
 name|SIGINT_ACTION
 expr_stmt|;
-comment|/* do some address checking */
+comment|/* Do some address checking. */
 if|if
 condition|(
 operator|(
@@ -314,7 +356,7 @@ condition|)
 name|u_clr_stk
 argument_list|()
 expr_stmt|;
-comment|/* some more address checking. These are "legal" command constructions    * but are kind-a useless since the buffer doesn't change */
+comment|/* 	 * Some more address checking. These are "legal" command constructions 	 * but are kind-a useless since the buffer doesn't change. 	 */
 if|if
 condition|(
 operator|(
@@ -695,10 +737,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-m */
-end_comment
 
 end_unit
 

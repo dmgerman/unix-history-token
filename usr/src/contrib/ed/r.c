@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)r.c	5.1 (Berkeley) %G%"
+literal|"@(#)r.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ed.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -43,7 +49,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -67,11 +121,15 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
+name|struct
+name|exec
+name|l_magic
+decl_stmt|;
+name|struct
+name|stat
+name|l_s_buf
+decl_stmt|;
 name|FILE
-modifier|*
-name|fopen
-argument_list|()
-decl_stmt|,
 modifier|*
 name|l_fp
 decl_stmt|;
@@ -85,16 +143,8 @@ decl_stmt|,
 modifier|*
 name|l_temp
 decl_stmt|;
-name|struct
-name|stat
-name|l_s_buf
-decl_stmt|;
 name|int
 name|l_srv
-decl_stmt|;
-name|struct
-name|exec
-name|l_magic
 decl_stmt|;
 if|if
 condition|(
@@ -186,7 +236,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* end-else */
 if|if
 condition|(
 name|filename_current
@@ -239,7 +288,7 @@ name|sigint_flag
 condition|)
 name|SIGINT_ACTION
 expr_stmt|;
-comment|/* determine if the file can be read. If not set the help message    * to something descritive that the user should understand.    */
+comment|/* 	 * Determine if the file can be read.  If not set the help message to 	 * something descriptive that the user should understand. 	 */
 if|if
 condition|(
 operator|(
@@ -275,89 +324,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-switch|switch
-condition|(
+name|strcpy
+argument_list|(
+name|help_msg
+argument_list|,
+name|strerror
+argument_list|(
 name|errno
-condition|)
-block|{
-case|case
-name|ENOTDIR
-case|:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"directory in pathname does not exist"
+argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|ENOENT
-case|:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"file does not exist"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|EACCES
-case|:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"permission lacking to read file"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ENAMETOOLONG
-case|:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"pathname or component of pathname too long"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|EIO
-case|:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"I/O error during read"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ELOOP
-case|:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"too many symbolic links in pathname"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"unable to read file stat"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
 else|else
 name|strcpy
 argument_list|(
@@ -393,7 +369,7 @@ literal|"r"
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|strcpy
@@ -417,7 +393,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* there is permission to read the file, but if it's an executable    * file of the object code and linked type, we really don't want    * to look at it (according ed spec's).    */
+comment|/* 	 * There is permission to read the file, but if it's an executable 	 * file of the object code and linked type, we really don't want to 	 * look at it (according to ed spec's). 	 */
 if|if
 condition|(
 name|fread
@@ -476,7 +452,10 @@ name|fseek
 argument_list|(
 name|l_fp
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -568,10 +547,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-r */
-end_comment
 
 end_unit
 

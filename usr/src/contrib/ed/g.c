@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)g.c	5.1 (Berkeley) %G%"
+literal|"@(#)g.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,8 +31,102 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|find_line
+name|__P
+argument_list|(
+operator|(
+name|LINE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|w_cmd_l_file
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Find a line that we noted matched the RE earlier in the current  * buffer (it may have disappeared because of the commands in the  * command list).  */
@@ -57,10 +151,11 @@ name|l_cl
 operator|=
 name|top
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -93,10 +188,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/*end-find_line */
-end_comment
 
 begin_comment
 comment|/*  * Write the command line to a STDIO tmp file. See g() below.  * This allows us to use cmd_loop to run the command list because  * we "trick" cmd_loop into reading a STDIO file instead of stdin.  */
@@ -139,10 +230,11 @@ name|l_cnt
 init|=
 literal|0
 decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|ss
 operator|=
@@ -224,7 +316,6 @@ name|l_cnt
 operator|++
 expr_stmt|;
 block|}
-comment|/* end-while */
 if|if
 condition|(
 name|ss
@@ -238,10 +329,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* end-w_cmd_l_file */
-end_comment
 
 begin_comment
 comment|/*  * The global function. All global commands (g, G, v, and V) are handled  * in here. The lines to be affected by the command list are 1st noted  * and then the command list is invoked for each line matching the RE.  * Note the trick of how the command list is executed. Saves a lot of  * code (and allows for \n's in substitutions).  */
@@ -305,10 +392,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|l_fp
-decl_stmt|,
-modifier|*
-name|fopen
-argument_list|()
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -385,10 +468,6 @@ literal|1
 expr_stmt|;
 name|l_template_g
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|FILENAME_LEN
@@ -480,7 +559,7 @@ literal|'V'
 operator|)
 condition|)
 block|{
-comment|/* if it's an interactive global command we use stdin, not a file */
+comment|/* 		 * If it's an interactive global command we use stdin, not a 		 * file. 		 */
 name|GV_flag
 operator|=
 literal|1
@@ -527,7 +606,7 @@ argument_list|(
 name|inputt
 argument_list|)
 expr_stmt|;
-comment|/* get the RE for the global command */
+comment|/* Get the RE for the global command. */
 name|l_patt
 operator|=
 name|get_pattern
@@ -547,6 +626,7 @@ name|sigint_flag
 condition|)
 name|SIGINT_ACTION
 expr_stmt|;
+comment|/* Instead of: if ((*errnum == -1)&& (ss == '\n'))... */
 if|if
 condition|(
 operator|*
@@ -555,7 +635,6 @@ operator|<
 operator|-
 literal|1
 condition|)
-comment|/* instead of: if ((*errnum == -1)&& (ss == '\n'))... */
 return|return;
 operator|*
 name|errnum
@@ -723,12 +802,13 @@ name|current
 operator|=
 name|start
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-comment|/* find the lines in the buffer that the global command wants           * to work with           */
+comment|/* 		 * Find the lines in the buffer that the global command wants 		 * to work with. 		 */
 if|if
 condition|(
 name|sigint_flag
@@ -799,11 +879,6 @@ condition|)
 block|{
 name|l_gut
 operator|=
-operator|(
-expr|struct
-name|g_list
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -875,11 +950,6 @@ operator|->
 name|next
 operator|)
 operator|=
-operator|(
-expr|struct
-name|g_list
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -959,7 +1029,6 @@ operator|->
 name|below
 expr_stmt|;
 block|}
-comment|/* end-while */
 if|if
 condition|(
 name|l_Head
@@ -1020,12 +1089,13 @@ condition|)
 name|u_clr_stk
 argument_list|()
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-comment|/* execute the command list on the lines that still exist           * that we indicated earlier that global wants to work with.           */
+comment|/* 		 * Execute the command list on the lines that still exist that 		 * we indicated earlier that global wants to work with. 		 */
 if|if
 condition|(
 name|sigint_flag
@@ -1043,7 +1113,10 @@ name|fseek
 argument_list|(
 name|l_fp
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1153,9 +1226,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* end-if */
 block|}
-comment|/* end-while */
 name|point
 label|:
 if|if
@@ -1215,7 +1286,6 @@ name|l_old
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end-while */
 ifdef|#
 directive|ifdef
 name|POSIX
@@ -1225,13 +1295,8 @@ name|l_posix_cur
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* end-g */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t.c	5.1 (Berkeley) %G%"
+literal|"@(#)t.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -104,10 +152,11 @@ name|EOF
 operator|)
 condition|)
 block|{
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -184,7 +233,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* end-if */
 operator|*
 name|errnum
 operator|=
@@ -425,7 +473,6 @@ name|sigint_flag
 condition|)
 break|break;
 block|}
-comment|/* end-for */
 if|if
 condition|(
 name|l_dest
@@ -493,7 +540,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* end-if, */
 else|else
 block|{
 operator|(
@@ -513,7 +559,6 @@ operator|=
 name|l_tb
 expr_stmt|;
 block|}
-comment|/* end-if,else */
 if|if
 condition|(
 name|l_dest
@@ -534,7 +579,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* end-if, */
 else|else
 block|{
 operator|(
@@ -564,7 +608,6 @@ operator|=
 name|l_te
 expr_stmt|;
 block|}
-comment|/* end-if,else */
 name|current
 operator|=
 name|l_te
@@ -581,10 +624,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* end-t */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p.c	5.1 (Berkeley) %G%"
+literal|"@(#)p.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -120,7 +162,7 @@ argument_list|,
 name|errnum
 argument_list|)
 condition|)
-comment|/* for "command-suffix pairs" */
+comment|/* For "command-suffix pairs". */
 return|return;
 if|if
 condition|(
@@ -145,12 +187,13 @@ name|current
 operator|=
 name|start
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-comment|/* print out the lines */
+comment|/* Print out the lines. */
 if|if
 condition|(
 name|sigint_flag
@@ -181,7 +224,7 @@ name|flag
 operator|==
 literal|1
 condition|)
-comment|/* when 'n' */
+comment|/* When 'n'. */
 name|printf
 argument_list|(
 literal|"%d\t"
@@ -225,7 +268,6 @@ operator|->
 name|below
 expr_stmt|;
 block|}
-comment|/* end-while */
 operator|*
 name|errnum
 operator|=
@@ -233,10 +275,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-p */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)z.c	5.1 (Berkeley) %G%"
+literal|"@(#)z.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -81,7 +123,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* set zsnum if need be here */
+comment|/* Set zsnum if need be here. */
 name|ss
 operator|=
 name|getc
@@ -103,6 +145,7 @@ operator|<
 literal|57
 operator|)
 condition|)
+comment|/* Default set in main. */
 name|zsnum
 operator|=
 name|dig_num_conv
@@ -112,7 +155,6 @@ argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;
-comment|/* default set in main */
 elseif|else
 if|if
 condition|(
@@ -247,13 +289,13 @@ name|l_cnt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* yes, set to = 1 */
+comment|/* Yes, set to = 1. */
 while|while
 condition|(
 literal|1
 condition|)
 block|{
-comment|/* scroll-out the next 'zsnum' of lines or until bottom */
+comment|/* Scroll-out the next 'zsnum' of lines or until bottom. */
 if|if
 condition|(
 name|sigint_flag
@@ -309,7 +351,6 @@ operator|->
 name|below
 expr_stmt|;
 block|}
-comment|/* end-while */
 operator|*
 name|errnum
 operator|=
@@ -317,10 +358,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-z */
-end_comment
 
 end_unit
 

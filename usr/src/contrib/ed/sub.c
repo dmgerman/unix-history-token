@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub.c	5.1 (Berkeley) %G%"
+literal|"@(#)sub.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -68,7 +116,9 @@ decl_stmt|,
 name|l_print
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+specifier|static
+name|int
 name|l_first_pass_flag
 init|=
 literal|0
@@ -84,6 +134,22 @@ modifier|*
 name|l_repl
 init|=
 name|NULL
+decl_stmt|;
+name|LINE
+modifier|*
+name|l_s_ret
+decl_stmt|,
+modifier|*
+name|l_temp_line
+decl_stmt|,
+modifier|*
+name|l_temp_line2
+decl_stmt|,
+modifier|*
+name|l_kval
+decl_stmt|,
+modifier|*
+name|l_last
 decl_stmt|;
 name|int
 name|l_s_flag
@@ -101,7 +167,8 @@ decl_stmt|,
 name|l_sr_flag
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|int
 name|l_err
 decl_stmt|,
 name|l_sl
@@ -121,22 +188,6 @@ modifier|*
 name|l_local_temp
 init|=
 name|NULL
-decl_stmt|;
-name|LINE
-modifier|*
-name|l_s_ret
-decl_stmt|,
-modifier|*
-name|l_temp_line
-decl_stmt|,
-modifier|*
-name|l_temp_line2
-decl_stmt|,
-modifier|*
-name|l_kval
-decl_stmt|,
-modifier|*
-name|l_last
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -390,9 +441,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* end-switch */
 block|}
-comment|/* end-for */
 name|ss
 operator|=
 name|getc
@@ -476,7 +525,6 @@ name|errnum
 operator|<
 literal|0
 condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -493,17 +541,13 @@ operator|==
 literal|'\n'
 operator|)
 condition|)
+comment|/* Note, \n still in stream for next getc. */
 name|l_print
 operator|=
-operator|(
-name|int
-operator|)
 literal|1
 expr_stmt|;
-comment|/* note: \n still in stream for next getc */
 else|else
 return|return;
-block|}
 operator|*
 name|errnum
 operator|=
@@ -534,7 +578,6 @@ operator|!=
 name|EOF
 operator|)
 condition|)
-block|{
 if|if
 condition|(
 name|ss
@@ -545,13 +588,15 @@ name|l_global
 operator|=
 literal|1
 expr_stmt|;
-elseif|else
-if|if
+else|else
+switch|switch
 condition|(
 name|ss
-operator|==
-literal|'p'
 condition|)
+block|{
+case|case
+literal|'p'
+case|:
 name|l_print
 operator|=
 operator|(
@@ -563,13 +608,10 @@ operator|)
 literal|1
 operator|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ss
-operator|==
+break|break;
+case|case
 literal|'n'
-condition|)
+case|:
 name|l_print
 operator|=
 operator|(
@@ -581,13 +623,10 @@ operator|)
 literal|2
 operator|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ss
-operator|==
+break|break;
+case|case
 literal|'l'
-condition|)
+case|:
 name|l_print
 operator|=
 operator|(
@@ -599,7 +638,8 @@ operator|)
 literal|4
 operator|)
 expr_stmt|;
-elseif|else
+break|break;
+default|default:
 if|if
 condition|(
 operator|(
@@ -714,10 +754,6 @@ argument_list|)
 expr_stmt|;
 name|RE_patt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -740,6 +776,13 @@ argument_list|(
 name|l_match
 argument_list|,
 name|RE_patt
+argument_list|,
+name|strlen
+argument_list|(
+name|l_match
+operator|+
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -997,7 +1040,7 @@ name|l_s_flag
 operator|=
 literal|1
 expr_stmt|;
-comment|/* the l_local passed into re_replace is not freed in re_replace                * because it is "text", the global line holder, for the first                * pass through this loop. The value returned by re_replace is                * a new string (with the first replacement in it). If the 'g'                * flag was set with substitute then this new string is passed in                * for the second pass and can be freed once re_replace is done                * with it. (...and so on for the rest of the 'g' passes.                * RE_match[0].rm_eo is changed in re_replace to be the                * new location of the next character immediately after                * the replacement since it is likely the position of that                * character has changed because of the replacement.                */
+comment|/* 				 * The l_local passed into re_replace is not 				 * freed in re_replace because it is "text", 				 * the global line holder, for the first pass 				 * through this loop. The value returned by 				 * re_replace is a new string (with the first 				 * replacement in it). If the 'g' flag was 				 * set with substitute then this new string 				 * is passed in for the second pass and can 				 * be freed once re_replace is done with it. 				 * (...and so on for the rest of the 'g' 				 * passes. RE_match[0].rm_eo is changed in 				 * re_replace to be the new location of the 				 * next character immediately after the 				 * replacement since it is likely the 				 * position of that character has changed 				 * because of the replacement. 				 */
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
@@ -1111,31 +1154,28 @@ name|l_local_temp
 operator|=
 name|l_local
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-comment|/* make the new string the one for this line. Check if               * it needs to be split.               */
+comment|/* 			 * Make the new string the one for this line.  Check if 			 * it needs to be split. 			 */
 if|if
 condition|(
-operator|(
 name|l_local
 index|[
 name|l_cnt
 index|]
 operator|==
 literal|'\n'
-operator|)
 operator|||
-operator|(
 name|l_local
 index|[
 name|l_cnt
 index|]
 operator|==
 literal|'\0'
-operator|)
 condition|)
 block|{
 if|if
@@ -1160,10 +1200,6 @@ literal|'\0'
 expr_stmt|;
 name|l_s_ret
 operator|=
-operator|(
-name|LINE
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1309,13 +1345,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* end-if */
 else|else
 name|l_cnt
 operator|++
 expr_stmt|;
 block|}
-comment|/* end-while */
 operator|(
 name|l_s_ret
 operator|->
@@ -1583,10 +1617,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-s */
-end_comment
 
 end_unit
 

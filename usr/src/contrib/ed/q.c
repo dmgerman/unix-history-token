@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)q.c	5.1 (Berkeley) %G%"
+literal|"@(#)q.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,61 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -55,24 +109,25 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
-name|int
-name|l_which
-decl_stmt|;
-comment|/* which is it? 'q' or 'Q' */
 specifier|register
 name|int
 name|l_ss
 init|=
 name|ss
 decl_stmt|;
+name|int
+name|l_which
+decl_stmt|;
+comment|/* Which is it? 'q' or 'Q'. */
 name|l_which
 operator|=
 name|ss
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|l_ss
 operator|=
@@ -140,7 +195,7 @@ argument_list|,
 name|inputt
 argument_list|)
 expr_stmt|;
-comment|/* note: 'Q' will bypass this if stmt., which warns of no save */
+comment|/* Note: 'Q' will bypass this if stmt., which warns of no save. */
 if|if
 condition|(
 operator|(
@@ -179,7 +234,7 @@ name|l_ss
 expr_stmt|;
 return|return;
 block|}
-comment|/* do cleanup; should it be even bothered?? */
+comment|/* Do cleanup; should it be even bothered?? */
 name|start
 operator|=
 name|top
@@ -194,6 +249,7 @@ name|End_default
 operator|=
 literal|0
 expr_stmt|;
+comment|/* We don't care about the returned errnum val anymore. */
 name|d
 argument_list|(
 name|inputt
@@ -201,7 +257,6 @@ argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;
-comment|/* we don't care about the returned errnum val anymore */
 name|u_clr_stk
 argument_list|()
 expr_stmt|;
@@ -215,24 +270,6 @@ argument_list|(
 name|filename_current
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STDIO
-name|fclose
-argument_list|(
-name|fhtmp
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|template
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DBI
 call|(
 name|dbhtmp
 operator|->
@@ -242,14 +279,12 @@ argument_list|(
 name|dbhtmp
 argument_list|)
 expr_stmt|;
-comment|/* overhead as the cache is flushed */
+comment|/* Overhead as the cache is flushed. */
 name|unlink
 argument_list|(
 name|template
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|0
@@ -257,10 +292,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-q */
-end_comment
 
 end_unit
 

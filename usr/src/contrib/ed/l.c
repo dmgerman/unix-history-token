@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)l.c	5.1 (Berkeley) %G%"
+literal|"@(#)l.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -120,18 +162,19 @@ argument_list|,
 name|errnum
 argument_list|)
 condition|)
-comment|/* for "command-suffix pairs" */
+comment|/* For "command-suffix pairs". */
 return|return;
 name|current
 operator|=
 name|start
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-comment|/* print out the line character-by-character and split the line           * when line length is at line_length.           */
+comment|/* 		 * Print out the line character-by-character and split the 		 * line when line length is at line_length. 		 */
 if|if
 condition|(
 name|sigint_flag
@@ -170,9 +213,13 @@ name|len
 condition|;
 name|l_cnt
 operator|++
+operator|,
+name|l_len
+operator|+=
+literal|2
 control|)
 block|{
-comment|/* check if line needs to be broken first */
+comment|/* Check if line needs to be broken first. */
 if|if
 condition|(
 operator|(
@@ -188,16 +235,18 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-comment|/* print out the next character */
-if|if
+else|else
+switch|switch
 condition|(
 name|text
 index|[
 name|l_cnt
 index|]
-operator|==
-literal|'\b'
 condition|)
+block|{
+case|case
+literal|'\b'
+case|:
 comment|/* backspace (cntl-H) */
 name|fwrite
 argument_list|(
@@ -213,16 +262,10 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|text
-index|[
-name|l_cnt
-index|]
-operator|==
+break|break;
+case|case
 literal|'\t'
-condition|)
+case|:
 comment|/* horizontal tab */
 name|fwrite
 argument_list|(
@@ -238,17 +281,11 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|text
-index|[
-name|l_cnt
-index|]
-operator|==
+break|break;
+case|case
 literal|'\n'
-condition|)
-comment|/* newline, not that there is one */
+case|:
+comment|/* newline (not that there is one). */
 name|fwrite
 argument_list|(
 literal|"\\n"
@@ -263,16 +300,10 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|text
-index|[
-name|l_cnt
-index|]
-operator|==
+break|break;
+case|case
 literal|'\v'
-condition|)
+case|:
 comment|/* vertical tab */
 name|fwrite
 argument_list|(
@@ -288,16 +319,10 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|text
-index|[
-name|l_cnt
-index|]
-operator|==
+break|break;
+case|case
 literal|'\f'
-condition|)
+case|:
 comment|/* form feed */
 name|fwrite
 argument_list|(
@@ -313,16 +338,10 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|text
-index|[
-name|l_cnt
-index|]
-operator|==
+break|break;
+case|case
 literal|'\r'
-condition|)
+case|:
 comment|/* return */
 name|fwrite
 argument_list|(
@@ -338,7 +357,8 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-elseif|else
+break|break;
+default|default:
 if|if
 condition|(
 operator|(
@@ -359,8 +379,6 @@ operator|>
 literal|126
 operator|)
 condition|)
-comment|/* not printable */
-comment|/* 127 is del */
 block|{
 name|putchar
 argument_list|(
@@ -446,10 +464,8 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|l_len
-operator|+=
-literal|2
-expr_stmt|;
+break|break;
+block|}
 block|}
 name|l_len
 operator|=
@@ -474,7 +490,6 @@ operator|->
 name|below
 expr_stmt|;
 block|}
-comment|/* end-while */
 operator|*
 name|errnum
 operator|=
@@ -482,10 +497,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-l */
-end_comment
 
 end_unit
 

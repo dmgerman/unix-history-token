@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)e.c	5.1 (Berkeley) %G%"
+literal|"@(#)e.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,73 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -145,7 +211,7 @@ name|errnum
 operator|=
 literal|0
 expr_stmt|;
-comment|/* note: 'E' will bypass this if stmt., which warns of no save */
+comment|/* Note: 'E' will bypass this if stmt., which warns of no save. */
 if|if
 condition|(
 operator|(
@@ -236,10 +302,10 @@ name|sigint_flag
 condition|)
 name|SIGINT_ACTION
 expr_stmt|;
+comment|/* An 'e' clears all traces of last doc'mt, even in 'g'. */
 name|u_clr_stk
 argument_list|()
 expr_stmt|;
-comment|/* an 'e' clears all traces of last doc'mt, even in 'g' */
 if|if
 condition|(
 operator|*
@@ -253,32 +319,6 @@ name|errnum
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STDIO
-if|if
-condition|(
-name|fhtmp
-operator|>
-name|NULL
-condition|)
-block|{
-name|fclose
-argument_list|(
-name|fhtmp
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|template
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DBI
 if|if
 condition|(
 name|dbhtmp
@@ -301,8 +341,6 @@ name|template
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|name_set
 operator|=
 literal|1
@@ -323,11 +361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* end-e */
-end_comment
-
-begin_comment
-comment|/* This is pulled out of e.c to make the "simulated 'e'" at startup   * easier to handle.   */
+comment|/*  * This is pulled out of e.c to make the "simulated 'e'" at startup easier to  * handle.  */
 end_comment
 
 begin_function
@@ -347,14 +381,9 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DBI
 name|RECNOINFO
 name|l_dbaccess
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|template
@@ -405,27 +434,6 @@ argument_list|(
 name|template
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STDIO
-name|fhtmp
-operator|=
-name|fopen
-argument_list|(
-name|template
-argument_list|,
-literal|"w+"
-argument_list|)
-expr_stmt|;
-name|file_seek
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DBI
 operator|(
 name|l_dbaccess
 operator|.
@@ -475,17 +483,13 @@ name|dbopen
 argument_list|(
 name|template
 argument_list|,
-operator|(
 name|O_CREAT
 operator||
 name|O_RDWR
-operator|)
 argument_list|,
-operator|(
 name|S_IRUSR
 operator||
 name|S_IWUSR
-operator|)
 argument_list|,
 operator|(
 name|DBTYPE
@@ -496,8 +500,6 @@ operator|&
 name|l_dbaccess
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|current
 operator|=
 name|top
@@ -521,11 +523,11 @@ condition|(
 name|name_set
 condition|)
 block|{
+comment|/* So 'r' knows the filename is already read in. */
 name|filename_flag
 operator|=
 literal|1
 expr_stmt|;
-comment|/* so 'r' knows the filename is already read in */
 name|r
 argument_list|(
 name|inputt
@@ -540,10 +542,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-e2 */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)line_number.c	5.1 (Berkeley) %G%"
+literal|"@(#)line_number.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,43 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -49,16 +85,16 @@ modifier|*
 name|line_addr
 decl_stmt|;
 block|{
+name|LINE
+modifier|*
+name|l_temp1
+decl_stmt|;
 name|int
 name|l_cnt
 init|=
 literal|1
 decl_stmt|;
 comment|/* yes! =1 */
-name|LINE
-modifier|*
-name|l_temp1
-decl_stmt|;
 name|l_temp1
 operator|=
 name|top
@@ -82,10 +118,11 @@ operator|(
 literal|0
 operator|)
 return|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -110,7 +147,6 @@ name|l_cnt
 operator|++
 expr_stmt|;
 block|}
-comment|/* end-while */
 return|return
 operator|(
 name|l_cnt
@@ -118,10 +154,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-line_number */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)filename.c	5.1 (Berkeley) %G%"
+literal|"@(#)filename.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -56,15 +104,15 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|l_fname
-decl_stmt|;
 specifier|register
 name|int
 name|l_cnt
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|l_fname
 decl_stmt|;
 name|int
 name|l_esc
@@ -79,10 +127,6 @@ name|l_len
 decl_stmt|;
 name|l_fname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|FILENAME_LEN
@@ -147,13 +191,13 @@ argument_list|,
 name|inputt
 argument_list|)
 expr_stmt|;
+comment|/* 			 * It's not really an error, but to flag remembered 			 * filename is to be used. 			 */
 operator|*
 name|errnum
 operator|=
 operator|-
 literal|2
 expr_stmt|;
-comment|/* it's not really an error, but to flag remembered filename is to be used */
 block|}
 else|else
 block|{
@@ -202,10 +246,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|ss
 operator|=
@@ -338,15 +383,14 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* end-while(1) */
 if|if
 condition|(
 name|l_bang_flag
 operator|==
 literal|1
 condition|)
-comment|/* user wants the name from a sh command */
 block|{
+comment|/* user wants the name from a sh command */
 name|FILE
 modifier|*
 name|namestream
@@ -510,10 +554,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-filename */
-end_comment
 
 end_unit
 

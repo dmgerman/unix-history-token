@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)address.c	5.1 (Berkeley) %G%"
+literal|"@(#)address.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -61,17 +103,22 @@ name|LINE
 modifier|*
 name|l_cl
 decl_stmt|;
+for|for
+control|(
 name|l_cl
 operator|=
 name|one
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|l_cl
 operator|!=
 name|NULL
-condition|)
-block|{
+condition|;
+name|l_cl
+operator|=
+name|l_cl
+operator|->
+name|below
+control|)
 if|if
 condition|(
 name|l_cl
@@ -83,14 +130,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|l_cl
-operator|=
-name|l_cl
-operator|->
-name|below
-expr_stmt|;
-block|}
-comment|/* end-while */
 return|return
 operator|(
 operator|-
@@ -99,10 +138,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* end-address_check */
-end_comment
 
 begin_comment
 comment|/*  * convert a number given by the user into variable  */
@@ -232,18 +267,24 @@ name|LINE
 modifier|*
 name|temp1
 decl_stmt|;
+for|for
+control|(
 name|temp1
 operator|=
 name|top
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|temp1
 operator|->
 name|below
 operator|!=
 name|NULL
-condition|)
+condition|;
+name|temp1
+operator|=
+name|temp1
+operator|->
+name|below
+control|)
 block|{
 comment|/* find the matching line number in the buffer */
 if|if
@@ -255,12 +296,6 @@ condition|)
 break|break;
 name|l_line
 operator|++
-expr_stmt|;
-name|temp1
-operator|=
-name|temp1
-operator|->
-name|below
 expr_stmt|;
 block|}
 if|if
@@ -313,11 +348,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* end-num_to_adddress */
-end_comment
-
-begin_comment
-comment|/*  * Figure out what the addresses are spec'd by the user.  * Note for backward compatability the most recent addresses in  * a chain are used by the commands (i.e. 3,5,17,22d deletes lines 17 to  * 22 inclusive. The two leading addresses 3 and 5 are dropped as cmd_loop  * rolls through here the extra times). Hence, the code may look  * a little wierder than it should.  * The variable l_order is used to control for legally constructed addresses  * as described in ed(1). So, "$-21" and "/RE/++++" are leagal but /RE/-$ is  * not.  */
+comment|/*  * Figure out what the addresses are spec'd by the user.  Note for backward  * compatability the most recent addresses in a chain are used by the commands  * (i.e. 3,5,17,22d deletes lines 17 to 22 inclusive. The two leading addresses  * 3 and 5 are dropped as cmd_loop rolls through here the extra times).  Hence,  * the code may look a little wierder than it should.  The variable l_order is  * used to control for legally constructed addresses as described in ed(1).  So,  * "$-21" and "/RE/++++" are leagal but /RE/-$ is not.  */
 end_comment
 
 begin_function
@@ -344,6 +375,10 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
+name|LINE
+modifier|*
+name|l_dot
+decl_stmt|;
 name|int
 name|l_last
 decl_stmt|,
@@ -352,21 +387,20 @@ decl_stmt|,
 name|l_num
 decl_stmt|,
 name|l_order
-init|=
-literal|0
-decl_stmt|;
-name|LINE
-modifier|*
-name|l_dot
-decl_stmt|;
-name|int
+decl_stmt|,
 name|l_pass_flag
-init|=
-literal|0
 decl_stmt|;
 name|l_dot
 operator|=
 name|NULL
+expr_stmt|;
+name|l_order
+operator|=
+literal|0
+expr_stmt|;
+name|l_pass_flag
+operator|=
+literal|0
 expr_stmt|;
 name|address_flag
 operator|=
@@ -483,7 +517,7 @@ argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;
-comment|/* " " (<space>), historically, gets counted as a "+"                  * if it's between two 'addable' address forms. Goofy,                  * but it makes it compatible for those strange old                  * scripts (or users?)                  */
+comment|/* 			 * " " (<space>), historically, gets counted as a "+" 			 * if it's between two 'addable' address forms. Goofy, 			 * but it makes it compatible for those strange old 			 * scripts (or users?) 			 */
 if|if
 condition|(
 operator|(
@@ -856,7 +890,6 @@ operator|)
 return|;
 break|break;
 block|}
-comment|/* End-switch */
 if|if
 condition|(
 operator|*
@@ -871,7 +904,6 @@ operator|=
 name|ss
 expr_stmt|;
 block|}
-comment|/* end-while */
 if|if
 condition|(
 name|ss
@@ -896,10 +928,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* End-address_conv */
-end_comment
 
 end_unit
 

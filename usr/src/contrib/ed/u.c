@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)u.c	5.1 (Berkeley) %G%"
+literal|"@(#)u.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -91,10 +139,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* end-u */
-end_comment
-
-begin_comment
 comment|/* This function does the "real work" of the undo. */
 end_comment
 
@@ -121,7 +165,7 @@ decl_stmt|,
 modifier|*
 name|l_temp
 decl_stmt|;
-comment|/* this is done because undo can be undone */
+comment|/* This is done because undo can be undone. */
 name|l_current
 operator|=
 name|u_current
@@ -199,7 +243,6 @@ name|l_temp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end-while */
 name|current
 operator|=
 name|l_current
@@ -216,11 +259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* end-undo */
-end_comment
-
-begin_comment
-comment|/* this function should be called before u_add_stk is in each command  * function, _except_ when the global flag is high (>0) -- otherwise,  * we couldn't undo all of the global commands, only the last iteration  * of the last command -- and the u command.  * This is where we begin to dispose of ed's undo knowledge of a line.  * The call to d_do() gets rid of the rest.  */
+comment|/*  * This function should be called before u_add_stk is in each command  * function, _except_ when the global flag is high (>0) -- otherwise,  * we couldn't undo all of the global commands, only the last iteration  * of the last command -- and the u command.  * This is where we begin to dispose of ed's undo knowledge of a line.  * The call to d_do() gets rid of the rest.  */
 end_comment
 
 begin_function
@@ -246,6 +285,7 @@ name|u_bottom
 operator|=
 name|bottom
 expr_stmt|;
+comment|/* Only if there is something to delete in the buffer. */
 if|if
 condition|(
 operator|(
@@ -256,7 +296,6 @@ operator|(
 name|d_stk
 operator|)
 condition|)
-comment|/* only if there is something to delete in the buffer */
 name|d_do
 argument_list|()
 expr_stmt|;
@@ -287,16 +326,12 @@ name|u_stk
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* just to sure */
+comment|/* Just to sure. */
 block|}
 end_function
 
 begin_comment
-comment|/* end-u_clr_stk */
-end_comment
-
-begin_comment
-comment|/*  * Place the addresses of and the pointer values of the LINE structures  * that are being changed on the undo stack.  * This is a quick, simple, and effective way to preserve what could be  * be brought back on request without keeping a copy of every bleep'n  * thing.  */
+comment|/*  * Place the addresses of and the pointer values of the LINE structures  * that are being changed on the undo stack.  This is a quick, simple,  * and effective way to preserve what could be be brought back on request  * without keeping a copy of every bleep'n thing.  */
 end_comment
 
 begin_function
@@ -326,11 +361,6 @@ condition|)
 return|return;
 name|l_now
 operator|=
-operator|(
-expr|struct
-name|u_layer
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -408,10 +438,6 @@ operator|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-u_add_stk */
-end_comment
 
 end_unit
 

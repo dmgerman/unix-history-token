@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)k.c	5.1 (Berkeley) %G%"
+literal|"@(#)k.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -110,7 +152,7 @@ name|End_default
 operator|=
 literal|0
 expr_stmt|;
-comment|/* the marks have to be "a" to "z" (inclusive); that is, ye olde    * portable character set (ASCII) lower case alphabet    */
+comment|/* 	 * The marks have to be "a" to "z" (inclusive); that is, ye olde 	 * portable character set (ASCII) lower case alphabet. 	 */
 if|if
 condition|(
 operator|(
@@ -183,10 +225,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* end-set_mark */
-end_comment
-
-begin_comment
 comment|/*  * This gets the address of a marked line.  */
 end_comment
 
@@ -210,7 +248,7 @@ operator|=
 name|getchar
 argument_list|()
 expr_stmt|;
-comment|/* ditto above comment */
+comment|/* Ditto above comment. */
 if|if
 condition|(
 operator|(
@@ -268,10 +306,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end-get_mark */
-end_comment
 
 begin_comment
 comment|/*  * This is for the restoration of marks during an undo.  */
@@ -384,13 +418,8 @@ operator|->
 name|below
 expr_stmt|;
 block|}
-comment|/* end-while */
 block|}
 end_block
-
-begin_comment
-comment|/* end-ku_chk */
-end_comment
 
 end_unit
 
