@@ -192,7 +192,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\tsize = %%d (512 byte blocks), %%dk (kB), %%dm (MB) or %%dg (GB)\n"
+literal|"\t\tsize = %%d (512 byte blocks), %%dk (kB),\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t       %%dm (MB), %%dg (GB) or %%dt (TB) \n"
 argument_list|)
 expr_stmt|;
 name|exit
