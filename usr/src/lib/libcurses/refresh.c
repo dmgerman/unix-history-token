@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.28 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1314,7 +1314,7 @@ condition|(
 operator|!
 name|force
 operator|&&
-name|bcmp
+name|memcmp
 argument_list|(
 name|nsp
 argument_list|,
@@ -1338,7 +1338,7 @@ condition|)
 block|{
 while|while
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 name|nsp
 argument_list|,
@@ -1434,7 +1434,7 @@ condition|(
 operator|(
 name|force
 operator|||
-name|bcmp
+name|memcmp
 argument_list|(
 name|nsp
 argument_list|,
@@ -2426,7 +2426,7 @@ index|]
 operator|->
 name|hash
 operator|||
-name|bcmp
+name|memcmp
 argument_list|(
 name|win
 operator|->
@@ -2533,7 +2533,7 @@ index|]
 operator|->
 name|hash
 operator|||
-name|bcmp
+name|memcmp
 argument_list|(
 name|win
 operator|->
@@ -2627,7 +2627,7 @@ index|]
 operator|->
 name|hash
 operator|||
-name|bcmp
+name|memcmp
 argument_list|(
 name|win
 operator|->
@@ -3221,7 +3221,7 @@ name|hash
 operator|!=
 name|blank_hash
 operator|||
-name|bcmp
+name|memcmp
 argument_list|(
 name|clp
 operator|->
