@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	5.3 (Berkeley) %G%"
+literal|"@(#)quota.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -481,13 +484,6 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|char
-name|c
-decl_stmt|,
-modifier|*
-name|p
-decl_stmt|;
-specifier|register
 name|struct
 name|fstab
 modifier|*
@@ -497,21 +493,9 @@ specifier|register
 name|char
 modifier|*
 name|msgi
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 decl_stmt|,
 modifier|*
 name|msgb
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 decl_stmt|;
 specifier|register
 name|enab
@@ -583,6 +567,9 @@ name|done
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setfsent
 argument_list|()
 expr_stmt|;
@@ -609,6 +596,16 @@ operator|<
 literal|0
 condition|)
 continue|continue;
+name|msgi
+operator|=
+name|msgb
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|fsdev
 operator|=
 name|statb
@@ -660,6 +657,9 @@ name|uid
 argument_list|,
 name|fsdev
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dqblk
 argument_list|)
@@ -683,12 +683,15 @@ operator|<
 literal|0
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fd
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|uid
@@ -708,6 +711,10 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|dqblk
 argument_list|,
@@ -754,6 +761,9 @@ argument_list|(
 name|qfilename
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -761,6 +771,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -901,6 +914,9 @@ name|dqb_iwarn
 operator|<
 name|MAX_IQ_WARN
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|iwarn
@@ -928,6 +944,9 @@ name|dqb_bwarn
 operator|<
 name|MAX_DQ_WARN
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dwarn
@@ -1119,6 +1138,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|endfsent
 argument_list|()
 expr_stmt|;
@@ -1135,6 +1157,9 @@ if|if
 condition|(
 name|morethanone
 condition|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1237,6 +1262,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1341,6 +1369,9 @@ operator|>=
 literal|40
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1358,6 +1389,9 @@ operator|==
 literal|0
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -1397,6 +1431,9 @@ operator|++
 operator|<
 literal|40
 condition|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|' '
@@ -1408,6 +1445,9 @@ condition|(
 name|column
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
