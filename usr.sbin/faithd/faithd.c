@@ -2275,11 +2275,19 @@ expr_stmt|;
 if|if
 condition|(
 name|s_src
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNABORTED
+condition|)
+goto|goto
+name|again
+goto|;
 name|exit_failure
 argument_list|(
 literal|"socket: %s"
