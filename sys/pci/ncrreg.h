@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.3 1995/03/21 22:48:36 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@cologne.de		Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.4 1996/10/11 19:50:12 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@cologne.de		Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -282,7 +282,7 @@ name|LDSC
 value|0x02
 comment|/* sta: disconnect& reconnect      */
 comment|/*10*/
-name|u_long
+name|u_int32_t
 name|nc_dsa
 decl_stmt|;
 comment|/* --> Base page                    */
@@ -365,11 +365,26 @@ name|nc_ctest3
 decl_stmt|;
 define|#
 directive|define
+name|FLF
+value|0x08
+comment|/* cmd: flush dma fifo              */
+define|#
+directive|define
 name|CLF
 value|0x04
-comment|/* clear scsi fifo		    */
+comment|/* cmd: clear dma fifo		    */
+define|#
+directive|define
+name|FM
+value|0x02
+comment|/* mod: fetch pin mode              */
+define|#
+directive|define
+name|WRIE
+value|0x01
+comment|/* mod: write and invalidate enable */
 comment|/*1c*/
-name|u_long
+name|u_int32_t
 name|nc_temp
 decl_stmt|;
 comment|/* ### Temporary stack              */
@@ -381,36 +396,51 @@ comment|/*21*/
 name|u_char
 name|nc_ctest4
 decl_stmt|;
+define|#
+directive|define
+name|BDIS
+value|0x80
+comment|/* mod: burst disable               */
+define|#
+directive|define
+name|MPEE
+value|0x08
+comment|/* mod: master parity error enable  */
 comment|/*22*/
 name|u_char
 name|nc_ctest5
 decl_stmt|;
+define|#
+directive|define
+name|DFS
+value|0x20
+comment|/* mod: dma fifo size               */
 comment|/*23*/
 name|u_char
 name|nc_ctest6
 decl_stmt|;
 comment|/*24*/
-name|u_long
+name|u_int32_t
 name|nc_dbc
 decl_stmt|;
 comment|/* ### Byte count and command       */
 comment|/*28*/
-name|u_long
+name|u_int32_t
 name|nc_dnad
 decl_stmt|;
 comment|/* ### Next command register        */
 comment|/*2c*/
-name|u_long
+name|u_int32_t
 name|nc_dsp
 decl_stmt|;
 comment|/* --> Script Pointer               */
 comment|/*30*/
-name|u_long
+name|u_int32_t
 name|nc_dsps
 decl_stmt|;
 comment|/* --> Script pointer save/opcode#2 */
 comment|/*34*/
-name|u_long
+name|u_int32_t
 name|nc_scratcha
 decl_stmt|;
 comment|/* ??? Temporary register a         */
@@ -418,6 +448,31 @@ comment|/*38*/
 name|u_char
 name|nc_dmode
 decl_stmt|;
+define|#
+directive|define
+name|BL_2
+value|0x80
+comment|/* mod: burst length shift value +2 */
+define|#
+directive|define
+name|BL_1
+value|0x40
+comment|/* mod: burst length shift value +1 */
+define|#
+directive|define
+name|ERL
+value|0x08
+comment|/* mod: enable read line            */
+define|#
+directive|define
+name|ERMP
+value|0x04
+comment|/* mod: enable read multiple        */
+define|#
+directive|define
+name|BOF
+value|0x02
+comment|/* mod: burst op code fetch         */
 comment|/*39*/
 name|u_char
 name|nc_dien
@@ -433,9 +488,29 @@ decl_stmt|;
 comment|/* --> Script execution control     */
 define|#
 directive|define
+name|CLSE
+value|0x80
+comment|/* mod: cache line size enable      */
+define|#
+directive|define
+name|PFF
+value|0x40
+comment|/* cmd: pre-fetch flush             */
+define|#
+directive|define
+name|PFEN
+value|0x20
+comment|/* mod: pre-fetch enable            */
+define|#
+directive|define
 name|SSM
 value|0x10
 comment|/* mod: single step mode            */
+define|#
+directive|define
+name|IRQM
+value|0x08
+comment|/* mod: irq mode (1 = totem pole !) */
 define|#
 directive|define
 name|STD
@@ -443,11 +518,16 @@ value|0x04
 comment|/* cmd: start dma mode              */
 define|#
 directive|define
+name|IRQD
+value|0x02
+comment|/* mod: irq disable                 */
+define|#
+directive|define
 name|NOCOM
 value|0x01
 comment|/* cmd: protect sfbr while reselect */
 comment|/*3c*/
-name|u_long
+name|u_int32_t
 name|nc_adder
 decl_stmt|;
 comment|/*40*/
@@ -589,6 +669,11 @@ value|0x80
 comment|/* c: tolerAnt enable */
 define|#
 directive|define
+name|HSC
+value|0x20
+comment|/* c: Halt SCSI Clock */
+define|#
+directive|define
 name|CSF
 value|0x02
 comment|/* c: clear scsi fifo */
@@ -598,8 +683,37 @@ name|nc_sidl
 decl_stmt|;
 comment|/* Lowlevel: latched from scsi data */
 comment|/*52*/
-name|u_short
-name|nc_52_
+name|u_char
+name|nc_stest4
+decl_stmt|;
+define|#
+directive|define
+name|SMODE
+value|0xc0
+comment|/* SCSI bus mode      (895/6 only) */
+define|#
+directive|define
+name|SMODE_HVD
+value|0x40
+comment|/* High Voltage Differential       */
+define|#
+directive|define
+name|SMODE_SE
+value|0x80
+comment|/* Single Ended                    */
+define|#
+directive|define
+name|SMODE_LVD
+value|0xc0
+comment|/* Low Voltage Differential        */
+define|#
+directive|define
+name|LCKFRQ
+value|0x20
+comment|/* Frequency Lock (895/6 only)     */
+comment|/*53*/
+name|u_char
+name|nc_53_
 decl_stmt|;
 comment|/*54*/
 name|u_short
@@ -690,8 +804,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|ncrcmd
 typedef|;
 end_typedef
@@ -791,10 +904,10 @@ begin_struct
 struct|struct
 name|scr_tblmove
 block|{
-name|u_long
+name|u_int32_t
 name|size
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|addr
 decl_stmt|;
 block|}
@@ -867,7 +980,7 @@ name|SCR_ID
 parameter_list|(
 name|id
 parameter_list|)
-value|(((u_long)(id))<< 16)
+value|(((u_int32_t)(id))<< 16)
 end_define
 
 begin_comment
@@ -941,13 +1054,30 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/*----------------------------------------------------------- ** **	Memory to memory move ** **----------------------------------------------------------- ** **	COPY (bytecount) **<< source_address>> **<< destination_address>> ** **----------------------------------------------------------- */
+comment|/*----------------------------------------------------------- ** **	Memory to memory move ** **----------------------------------------------------------- ** **	COPY (bytecount) **<< source_address>> **<< destination_address>> ** **	SCR_COPY   sets the NO FLUSH option by default. **	SCR_COPY_F does not set this option. ** **	For chips which do not support this option, **	ncr_copy_and_bind() will remove this bit. **----------------------------------------------------------- */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|SCR_NO_FLUSH
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCR_COPY
+parameter_list|(
+name|n
+parameter_list|)
+value|(0xc0000000 | SCR_NO_FLUSH | (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCR_COPY_F
 parameter_list|(
 name|n
 parameter_list|)
@@ -1122,6 +1252,13 @@ end_define
 begin_comment
 comment|/*----------------------------------------------------------- ** **	Waiting for Disconnect or Reselect ** **----------------------------------------------------------- ** **	JUMP            [ | IFTRUE/IFFALSE ( ... ) ] **<<address>> ** **	JUMPR           [ | IFTRUE/IFFALSE ( ... ) ] **<<distance>> ** **	CALL            [ | IFTRUE/IFFALSE ( ... ) ] **<<address>> ** **	CALLR           [ | IFTRUE/IFFALSE ( ... ) ] **<<distance>> ** **	RETURN          [ | IFTRUE/IFFALSE ( ... ) ] **<<dummy>> ** **	INT             [ | IFTRUE/IFFALSE ( ... ) ] **<<ident>> ** **	INT_FLY         [ | IFTRUE/IFFALSE ( ... ) ] **<<ident>> ** **	Conditions: **	     WHEN (phase) **	     IF   (phase) **	     CARRY **	     DATA (data, mask) ** **----------------------------------------------------------- */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCR_NO_OP
+value|0x80000000
+end_define
 
 begin_define
 define|#
@@ -1510,6 +1647,157 @@ define|#
 directive|define
 name|S_SENSE
 value|(0x80)
+end_define
+
+begin_comment
+comment|/* **	Bits defining chip features. **	For now only some of them are used, since we explicitely  **	deal with PCI device id and revision id. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FE_LED0
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_WIDE
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_ULTRA
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_ULTRA2
+value|(1<<3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_DBLR
+value|(1<<4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_QUAD
+value|(1<<5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_ERL
+value|(1<<6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_CLSE
+value|(1<<7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_WRIE
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_ERMP
+value|(1<<9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_BOF
+value|(1<<10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_DFS
+value|(1<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_PFEN
+value|(1<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_LDSTR
+value|(1<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RAM
+value|(1<<14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_CLK80
+value|(1<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_DIFF
+value|(1<<16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_BIOS
+value|(1<<17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_CACHE_SET
+value|(FE_ERL|FE_CLSE|FE_WRIE|FE_ERMP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_SCSI_SET
+value|(FE_WIDE|FE_ULTRA|FE_ULTRA2|FE_DBLR|FE_QUAD|F_CLK80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_SPECIAL_SET
+value|(FE_CACHE_SET|FE_BOF|FE_DFS|FE_LDSTR|FE_PFEN|FE_RAM)
 end_define
 
 begin_endif
