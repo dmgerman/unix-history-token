@@ -360,7 +360,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 name|q
 decl_stmt|;
@@ -380,7 +380,7 @@ modifier|*
 name|cp
 decl_stmt|;
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 modifier|*
 name|queue
@@ -967,7 +967,7 @@ name|pp
 argument_list|,
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 name|free

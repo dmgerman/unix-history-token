@@ -997,7 +997,7 @@ name|stb
 decl_stmt|;
 specifier|register
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 name|q
 decl_stmt|,
@@ -1006,7 +1006,7 @@ modifier|*
 name|qp
 decl_stmt|;
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 modifier|*
 name|queue
@@ -1497,7 +1497,7 @@ name|stat
 argument_list|(
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|,
 operator|&
 name|stb
@@ -1540,7 +1540,7 @@ literal|"%s\n"
 argument_list|,
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 name|i
@@ -1593,7 +1593,7 @@ name|pp
 argument_list|,
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 else|else
@@ -1605,7 +1605,7 @@ name|pp
 argument_list|,
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Check to see if we are supposed to stop printing or 		 * if we are to rebuild the queue. 		 */
@@ -1847,7 +1847,7 @@ literal|"printed"
 argument_list|,
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1865,12 +1865,12 @@ name|unlink
 argument_list|(
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 name|q
 operator|->
-name|q_name
+name|job_cfname
 index|[
 literal|0
 index|]
@@ -1884,7 +1884,7 @@ name|unlink
 argument_list|(
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 if|if
