@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	3.4	(Berkeley)	%G%"
+literal|"@(#)interactive.c	3.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,7 +467,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"
+literal|"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"
 argument_list|,
 literal|"Available commands are:\n"
 argument_list|,
@@ -486,6 +486,8 @@ argument_list|,
 literal|" list of files to be extracted\n"
 argument_list|,
 literal|"\textract - extract requested files\n"
+argument_list|,
+literal|"\tsetmodes - set modes of requested directories\n"
 argument_list|,
 literal|"\tquit - immediately exit program\n"
 argument_list|,
@@ -607,7 +609,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * Just restore requested directory modes. 	 */
 case|case
-literal|'R'
+literal|'s'
 case|:
 name|setdirmodes
 argument_list|()
