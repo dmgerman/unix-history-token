@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.6 %G%"
+literal|"@(#)tmps.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"0.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_ifdef
@@ -56,7 +62,7 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_define
@@ -87,15 +93,16 @@ name|FIRSTREG
 value|6
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+endif|vax
+end_endif
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PDP11
+name|pdp11
 end_ifdef
 
 begin_define
@@ -126,10 +133,24 @@ name|FIRSTREG
 value|2
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+endif|pdp11
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+operator|(
+name|vax
+operator|||
+name|pdp11
+operator|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -162,13 +183,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|PDP11
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|VAX
 end_endif
 
 begin_endif
@@ -514,7 +528,7 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|vax
 end_ifdef
 
 begin_comment
@@ -586,7 +600,7 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|VAX
+endif|vax
 end_endif
 
 begin_endif
