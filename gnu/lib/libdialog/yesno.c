@@ -187,12 +187,8 @@ decl_stmt|,
 name|y
 decl_stmt|,
 name|key
-init|=
-literal|0
 decl_stmt|,
 name|button
-init|=
-literal|0
 decl_stmt|;
 name|WINDOW
 modifier|*
@@ -635,46 +631,15 @@ name|height
 operator|-
 literal|2
 expr_stmt|;
-name|print_button
-argument_list|(
-name|dialog
-argument_list|,
-name|yesdefault
-condition|?
-literal|"  No  "
-else|:
-literal|" Yes "
-argument_list|,
-name|y
-argument_list|,
-name|x
-operator|+
-literal|13
-argument_list|,
-name|FALSE
-argument_list|)
+comment|/* preset button 0 or 1 for YES or NO as the default */
+name|key
+operator|=
+literal|0
 expr_stmt|;
-name|print_button
-argument_list|(
-name|dialog
-argument_list|,
+name|button
+operator|=
+operator|!
 name|yesdefault
-condition|?
-literal|" Yes "
-else|:
-literal|"  No  "
-argument_list|,
-name|y
-argument_list|,
-name|x
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|wrefresh
-argument_list|(
-name|dialog
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -683,6 +648,40 @@ operator|!=
 name|ESC
 condition|)
 block|{
+name|print_button
+argument_list|(
+name|dialog
+argument_list|,
+literal|"  No  "
+argument_list|,
+name|y
+argument_list|,
+name|x
+operator|+
+literal|13
+argument_list|,
+name|button
+argument_list|)
+expr_stmt|;
+name|print_button
+argument_list|(
+name|dialog
+argument_list|,
+literal|" Yes "
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|,
+operator|!
+name|button
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|dialog
+argument_list|)
+expr_stmt|;
 name|key
 operator|=
 name|wgetch
@@ -751,103 +750,12 @@ case|:
 case|case
 name|KEY_RIGHT
 case|:
-if|if
-condition|(
+name|button
+operator|=
 operator|!
 name|button
-condition|)
-block|{
-name|button
-operator|=
-literal|1
 expr_stmt|;
-comment|/* Indicates "No" button is selected */
-name|print_button
-argument_list|(
-name|dialog
-argument_list|,
-name|yesdefault
-condition|?
-literal|" Yes "
-else|:
-literal|"  No  "
-argument_list|,
-name|y
-argument_list|,
-name|x
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-name|print_button
-argument_list|(
-name|dialog
-argument_list|,
-name|yesdefault
-condition|?
-literal|"  No  "
-else|:
-literal|" Yes "
-argument_list|,
-name|y
-argument_list|,
-name|x
-operator|+
-literal|13
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|button
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Indicates "Yes" button is selected */
-name|print_button
-argument_list|(
-name|dialog
-argument_list|,
-name|yesdefault
-condition|?
-literal|"  No  "
-else|:
-literal|" Yes "
-argument_list|,
-name|y
-argument_list|,
-name|x
-operator|+
-literal|13
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-name|print_button
-argument_list|(
-name|dialog
-argument_list|,
-name|yesdefault
-condition|?
-literal|" Yes "
-else|:
-literal|"  No  "
-argument_list|,
-name|y
-argument_list|,
-name|x
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-block|}
-name|wrefresh
-argument_list|(
-name|dialog
-argument_list|)
-expr_stmt|;
+comment|/* redrawn at the loop's entry */
 break|break;
 case|case
 literal|' '
@@ -868,16 +776,7 @@ argument_list|(
 name|tmphlp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|yesdefault
-condition|)
 return|return
-name|button
-return|;
-else|else
-return|return
-operator|!
 name|button
 return|;
 case|case
