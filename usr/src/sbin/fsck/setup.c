@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.21 (Berkeley) %G%"
+literal|"@(#)setup.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,18 +150,31 @@ comment|/* block map */
 value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPF(fs), NBBY))
 end_define
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
+name|malloc
+argument_list|()
+decl_stmt|,
+modifier|*
 name|calloc
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|char
 modifier|*
 name|index
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|disklabel
+modifier|*
+name|getdisklabel
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -200,10 +213,6 @@ name|j
 decl_stmt|;
 name|struct
 name|disklabel
-modifier|*
-name|getdisklabel
-argument_list|()
-decl_stmt|,
 modifier|*
 name|lp
 decl_stmt|;
@@ -464,10 +473,6 @@ name|b_un
 operator|.
 name|b_buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|SBSIZE
@@ -479,10 +484,6 @@ name|b_un
 operator|.
 name|b_buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|SBSIZE
@@ -496,7 +497,7 @@ name|b_un
 operator|.
 name|b_buf
 operator|==
-literal|0
+name|NULL
 operator|||
 name|asblk
 operator|.
@@ -504,7 +505,7 @@ name|b_un
 operator|.
 name|b_buf
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errexit
 argument_list|(
@@ -1885,8 +1886,6 @@ condition|(
 name|asblk
 operator|.
 name|b_errs
-operator|!=
-name|NULL
 condition|)
 return|return
 operator|(
@@ -2287,12 +2286,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|disklabel
-modifier|*
-name|getdisklabel
-parameter_list|()
-function_decl|;
 name|cp
 operator|=
 name|index

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.15 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,14 @@ end_comment
 begin_function_decl
 name|long
 name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -464,10 +472,6 @@ name|bufp
 decl_stmt|;
 name|bufp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|sblock
@@ -559,10 +563,6 @@ argument_list|)
 expr_stmt|;
 name|bufp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|sblock
@@ -574,11 +574,11 @@ if|if
 condition|(
 name|bp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|bufp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
