@@ -1178,7 +1178,7 @@ name|p_vmspace
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * cleanup by parent process wait()ing on exiting child.  vm_refcnt 	 * may not be 0 (e.g. fork() and child exits without exec()ing). 	 * exitingcnt may increment above 0 and drop back down to zero 	 * several times while vm_refcnt is held non-zero.  vm_refcnt 	 * may also increment above 0 and drop back down to zero several  	 * times while vm_exitingcnt is held non-zero. 	 *  	 * The last wait on the exiting child's vmspace will clean up  	 * the remainder of the vmspace. 	 */
+comment|/* 	 * cleanup by parent process wait()ing on exiting child.  vm_refcnt 	 * may not be 0 (e.g. fork() and child exits without exec()ing). 	 * exitingcnt may increment above 0 and drop back down to zero 	 * several times while vm_refcnt is held non-zero.  vm_refcnt 	 * may also increment above 0 and drop back down to zero several 	 * times while vm_exitingcnt is held non-zero. 	 * 	 * The last wait on the exiting child's vmspace will clean up 	 * the remainder of the vmspace. 	 */
 if|if
 condition|(
 operator|--
@@ -3036,7 +3036,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * OBJ_ONEMAPPING must be cleared unless this mapping 		 * is trivially proven to be the only mapping for any 		 * of the object's pages.  (Object granularity 		 * reference counting is insufficient to recognize 		 * aliases with precision.)  		 */
+comment|/* 		 * OBJ_ONEMAPPING must be cleared unless this mapping 		 * is trivially proven to be the only mapping for any 		 * of the object's pages.  (Object granularity 		 * reference counting is insufficient to recognize 		 * aliases with precision.) 		 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -3158,7 +3158,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * We were able to extend the object.  Determine if we 		 * can extend the previous map entry to include the  		 * new range as well. 		 */
+comment|/* 		 * We were able to extend the object.  Determine if we 		 * can extend the previous map entry to include the 		 * new range as well. 		 */
 if|if
 condition|(
 operator|(
@@ -5450,7 +5450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_madvise:  *  * 	This routine traverses a processes map handling the madvise  *	system call.  Advisories are classified as either those effecting  *	the vm_map_entry structure, or those effecting the underlying   *	objects.  */
+comment|/*  *	vm_map_madvise:  *  *	This routine traverses a processes map handling the madvise  *	system call.  Advisories are classified as either those effecting  *	the vm_map_entry structure, or those effecting the underlying  *	objects.  */
 end_comment
 
 begin_function
@@ -5480,7 +5480,7 @@ name|modify_map
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Some madvise calls directly modify the vm_map_entry, in which case 	 * we need to use an exclusive lock on the map and we need to perform  	 * various clipping operations.  Otherwise we only need a read-lock 	 * on the map. 	 */
+comment|/* 	 * Some madvise calls directly modify the vm_map_entry, in which case 	 * we need to use an exclusive lock on the map and we need to perform 	 * various clipping operations.  Otherwise we only need a read-lock 	 * on the map. 	 */
 switch|switch
 condition|(
 name|behav
@@ -7949,7 +7949,7 @@ name|VM_PROT_WRITE
 operator|)
 condition|)
 block|{
-comment|/* 			 * Flush pages if writing is allowed, invalidate them 			 * if invalidation requested.  Pages undergoing I/O 			 * will be ignored by vm_object_page_remove(). 			 * 			 * We cannot lock the vnode and then wait for paging 			 * to complete without deadlocking against vm_fault. 			 * Instead we simply call vm_object_page_remove() and 			 * allow it to block internally on a page-by-page  			 * basis when it encounters pages undergoing async  			 * I/O. 			 */
+comment|/* 			 * Flush pages if writing is allowed, invalidate them 			 * if invalidation requested.  Pages undergoing I/O 			 * will be ignored by vm_object_page_remove(). 			 * 			 * We cannot lock the vnode and then wait for paging 			 * to complete without deadlocking against vm_fault. 			 * Instead we simply call vm_object_page_remove() and 			 * allow it to block internally on a page-by-page 			 * basis when it encounters pages undergoing async 			 * I/O. 			 */
 name|int
 name|flags
 decl_stmt|;
@@ -9911,7 +9911,7 @@ name|KERN_NO_SPACE
 operator|)
 return|;
 block|}
-comment|/* 	 * If we can't accomodate max_ssize in the current mapping, no go. 	 * However, we need to be aware that subsequent user mappings might 	 * map into the space we have reserved for stack, and currently this 	 * space is not protected.   	 * 	 * Hopefully we will at least detect this condition when we try to 	 * grow the stack. 	 */
+comment|/* 	 * If we can't accomodate max_ssize in the current mapping, no go. 	 * However, we need to be aware that subsequent user mappings might 	 * map into the space we have reserved for stack, and currently this 	 * space is not protected. 	 * 	 * Hopefully we will at least detect this condition when we try to 	 * grow the stack. 	 */
 if|if
 condition|(
 operator|(

@@ -347,7 +347,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  *	A map is a set of map entries.  These map entries are  *	organized both as a binary search tree and as a doubly-linked  *	list.  Both structures are ordered based upon the start and  *	end addresses contained within each map entry.  Sleator and  *	Tarjan's top-down splay algorithm is employed to control  *	height imbalance in the binary search tree.    *  *	Note: the lock structure cannot be the first element of vm_map  *	because this can result in a running lockup between two or more  *	system processes trying to kmem_alloc_wait() due to kmem_alloc_wait()  *	and free tsleep/waking up 'map' and the underlying lockmgr also  *	sleeping and waking up on 'map'.  The lockup occurs when the map fills  *	up.  The 'exec' map, for example.  *  * List of locks  *	(c)	const until freed  */
+comment|/*  *	A map is a set of map entries.  These map entries are  *	organized both as a binary search tree and as a doubly-linked  *	list.  Both structures are ordered based upon the start and  *	end addresses contained within each map entry.  Sleator and  *	Tarjan's top-down splay algorithm is employed to control  *	height imbalance in the binary search tree.  *  *	Note: the lock structure cannot be the first element of vm_map  *	because this can result in a running lockup between two or more  *	system processes trying to kmem_alloc_wait() due to kmem_alloc_wait()  *	and free tsleep/waking up 'map' and the underlying lockmgr also  *	sleeping and waking up on 'map'.  The lockup occurs when the map fills  *	up.  The 'exec' map, for example.  *  * List of locks  *	(c)	const until freed  */
 end_comment
 
 begin_struct
@@ -546,7 +546,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*   * Shareable process virtual address space.  *  * List of locks  *	(c)	const until freed  */
+comment|/*  * Shareable process virtual address space.  *  * List of locks  *	(c)	const until freed  */
 end_comment
 
 begin_struct
