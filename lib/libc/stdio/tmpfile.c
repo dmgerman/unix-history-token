@@ -120,6 +120,17 @@ name|tmpdir
 decl_stmt|;
 name|tmpdir
 operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|issetugid
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|tmpdir
+operator|=
 name|getenv
 argument_list|(
 literal|"TMPDIR"
