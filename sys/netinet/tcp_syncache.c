@@ -1642,7 +1642,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|tcbinfo
@@ -1674,7 +1674,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
@@ -1870,7 +1870,7 @@ name|slot
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
