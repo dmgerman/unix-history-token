@@ -169,6 +169,40 @@ value|{ \ 	{ 0, 0 }, \ 	{ "vmmeter", CTLTYPE_STRUCT }, \ 	{ "loadavg", CTLTYPE_S
 end_define
 
 begin_comment
+comment|/*  * Structure for swap device statistics  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XSWDEV_VERSION
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|xswdev
+block|{
+name|u_int
+name|xsw_version
+decl_stmt|;
+name|udev_t
+name|xsw_dev
+decl_stmt|;
+name|int
+name|xsw_flags
+decl_stmt|;
+name|int
+name|xsw_nblks
+decl_stmt|;
+name|int
+name|xsw_used
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  *	Return values from the VM routines.  */
 end_comment
 
