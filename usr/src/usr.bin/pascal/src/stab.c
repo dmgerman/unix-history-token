@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.9.1.1 %G%"
+literal|"@(#)stab.c 2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1577,6 +1577,9 @@ condition|)
 block|{
 name|label
 operator|=
+operator|(
+name|int
+operator|)
 name|getlab
 argument_list|()
 expr_stmt|;
@@ -1766,6 +1769,9 @@ condition|)
 block|{
 name|label
 operator|=
+operator|(
+name|int
+operator|)
 name|getlab
 argument_list|()
 expr_stmt|;
@@ -2071,31 +2077,6 @@ end_block
 begin_comment
 comment|/*  * Generate symbolic information about a constant.  */
 end_comment
-
-begin_operator
-operator|,
-end_operator
-
-begin_expr_stmt
-operator|(
-name|int
-operator|)
-name|type
-operator|,
-name|N_PC
-operator|,
-name|N_PGTYPE
-operator|,
-name|ABS
-argument_list|(
-name|line
-argument_list|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_macro
 unit|} }
