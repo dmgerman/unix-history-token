@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.15 1997/03/27 20:00:48 guido Exp $"
+literal|"$Id: mountd.c,v 1.16 1997/03/29 03:32:49 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1479,6 +1479,12 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|int
+name|mib
+index|[
+literal|3
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -1488,12 +1494,6 @@ name|vfc
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
-name|mib
-index|[
-literal|3
-index|]
 decl_stmt|;
 name|error
 operator|=
@@ -1890,6 +1890,10 @@ argument_list|)
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
 name|syslog
