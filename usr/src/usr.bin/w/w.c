@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.4 (Berkeley) %G%"
+literal|"@(#)w.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,10 +1005,10 @@ argument_list|,
 operator|&
 name|win
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
-operator|||
+operator|&&
 name|win
 operator|.
 name|ws_col
