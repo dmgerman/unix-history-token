@@ -1498,7 +1498,9 @@ name|n_name
 argument_list|,
 name|td
 operator|->
-name|td_pid
+name|td_proc
+operator|->
+name|p_pid
 argument_list|,
 name|np
 operator|->
