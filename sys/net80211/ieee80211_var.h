@@ -1053,7 +1053,7 @@ comment|/* CONF: short preamble */
 end_comment
 
 begin_comment
-comment|/* ic_capabilities */
+comment|/* ic_caps */
 end_comment
 
 begin_define
