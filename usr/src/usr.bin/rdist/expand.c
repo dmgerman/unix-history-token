@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.5 (Berkeley) 83/11/01"
+literal|"@(#)expand.c	4.6 (Berkeley) 83/11/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -2734,6 +2734,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|s3
+operator|=
+name|file
+expr_stmt|;
 while|while
 condition|(
 operator|*
