@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)disk.h	5.4 (Berkeley) %G%  *  * from: $Header: disk.h,v 1.3 92/12/02 03:43:24 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)disk.h	5.4 (Berkeley) %G%  *  * from: $Header: disk.h,v 1.4 93/04/30 00:04:10 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -656,6 +656,17 @@ begin_comment
 comment|/*				0x20..0x3e vendor specific */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_CDCCACHECTL
+value|0x38
+end_define
+
+begin_comment
+comment|/* CDC (Wren) cache control page */
+end_comment
+
 begin_comment
 comment|/*  * Structure of a Read/Write Error Recovery mode page.  * N.B.: CDC Wren V, at least, does not include write retry& time limit.  */
 end_comment
@@ -665,12 +676,6 @@ struct|struct
 name|scsi_page_rwerrrec
 block|{
 name|u_char
-name|rw_psc
-decl_stmt|,
-comment|/* saveable flag + code (0x01) */
-name|rw_len
-decl_stmt|,
-comment|/* length (0x0a) */
 name|rw_flags
 decl_stmt|,
 comment|/* flags, see below */
@@ -806,12 +811,6 @@ struct|struct
 name|scsi_page_fmt
 block|{
 name|u_char
-name|fmt_psc
-decl_stmt|,
-comment|/* saveable flag + code (0x03) */
-name|fmt_len
-decl_stmt|,
-comment|/* length (0x16) */
 name|fmt_tpzh
 decl_stmt|,
 comment|/* tracks per zone (MSB) */
@@ -940,12 +939,6 @@ struct|struct
 name|scsi_page_rdgeom
 block|{
 name|u_char
-name|rd_psc
-decl_stmt|,
-comment|/* saveable flag + code (0x04) */
-name|rd_len
-decl_stmt|,
-comment|/* length (0x16) */
 name|rd_ncylh
 decl_stmt|,
 comment|/* number of cylinders (MSB) */
@@ -1084,12 +1077,6 @@ struct|struct
 name|scsi_page_verrrec
 block|{
 name|u_char
-name|v_psc
-decl_stmt|,
-comment|/* saveable flag + code (0x07) */
-name|v_len
-decl_stmt|,
-comment|/* length (0x0a) */
 name|v_flags
 decl_stmt|,
 comment|/* flags, see below */
@@ -1168,12 +1155,6 @@ struct|struct
 name|scsi_page_cache
 block|{
 name|u_char
-name|cache_psc
-decl_stmt|,
-comment|/* saveable flag + code (0x08) */
-name|cache_len
-decl_stmt|,
-comment|/* length (0x0a) */
 name|cache_flags
 decl_stmt|,
 comment|/* flags, see below */
@@ -1303,12 +1284,6 @@ struct|struct
 name|scsi_page_ctlmode
 block|{
 name|u_char
-name|cm_psc
-decl_stmt|,
-comment|/* saveable flag + code (0x0a) */
-name|cm_len
-decl_stmt|,
-comment|/* length (0x06) */
 name|cm_rlec
 decl_stmt|,
 comment|/* report log-activity exception condition */
@@ -1420,6 +1395,79 @@ end_define
 
 begin_comment
 comment|/* target may do AEN for deferred errors */
+end_comment
+
+begin_comment
+comment|/*  * Structure of a CDC-specific Cache Control mode page.  */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_page_CDCcachectlmode
+block|{
+name|u_char
+name|ccm_flags
+decl_stmt|,
+comment|/* flags (below) */
+name|ccm_pfthresh
+decl_stmt|,
+comment|/* prefetch threshold */
+name|ccm_maxthresh
+decl_stmt|,
+comment|/* maximum threshold (?) */
+name|ccm_maxpfmult
+decl_stmt|,
+comment|/* maximum prefetch multiplier */
+name|ccm_minthresh
+decl_stmt|,
+comment|/* minimum thresold (?) */
+name|ccm_minpfmult
+decl_stmt|,
+comment|/* minimum prefetch multiplier */
+name|ccm_xxx
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* reserved */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCSI_CDC_CCM_WIE
+value|0x40
+end_define
+
+begin_comment
+comment|/* write index enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CDC_CCM_CE
+value|0x10
+end_define
+
+begin_comment
+comment|/* cache enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CDC_CCM_TBLSZ
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xf)
+end_define
+
+begin_comment
+comment|/* table size */
 end_comment
 
 begin_comment
