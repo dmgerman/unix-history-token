@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.4	%G%	*/
+comment|/*	init_main.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -599,9 +599,6 @@ specifier|register
 name|struct
 name|buf
 modifier|*
-name|cp
-decl_stmt|,
-modifier|*
 name|bp
 decl_stmt|;
 specifier|register
@@ -924,35 +921,9 @@ condition|;
 name|bdp
 operator|++
 control|)
-block|{
-name|dp
-operator|=
-name|bdp
-operator|->
-name|d_tab
-expr_stmt|;
-if|if
-condition|(
-name|dp
-condition|)
-block|{
-name|dp
-operator|->
-name|b_forw
-operator|=
-name|dp
-expr_stmt|;
-name|dp
-operator|->
-name|b_back
-operator|=
-name|dp
-expr_stmt|;
-block|}
 name|nblkdev
 operator|++
 expr_stmt|;
-block|}
 comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a vswapon() 	 * system is issued, usually when the system goes multi-user. 	 */
 name|nswdev
 operator|=
