@@ -2752,6 +2752,7 @@ block|{
 name|int
 name|msqid
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|msgp
@@ -2802,6 +2803,7 @@ name|uap
 operator|->
 name|msqid
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|user_msgp

@@ -381,16 +381,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* XXX second parameter missing const type-qualifier. */
-end_comment
-
 begin_function_decl
 name|int
 name|msgsnd
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
