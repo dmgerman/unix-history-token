@@ -578,6 +578,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"pcn"
+block|,
+literal|"AMD Am79c79x PCI ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"rl"
 block|,
 literal|"RealTek 8129/8139 PCI ethernet card"
