@@ -47,12 +47,12 @@ block|{
 comment|/* Specified by interface name */
 define|#
 directive|define
-name|FW_IFNLEN
+name|IP6FW_IFNLEN
 value|IFNAMSIZ
 name|char
 name|name
 index|[
-name|FW_IFNLEN
+name|IP6FW_IFNLEN
 index|]
 decl_stmt|;
 name|short

@@ -1640,7 +1640,7 @@ name|fu_via_if
 operator|.
 name|name
 argument_list|,
-name|FW_IFNLEN
+name|IP6FW_IFNLEN
 argument_list|)
 condition|)
 return|return
@@ -3925,7 +3925,7 @@ name|fu_via_if
 operator|.
 name|name
 index|[
-name|FW_IFNLEN
+name|IP6FW_IFNLEN
 operator|-
 literal|1
 index|]
