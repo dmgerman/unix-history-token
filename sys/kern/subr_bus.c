@@ -10116,17 +10116,6 @@ argument_list|)
 expr_stmt|;
 name|urm
 operator|.
-name|rm_descr
-index|[
-name|RM_TEXTLEN
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|urm
-operator|.
 name|rm_start
 operator|=
 name|rm
