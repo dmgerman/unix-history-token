@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.20 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.20.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1823,7 +1823,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s: return to sender: %s"
+literal|"%s: %s: returntosender: %s"
 argument_list|,
 name|e
 operator|->
@@ -1843,7 +1843,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|msg
+argument_list|,
+literal|"warning:"
+argument_list|,
+literal|8
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1856,14 +1870,19 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|msg
+operator|=
+name|buf
+expr_stmt|;
+block|}
+end_if
 
 begin_expr_stmt
 name|addheader
 argument_list|(
 literal|"Subject"
 argument_list|,
-name|buf
+name|msg
 argument_list|,
 name|ee
 argument_list|)
