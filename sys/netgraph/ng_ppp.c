@@ -2624,6 +2624,8 @@ operator|(
 name|long
 operator|)
 name|node
+operator|->
+name|ID
 argument_list|,
 name|NG_PPP_HOOK_VJC_IP
 argument_list|)
@@ -2644,7 +2646,6 @@ argument_list|,
 name|rptr
 argument_list|)
 return|;
-comment|/* XXX Archie, looks like you are using the wrong value for the ID here..  you can't use a node address as a node-ID any more..  But it may be that you can use the new 'hook' arg for ng_send_msg() to achieve a more efficient resuld than an ID anyhow. */
 block|}
 default|default:
 name|error
