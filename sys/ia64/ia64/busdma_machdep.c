@@ -1337,6 +1337,11 @@ condition|(
 name|map
 operator|!=
 name|NULL
+operator|&&
+name|map
+operator|!=
+operator|&
+name|nobounce_dmamap
 condition|)
 block|{
 if|if
