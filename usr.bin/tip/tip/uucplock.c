@@ -193,10 +193,14 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|pid
+operator|=
 name|get_pid
 argument_list|(
 name|fd
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
