@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	5.2 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1237,7 +1237,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cap_mkdb [-f outfile] file1 [file2 ...]\n"
+literal|"usage: cap_mkdb [-v] [-f outfile] file1 [file2 ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
