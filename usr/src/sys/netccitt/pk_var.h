@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -160,13 +160,13 @@ name|sockaddr_x25
 modifier|*
 name|lcd_craddr
 decl_stmt|;
-comment|/* Calling address */
+comment|/* Calling address pointer */
 name|struct
 name|sockaddr_x25
 modifier|*
 name|lcd_ceaddr
 decl_stmt|;
-comment|/* Called address */
+comment|/* Called address pointer */
 name|time_t
 name|lcd_stime
 decl_stmt|;
@@ -194,7 +194,15 @@ name|pkcb
 modifier|*
 name|lcd_pkp
 decl_stmt|;
-comment|/* network this lcd is attached to */
+comment|/* Network this lcd is attached to */
+block|struct
+name|sockaddr_x25
+name|lcd_faddr
+comment|/* Remote Address (Calling) */
+expr|struct
+name|sockaddr_x25
+name|lcd_laddr
+comment|/* Local Address (Called) */
 block|}
 struct|;
 end_struct
@@ -240,24 +248,32 @@ modifier|*
 name|pk_ia
 decl_stmt|;
 comment|/* backpointer to ifaddr */
-name|short
-name|pk_state
-decl_stmt|;
-comment|/* packet level status */
 name|int
 function_decl|(
 modifier|*
-name|pk_output
+name|pk_lloutput
 function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* link level output procedure */
+name|int
+function_decl|(
+modifier|*
+name|pk_start
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* connect, confirm method */
 name|struct
 name|x25config
 modifier|*
 name|pk_xcp
 decl_stmt|;
 comment|/* network specific configuration */
+name|short
+name|pk_state
+decl_stmt|;
+comment|/* packet level status */
 name|struct
 name|x25config
 name|pk_xc
@@ -464,6 +480,15 @@ modifier|*
 name|pk_listenhead
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|pklcd
+modifier|*
+name|pk_attach
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
