@@ -74,8 +74,7 @@ begin_struct
 struct|struct
 name|pcic_handle
 block|{
-name|struct
-name|pcic_softc
+name|void
 modifier|*
 name|sc
 decl_stmt|;

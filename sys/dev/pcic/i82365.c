@@ -220,6 +220,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|N
+parameter_list|(
+name|a
+parameter_list|)
+value|(sizeof(a)/sizeof(a[0]))
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIC_VENDOR_UNKNOWN
 value|0
 end_define
@@ -250,6 +260,16 @@ define|#
 directive|define
 name|PCIC_VENDOR_CIRRUS_PD672X
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_H2SOFTC
+parameter_list|(
+name|h
+parameter_list|)
+value|((struct pcic_softc *)h->sc)
 end_define
 
 begin_comment
@@ -1271,7 +1291,7 @@ name|error
 return|;
 block|}
 comment|/* now check for each controller/socket */
-comment|/* 	 * this could be done with a loop, but it would violate the 	 * abstraction...  --- unknown 	 * so? I don't see the abstraction... --imp 	 */
+comment|/* 	 * this could be done with a loop, but it would violate the 	 * abstraction...  --- unknown 	 * I don't see the abstraction... --imp 	 */
 name|count
 operator|=
 literal|0
@@ -1911,11 +1931,18 @@ name|count
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"pcic_attach: attach found no sockets"
+literal|"pcic_attach: attach found no sockets\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* establish the interrupt */
 comment|/* XXX block interrupts? */
 for|for
@@ -2523,9 +2550,10 @@ literal|"%s,%s"
 argument_list|,
 name|device_get_name
 argument_list|(
+name|PCIC_H2SOFTC
+argument_list|(
 name|h
-operator|->
-name|sc
+argument_list|)
 operator|->
 name|dev
 argument_list|)
@@ -2536,9 +2564,10 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
+name|PCIC_H2SOFTC
+argument_list|(
 name|h
-operator|->
-name|sc
+argument_list|)
 operator|->
 name|dev
 argument_list|,
@@ -4431,20 +4460,10 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-sizeof|sizeof
+name|N
 argument_list|(
 name|mem_map_index
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|mem_map_index
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 condition|;
 name|i
 operator|++
@@ -4657,20 +4676,10 @@ if|if
 condition|(
 name|window
 operator|>=
-operator|(
-sizeof|sizeof
+name|N
 argument_list|(
 name|mem_map_index
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|mem_map_index
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 condition|)
 name|panic
 argument_list|(
@@ -4758,21 +4767,12 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|pcic_softc
-modifier|*
-name|sc
-init|=
-name|h
-operator|->
-name|sc
-decl_stmt|;
 comment|/* 	 * Allocate some arbitrary I/O space. 	 */
 name|iot
 operator|=
-name|sc
+name|h
 operator|->
-name|iot
+name|ph_bus_t
 expr_stmt|;
 name|ioaddr
 operator|=
@@ -5317,12 +5317,6 @@ block|}
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|struct pcic_softc *sc = h->sc;
-endif|#
-directive|endif
 comment|/* XXX Sanity check offset/size. */
 name|win
 operator|=
@@ -5337,20 +5331,10 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-sizeof|sizeof
+name|N
 argument_list|(
 name|io_map_index
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|io_map_index
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 condition|;
 name|i
 operator|++
@@ -5500,20 +5484,10 @@ if|if
 condition|(
 name|window
 operator|>=
-operator|(
-sizeof|sizeof
+name|N
 argument_list|(
 name|io_map_index
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|io_map_index
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 condition|)
 name|panic
 argument_list|(
