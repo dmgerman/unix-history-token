@@ -1036,6 +1036,62 @@ parameter_list|)
 end_define
 
 begin_comment
+comment|/* These macros generate the special .type and .size directives which    are used to set the corresponding fields of the linker symbol table    entries in an ELF object file under SVR4/ELF.  These macros also output    the starting labels for the relevant functions/objects.  */
+end_comment
+
+begin_comment
+comment|/* Write the extra assembler code needed to declare an object properly.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_DECLARE_OBJECT_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_DECLARE_OBJECT_NAME
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|DECL
+parameter_list|)
+define|\
+value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	putc (',', FILE);						\ 	fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,				\ 		 int_size_in_bytes (TREE_TYPE (DECL)));			\ 	fputc ('\n', FILE);						\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+end_define
+
+begin_comment
+comment|/* Output the size directive for a decl in rest_of_decl_compilation    in the case where we did not do so before the initializer.    Once we find the error_mark_node, we know that the value of    size_directive_output was set    by ASM_DECLARE_OBJECT_NAME when it was run for the same decl.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_FINISH_DECLARE_OBJECT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_FINISH_DECLARE_OBJECT
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|TOP_LEVEL
+parameter_list|,
+name|AT_END
+parameter_list|)
+define|\
+value|do {									\     char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		\&& ! AT_END&& TOP_LEVEL					\&& DECL_INITIAL (DECL) == error_mark_node			\&& !size_directive_output)					\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, name);					\ 	putc (',', FILE);						\ 	fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,				\ 		int_size_in_bytes (TREE_TYPE (DECL))); 			\ 	fputc ('\n', FILE);						\       }									\   } while (0)
+end_define
+
+begin_comment
 comment|/************************[  Debugger stuff  ]*********************************/
 end_comment
 
