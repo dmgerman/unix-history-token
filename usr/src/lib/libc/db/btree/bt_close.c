@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_close.c	5.2 (Berkeley) %G%"
+literal|"@(#)bt_close.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,7 +602,7 @@ name|m
 operator|.
 name|m_lorder
 operator|=
-name|htonl
+name|HTONL
 argument_list|(
 operator|(
 name|long
