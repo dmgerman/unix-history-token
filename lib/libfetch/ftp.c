@@ -1014,6 +1014,13 @@ argument_list|(
 name|FTP_PROTOCOL_ERROR
 argument_list|)
 expr_stmt|;
+name|us
+operator|->
+name|size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 operator|-
 literal|1
