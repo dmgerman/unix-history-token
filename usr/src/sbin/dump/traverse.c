@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.8 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -585,6 +585,8 @@ name|dp
 argument_list|,
 name|i
 argument_list|)
+argument_list|,
+name|filesize
 argument_list|)
 expr_stmt|;
 if|if
@@ -867,6 +869,8 @@ argument_list|,
 name|sblock
 operator|->
 name|fs_bsize
+argument_list|,
+name|filesize
 argument_list|)
 expr_stmt|;
 if|if
@@ -967,6 +971,8 @@ argument_list|,
 argument|blkno
 argument_list|,
 argument|size
+argument_list|,
+argument|filesize
 argument_list|)
 end_macro
 
@@ -986,6 +992,12 @@ begin_decl_stmt
 specifier|register
 name|int
 name|size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|filesize
 decl_stmt|;
 end_decl_stmt
 
@@ -1020,6 +1032,16 @@ name|dblk
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|filesize
+operator|<
+name|size
+condition|)
+name|size
+operator|=
+name|filesize
 expr_stmt|;
 for|for
 control|(
