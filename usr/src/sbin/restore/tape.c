@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.6 (Berkeley) %G%"
+literal|"@(#)tape.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4746,6 +4746,10 @@ argument_list|,
 literal|"Volume header\n"
 argument_list|)
 expr_stmt|;
+name|previno
+operator|=
+literal|0x7fffffff
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4951,6 +4955,15 @@ name|skipcnt
 init|=
 literal|0
 decl_stmt|;
+name|long
+name|i
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|TP_BSIZE
+index|]
+decl_stmt|;
 name|curfile
 operator|.
 name|name
@@ -5001,6 +5014,12 @@ name|header
 argument_list|)
 operator|==
 name|FAIL
+operator|||
+name|header
+operator|->
+name|c_ddate
+operator|!=
+name|dumptime
 condition|)
 name|skipcnt
 operator|++
@@ -5012,6 +5031,58 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
+name|checktype
+argument_list|(
+name|header
+argument_list|,
+name|TS_ADDR
+argument_list|)
+operator|==
+name|GOOD
+condition|)
+block|{
+comment|/* 			 * Skip up to the beginning of the next record 			 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|header
+operator|->
+name|c_count
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|header
+operator|->
+name|c_addr
+index|[
+name|i
+index|]
+condition|)
+name|readtape
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|gethead
+argument_list|(
+name|header
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|checktype
