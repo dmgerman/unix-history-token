@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dzreg.h	6.1	83/07/29	*/
+comment|/*	dzreg.h	6.2	84/03/15	*/
 end_comment
 
 begin_comment
@@ -280,7 +280,7 @@ begin_define
 define|#
 directive|define
 name|DZ_IEN
-value|(DZ_32|DZ_MIE|DZ_MSE|DZ_RIE|DZ_TIE|DZ_SAE)
+value|(DZ_32|DZ_MIE|DZ_MSE|DZ_RIE|DZ_TIE)
 end_define
 
 begin_comment
