@@ -32,6 +32,12 @@ begin_comment
 comment|/*  * Melbourne getty.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1234,7 +1240,7 @@ begin_decl_stmt
 name|char
 name|editedhost
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
