@@ -3,31 +3,19 @@ begin_comment
 comment|/*  * Cronyx-Sigma adapter configuration utility for Unix.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * Usage:  *      cxconfig [-a]  *              -- print status of all channels  *      cxconfig [-a]<channel>  *              -- print status of the channel  *      cxconfig<channel><option>...  *              -- set channel options  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

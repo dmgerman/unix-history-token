@@ -7,31 +7,19 @@ begin_comment
 comment|/*  *  Copyright (C) 1990-2, RSA Data Security, Inc. Created 1990. All  *  rights reserved.  *  *  RSA Data Security, Inc. makes no representations concerning either  *  the merchantability of this software or the suitability of this  *  software for any particular purpose. It is provided "as is"  *  without express or implied warranty of any kind.  *  *  These notices must be retained in any copies of any part of this  *  documentation and/or software.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
