@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/* $OpenBSD: if_pflog.h,v 1.9 2003/07/15 20:27:27 dhartmei Exp $ */
 end_comment
 
@@ -28,6 +32,20 @@ name|ifnet
 name|sc_if
 decl_stmt|;
 comment|/* the interface */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|LIST_ENTRY
+argument_list|(
+argument|pflog_softc
+argument_list|)
+name|sc_next
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

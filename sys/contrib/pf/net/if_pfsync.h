@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: if_pfsync.h,v 1.2 2002/12/11 18:31:26 mickey Exp $	*/
 end_comment
 
@@ -33,10 +37,24 @@ name|struct
 name|ifnet
 name|sc_if
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|struct
+name|callout
+name|sc_tmo
+decl_stmt|;
+else|#
+directive|else
 name|struct
 name|timeout
 name|sc_tmo
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -53,6 +71,20 @@ name|int
 name|sc_count
 decl_stmt|;
 comment|/* number of states in one mtu */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|LIST_ENTRY
+argument_list|(
+argument|pfsync_softc
+argument_list|)
+name|sc_next
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
