@@ -9814,22 +9814,33 @@ name|icr_hi
 operator|=
 name|icr_hi
 expr_stmt|;
-comment|/* do an INIT IPI: assert RESET */
+comment|/* setup common fields for subsequent IPIs */
 name|icr_lo
 operator|=
 name|lapic
 operator|.
 name|icr_lo
 operator|&
-literal|0xfff00000
+name|APIC_ICRLO_RESV_MASK
 expr_stmt|;
+name|icr_lo
+operator||=
+name|APIC_DESTMODE_PHY
+expr_stmt|;
+comment|/* do an INIT IPI: assert RESET */
 name|lapic
 operator|.
 name|icr_lo
 operator|=
 name|icr_lo
 operator||
-literal|0x0000c500
+name|APIC_DEST_DESTFLD
+operator||
+name|APIC_TRIGMOD_EDGE
+operator||
+name|APIC_LEVEL_ASSERT
+operator||
+name|APIC_DELMODE_INIT
 expr_stmt|;
 comment|/* wait for pending status end */
 while|while
@@ -9849,7 +9860,13 @@ name|icr_lo
 operator|=
 name|icr_lo
 operator||
-literal|0x00008500
+name|APIC_DEST_ALLESELF
+operator||
+name|APIC_TRIGMOD_LEVEL
+operator||
+name|APIC_LEVEL_DEASSERT
+operator||
+name|APIC_DELMODE_INIT
 expr_stmt|;
 comment|/* wait for pending status end */
 name|u_sleep
@@ -9876,7 +9893,13 @@ name|icr_lo
 operator|=
 name|icr_lo
 operator||
-literal|0x00000600
+name|APIC_DEST_DESTFLD
+operator||
+name|APIC_TRIGMOD_EDGE
+operator||
+name|APIC_LEVEL_DEASSERT
+operator||
+name|APIC_DELMODE_STARTUP
 operator||
 name|vector
 expr_stmt|;
@@ -9903,7 +9926,13 @@ name|icr_lo
 operator|=
 name|icr_lo
 operator||
-literal|0x00000600
+name|APIC_DEST_DESTFLD
+operator||
+name|APIC_TRIGMOD_EDGE
+operator||
+name|APIC_LEVEL_DEASSERT
+operator||
+name|APIC_DELMODE_STARTUP
 operator||
 name|vector
 expr_stmt|;
