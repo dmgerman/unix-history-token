@@ -215,6 +215,47 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DATAPORT
+parameter_list|(
+name|base
+parameter_list|)
+value|(base)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMDPORT
+parameter_list|(
+name|base
+parameter_list|)
+value|(base+2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATPORT
+parameter_list|(
+name|base
+parameter_list|)
+value|(base+2)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -245,6 +286,15 @@ parameter_list|)
 value|(base+1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -252,7 +302,7 @@ name|mpu401_status
 parameter_list|(
 name|devc
 parameter_list|)
-value|inb( STATPORT(devc->base))
+value|inb( STATPORT((devc)->base))
 end_define
 
 begin_define
@@ -284,7 +334,7 @@ name|devc
 parameter_list|,
 name|cmd
 parameter_list|)
-value|outb( COMDPORT(devc->base),  cmd)
+value|outb( COMDPORT((devc)->base),  cmd)
 end_define
 
 begin_define
@@ -294,7 +344,7 @@ name|read_data
 parameter_list|(
 name|devc
 parameter_list|)
-value|inb( DATAPORT(devc->base))
+value|inb( DATAPORT((devc)->base))
 end_define
 
 begin_define
@@ -306,7 +356,7 @@ name|devc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb( DATAPORT(devc->base),  byte)
+value|outb( DATAPORT((devc)->base),  byte)
 end_define
 
 begin_define
@@ -2154,6 +2204,31 @@ name|dev
 index|]
 expr_stmt|;
 comment|/*      * Sometimes it takes about 13000 loops before the output becomes      * ready (After reset). Normally it takes just about 10 loops.      */
+ifdef|#
+directive|ifdef
+name|PC98
+for|for
+control|(
+name|timeout
+operator|=
+literal|23000
+init|;
+name|timeout
+operator|>
+literal|0
+operator|&&
+operator|!
+name|output_ready
+argument_list|(
+name|devc
+argument_list|)
+condition|;
+name|timeout
+operator|--
+control|)
+empty_stmt|;
+else|#
+directive|else
 for|for
 control|(
 name|timeout
@@ -2174,6 +2249,8 @@ name|timeout
 operator|--
 control|)
 empty_stmt|;
+endif|#
+directive|endif
 name|flags
 operator|=
 name|splhigh
@@ -2295,10 +2372,21 @@ name|devc
 argument_list|)
 expr_stmt|;
 comment|/*      * Sometimes it takes about 30000 loops before the output becomes      * ready (After reset). Normally it takes just about 10 loops.      */
+ifdef|#
+directive|ifdef
+name|PC98
+name|timeout
+operator|=
+literal|50000
+expr_stmt|;
+else|#
+directive|else
 name|timeout
 operator|=
 literal|30000
 expr_stmt|;
+endif|#
+directive|endif
 name|retry
 label|:
 if|if
@@ -4940,13 +5028,10 @@ literal|1
 return|;
 if|if
 condition|(
-name|inb
+name|mpu401_status
 argument_list|(
-name|hw_config
-operator|->
-name|io_base
-operator|+
-literal|1
+operator|&
+name|tmp_devc
 argument_list|)
 operator|==
 literal|0xff

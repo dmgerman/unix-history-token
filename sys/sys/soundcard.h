@@ -219,6 +219,13 @@ name|SNDCARD_AWE32
 value|25
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNDCARD_NSS
+value|26
+end_define
+
 begin_include
 include|#
 directive|include
@@ -2099,7 +2106,7 @@ comment|/* Read only */
 name|char
 name|name
 index|[
-literal|30
+literal|33
 index|]
 decl_stmt|;
 name|int
