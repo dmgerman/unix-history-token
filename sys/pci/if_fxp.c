@@ -1364,7 +1364,10 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-literal|"fxp"
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -1931,6 +1934,14 @@ expr_stmt|;
 name|FXP_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
