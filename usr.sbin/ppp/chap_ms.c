@@ -938,6 +938,7 @@ value|20
 end_define
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|SHA1_End
