@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)crypt.c	4.2 (Berkeley) %G%"
+literal|"@(#)crypt.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|pid
+decl_stmt|,
+name|wpid
+decl_stmt|;
 name|unsigned
 name|random
 decl_stmt|;
@@ -176,8 +181,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|pid
+operator|=
 name|fork
 argument_list|()
+operator|)
 operator|==
 literal|0
 condition|)
@@ -244,6 +253,11 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|wpid
+operator|=
 name|wait
 argument_list|(
 operator|(
@@ -252,7 +266,16 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|wpid
+operator|!=
+name|pid
+condition|)
+empty_stmt|;
 if|if
 condition|(
 name|read
