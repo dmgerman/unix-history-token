@@ -210,6 +210,14 @@ name|int
 name|userrefs
 decl_stmt|;
 comment|/* kldload(2) count */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|LINKER_FILE_LINKED
+value|0x1
+comment|/* file has been fully linked */
 name|TAILQ_ENTRY
 argument_list|(
 argument|linker_file

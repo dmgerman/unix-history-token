@@ -1651,6 +1651,12 @@ literal|0
 expr_stmt|;
 name|lf
 operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|lf
+operator|->
 name|filename
 operator|=
 operator|(
@@ -1922,6 +1928,15 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* Don't try to run SYSUNINITs if we are unloaded due to a link error */
+if|if
+condition|(
+name|file
+operator|->
+name|flags
+operator|&
+name|LINKER_FILE_LINKED
+condition|)
 name|linker_file_sysuninit
 argument_list|(
 name|file
