@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gettytab.h	4.1	83/07/06	*/
+comment|/*	gettytab.h	4.2	83/07/07	*/
 end_comment
 
 begin_comment
@@ -393,6 +393,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EPset
+value|gettyflags[2].set
+end_define
+
+begin_define
+define|#
+directive|define
 name|OP
 value|gettyflags[3].value
 end_define
@@ -400,8 +407,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|OPset
+value|gettyflags[2].set
+end_define
+
+begin_define
+define|#
+directive|define
 name|AP
 value|gettyflags[4].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|APset
+value|gettyflags[2].set
 end_define
 
 begin_define
@@ -493,6 +514,13 @@ define|#
 directive|define
 name|HC
 value|gettyflags[17].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|UB
+value|gettyflags[18].value
 end_define
 
 begin_function_decl
