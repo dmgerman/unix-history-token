@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_output.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_output.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -305,6 +305,14 @@ operator|=
 name|idp
 operator|->
 name|idp_dna
+expr_stmt|;
+name|dst
+operator|->
+name|sns_addr
+operator|.
+name|x_port
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 		 * If routing to interface only, 		 * short circuit routing lookup. 		 */
 if|if
