@@ -534,12 +534,12 @@ name|dummy_timecounter
 block|,
 literal|0
 block|,
-literal|0
+literal|18446744073709ULL
 block|,
 literal|0
 block|,
 block|{
-literal|0
+literal|1
 block|,
 literal|0
 block|}
