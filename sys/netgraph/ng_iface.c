@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -65,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -810,6 +822,29 @@ name|UNITS_BITSPERWORD
 value|(sizeof(*ng_iface_units) * NBBY)
 end_define
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ng_iface_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|ng_iface
+argument_list|,
+operator|&
+name|ng_iface_mtx
+argument_list|,
+literal|"ng_iface"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/************************************************************************ 			HELPER STUFF  ************************************************************************/
 end_comment
@@ -1063,6 +1098,12 @@ name|index
 decl_stmt|,
 name|bit
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_iface_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|index
@@ -1136,11 +1177,19 @@ name|newarray
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_iface_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 name|bcopy
 argument_list|(
 name|ng_iface_units
@@ -1263,6 +1312,12 @@ expr_stmt|;
 name|ng_units_in_use
 operator|++
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_iface_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1301,6 +1356,12 @@ operator|=
 name|unit
 operator|%
 name|UNITS_BITSPERWORD
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_iface_mtx
+argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -1384,6 +1445,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_iface_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
