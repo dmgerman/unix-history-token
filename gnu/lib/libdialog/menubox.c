@@ -1353,7 +1353,11 @@ name|save
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|result
+condition|)
 name|strcpy
 argument_list|(
 name|result
