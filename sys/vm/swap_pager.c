@@ -3132,7 +3132,13 @@ operator|&
 name|nsw_rcount
 argument_list|)
 expr_stmt|;
-comment|/* 	 * map our page(s) into kva for input 	 * 	 * NOTE: B_PAGING is set by pbgetvp() 	 */
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_PAGING
+expr_stmt|;
+comment|/* 	 * map our page(s) into kva for input 	 */
 name|pmap_qenter
 argument_list|(
 operator|(
@@ -3848,7 +3854,7 @@ operator|=
 name|j
 expr_stmt|;
 block|}
-comment|/* 		 * All I/O parameters have been satisfied, build the I/O 		 * request and assign the swap space. 		 * 		 * NOTE: B_PAGING is set by pbgetvp() 		 */
+comment|/* 		 * All I/O parameters have been satisfied, build the I/O 		 * request and assign the swap space. 		 */
 if|if
 condition|(
 name|sync
@@ -3882,6 +3888,12 @@ operator|=
 name|B_ASYNC
 expr_stmt|;
 block|}
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_PAGING
+expr_stmt|;
 name|bp
 operator|->
 name|b_iocmd
