@@ -496,20 +496,6 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|earlysetcpuclass
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* same header file */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
 name|finishidentcpu
 parameter_list|(
 name|void
@@ -1349,9 +1335,6 @@ literal|"%s"
 argument_list|,
 name|version
 argument_list|)
-expr_stmt|;
-name|earlysetcpuclass
-argument_list|()
 expr_stmt|;
 name|startrtclock
 argument_list|()
