@@ -49,6 +49,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<less.h>
 end_include
 
@@ -2287,6 +2293,10 @@ name|char
 modifier|*
 name|editor
 decl_stmt|;
+name|char
+modifier|*
+name|base
+decl_stmt|;
 name|int
 name|c
 decl_stmt|;
@@ -2318,7 +2328,7 @@ argument_list|(
 literal|"EDITOR"
 argument_list|)
 expr_stmt|;
-comment|/* pass the line number to vi */
+comment|/* default editor is vi */
 if|if
 condition|(
 name|editor
@@ -2330,16 +2340,54 @@ name|editor
 operator|==
 literal|'\0'
 condition|)
-block|{
 name|editor
 operator|=
 name|_PATH_VI
 expr_stmt|;
+comment|/* check last component in case of full path */
+name|base
+operator|=
+name|strrchr
+argument_list|(
+name|editor
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|base
+condition|)
+name|base
+operator|=
+name|editor
+expr_stmt|;
+comment|/* emacs also accepts vi-style +nnnn */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|base
+argument_list|,
+literal|"vi"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|base
+argument_list|,
+literal|"emacs"
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|dolinenumber
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
 name|dolinenumber
 operator|=
