@@ -2896,6 +2896,9 @@ name|printf
 argument_list|(
 literal|" tcpseq %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|chain
@@ -2916,6 +2919,9 @@ name|printf
 argument_list|(
 literal|" tcpack %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|chain
