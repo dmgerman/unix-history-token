@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson.  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: FreeBSD: src/sys/i386/include/atomic.h,v 1.20 2001/02/11  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -163,13 +163,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_load
+parameter_list|(
+name|p
+parameter_list|,
+name|sz
+parameter_list|)
+define|\
+value|atomic_cas(p, 0, 0, sz)
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_load_acq
 parameter_list|(
 name|p
 parameter_list|,
 name|sz
 parameter_list|)
-value|({					\ 	itype(sz) v;							\ 	v = atomic_cas_ ## sz(p, 0, 0);					\ 	membar(LoadLoad | LoadStore);					\ 	v;								\ })
+value|({					\ 	itype(sz) v;							\ 	v = atomic_load(p, sz);						\ 	membar(LoadLoad | LoadStore);					\ 	v;								\ })
 end_define
 
 begin_define
@@ -181,7 +194,21 @@ name|p
 parameter_list|,
 name|sz
 parameter_list|)
-value|({					\ 	itype(sz) e, r;							\ 	for (e = *(volatile itype(sz) *)p;; e = r) {			\ 		r = atomic_cas_ ## sz(p, e, 0);				\ 		if (r == e)						\ 			break;						\ 	}								\ 	e;								\ })
+value|({					\ 	itype(sz) e, r;							\ 	for (e = *(volatile itype(sz) *)p;; e = r) {			\ 		r = atomic_cas(p, e, 0, sz);				\ 		if (r == e)						\ 			break;						\ 	}								\ 	e;								\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_store
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|,
+name|sz
+parameter_list|)
+value|do {					\ 	itype(sz) e, r;							\ 	for (e = *(volatile itype(sz) *)p;; e = r) {			\ 		r = atomic_cas(p, e, v, sz);				\ 		if (r == e)						\ 			break;						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -195,7 +222,7 @@ name|v
 parameter_list|,
 name|sz
 parameter_list|)
-value|do {					\ 	itype(sz) e, r;							\ 	membar(LoadStore | StoreStore);					\ 	for (e = *(volatile itype(sz) *)p;; e = r) {			\ 		r = atomic_cas_ ## sz(p, e, v);				\ 		if (r == e)						\ 			break;						\ 	}								\ } while (0)
+value|do {					\ 	membar(LoadStore | StoreStore);					\ 	atomic_store(p, v, sz);						\ } while (0)
 end_define
 
 begin_define
@@ -214,7 +241,7 @@ parameter_list|,
 name|sz
 parameter_list|)
 define|\ 									\
-value|static __inline void							\ atomic_add_ ## name(volatile ptype p, atype v)				\ {									\ 	atomic_op(p, +, v, sz);						\ }									\ static __inline void							\ atomic_add_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, +, v, sz);					\ }									\ static __inline void							\ atomic_add_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, +, v, sz);					\ }									\ 									\ static __inline void							\ atomic_clear_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op(p,&, ~v, sz);					\ }									\ static __inline void							\ atomic_clear_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p,&, ~v, sz);					\ }									\ static __inline void							\ atomic_clear_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p,&, ~v, sz);					\ }									\ 									\ static __inline int							\ atomic_cmpset_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas(p, e, s, sz)) == e);			\ }									\ static __inline int							\ atomic_cmpset_acq_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_acq(p, e, s, sz)) == e);		\ }									\ static __inline int							\ atomic_cmpset_rel_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_rel(p, e, s, sz)) == e);		\ }									\ 									\ static __inline vtype							\ atomic_load_acq_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_cas_acq(p, 0, 0, sz));			\ }									\ 									\ static __inline vtype							\ atomic_readandclear_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_load_clear(p, sz));			\ }									\ 									\ static __inline void							\ atomic_set_ ## name(volatile ptype p, atype v)				\ {									\ 	atomic_op(p, |, v, sz);						\ }									\ static __inline void							\ atomic_set_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, |, v, sz);					\ }									\ static __inline void							\ atomic_set_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, |, v, sz);					\ }									\ 									\ static __inline void							\ atomic_subtract_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op(p, -, v, sz);						\ }									\ static __inline void							\ atomic_subtract_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, -, v, sz);					\ }									\ static __inline void							\ atomic_subtract_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, -, v, sz);					\ }									\ 									\ static __inline void							\ atomic_store_rel_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store_rel(p, v, sz);					\ }
+value|static __inline void							\ atomic_add_ ## name(volatile ptype p, atype v)				\ {									\ 	atomic_op(p, +, v, sz);						\ }									\ static __inline void							\ atomic_add_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, +, v, sz);					\ }									\ static __inline void							\ atomic_add_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, +, v, sz);					\ }									\ 									\ static __inline void							\ atomic_clear_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op(p,&, ~v, sz);					\ }									\ static __inline void							\ atomic_clear_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p,&, ~v, sz);					\ }									\ static __inline void							\ atomic_clear_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p,&, ~v, sz);					\ }									\ 									\ static __inline int							\ atomic_cmpset_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas(p, e, s, sz)) == e);			\ }									\ static __inline int							\ atomic_cmpset_acq_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_acq(p, e, s, sz)) == e);		\ }									\ static __inline int							\ atomic_cmpset_rel_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_rel(p, e, s, sz)) == e);		\ }									\ 									\ static __inline vtype							\ atomic_load_ ## name(volatile ptype p)					\ {									\ 	return ((vtype)atomic_cas(p, 0, 0, sz));			\ }									\ static __inline vtype							\ atomic_load_acq_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_cas_acq(p, 0, 0, sz));			\ }									\ 									\ static __inline vtype							\ atomic_readandclear_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_load_clear(p, sz));			\ }									\ 									\ static __inline void							\ atomic_set_ ## name(volatile ptype p, atype v)				\ {									\ 	atomic_op(p, |, v, sz);						\ }									\ static __inline void							\ atomic_set_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, |, v, sz);					\ }									\ static __inline void							\ atomic_set_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, |, v, sz);					\ }									\ 									\ static __inline void							\ atomic_subtract_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op(p, -, v, sz);						\ }									\ static __inline void							\ atomic_subtract_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_acq(p, -, v, sz);					\ }									\ static __inline void							\ atomic_subtract_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	atomic_op_rel(p, -, v, sz);					\ }									\ 									\ static __inline void							\ atomic_store_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store(p, v, sz);						\ }									\ static __inline void							\ atomic_store_rel_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store_rel(p, v, sz);					\ }
 end_define
 
 begin_expr_stmt
