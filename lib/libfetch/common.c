@@ -123,6 +123,9 @@ name|_netdb_errlist
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|EAI_NODATA
 block|{
 name|EAI_NODATA
 block|,
@@ -131,6 +134,8 @@ block|,
 literal|"Host not found"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|EAI_AGAIN
 block|,
