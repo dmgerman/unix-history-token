@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3957,6 +3957,10 @@ name|callcount
 decl_stmt|;
 name|int
 name|fcount
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|mtop
@@ -4163,12 +4167,34 @@ name|TS_BOT
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ERROR
+condition|)
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bp
+operator|->
+name|b_error
+operator|)
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
-name|geterror
-argument_list|(
-name|bp
-argument_list|)
+name|EIO
+operator|)
+return|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 case|case

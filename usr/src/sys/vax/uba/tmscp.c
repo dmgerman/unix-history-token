@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.11 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.12 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -8640,6 +8640,11 @@ name|int
 name|fcount
 decl_stmt|;
 comment|/* number of files (or records) to space */
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 specifier|register
 name|struct
 name|mtop
@@ -8849,12 +8854,34 @@ condition|)
 comment|/* like hitting BOT */
 break|break;
 block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ERROR
+condition|)
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bp
+operator|->
+name|b_error
+operator|)
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
-name|geterror
-argument_list|(
-name|bp
-argument_list|)
+name|EIO
+operator|)
+return|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 case|case
