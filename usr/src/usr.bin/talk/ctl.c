@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctl.c	5.4 (Berkeley) %G%"
+literal|"@(#)ctl.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,11 @@ name|sockaddr_in
 name|daemon_addr
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|daemon_addr
+argument_list|)
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
@@ -55,6 +60,11 @@ name|sockaddr_in
 name|ctl_addr
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|ctl_addr
+argument_list|)
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
@@ -66,6 +76,11 @@ name|sockaddr_in
 name|my_addr
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|my_addr
+argument_list|)
+block|,
 name|AF_INET
 block|}
 decl_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)get_names.c	5.5 (Berkeley) %G%"
+literal|"@(#)get_names.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,6 +388,19 @@ argument_list|)
 expr_stmt|;
 name|msg
 operator|.
+name|addr
+operator|.
+name|sa_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|msg
+operator|.
+name|addr
+argument_list|)
+expr_stmt|;
+name|msg
+operator|.
 name|ctl_addr
 operator|.
 name|sa_family
@@ -395,6 +408,19 @@ operator|=
 name|htons
 argument_list|(
 name|AF_INET
+argument_list|)
+expr_stmt|;
+name|msg
+operator|.
+name|ctl_addr
+operator|.
+name|sa_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|msg
+operator|.
+name|ctl_addr
 argument_list|)
 expr_stmt|;
 name|msg
