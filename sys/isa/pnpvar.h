@@ -21,27 +21,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void    pnp_write(int d, u_char r);
-comment|/* used by Luigi's sound driver */
-end_comment
-
-begin_comment
-unit|u_char  pnp_read(int d);
-comment|/* currently unused, but who knows... */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define

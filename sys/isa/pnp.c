@@ -349,22 +349,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * these entries are initialized using the autoconfig menu  * The struct is invalid (and must be initialized) if the first  * CSN is zero. The init code fills invalid entries with CSN 255  * which is not a supported value.  */
-end_comment
-
-begin_endif
-unit|struct pnp_cinfo pnp_ldn_overrides[MAX_PNP_LDN] = {     { 0 } };
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* The READ_DATA port that we are using currently */
 end_comment
@@ -625,18 +609,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static u_char pnp_read(int d) { 	outb (_PNP_ADDRESS, d); 	return (inb(3 | (pnp_rd_port<<2))); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Send Initiation LFSR as described in "Plug and Play ISA Specification",  * Intel May 94.  */
@@ -1082,42 +1054,6 @@ name|count
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * write_pnp_parms initializes a logical device with the parms  * in d, and then activates the board if the last parameter is 1.  */
-end_comment
-
-begin_comment
-unit|static int write_pnp_parms(struct pnp_cinfo *d, pnp_id *p, int ldn) {     int i, empty = -1 ;      pnp_write (SET_LDN, ldn );     i = pnp_read(SET_LDN) ;     if (i != ldn) { 	printf("Warning: LDN %d does not exist\n", ldn);     }     for (i = 0; i< 8; i++) { 	pnp_write(IO_CONFIG_BASE + i * 2, d->ic_port[i]>> 8 ); 	pnp_write(IO_CONFIG_BASE + i * 2 + 1, d->ic_port[i]& 0xff );     }     for (i = 0; i< 4; i++) { 	pnp_write(MEM_CONFIG + i*8, (d->ic_mem[i].base>> 16)& 0xff ); 	pnp_write(MEM_CONFIG + i*8+1, (d->ic_mem[i].base>> 8)& 0xff ); 	pnp_write(MEM_CONFIG + i*8+2, d->ic_mem[i].control& 0xff ); 	pnp_write(MEM_CONFIG + i*8+3, (d->ic_mem[i].range>> 16)& 0xff ); 	pnp_write(MEM_CONFIG + i*8+4, (d->ic_mem[i].range>> 8)& 0xff );     }     for (i = 0; i< 2; i++) { 	pnp_write(IRQ_CONFIG + i*2    , d->irq[i] ); 	pnp_write(IRQ_CONFIG + i*2 + 1, d->irq_type[i] ); 	pnp_write(DRQ_CONFIG + i, d->drq[i] );     }
-comment|/*      * store parameters read into the current kernel      * so manual editing next time is easier      */
-end_comment
-
-begin_comment
-unit|for (i = 0 ; i< MAX_PNP_LDN; i++) { 	if (pnp_ldn_overrides[i].csn == d->csn&& 		pnp_ldn_overrides[i].ldn == ldn) { 	    d->flags = pnp_ldn_overrides[i].flags ; 	    pnp_ldn_overrides[i] = *d ; 	    break ; 	} else if (pnp_ldn_overrides[i].csn< 1 || 		pnp_ldn_overrides[i].csn == 255) 	    empty = i ;     }     if (i== MAX_PNP_LDN&& empty != -1) 	pnp_ldn_overrides[empty] = *d;
-comment|/*      * Here should really perform the range check, and      * return a failure if not successful.      */
-end_comment
-
-begin_comment
-unit|pnp_write (IO_RANGE_CHECK, 0);     DELAY(1000);
-comment|/* XXX is it really necessary ? */
-end_comment
-
-begin_comment
-unit|pnp_write (ACTIVATE, d->enable ? 1 : 0);     DELAY(1000);
-comment|/* XXX is it really necessary ? */
-end_comment
-
-begin_endif
-unit|return 1 ; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This function is called after the bus has assigned resource  * locations for a logical device.  */
@@ -3479,12 +3415,6 @@ block|{
 name|int
 name|num_pnp_devs
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (pnp_ldn_overrides[0].csn == 0) { 		if (bootverbose) 			printf("Initializing PnP override table\n"); 		bzero (pnp_ldn_overrides, sizeof(pnp_ldn_overrides)); 		pnp_ldn_overrides[0].csn = 255 ; 	}
-endif|#
-directive|endif
 comment|/* Try various READ_DATA ports from 0x203-0x3ff */
 for|for
 control|(
