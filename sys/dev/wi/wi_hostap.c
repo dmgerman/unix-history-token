@@ -235,6 +235,223 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|wihap_sta_timeout
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|wihap_sta_info
+modifier|*
+name|wihap_sta_alloc
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wihap_sta_delete
+parameter_list|(
+name|struct
+name|wihap_sta_info
+modifier|*
+name|sta
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|wihap_sta_info
+modifier|*
+name|wihap_sta_find
+parameter_list|(
+name|struct
+name|wihap_info
+modifier|*
+name|whi
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|wihap_sta_is_assoc
+parameter_list|(
+name|struct
+name|wihap_info
+modifier|*
+name|whi
+parameter_list|,
+name|u_int8_t
+name|addr
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wihap_auth_req
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|wi_frame
+modifier|*
+name|rxfrm
+parameter_list|,
+name|caddr_t
+name|pkt
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wihap_sta_deauth
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_int8_t
+name|sta_addr
+index|[]
+parameter_list|,
+name|u_int16_t
+name|reason
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wihap_deauth_req
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|wi_frame
+modifier|*
+name|rxfrm
+parameter_list|,
+name|caddr_t
+name|pkt
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wihap_assoc_req
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|wi_frame
+modifier|*
+name|rxfrm
+parameter_list|,
+name|caddr_t
+name|pkt
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wihap_sta_disassoc
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|wihap_sta_info
+modifier|*
+name|sta
+parameter_list|,
+name|u_int16_t
+name|reason
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wihap_disassoc_req
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|wi_frame
+modifier|*
+name|rxfrm
+parameter_list|,
+name|caddr_t
+name|pkt
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * take_hword()  *  *	Used for parsing management frames.  The pkt pointer and length  *	variables are updated after the value is removed.  */
 end_comment
@@ -291,7 +508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * take_tlv()  *  *	Parse out TLV element from a packet, check for underflow of packet  *	or overflow of buffer, update pkt/len.  */
+comment|/* take_tlv()  *  *	Parse out TLV element from a packet, check for underflow of packet  *	or overflow of buffer, update pkt/len.  */
 end_comment
 
 begin_function
@@ -410,13 +627,15 @@ operator|+
 name|len
 expr_stmt|;
 return|return
+operator|(
 name|len
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * put_hword()  *	Put half-word element into management frames.  */
+comment|/* put_hword()  *	Put half-word element into management frames.  */
 end_comment
 
 begin_function
@@ -458,7 +677,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * put_tlv()  *	Put TLV elements into management frames.  */
+comment|/* put_tlv()  *	Put TLV elements into management frames.  */
 end_comment
 
 begin_function
@@ -538,16 +757,16 @@ name|u_int16_t
 name|rates
 parameter_list|)
 block|{
-name|int
-name|len
-init|=
-literal|0
-decl_stmt|;
 name|u_int8_t
 name|ratebuf
 index|[
 literal|8
 index|]
+decl_stmt|;
+name|int
+name|len
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -623,7 +842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_init()  *  *	Initialize host AP data structures.  Called even if port type is  *	not AP.  */
+comment|/* wihap_init()  *  *	Initialize host AP data structures.  Called even if port type is  *	not AP.  */
 end_comment
 
 begin_function
@@ -740,26 +959,11 @@ name|inactivity_time
 operator|=
 name|WIHAP_DFLT_INACTIVITY_TIME
 expr_stmt|;
-name|whi
-operator|->
-name|hostap_ch
-operator|=
-name|timeout
-argument_list|(
-name|wihap_timer
-argument_list|,
-name|sc
-argument_list|,
-name|hz
-operator|*
-name|WIHAP_INTERVAL
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_sta_disassoc()  *  *	Send a disassociation frame to a specified station.  */
+comment|/* wihap_sta_disassoc()  *  *	Send a disassociation frame to a specified station.  */
 end_comment
 
 begin_function
@@ -772,9 +976,10 @@ name|wi_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int8_t
-name|sta_addr
-index|[]
+name|struct
+name|wihap_sta_info
+modifier|*
+name|sta
 parameter_list|,
 name|u_int16_t
 name|reason
@@ -804,7 +1009,9 @@ name|printf
 argument_list|(
 literal|"Sending disassoc to sta %6D\n"
 argument_list|,
-name|sta_addr
+name|sta
+operator|->
+name|addr
 argument_list|,
 literal|":"
 argument_list|)
@@ -854,7 +1061,9 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|sta_addr
+name|sta
+operator|->
+name|addr
 argument_list|,
 name|resp_hdr
 operator|->
@@ -922,7 +1131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_sta_deauth()  *  *	Send a deauthentication message to a specified station.  */
+comment|/* wihap_sta_deauth()  *  *	Send a deauthentication message to a specified station.  */
 end_comment
 
 begin_function
@@ -1088,7 +1297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_shutdown()  *  *	Disassociate all stations and free up data structures.  */
+comment|/* wihap_shutdown()  *  *	Disassociate all stations and free up data structures.  */
 end_comment
 
 begin_function
@@ -1118,6 +1327,9 @@ name|sta
 decl_stmt|,
 modifier|*
 name|next
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -1158,7 +1370,12 @@ name|WIHAPFL_ACTIVE
 operator|)
 condition|)
 return|return;
-comment|/*  	 * XXX: I read somewhere you can deauth all the stations with 	 * a single broadcast.  Maybe try that someday. 	 */
+comment|/* XXX: I read somewhere you can deauth all the stations with 	 * a single broadcast.  Maybe try that someday. 	 */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|sta
 operator|=
 name|LIST_FIRST
@@ -1174,6 +1391,17 @@ condition|(
 name|sta
 condition|)
 block|{
+name|untimeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|sta
+operator|->
+name|tmo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1196,8 +1424,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|sta
-operator|->
-name|addr
 argument_list|,
 name|IEEE80211_REASON_ASSOC_LEAVE
 argument_list|)
@@ -1267,17 +1493,6 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-name|untimeout
-argument_list|(
-name|wihap_timer
-argument_list|,
-name|sc
-argument_list|,
-name|whi
-operator|->
-name|hostap_ch
-argument_list|)
-expr_stmt|;
 name|whi
 operator|->
 name|apflags
@@ -1288,7 +1503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sta_hash_func()  * Hash function for finding stations from ethernet address.  */
+comment|/* sta_hash_func()  * Hash function for finding stations from ethernet address.  */
 end_comment
 
 begin_function
@@ -1328,7 +1543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * addr_cmp():    * Maybe this is a faster way to compare addresses?   */
+comment|/* addr_cmp():  Maybe this is a faster way to compare addresses? */
 end_comment
 
 begin_function
@@ -1375,21 +1590,221 @@ operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
 name|a
+operator|)
 operator|==
 operator|*
 operator|(
 name|u_int32_t
 operator|*
 operator|)
+operator|(
 name|b
+operator|)
 operator|)
 return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|wihap_sta_timeout
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
+name|struct
+name|wihap_sta_info
+modifier|*
+name|sta
+init|=
+name|v
+decl_stmt|;
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+init|=
+name|sta
+operator|->
+name|sc
+decl_stmt|;
+name|struct
+name|wihap_info
+modifier|*
+name|whi
+init|=
+operator|&
+name|sc
+operator|->
+name|wi_hostap_info
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|sta
+operator|->
+name|flags
+operator|&
+name|WI_SIFLAGS_ASSOC
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"inactivity disassoc: %6D\n"
+argument_list|,
+name|sta
+operator|->
+name|addr
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+comment|/* Disassoc station. */
+name|wihap_sta_disassoc
+argument_list|(
+name|sc
+argument_list|,
+name|sta
+argument_list|,
+name|IEEE80211_REASON_ASSOC_EXPIRE
+argument_list|)
+expr_stmt|;
+name|sta
+operator|->
+name|flags
+operator|&=
+operator|~
+name|WI_SIFLAGS_ASSOC
+expr_stmt|;
+name|sta
+operator|->
+name|tmo
+operator|=
+name|timeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|hz
+operator|*
+name|whi
+operator|->
+name|inactivity_time
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sta
+operator|->
+name|flags
+operator|&
+name|WI_SIFLAGS_AUTHEN
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"inactivity disassoc: %6D\n"
+argument_list|,
+name|sta
+operator|->
+name|addr
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+comment|/* Deauthenticate station. */
+name|wihap_sta_deauth
+argument_list|(
+name|sc
+argument_list|,
+name|sta
+operator|->
+name|addr
+argument_list|,
+name|IEEE80211_REASON_AUTH_EXPIRE
+argument_list|)
+expr_stmt|;
+name|sta
+operator|->
+name|flags
+operator|&=
+operator|~
+name|WI_SIFLAGS_AUTHEN
+expr_stmt|;
+comment|/* Delete the station if it's not permanent. */
+if|if
+condition|(
+operator|!
+operator|(
+name|sta
+operator|->
+name|flags
+operator|&
+name|WI_SIFLAGS_PERM
+operator|)
+condition|)
+name|wihap_sta_delete
+argument_list|(
+name|sta
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * wihap_sta_delete()  * Delete a single station and free up its data structure.  */
+comment|/* wihap_sta_delete()  * Delete a single station and free up its data structure.  */
 end_comment
 
 begin_function
@@ -1398,16 +1813,30 @@ name|void
 name|wihap_sta_delete
 parameter_list|(
 name|struct
-name|wihap_info
-modifier|*
-name|whi
-parameter_list|,
-name|struct
 name|wihap_sta_info
 modifier|*
 name|sta
 parameter_list|)
 block|{
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+init|=
+name|sta
+operator|->
+name|sc
+decl_stmt|;
+name|struct
+name|wihap_info
+modifier|*
+name|whi
+init|=
+operator|&
+name|sc
+operator|->
+name|wi_hostap_info
+decl_stmt|;
 name|int
 name|i
 init|=
@@ -1417,6 +1846,17 @@ name|asid
 operator|-
 literal|0xc001
 decl_stmt|;
+name|untimeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|sta
+operator|->
+name|tmo
+argument_list|)
+expr_stmt|;
 name|whi
 operator|->
 name|asid_inuse_mask
@@ -1428,7 +1868,7 @@ index|]
 operator|&=
 operator|~
 operator|(
-literal|1ul
+literal|1UL
 operator|<<
 operator|(
 name|i
@@ -1467,7 +1907,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_sta_alloc()  *  *	Create a new station data structure and put it in the list  *	and hash table.  */
+comment|/* wihap_sta_alloc()  *  *	Create a new station data structure and put it in the list  *	and hash table.  */
 end_comment
 
 begin_function
@@ -1478,30 +1918,39 @@ modifier|*
 name|wihap_sta_alloc
 parameter_list|(
 name|struct
-name|wihap_info
+name|wi_softc
 modifier|*
-name|whi
+name|sc
 parameter_list|,
 name|u_int8_t
 modifier|*
 name|addr
 parameter_list|)
 block|{
-name|int
-name|i
+name|struct
+name|wihap_info
+modifier|*
+name|whi
+init|=
+operator|&
+name|sc
+operator|->
+name|wi_hostap_info
+decl_stmt|;
+name|struct
+name|wihap_sta_info
+modifier|*
+name|sta
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|hash
 init|=
 name|sta_hash_func
 argument_list|(
 name|addr
 argument_list|)
-decl_stmt|;
-name|struct
-name|wihap_sta_info
-modifier|*
-name|sta
 decl_stmt|;
 comment|/* Allocate structure. */
 name|MALLOC
@@ -1564,7 +2013,7 @@ literal|4
 index|]
 operator|&
 operator|(
-literal|1ul
+literal|1UL
 operator|<<
 operator|(
 name|i
@@ -1605,7 +2054,7 @@ literal|4
 index|]
 operator||=
 operator|(
-literal|1ul
+literal|1UL
 operator|<<
 operator|(
 name|i
@@ -1650,6 +2099,12 @@ argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
+name|sta
+operator|->
+name|sc
+operator|=
+name|sc
+expr_stmt|;
 name|whi
 operator|->
 name|n_stations
@@ -1684,7 +2139,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_sta_find()  *  *	Find station structure given address.  */
+comment|/* wihap_sta_find()  *  *	Find station structure given address.  */
 end_comment
 
 begin_function
@@ -1749,278 +2204,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * wihap_timer()  *  *	Called every WIHAP_INTERVAL seconds.  Look for inactive  *	stations and disassociate them.  */
-end_comment
-
-begin_function
-name|void
-name|wihap_timer
-parameter_list|(
-name|void
-modifier|*
-name|xsc
-parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|struct
-name|wihap_sta_info
-modifier|*
-name|sta
-decl_stmt|,
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|wi_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|wi_softc
-operator|*
-operator|)
-name|xsc
-decl_stmt|;
-name|struct
-name|wihap_info
-modifier|*
-name|whi
-init|=
-operator|&
-name|sc
-operator|->
-name|wi_hostap_info
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-name|sta
-operator|=
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|whi
-operator|->
-name|sta_list
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|sta
-condition|)
-block|{
-comment|/* Grab next station now just in case we delete it. */
-name|next
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|sta
-argument_list|,
-name|list
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sta
-operator|->
-name|inactivity_timer
-operator|>=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|--
-name|sta
-operator|->
-name|inactivity_timer
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_flags
-operator|&
-name|IFF_DEBUG
-condition|)
-name|printf
-argument_list|(
-literal|"wihap_timer: disassoc due to "
-literal|"inactivity: %6D\n"
-argument_list|,
-name|sta
-operator|->
-name|addr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sta
-operator|->
-name|flags
-operator|&
-name|WI_SIFLAGS_ASSOC
-condition|)
-block|{
-comment|/* Disassoc station. */
-name|wihap_sta_disassoc
-argument_list|(
-name|sc
-argument_list|,
-name|sta
-operator|->
-name|addr
-argument_list|,
-name|IEEE80211_REASON_ASSOC_EXPIRE
-argument_list|)
-expr_stmt|;
-name|sta
-operator|->
-name|flags
-operator|&=
-operator|~
-name|WI_SIFLAGS_ASSOC
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|sta
-operator|->
-name|inactivity_timer
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_flags
-operator|&
-name|IFF_DEBUG
-condition|)
-name|printf
-argument_list|(
-literal|"wihap_timer: deauth due to "
-literal|"inactivity: %6D\n"
-argument_list|,
-name|sta
-operator|->
-name|addr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sta
-operator|->
-name|flags
-operator|&
-name|WI_SIFLAGS_AUTHEN
-condition|)
-block|{
-comment|/* Deauthenticate station. */
-name|wihap_sta_deauth
-argument_list|(
-name|sc
-argument_list|,
-name|sta
-operator|->
-name|addr
-argument_list|,
-name|IEEE80211_REASON_AUTH_EXPIRE
-argument_list|)
-expr_stmt|;
-name|sta
-operator|->
-name|flags
-operator|&=
-operator|~
-name|WI_SIFLAGS_AUTHEN
-expr_stmt|;
-block|}
-comment|/* Delete the station if it's not permanent. */
-if|if
-condition|(
-operator|!
-operator|(
-name|sta
-operator|->
-name|flags
-operator|&
-name|WI_SIFLAGS_PERM
-operator|)
-condition|)
-name|wihap_sta_delete
-argument_list|(
-name|whi
-argument_list|,
-name|sta
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|sta
-operator|=
-name|next
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|whi
-operator|->
-name|hostap_ch
-operator|=
-name|timeout
-argument_list|(
-name|wihap_timer
-argument_list|,
-name|sc
-argument_list|,
-name|hz
-operator|*
-name|WIHAP_INTERVAL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
 name|wihap_check_rates
 parameter_list|(
-name|struct
-name|wi_softc
-modifier|*
-name|sc
-parameter_list|,
 name|struct
 name|wihap_sta_info
 modifier|*
@@ -2034,6 +2222,15 @@ name|int
 name|rates_len
 parameter_list|)
 block|{
+name|struct
+name|wi_softc
+modifier|*
+name|sc
+init|=
+name|sta
+operator|->
+name|sc
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2181,7 +2378,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_auth_req()  *  *	Handle incoming authentication request.  Only handle OPEN  *	requests.  */
+comment|/* wihap_auth_req()  *  *	Handle incoming authentication request.  Only handle OPEN  *	requests.  */
 end_comment
 
 begin_function
@@ -2480,7 +2677,7 @@ name|sta
 operator|=
 name|wihap_sta_alloc
 argument_list|(
-name|whi
+name|sc
 argument_list|,
 name|rxfrm
 operator|->
@@ -2570,20 +2767,11 @@ name|resp_hdr
 operator|->
 name|frame_ctl
 operator|=
+name|htole16
+argument_list|(
 name|WI_FTYPE_MGMT
 operator||
 name|WI_STYPE_MGMT_AUTH
-expr_stmt|;
-name|pkt
-operator|=
-name|sc
-operator|->
-name|wi_txbuf
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|wi_80211_hdr
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2628,6 +2816,20 @@ name|addr3
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
+expr_stmt|;
+name|pkt
+operator|=
+operator|&
+name|sc
+operator|->
+name|wi_txbuf
+index|[
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|wi_80211_hdr
+argument_list|)
+index|]
 expr_stmt|;
 name|put_hword
 argument_list|(
@@ -2704,7 +2906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_assoc_req()  *  *	Handle incoming association and reassociation requests.  */
+comment|/* wihap_assoc_req()  *  *	Handle incoming association and reassociation requests.  */
 end_comment
 
 begin_function
@@ -2762,16 +2964,13 @@ literal|8
 index|]
 decl_stmt|;
 name|int
+name|ssid_len
+decl_stmt|,
 name|rates_len
 decl_stmt|;
-name|int
-name|ssid_len
-decl_stmt|;
-name|char
+name|struct
+name|ieee80211_nwid
 name|ssid
-index|[
-literal|33
-index|]
 decl_stmt|;
 name|u_int16_t
 name|status
@@ -2827,13 +3026,13 @@ argument_list|,
 name|IEEE80211_ELEMID_SSID
 argument_list|,
 name|ssid
+operator|.
+name|i_nwid
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ssid
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 operator|)
 operator|<
@@ -2841,11 +3040,10 @@ literal|0
 condition|)
 return|return;
 name|ssid
-index|[
-name|ssid_len
-index|]
+operator|.
+name|i_len
 operator|=
-literal|'\0'
+name|ssid_len
 expr_stmt|;
 if|if
 condition|(
@@ -2881,13 +3079,19 @@ name|rxfrm
 operator|->
 name|wi_frame_ctl
 operator|&
+name|htole16
+argument_list|(
 name|WI_FCTL_STYPE
+argument_list|)
 operator|)
 operator|==
+name|htole16
+argument_list|(
 name|WI_STYPE_MGMT_REASREQ
+argument_list|)
 condition|)
 block|{
-comment|/* Reassociation Request-- 		 * Current AP.  (Ignore?) 		 */
+comment|/* Reassociation Request-- * Current AP.  (Ignore?) */
 if|if
 condition|(
 name|len
@@ -2929,6 +3133,8 @@ operator|->
 name|wi_net_name
 argument_list|,
 name|ssid
+operator|.
+name|i_nwid
 argument_list|)
 operator|!=
 literal|0
@@ -2948,9 +3154,15 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wihap_assoc_req: bad ssid: '%s'\n"
+literal|"wihap_assoc_req: bad ssid: '%s' != '%s'\n"
 argument_list|,
 name|ssid
+operator|.
+name|i_nwid
+argument_list|,
+name|sc
+operator|->
+name|wi_net_name
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2996,7 +3208,40 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Check capinfo. 	 * Check for ESS, not IBSS. 	 * Check WEP/PRIVACY flags match.  XXX: WEP doesn't work for host AP. 	 * Refuse stations requesting to be put on CF-polling list. 	 */
+comment|/* Check supported rates against ours. */
+if|if
+condition|(
+name|wihap_check_rates
+argument_list|(
+name|sta
+argument_list|,
+name|rates
+argument_list|,
+name|rates_len
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|status
+operator|=
+name|IEEE80211_STATUS_RATES
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+comment|/* Check capinfo. 	 * Check for ESS, not IBSS. 	 * Check WEP/PRIVACY flags match. 	 * Refuse stations requesting to be put on CF-polling list. 	 */
+name|sta
+operator|->
+name|capinfo
+operator|=
+name|capinfo
+expr_stmt|;
+name|status
+operator|=
+name|IEEE80211_STATUS_CAPINFO
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3010,7 +3255,32 @@ operator|)
 operator|)
 operator|!=
 name|IEEE80211_CAPINFO_ESS
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"wihap_assoc_req: capinfo mismatch: "
+literal|"client using IBSS mode\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|sc
 operator|->
@@ -3036,7 +3306,40 @@ operator|&
 name|IEEE80211_CAPINFO_PRIVACY
 operator|)
 operator|)
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"wihap_assoc_req: capinfo mismatch: client "
+literal|"%susing WEP\n"
+argument_list|,
+name|sc
+operator|->
+name|wi_use_wep
+condition|?
+literal|"not "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|capinfo
 operator|&
@@ -3065,45 +3368,8 @@ condition|)
 name|printf
 argument_list|(
 literal|"wihap_assoc_req: capinfo mismatch: "
-literal|"capinfo=0x%x\n"
-argument_list|,
-name|capinfo
+literal|"client requested CF polling\n"
 argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|IEEE80211_STATUS_CAPINFO
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
-name|sta
-operator|->
-name|capinfo
-operator|=
-name|capinfo
-expr_stmt|;
-comment|/* Check supported rates against ours. */
-if|if
-condition|(
-name|wihap_check_rates
-argument_list|(
-name|sc
-argument_list|,
-name|sta
-argument_list|,
-name|rates
-argument_list|,
-name|rates_len
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|status
-operator|=
-name|IEEE80211_STATUS_RATES
 expr_stmt|;
 goto|goto
 name|fail
@@ -3209,9 +3475,12 @@ name|resp_hdr
 operator|->
 name|frame_ctl
 operator|=
+name|htole16
+argument_list|(
 name|WI_FTYPE_MGMT
 operator||
 name|WI_STYPE_MGMT_ASRESP
+argument_list|)
 expr_stmt|;
 name|pkt
 operator|=
@@ -3327,7 +3596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_deauth_req()  *  *	Handle deauthentication requests.  Delete the station.  */
+comment|/* wihap_deauth_req()  *  *	Handle deauthentication requests.  Delete the station.  */
 end_comment
 
 begin_function
@@ -3433,8 +3702,6 @@ block|}
 else|else
 name|wihap_sta_delete
 argument_list|(
-name|whi
-argument_list|,
 name|sta
 argument_list|)
 expr_stmt|;
@@ -3442,7 +3709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_disassoc_req()  *  *	Handle disassociation requests.  Just reset the assoc flag.  *	We'll free up the station resources when we get a deauth  *	request or when it times out.  */
+comment|/* wihap_disassoc_req()  *  *	Handle disassociation requests.  Just reset the assoc flag.  *	We'll free up the station resources when we get a deauth  *	request or when it times out.  */
 end_comment
 
 begin_function
@@ -3558,7 +3825,7 @@ name|WI_SIFLAGS_AUTHEN
 operator|)
 condition|)
 block|{
-comment|/* If station is not authenticated, send deauthentication 		 * frame. 		 */
+comment|/* 		 * If station is not authenticated, send deauthentication 		 * frame. 		 */
 name|wihap_sta_deauth
 argument_list|(
 name|sc
@@ -3584,11 +3851,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_debug_frame_type()  *  * Print out frame type.  Used in early debugging.  */
+comment|/* wihap_debug_frame_type()  *  * Print out frame type.  Used in early debugging.  */
 end_comment
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|wihap_debug_frame_type
 parameter_list|(
@@ -3602,25 +3870,31 @@ name|printf
 argument_list|(
 literal|"wihap_mgmt_input: len=%d "
 argument_list|,
+name|le16toh
+argument_list|(
 name|rxfrm
 operator|->
 name|wi_dat_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|le16toh
-argument_list|(
 name|rxfrm
 operator|->
 name|wi_frame_ctl
-argument_list|)
 operator|&
+name|htole16
+argument_list|(
 name|WI_FCTL_FTYPE
+argument_list|)
 operator|)
 operator|==
+name|htole16
+argument_list|(
 name|WI_FTYPE_MGMT
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -3784,7 +4058,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_mgmt_input:  *  *	Called for each management frame received in host ap mode.  *	wihap_mgmt_input() is expected to free the mbuf.  */
+comment|/* wihap_mgmt_input:  *  *	Called for each management frame received in host ap mode.  *	wihap_mgmt_input() is expected to free the mbuf.  */
 end_comment
 
 begin_function
@@ -3811,6 +4085,8 @@ name|caddr_t
 name|pkt
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
 name|len
 decl_stmt|;
 if|if
@@ -3856,12 +4132,24 @@ name|rxfrm
 operator|->
 name|wi_frame_ctl
 operator|&
+name|htole16
+argument_list|(
 name|WI_FCTL_FTYPE
+argument_list|)
 operator|)
 operator|==
+name|htole16
+argument_list|(
 name|WI_FTYPE_MGMT
+argument_list|)
 condition|)
 block|{
+comment|/* any of the following will mess w/ the station list */
+name|s
+operator|=
+name|splsoftclock
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|le16toh
@@ -3974,6 +4262,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 name|m_freem
 argument_list|(
@@ -3984,7 +4277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_sta_is_assoc()  *  *	Determine if a station is assoc'ed.  Update its activity  *	counter as a side-effect.  */
+comment|/* wihap_sta_is_assoc()  *  *	Determine if a station is assoc'ed.  Update its activity  *	counter as a side-effect.  */
 end_comment
 
 begin_function
@@ -4040,6 +4333,23 @@ name|whi
 operator|->
 name|inactivity_time
 expr_stmt|;
+name|sta
+operator|->
+name|tmo
+operator|=
+name|timeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|hz
+operator|*
+name|whi
+operator|->
+name|inactivity_time
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -4056,7 +4366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_check_tx()  *  *	Determine if a station is assoc'ed, get its tx rate, and update  *	its activity.  */
+comment|/* wihap_check_tx()  *  *	Determine if a station is assoc'ed, get its tx rate, and update  *	its activity.  */
 end_comment
 
 begin_function
@@ -4097,6 +4407,14 @@ block|,
 literal|110
 block|}
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|addr
@@ -4146,11 +4464,20 @@ block|{
 comment|/* Keep it active. */
 name|sta
 operator|->
-name|inactivity_timer
+name|tmo
 operator|=
+name|timeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|hz
+operator|*
 name|whi
 operator|->
 name|inactivity_time
+argument_list|)
 expr_stmt|;
 operator|*
 name|txrate
@@ -4162,12 +4489,22 @@ operator|->
 name|tx_curr_rate
 index|]
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4229,20 +4566,22 @@ name|sta
 decl_stmt|;
 name|int
 name|mcast
+decl_stmt|,
+name|s
 decl_stmt|;
 comment|/* TODS flag must be set. */
 if|if
 condition|(
 operator|!
 operator|(
-name|le16toh
-argument_list|(
 name|rxfrm
 operator|->
 name|wi_frame_ctl
-argument_list|)
 operator|&
+name|htole16
+argument_list|(
 name|WI_FCTL_TODS
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -4263,6 +4602,11 @@ operator|->
 name|wi_addr2
 argument_list|,
 literal|":"
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -4308,12 +4652,22 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
+name|s
+operator|=
+name|splsoftclock
+argument_list|()
+expr_stmt|;
 comment|/* Find source station. */
 name|sta
 operator|=
@@ -4362,6 +4716,16 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -4370,19 +4734,36 @@ return|;
 block|}
 name|sta
 operator|->
-name|inactivity_timer
+name|tmo
 operator|=
+name|timeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|hz
+operator|*
 name|whi
 operator|->
 name|inactivity_time
+argument_list|)
 expr_stmt|;
 name|sta
 operator|->
 name|sig_info
 operator|=
+name|le16toh
+argument_list|(
 name|rxfrm
 operator|->
 name|wi_q_info
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* Repeat this packet to BSS? */
 name|mcast
@@ -4481,7 +4862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wihap_ioctl()  *  *	Handle Host AP specific ioctls.  Called from wi_ioctl().  */
+comment|/* wihap_ioctl()  *  *	Handle Host AP specific ioctls.  Called from wi_ioctl().  */
 end_comment
 
 begin_function
@@ -4500,11 +4881,6 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ifreq
 modifier|*
@@ -4545,9 +4921,14 @@ name|hostap_sta
 name|stabuf
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
+name|error
+init|=
+literal|0
+decl_stmt|,
 name|n
-decl_stmt|;
-name|int
+decl_stmt|,
 name|flag
 decl_stmt|;
 if|if
@@ -4610,6 +4991,11 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|sta
 operator|=
 name|wihap_sta_find
@@ -4647,8 +5033,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|sta
-operator|->
-name|addr
 argument_list|,
 name|IEEE80211_REASON_ASSOC_LEAVE
 argument_list|)
@@ -4675,12 +5059,15 @@ argument_list|)
 expr_stmt|;
 name|wihap_sta_delete
 argument_list|(
-name|whi
-argument_list|,
 name|sta
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIOCHOSTAP_GET
@@ -4707,6 +5094,11 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|sta
 operator|=
 name|wihap_sta_find
@@ -4788,6 +5180,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIOCHOSTAP_ADD
@@ -4826,6 +5223,11 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|sta
 operator|=
 name|wihap_sta_find
@@ -4848,6 +5250,11 @@ name|error
 operator|=
 name|EEXIST
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 if|if
@@ -4863,13 +5270,18 @@ name|error
 operator|=
 name|ENOSPC
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|sta
 operator|=
 name|wihap_sta_alloc
 argument_list|(
-name|whi
+name|sc
 argument_list|,
 name|reqsta
 operator|.
@@ -4886,11 +5298,25 @@ name|flags
 expr_stmt|;
 name|sta
 operator|->
-name|inactivity_timer
+name|tmo
 operator|=
+name|timeout
+argument_list|(
+name|wihap_sta_timeout
+argument_list|,
+name|sta
+argument_list|,
+name|hz
+operator|*
 name|whi
 operator|->
 name|inactivity_time
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -5016,6 +5442,11 @@ expr_stmt|;
 name|n
 operator|=
 literal|0
+expr_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|sta
 operator|=
@@ -5143,6 +5574,11 @@ name|hostap_sta
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
