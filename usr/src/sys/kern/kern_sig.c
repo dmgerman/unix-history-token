@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3097,6 +3097,11 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -3124,13 +3129,16 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|error
-operator|=
-name|EFAULT
+name|vput
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -3140,7 +3148,7 @@ specifier|register
 name|int
 name|fd
 decl_stmt|;
-comment|/* unmasp funky devices in the user's address space */
+comment|/* unmap funky devices in the user's address space */
 for|for
 control|(
 name|fd
@@ -3240,6 +3248,8 @@ literal|0
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
+name|IO_NODELOCKED
+operator||
 name|IO_UNIT
 argument_list|,
 name|ndp
@@ -3302,6 +3312,8 @@ argument_list|)
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
+name|IO_NODELOCKED
+operator||
 name|IO_UNIT
 argument_list|,
 name|ndp
@@ -3375,6 +3387,8 @@ argument_list|)
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
+name|IO_NODELOCKED
+operator||
 name|IO_UNIT
 argument_list|,
 name|ndp
@@ -3388,13 +3402,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-if|if
-condition|(
-name|vp
-condition|)
-name|vrele
+name|vput
 argument_list|(
 name|vp
 argument_list|)
