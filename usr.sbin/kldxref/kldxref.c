@@ -1048,7 +1048,7 @@ argument_list|)
 expr_stmt|;
 name|check
 argument_list|(
-name|ef_seg_read_entry
+name|ef_seg_read_entry_rel
 argument_list|(
 operator|&
 name|ef
@@ -1085,7 +1085,7 @@ condition|)
 block|{
 name|check
 argument_list|(
-name|ef_seg_read
+name|ef_seg_read_rel
 argument_list|(
 operator|&
 name|ef
