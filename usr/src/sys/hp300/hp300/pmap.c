@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)pmap.c	7.3 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)pmap.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  *	HP9000/300 series physical map management code.  *	For 68020/68030 machines with HP, 68551, or 68030 MMUs  *		(models 320,350,318,319,330,340,360,370,345,375)  *	Don't even pay lip service to multiprocessor support.  */
+comment|/*  *	HP9000/300 series physical map management code.  *	For 68020/68030 machines with HP, 68551, or 68030 MMUs  *		(models 320,350,318,319,330,340,360,370,345,375)  *	Don't even pay lip service to multiprocessor support.  *  *	XXX will only work for PAGE_SIZE == NBPG (hppagesperpage == 1)  *	right now because of the assumed one-to-one relationship of PT  *	pages to STEs.  */
 end_comment
 
 begin_comment
@@ -345,6 +345,15 @@ directive|define
 name|PVF_TOTAL
 value|0x80
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|pager_sva
+decl_stmt|,
+name|pager_eva
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1080,10 +1089,6 @@ name|int
 name|rv
 decl_stmt|;
 specifier|extern
-name|vm_offset_t
-name|DIObase
-decl_stmt|;
-specifier|extern
 name|char
 name|kstack
 index|[]
@@ -1111,7 +1116,10 @@ directive|endif
 comment|/* 	 * Now that kernel map has been allocated, we can mark as 	 * unavailable regions which we have mapped in locore. 	 */
 name|addr
 operator|=
-name|DIObase
+operator|(
+name|vm_offset_t
+operator|)
+name|intiobase
 expr_stmt|;
 operator|(
 name|void
@@ -1132,7 +1140,9 @@ name|addr
 argument_list|,
 name|hp300_ptob
 argument_list|(
-name|IOMAPSIZE
+name|IIOMAPSIZE
+operator|+
+name|EIOMAPSIZE
 argument_list|)
 argument_list|,
 name|FALSE
@@ -1142,7 +1152,10 @@ if|if
 condition|(
 name|addr
 operator|!=
-name|DIObase
+operator|(
+name|vm_offset_t
+operator|)
+name|intiobase
 condition|)
 goto|goto
 name|bogons
@@ -3347,17 +3360,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Routine:	pmap_remove_all  *	Function:  *		Removes this physical page from  *		all physical maps in which it resides.  *		Reflects back modify bits to the pager.  */
+comment|/*  *	pmap_page_protect:  *  *	Lower the permission for all mappings to a given page.  */
 end_comment
 
 begin_function
 name|void
-name|pmap_remove_all
+name|pmap_page_protect
 parameter_list|(
 name|pa
+parameter_list|,
+name|prot
 parameter_list|)
 name|vm_offset_t
 name|pa
+decl_stmt|;
+name|vm_prot_t
+name|prot
 decl_stmt|;
 block|{
 specifier|register
@@ -3372,26 +3390,37 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
+operator|(
 name|pmapdebug
 operator|&
 operator|(
 name|PDB_FOLLOW
 operator||
-name|PDB_REMOVE
-operator||
 name|PDB_PROTECT
+operator|)
+operator|)
+operator|||
+name|prot
+operator|==
+name|VM_PROT_NONE
+operator|&&
+operator|(
+name|pmapdebug
+operator|&
+name|PDB_REMOVE
 operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"pmap_remove_all(%x)\n"
+literal|"pmap_page_protect(%x, %x)\n"
 argument_list|,
 name|pa
+argument_list|,
+name|prot
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Not one of ours 	 */
 if|if
 condition|(
 name|pa
@@ -3403,6 +3432,36 @@ operator|>=
 name|vm_last_phys
 condition|)
 return|return;
+switch|switch
+condition|(
+name|prot
+condition|)
+block|{
+case|case
+name|VM_PROT_ALL
+case|:
+break|break;
+comment|/* copy_on_write */
+case|case
+name|VM_PROT_READ
+case|:
+case|case
+name|VM_PROT_READ
+operator||
+name|VM_PROT_EXECUTE
+case|:
+name|pmap_changebit
+argument_list|(
+name|pa
+argument_list|,
+name|PG_RO
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* remove_all */
+default|default:
 name|pv
 operator|=
 name|pa_to_pvh
@@ -3415,7 +3474,6 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Do it the easy way for now 	 */
 while|while
 condition|(
 name|pv
@@ -3463,7 +3521,7 @@ name|pa
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_remove_all: bad mapping"
+literal|"pmap_page_protect: bad mapping"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3491,54 +3549,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-end_function
-
-begin_comment
-comment|/*  *	Routine:	pmap_copy_on_write  *	Function:  *		Remove write privileges from all  *		physical maps for this physical page.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_copy_on_write
-parameter_list|(
-name|pa
-parameter_list|)
-name|vm_offset_t
-name|pa
-decl_stmt|;
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|pmapdebug
-operator|&
-operator|(
-name|PDB_FOLLOW
-operator||
-name|PDB_PROTECT
-operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"pmap_copy_on_write(%x)\n"
-argument_list|,
-name|pa
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|pmap_changebit
-argument_list|(
-name|pa
-argument_list|,
-name|PG_RO
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5918,23 +5930,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Routine:	pmap_kernel  *	Function:  *		Returns the physical map handle for the kernel.  */
-end_comment
-
-begin_function
-name|pmap_t
-name|pmap_kernel
-parameter_list|()
-block|{
-return|return
-operator|(
-name|kernel_pmap
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	pmap_zero_page zeros the specified (machine independent)  *	page by mapping the page into virtual memory and using  *	bzero to clear its contents, one machine dependent page  *	at a time.  */
 end_comment
 
@@ -7086,6 +7081,32 @@ name|pv
 operator|->
 name|pv_va
 expr_stmt|;
+comment|/* 			 * XXX don't write protect pager mappings 			 */
+if|if
+condition|(
+name|bit
+operator|==
+name|PG_RO
+condition|)
+block|{
+specifier|extern
+name|vm_offset_t
+name|pager_sva
+decl_stmt|,
+name|pager_eva
+decl_stmt|;
+if|if
+condition|(
+name|va
+operator|>=
+name|pager_sva
+operator|&&
+name|va
+operator|<
+name|pager_eva
+condition|)
+continue|continue;
+block|}
 name|pte
 operator|=
 operator|(
