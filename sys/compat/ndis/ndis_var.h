@@ -5060,6 +5060,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|ndis_free_buf
+parameter_list|(
+name|ndis_buffer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|ndis_reset_nic
 parameter_list|(
