@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.26 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -825,22 +825,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|chflags
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|chroot
 name|__P
 argument_list|(
@@ -966,20 +950,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fchflags
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|long
 operator|)
 argument_list|)
 decl_stmt|;
