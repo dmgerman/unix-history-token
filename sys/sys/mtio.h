@@ -141,6 +141,112 @@ begin_comment
 comment|/* disable controller cache */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__386BSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MTSETBSIZ
+value|10
+end_define
+
+begin_comment
+comment|/* Set block size for device */
+end_comment
+
+begin_comment
+comment|/* If device is a variable size dev */
+end_comment
+
+begin_comment
+comment|/* a non zero parameter will change */
+end_comment
+
+begin_comment
+comment|/* the device to a fixed block size */
+end_comment
+
+begin_comment
+comment|/* device with block size set to */
+end_comment
+
+begin_comment
+comment|/* that of the parameter passed in. */
+end_comment
+
+begin_comment
+comment|/* Resetting the block size to 0 will */
+end_comment
+
+begin_comment
+comment|/* restore the device to a variable */
+end_comment
+
+begin_comment
+comment|/* block size device. */
+end_comment
+
+begin_comment
+comment|/* This ioctl is a noop on fixed block */
+end_comment
+
+begin_comment
+comment|/* devices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTSETHDNSTY
+value|11
+end_define
+
+begin_comment
+comment|/* Set default high density values for device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTSETMDNSTY
+value|12
+end_define
+
+begin_comment
+comment|/* Set default medium density values for device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTSETLDNSTY
+value|13
+end_define
+
+begin_comment
+comment|/* Set default low density values for device */
+end_comment
+
+begin_comment
+comment|/* These values are as defined in SCSI II spec */
+end_comment
+
+begin_comment
+comment|/* and range from 0 to 0x17 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* structure for MTIOCGET - mag tape get status command */
 end_comment
@@ -163,10 +269,34 @@ name|mt_erreg
 decl_stmt|;
 comment|/* ``error'' register */
 comment|/* end device-dependent registers */
-name|short
+name|daddr_t
 name|mt_resid
 decl_stmt|;
 comment|/* residual count */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__386BSD__
+argument_list|)
+name|daddr_t
+name|mt_bsiz
+decl_stmt|;
+comment|/* block size, 0 is variable */
+name|short
+name|mt_dns_high
+decl_stmt|;
+comment|/* density setting for high density */
+name|short
+name|mt_dns_medium
+decl_stmt|;
+comment|/* density setting for medium density */
+name|short
+name|mt_dns_low
+decl_stmt|;
+comment|/* density setting for low density */
+endif|#
+directive|endif
 comment|/* the following two are not yet implemented */
 name|daddr_t
 name|mt_fileno
@@ -177,6 +307,10 @@ name|mt_blkno
 decl_stmt|;
 comment|/* block number of current position */
 comment|/* end not yet implemented */
+name|u_short
+name|mt_flags
+decl_stmt|;
+comment|/* Solbourne compatiable way of getting r/w status */
 block|}
 struct|;
 end_struct
@@ -370,6 +504,21 @@ end_define
 
 begin_comment
 comment|/* HP 35450A DAT drive */
+end_comment
+
+begin_comment
+comment|/*  * Constants for mt_flags structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTF_WRITE_PROT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* write protect status of tape */
 end_comment
 
 begin_comment
