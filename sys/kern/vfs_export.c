@@ -7193,7 +7193,16 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clean out any buffers associated with the vnode. 	 */
+comment|/* 	 * Clean out any buffers associated with the vnode. 	 * If the flush fails, just toss the buffers. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|DOCLOSE
+condition|)
+block|{
+if|if
+condition|(
 name|vinvalbuf
 argument_list|(
 name|vp
@@ -7208,7 +7217,25 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|vinvalbuf
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|NOCRED
+argument_list|,
+name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -7231,7 +7258,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * vclean() may be called twice.  The first time removes the 			 * primary reference to the object, the second time goes 			 * one further and is a special-case to terminate the object. 			 */
+comment|/* 			 * vclean() may be called twice. The first time 			 * removes the primary reference to the object, 			 * the second time goes one further and is a 			 * special-case to terminate the object. 			 */
 name|vm_object_terminate
 argument_list|(
 name|obj
