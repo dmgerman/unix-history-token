@@ -2360,10 +2360,6 @@ name|n
 expr_stmt|;
 continue|continue;
 block|}
-name|returntosingle
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|astart
@@ -2536,10 +2532,6 @@ name|size
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
-name|returntosingle
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2753,10 +2745,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|returntosingle
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|bkgrdflag
