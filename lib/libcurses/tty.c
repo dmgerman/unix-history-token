@@ -831,7 +831,7 @@ name|tputs
 argument_list|(
 name|SC
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -847,7 +847,7 @@ argument_list|,
 name|top
 argument_list|)
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -856,7 +856,7 @@ name|tputs
 argument_list|(
 name|RC
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)

@@ -333,7 +333,7 @@ name|tputs
 argument_list|(
 name|CR
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -352,7 +352,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -471,7 +471,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -563,7 +563,7 @@ name|tputs
 argument_list|(
 name|cgp
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -817,7 +817,7 @@ name|tputs
 argument_list|(
 name|HO
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -869,7 +869,7 @@ name|tputs
 argument_list|(
 name|LL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1066,7 +1066,7 @@ name|tputs
 argument_list|(
 name|CR
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1090,7 +1090,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1130,7 +1130,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1210,7 +1210,7 @@ name|tputs
 argument_list|(
 name|BT
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1320,7 +1320,7 @@ name|tputs
 argument_list|(
 name|TA
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1363,7 +1363,7 @@ name|tputs
 argument_list|(
 name|TA
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
