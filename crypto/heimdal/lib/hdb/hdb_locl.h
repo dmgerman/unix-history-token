@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: hdb_locl.h,v 1.17 2001/08/22 20:30:28 assar Exp $ */
+comment|/* $Id: hdb_locl.h,v 1.18 2002/09/10 20:03:48 joda Exp $ */
 end_comment
 
 begin_comment
@@ -127,33 +127,11 @@ directive|include
 file|<roken.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_OPENSSL
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<openssl/des.h>
+file|"crypto-headers.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<des.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
