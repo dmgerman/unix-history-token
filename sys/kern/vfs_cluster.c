@@ -2005,6 +2005,9 @@ operator|.
 name|cluster_entry
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -2113,6 +2116,9 @@ operator|=
 name|bogus_page
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 		 * XXX shouldn't this be += size for both, like in 		 * cluster_wbuild()? 		 * 		 * Don't inherit tbp->b_bufsize as it may be larger due to 		 * a non-page-aligned size.  Instead just aggregate using 		 * 'size'. 		 */
 if|if
 condition|(
@@ -3860,6 +3866,9 @@ goto|;
 block|}
 block|}
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -3944,6 +3953,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 name|bp
 operator|->
