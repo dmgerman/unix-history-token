@@ -258,12 +258,10 @@ name|xdrs
 parameter_list|,
 name|verf
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-specifier|register
 name|struct
 name|authdes_verf
 modifier|*

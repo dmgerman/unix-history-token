@@ -54,7 +54,6 @@ name|int
 name|exp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|oldexp
 decl_stmt|,

@@ -95,7 +95,6 @@ block|{
 name|int
 name|retval
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|so

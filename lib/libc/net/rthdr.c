@@ -148,7 +148,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|cmsghdr
 modifier|*
@@ -161,7 +160,6 @@ operator|*
 operator|)
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|ip6_rthdr
 modifier|*
@@ -289,7 +287,6 @@ name|u_int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ip6_rthdr
 modifier|*
@@ -550,7 +547,6 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ip6_rthdr
 modifier|*
@@ -769,7 +765,6 @@ modifier|*
 name|cmsg
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ip6_rthdr
 modifier|*
@@ -906,7 +901,6 @@ name|int
 name|index
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ip6_rthdr
 modifier|*
@@ -1084,7 +1078,6 @@ name|int
 name|index
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ip6_rthdr
 modifier|*

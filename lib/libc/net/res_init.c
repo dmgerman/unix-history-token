@@ -287,12 +287,10 @@ name|int
 name|res_init
 parameter_list|()
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -301,7 +299,6 @@ modifier|*
 modifier|*
 name|pp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -2751,7 +2748,6 @@ name|in_addr
 name|in
 decl_stmt|;
 block|{
-specifier|register
 name|u_int32_t
 name|i
 init|=

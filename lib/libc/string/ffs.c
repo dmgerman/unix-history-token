@@ -67,12 +67,10 @@ name|ffs
 parameter_list|(
 name|mask
 parameter_list|)
-specifier|register
 name|int
 name|mask
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|bit
 decl_stmt|;

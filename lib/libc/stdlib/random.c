@@ -92,7 +92,7 @@ file|"un-namespace.h"
 end_include
 
 begin_comment
-comment|/*  * random.c:  *  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is  * then initialized to contain information for random number generation with  * that much state information.  Good sizes for the amount of state  * information are 32, 64, 128, and 256 bytes.  The state can be switched by  * calling the setstate() routine with the same array as was initiallized  * with initstate().  By default, the package runs with 128 bytes of state  * information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used.  *  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note:  * the zeroeth word of state information also has some other information  * stored in it -- see setstate() for details).  *  * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will  * have period 2^deg - 1 (where deg is the degree of the polynomial being  * used, assuming that the polynomial is irreducible and primitive).  The  * higher order bits will have longer periods, since their values are also  * influenced by pseudo-random carries out of the lower bits.  The total  * period of the generator is approximately deg*(2**deg - 1); thus doubling  * the amount of state information has a vast influence on the period of the  * generator.  Note: the deg*(2**deg - 1) is an approximation only good for  * large deg, when the period of the shift register is the dominant factor.  * With deg equal to seven, the period is actually much longer than the  * 7*(2**7 - 1) predicted by this formula.  *  * Modified 28 December 1994 by Jacob S. Rosenberg.  * The following changes have been made:  * All references to the type u_int have been changed to unsigned long.  * All references to type int have been changed to type long.  Other  * cleanups have been made as well.  A warning for both initstate and  * setstate has been inserted to the effect that on Sparc platforms  * the 'arg_state' variable must be forced to begin on word boundaries.  * This can be easily done by casting a long integer array to char *.  * The overall logic has been left STRICTLY alone.  This software was  * tested on both a VAX and Sun SpacsStation with exactly the same  * results.  The new version and the original give IDENTICAL results.  * The new version is somewhat faster than the original.  As the  * documentation says:  "By default, the package runs with 128 bytes of  * state information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used."  For a buffer of  * 128 bytes, this new version runs about 19 percent faster and for a 16  * byte buffer it is about 5 percent faster.  */
+comment|/*  * random.c:  *  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is  * then initialized to contain information for random number generation with  * that much state information.  Good sizes for the amount of state  * information are 32, 64, 128, and 256 bytes.  The state can be switched by  * calling the setstate() routine with the same array as was initiallized  * with initstate().  By default, the package runs with 128 bytes of state  * information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used.  *  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note:  * the zeroeth word of state information also has some other information  * stored in it -- see setstate() for details).  *  * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will  * have period 2^deg - 1 (where deg is the degree of the polynomial being  * used, assuming that the polynomial is irreducible and primitive).  The  * higher order bits will have longer periods, since their values are also  * influenced by pseudo-random carries out of the lower bits.  The total  * period of the generator is approximately deg*(2**deg - 1); thus doubling  * the amount of state information has a vast influence on the period of the  * generator.  Note: the deg*(2**deg - 1) is an approximation only good for  * large deg, when the period of the shift is the dominant factor.  * With deg equal to seven, the period is actually much longer than the  * 7*(2**7 - 1) predicted by this formula.  *  * Modified 28 December 1994 by Jacob S. Rosenberg.  * The following changes have been made:  * All references to the type u_int have been changed to unsigned long.  * All references to type int have been changed to type long.  Other  * cleanups have been made as well.  A warning for both initstate and  * setstate has been inserted to the effect that on Sparc platforms  * the 'arg_state' variable must be forced to begin on word boundaries.  * This can be easily done by casting a long integer array to char *.  * The overall logic has been left STRICTLY alone.  This software was  * tested on both a VAX and Sun SpacsStation with exactly the same  * results.  The new version and the original give IDENTICAL results.  * The new version is somewhat faster than the original.  As the  * documentation says:  "By default, the package runs with 128 bytes of  * state information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used."  For a buffer of  * 128 bytes, this new version runs about 19 percent faster and for a 16  * byte buffer it is about 5 percent faster.  */
 end_comment
 
 begin_comment
@@ -590,7 +590,6 @@ name|good_rand
 parameter_list|(
 name|x
 parameter_list|)
-specifier|register
 name|long
 name|x
 decl_stmt|;
@@ -612,7 +611,6 @@ else|#
 directive|else
 comment|/* !USE_WEAK_SEEDING */
 comment|/*  * Compute x = (7^5 * x) mod (2^31 - 1)  * wihout overflowing 31 bits:  *      (2^31 - 1) = 127773 * (7^5) + 2836  * From "Random number generators: good ones are hard to find",  * Park and Miller, Communications of the ACM, vol. 31, no. 10,  * October 1988, p. 1195.  */
-specifier|register
 name|long
 name|hi
 decl_stmt|,
@@ -676,7 +674,6 @@ name|long
 name|x
 decl_stmt|;
 block|{
-specifier|register
 name|long
 name|i
 decl_stmt|;
@@ -966,7 +963,6 @@ name|n
 decl_stmt|;
 comment|/* # bytes of state info */
 block|{
-specifier|register
 name|char
 modifier|*
 name|ostate
@@ -984,7 +980,6 @@ literal|1
 index|]
 operator|)
 decl_stmt|;
-specifier|register
 name|long
 modifier|*
 name|long_arg_state
@@ -1230,7 +1225,6 @@ name|arg_state
 decl_stmt|;
 comment|/* pointer to state array */
 block|{
-specifier|register
 name|long
 modifier|*
 name|new_state
@@ -1241,7 +1235,6 @@ operator|*
 operator|)
 name|arg_state
 decl_stmt|;
-specifier|register
 name|long
 name|type
 init|=
@@ -1252,7 +1245,6 @@ index|]
 operator|%
 name|MAX_TYPES
 decl_stmt|;
-specifier|register
 name|long
 name|rear
 init|=
@@ -1430,11 +1422,9 @@ name|long
 name|random
 parameter_list|()
 block|{
-specifier|register
 name|long
 name|i
 decl_stmt|;
-specifier|register
 name|long
 modifier|*
 name|f

@@ -95,18 +95,15 @@ name|__smakebuf
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|void
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|flags
 decl_stmt|;
@@ -272,7 +269,6 @@ name|bufsize
 parameter_list|,
 name|couldbetty
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp

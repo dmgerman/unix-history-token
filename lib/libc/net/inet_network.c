@@ -71,14 +71,12 @@ name|inet_network
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|in_addr_t
 name|val
 decl_stmt|,
@@ -86,7 +84,6 @@ name|base
 decl_stmt|,
 name|n
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -101,7 +98,6 @@ name|pp
 init|=
 name|parts
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

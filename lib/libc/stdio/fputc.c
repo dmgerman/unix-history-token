@@ -85,7 +85,6 @@ parameter_list|)
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|fp

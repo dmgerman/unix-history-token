@@ -146,7 +146,7 @@ name|parmj
 parameter_list|,
 name|n
 parameter_list|)
-value|{ 		\ 	long i = (n) / sizeof (TYPE); 			\ 	register TYPE *pi = (TYPE *) (parmi); 		\ 	register TYPE *pj = (TYPE *) (parmj); 		\ 	do { 						\ 		register TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\         } while (--i> 0);				\ }
+value|{ 		\ 	long i = (n) / sizeof (TYPE); 			\ 	TYPE *pi = (TYPE *) (parmi); 		\ 	TYPE *pj = (TYPE *) (parmj); 		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\         } while (--i> 0);				\ }
 end_define
 
 begin_define

@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -78,13 +92,11 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|servent
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*

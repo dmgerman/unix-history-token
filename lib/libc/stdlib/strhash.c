@@ -135,7 +135,6 @@ name|int
 name|size
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -820,11 +819,9 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|size
 init|=
@@ -929,11 +926,9 @@ name|p2
 parameter_list|)
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|size
 init|=
@@ -1064,7 +1059,6 @@ name|int
 name|verbose
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

@@ -94,7 +94,6 @@ modifier|*
 name|preg
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|re_guts
 modifier|*

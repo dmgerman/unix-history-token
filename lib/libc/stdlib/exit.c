@@ -103,13 +103,11 @@ name|int
 name|status
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|atexit
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;

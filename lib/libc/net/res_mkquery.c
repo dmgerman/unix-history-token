@@ -187,17 +187,14 @@ name|buflen
 decl_stmt|;
 comment|/* size of buffer */
 block|{
-specifier|register
 name|HEADER
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -762,12 +759,10 @@ name|anslen
 decl_stmt|;
 comment|/* answer buffer length */
 block|{
-specifier|register
 name|HEADER
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp

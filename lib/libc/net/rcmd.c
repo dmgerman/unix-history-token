@@ -2522,7 +2522,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -3308,7 +3307,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|user

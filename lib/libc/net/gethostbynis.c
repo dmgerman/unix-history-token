@@ -230,7 +230,6 @@ name|int
 name|af
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp

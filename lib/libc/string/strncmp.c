@@ -67,7 +67,6 @@ name|s2
 parameter_list|,
 name|n
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -79,7 +78,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|n
 decl_stmt|;

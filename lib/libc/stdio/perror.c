@@ -97,7 +97,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|iovec
 modifier|*

@@ -118,7 +118,6 @@ operator|.
 name|x_port
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -127,7 +126,6 @@ name|char
 modifier|*
 name|cp2
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|up
@@ -330,7 +328,6 @@ name|nonzero
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

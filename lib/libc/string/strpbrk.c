@@ -70,7 +70,6 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -83,13 +82,11 @@ end_function
 
 begin_block
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|scanp
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|,

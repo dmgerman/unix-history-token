@@ -85,7 +85,6 @@ name|ch
 parameter_list|)
 endif|#
 directive|endif
-specifier|register
 specifier|const
 name|char
 modifier|*

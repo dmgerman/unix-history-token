@@ -141,7 +141,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|cmsghdr
 modifier|*
@@ -245,7 +244,6 @@ name|optlen
 decl_stmt|,
 name|off
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|bp
@@ -570,7 +568,6 @@ name|padlen
 decl_stmt|,
 name|off
 decl_stmt|;
-specifier|register
 name|u_int8_t
 modifier|*
 name|bp

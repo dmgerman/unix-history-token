@@ -66,7 +66,6 @@ name|buf
 parameter_list|,
 name|size
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp

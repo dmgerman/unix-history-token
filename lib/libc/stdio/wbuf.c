@@ -74,17 +74,14 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;

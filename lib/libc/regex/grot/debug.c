@@ -84,7 +84,6 @@ modifier|*
 name|d
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -94,15 +93,12 @@ name|r
 operator|->
 name|re_g
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|last
 decl_stmt|;
@@ -584,7 +580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - s_print - print the strip for debugging  == static void s_print(register struct re_guts *g, FILE *d);  */
+comment|/*  - s_print - print the strip for debugging  == static void s_print(struct re_guts *g, FILE *d);  */
 end_comment
 
 begin_function
@@ -596,7 +592,6 @@ name|g
 parameter_list|,
 name|d
 parameter_list|)
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -607,41 +602,33 @@ modifier|*
 name|d
 decl_stmt|;
 block|{
-specifier|register
 name|sop
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|done
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|sop
 name|opnd
 decl_stmt|;
-specifier|register
 name|int
 name|col
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|last
 decl_stmt|;
-specifier|register
 name|sopno
 name|offset
 init|=

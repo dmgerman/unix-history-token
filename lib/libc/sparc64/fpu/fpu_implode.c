@@ -68,12 +68,10 @@ name|round
 name|__P
 argument_list|(
 operator|(
-specifier|register
 expr|struct
 name|fpemu
 operator|*
 operator|,
-specifier|register
 expr|struct
 name|fpn
 operator|*
@@ -108,20 +106,17 @@ specifier|static
 name|int
 name|round
 parameter_list|(
-specifier|register
 name|struct
 name|fpemu
 modifier|*
 name|fe
 parameter_list|,
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 parameter_list|)
 block|{
-specifier|register
 name|u_int
 name|m0
 decl_stmt|,
@@ -131,7 +126,6 @@ name|m2
 decl_stmt|,
 name|m3
 decl_stmt|;
-specifier|register
 name|int
 name|gr
 decl_stmt|,
@@ -574,18 +568,15 @@ name|fpemu
 modifier|*
 name|fe
 decl_stmt|;
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|u_int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|sign
 decl_stmt|,
@@ -733,7 +724,6 @@ name|fpemu
 modifier|*
 name|fe
 decl_stmt|;
-specifier|register
 name|struct
 name|fpn
 modifier|*
@@ -744,11 +734,9 @@ modifier|*
 name|res
 decl_stmt|;
 block|{
-specifier|register
 name|u_int64_t
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|sign
 decl_stmt|,
@@ -931,14 +919,12 @@ name|fpemu
 modifier|*
 name|fe
 decl_stmt|;
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|u_int
 name|sign
 init|=
@@ -948,7 +934,6 @@ name|fp_sign
 operator|<<
 literal|31
 decl_stmt|;
-specifier|register
 name|int
 name|exp
 decl_stmt|;
@@ -1306,7 +1291,6 @@ name|fpemu
 modifier|*
 name|fe
 decl_stmt|;
-specifier|register
 name|struct
 name|fpn
 modifier|*
@@ -1317,7 +1301,6 @@ modifier|*
 name|res
 decl_stmt|;
 block|{
-specifier|register
 name|u_int
 name|sign
 init|=
@@ -1327,7 +1310,6 @@ name|fp_sign
 operator|<<
 literal|31
 decl_stmt|;
-specifier|register
 name|int
 name|exp
 decl_stmt|;
@@ -1686,7 +1668,6 @@ name|fpemu
 modifier|*
 name|fe
 decl_stmt|;
-specifier|register
 name|struct
 name|fpn
 modifier|*
@@ -1697,7 +1678,6 @@ modifier|*
 name|res
 decl_stmt|;
 block|{
-specifier|register
 name|u_int
 name|sign
 init|=
@@ -1707,7 +1687,6 @@ name|fp_sign
 operator|<<
 literal|31
 decl_stmt|;
-specifier|register
 name|int
 name|exp
 decl_stmt|;
@@ -2114,7 +2093,6 @@ name|fpemu
 modifier|*
 name|fe
 decl_stmt|;
-specifier|register
 name|struct
 name|fpn
 modifier|*
@@ -2123,7 +2101,6 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-specifier|register
 name|u_int
 modifier|*
 name|space

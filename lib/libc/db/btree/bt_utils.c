@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -842,11 +856,9 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|p1
@@ -958,7 +970,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|p1
@@ -966,7 +977,6 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
-specifier|register
 name|size_t
 name|cnt
 decl_stmt|,

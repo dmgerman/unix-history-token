@@ -684,17 +684,14 @@ name|ngroups
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|group
 modifier|*
 name|grp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;

@@ -207,13 +207,11 @@ literal|"Dec"
 block|}
 decl_stmt|;
 comment|/* 	** Big enough for something such as 	** ??? ???-2147483648 -2147483648:-2147483648:-2147483648 -2147483648\n 	** (two three-character abbreviations, five strings denoting integers, 	** three explicit spaces, two explicit colons, a newline, 	** and a trailing ASCII nul). 	*/
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|wn
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*

@@ -100,13 +100,11 @@ name|value
 parameter_list|,
 name|rewrite
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -129,7 +127,6 @@ modifier|*
 name|alloced
 decl_stmt|;
 comment|/* if allocated space before */
-specifier|register
 name|char
 modifier|*
 name|c
@@ -217,11 +214,9 @@ block|}
 else|else
 block|{
 comment|/* create new slot */
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -517,7 +512,6 @@ modifier|*
 modifier|*
 name|environ
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*

@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Hybrid exponential search/linear search merge sort with hybrid  * natural/pairwise first pass.  Requires about .3% more comparisons  * for random data than LSMS with pairwise first pass alone.  * It works for objects as small as two bytes.  */
 end_comment
@@ -252,7 +266,6 @@ decl_stmt|;
 name|size_t
 name|nmemb
 decl_stmt|;
-specifier|register
 name|size_t
 name|size
 decl_stmt|;
@@ -280,7 +293,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -291,7 +303,6 @@ name|big
 decl_stmt|,
 name|iflag
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|f1

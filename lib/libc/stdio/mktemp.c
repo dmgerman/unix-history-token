@@ -370,7 +370,6 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|doopen
@@ -382,7 +381,6 @@ name|int
 name|slen
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|start

@@ -77,13 +77,11 @@ name|fp
 parameter_list|,
 name|i
 parameter_list|)
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|u_int
 name|i
 decl_stmt|;
@@ -177,13 +175,11 @@ name|fp
 parameter_list|,
 name|i
 parameter_list|)
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|u_int64_t
 name|i
 decl_stmt|;
@@ -309,22 +305,18 @@ name|fp
 parameter_list|,
 name|i
 parameter_list|)
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|u_int
 name|i
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|exp
 decl_stmt|;
-specifier|register
 name|u_int
 name|frac
 decl_stmt|,
@@ -414,24 +406,20 @@ name|i
 parameter_list|,
 name|j
 parameter_list|)
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|u_int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|exp
 decl_stmt|;
-specifier|register
 name|u_int
 name|frac
 decl_stmt|,
@@ -551,13 +539,11 @@ name|k
 parameter_list|,
 name|l
 parameter_list|)
-specifier|register
 name|struct
 name|fpn
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|u_int
 name|i
 decl_stmt|,
@@ -568,11 +554,9 @@ decl_stmt|,
 name|l
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|exp
 decl_stmt|;
-specifier|register
 name|u_int
 name|frac
 decl_stmt|,
@@ -711,7 +695,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Explode the contents of a register / regpair / regquad.  * If the input is a signalling NaN, an NV (invalid) exception  * will be set.  (Note that nothing but NV can occur until ALU  * operations are performed.)  */
+comment|/*  * Explode the contents of a / regpair / regquad.  * If the input is a signalling NaN, an NV (invalid) exception  * will be set.  (Note that nothing but NV can occur until ALU  * operations are performed.)  */
 end_comment
 
 begin_function

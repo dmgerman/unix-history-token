@@ -1219,7 +1219,6 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|key_call_private
 modifier|*

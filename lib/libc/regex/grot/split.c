@@ -52,19 +52,16 @@ name|sep
 decl_stmt|;
 comment|/* "" white, "c" single char, "ab" [ab]+ */
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 init|=
 name|string
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
 comment|/* latest character */
-specifier|register
 name|char
 name|sepc
 init|=
@@ -73,15 +70,12 @@ index|[
 literal|0
 index|]
 decl_stmt|;
-specifier|register
 name|char
 name|sepc2
 decl_stmt|;
-specifier|register
 name|int
 name|fn
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -89,12 +83,10 @@ name|fp
 init|=
 name|fields
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|sepp
 decl_stmt|;
-specifier|register
 name|int
 name|trimtrail
 decl_stmt|;
@@ -685,7 +677,6 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -914,7 +905,6 @@ index|[
 name|NF
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|nf
 decl_stmt|;
@@ -976,11 +966,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|fn
 decl_stmt|;
-specifier|register
 name|int
 name|bound
 decl_stmt|;
@@ -1824,7 +1812,6 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -1837,19 +1824,15 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|nf
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|printit
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|f

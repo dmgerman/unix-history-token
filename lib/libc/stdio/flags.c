@@ -92,7 +92,6 @@ name|mode
 parameter_list|,
 name|optr
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -103,7 +102,6 @@ modifier|*
 name|optr
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ret
 decl_stmt|,

@@ -82,7 +82,6 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|size_t
 name|n
 decl_stmt|;
@@ -92,7 +91,6 @@ condition|(
 name|n
 condition|)
 block|{
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -100,7 +98,6 @@ name|tp
 init|=
 name|t
 decl_stmt|;
-specifier|register
 specifier|const
 name|unsigned
 name|char
@@ -109,7 +106,6 @@ name|fp
 init|=
 name|f
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 name|uc

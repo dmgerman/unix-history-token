@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -329,17 +343,14 @@ name|size_t
 name|errbuf_size
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|rerr
 modifier|*
 name|r
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
-specifier|register
 name|int
 name|target
 init|=
@@ -348,7 +359,6 @@ operator|&
 operator|~
 name|REG_ITOA
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -554,7 +564,6 @@ modifier|*
 name|localbuf
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|rerr
 modifier|*

@@ -113,7 +113,6 @@ name|int
 name|fcc
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|fpn
 modifier|*
@@ -122,7 +121,6 @@ decl_stmt|,
 modifier|*
 name|b
 decl_stmt|;
-specifier|register
 name|int
 name|cc
 decl_stmt|;

@@ -152,7 +152,6 @@ name|atexit
 name|__atexit0
 decl_stmt|;
 comment|/* one guaranteed table */
-specifier|register
 name|struct
 name|atexit
 modifier|*

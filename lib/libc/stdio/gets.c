@@ -102,11 +102,9 @@ modifier|*
 name|buf
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s

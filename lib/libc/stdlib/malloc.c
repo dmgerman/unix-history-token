@@ -4534,7 +4534,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-specifier|register
 name|void
 modifier|*
 name|r

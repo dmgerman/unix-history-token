@@ -258,17 +258,14 @@ name|int
 name|net_i
 decl_stmt|;
 block|{
-specifier|register
 name|HEADER
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;

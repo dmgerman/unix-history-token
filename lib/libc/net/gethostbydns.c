@@ -524,19 +524,16 @@ name|int
 name|qtype
 decl_stmt|;
 block|{
-specifier|register
 specifier|const
 name|HEADER
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -1688,7 +1685,6 @@ operator|!
 name|haveanswer
 condition|)
 block|{
-specifier|register
 name|int
 name|nn
 decl_stmt|;
@@ -2128,7 +2124,6 @@ decl_stmt|;
 name|querybuf
 name|buf
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -2863,7 +2858,6 @@ decl_stmt|;
 name|querybuf
 name|buf
 decl_stmt|;
-specifier|register
 name|struct
 name|hostent
 modifier|*
@@ -2883,7 +2877,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SUNSECURITY
-specifier|register
 name|struct
 name|hostent
 modifier|*

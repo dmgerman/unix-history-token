@@ -94,12 +94,10 @@ init|=
 name|UPREFIX
 decl_stmt|;
 comment|/* 64-bit number + slop */
-specifier|register
 name|unsigned
 name|int
 name|signum
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

@@ -81,7 +81,6 @@ name|char
 modifier|*
 name|src
 decl_stmt|;
-specifier|register
 name|size_t
 name|n
 decl_stmt|;
@@ -93,14 +92,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|d
 init|=
 name|dst
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*

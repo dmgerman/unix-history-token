@@ -5001,19 +5001,16 @@ modifier|*
 name|errp
 decl_stmt|;
 block|{
-specifier|register
 specifier|const
 name|HEADER
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -6031,7 +6028,6 @@ operator|!
 name|haveanswer
 condition|)
 block|{
-specifier|register
 name|int
 name|nn
 decl_stmt|;

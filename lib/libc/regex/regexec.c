@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * the outer shell of regexec()  *  * This file includes engine.c *twice*, after muchos fiddling with the  * macros that code uses.  This lets the same code operate on two different  * representations for state sets.  */
 end_comment
@@ -745,7 +759,6 @@ name|int
 name|eflags
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|re_guts
 modifier|*

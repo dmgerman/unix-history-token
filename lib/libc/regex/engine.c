@@ -661,7 +661,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  - matcher - the actual matching engine  == static int matcher(register struct re_guts *g, char *string, \  ==	size_t nmatch, regmatch_t pmatch[], int eflags);  */
+comment|/*  - matcher - the actual matching engine  == static int matcher(struct re_guts *g, char *string, \  ==	size_t nmatch, regmatch_t pmatch[], int eflags);  */
 end_comment
 
 begin_function
@@ -680,7 +680,6 @@ name|pmatch
 parameter_list|,
 name|eflags
 parameter_list|)
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -701,12 +700,10 @@ name|int
 name|eflags
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|endp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -714,7 +711,6 @@ name|struct
 name|match
 name|mv
 decl_stmt|;
-specifier|register
 name|struct
 name|match
 modifier|*
@@ -723,12 +719,10 @@ init|=
 operator|&
 name|mv
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 specifier|const
 name|sopno
 name|gf
@@ -740,7 +734,6 @@ operator|+
 literal|1
 decl_stmt|;
 comment|/* +1 for OEND */
-specifier|register
 specifier|const
 name|sopno
 name|gl
@@ -758,7 +751,6 @@ modifier|*
 name|stop
 decl_stmt|;
 comment|/* Boyer-Moore algorithms variables */
-specifier|register
 name|char
 modifier|*
 name|pp
@@ -768,22 +760,18 @@ name|cj
 decl_stmt|,
 name|mj
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|mustfirst
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|mustlast
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|matchjump
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|charjump
@@ -1958,7 +1946,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dissect - figure out what matched what, no back references  == static char *dissect(register struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
+comment|/*  - dissect - figure out what matched what, no back references  == static char *dissect(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
@@ -1978,7 +1966,6 @@ name|startst
 parameter_list|,
 name|stopst
 parameter_list|)
-specifier|register
 name|struct
 name|match
 modifier|*
@@ -1999,73 +1986,60 @@ name|sopno
 name|stopst
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|sopno
 name|ss
 decl_stmt|;
 comment|/* start sop of current subRE */
-specifier|register
 name|sopno
 name|es
 decl_stmt|;
 comment|/* end sop of current subRE */
-specifier|register
 name|char
 modifier|*
 name|sp
 decl_stmt|;
 comment|/* start of string matched by it */
-specifier|register
 name|char
 modifier|*
 name|stp
 decl_stmt|;
 comment|/* string matched by it cannot pass here */
-specifier|register
 name|char
 modifier|*
 name|rest
 decl_stmt|;
 comment|/* start of rest of string */
-specifier|register
 name|char
 modifier|*
 name|tail
 decl_stmt|;
 comment|/* string unmatched by rest of RE */
-specifier|register
 name|sopno
 name|ssub
 decl_stmt|;
 comment|/* start sop of subsubRE */
-specifier|register
 name|sopno
 name|esub
 decl_stmt|;
 comment|/* end sop of subsubRE */
-specifier|register
 name|char
 modifier|*
 name|ssp
 decl_stmt|;
 comment|/* start of string matched by subsubRE */
-specifier|register
 name|char
 modifier|*
 name|sep
 decl_stmt|;
 comment|/* end of string matched by subsubRE */
-specifier|register
 name|char
 modifier|*
 name|oldssp
 decl_stmt|;
 comment|/* previous ssp */
-specifier|register
 name|char
 modifier|*
 name|dp
@@ -3015,7 +2989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - backref - figure out what matched what, figuring in back references  == static char *backref(register struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst, sopno lev);  */
+comment|/*  - backref - figure out what matched what, figuring in back references  == static char *backref(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst, sopno lev);  */
 end_comment
 
 begin_function
@@ -3037,7 +3011,6 @@ name|stopst
 parameter_list|,
 name|lev
 parameter_list|)
-specifier|register
 name|struct
 name|match
 modifier|*
@@ -3062,59 +3035,47 @@ name|lev
 decl_stmt|;
 comment|/* PLUS nesting level */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|sopno
 name|ss
 decl_stmt|;
 comment|/* start sop of current subRE */
-specifier|register
 name|char
 modifier|*
 name|sp
 decl_stmt|;
 comment|/* start of string matched by it */
-specifier|register
 name|sopno
 name|ssub
 decl_stmt|;
 comment|/* start sop of subsubRE */
-specifier|register
 name|sopno
 name|esub
 decl_stmt|;
 comment|/* end sop of subsubRE */
-specifier|register
 name|char
 modifier|*
 name|ssp
 decl_stmt|;
 comment|/* start of string matched by subsubRE */
-specifier|register
 name|char
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
-specifier|register
 name|int
 name|hard
 decl_stmt|;
-specifier|register
 name|sop
 name|s
 decl_stmt|;
-specifier|register
 name|regoff_t
 name|offsave
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
@@ -4493,7 +4454,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - fast - step through the string at top speed  == static char *fast(register struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
+comment|/*  - fast - step through the string at top speed  == static char *fast(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
@@ -4513,7 +4474,6 @@ name|startst
 parameter_list|,
 name|stopst
 parameter_list|)
-specifier|register
 name|struct
 name|match
 modifier|*
@@ -4534,7 +4494,6 @@ name|sopno
 name|stopst
 decl_stmt|;
 block|{
-specifier|register
 name|states
 name|st
 init|=
@@ -4542,7 +4501,6 @@ name|m
 operator|->
 name|st
 decl_stmt|;
-specifier|register
 name|states
 name|fresh
 init|=
@@ -4550,7 +4508,6 @@ name|m
 operator|->
 name|fresh
 decl_stmt|;
-specifier|register
 name|states
 name|tmp
 init|=
@@ -4558,14 +4515,12 @@ name|m
 operator|->
 name|tmp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
 init|=
 name|start
 decl_stmt|;
-specifier|register
 name|int
 name|c
 init|=
@@ -4586,20 +4541,16 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
-specifier|register
 name|int
 name|lastc
 decl_stmt|;
 comment|/* previous c */
-specifier|register
 name|int
 name|flagch
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|coldp
@@ -5098,7 +5049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - slow - step through the string more deliberately  == static char *slow(register struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
+comment|/*  - slow - step through the string more deliberately  == static char *slow(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
@@ -5118,7 +5069,6 @@ name|startst
 parameter_list|,
 name|stopst
 parameter_list|)
-specifier|register
 name|struct
 name|match
 modifier|*
@@ -5139,7 +5089,6 @@ name|sopno
 name|stopst
 decl_stmt|;
 block|{
-specifier|register
 name|states
 name|st
 init|=
@@ -5147,7 +5096,6 @@ name|m
 operator|->
 name|st
 decl_stmt|;
-specifier|register
 name|states
 name|empty
 init|=
@@ -5155,7 +5103,6 @@ name|m
 operator|->
 name|empty
 decl_stmt|;
-specifier|register
 name|states
 name|tmp
 init|=
@@ -5163,14 +5110,12 @@ name|m
 operator|->
 name|tmp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
 init|=
 name|start
 decl_stmt|;
-specifier|register
 name|int
 name|c
 init|=
@@ -5191,20 +5136,16 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
-specifier|register
 name|int
 name|lastc
 decl_stmt|;
 comment|/* previous c */
-specifier|register
 name|int
 name|flagch
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|matchp
@@ -5679,7 +5620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - step - map set of states reachable before char to set reachable after  == static states step(register struct re_guts *g, sopno start, sopno stop, \  ==	register states bef, int ch, register states aft);  == #define	BOL	(OUT+1)  == #define	EOL	(BOL+1)  == #define	BOLEOL	(BOL+2)  == #define	NOTHING	(BOL+3)  == #define	BOW	(BOL+4)  == #define	EOW	(BOL+5)  == #define	CODEMAX	(BOL+5)		// highest code used  == #define	NONCHAR(c)	((c)> CHAR_MAX)  == #define	NNONCHAR	(CODEMAX-CHAR_MAX)  */
+comment|/*  - step - map set of states reachable before char to set reachable after  == static states step(struct re_guts *g, sopno start, sopno stop, \  ==	states bef, int ch, states aft);  == #define	BOL	(OUT+1)  == #define	EOL	(BOL+1)  == #define	BOLEOL	(BOL+2)  == #define	NOTHING	(BOL+3)  == #define	BOW	(BOL+4)  == #define	EOW	(BOL+5)  == #define	CODEMAX	(BOL+5)		// highest code used  == #define	NONCHAR(c)	((c)> CHAR_MAX)  == #define	NNONCHAR	(CODEMAX-CHAR_MAX)  */
 end_comment
 
 begin_function
@@ -5699,7 +5640,6 @@ name|ch
 parameter_list|,
 name|aft
 parameter_list|)
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -5713,7 +5653,6 @@ name|sopno
 name|stop
 decl_stmt|;
 comment|/* state after stop state within strip */
-specifier|register
 name|states
 name|bef
 decl_stmt|;
@@ -5722,35 +5661,28 @@ name|int
 name|ch
 decl_stmt|;
 comment|/* character or NONCHAR code */
-specifier|register
 name|states
 name|aft
 decl_stmt|;
 comment|/* states already known reachable after */
 block|{
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
-specifier|register
 name|sop
 name|s
 decl_stmt|;
-specifier|register
 name|sopno
 name|pc
 decl_stmt|;
-specifier|register
 name|onestate
 name|here
 decl_stmt|;
 comment|/* note, macros know this name */
-specifier|register
 name|sopno
 name|look
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6415,7 +6347,6 @@ modifier|*
 name|d
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -6425,11 +6356,9 @@ name|m
 operator|->
 name|g
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|first
 init|=

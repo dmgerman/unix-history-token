@@ -103,7 +103,6 @@ modifier|*
 name|mode
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp

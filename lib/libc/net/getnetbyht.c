@@ -250,7 +250,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -541,13 +540,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|struct
 name|netent
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -683,7 +680,6 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-specifier|register
 name|struct
 name|netent
 modifier|*

@@ -1807,11 +1807,9 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|p1

@@ -82,7 +82,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|length
 decl_stmt|;
@@ -90,7 +89,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|p1

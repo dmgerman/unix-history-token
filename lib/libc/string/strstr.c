@@ -70,7 +70,6 @@ name|s
 parameter_list|,
 name|find
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -83,13 +82,11 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|,
 name|sc
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;

@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * PACKAGE: hash  * DESCRIPTION:  *	Big key/data handling for the hashing package.  *  * ROUTINES:  * External  *	__big_keydata  *	__big_split  *	__big_insert  *	__big_return  *	__big_delete  *	__find_last_page  * Internal  *	collect_key  *	collect_data  */
 end_comment
@@ -194,7 +208,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|u_int16_t
 modifier|*
 name|p
@@ -740,7 +753,6 @@ modifier|*
 name|bufp
 decl_stmt|;
 block|{
-specifier|register
 name|BUFHEAD
 modifier|*
 name|last_bfp
@@ -1090,12 +1102,10 @@ name|int
 name|size
 decl_stmt|;
 block|{
-specifier|register
 name|u_int16_t
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2037,12 +2047,10 @@ decl_stmt|,
 name|set
 decl_stmt|;
 block|{
-specifier|register
 name|u_int16_t
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2795,12 +2803,10 @@ modifier|*
 name|ret
 decl_stmt|;
 block|{
-specifier|register
 name|BUFHEAD
 modifier|*
 name|tmpp
 decl_stmt|;
-specifier|register
 name|u_int16_t
 modifier|*
 name|tp

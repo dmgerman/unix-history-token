@@ -45,7 +45,6 @@ name|double
 name|d
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ieee_double
 modifier|*
@@ -91,7 +90,6 @@ name|double
 name|d
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ieee_double
 modifier|*

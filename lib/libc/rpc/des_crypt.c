@@ -64,7 +64,6 @@ operator|,
 name|char
 operator|*
 operator|,
-specifier|register
 name|unsigned
 operator|,
 name|unsigned
@@ -122,7 +121,7 @@ name|src
 parameter_list|,
 name|dst
 parameter_list|)
-value|{ \ 	register char *a = (char *) dst; \ 	register char *b = (char *) src; \ 	*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ 	*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ }
+value|{ \ 	char *a = (char *) dst; \ 	char *b = (char *) src; \ 	*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ 	*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ }
 end_define
 
 begin_comment
@@ -140,7 +139,7 @@ name|dst
 parameter_list|,
 name|len
 parameter_list|)
-value|{ \ 	register char *a = (char *) dst; \ 	register char *b = (char *) src; \ 	register int i; \ 	for (i = (int) len; i> 0; i -= 8) { \ 		*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ 		*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ 	} \ }
+value|{ \ 	char *a = (char *) dst; \ 	char *b = (char *) src; \ 	int i; \ 	for (i = (int) len; i> 0; i -= 8) { \ 		*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ 		*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \ 	} \ }
 end_define
 
 begin_comment
@@ -365,21 +364,18 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-specifier|register
 name|unsigned
 name|len
 decl_stmt|;
 name|unsigned
 name|mode
 decl_stmt|;
-specifier|register
 name|struct
 name|desparams
 modifier|*
 name|desp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|desdev
 decl_stmt|;

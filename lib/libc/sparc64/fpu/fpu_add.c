@@ -63,14 +63,12 @@ name|__fpu_add
 parameter_list|(
 name|fe
 parameter_list|)
-specifier|register
 name|struct
 name|fpemu
 modifier|*
 name|fe
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fpn
 modifier|*
@@ -92,7 +90,6 @@ decl_stmt|,
 modifier|*
 name|r
 decl_stmt|;
-specifier|register
 name|u_int
 name|r0
 decl_stmt|,
@@ -102,7 +99,6 @@ name|r2
 decl_stmt|,
 name|r3
 decl_stmt|;
-specifier|register
 name|int
 name|rd
 decl_stmt|;

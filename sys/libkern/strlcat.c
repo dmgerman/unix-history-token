@@ -95,14 +95,12 @@ name|size_t
 name|siz
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|d
 init|=
 name|dst
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -110,7 +108,6 @@ name|s
 init|=
 name|src
 decl_stmt|;
-specifier|register
 name|size_t
 name|n
 init|=

@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -113,7 +127,6 @@ name|iso_addr
 parameter_list|(
 name|addr
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -125,7 +138,6 @@ name|struct
 name|iso_addr
 name|out_addr
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -147,7 +159,6 @@ operator|.
 name|isoa_genaddr
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|byte
 init|=

@@ -1286,13 +1286,11 @@ name|struct
 name|parse
 name|pa
 decl_stmt|;
-specifier|register
 name|struct
 name|re_guts
 modifier|*
 name|g
 decl_stmt|;
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -1301,11 +1299,9 @@ init|=
 operator|&
 name|pa
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
@@ -1939,7 +1935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_ere - ERE parser top level, concatenation and alternation  == static void p_ere(register struct parse *p, int stop);  */
+comment|/*  - p_ere - ERE parser top level, concatenation and alternation  == static void p_ere(struct parse *p, int stop);  */
 end_comment
 
 begin_function
@@ -1951,7 +1947,6 @@ name|p
 parameter_list|,
 name|stop
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -1962,23 +1957,18 @@ name|stop
 decl_stmt|;
 comment|/* character this ERE should end at */
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|sopno
 name|prevback
 decl_stmt|;
-specifier|register
 name|sopno
 name|prevfwd
 decl_stmt|;
-specifier|register
 name|sopno
 name|conc
 decl_stmt|;
-specifier|register
 name|int
 name|first
 init|=
@@ -2138,7 +2128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_ere_exp - parse one subERE, an atom possibly followed by a repetition op  == static void p_ere_exp(register struct parse *p);  */
+comment|/*  - p_ere_exp - parse one subERE, an atom possibly followed by a repetition op  == static void p_ere_exp(struct parse *p);  */
 end_comment
 
 begin_function
@@ -2148,30 +2138,24 @@ name|p_ere_exp
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|sopno
 name|pos
 decl_stmt|;
-specifier|register
 name|int
 name|count
 decl_stmt|;
-specifier|register
 name|int
 name|count2
 decl_stmt|;
-specifier|register
 name|sopno
 name|subno
 decl_stmt|;
@@ -2857,7 +2841,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_str - string (no metacharacters) "parser"  == static void p_str(register struct parse *p);  */
+comment|/*  - p_str - string (no metacharacters) "parser"  == static void p_str(struct parse *p);  */
 end_comment
 
 begin_function
@@ -2867,7 +2851,6 @@ name|p_str
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -2902,7 +2885,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  == static void p_bre(register struct parse *p, register int end1, \  ==	register int end2);  * Giving end1 as OUT essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  The  * only undesirable side effect is that '$' gets included as a character  * category in such cases.  This is fairly harmless; not worth fixing.  * The amount of lookahead needed to avoid this kludge is excessive.  */
+comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  == static void p_bre(struct parse *p, int end1, \  ==	int end2);  * Giving end1 as OUT essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  The  * only undesirable side effect is that '$' gets included as a character  * category in such cases.  This is fairly harmless; not worth fixing.  * The amount of lookahead needed to avoid this kludge is excessive.  */
 end_comment
 
 begin_function
@@ -2916,38 +2899,32 @@ name|end1
 parameter_list|,
 name|end2
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|end1
 decl_stmt|;
 comment|/* first terminating character */
-specifier|register
 name|int
 name|end2
 decl_stmt|;
 comment|/* second terminating character */
 block|{
-specifier|register
 name|sopno
 name|start
 init|=
 name|HERE
 argument_list|()
 decl_stmt|;
-specifier|register
 name|int
 name|first
 init|=
 literal|1
 decl_stmt|;
 comment|/* first subexpression? */
-specifier|register
 name|int
 name|wasdollar
 init|=
@@ -3064,7 +3041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_simp_re - parse a simple RE, an atom possibly followed by a repetition  == static int p_simp_re(register struct parse *p, int starordinary);  */
+comment|/*  - p_simp_re - parse a simple RE, an atom possibly followed by a repetition  == static int p_simp_re(struct parse *p, int starordinary);  */
 end_comment
 
 begin_function
@@ -3077,7 +3054,6 @@ name|p
 parameter_list|,
 name|starordinary
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -3088,27 +3064,21 @@ name|starordinary
 decl_stmt|;
 comment|/* is a leading * an ordinary character? */
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|count
 decl_stmt|;
-specifier|register
 name|int
 name|count2
 decl_stmt|;
-specifier|register
 name|sopno
 name|pos
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|sopno
 name|subno
 decl_stmt|;
@@ -3759,7 +3729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_count - parse a repetition count  == static int p_count(register struct parse *p);  */
+comment|/*  - p_count - parse a repetition count  == static int p_count(struct parse *p);  */
 end_comment
 
 begin_function
@@ -3770,20 +3740,17 @@ name|p_count
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|count
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|ndigits
 init|=
@@ -3850,7 +3817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_bracket - parse a bracketed character list  == static void p_bracket(register struct parse *p);  *  * Note a significant property of this code:  if the allocset() did SETERROR,  * no set operations are done.  */
+comment|/*  - p_bracket - parse a bracketed character list  == static void p_bracket(struct parse *p);  *  * Note a significant property of this code:  if the allocset() did SETERROR,  * no set operations are done.  */
 end_comment
 
 begin_function
@@ -3860,14 +3827,12 @@ name|p_bracket
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|cset
 modifier|*
 name|cs
@@ -3877,7 +3842,6 @@ argument_list|(
 name|p
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|invert
 init|=
@@ -4074,11 +4038,9 @@ operator|&
 name|REG_ICASE
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|ci
 decl_stmt|;
@@ -4158,7 +4120,6 @@ condition|(
 name|invert
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4298,7 +4259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_term - parse one term of a bracketed character list  == static void p_b_term(register struct parse *p, register cset *cs);  */
+comment|/*  - p_b_term - parse one term of a bracketed character list  == static void p_b_term(struct parse *p, cset *cs);  */
 end_comment
 
 begin_function
@@ -4310,29 +4271,24 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|char
 name|start
 decl_stmt|,
 name|finish
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4724,7 +4680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_cclass - parse a character-class name and deal with it  == static void p_b_cclass(register struct parse *p, register cset *cs);  */
+comment|/*  - p_b_cclass - parse a character-class name and deal with it  == static void p_b_cclass(struct parse *p, cset *cs);  */
 end_comment
 
 begin_function
@@ -4736,23 +4692,19 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|sp
@@ -4761,13 +4713,11 @@ name|p
 operator|->
 name|next
 decl_stmt|;
-specifier|register
 name|struct
 name|cclass
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
@@ -5279,7 +5229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_eclass - parse an equivalence-class name and deal with it  == static void p_b_eclass(register struct parse *p, register cset *cs);  *  * This implementation is incomplete. xxx  */
+comment|/*  - p_b_eclass - parse an equivalence-class name and deal with it  == static void p_b_eclass(struct parse *p, cset *cs);  *  * This implementation is incomplete. xxx  */
 end_comment
 
 begin_function
@@ -5291,19 +5241,16 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -5327,7 +5274,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_symbol - parse a character or [..]ed multicharacter collating symbol  == static char p_b_symbol(register struct parse *p);  */
+comment|/*  - p_b_symbol - parse a character or [..]ed multicharacter collating symbol  == static char p_b_symbol(struct parse *p);  */
 end_comment
 
 begin_function
@@ -5338,14 +5285,12 @@ name|p_b_symbol
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|value
 decl_stmt|;
@@ -5410,7 +5355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_coll_elem - parse a collating-element name and look it up  == static char p_b_coll_elem(register struct parse *p, int endc);  */
+comment|/*  - p_b_coll_elem - parse a collating-element name and look it up  == static char p_b_coll_elem(struct parse *p, int endc);  */
 end_comment
 
 begin_function
@@ -5423,7 +5368,6 @@ name|p
 parameter_list|,
 name|endc
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -5434,7 +5378,6 @@ name|endc
 decl_stmt|;
 comment|/* name ended by endc,']' */
 block|{
-specifier|register
 name|char
 modifier|*
 name|sp
@@ -5443,13 +5386,11 @@ name|p
 operator|->
 name|next
 decl_stmt|;
-specifier|register
 name|struct
 name|cname
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -5642,7 +5583,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - bothcases - emit a dualcase version of a two-case character  == static void bothcases(register struct parse *p, int ch);  *  * Boy, is this implementation ever a kludge...  */
+comment|/*  - bothcases - emit a dualcase version of a two-case character  == static void bothcases(struct parse *p, int ch);  *  * Boy, is this implementation ever a kludge...  */
 end_comment
 
 begin_function
@@ -5654,7 +5595,6 @@ name|p
 parameter_list|,
 name|ch
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -5664,7 +5604,6 @@ name|int
 name|ch
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|oldnext
@@ -5673,7 +5612,6 @@ name|p
 operator|->
 name|next
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|oldend
@@ -5773,7 +5711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - ordinary - emit an ordinary character  == static void ordinary(register struct parse *p, register int ch);  */
+comment|/*  - ordinary - emit an ordinary character  == static void ordinary(struct parse *p, int ch);  */
 end_comment
 
 begin_function
@@ -5785,18 +5723,15 @@ name|p
 parameter_list|,
 name|ch
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
 block|{
-specifier|register
 name|cat_t
 modifier|*
 name|cap
@@ -5879,7 +5814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - nonnewline - emit REG_NEWLINE version of OANY  == static void nonnewline(register struct parse *p);  *  * Boy, is this implementation ever a kludge...  */
+comment|/*  - nonnewline - emit REG_NEWLINE version of OANY  == static void nonnewline(struct parse *p);  *  * Boy, is this implementation ever a kludge...  */
 end_comment
 
 begin_function
@@ -5889,14 +5824,12 @@ name|nonnewline
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|oldnext
@@ -5905,7 +5838,6 @@ name|p
 operator|->
 name|next
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|oldend
@@ -5994,7 +5926,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - repeat - generate code for a bounded repetition, recursively if needed  == static void repeat(register struct parse *p, sopno start, int from, int to);  */
+comment|/*  - repeat - generate code for a bounded repetition, recursively if needed  == static void repeat(struct parse *p, sopno start, int from, int to);  */
 end_comment
 
 begin_function
@@ -6010,7 +5942,6 @@ name|from
 parameter_list|,
 name|to
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -6029,7 +5960,6 @@ name|to
 decl_stmt|;
 comment|/* to this number of times (maybe INFINITY) */
 block|{
-specifier|register
 name|sopno
 name|finish
 init|=
@@ -6060,7 +5990,6 @@ parameter_list|(
 name|n
 parameter_list|)
 value|(((n)<= 1) ? (n) : ((n) == INFINITY) ? INF : N)
-specifier|register
 name|sopno
 name|copy
 decl_stmt|;
@@ -6408,7 +6337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - seterr - set an error condition  == static int seterr(register struct parse *p, int e);  */
+comment|/*  - seterr - set an error condition  == static int seterr(struct parse *p, int e);  */
 end_comment
 
 begin_function
@@ -6421,7 +6350,6 @@ name|p
 parameter_list|,
 name|e
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -6469,7 +6397,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - allocset - allocate a set of characters for []  == static cset *allocset(register struct parse *p);  */
+comment|/*  - allocset - allocate a set of characters for []  == static cset *allocset(struct parse *p);  */
 end_comment
 
 begin_function
@@ -6480,14 +6408,12 @@ name|allocset
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|no
 init|=
@@ -6498,20 +6424,16 @@ operator|->
 name|ncsets
 operator|++
 decl_stmt|;
-specifier|register
 name|size_t
 name|nc
 decl_stmt|;
-specifier|register
 name|size_t
 name|nbytes
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
-specifier|register
 name|size_t
 name|css
 init|=
@@ -6524,7 +6446,6 @@ name|g
 operator|->
 name|csetsize
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6863,7 +6784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - freeset - free a now-unused set  == static void freeset(register struct parse *p, register cset *cs);  */
+comment|/*  - freeset - free a now-unused set  == static void freeset(struct parse *p, cset *cs);  */
 end_comment
 
 begin_function
@@ -6875,23 +6796,19 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|top
@@ -6910,7 +6827,6 @@ operator|->
 name|ncsets
 index|]
 decl_stmt|;
-specifier|register
 name|size_t
 name|css
 init|=
@@ -6963,7 +6879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - freezeset - final processing on a set of characters  == static int freezeset(register struct parse *p, register cset *cs);  *  * The main task here is merging identical sets.  This is usually a waste  * of time (although the hash code minimizes the overhead), but can win  * big if REG_ICASE is being used.  REG_ICASE, by the way, is why the hash  * is done using addition rather than xor -- all ASCII [aA] sets xor to  * the same value!  */
+comment|/*  - freezeset - final processing on a set of characters  == static int freezeset(struct parse *p, cset *cs);  *  * The main task here is merging identical sets.  This is usually a waste  * of time (although the hash code minimizes the overhead), but can win  * big if REG_ICASE is being used.  REG_ICASE, by the way, is why the hash  * is done using addition rather than xor -- all ASCII [aA] sets xor to  * the same value!  */
 end_comment
 
 begin_function
@@ -6976,19 +6892,16 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
 block|{
-specifier|register
 name|short
 name|h
 init|=
@@ -6996,11 +6909,9 @@ name|cs
 operator|->
 name|hash
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|top
@@ -7019,12 +6930,10 @@ operator|->
 name|ncsets
 index|]
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs2
 decl_stmt|;
-specifier|register
 name|size_t
 name|css
 init|=
@@ -7157,7 +7066,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - firstch - return first character in a set (which must have at least one)  == static int firstch(register struct parse *p, register cset *cs);  */
+comment|/*  - firstch - return first character in a set (which must have at least one)  == static int firstch(struct parse *p, cset *cs);  */
 end_comment
 
 begin_function
@@ -7170,23 +7079,19 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|size_t
 name|css
 init|=
@@ -7244,7 +7149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - nch - number of characters in a set  == static int nch(register struct parse *p, register cset *cs);  */
+comment|/*  - nch - number of characters in a set  == static int nch(struct parse *p, cset *cs);  */
 end_comment
 
 begin_function
@@ -7256,23 +7161,19 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|size_t
 name|css
 init|=
@@ -7285,7 +7186,6 @@ name|g
 operator|->
 name|csetsize
 decl_stmt|;
-specifier|register
 name|int
 name|n
 init|=
@@ -7325,7 +7225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcadd - add a collating element to a cset  == static void mcadd(register struct parse *p, register cset *cs, \  ==	register char *cp);  */
+comment|/*  - mcadd - add a collating element to a cset  == static void mcadd(struct parse *p, cset *cs, \  ==	char *cp);  */
 end_comment
 
 begin_function
@@ -7339,24 +7239,20 @@ name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|size_t
 name|oldend
 init|=
@@ -7465,7 +7361,7 @@ name|used
 end_if
 
 begin_comment
-comment|/*  - mcsub - subtract a collating element from a cset  == static void mcsub(register cset *cs, register char *cp);  */
+comment|/*  - mcsub - subtract a collating element from a cset  == static void mcsub(cset *cs, char *cp);  */
 end_comment
 
 begin_function
@@ -7477,18 +7373,15 @@ name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|fp
@@ -7500,7 +7393,6 @@ argument_list|,
 name|cp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 init|=
@@ -7604,7 +7496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcin - is a collating element in a cset?  == static int mcin(register cset *cs, register char *cp);  */
+comment|/*  - mcin - is a collating element in a cset?  == static int mcin(cset *cs, char *cp);  */
 end_comment
 
 begin_function
@@ -7616,12 +7508,10 @@ name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -7643,7 +7533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcfind - find a collating element in a cset  == static char *mcfind(register cset *cs, register char *cp);  */
+comment|/*  - mcfind - find a collating element in a cset  == static char *mcfind(cset *cs, char *cp);  */
 end_comment
 
 begin_function
@@ -7656,18 +7546,15 @@ name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-specifier|register
 name|cset
 modifier|*
 name|cs
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -7737,7 +7624,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  - mcinvert - invert the list of collating elements in a cset  == static void mcinvert(register struct parse *p, register cset *cs);  *  * This would have to know the set of possibilities.  Implementation  * is deferred.  */
+comment|/*  - mcinvert - invert the list of collating elements in a cset  == static void mcinvert(struct parse *p, cset *cs);  *  * This would have to know the set of possibilities.  Implementation  * is deferred.  */
 end_comment
 
 begin_function
@@ -7749,13 +7636,11 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
@@ -7775,7 +7660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mccase - add case counterparts of the list of collating elements in a cset  == static void mccase(register struct parse *p, register cset *cs);  *  * This would have to know the set of possibilities.  Implementation  * is deferred.  */
+comment|/*  - mccase - add case counterparts of the list of collating elements in a cset  == static void mccase(struct parse *p, cset *cs);  *  * This would have to know the set of possibilities.  Implementation  * is deferred.  */
 end_comment
 
 begin_function
@@ -7787,13 +7672,11 @@ name|p
 parameter_list|,
 name|cs
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
@@ -7813,7 +7696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - isinsets - is this character in any sets?  == static int isinsets(register struct re_guts *g, int c);  */
+comment|/*  - isinsets - is this character in any sets?  == static int isinsets(struct re_guts *g, int c);  */
 end_comment
 
 begin_function
@@ -7826,7 +7709,6 @@ name|g
 parameter_list|,
 name|c
 parameter_list|)
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -7836,16 +7718,13 @@ name|int
 name|c
 decl_stmt|;
 block|{
-specifier|register
 name|uch
 modifier|*
 name|col
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|ncols
 init|=
@@ -7863,7 +7742,6 @@ operator|)
 operator|/
 name|CHAR_BIT
 decl_stmt|;
-specifier|register
 name|unsigned
 name|uc
 init|=
@@ -7920,7 +7798,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - samesets - are these two characters in exactly the same sets?  == static int samesets(register struct re_guts *g, int c1, int c2);  */
+comment|/*  - samesets - are these two characters in exactly the same sets?  == static int samesets(struct re_guts *g, int c1, int c2);  */
 end_comment
 
 begin_function
@@ -7935,7 +7813,6 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -7948,16 +7825,13 @@ name|int
 name|c2
 decl_stmt|;
 block|{
-specifier|register
 name|uch
 modifier|*
 name|col
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|ncols
 init|=
@@ -7975,7 +7849,6 @@ operator|)
 operator|/
 name|CHAR_BIT
 decl_stmt|;
-specifier|register
 name|unsigned
 name|uc1
 init|=
@@ -7984,7 +7857,6 @@ name|uch
 operator|)
 name|c1
 decl_stmt|;
-specifier|register
 name|unsigned
 name|uc2
 init|=
@@ -8044,7 +7916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - categorize - sort out character categories  == static void categorize(struct parse *p, register struct re_guts *g);  */
+comment|/*  - categorize - sort out character categories  == static void categorize(struct parse *p, struct re_guts *g);  */
 end_comment
 
 begin_function
@@ -8061,14 +7933,12 @@ name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|re_guts
 modifier|*
 name|g
 decl_stmt|;
 block|{
-specifier|register
 name|cat_t
 modifier|*
 name|cats
@@ -8077,15 +7947,12 @@ name|g
 operator|->
 name|categories
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|c2
 decl_stmt|;
-specifier|register
 name|cat_t
 name|cat
 decl_stmt|;
@@ -8188,7 +8055,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dupl - emit a duplicate of a bunch of sops  == static sopno dupl(register struct parse *p, sopno start, sopno finish);  */
+comment|/*  - dupl - emit a duplicate of a bunch of sops  == static sopno dupl(struct parse *p, sopno start, sopno finish);  */
 end_comment
 
 begin_function
@@ -8203,7 +8070,6 @@ name|start
 parameter_list|,
 name|finish
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -8218,14 +8084,12 @@ name|finish
 decl_stmt|;
 comment|/* to this less one */
 block|{
-specifier|register
 name|sopno
 name|ret
 init|=
 name|HERE
 argument_list|()
 decl_stmt|;
-specifier|register
 name|sopno
 name|len
 init|=
@@ -8333,7 +8197,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - doemit - emit a strip operator  == static void doemit(register struct parse *p, sop op, size_t opnd);  *  * It might seem better to implement this as a macro with a function as  * hard-case backup, but it's just too big and messy unless there are  * some changes to the data structures.  Maybe later.  */
+comment|/*  - doemit - emit a strip operator  == static void doemit(struct parse *p, sop op, size_t opnd);  *  * It might seem better to implement this as a macro with a function as  * hard-case backup, but it's just too big and messy unless there are  * some changes to the data structures.  Maybe later.  */
 end_comment
 
 begin_function
@@ -8347,7 +8211,6 @@ name|op
 parameter_list|,
 name|opnd
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -8442,7 +8305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - doinsert - insert a sop into the strip  == static void doinsert(register struct parse *p, sop op, size_t opnd, sopno pos);  */
+comment|/*  - doinsert - insert a sop into the strip  == static void doinsert(struct parse *p, sop op, size_t opnd, sopno pos);  */
 end_comment
 
 begin_function
@@ -8458,7 +8321,6 @@ name|opnd
 parameter_list|,
 name|pos
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
@@ -8474,15 +8336,12 @@ name|sopno
 name|pos
 decl_stmt|;
 block|{
-specifier|register
 name|sopno
 name|sn
 decl_stmt|;
-specifier|register
 name|sop
 name|s
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -8649,7 +8508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dofwd - complete a forward reference  == static void dofwd(register struct parse *p, sopno pos, sop value);  */
+comment|/*  - dofwd - complete a forward reference  == static void dofwd(struct parse *p, sopno pos, sop value);  */
 end_comment
 
 begin_function
@@ -8663,13 +8522,11 @@ name|pos
 parameter_list|,
 name|value
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|sopno
 name|pos
 decl_stmt|;
@@ -8719,7 +8576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - enlarge - enlarge the strip  == static void enlarge(register struct parse *p, sopno size);  */
+comment|/*  - enlarge - enlarge the strip  == static void enlarge(struct parse *p, sopno size);  */
 end_comment
 
 begin_function
@@ -8731,18 +8588,15 @@ name|p
 parameter_list|,
 name|size
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|sopno
 name|size
 decl_stmt|;
 block|{
-specifier|register
 name|sop
 modifier|*
 name|sp
@@ -8806,7 +8660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - stripsnug - compact the strip  == static void stripsnug(register struct parse *p, register struct re_guts *g);  */
+comment|/*  - stripsnug - compact the strip  == static void stripsnug(struct parse *p, struct re_guts *g);  */
 end_comment
 
 begin_function
@@ -8818,13 +8672,11 @@ name|p
 parameter_list|,
 name|g
 parameter_list|)
-specifier|register
 name|struct
 name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|re_guts
 modifier|*
@@ -8894,7 +8746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - findmust - fill in must and mlen with longest mandatory literal string  == static void findmust(register struct parse *p, register struct re_guts *g);  *  * This algorithm could do fancy things like analyzing the operands of |  * for common subsequences.  Someday.  This code is simple and finds most  * of the interesting cases.  *  * Note that must and mlen got initialized during setup.  */
+comment|/*  - findmust - fill in must and mlen with longest mandatory literal string  == static void findmust(struct parse *p, struct re_guts *g);  *  * This algorithm could do fancy things like analyzing the operands of |  * for common subsequences.  Someday.  This code is simple and finds most  * of the interesting cases.  *  * Note that must and mlen got initialized during setup.  */
 end_comment
 
 begin_function
@@ -8911,14 +8763,12 @@ name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|re_guts
 modifier|*
 name|g
 decl_stmt|;
 block|{
-specifier|register
 name|sop
 modifier|*
 name|scan
@@ -8927,25 +8777,20 @@ name|sop
 modifier|*
 name|start
 decl_stmt|;
-specifier|register
 name|sop
 modifier|*
 name|newstart
 decl_stmt|;
-specifier|register
 name|sopno
 name|newlen
 decl_stmt|;
-specifier|register
 name|sop
 name|s
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|sopno
 name|i
 decl_stmt|;
@@ -9915,7 +9760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - computejumps - compute char jumps for BM scan  == static void computejumps(register struct parse *p, register struct re_guts *g);  *  * This algorithm assumes g->must exists and is has size greater than  * zero. It's based on the algorithm found on Computer Algorithms by  * Sara Baase.  *  * A char jump is the number of characters one needs to jump based on  * the value of the character from the text that was mismatched.  */
+comment|/*  - computejumps - compute char jumps for BM scan  == static void computejumps(struct parse *p, struct re_guts *g);  *  * This algorithm assumes g->must exists and is has size greater than  * zero. It's based on the algorithm found on Computer Algorithms by  * Sara Baase.  *  * A char jump is the number of characters one needs to jump based on  * the value of the character from the text that was mismatched.  */
 end_comment
 
 begin_function
@@ -10071,7 +9916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - computematchjumps - compute match jumps for BM scan  == static void computematchjumps(register struct parse *p, register struct re_guts *g);  *  * This algorithm assumes g->must exists and is has size greater than  * zero. It's based on the algorithm found on Computer Algorithms by  * Sara Baase.  *  * A match jump is the number of characters one needs to advance based  * on the already-matched suffix.  * Notice that all values here are minus (g->mlen-1), because of the way  * the search algorithm works.  */
+comment|/*  - computematchjumps - compute match jumps for BM scan  == static void computematchjumps(struct parse *p, struct re_guts *g);  *  * This algorithm assumes g->must exists and is has size greater than  * zero. It's based on the algorithm found on Computer Algorithms by  * Sara Baase.  *  * A match jump is the number of characters one needs to advance based  * on the already-matched suffix.  * Notice that all values here are minus (g->mlen-1), because of the way  * the search algorithm works.  */
 end_comment
 
 begin_function
@@ -10434,7 +10279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - pluscount - count + nesting  == static sopno pluscount(register struct parse *p, register struct re_guts *g);  */
+comment|/*  - pluscount - count + nesting  == static sopno pluscount(struct parse *p, struct re_guts *g);  */
 end_comment
 
 begin_function
@@ -10452,29 +10297,24 @@ name|parse
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|re_guts
 modifier|*
 name|g
 decl_stmt|;
 block|{
-specifier|register
 name|sop
 modifier|*
 name|scan
 decl_stmt|;
-specifier|register
 name|sop
 name|s
 decl_stmt|;
-specifier|register
 name|sopno
 name|plusnest
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|sopno
 name|maxnest
 init|=

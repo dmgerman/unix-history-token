@@ -781,14 +781,12 @@ modifier|*
 name|grp
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 init|=
 name|endp
 decl_stmt|;
-specifier|register
 name|long
 name|sval
 decl_stmt|;

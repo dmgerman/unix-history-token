@@ -70,7 +70,6 @@ name|in_addr
 name|in
 decl_stmt|;
 block|{
-specifier|register
 name|in_addr_t
 name|i
 init|=

@@ -151,7 +151,6 @@ end_function_decl
 
 begin_block
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp

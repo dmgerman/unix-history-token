@@ -69,7 +69,6 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*

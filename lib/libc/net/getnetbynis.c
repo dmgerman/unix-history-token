@@ -196,7 +196,6 @@ name|int
 name|af
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp

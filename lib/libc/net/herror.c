@@ -165,7 +165,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|iovec
 modifier|*

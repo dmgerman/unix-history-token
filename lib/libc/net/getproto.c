@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -58,12 +72,10 @@ name|getprotobynumber
 parameter_list|(
 name|proto
 parameter_list|)
-specifier|register
 name|int
 name|proto
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|protoent
 modifier|*

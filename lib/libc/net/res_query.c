@@ -1350,7 +1350,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp1

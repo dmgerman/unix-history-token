@@ -69,7 +69,6 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*

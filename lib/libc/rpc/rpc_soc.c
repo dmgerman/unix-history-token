@@ -1995,7 +1995,6 @@ decl_stmt|;
 name|u_long
 name|vers
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|sockp
@@ -2291,7 +2290,6 @@ name|recvsize
 parameter_list|,
 name|path
 parameter_list|)
-specifier|register
 name|int
 name|sock
 decl_stmt|;

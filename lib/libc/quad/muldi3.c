@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"quad.h"
 end_include
 
@@ -83,7 +97,6 @@ name|low
 decl_stmt|,
 name|prod
 decl_stmt|;
-specifier|register
 name|u_long
 name|high
 decl_stmt|,
@@ -93,7 +106,6 @@ name|udiff
 decl_stmt|,
 name|vdiff
 decl_stmt|;
-specifier|register
 name|int
 name|negall
 decl_stmt|,

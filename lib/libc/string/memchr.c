@@ -73,12 +73,10 @@ name|void
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|size_t
 name|n
 decl_stmt|;
@@ -90,7 +88,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|register
 specifier|const
 name|unsigned
 name|char

@@ -102,7 +102,6 @@ name|fpurge
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp

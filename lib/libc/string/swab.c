@@ -80,16 +80,13 @@ name|size_t
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|unsigned
 name|long
 name|temp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|fp

@@ -133,7 +133,6 @@ name|offset
 parameter_list|,
 name|whence
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -315,7 +314,6 @@ name|int
 name|ltest
 decl_stmt|;
 block|{
-specifier|register
 name|fpos_t
 argument_list|(
 argument|*seekfn

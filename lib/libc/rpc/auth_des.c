@@ -1361,7 +1361,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|rpc_inline_t
 modifier|*
 name|ixdr
@@ -1935,7 +1934,6 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-specifier|register
 name|uint32_t
 modifier|*
 name|ixdr

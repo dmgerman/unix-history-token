@@ -66,12 +66,10 @@ name|to
 parameter_list|,
 name|from
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|to
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*

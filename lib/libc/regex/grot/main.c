@@ -171,7 +171,6 @@ name|errflg
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1386,7 +1385,6 @@ literal|"ERE"
 else|:
 literal|"BRE"
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2011,12 +2009,10 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|o
 init|=
@@ -2030,7 +2026,6 @@ name|copts
 else|:
 name|eopts
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|legal
@@ -2228,7 +2223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - fixstr - transform magic characters in strings  == void fixstr(register char *p);  */
+comment|/*  - fixstr - transform magic characters in strings  == void fixstr(char *p);  */
 end_comment
 
 begin_function
@@ -2237,7 +2232,6 @@ name|fixstr
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2343,15 +2337,12 @@ modifier|*
 name|should
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|int
 name|shlen
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2363,7 +2354,6 @@ index|[
 literal|500
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|at

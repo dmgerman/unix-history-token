@@ -96,7 +96,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|register
 specifier|const
 name|unsigned
 name|char

@@ -100,7 +100,6 @@ name|inet_addr
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -148,7 +147,6 @@ name|cp
 parameter_list|,
 name|addr
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*

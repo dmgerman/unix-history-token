@@ -77,11 +77,9 @@ name|mode
 parameter_list|,
 name|p
 parameter_list|)
-specifier|register
 name|mode_t
 name|mode
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

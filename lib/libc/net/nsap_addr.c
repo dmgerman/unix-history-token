@@ -92,7 +92,6 @@ name|xtob
 parameter_list|(
 name|c
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -325,19 +324,16 @@ parameter_list|)
 name|int
 name|binlen
 decl_stmt|;
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|binary
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|ascii
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|nib
 decl_stmt|;

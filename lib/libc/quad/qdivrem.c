@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Multiprecision divide.  This algorithm is from Knuth vol. 2 (2nd ed),  * section 4.3.1, pp. 257--259.  */
 end_comment
@@ -124,21 +138,17 @@ specifier|static
 name|void
 name|shl
 parameter_list|(
-specifier|register
 name|digit
 modifier|*
 name|p
 parameter_list|,
-specifier|register
 name|int
 name|len
 parameter_list|,
-specifier|register
 name|int
 name|sh
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -243,7 +253,6 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|digit
 name|v1
 decl_stmt|,
@@ -828,7 +837,6 @@ expr_stmt|;
 comment|/* for D3 */
 do|do
 block|{
-specifier|register
 name|digit
 name|uj0
 decl_stmt|,

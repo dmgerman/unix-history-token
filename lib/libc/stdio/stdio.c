@@ -124,7 +124,6 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -174,7 +173,6 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -222,7 +220,6 @@ name|int
 name|whence
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp

@@ -74,14 +74,12 @@ name|char
 modifier|*
 name|s1
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|s2
 decl_stmt|;
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -90,7 +88,6 @@ decl_stmt|,
 modifier|*
 name|spanp
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|,

@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -94,11 +108,9 @@ name|SRCHOP
 name|op
 decl_stmt|;
 block|{
-specifier|register
 name|indx_t
 name|index
 decl_stmt|;
-specifier|register
 name|PAGE
 modifier|*
 name|h

@@ -108,13 +108,11 @@ name|ftell
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|off_t
 name|rv
 decl_stmt|;
@@ -161,7 +159,6 @@ name|ftello
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -238,7 +235,6 @@ name|fp
 parameter_list|,
 name|offset
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -248,7 +244,6 @@ modifier|*
 name|offset
 decl_stmt|;
 block|{
-specifier|register
 name|fpos_t
 name|pos
 decl_stmt|;

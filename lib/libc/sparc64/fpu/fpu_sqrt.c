@@ -61,7 +61,6 @@ modifier|*
 name|fe
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fpn
 modifier|*
@@ -72,7 +71,6 @@ name|fe
 operator|->
 name|fe_f1
 decl_stmt|;
-specifier|register
 name|u_int
 name|bit
 decl_stmt|,
@@ -80,7 +78,6 @@ name|q
 decl_stmt|,
 name|tt
 decl_stmt|;
-specifier|register
 name|u_int
 name|x0
 decl_stmt|,
@@ -90,7 +87,6 @@ name|x2
 decl_stmt|,
 name|x3
 decl_stmt|;
-specifier|register
 name|u_int
 name|y0
 decl_stmt|,
@@ -100,7 +96,6 @@ name|y2
 decl_stmt|,
 name|y3
 decl_stmt|;
-specifier|register
 name|u_int
 name|d0
 decl_stmt|,
@@ -110,7 +105,6 @@ name|d2
 decl_stmt|,
 name|d3
 decl_stmt|;
-specifier|register
 name|int
 name|e
 decl_stmt|;

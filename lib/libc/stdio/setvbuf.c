@@ -102,7 +102,6 @@ name|mode
 parameter_list|,
 name|size
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -111,16 +110,13 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-specifier|register
 name|int
 name|mode
 decl_stmt|;
-specifier|register
 name|size_t
 name|size
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ret
 decl_stmt|,

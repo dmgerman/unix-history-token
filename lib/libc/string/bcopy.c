@@ -152,7 +152,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|length
 decl_stmt|;
@@ -160,14 +159,12 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|dst
 init|=
 name|dst0
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -175,7 +172,6 @@ name|src
 init|=
 name|src0
 decl_stmt|;
-specifier|register
 name|size_t
 name|t
 decl_stmt|;

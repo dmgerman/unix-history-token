@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Radixsort routines.  *  * Program r_sort_a() is unstable but uses O(logN) extra memory for a stack.  * Use radixsort(a, n, trace, endchar) for this case.  *  * For stable sorting (using N extra pointers) use sradixsort(), which calls  * r_sort_b().  *  * For a description of this code, see D. McIlroy, P. McIlroy, K. Bostic,  * "Engineering Radix Sort".  */
 end_comment
@@ -505,11 +519,9 @@ name|nc
 decl_stmt|,
 name|bmin
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -1001,11 +1013,9 @@ name|nc
 decl_stmt|,
 name|bmin
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -1442,7 +1452,6 @@ parameter_list|,
 name|endch
 parameter_list|)
 comment|/* insertion sort */
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -1454,7 +1463,6 @@ name|n
 decl_stmt|,
 name|b
 decl_stmt|;
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -1464,7 +1472,6 @@ name|u_int
 name|endch
 decl_stmt|;
 block|{
-specifier|register
 name|u_char
 name|ch
 decl_stmt|;
