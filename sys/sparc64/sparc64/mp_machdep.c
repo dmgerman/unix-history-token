@@ -508,6 +508,10 @@ name|cpus
 operator|++
 expr_stmt|;
 block|}
+name|mp_maxid
+operator|=
+name|cpus
+expr_stmt|;
 return|return
 operator|(
 name|cpus
