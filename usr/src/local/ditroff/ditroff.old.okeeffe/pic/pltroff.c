@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* pltroff.c	(Berkeley)	1.2	83/08/09  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
+comment|/* pltroff.c	(Berkeley)	1.3	83/08/09  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
 end_comment
 
 begin_include
@@ -5710,6 +5710,11 @@ name|dx
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
