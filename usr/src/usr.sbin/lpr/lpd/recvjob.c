@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.9 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -934,11 +934,28 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|dfname
 argument_list|,
 name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|index
+argument_list|(
+name|dfname
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+name|frecverr
+argument_list|(
+literal|"illegal path name"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1280,15 +1297,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|stat
-name|stb
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|ddev
-decl_stmt|;
 name|int
 name|spacefree
 decl_stmt|;
