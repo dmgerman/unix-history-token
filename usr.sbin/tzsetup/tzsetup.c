@@ -761,15 +761,20 @@ begin_comment
 comment|/*  * This is the easiest organization... we use ISO 3166 country codes,  * of the two-letter variety, so we just size this array to suit.  * Beats worrying about dynamic allocation.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NCOUNTRIES
+value|(26*26)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
 name|country
 name|countries
 index|[
-literal|26
-operator|*
-literal|26
+name|NCOUNTRIES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1512,7 +1517,7 @@ name|qsort
 argument_list|(
 name|countries
 argument_list|,
-literal|576
+name|NCOUNTRIES
 argument_list|,
 sizeof|sizeof
 name|countries
