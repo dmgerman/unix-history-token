@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinsline.c	3.2 83/08/11"
+literal|"@(#)wwinsline.c	3.3 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,10 +63,11 @@ modifier|*
 modifier|*
 name|cqq
 decl_stmt|;
+specifier|register
 name|union
 name|ww_char
 modifier|*
-name|tmp
+name|cp
 decl_stmt|;
 name|int
 name|srow
@@ -75,6 +76,9 @@ name|erow
 decl_stmt|;
 name|char
 name|deleted
+decl_stmt|;
+name|int
+name|visible
 decl_stmt|;
 comment|/* 	 * Scroll first. 	 */
 if|if
@@ -91,9 +95,20 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
 name|srow
 operator|=
 literal|0
+expr_stmt|;
+name|visible
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|visible
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -140,7 +155,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|1
+name|visible
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fix the buffer. 	 * But leave clearing the last line for wwclreol(). 	 */
@@ -162,7 +177,7 @@ name|cpp
 operator|-
 literal|1
 expr_stmt|;
-name|tmp
+name|cp
 operator|=
 operator|*
 name|cqq
@@ -196,9 +211,13 @@ expr_stmt|;
 operator|*
 name|cqq
 operator|=
-name|tmp
+name|cp
 expr_stmt|;
 comment|/* 	 * Now clear the last line. 	 */
+if|if
+condition|(
+name|visible
+condition|)
 name|wwclreol1
 argument_list|(
 name|w
@@ -209,6 +228,30 @@ literal|0
 argument_list|,
 name|deleted
 argument_list|)
+expr_stmt|;
+else|else
+for|for
+control|(
+name|i
+operator|=
+name|w
+operator|->
+name|ww_w
+operator|.
+name|nc
+init|;
+operator|--
+name|i
+operator|>=
+literal|0
+condition|;
+control|)
+name|cp
+operator|++
+operator|->
+name|c_w
+operator|=
+literal|' '
 expr_stmt|;
 block|}
 end_block
