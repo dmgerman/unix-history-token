@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -413,6 +413,18 @@ block|,
 literal|"ADMtek"
 block|,
 literal|"AN8511 USB Ethernet adapter"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ADMTEK
+block|,
+name|USB_PRODUCT_ADMTEK_PEGASUSII_2
+block|,
+literal|0
+block|,
+literal|"ADMtek"
+block|,
+literal|"AN8513 USB Ethernet adapter"
 block|, 	}
 block|,
 block|{
