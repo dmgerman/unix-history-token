@@ -692,10 +692,13 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*      * Note that we defer the actual scan of the child PCI bus; ACPI will call      * bus_generic_attach on its children a second time after the first pass      * is complete.  This leads to slightly neater output.      */
+comment|/*      * Now go scan the bus.      *      * XXX It would be nice to defer this and count on the nexus getting it      * after the first pass, but this does not seem to be reliable.      */
 return|return
 operator|(
-literal|0
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 return|;
 block|}
