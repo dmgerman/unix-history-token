@@ -1098,7 +1098,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-break|break;
 block|}
 break|break;
 case|case

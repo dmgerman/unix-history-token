@@ -777,6 +777,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* XXX: fall though intentional ?? */
 default|default:
 comment|/* 			 * BMCR data is stored in the ifmedia entry. 			 */
 name|PHY_WRITE

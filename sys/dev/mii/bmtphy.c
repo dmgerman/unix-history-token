@@ -342,7 +342,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-break|break;
 block|}
 return|return
 operator|(

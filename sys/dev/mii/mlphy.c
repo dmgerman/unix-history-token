@@ -888,7 +888,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|IFM_10_T
 case|:
