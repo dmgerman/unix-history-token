@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)special.c	8.1 (Berkeley) %G%"
+literal|"@(#)special.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -95,7 +95,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|off_t
 name|skip1
 decl_stmt|,
@@ -105,13 +104,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ch1
 decl_stmt|,
 name|ch2
 decl_stmt|;
-specifier|register
 name|off_t
 name|byte
 decl_stmt|,
@@ -144,14 +141,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file1
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -171,14 +165,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
 argument_list|,
-name|file1
+literal|"%s"
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|file2
 argument_list|)
 expr_stmt|;
 while|while
@@ -321,14 +312,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file1
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -340,14 +328,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+name|ERR_EXIT
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file2
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -391,7 +376,7 @@ name|dfound
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|DIFF_EXIT
 argument_list|)
 expr_stmt|;
 block|}
