@@ -670,15 +670,11 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|pp_vendor_str
+name|pp_cis
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* NULL to not match */
-specifier|const
-name|char
-modifier|*
-name|pp_product_str
-decl_stmt|;
-comment|/* NULL to not match */
 block|}
 struct|;
 end_struct
