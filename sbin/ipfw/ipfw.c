@@ -2364,7 +2364,7 @@ name|IP_FW_IF_IPID
 condition|)
 name|printf
 argument_list|(
-literal|" ipid 0x%04x"
+literal|" ipid %#x"
 argument_list|,
 name|chain
 operator|->
@@ -5077,7 +5077,7 @@ literal|"    {established|setup}\n"
 literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg},...\n"
 literal|"    ipoptions [!]{ssrr|lsrr|rr|ts},...\n"
 literal|"    iplen {length}\n"
-literal|"    ipid {identification number (in hex)}\n"
+literal|"    ipid {identification number}\n"
 literal|"    iptos [!]{lowdelay|throughput|reliability|mincost|congestion}\n"
 literal|"    ipttl {time to live}\n"
 literal|"    ipversion {version number}\n"
@@ -12682,6 +12682,14 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|unsigned
+name|long
+name|ipid
+decl_stmt|;
+name|char
+modifier|*
+name|c
+decl_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -12699,98 +12707,47 @@ literal|"missing argument"
 literal|" for ``ipid''"
 argument_list|)
 expr_stmt|;
+name|ipid
+operator|=
+name|strtoul
+argument_list|(
+operator|*
+name|av
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+operator|!=
+literal|'\0'
+condition|)
+name|show_usage
+argument_list|(
+literal|"argument to ipid must be numeric"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ipid
+operator|>
+literal|65535
+condition|)
+name|show_usage
+argument_list|(
+literal|"argument to ipid out of range"
+argument_list|)
+expr_stmt|;
 name|rule
 operator|.
 name|fw_ipflg
 operator||=
 name|IP_FW_IF_IPID
-expr_stmt|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
-operator|!=
-literal|6
-operator|||
-operator|(
-operator|*
-name|av
-operator|)
-index|[
-literal|0
-index|]
-operator|!=
-literal|'0'
-operator|||
-operator|(
-operator|*
-name|av
-operator|)
-index|[
-literal|1
-index|]
-operator|!=
-literal|'x'
-operator|||
-name|isxdigit
-argument_list|(
-operator|(
-operator|*
-name|av
-operator|)
-index|[
-literal|2
-index|]
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|isxdigit
-argument_list|(
-operator|(
-operator|*
-name|av
-operator|)
-index|[
-literal|3
-index|]
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|isxdigit
-argument_list|(
-operator|(
-operator|*
-name|av
-operator|)
-index|[
-literal|4
-index|]
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|isxdigit
-argument_list|(
-operator|(
-operator|*
-name|av
-operator|)
-index|[
-literal|5
-index|]
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|show_usage
-argument_list|(
-literal|"argument to ipid must be in hex"
-argument_list|)
 expr_stmt|;
 name|rule
 operator|.
@@ -12799,15 +12756,7 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|strtoul
-argument_list|(
-operator|*
-name|av
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
+name|ipid
 expr_stmt|;
 name|av
 operator|++
