@@ -5943,11 +5943,6 @@ decl_stmt|,
 modifier|*
 name|path
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
