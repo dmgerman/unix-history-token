@@ -2764,7 +2764,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"kdebase"
+literal|"kde"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2803,7 +2803,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"gnomecore"
+literal|"gnome"
 argument_list|)
 expr_stmt|;
 if|if
