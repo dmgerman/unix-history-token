@@ -93,14 +93,16 @@ begin_define
 define|#
 directive|define
 name|BKPT_SKIP
-value|kdb_frame->tf_rip += 1
+define|\
+value|do {						\ 	kdb_frame->tf_rip += 1;			\ 	kdb_thrctx->pcb_rip += 1;		\ } while(0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FIXUP_PC_AFTER_BREAK
-value|kdb_frame->tf_rip -= 1;
+define|\
+value|do {						\ 	kdb_frame->tf_rip -= 1;			\ 	kdb_thrctx->pcb_rip -= 1;		\ } while(0);
 end_define
 
 begin_define
