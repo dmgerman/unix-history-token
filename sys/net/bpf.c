@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpf.h"
+file|"opt_bpf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_netgraph.h"
 end_include
 
 begin_ifndef
@@ -210,9 +216,15 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|NBPF
-operator|>
-literal|0
+name|defined
+argument_list|(
+name|DEV_BPF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NETGRAPH_BPF
+argument_list|)
 end_if
 
 begin_comment
@@ -5199,7 +5211,7 @@ argument|NULL
 argument_list|)
 else|#
 directive|else
-comment|/* !BPF */
+comment|/* !DEV_BPF&& !NETGRAPH_BPF */
 comment|/*  * NOP stubs to allow bpf-using drivers to load and function.  *  * A 'better' implementation would allow the core bpf functionality  * to be loaded at runtime.  */
 name|void
 name|bpf_tap
@@ -5311,6 +5323,28 @@ literal|1
 return|;
 comment|/* "no filter" behaviour */
 block|}
+name|int
+name|bpf_validate
+parameter_list|(
+name|f
+parameter_list|,
+name|len
+parameter_list|)
+specifier|const
+name|struct
+name|bpf_insn
+modifier|*
+name|f
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|{
+return|return
+literal|0
+return|;
+comment|/* false */
+block|}
 end_block
 
 begin_endif
@@ -5319,7 +5353,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !BPF */
+comment|/* !DEV_BPF&& !NETGRAPH_BPF */
 end_comment
 
 end_unit
