@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symorder.c	5.5 (Berkeley) %G%"
+literal|"@(#)symorder.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,27 @@ define|#
 directive|define
 name|SPACE
 value|500
+end_define
+
+begin_define
+define|#
+directive|define
+name|OKEXIT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTFOUNDEXIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERREXIT
+value|2
 end_define
 
 begin_decl_stmt
@@ -252,7 +273,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERREXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1013,10 +1034,15 @@ operator|.
 name|n_name
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|NOTFOUNDEXIT
+argument_list|)
+expr_stmt|;
 block|}
 name|exit
 argument_list|(
-literal|0
+name|OKEXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1329,7 +1355,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERREXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1401,7 +1427,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERREXIT
 argument_list|)
 expr_stmt|;
 block|}
