@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.3	%G%	*/
+comment|/*	systm.h	4.4	%G%	*/
 end_comment
 
 begin_comment
@@ -246,6 +246,26 @@ end_comment
 
 begin_decl_stmt
 name|dev_t
+name|dumpdev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* device to take dumps on */
+end_comment
+
+begin_decl_stmt
+name|long
+name|dumplo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* offset into dumpdev */
+end_comment
+
+begin_decl_stmt
+name|dev_t
 name|swapdev
 decl_stmt|;
 end_decl_stmt
@@ -259,6 +279,10 @@ name|dev_t
 name|argdev
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* device for argument lists */
+end_comment
 
 begin_decl_stmt
 name|dev_t
