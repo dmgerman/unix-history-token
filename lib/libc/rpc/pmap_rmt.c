@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pmap_rmt.c,v 1.5 1996/03/17 20:12:53 guido Exp $"
+literal|"$Id: pmap_rmt.c,v 1.6 1996/06/10 00:49:17 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,15 +138,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-operator|+
+begin_function_decl
 name|int
 name|_rpc_dtablesize
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * pmapper remote-call-service interface.  * This routine is used to call the pmapper remote call service  * which will look up a service program in the port maps, and then  * remotely call that routine with the given parameters.  This allows  * programs to do a lookup and call in one step. */
