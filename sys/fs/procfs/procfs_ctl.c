@@ -69,26 +69,6 @@ directive|include
 file|<vm/vm.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FIX_SSTEP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FIX_SSTEP
-parameter_list|(
-name|p
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * True iff process (p) is in trace wait state  * relative to process (curp)  */
 end_comment
