@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.21 (Berkeley) %G%"
+literal|"@(#)proc.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3398,11 +3398,14 @@ condition|(
 operator|(
 name|flag
 operator|&
-operator|(
 name|REASON
-operator||
-name|AREASON
 operator|)
+operator|||
+operator|(
+operator|(
+name|flag
+operator|&
+name|AREASON
 operator|)
 operator|&&
 name|reason
@@ -3412,6 +3415,7 @@ operator|&&
 name|reason
 operator|!=
 name|SIGPIPE
+operator|)
 condition|)
 name|xprintf
 argument_list|(
@@ -3448,7 +3452,7 @@ name|p_reason
 condition|)
 name|xprintf
 argument_list|(
-literal|"Exit %-16d"
+literal|"Exit %-18d"
 argument_list|,
 name|pp
 operator|->
