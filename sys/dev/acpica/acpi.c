@@ -3023,6 +3023,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+comment|/* Allow children to shutdown first. */
+name|bus_generic_shutdown
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Disable all wake GPEs not appropriate for reboot/poweroff. */
 name|acpi_wake_limit_walk
 argument_list|(
