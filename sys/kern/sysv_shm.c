@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.6 1995/07/29 11:40:15 bde Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.7 1995/08/28 09:18:48 julian Exp $ */
 end_comment
 
 begin_comment
@@ -101,25 +101,18 @@ directive|include
 file|<vm/vm_kern.h>
 end_include
 
-begin_comment
-comment|/*  * Provides the following externally accessible functions:  *  * shminit(void);		           initialization  * shmexit(struct proc *)                  cleanup  * shmfork(struct proc *, struct proc *, int) fork handling  * shmsys(arg1, arg2, arg3, arg4);         shm{at,ctl,dt,get}(arg2, arg3, arg4)  *  * Structures:  * shmsegs (an array of 'struct shmid_ds')  * per proc array of 'struct shmmap_state'  */
-end_comment
-
-begin_comment
-comment|/*  * System initialization  */
-end_comment
-
-begin_function_decl
-specifier|extern
+begin_decl_stmt
+specifier|static
 name|void
 name|shminit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* should be static*/
-end_comment
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|SYSINIT
@@ -3057,7 +3050,12 @@ end_function
 begin_function
 name|void
 name|shminit
-parameter_list|()
+parameter_list|(
+name|udata
+parameter_list|)
+name|caddr_t
+name|udata
+decl_stmt|;
 block|{
 name|int
 name|i
