@@ -976,6 +976,11 @@ define|#
 directive|define
 name|NO_START_STOP
 value|0x04
+comment|/* Don't ask for full inquiry data (255 bytes). 	 * Yano ATAPI-USB 	 */
+define|#
+directive|define
+name|FORCE_SHORT_INQUIRY
+value|0x08
 name|unsigned
 name|int
 name|proto
@@ -2257,7 +2262,7 @@ directive|else
 block|sc->proto = PROTO_ATAPI | PROTO_CBI;
 endif|#
 directive|endif
-block|sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_INSYSTEM&& UGETW(dd->idProduct) == USB_PRODUCT_INSYSTEM_USBCABLE) { 		sc->drive = INSYSTEM_USBCABLE; 		sc->proto = PROTO_ATAPI | PROTO_CBI; 		sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}
+block|sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_INSYSTEM&& UGETW(dd->idProduct) == USB_PRODUCT_INSYSTEM_USBCABLE) { 		sc->drive = INSYSTEM_USBCABLE; 		sc->proto = PROTO_ATAPI | PROTO_CBI; 		sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_YANO&& UGETW(dd->idProduct) == USB_PRODUCT_YANO_U640MO) { 		sc->proto = PROTO_ATAPI | PROTO_CBI_I; 		sc->quirks |= FORCE_SHORT_INQUIRY; 		return(UMATCH_VENDOR_PRODUCT); 	}
 endif|#
 directive|endif
 if|if
@@ -10793,7 +10798,6 @@ block|}
 return|return
 literal|1
 return|;
-comment|/* success */
 block|}
 end_function
 
@@ -10894,7 +10898,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* success */
 comment|/* All other commands are not legal in RBC */
 default|default:
 name|printf
@@ -10993,16 +10996,20 @@ argument_list|,
 name|UFI_COMMAND_LENGTH
 argument_list|)
 expr_stmt|;
-comment|/* Handle any quirks */
-if|if
+switch|switch
 condition|(
 name|cmd
 index|[
 literal|0
 index|]
-operator|==
+condition|)
+block|{
+comment|/* Commands of which the format has been verified. They should work. 	 * Copy the command into the (zeroed out) destination buffer. 	 */
+case|case
 name|TEST_UNIT_READY
-operator|&&
+case|:
+if|if
+condition|(
 name|sc
 operator|->
 name|quirks
@@ -11010,7 +11017,7 @@ operator|&
 name|NO_TEST_UNIT_READY
 condition|)
 block|{
-comment|/* Some devices do not support this command. 		 * Start Stop Unit should give the same results 		 */
+comment|/* Some devices do not support this command. 			 * Start Stop Unit should give the same results 			 */
 name|DPRINTF
 argument_list|(
 name|UDMASS_UFI
@@ -11028,36 +11035,43 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|cmd
+operator|(
+operator|*
+name|rcmd
+operator|)
 index|[
 literal|0
 index|]
 operator|=
 name|START_STOP_UNIT
 expr_stmt|;
-name|cmd
+operator|(
+operator|*
+name|rcmd
+operator|)
 index|[
 literal|4
 index|]
 operator|=
 name|SSS_START
 expr_stmt|;
+block|}
+else|else
+block|{
+name|memcpy
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+name|cmd
+argument_list|,
+name|cmdlen
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
-block|}
-switch|switch
-condition|(
-name|cmd
-index|[
-literal|0
-index|]
-condition|)
-block|{
-comment|/* Commands of which the format has been verified. They should work. */
-case|case
-name|TEST_UNIT_READY
-case|:
 case|case
 name|REZERO_UNIT
 case|:
@@ -11095,7 +11109,6 @@ case|:
 case|case
 name|MODE_SENSE_10
 case|:
-comment|/* Copy the command into the (zeroed out) destination buffer */
 name|memcpy
 argument_list|(
 operator|*
@@ -11109,7 +11122,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* success */
 comment|/* Other UFI commands: FORMAT_UNIT, MODE_SELECT, READ_FORMAT_CAPACITY, 	 * VERIFY, WRITE_AND_VERIFY. 	 * These should be checked whether they somehow can be made to fit. 	 */
 comment|/* These commands are known _not_ to work. They should be converted 	 * The 6 byte commands can be switched off with a CAM quirk. See 	 * the entry for the Y-E data drive. 	 */
 case|case
@@ -11246,7 +11258,42 @@ literal|0
 index|]
 condition|)
 block|{
-comment|/* Commands of which the format has been verified. They should work. */
+comment|/* Commands of which the format has been verified. They should work. 	 * Copy the command into the (zeroed out) destination buffer. 	 */
+case|case
+name|INQUIRY
+case|:
+name|memcpy
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+name|cmd
+argument_list|,
+name|cmdlen
+argument_list|)
+expr_stmt|;
+comment|/* some drives wedge when asked for full inquiry information. */
+if|if
+condition|(
+name|sc
+operator|->
+name|quirks
+operator|&
+name|FORCE_SHORT_INQUIRY
+condition|)
+operator|(
+operator|*
+name|rcmd
+operator|)
+index|[
+literal|4
+index|]
+operator|=
+name|SHORT_INQUIRY_LENGTH
+expr_stmt|;
+return|return
+literal|1
+return|;
 case|case
 name|TEST_UNIT_READY
 case|:
@@ -11255,9 +11302,6 @@ name|REZERO_UNIT
 case|:
 case|case
 name|REQUEST_SENSE
-case|:
-case|case
-name|INQUIRY
 case|:
 case|case
 name|START_STOP_UNIT
@@ -11290,7 +11334,6 @@ case|:
 case|case
 name|MODE_SENSE_10
 case|:
-comment|/* Copy the command into the (zeroed out) destination buffer */
 name|memcpy
 argument_list|(
 operator|*
@@ -11304,7 +11347,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* success */
 comment|/* These commands are known _not_ to work. They should be converted 	 * The 6 byte commands can be switched off with a CAM quirk. See 	 * the entry for the Y-E data drive. 	 */
 case|case
 name|READ_6
