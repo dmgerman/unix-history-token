@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.9
+literal|4.10
 operator|%
 name|G
 operator|%
@@ -2636,6 +2636,8 @@ name|atooct
 argument_list|(
 name|val
 argument_list|)
+operator|&
+literal|0777
 expr_stmt|;
 break|break;
 case|case
