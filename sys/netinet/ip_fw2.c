@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002 Luigi Rizzo, Universita` di Pisa  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright    *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2002 Luigi Rizzo, Universita` di Pisa  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -4608,8 +4608,12 @@ name|last_log
 operator|=
 name|time_second
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_SECURITY
+operator||
+name|LOG_DEBUG
+argument_list|,
 literal|"drop session, too many entries\n"
 argument_list|)
 expr_stmt|;
@@ -8628,7 +8632,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Remove all rules with given number, and also do set manipulation.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *   *	0	delete rules with given number  *	1	delete rules with given set number  *	2	move rules with given number to new set  *	3	move rules with given set number to new set  *	4	swap sets with given numbers  */
+comment|/**  * Remove all rules with given number, and also do set manipulation.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *  *	0	delete rules with given number  *	1	delete rules with given set number  *	2	move rules with given number to new set  *	3	move rules with given set number to new set  *	4	swap sets with given numbers  */
 end_comment
 
 begin_function
@@ -10399,7 +10403,7 @@ break|break;
 case|case
 name|IP_FW_FLUSH
 case|:
-comment|/* 		 * Normally we cannot release the lock on each iteration. 		 * We could do it here only because we start from the head all 		 * the times so there is no risk of missing some entries. 		 * On the other hand, the risk is that we end up with 		 * a very inconsistent ruleset, so better keep the lock 		 * around the whole cycle. 		 *  		 * XXX this code can be improved by resetting the head of 		 * the list to point to the default rule, and then freeing 		 * the old list without the need for a lock. 		 */
+comment|/* 		 * Normally we cannot release the lock on each iteration. 		 * We could do it here only because we start from the head all 		 * the times so there is no risk of missing some entries. 		 * On the other hand, the risk is that we end up with 		 * a very inconsistent ruleset, so better keep the lock 		 * around the whole cycle. 		 * 		 * XXX this code can be improved by resetting the head of 		 * the list to point to the default rule, and then freeing 		 * the old list without the need for a lock. 		 */
 name|s
 operator|=
 name|splimp
