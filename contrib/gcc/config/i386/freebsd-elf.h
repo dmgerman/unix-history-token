@@ -50,8 +50,40 @@ name|TARGET_VERSION
 value|fprintf (stderr, " (i386 FreeBSD/ELF)");
 end_define
 
+begin_define
+define|#
+directive|define
+name|MASK_PROFILER_EPILOGUE
+value|010000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_PROFILER_EPILOGUE
+value|(target_flags& MASK_PROFILER_EPILOGUE)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_SWITCHES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_SWITCHES
+define|\
+value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE},	\      { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE},
+end_define
+
 begin_comment
 comment|/* The svr4 ABI for the i386 says that records and unions are returned    in memory.  */
+end_comment
+
+begin_comment
+comment|/* On FreeBSD, we do not. */
 end_comment
 
 begin_undef
@@ -64,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_PCC_STRUCT_RETURN
-value|1
+value|0
 end_define
 
 begin_comment
@@ -128,7 +160,21 @@ value|((n) == 0 ? 0 \  : (n) == 1 ? 2 \  : (n) == 2 ? 1 \  : (n) == 3 ? 3 \  : (
 end_define
 
 begin_comment
+comment|/* Tell final.c that we don't need a label passed to mcount.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_DATA
+end_define
+
+begin_comment
 comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  */
+end_comment
+
+begin_comment
+comment|/* Redefine this to not pass an unused label in %edx.  */
 end_comment
 
 begin_undef
@@ -147,7 +193,18 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%edx\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%edx\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
+value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mcount\n");					\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_PROFILER_EPILOGUE
+parameter_list|(
+name|FILE
+parameter_list|)
+define|\
+value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf (FILE, "\tcall *mexitcount@GOT(%%ebx)\n");		\       else								\ 	fprintf (FILE, "\tcall mexitcount\n");				\     }									\ }
 end_define
 
 begin_undef
@@ -187,6 +244,13 @@ define|#
 directive|define
 name|WCHAR_TYPE
 value|"int"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WCHAR_UNSIGNED
+value|0
 end_define
 
 begin_undef
@@ -325,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__} %{posix:-D_POSIX_SOURCE}"
+value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__}"
 end_define
 
 begin_else
@@ -337,13 +401,17 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{m486:-D__i486__} %{posix:-D_POSIX_SOURCE}"
+value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{m486:-D__i486__}"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Like the default, except no -lg, and no -p.  */
+end_comment
 
 begin_undef
 undef|#
@@ -351,41 +419,12 @@ directive|undef
 name|LIB_SPEC
 end_undef
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* We no longer link with libc_p.a or libg.a by default. If you  * want to profile or debug the C library, please add  * -lc_p or -ggdb to LDFLAGS at the link time, respectively.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|LIB_SPEC
-define|\
-value|"%{!shared: %{mieee-fp:-lieee} %{p:-lgmon} %{pg:-lgmon} \      %{!ggdb:%{{!pthread:-lc}%{pthread:-lc_r}}} %{ggdb:-lg}}"
+value|"%{!shared:%{!pg:%{!pthread:-lc}%{pthread:-lc_r}}%{pg:%{!pthread:-lc_p}%{pthread:-lc_r_p}}}"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: \      %{mieee-fp:-lieee} %{p:-lgmon -lc_p} %{pg:-lgmon -lc_p} \        %{!p:%{!pg:%{!g*:-lc} %{g*:-lg}}}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     I took out %{v:%{!V:-V}}. It is too much :-(. They can use    -Wl,-V.     When the -shared link option is used a final link is not being    done.  */
@@ -401,7 +440,8 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \ 	%{static:-static}}}"
+define|\
+value|"-m elf_i386 -L/usr/lib %{shared:-shared} \   %{!shared: \     %{!static: \       %{rdynamic:-export-dynamic} \       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \      %{static:-static}}"
 end_define
 
 begin_comment
@@ -413,6 +453,42 @@ include|#
 directive|include
 file|"i386/perform.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|LINK_LIBGCC_SPECIAL_1
+value|1
+end_define
+
+begin_comment
+comment|/* This goes away when the math emulator is fixed.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+value|(MASK_NO_FANCY_MATH_387 | 0301)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ATEXIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PUTENV
+end_define
 
 end_unit
 
