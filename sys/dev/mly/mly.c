@@ -1129,30 +1129,43 @@ name|cdevsw
 name|mly_cdevsw
 init|=
 block|{
+comment|/* open */
 name|mly_user_open
 block|,
+comment|/* close */
 name|mly_user_close
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|mly_user_ioctl
 block|,
+comment|/* poll */
 name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"mly"
 block|,
+comment|/* maj */
 name|MLY_CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 literal|0
 block|}
 decl_stmt|;
