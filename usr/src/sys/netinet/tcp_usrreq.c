@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.78	83/05/27	*/
+comment|/*	tcp_usrreq.c	1.79	83/06/14	*/
 end_comment
 
 begin_include
@@ -593,6 +593,15 @@ name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	 * Create a TCP connection between two sockets. 	 */
+case|case
+name|PRU_CONNECT2
+case|:
+name|error
+operator|=
+name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 comment|/* 	 * Initiate disconnect from peer. 	 * If connection never passed embryonic stage, just drop; 	 * else if don't need to let data drain, then can just drop anyways, 	 * else have to begin TCP shutdown process: mark socket disconnecting, 	 * drain unread data, state switch to reflect user close, and 	 * send segment (e.g. FIN) to peer.  Socket will be really disconnected 	 * when peer sends FIN and acks ours. 	 * 	 * SHOULD IMPLEMENT LATER PRU_CONNECT VIA REALLOC TCPCB. 	 */

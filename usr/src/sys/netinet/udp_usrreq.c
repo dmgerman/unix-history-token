@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.49	83/06/12	*/
+comment|/*	udp_usrreq.c	4.50	83/06/14	*/
 end_comment
 
 begin_include
@@ -1300,6 +1300,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PRU_CONNECT2
+case|:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
+case|case
 name|PRU_ACCEPT
 case|:
 name|error
@@ -1480,27 +1488,28 @@ name|nam
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"request %d\n"
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
 case|case
 name|PRU_CONTROL
 case|:
-return|return
-operator|(
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+name|error
+operator|=
 name|EOPNOTSUPP
-operator|)
-return|;
-case|case
-name|PRU_RCVD
-case|:
+expr_stmt|;
+break|break;
 case|case
 name|PRU_SENSE
+case|:
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* fall thru... */
+case|case
+name|PRU_RCVD
 case|:
 case|case
 name|PRU_RCVOOB
@@ -1525,6 +1534,12 @@ operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"udp_usrreq"
+argument_list|)
+expr_stmt|;
 block|}
 name|release
 label|:

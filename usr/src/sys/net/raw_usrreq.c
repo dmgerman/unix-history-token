@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.27	83/06/12	*/
+comment|/*	raw_usrreq.c	4.28	83/06/14	*/
 end_comment
 
 begin_include
@@ -787,9 +787,7 @@ name|error
 operator|=
 name|EACCES
 expr_stmt|;
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 if|if
 condition|(
@@ -800,9 +798,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 name|error
 operator|=
@@ -827,9 +823,7 @@ name|error
 operator|=
 name|ENOTCONN
 expr_stmt|;
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 name|raw_detach
 argument_list|(
@@ -854,9 +848,7 @@ name|error
 operator|=
 name|EISCONN
 expr_stmt|;
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 name|raw_connaddr
 argument_list|(
@@ -871,6 +863,16 @@ name|so
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PRU_CONNECT2
+case|:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+goto|goto
+name|release
+goto|;
 case|case
 name|PRU_BIND
 case|:
@@ -888,9 +890,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 comment|/* XXX */
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 name|error
 operator|=
@@ -922,9 +922,7 @@ name|error
 operator|=
 name|ENOTCONN
 expr_stmt|;
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 name|raw_disconnect
 argument_list|(
@@ -969,9 +967,7 @@ name|error
 operator|=
 name|EISCONN
 expr_stmt|;
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 name|raw_connaddr
 argument_list|(
@@ -999,9 +995,7 @@ name|error
 operator|=
 name|ENOTCONN
 expr_stmt|;
-goto|goto
-name|release
-goto|;
+break|break;
 block|}
 name|error
 operator|=
@@ -1057,11 +1051,15 @@ break|break;
 case|case
 name|PRU_CONTROL
 case|:
-return|return
-operator|(
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+name|error
+operator|=
 name|EOPNOTSUPP
-operator|)
-return|;
+expr_stmt|;
+break|break;
 comment|/* 	 * Not supported. 	 */
 case|case
 name|PRU_ACCEPT
