@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * rarpd support routines  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  * This code is public domain. There is no copyright. There are no  * distribution or usage restrictions. There are no strings attached.  *  * Have a party.  *  *	$Id: ether_addr.c,v 1.1.1.1 1995/03/02 06:41:40 wpaul Exp $  */
+comment|/*  * rarpd support routines  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  * This code is public domain. There is no copyright. There are no  * distribution or usage restrictions. There are no strings attached.  *  * Have a party.  *  *	$Id: ether_addr.c,v 1.2 1995/03/03 22:20:15 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -523,7 +523,8 @@ name|ether_print
 parameter_list|(
 name|cp
 parameter_list|)
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -578,7 +579,8 @@ name|char
 modifier|*
 name|a
 decl_stmt|;
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|n
 decl_stmt|;
