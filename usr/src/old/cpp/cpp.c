@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c 1.3 %G%"
+literal|"@(#)cpp.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8942,6 +8942,30 @@ operator|=
 name|stsym
 argument_list|(
 literal|"mert"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|mc68000
+name|varloc
+operator|=
+name|stsym
+argument_list|(
+literal|"mc68000"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|sun
+name|varloc
+operator|=
+name|stsym
+argument_list|(
+literal|"sun"
 argument_list|)
 expr_stmt|;
 endif|#
