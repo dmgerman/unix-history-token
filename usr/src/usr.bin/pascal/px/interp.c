@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.29 %G%"
+literal|"@(#)interp.c 1.30 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -637,10 +637,18 @@ modifier|*
 modifier|*
 name|ip
 decl_stmt|;
+name|int
+name|mypid
+decl_stmt|;
 name|pcaddrp
 operator|=
 operator|&
 name|pc
+expr_stmt|;
+name|mypid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Setup sets up any hardware specific parameters before 	 * starting the interpreter. Typically this is inline replaced 	 * by interp.sed to utilize specific machine instructions. 	 */
 name|setup
@@ -866,8 +874,7 @@ argument_list|()
 expr_stmt|;
 name|kill
 argument_list|(
-name|getpid
-argument_list|()
+name|mypid
 argument_list|,
 name|SIGILL
 argument_list|)
@@ -7124,7 +7131,7 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-comment|/* tl1 index lower bound */
+comment|/* tl1 loop branch */
 if|if
 condition|(
 name|tl1
@@ -7150,70 +7157,29 @@ operator|=
 name|pop4
 argument_list|()
 expr_stmt|;
+comment|/* tl upper bound */
 if|if
 condition|(
 operator|*
 name|tcp
-operator|<
+operator|==
 name|tl
 condition|)
-block|{
-comment|/* still going up */
-name|tl
-operator|=
+comment|/* loop is done, fall through */
+continue|continue;
 operator|*
 name|tcp
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 comment|/* inc index var */
-name|tl2
-operator|=
-operator|*
-name|pc
-operator|.
-name|sp
-operator|++
-expr_stmt|;
-comment|/* index upper bound */
-if|if
-condition|(
-name|_runtst
-condition|)
-name|RANG4
-argument_list|(
-name|tl
-argument_list|,
-name|tl1
-argument_list|,
-name|tl2
-argument_list|)
-expr_stmt|;
-operator|*
-name|tcp
-operator|=
-name|tl
-expr_stmt|;
-comment|/* update index var */
 name|pc
 operator|.
 name|cp
 operator|+=
-operator|*
-name|pc
-operator|.
-name|sp
+name|tl1
 expr_stmt|;
 comment|/* return to top of loop */
-continue|continue;
-block|}
-name|pc
-operator|.
-name|sp
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* else fall through */
 continue|continue;
 case|case
 name|O_FOR2U
@@ -7226,7 +7192,7 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-comment|/* tl1 index lower bound */
+comment|/* tl1 loop branch */
 if|if
 condition|(
 name|tl1
@@ -7256,70 +7222,29 @@ operator|=
 name|pop4
 argument_list|()
 expr_stmt|;
+comment|/* tl upper bound */
 if|if
 condition|(
 operator|*
 name|tsp
-operator|<
+operator|==
 name|tl
 condition|)
-block|{
-comment|/* still going up */
-name|tl
-operator|=
+comment|/* loop is done, fall through */
+continue|continue;
 operator|*
 name|tsp
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 comment|/* inc index var */
-name|tl2
-operator|=
-operator|*
-name|pc
-operator|.
-name|sp
-operator|++
-expr_stmt|;
-comment|/* index upper bound */
-if|if
-condition|(
-name|_runtst
-condition|)
-name|RANG4
-argument_list|(
-name|tl
-argument_list|,
-name|tl1
-argument_list|,
-name|tl2
-argument_list|)
-expr_stmt|;
-operator|*
-name|tsp
-operator|=
-name|tl
-expr_stmt|;
-comment|/* update index var */
 name|pc
 operator|.
 name|cp
 operator|+=
-operator|*
-name|pc
-operator|.
-name|sp
+name|tl1
 expr_stmt|;
 comment|/* return to top of loop */
-continue|continue;
-block|}
-name|pc
-operator|.
-name|sp
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* else fall through */
 continue|continue;
 case|case
 name|O_FOR4U
@@ -7332,7 +7257,7 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-comment|/* tl1 index lower bound */
+comment|/* tl1 loop branch */
 if|if
 condition|(
 name|tl1
@@ -7344,7 +7269,7 @@ operator|=
 operator|*
 name|pc
 operator|.
-name|lp
+name|sp
 operator|++
 expr_stmt|;
 name|tlp
@@ -7362,70 +7287,29 @@ operator|=
 name|pop4
 argument_list|()
 expr_stmt|;
+comment|/* tl upper bound */
 if|if
 condition|(
 operator|*
 name|tlp
-operator|<
+operator|==
 name|tl
 condition|)
-block|{
-comment|/* still going up */
-name|tl
-operator|=
+comment|/* loop is done, fall through */
+continue|continue;
 operator|*
 name|tlp
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 comment|/* inc index var */
-name|tl2
-operator|=
-operator|*
-name|pc
-operator|.
-name|lp
-operator|++
-expr_stmt|;
-comment|/* index upper bound */
-if|if
-condition|(
-name|_runtst
-condition|)
-name|RANG4
-argument_list|(
-name|tl
-argument_list|,
-name|tl1
-argument_list|,
-name|tl2
-argument_list|)
-expr_stmt|;
-operator|*
-name|tlp
-operator|=
-name|tl
-expr_stmt|;
-comment|/* update index var */
 name|pc
 operator|.
 name|cp
 operator|+=
-operator|*
-name|pc
-operator|.
-name|sp
+name|tl1
 expr_stmt|;
 comment|/* return to top of loop */
-continue|continue;
-block|}
-name|pc
-operator|.
-name|sp
-operator|+=
-literal|3
-expr_stmt|;
-comment|/* else fall through */
 continue|continue;
 case|case
 name|O_FOR1D
@@ -7438,7 +7322,7 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-comment|/* tl1 index lower bound */
+comment|/* tl1 loop branch */
 if|if
 condition|(
 name|tl1
@@ -7464,70 +7348,29 @@ operator|=
 name|pop4
 argument_list|()
 expr_stmt|;
+comment|/* tl upper bound */
 if|if
 condition|(
 operator|*
 name|tcp
-operator|>
+operator|==
 name|tl
 condition|)
-block|{
-comment|/* still going down */
-name|tl
-operator|=
+comment|/* loop is done, fall through */
+continue|continue;
 operator|*
 name|tcp
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
-comment|/* inc index var */
-name|tl2
-operator|=
-operator|*
-name|pc
-operator|.
-name|sp
-operator|++
-expr_stmt|;
-comment|/* index upper bound */
-if|if
-condition|(
-name|_runtst
-condition|)
-name|RANG4
-argument_list|(
-name|tl
-argument_list|,
-name|tl1
-argument_list|,
-name|tl2
-argument_list|)
-expr_stmt|;
-operator|*
-name|tcp
-operator|=
-name|tl
-expr_stmt|;
-comment|/* update index var */
+comment|/* dec index var */
 name|pc
 operator|.
 name|cp
 operator|+=
-operator|*
-name|pc
-operator|.
-name|sp
+name|tl1
 expr_stmt|;
 comment|/* return to top of loop */
-continue|continue;
-block|}
-name|pc
-operator|.
-name|sp
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* else fall through */
 continue|continue;
 case|case
 name|O_FOR2D
@@ -7540,7 +7383,7 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-comment|/* tl1 index lower bound */
+comment|/* tl1 loop branch */
 if|if
 condition|(
 name|tl1
@@ -7570,70 +7413,29 @@ operator|=
 name|pop4
 argument_list|()
 expr_stmt|;
+comment|/* tl upper bound */
 if|if
 condition|(
 operator|*
 name|tsp
-operator|>
+operator|==
 name|tl
 condition|)
-block|{
-comment|/* still going down */
-name|tl
-operator|=
+comment|/* loop is done, fall through */
+continue|continue;
 operator|*
 name|tsp
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
-comment|/* inc index var */
-name|tl2
-operator|=
-operator|*
-name|pc
-operator|.
-name|sp
-operator|++
-expr_stmt|;
-comment|/* index upper bound */
-if|if
-condition|(
-name|_runtst
-condition|)
-name|RANG4
-argument_list|(
-name|tl
-argument_list|,
-name|tl1
-argument_list|,
-name|tl2
-argument_list|)
-expr_stmt|;
-operator|*
-name|tsp
-operator|=
-name|tl
-expr_stmt|;
-comment|/* update index var */
+comment|/* dec index var */
 name|pc
 operator|.
 name|cp
 operator|+=
-operator|*
-name|pc
-operator|.
-name|sp
+name|tl1
 expr_stmt|;
 comment|/* return to top of loop */
-continue|continue;
-block|}
-name|pc
-operator|.
-name|sp
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* else fall through */
 continue|continue;
 case|case
 name|O_FOR4D
@@ -7646,7 +7448,7 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-comment|/* tl1 index lower bound */
+comment|/* tl1 loop branch */
 if|if
 condition|(
 name|tl1
@@ -7658,7 +7460,7 @@ operator|=
 operator|*
 name|pc
 operator|.
-name|lp
+name|sp
 operator|++
 expr_stmt|;
 name|tlp
@@ -7676,70 +7478,29 @@ operator|=
 name|pop4
 argument_list|()
 expr_stmt|;
+comment|/* tl upper bound */
 if|if
 condition|(
 operator|*
 name|tlp
-operator|>
+operator|==
 name|tl
 condition|)
-block|{
-comment|/* still going down */
-name|tl
-operator|=
+comment|/* loop is done, fall through */
+continue|continue;
 operator|*
 name|tlp
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
-comment|/* inc index var */
-name|tl2
-operator|=
-operator|*
-name|pc
-operator|.
-name|lp
-operator|++
-expr_stmt|;
-comment|/* index upper bound */
-if|if
-condition|(
-name|_runtst
-condition|)
-name|RANG4
-argument_list|(
-name|tl
-argument_list|,
-name|tl1
-argument_list|,
-name|tl2
-argument_list|)
-expr_stmt|;
-operator|*
-name|tlp
-operator|=
-name|tl
-expr_stmt|;
-comment|/* update index var */
+comment|/* dec index var */
 name|pc
 operator|.
 name|cp
 operator|+=
-operator|*
-name|pc
-operator|.
-name|sp
+name|tl1
 expr_stmt|;
 comment|/* return to top of loop */
-continue|continue;
-block|}
-name|pc
-operator|.
-name|sp
-operator|+=
-literal|3
-expr_stmt|;
-comment|/* else fall through */
 continue|continue;
 case|case
 name|O_READE
