@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.24 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,12 @@ include|#
 directive|include
 file|<machine/endian.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -69,6 +75,11 @@ begin_comment
 comment|/* Sys V compatibility */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -77,6 +88,10 @@ name|long
 name|u_quad_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* quads */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -119,7 +134,8 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|unsigned
+name|long
 name|dev_t
 typedef|;
 end_typedef
@@ -130,13 +146,62 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|unsigned
+name|long
+name|fixpt_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* fixed point number */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|gid_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* group id */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
 name|ino_t
 typedef|;
 end_typedef
 
 begin_comment
 comment|/* inode number */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|mode_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* permissions */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|nlink_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* link count */
 end_comment
 
 begin_typedef
@@ -152,24 +217,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_short
-name|nlink_t
+name|short
+name|pid_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* link count */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|long
-name|swblk_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* swap offset */
+comment|/* process id */
 end_comment
 
 begin_typedef
@@ -185,57 +239,25 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|long
+name|swblk_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* swap offset */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
 name|uid_t
 typedef|;
 end_typedef
 
 begin_comment
 comment|/* user id */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|gid_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* group id */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|short
-name|pid_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* process id */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_short
-name|mode_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* permissions */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|fixpt_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* fixed point number */
 end_comment
 
 begin_ifndef
