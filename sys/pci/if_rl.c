@@ -4635,6 +4635,8 @@ operator|.
 name|rl_rx_buf
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
 name|m_pullup
 argument_list|(
 name|m
