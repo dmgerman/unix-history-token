@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.1 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1695,7 +1695,7 @@ directive|ifdef
 name|RLOCALS
 name|adbprintf
 argument_list|(
-literal|"\ fp: 516tap: %?s%?R%32tsp:  %?s%?R%48tpc:  %?s%?R\n\ r0: 516tr1: 532tr2:  548tr3:  %R\n\ r4: 516tr5: 532tr6:  548tr7:  %R\n\ r8: 516tr9: 532tr10: 548tr11: %R\n"
+literal|"\ fp: %R\%16tap: %?s%?R%32tsp:  %?s%?R%48tpc:  %?s%?R\n\ r0: %R\%16tr1: %R\%32tr2:  %R\%48tr3:  %R\n\ r4: %R\%16tr5: %R\%32tr6:  %R\%48tr7:  %R\n\ r8: %R\%16tr9: %R\%32tr10: %R\%48tr11: %R\n"
 argument_list|,
 define|#
 directive|define
