@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -121,7 +121,7 @@ decl_stmt|,
 name|bind
 argument_list|()
 decl_stmt|,
-name|accept
+name|oaccept
 argument_list|()
 decl_stmt|,
 name|connect
@@ -141,7 +141,7 @@ decl_stmt|,
 name|shutdown
 argument_list|()
 decl_stmt|,
-name|getsockname
+name|ogetsockname
 argument_list|()
 decl_stmt|,
 name|sendto
@@ -152,10 +152,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|recvfrom
+name|orecvfrom
 argument_list|()
 decl_stmt|,
-name|getpeername
+name|ogetpeername
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -215,7 +215,7 @@ block|,
 literal|3
 block|,
 comment|/* 3f0 */
-name|accept
+name|oaccept
 block|,
 literal|3
 block|,
@@ -240,7 +240,7 @@ block|,
 literal|2
 block|,
 comment|/* 3f5 */
-name|getsockname
+name|ogetsockname
 block|,
 literal|3
 block|,
@@ -255,12 +255,12 @@ block|,
 literal|6
 block|,
 comment|/* 3f8 */
-name|recvfrom
+name|orecvfrom
 block|,
 literal|6
 block|,
 comment|/* 3f9 */
-name|getpeername
+name|ogetpeername
 block|,
 literal|3
 block|,
