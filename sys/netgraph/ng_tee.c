@@ -1451,6 +1451,13 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Deliver frame out destination hook */
+if|if
+condition|(
+name|dest
+operator|->
+name|hook
+condition|)
+block|{
 name|dest
 operator|->
 name|stats
@@ -1470,12 +1477,6 @@ operator|.
 name|outFrames
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|dest
-operator|->
-name|hook
-condition|)
 name|NG_FWD_ITEM_HOOK
 argument_list|(
 name|error
@@ -1487,6 +1488,7 @@ operator|->
 name|hook
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|NG_FREE_ITEM
 argument_list|(
