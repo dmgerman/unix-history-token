@@ -2890,6 +2890,9 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 		 * If the object is not being used, we ignore previous  		 * references. 		 */
 if|if
 condition|(
@@ -2941,9 +2944,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_activate
 argument_list|(
 name|m
@@ -2992,9 +2992,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_activate
 argument_list|(
 name|m
@@ -3041,6 +3038,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 		 * Invalid pages can be easily freed 		 */
 if|if
 condition|(
