@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.182 1996/10/26 20:16:58 sos Exp $  */
+comment|/*-  * Copyright (c) 1992-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.182.2.1 1996/11/04 20:40:00 sos Exp $  */
 end_comment
 
 begin_include
@@ -3417,6 +3417,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|spltty
+argument_list|()
+expr_stmt|;
 operator|(
 operator|*
 name|linesw
@@ -3438,6 +3441,9 @@ name|ttyclose
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|spl0
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -3667,7 +3673,7 @@ operator|&
 name|TS_ISOPEN
 operator|)
 condition|)
-return|return;
+continue|continue;
 switch|switch
 condition|(
 name|c
@@ -6386,6 +6392,15 @@ condition|)
 return|return
 name|error
 return|;
+if|if
+condition|(
+name|securelevel
+operator|>
+literal|0
+condition|)
+return|return
+name|EPERM
+return|;
 name|fp
 operator|=
 operator|(
@@ -8031,6 +8046,10 @@ name|kernel_default
 expr_stmt|;
 if|if
 condition|(
+name|scp
+operator|==
+name|cur_console
+operator|&&
 operator|!
 operator|(
 name|scp
@@ -14085,6 +14104,25 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/*      * Validate cursor location.  It may be off the screen.  Then we must      * not use it for the initial buffer offset.      */
+if|if
+condition|(
+name|hw_cursor
+operator|>=
+name|ROW
+operator|*
+name|COL
+condition|)
+name|hw_cursor
+operator|=
+operator|(
+name|ROW
+operator|-
+literal|1
+operator|)
+operator|*
+name|COL
+expr_stmt|;
 comment|/* move hardware cursor out of the way */
 name|outb
 argument_list|(
@@ -15247,7 +15285,6 @@ literal|0
 decl_stmt|;
 name|next_code
 label|:
-comment|/* check if there is anything in the keyboard buffer */
 if|if
 condition|(
 name|inb
