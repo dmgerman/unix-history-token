@@ -764,10 +764,9 @@ name|kp
 operator|->
 name|ki_addr
 operator|=
-name|proc
-operator|.
-name|p_uarea
+literal|0
 expr_stmt|;
+comment|/* XXX uarea */
 comment|/* kp->ki_kstack = proc.p_thread.td_kstack; XXXKSE */
 name|kp
 operator|->
