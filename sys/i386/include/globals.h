@@ -250,6 +250,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|prv_PMAP2
+value|GLOBAL_LVALUE(prv_PMAP2, pd_entry_t *)
+end_define
+
+begin_define
+define|#
+directive|define
 name|prv_CADDR1
 value|GLOBAL_RVALUE(prv_CADDR1, caddr_t)
 end_define
@@ -273,6 +280,13 @@ define|#
 directive|define
 name|prv_PADDR1
 value|GLOBAL_RVALUE(prv_PADDR1, pt_entry_t *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|prv_PADDR2
+value|GLOBAL_RVALUE(prv_PADDR2, pt_entry_t *)
 end_define
 
 begin_endif
@@ -428,6 +442,13 @@ end_macro
 begin_macro
 name|GLOBAL_FUNC
 argument_list|(
+argument|prv_PMAP2
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
 argument|prv_CADDR1
 argument_list|)
 end_macro
@@ -450,6 +471,13 @@ begin_macro
 name|GLOBAL_FUNC
 argument_list|(
 argument|prv_PADDR1
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
+argument|prv_PADDR2
 argument_list|)
 end_macro
 

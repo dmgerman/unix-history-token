@@ -94,6 +94,10 @@ name|pd_entry_t
 modifier|*
 name|gd_prv_PMAP1
 decl_stmt|;
+name|pd_entry_t
+modifier|*
+name|gd_prv_PMAP2
+decl_stmt|;
 name|caddr_t
 name|gd_prv_CADDR1
 decl_stmt|;
@@ -106,6 +110,10 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|gd_prv_PADDR1
+decl_stmt|;
+name|pt_entry_t
+modifier|*
+name|gd_prv_PADDR2
 decl_stmt|;
 endif|#
 directive|endif
@@ -147,7 +155,7 @@ name|globaldata
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* page 1..4 - CPAGE1,CPAGE2,CPAGE3,PPAGE1 */
+comment|/* page 1..5 - CPAGE1,CPAGE2,CPAGE3,PPAGE1,PPAGE2 */
 name|char
 name|CPAGE1
 index|[
@@ -172,7 +180,13 @@ index|[
 name|PAGE_SIZE
 index|]
 decl_stmt|;
-comment|/* page 5..4+UPAGES - idle stack (UPAGES pages) */
+name|char
+name|PPAGE2
+index|[
+name|PAGE_SIZE
+index|]
+decl_stmt|;
+comment|/* page 6..5+UPAGES - idle stack (UPAGES pages) */
 name|char
 name|idlestack
 index|[

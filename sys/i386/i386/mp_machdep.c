@@ -9082,7 +9082,7 @@ name|SMPpt
 index|[
 name|pg
 operator|+
-literal|5
+literal|6
 operator|+
 name|i
 index|]
@@ -9145,6 +9145,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* *prv_PMAP1 */
+name|SMPpt
+index|[
+name|pg
+operator|+
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* *prv_PMAP2 */
 comment|/* prime data page for it to use */
 name|gd
 operator|->
@@ -9214,6 +9224,22 @@ index|]
 expr_stmt|;
 name|gd
 operator|->
+name|gd_prv_PMAP2
+operator|=
+operator|(
+name|pd_entry_t
+operator|*
+operator|)
+operator|&
+name|SMPpt
+index|[
+name|pg
+operator|+
+literal|5
+index|]
+expr_stmt|;
+name|gd
+operator|->
 name|gd_prv_CADDR1
 operator|=
 name|SMP_prvspace
@@ -9259,6 +9285,21 @@ name|x
 index|]
 operator|.
 name|PPAGE1
+expr_stmt|;
+name|gd
+operator|->
+name|gd_prv_PADDR2
+operator|=
+operator|(
+name|pt_entry_t
+operator|*
+operator|)
+name|SMP_prvspace
+index|[
+name|x
+index|]
+operator|.
+name|PPAGE2
 expr_stmt|;
 comment|/* setup a vector to our boot code */
 operator|*
@@ -9493,7 +9534,7 @@ operator|++
 control|)
 name|SMPpt
 index|[
-literal|5
+literal|6
 operator|+
 name|i
 index|]
