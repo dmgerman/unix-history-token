@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.13 1998/06/17 14:58:00 bde Exp $ */
+comment|/* $Id: if_wl.c,v 1.14 1998/08/20 05:49:59 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -7750,10 +7750,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"XMT    mbuf: L%d @%x "
+literal|"XMT    mbuf: L%d @%p "
 argument_list|,
 name|count
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mb_p
 argument_list|)
 expr_stmt|;
@@ -8172,10 +8176,14 @@ name|xmt_debug
 condition|)
 name|printf
 argument_list|(
-literal|"mbuf+ L%d @%x "
+literal|"mbuf+ L%d @%p "
 argument_list|,
 name|count
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mb_p
 argument_list|)
 expr_stmt|;

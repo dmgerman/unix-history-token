@@ -5145,7 +5145,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"TWRCV: invalid packet: (%d, %x) %c %d\n"
+literal|"TWRCV: invalid packet: (%d, %x) %c %s\n"
 argument_list|,
 name|sc
 operator|->

@@ -17801,7 +17801,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"AWE32 Warning: Patch record too short (%d<%d)\n"
+literal|"AWE32 Warning: Patch record too short (%d<%ld)\n"
 argument_list|,
 name|size
 argument_list|,
@@ -18212,7 +18212,7 @@ literal|1
 argument_list|,
 name|printk
 argument_list|(
-literal|"AWE32: [gus base offset=%d, note=%d, range=%d-%d(%d-%d)]\n"
+literal|"AWE32: [gus base offset=%d, note=%d, range=%d-%d(%lu-%lu)]\n"
 argument_list|,
 name|rec
 operator|->

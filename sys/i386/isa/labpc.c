@@ -2889,10 +2889,18 @@ name|b_actf
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ad_intr: error: bp %0p, data %0p, status %x"
+literal|"ad_intr: error: bp %p, data %p, status %x"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|bp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ctlr
 operator|->
 name|data
@@ -3040,8 +3048,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bp %0p, status %x, cr3 %x\n"
+literal|"bp %p, status %x, cr3 %x\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|status

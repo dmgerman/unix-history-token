@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  errors.c  *  *  The error handling functions for wm-FPU-emu  *  *  * Copyright (C) 1992,1993,1994  *                       W. Metzenthen, 22 Parker St, Ormond, Vic 3163,  *                       Australia.  E-mail   billm@vaxc.cc.monash.edu.au  * All rights reserved.  *  * This copyright notice covers the redistribution and use of the  * FPU emulator developed by W. Metzenthen. It covers only its use  * in the 386BSD, FreeBSD and NetBSD operating systems. Any other  * use is not permitted under this copyright.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must include information specifying  *    that source code for the emulator is freely available and include  *    either:  *      a) an offer to provide the source code for a nominal distribution  *         fee, or  *      b) list at least two alternative methods whereby the source  *         can be obtained, e.g. a publically accessible bulletin board  *         and an anonymous ftp site from which the software can be  *         downloaded.  * 3. All advertising materials specifically mentioning features or use of  *    this emulator must acknowledge that it was developed by W. Metzenthen.  * 4. The name of W. Metzenthen may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * W. METZENTHEN BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * The purpose of this copyright, based upon the Berkeley copyright, is to  * ensure that the covered software remains freely available to everyone.  *  * The software (with necessary differences) is also available, but under  * the terms of the GNU copyleft, for the Linux operating system and for  * the djgpp ms-dos extender.  *  * W. Metzenthen   June 1994.  *  *  *    $Id: errors.c,v 1.7 1997/02/22 09:29:01 peter Exp $  *  */
+comment|/*  *  errors.c  *  *  The error handling functions for wm-FPU-emu  *  *  * Copyright (C) 1992,1993,1994  *                       W. Metzenthen, 22 Parker St, Ormond, Vic 3163,  *                       Australia.  E-mail   billm@vaxc.cc.monash.edu.au  * All rights reserved.  *  * This copyright notice covers the redistribution and use of the  * FPU emulator developed by W. Metzenthen. It covers only its use  * in the 386BSD, FreeBSD and NetBSD operating systems. Any other  * use is not permitted under this copyright.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must include information specifying  *    that source code for the emulator is freely available and include  *    either:  *      a) an offer to provide the source code for a nominal distribution  *         fee, or  *      b) list at least two alternative methods whereby the source  *         can be obtained, e.g. a publically accessible bulletin board  *         and an anonymous ftp site from which the software can be  *         downloaded.  * 3. All advertising materials specifically mentioning features or use of  *    this emulator must acknowledge that it was developed by W. Metzenthen.  * 4. The name of W. Metzenthen may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * W. METZENTHEN BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * The purpose of this copyright, based upon the Berkeley copyright, is to  * ensure that the covered software remains freely available to everyone.  *  * The software (with necessary differences) is also available, but under  * the terms of the GNU copyleft, for the Linux operating system and for  * the djgpp ms-dos extender.  *  * W. Metzenthen   June 1994.  *  *  *    $Id: errors.c,v 1.8 1997/06/14 15:11:03 bde Exp $  *  */
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Unimplemented FPU Opcode at eip=%p : %02x "
+literal|"Unimplemented FPU Opcode at eip=%#08x : %02x "
 argument_list|,
 name|FPU_ORIG_EIP
 argument_list|,
@@ -425,7 +425,7 @@ name|SW_Top_Shift
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"At %p: %02x "
+literal|"At %#08x: %02x "
 argument_list|,
 name|FPU_ORIG_EIP
 argument_list|,
@@ -492,6 +492,10 @@ else|:
 literal|0
 argument_list|,
 comment|/* busy */
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|status_word
 operator|&
@@ -499,6 +503,7 @@ literal|0x3800
 operator|)
 operator|>>
 literal|11
+argument_list|)
 argument_list|,
 comment|/* stack top pointer */
 name|status_word
@@ -614,6 +619,10 @@ literal|1
 else|:
 literal|0
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|control_word
 operator|&
@@ -621,7 +630,12 @@ literal|0x800
 operator|)
 operator|>>
 literal|11
+argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|control_word
 operator|&
@@ -629,7 +643,12 @@ literal|0x400
 operator|)
 operator|>>
 literal|10
+argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|control_word
 operator|&
@@ -637,7 +656,12 @@ literal|0x200
 operator|)
 operator|>>
 literal|9
+argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|control_word
 operator|&
@@ -645,6 +669,7 @@ literal|0x100
 operator|)
 operator|>>
 literal|8
+argument_list|)
 argument_list|,
 name|control_word
 operator|&
@@ -772,7 +797,7 @@ name|TW_Infinity
 case|:
 name|printf
 argument_list|(
-literal|"st(%d)  %c .%04x %04x %04x %04x e%+-6d "
+literal|"st(%d)  %c .%04lx %04lx %04lx %04lx e%+-6ld "
 argument_list|,
 name|i
 argument_list|,
@@ -784,49 +809,29 @@ literal|'-'
 else|:
 literal|'+'
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|r
 operator|->
 name|sigh
 operator|>>
 literal|16
-argument_list|)
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|r
 operator|->
 name|sigh
 operator|&
 literal|0xFFFF
-argument_list|)
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|r
 operator|->
 name|sigl
 operator|>>
 literal|16
-argument_list|)
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|r
 operator|->
 name|sigl
 operator|&
 literal|0xFFFF
-argument_list|)
 argument_list|,
 name|r
 operator|->
@@ -867,7 +872,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"[data] %c .%04x %04x %04x %04x e%+-6d "
+literal|"[data] %c .%04lx %04lx %04lx %04lx e%+-6ld "
 argument_list|,
 name|FPU_loaded_data
 operator|.
@@ -877,49 +882,29 @@ literal|'-'
 else|:
 literal|'+'
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|FPU_loaded_data
 operator|.
 name|sigh
 operator|>>
 literal|16
-argument_list|)
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|FPU_loaded_data
 operator|.
 name|sigh
 operator|&
 literal|0xFFFF
-argument_list|)
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|FPU_loaded_data
 operator|.
 name|sigl
 operator|>>
 literal|16
-argument_list|)
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|FPU_loaded_data
 operator|.
 name|sigl
 operator|&
 literal|0xFFFF
-argument_list|)
 argument_list|,
 name|FPU_loaded_data
 operator|.
