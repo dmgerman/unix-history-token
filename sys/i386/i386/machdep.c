@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.128.4.1 1995/08/23 07:16:42 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.128.4.2 1995/08/24 03:48:25 davidg Exp $  */
 end_comment
 
 begin_include
@@ -428,16 +428,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|initcpu
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|char
 name|machine
@@ -709,10 +699,21 @@ begin_decl_stmt
 name|vm_offset_t
 name|phys_avail
 index|[
-literal|6
+literal|10
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* must be 2 less so 0 0 can signal end of chunks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHYS_AVAIL_ARRAY_END
+value|((sizeof(phys_avail) / sizeof(vm_offset_t)) - 2)
+end_define
 
 begin_decl_stmt
 name|int
@@ -824,6 +825,8 @@ literal|0
 decl_stmt|;
 name|int
 name|firstaddr
+decl_stmt|,
+name|indx
 decl_stmt|;
 name|vm_offset_t
 name|minaddr
@@ -898,32 +901,112 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"real memory  = %d (%d pages)\n"
+literal|"real memory  = %d (%dK bytes)\n"
 argument_list|,
 name|ptoa
 argument_list|(
-name|physmem
+name|Maxmem
 argument_list|)
 argument_list|,
-name|physmem
+name|ptoa
+argument_list|(
+name|Maxmem
+argument_list|)
+operator|/
+literal|1024
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
 condition|(
 name|badpages
+operator|!=
+literal|0
 condition|)
+block|{
+name|int
+name|indx
+init|=
+literal|1
+decl_stmt|;
+comment|/* 		 * XXX skip reporting ISA hole& unmanaged kernel memory 		 */
+if|if
+condition|(
+name|phys_avail
+index|[
+literal|0
+index|]
+operator|==
+name|PAGE_SIZE
+condition|)
+name|indx
+operator|+=
+literal|2
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"bad memory   = %d (%d pages)\n"
-argument_list|,
-name|ptoa
-argument_list|(
-name|badpages
-argument_list|)
-argument_list|,
-name|badpages
+literal|"Physical memory hole(s):\n"
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+name|phys_avail
+index|[
+name|indx
+operator|+
+literal|1
+index|]
+operator|!=
+literal|0
+condition|;
+name|indx
+operator|+=
+literal|2
+control|)
+block|{
+name|int
+name|size
+init|=
+name|phys_avail
+index|[
+name|indx
+operator|+
+literal|1
+index|]
+operator|-
+name|phys_avail
+index|[
+name|indx
+index|]
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"0x%08x - 0x%08x, %d bytes (%d pages)\n"
+argument_list|,
+name|phys_avail
+index|[
+name|indx
+index|]
+argument_list|,
+name|phys_avail
+index|[
+name|indx
+operator|+
+literal|1
+index|]
+operator|-
+literal|1
+argument_list|,
+name|size
+argument_list|,
+name|size
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Quickly wire in netisrs. 	 */
 name|setup_netisrs
 argument_list|(
@@ -1581,22 +1664,6 @@ condition|)
 name|userconfig
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"avail memory = %d (%d pages)\n"
-argument_list|,
-name|ptoa
-argument_list|(
-name|cnt
-operator|.
-name|v_free_count
-argument_list|)
-argument_list|,
-name|cnt
-operator|.
-name|v_free_count
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BOUNCE_BUFFERS
@@ -1606,9 +1673,26 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Set up CPU-specific registers, cache, etc. 	 */
-name|initcpu
-argument_list|()
+name|printf
+argument_list|(
+literal|"avail memory = %d (%dK bytes)\n"
+argument_list|,
+name|ptoa
+argument_list|(
+name|cnt
+operator|.
+name|v_free_count
+argument_list|)
+argument_list|,
+name|ptoa
+argument_list|(
+name|cnt
+operator|.
+name|v_free_count
+argument_list|)
+operator|/
+literal|1024
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
 name|bufinit
@@ -4137,14 +4221,6 @@ block|}
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|initcpu
-parameter_list|()
-block|{ }
-end_function
-
 begin_comment
 comment|/*  * Clear registers on exec  */
 end_comment
@@ -5412,6 +5488,8 @@ name|pagesinext
 decl_stmt|;
 name|int
 name|target_page
+decl_stmt|,
+name|pa_indx
 decl_stmt|;
 name|proc0
 operator|.
@@ -6121,7 +6199,7 @@ name|pagesinext
 operator|=
 literal|3840
 expr_stmt|;
-comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of of the physical address space. It should be 	 * called something like "Maxphyspage". 	 */
+comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of of the physical address space. It 	 */
 name|Maxmem
 operator|=
 name|pagesinext
@@ -6141,17 +6219,6 @@ literal|4
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Calculate number of physical pages, but account for Maxmem 	 *	adjustment above. 	 */
-name|physmem
-operator|=
-name|pagesinbase
-operator|+
-name|Maxmem
-operator|-
-literal|0x100000
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
 comment|/* call pmap initialization to make new kernel address space */
 name|pmap_bootstrap
 argument_list|(
@@ -6160,28 +6227,81 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do a quick, non-destructive check over extended memory to verify 	 * what the BIOS tells us agrees with reality. Adjust down Maxmem 	 * if we find that the page can't be correctly written to/read from. 	 */
+comment|/* 	 * Size up each available chunk of physical memory. 	 */
+comment|/* 	 * We currently don't bother testing base memory. 	 * XXX  ...but we probably should. 	 */
+name|pa_indx
+operator|=
+literal|0
+expr_stmt|;
+name|badpages
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|pagesinbase
+operator|>
+literal|1
+condition|)
+block|{
+name|phys_avail
+index|[
+name|pa_indx
+operator|++
+index|]
+operator|=
+name|PAGE_SIZE
+expr_stmt|;
+comment|/* skip first page of memory */
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+operator|=
+name|ptoa
+argument_list|(
+name|pagesinbase
+argument_list|)
+expr_stmt|;
+comment|/* memory up to the ISA hole */
+name|physmem
+operator|=
+name|pagesinbase
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* point at first chunk end */
+name|pa_indx
+operator|++
+expr_stmt|;
+block|}
 for|for
 control|(
 name|target_page
 operator|=
-name|Maxmem
-operator|-
-literal|1
+name|avail_start
 init|;
 name|target_page
-operator|>=
-name|atop
+operator|<
+name|ptoa
 argument_list|(
-name|first
+name|Maxmem
 argument_list|)
 condition|;
 name|target_page
-operator|--
+operator|+=
+name|PAGE_SIZE
 control|)
 block|{
 name|int
 name|tmp
+decl_stmt|,
+name|page_bad
+init|=
+name|FALSE
 decl_stmt|;
 comment|/* 		 * map page into kernel: valid, read/write, non-cacheable 		 */
 operator|*
@@ -6197,10 +6317,7 @@ name|PG_KW
 operator||
 name|PG_N
 operator||
-name|ptoa
-argument_list|(
 name|target_page
-argument_list|)
 expr_stmt|;
 name|pmap_update
 argument_list|()
@@ -6236,14 +6353,10 @@ operator|!=
 literal|0xaaaaaaaa
 condition|)
 block|{
-name|Maxmem
+name|page_bad
 operator|=
-name|target_page
+name|TRUE
 expr_stmt|;
-name|badpages
-operator|++
-expr_stmt|;
-continue|continue;
 block|}
 comment|/* 		 * Test for alternating 0's and 1's 		 */
 operator|*
@@ -6267,14 +6380,10 @@ operator|!=
 literal|0x55555555
 condition|)
 block|{
-name|Maxmem
+name|page_bad
 operator|=
-name|target_page
+name|TRUE
 expr_stmt|;
-name|badpages
-operator|++
-expr_stmt|;
-continue|continue;
 block|}
 comment|/* 		 * Test for all 1's 		 */
 operator|*
@@ -6298,14 +6407,10 @@ operator|!=
 literal|0xffffffff
 condition|)
 block|{
-name|Maxmem
+name|page_bad
 operator|=
-name|target_page
+name|TRUE
 expr_stmt|;
-name|badpages
-operator|++
-expr_stmt|;
-continue|continue;
 block|}
 comment|/* 		 * Test for all 0's 		 */
 operator|*
@@ -6330,15 +6435,12 @@ literal|0x0
 condition|)
 block|{
 comment|/* 			 * test of page failed 			 */
-name|Maxmem
+name|page_bad
 operator|=
-name|target_page
+name|TRUE
 expr_stmt|;
-name|badpages
-operator|++
-expr_stmt|;
-continue|continue;
 block|}
+comment|/* 		 * Restore original value. 		 */
 operator|*
 operator|(
 name|int
@@ -6348,18 +6450,90 @@ name|CADDR1
 operator|=
 name|tmp
 expr_stmt|;
-block|}
+comment|/* 		 * Adjust array of valid/good pages. 		 */
 if|if
 condition|(
-name|badpages
-operator|!=
-literal|0
+name|page_bad
+operator|==
+name|FALSE
 condition|)
+block|{
+comment|/* 			 * If this good page is a continuation of the 			 * previous set of good pages, then just increase 			 * the end pointer. Otherwise start a new chunk. 			 * Note that "end" points one higher than end, 			 * making the range>= start and< end. 			 */
+if|if
+condition|(
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+operator|==
+name|target_page
+condition|)
+block|{
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pa_indx
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|pa_indx
+operator|==
+name|PHYS_AVAIL_ARRAY_END
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"WARNING: BIOS extended memory size and reality don't agree.\n"
+literal|"Too many holes in the physical address space, giving up\n"
 argument_list|)
 expr_stmt|;
+name|pa_indx
+operator|--
+expr_stmt|;
+break|break;
+block|}
+name|phys_avail
+index|[
+name|pa_indx
+operator|++
+index|]
+operator|=
+name|target_page
+expr_stmt|;
+comment|/* start */
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+operator|=
+name|target_page
+operator|+
+name|PAGE_SIZE
+expr_stmt|;
+comment|/* end */
+block|}
+name|physmem
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+name|badpages
+operator|++
+expr_stmt|;
+name|page_bad
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+block|}
 operator|*
 operator|(
 name|int
@@ -6372,15 +6546,84 @@ expr_stmt|;
 name|pmap_update
 argument_list|()
 expr_stmt|;
-name|avail_end
-operator|=
-operator|(
-name|Maxmem
-operator|<<
-name|PAGE_SHIFT
-operator|)
+comment|/* 	 * XXX 	 * The last chunk must contain at leat one page plus the message 	 * buffer to avoid complicating other code (message buffer address 	 * calculation, etc.). 	 */
+while|while
+condition|(
+name|phys_avail
+index|[
+name|pa_indx
 operator|-
-name|i386_round_page
+literal|1
+index|]
+operator|+
+name|PAGE_SIZE
+operator|+
+name|round_page
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|msgbuf
+argument_list|)
+argument_list|)
+operator|>=
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+condition|)
+block|{
+name|physmem
+operator|-=
+name|atop
+argument_list|(
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+operator|-
+name|phys_avail
+index|[
+name|pa_indx
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|phys_avail
+index|[
+name|pa_indx
+operator|--
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|phys_avail
+index|[
+name|pa_indx
+operator|--
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|Maxmem
+operator|=
+name|atop
+argument_list|(
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Trim off space for the message buffer. */
+name|phys_avail
+index|[
+name|pa_indx
+index|]
+operator|-=
+name|round_page
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -6389,73 +6632,12 @@ name|msgbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize pointers to the two chunks of memory; for use 	 *	later in vm_page_startup. 	 */
-comment|/* avail_start is initialized in pmap_bootstrap */
-name|x
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|pagesinbase
-operator|>
-literal|1
-condition|)
-block|{
-name|phys_avail
-index|[
-name|x
-operator|++
-index|]
-operator|=
-name|NBPG
-expr_stmt|;
-comment|/* skip first page of memory */
-name|phys_avail
-index|[
-name|x
-operator|++
-index|]
-operator|=
-name|pagesinbase
-operator|*
-name|NBPG
-expr_stmt|;
-comment|/* memory up to the ISA hole */
-block|}
-name|phys_avail
-index|[
-name|x
-operator|++
-index|]
-operator|=
-name|avail_start
-expr_stmt|;
-comment|/* memory up to the end */
-name|phys_avail
-index|[
-name|x
-operator|++
-index|]
-operator|=
 name|avail_end
-expr_stmt|;
+operator|=
 name|phys_avail
 index|[
-name|x
-operator|++
+name|pa_indx
 index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no more chunks */
-name|phys_avail
-index|[
-name|x
-operator|++
-index|]
-operator|=
-literal|0
 expr_stmt|;
 comment|/* now running on new page tables, configured,and u/iom is accessible */
 comment|/* make a initial tss so microp can get interrupt stack on syscall! */
