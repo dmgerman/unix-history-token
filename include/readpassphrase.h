@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readpassphrase.h,v 1.1 2000/11/21 00:48:38 millert Exp $	*/
+comment|/*	$OpenBSD: /usr/local/www/cvsroot/OpenBSD/src/include/readpassphrase.h,v 1.2 2002/02/16 21:27:17 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -95,28 +95,25 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 name|char
 modifier|*
 name|readpassphrase
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS
