@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.20 1997/11/07 02:34:50 msmith Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.21 1997/11/09 06:30:29 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -106,15 +106,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|db_lhistory
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|db_lhistory_buffer
 index|[
 literal|2048
 index|]
@@ -575,7 +567,7 @@ name|__FreeBSD__
 case|case
 literal|591
 case|:
-comment|/* syscons's idea of an arrow key... */
+comment|/* syscons's idea of left arrow key */
 endif|#
 directive|endif
 case|case
@@ -610,7 +602,7 @@ name|__FreeBSD__
 case|case
 literal|593
 case|:
-comment|/* syscons's idea of an arrow key... */
+comment|/* syscons's idea of right arrow key */
 endif|#
 directive|endif
 case|case
@@ -879,7 +871,7 @@ name|__FreeBSD__
 case|case
 literal|588
 case|:
-comment|/* syscons's idea of an arrow key... */
+comment|/* syscons's idea of up arrow key */
 endif|#
 directive|endif
 case|case
@@ -925,7 +917,7 @@ name|__FreeBSD__
 case|case
 literal|596
 case|:
-comment|/* syscons's idea of an arrow key... */
+comment|/* syscons's idea of down arrow key */
 endif|#
 directive|endif
 case|case
@@ -1199,37 +1191,18 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|db_lhistory
-operator|&&
 name|lsize
 operator|!=
 name|db_lhistlsize
 condition|)
 block|{
-comment|/* Should not happen, but to be sane, throw history away. */
-name|db_lhistory
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|db_lhistory
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Initialize input line history. */
-name|db_lhistory
-operator|=
-name|db_lhistory_buffer
-expr_stmt|;
+comment|/* 		 * (Re)initialize input line history.  Throw away any 		 * existing history. 		 */
 name|db_lhist_nlines
 operator|=
-operator|(
 sizeof|sizeof
-name|db_lhistory_buffer
-operator|)
+argument_list|(
+name|db_lhistory
+argument_list|)
 operator|/
 name|lsize
 expr_stmt|;
@@ -1292,15 +1265,11 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|db_lhistory
-operator|&&
-operator|(
 name|db_le
 operator|-
 name|db_lbuf_start
 operator|>
 literal|1
-operator|)
 condition|)
 block|{
 comment|/* Maintain input line history for non-empty lines. */
@@ -1340,11 +1309,9 @@ name|lstart
 argument_list|,
 name|db_lhistory
 operator|+
-operator|(
 name|db_lhistidx
 operator|*
 name|db_lhistlsize
-operator|)
 argument_list|,
 name|db_lhistlsize
 argument_list|)
