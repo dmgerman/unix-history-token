@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.29 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.30 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.29 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.30 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1061,12 +1061,16 @@ argument_list|,
 name|PrivacyFlags
 argument_list|)
 condition|)
+block|{
 name|message
 argument_list|(
 literal|"503 Polite people say HELO first"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 else|else
+block|{
 name|auth_warning
 argument_list|(
 name|e
@@ -1076,7 +1080,7 @@ argument_list|,
 name|RealHostName
 argument_list|)
 expr_stmt|;
-break|break;
+block|}
 block|}
 if|if
 condition|(
