@@ -489,7 +489,7 @@ if|if
 condition|(
 name|kldload
 argument_list|(
-literal|"g_ccd"
+literal|"geom_ccd"
 argument_list|)
 operator|<
 literal|0
@@ -503,7 +503,7 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"g_ccd module not available!"
+literal|"geom_ccd module not available!"
 argument_list|)
 expr_stmt|;
 block|}
