@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.13 (Berkeley) %G%"
+literal|"@(#)ns.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"netstat.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|nspcb
@@ -188,42 +194,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|Aflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|aflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nflag
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|plural
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|ns_prpr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ns_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -238,29 +222,21 @@ begin_comment
 comment|/*  * Print a summary of connections related to a Network Systems  * protocol.  For SPP, also give state of connection.  * Listening processes (aflag) are suppressed unless the  * -a (all) flag is specified.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|nsprotopr
-argument_list|(
-argument|off
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|off
+parameter_list|,
+name|name
+parameter_list|)
 name|off_t
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|nspcb
@@ -296,7 +272,7 @@ argument_list|)
 operator|==
 literal|0
 expr_stmt|;
-name|kvm_read
+name|kread
 argument_list|(
 name|off
 argument_list|,
@@ -369,7 +345,7 @@ name|nspcb
 operator|.
 name|nsp_next
 expr_stmt|;
-name|kvm_read
+name|kread
 argument_list|(
 operator|(
 name|off_t
@@ -420,7 +396,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|kvm_read
+name|kread
 argument_list|(
 operator|(
 name|off_t
@@ -461,7 +437,7 @@ condition|(
 name|isspp
 condition|)
 block|{
-name|kvm_read
+name|kread
 argument_list|(
 name|ppcb
 argument_list|,
@@ -658,7 +634,7 @@ name|next
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -679,29 +655,21 @@ begin_comment
 comment|/*  * Dump SPP statistics structure.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|spp_stats
-argument_list|(
-argument|off
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|off
+parameter_list|,
+name|name
+parameter_list|)
 name|off_t
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|spp_istat
@@ -718,7 +686,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|kvm_read
+name|kread
 argument_list|(
 name|off
 argument_list|,
@@ -1359,7 +1327,7 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_undef
 undef|#
@@ -1385,29 +1353,21 @@ begin_comment
 comment|/*  * Dump IDP statistics structure.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|idp_stats
-argument_list|(
-argument|off
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|off
+parameter_list|,
+name|name
+parameter_list|)
 name|off_t
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|idpstat
@@ -1420,7 +1380,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|kvm_read
+name|kread
 argument_list|(
 name|off
 argument_list|,
@@ -1478,7 +1438,7 @@ literal|" with bad checksums"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_struct
 specifier|static
@@ -1584,29 +1544,21 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|nserr_stats
-argument_list|(
-argument|off
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|off
+parameter_list|,
+name|name
+parameter_list|)
 name|off_t
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ns_errstat
@@ -1632,7 +1584,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|kvm_read
+name|kread
 argument_list|(
 name|off
 argument_list|,
@@ -1820,18 +1772,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|ns_erputil
-argument_list|(
-argument|z
-argument_list|,
-argument|c
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|z
+parameter_list|,
+name|c
+parameter_list|)
+name|int
+name|z
+decl_stmt|,
+name|c
+decl_stmt|;
 block|{
 name|int
 name|j
@@ -1945,7 +1901,7 @@ name|where
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -1960,6 +1916,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|ns_prpr
@@ -1980,12 +1937,6 @@ init|=
 operator|&
 name|ssns
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|ns_print
-parameter_list|()
-function_decl|;
 name|sns
 operator|->
 name|sns_addr
@@ -1997,6 +1948,11 @@ return|return
 operator|(
 name|ns_print
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sns
 argument_list|)
 operator|)

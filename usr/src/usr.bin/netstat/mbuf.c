@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.10 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"netstat.h"
 end_include
 
 begin_define
@@ -218,20 +236,15 @@ begin_comment
 comment|/*  * Print mbuf statistics.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mbpr
-argument_list|(
-argument|mbaddr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mbaddr
+parameter_list|)
 name|off_t
 name|mbaddr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -262,7 +275,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"unexpected change to mbstat; check source\n"
+literal|"%s: unexpected change to mbstat; check source\n"
+argument_list|,
+name|prog
 argument_list|)
 expr_stmt|;
 return|return;
@@ -274,16 +289,20 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"mbstat: symbol not in namelist\n"
+name|stderr
+argument_list|,
+literal|"%s: mbstat: symbol not in namelist\n"
+argument_list|,
+name|prog
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 if|if
 condition|(
-name|kvm_read
+name|kread
 argument_list|(
 name|mbaddr
 argument_list|,
@@ -299,20 +318,8 @@ argument_list|(
 name|mbstat
 argument_list|)
 argument_list|)
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|mbstat
-argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"mbstat: bad read\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|totmbufs
 operator|=
 literal|0
@@ -536,7 +543,7 @@ name|m_drain
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

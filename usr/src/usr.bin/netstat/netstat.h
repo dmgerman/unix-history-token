@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -543,10 +543,6 @@ name|unixpr
 name|__P
 argument_list|(
 operator|(
-name|off_t
-operator|,
-name|off_t
-operator|,
 expr|struct
 name|protosw
 operator|*
