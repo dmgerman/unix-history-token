@@ -1030,12 +1030,12 @@ if|if
 condition|(
 operator|*
 name|s
-operator|<=
+operator|<
 literal|'a'
 operator|||
 operator|*
 name|s
-operator|>=
+operator|>
 literal|'h'
 condition|)
 return|return;
