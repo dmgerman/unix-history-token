@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,8 +746,17 @@ argument_list|()
 expr_stmt|;
 comment|/* last will and testament   */
 block|}
-else|else
-comment|/* default wrap-up: undivert */
+if|if
+condition|(
+name|active
+operator|!=
+name|stdout
+condition|)
+name|active
+operator|=
+name|stdout
+expr_stmt|;
+comment|/* reset output just in case */
 for|for
 control|(
 name|n
@@ -761,6 +770,7 @@ condition|;
 name|n
 operator|++
 control|)
+comment|/* default wrap-up: undivert */
 if|if
 condition|(
 name|outfile
