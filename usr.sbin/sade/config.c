@@ -2056,6 +2056,16 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|rcSite
+argument_list|,
+literal|"#REMOVED: %s"
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
 block|}
 name|fclose
 argument_list|(
