@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -27,73 +27,73 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../sys/param.h"
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/systm.h"
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/socket.h"
+file|"sys/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/user.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/proc.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/vnode.h"
+file|"sys/vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/file.h"
+file|"sys/file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/callout.h"
+file|"sys/callout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/clist.h"
+file|"sys/clist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/mbuf.h"
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
+file|"ufs/quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sys/kernel.h"
+file|"sys/kernel.h"
 end_include
 
 begin_ifdef
@@ -111,7 +111,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../sys/shm.h"
+file|"sys/shm.h"
 end_include
 
 begin_endif
