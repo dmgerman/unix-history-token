@@ -171,6 +171,16 @@ directive|include
 file|<machine/tstate.h>
 end_include
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|KERNBASE
+argument_list|,
+name|KERNBASE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * XXX: gas, as of version 2.11.2, does not know this ASI (and some other  * UltraSparc specific ones). This definition will probably get us into trouble  * as soon as they are added.  */
 end_comment
