@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.41 1997/11/27 10:15:48 kato Exp $  **/
+comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.42 1997/12/09 11:55:25 kato Exp $  **/
 end_comment
 
 begin_comment
@@ -8795,7 +8795,7 @@ comment|/* VISUAL_USERCONFIG */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.41 1997/11/27 10:15:48 kato Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.42 1997/12/09 11:55:25 kato Exp $  */
 end_comment
 
 begin_include
@@ -12682,11 +12682,8 @@ name|dt
 operator|++
 control|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|char
-name|line
+name|dname
 index|[
 literal|80
 index|]
@@ -12741,25 +12738,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Device   port       irq   drq   iomem   iosize   unit  flags      enabled\n"
+literal|"Device   port       irq   drq   iomem   iosize   unit  flags      enab confl\n"
 argument_list|)
 expr_stmt|;
 operator|++
 name|lineno
 expr_stmt|;
 block|}
-comment|/* 	 * printf() doesn't support %#, %- or even field widths for strings, 	 * so formatting is not straightforward. 	 */
-name|bzero
-argument_list|(
-name|line
-argument_list|,
-sizeof|sizeof
-name|line
-argument_list|)
-expr_stmt|;
 name|sprintf
 argument_list|(
-name|line
+name|dname
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -12774,28 +12762,16 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-comment|/* Missing: id_id (don't need it). */
-comment|/* Missing: id_driver (useful if we could show it by name). */
-name|sprintf
+name|printf
 argument_list|(
-name|line
-operator|+
-literal|9
+literal|"%-9.9s%-#11x%-6d%-6d%-8p%-9d%-6d%-#11x%-5s%-3s\n"
 argument_list|,
-literal|"0x%x"
+name|dname
 argument_list|,
+comment|/* dt->id_id, dt->id_driver(by name), */
 name|dt
 operator|->
 name|id_iobase
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|line
-operator|+
-literal|20
-argument_list|,
-literal|"%d"
 argument_list|,
 name|ffs
 argument_list|(
@@ -12805,85 +12781,30 @@ name|id_irq
 argument_list|)
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|line
-operator|+
-literal|26
-argument_list|,
-literal|"%d"
 argument_list|,
 name|dt
 operator|->
 name|id_drq
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|line
-operator|+
-literal|32
-argument_list|,
-literal|"%p"
 argument_list|,
 name|dt
 operator|->
 name|id_maddr
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|line
-operator|+
-literal|40
-argument_list|,
-literal|"%d"
 argument_list|,
 name|dt
 operator|->
 name|id_msize
-argument_list|)
-expr_stmt|;
-comment|/* Missing: id_msize (0 at start, useful if we can get here later). */
-comment|/* Missing: id_intr (useful if we could show it by name). */
-comment|/* Display only: id_unit. */
-name|sprintf
-argument_list|(
-name|line
-operator|+
-literal|49
 argument_list|,
-literal|"%d"
-argument_list|,
+comment|/* dt->id_intr(by name), */
 name|dt
 operator|->
 name|id_unit
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|line
-operator|+
-literal|55
-argument_list|,
-literal|"0x%x"
 argument_list|,
 name|dt
 operator|->
 name|id_flags
-argument_list|)
-expr_stmt|;
-comment|/* Missing: id_scsiid, id_alive, id_ri_flags, id_reconfig (0 now...) */
-name|sprintf
-argument_list|(
-name|line
-operator|+
-literal|66
 argument_list|,
-literal|"%s"
-argument_list|,
+comment|/* dt->id_scsiid, dt->id_alive, dt->id_ri_flags, */
+comment|/* dt->id_reconfig, */
 name|dt
 operator|->
 name|id_enabled
@@ -12891,42 +12812,14 @@ condition|?
 literal|"Yes"
 else|:
 literal|"No"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|66
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|line
-index|[
-name|i
-index|]
-operator|==
-literal|'\0'
-condition|)
-name|line
-index|[
-name|i
-index|]
-operator|=
-literal|' '
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
 argument_list|,
-name|line
+name|dt
+operator|->
+name|id_conflicts
+condition|?
+literal|"Yes"
+else|:
+literal|"No"
 argument_list|)
 expr_stmt|;
 operator|++
