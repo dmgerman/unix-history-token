@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: compare.c,v 1.8 1997/10/01 06:30:00 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1365,6 +1365,8 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|==
