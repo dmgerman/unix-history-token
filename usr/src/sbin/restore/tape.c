@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.9	(Berkeley)	83/03/27"
+literal|"@(#)tape.c	3.10	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -800,6 +800,10 @@ argument_list|(
 literal|"no memory for file removal list\n"
 argument_list|)
 expr_stmt|;
+name|clrimap
+operator|=
+name|map
+expr_stmt|;
 name|curfile
 operator|.
 name|action
@@ -812,10 +816,6 @@ name|xtrmap
 argument_list|,
 name|xtrmapskip
 argument_list|)
-expr_stmt|;
-name|clrimap
-operator|=
-name|map
 expr_stmt|;
 if|if
 condition|(
@@ -878,6 +878,10 @@ argument_list|(
 literal|"no memory for file dump list\n"
 argument_list|)
 expr_stmt|;
+name|dumpmap
+operator|=
+name|map
+expr_stmt|;
 name|curfile
 operator|.
 name|action
@@ -890,10 +894,6 @@ name|xtrmap
 argument_list|,
 name|xtrmapskip
 argument_list|)
-expr_stmt|;
-name|dumpmap
-operator|=
-name|map
 expr_stmt|;
 block|}
 end_block
@@ -2605,6 +2605,10 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|map
+operator|+=
+name|size
+expr_stmt|;
 block|}
 end_block
 
@@ -2639,16 +2643,16 @@ name|buf
 operator|=
 name|buf
 expr_stmt|;
-name|size
-operator|=
-name|size
-expr_stmt|;
 endif|#
 directive|endif
 name|panic
 argument_list|(
 literal|"hole in map\n"
 argument_list|)
+expr_stmt|;
+name|map
+operator|+=
+name|size
 expr_stmt|;
 block|}
 end_block
@@ -3270,7 +3274,7 @@ decl_stmt|;
 name|long
 name|c_tapea
 decl_stmt|;
-name|short
+name|u_short
 name|c_inumber
 decl_stmt|;
 name|long
@@ -3286,13 +3290,13 @@ name|unsigned
 name|short
 name|odi_mode
 decl_stmt|;
-name|short
+name|u_short
 name|odi_nlink
 decl_stmt|;
-name|short
+name|u_short
 name|odi_uid
 decl_stmt|;
-name|short
+name|u_short
 name|odi_gid
 decl_stmt|;
 name|long
