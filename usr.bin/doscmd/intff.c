@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"doscmd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -19,6 +13,24 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cwd.h"
 end_include
 
 begin_include
@@ -2794,14 +2806,10 @@ name|REGS
 parameter_list|)
 block|{
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|char
-modifier|*
-name|fname
 decl_stmt|;
 if|if
 condition|(
@@ -2817,7 +2825,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|index
+name|idx
 operator|=
 name|intfunc_find
 argument_list|(
@@ -2832,7 +2840,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 operator|-
 literal|1
@@ -2883,14 +2891,14 @@ literal|"REDIR: %02x (%s)\n"
 argument_list|,
 name|int2f11_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|func
 argument_list|,
 name|int2f11_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|desc
@@ -2901,7 +2909,7 @@ name|error
 operator|=
 name|int2f11_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|handler
@@ -3180,12 +3188,16 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|path
 operator|=
 name|dos_getpath
 argument_list|(
 name|drive
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 comment|/* assigned to a path? */
 name|install_drive

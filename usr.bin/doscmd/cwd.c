@@ -69,6 +69,12 @@ directive|include
 file|"doscmd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cwd.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -160,10 +166,6 @@ name|paths
 index|[
 name|MAX_DRIVE
 index|]
-init|=
-block|{
-literal|0
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1199,13 +1201,13 @@ name|where
 parameter_list|)
 block|{
 name|u_char
-name|newpath
+name|new_path
 index|[
 literal|1024
 index|]
 decl_stmt|;
 name|u_char
-name|realpath
+name|real_path
 index|[
 literal|1024
 index|]
@@ -1239,7 +1241,7 @@ name|dos_makepath
 argument_list|(
 name|where
 argument_list|,
-name|newpath
+name|new_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -1255,9 +1257,9 @@ name|error
 operator|=
 name|dos_to_real_path
 argument_list|(
-name|newpath
+name|new_path
 argument_list|,
-name|realpath
+name|real_path
 argument_list|,
 operator|&
 name|drive
@@ -1276,7 +1278,7 @@ if|if
 condition|(
 name|ustat
 argument_list|(
-name|realpath
+name|real_path
 argument_list|,
 operator|&
 name|sb
@@ -1301,7 +1303,7 @@ if|if
 condition|(
 name|uaccess
 argument_list|(
-name|realpath
+name|real_path
 argument_list|,
 name|R_OK
 operator||
@@ -1327,7 +1329,7 @@ name|len
 operator|=
 name|ustrlen
 argument_list|(
-name|newpath
+name|new_path
 operator|+
 literal|2
 argument_list|)
@@ -1396,7 +1398,7 @@ argument_list|(
 name|drive
 argument_list|)
 argument_list|,
-name|newpath
+name|new_path
 argument_list|,
 name|strerror
 argument_list|(
@@ -1405,15 +1407,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ustrcpy
+name|ustrncpy
 argument_list|(
 name|d
 operator|->
 name|cwd
 argument_list|,
-name|newpath
+name|new_path
 operator|+
 literal|2
+argument_list|,
+name|d
+operator|->
+name|maxlen
+operator|-
+name|d
+operator|->
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -1425,7 +1435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a DOS path dospath and a drive, convert it to a BSD pathname  * and store the result in realpath.  * Return DOS errno on failure.  */
+comment|/*  * Given a DOS path dos_path and a drive, convert it to a BSD pathname  * and store the result in real_path.  * Return DOS errno on failure.  */
 end_comment
 
 begin_function
@@ -1434,11 +1444,11 @@ name|dos_to_real_path
 parameter_list|(
 name|u_char
 modifier|*
-name|dospath
+name|dos_path
 parameter_list|,
 name|u_char
 modifier|*
-name|realpath
+name|real_path
 parameter_list|,
 name|int
 modifier|*
@@ -1450,7 +1460,7 @@ modifier|*
 name|d
 decl_stmt|;
 name|u_char
-name|newpath
+name|new_path
 index|[
 literal|1024
 index|]
@@ -1458,9 +1468,6 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|rp
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1480,19 +1487,19 @@ name|D_REDIR
 argument_list|,
 literal|"dos_to_real_path(%s)\n"
 argument_list|,
-name|dospath
+name|dos_path
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dospath
+name|dos_path
 index|[
 literal|0
 index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|dospath
+name|dos_path
 index|[
 literal|1
 index|]
@@ -1505,13 +1512,13 @@ operator|=
 name|drlton
 argument_list|(
 operator|*
-name|dospath
+name|dos_path
 argument_list|)
 expr_stmt|;
-name|dospath
+name|dos_path
 operator|++
 expr_stmt|;
-name|dospath
+name|dos_path
 operator|++
 expr_stmt|;
 block|}
@@ -1545,7 +1552,7 @@ operator|)
 return|;
 name|ustrcpy
 argument_list|(
-name|realpath
+name|real_path
 argument_list|,
 name|d
 operator|->
@@ -1554,7 +1561,7 @@ argument_list|)
 expr_stmt|;
 name|rp
 operator|=
-name|realpath
+name|real_path
 expr_stmt|;
 while|while
 condition|(
@@ -1564,18 +1571,25 @@ condition|)
 operator|++
 name|rp
 expr_stmt|;
-name|ustrcpy
+name|ustrncpy
 argument_list|(
-name|newpath
+name|new_path
 argument_list|,
-name|dospath
+name|dos_path
+argument_list|,
+literal|1024
+operator|-
+name|ustrlen
+argument_list|(
+name|new_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dirs
 operator|=
 name|get_entries
 argument_list|(
-name|newpath
+name|new_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -1592,11 +1606,15 @@ return|;
 comment|/*      * Skip the leading /      * There are no . or .. entries to worry about either      */
 while|while
 condition|(
+operator|(
 name|dir
 operator|=
 operator|*
 operator|++
 name|dirs
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -2170,12 +2188,14 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|inline
+name|int
 name|isvalid
-argument_list|(
-argument|unsigned c
-argument_list|)
+parameter_list|(
+name|unsigned
+name|c
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2190,14 +2210,16 @@ literal|1
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|inline
+name|int
 name|isdot
-argument_list|(
-argument|unsigned c
-argument_list|)
+parameter_list|(
+name|unsigned
+name|c
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2212,14 +2234,16 @@ literal|3
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|inline
+name|int
 name|isslash
-argument_list|(
-argument|unsigned c
-argument_list|)
+parameter_list|(
+name|unsigned
+name|c
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2234,7 +2258,7 @@ literal|4
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/*  * Given a real component, compute the DOS component.  */
@@ -3803,16 +3827,17 @@ begin_comment
 comment|/*  * Return file system statistics for drive.  * Return the DOS errno on failure.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|get_space
-argument_list|(
-argument|int drive
-argument_list|,
-argument|fsstat_t *fs
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|drive
+parameter_list|,
+name|fsstat_t
+modifier|*
+name|fs
+parameter_list|)
 block|{
 name|Path_t
 modifier|*
@@ -4107,7 +4132,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_if
 if|#
@@ -4488,28 +4513,33 @@ begin_comment
 comment|/*  * Find the first file on drive which matches the path with the given  * attributes attr.  * If found, the result is placed in dir (32 bytes).  * The DTA is populated as required by DOS, but the state area is ignored.  * Returns DOS errno on failure.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|find_first
-argument_list|(
-argument|u_char *path
-argument_list|,
-argument|int attr
-argument_list|,
-argument|dosdir_t *dir
-argument_list|,
-argument|find_block_t *dta
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_char
+modifier|*
+name|path
+parameter_list|,
+name|int
+name|attr
+parameter_list|,
+name|dosdir_t
+modifier|*
+name|dir
+parameter_list|,
+name|find_block_t
+modifier|*
+name|dta
+parameter_list|)
 block|{
 name|u_char
-name|newpath
+name|new_path
 index|[
 literal|1024
 index|]
 decl_stmt|,
-name|realpath
+name|real_path
 index|[
 literal|1024
 index|]
@@ -4553,7 +4583,7 @@ name|dos_makepath
 argument_list|(
 name|path
 argument_list|,
-name|newpath
+name|new_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -4567,7 +4597,7 @@ operator|)
 return|;
 name|expr
 operator|=
-name|newpath
+name|new_path
 expr_stmt|;
 name|slash
 operator|=
@@ -4611,9 +4641,9 @@ name|error
 operator|=
 name|dos_to_real_path
 argument_list|(
-name|newpath
+name|new_path
 argument_list|,
-name|realpath
+name|real_path
 argument_list|,
 operator|&
 name|drive
@@ -4660,7 +4690,7 @@ name|dp
 operator|=
 name|opendir
 argument_list|(
-name|realpath
+name|real_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -4676,13 +4706,20 @@ operator|(
 name|PATH_NOT_FOUND
 operator|)
 return|;
-name|ustrcpy
+name|ustrncpy
 argument_list|(
 name|search
 operator|->
 name|searchdir
 argument_list|,
-name|realpath
+name|real_path
+argument_list|,
+literal|1024
+operator|-
+name|ustrlen
+argument_list|(
+name|real_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|search
@@ -4762,7 +4799,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Continue on where find_first left off.  * The results will be placed in dir.  * DTA state area is ignored.  */
@@ -4823,6 +4860,7 @@ endif|#
 directive|endif
 while|while
 condition|(
+operator|(
 name|d
 operator|=
 name|readdir
@@ -4831,6 +4869,9 @@ name|search
 operator|->
 name|dp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|real_to_dos

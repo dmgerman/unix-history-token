@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"doscmd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -36,19 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<glob.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -60,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<glob.h>
 end_include
 
 begin_include
@@ -78,7 +60,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cwd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dispatch.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_decl_stmt
@@ -675,9 +687,6 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|u_char
-name|c
-decl_stmt|;
 name|R_AL
 operator|=
 name|upcase
@@ -705,36 +714,8 @@ block|{
 name|fsstat_t
 name|fs
 decl_stmt|;
-name|struct
-name|statfs
-name|fsstat
-decl_stmt|;
-name|char
-name|fspath
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|int
-name|junk
-decl_stmt|;
-name|int
-name|spc
-decl_stmt|,
-name|fclus
-decl_stmt|,
-name|bps
-decl_stmt|,
-name|nclus
-decl_stmt|;
-name|long
-name|nsec
-decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
-name|dd_save
 decl_stmt|;
 name|int
 name|drive
@@ -981,13 +962,6 @@ modifier|*
 name|dta
 parameter_list|)
 block|{
-name|u_char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|;
 name|dta
 operator|->
 name|attr
@@ -2209,6 +2183,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* keep `gcc -Wall' happy */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2236,6 +2216,10 @@ name|n
 operator|=
 name|tty_read
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -2317,6 +2301,10 @@ name|n
 operator|=
 name|tty_read
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -2399,6 +2387,10 @@ name|R_AL
 operator|=
 name|tty_read
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -2443,6 +2435,10 @@ name|n
 operator|=
 name|tty_read
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -2629,6 +2625,10 @@ name|n
 operator|=
 name|tty_read
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -5114,16 +5114,11 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|int
-name|fd
-decl_stmt|;
 name|char
 modifier|*
 name|addr
 decl_stmt|;
 name|int
-name|nbytes
-decl_stmt|,
 name|n
 decl_stmt|;
 name|int
@@ -6089,6 +6084,11 @@ operator|=
 literal|0x1200
 expr_stmt|;
 comment|/* disk is remote, direct I/O not allowed */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -6923,7 +6923,7 @@ decl_stmt|;
 name|u_short
 name|date
 decl_stmt|,
-name|time
+name|mtime
 decl_stmt|;
 if|if
 condition|(
@@ -6952,12 +6952,12 @@ operator|&
 name|date
 argument_list|,
 operator|&
-name|time
+name|mtime
 argument_list|)
 expr_stmt|;
 name|R_CX
 operator|=
-name|time
+name|mtime
 expr_stmt|;
 name|R_DX
 operator|=
@@ -7480,6 +7480,11 @@ name|R_BX
 operator|=
 name|pspseg
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -7867,6 +7872,11 @@ name|total
 operator|/
 literal|128
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -10293,10 +10303,10 @@ name|int
 name|error
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 comment|/* look for a handler */
-name|index
+name|idx
 operator|=
 name|intfunc_find
 argument_list|(
@@ -10311,7 +10321,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 operator|-
 literal|1
@@ -10345,7 +10355,7 @@ name|error
 operator|=
 name|int21_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|handler
@@ -10361,14 +10371,14 @@ literal|"msdos call %02x (%s) returns %d (%s)\n"
 argument_list|,
 name|int21_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|func
 argument_list|,
 name|int21_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|desc
@@ -10487,9 +10497,6 @@ parameter_list|)
 block|{
 name|u_long
 name|vec
-decl_stmt|;
-name|int
-name|hn
 decl_stmt|;
 comment|/* hook vectors */
 name|vec

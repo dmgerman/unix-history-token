@@ -6,13 +6,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"doscmd.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
 end_include
 
 begin_define
@@ -374,10 +392,6 @@ name|diskinfo
 index|[
 literal|26
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1840,13 +1854,15 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
 specifier|inline
+name|int
 name|bps
-argument_list|(
-argument|int size
-argument_list|)
+parameter_list|(
+name|int
+name|size
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1901,21 +1917,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+comment|/* keep `gcc -Wall' happy */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
-begin_macro
-unit|}  int
+begin_function
+name|int
 name|init_floppy
-argument_list|(
-argument|int drive
-argument_list|,
-argument|int type
-argument_list|,
-argument|char *file
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|drive
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|)
 block|{
 name|struct
 name|diskinfo
@@ -2539,7 +2563,7 @@ name|drive
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -2567,15 +2591,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|icnt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#

@@ -34,7 +34,7 @@ begin_decl_stmt
 name|int
 name|nmice
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -62,10 +62,6 @@ name|vec
 decl_stmt|;
 name|u_short
 name|mask
-decl_stmt|;
-name|void
-modifier|*
-name|addr
 decl_stmt|;
 name|int
 name|i
@@ -497,22 +493,6 @@ name|mouse_status
 operator|.
 name|lasty
 expr_stmt|;
-name|mouse_status
-operator|.
-name|lastx
-operator|-
-name|mouse_status
-operator|.
-name|x
-expr_stmt|;
-name|mouse_status
-operator|.
-name|lasty
-operator|-
-name|mouse_status
-operator|.
-name|y
-expr_stmt|;
 break|break;
 case|case
 literal|0x0c
@@ -941,7 +921,7 @@ break|break;
 case|case
 literal|0x1b
 case|:
-comment|/* set mouse sensitivity */
+comment|/* get mouse sensitivity */
 name|R_BX
 operator|=
 name|mouse_status

@@ -285,9 +285,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 comment|/* Initialize handle table: xms_handle.addr == 0 means free */
 name|bzero
 argument_list|(
@@ -1028,9 +1025,6 @@ name|void
 name|initHMA
 parameter_list|()
 block|{
-name|caddr_t
-name|add
-decl_stmt|;
 name|int
 name|mfd
 decl_stmt|;

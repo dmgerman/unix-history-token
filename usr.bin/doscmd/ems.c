@@ -1633,9 +1633,6 @@ case|case
 name|PAGE_MAP_PARTIAL
 case|:
 block|{
-name|u_long
-name|addr
-decl_stmt|;
 name|int
 name|subfunction
 decl_stmt|;
@@ -4195,8 +4192,6 @@ operator|=
 name|EMS_FUNCTION_DISABLED
 expr_stmt|;
 break|break;
-name|unknown
-label|:
 default|default:
 name|debug
 argument_list|(
@@ -4242,7 +4237,9 @@ name|ems_max_size
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|strcpy
 argument_list|(
 name|path
@@ -5020,6 +5017,13 @@ argument_list|(
 literal|"EMS handle count garbled, should not happen\n"
 argument_list|)
 expr_stmt|;
+comment|/* quiet 'gcc -Wall' */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

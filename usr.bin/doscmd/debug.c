@@ -15,6 +15,12 @@ directive|include
 file|"doscmd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
+
 begin_comment
 comment|/* debug output goes here */
 end_comment
@@ -304,12 +310,6 @@ condition|)
 block|{
 name|char
 name|buf
-index|[
-literal|1024
-index|]
-decl_stmt|;
-name|char
-name|buf2
 index|[
 literal|1024
 index|]

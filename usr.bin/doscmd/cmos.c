@@ -295,13 +295,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|fast_delta_uclock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|timeval
 name|fast_clock

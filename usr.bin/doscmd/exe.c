@@ -6,13 +6,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -24,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -86,14 +98,6 @@ name|frames
 index|[
 literal|10
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|env_block
 decl_stmt|;
 end_decl_stmt
 
@@ -1812,25 +1816,6 @@ argument_list|,
 name|text_size
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|get_psp
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|psp_s
-index|[
-name|curpsp
-index|]
-operator|)
-return|;
 block|}
 end_function
 

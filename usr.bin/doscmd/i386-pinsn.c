@@ -10,6 +10,10 @@ comment|/* Print i386 instructions for GDB, the GNU debugger.    Copyright (C) 1
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * 80386 instruction printer by Pace Willisson (pace@prep.ai.mit.edu)  * July 1988  */
 end_comment
 
@@ -28,6 +32,44 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
+end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|dofloat
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|oappend
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|putop
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -5092,12 +5134,13 @@ name|prefixes
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|ckprefix
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|prefixes
 operator|=
@@ -5218,7 +5261,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -5266,60 +5309,42 @@ begin_comment
 comment|/*  * disassemble the first instruction in 'inbuf'.  You have to make  *   sure all of the bytes of the instruction are filled in.  *   On the 386's of 1988, the maximum length of an instruction is 15 bytes.  *   (see topic "Redundant prefixes" in the "Differences from 8086"  *   section of the "Virtual 8086 Mode" chapter.)  * 'pc' should be the address of this instruction, it will  *   be used to print the target address if this is a relative jump or call  * 'outbuf' gets filled in with the disassembled instruction.  it should  *   be long enough to hold the longest disassembled instruction.  *   100 bytes is certainly enough, unless symbol printing is added later  * The function returns the length of this instruction in bytes.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|i386dis
-argument_list|(
-argument|ucs
-argument_list|,
-argument|uip
-argument_list|,
-argument|inbuf
-argument_list|,
-argument|outbuf
-argument_list|,
-argument|mode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ucs
+parameter_list|,
+name|uip
+parameter_list|,
+name|inbuf
+parameter_list|,
+name|outbuf
+parameter_list|,
+name|mode
+parameter_list|)
 name|unsigned
 name|short
 name|ucs
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|short
 name|uip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|char
 modifier|*
 name|inbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|outbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|dis386
 modifier|*
 name|dp
-decl_stmt|;
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|int
 name|i
@@ -5863,7 +5888,7 @@ name|inbuf
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -6665,12 +6690,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|dofloat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|dis386
@@ -6836,7 +6860,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6893,21 +6917,17 @@ begin_comment
 comment|/* capital letters in template are macros */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|putop
-argument_list|(
-argument|template
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|template
+parameter_list|)
 name|char
 modifier|*
 name|template
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -7008,23 +7028,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|oappend
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|strcpy
 argument_list|(
@@ -7046,7 +7060,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|append_prefix

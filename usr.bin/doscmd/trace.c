@@ -564,16 +564,20 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|inline
+name|void
 name|showstate
-argument_list|(
-argument|long flags
-argument_list|,
-argument|long flag
-argument_list|,
-argument|char f
-argument_list|)
+parameter_list|(
+name|long
+name|flags
+parameter_list|,
+name|long
+name|flag
+parameter_list|,
+name|char
+name|f
+parameter_list|)
 block|{
 name|putc
 argument_list|(
@@ -582,33 +586,41 @@ name|flags
 operator|&
 name|flag
 operator|)
-operator|?
+condition|?
 name|f
-operator|:
+else|:
 literal|' '
 argument_list|,
 name|debugf
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|printtrace
-argument_list|(
-argument|regcontext_t *REGS
-argument_list|,
-argument|char *buf
-argument_list|)
+parameter_list|(
+name|regcontext_t
+modifier|*
+name|REGS
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
 block|{
 specifier|static
 name|int
 name|first
-operator|=
+init|=
 literal|1
-block|;
+decl_stmt|;
 name|u_char
-operator|*
+modifier|*
 name|addr
-operator|=
+init|=
 operator|(
 name|u_char
 operator|*
@@ -619,11 +631,11 @@ name|R_CS
 argument_list|,
 name|R_IP
 argument_list|)
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|bigfmt
-operator|=
+init|=
 literal|"%04x:%04x "
 if|#
 directive|if
@@ -633,7 +645,7 @@ endif|#
 directive|endif
 literal|"%-30s "
 literal|"%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x "
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|first
@@ -757,21 +769,12 @@ argument_list|,
 name|R_ES
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 literal|0
-end_if
-
-begin_endif
-unit|fprintf(debugf, "%04x %04x %04x %04x ", 	    ((u_short *)VECPTR(0x0D760FCA-14))[0], 	    ((u_short *)VECPTR(0x0D760FCA-14))[1], 	    ((u_short *)VECPTR(0x0D760F7A+8))[0], 	    ((u_short *)VECPTR(0x0D760F7A+8))[1]);
+block|fprintf(debugf, "%04x %04x %04x %04x ", 	    ((u_short *)VECPTR(0x0D760FCA-14))[0], 	    ((u_short *)VECPTR(0x0D760FCA-14))[1], 	    ((u_short *)VECPTR(0x0D760F7A+8))[0], 	    ((u_short *)VECPTR(0x0D760F7A+8))[1]);
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -781,9 +784,6 @@ argument_list|,
 literal|'C'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -793,9 +793,6 @@ argument_list|,
 literal|'P'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -805,9 +802,6 @@ argument_list|,
 literal|'c'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -817,9 +811,6 @@ argument_list|,
 literal|'Z'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -829,9 +820,6 @@ argument_list|,
 literal|'N'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -841,9 +829,6 @@ argument_list|,
 literal|'T'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -853,9 +838,6 @@ argument_list|,
 literal|'I'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -865,9 +847,6 @@ argument_list|,
 literal|'D'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -877,9 +856,6 @@ argument_list|,
 literal|'V'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -889,9 +865,6 @@ argument_list|,
 literal|'n'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -901,9 +874,6 @@ argument_list|,
 literal|'r'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -913,9 +883,6 @@ argument_list|,
 literal|'v'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -925,9 +892,6 @@ argument_list|,
 literal|'a'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -937,9 +901,6 @@ argument_list|,
 literal|'i'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -949,9 +910,6 @@ argument_list|,
 literal|'p'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|putc
 argument_list|(
 literal|'\n'
@@ -959,8 +917,8 @@ argument_list|,
 name|debugf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-unit|}
 end_unit
 

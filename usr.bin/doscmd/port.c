@@ -6,7 +6,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_define
@@ -22,28 +40,6 @@ directive|define
 name|MAXPORT_MASK
 value|(MAXPORT - 1)
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/sysarch.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|consfd
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#

@@ -15,6 +15,12 @@ directive|include
 file|"dispatch.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
+
 begin_comment
 comment|/* ** Multiplex interrupt. ** ** subfunctions 0-0x7f reserved for DOS, some are implemented here. ** */
 end_comment
@@ -46,6 +52,11 @@ name|R_AL
 operator|=
 name|FUNC_NUM_IVALID
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -372,10 +383,10 @@ name|REGS
 parameter_list|)
 block|{
 name|int
-name|index
+name|idx
 decl_stmt|;
 comment|/* look up the handler for the current function */
-name|index
+name|idx
 operator|=
 name|intfunc_search
 argument_list|(
@@ -388,7 +399,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|>=
 literal|0
 condition|)
@@ -396,7 +407,7 @@ block|{
 comment|/* respond on multiplex chain */
 name|int2f_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|handler

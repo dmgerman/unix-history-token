@@ -897,11 +897,6 @@ name|char
 modifier|*
 name|mp
 decl_stmt|;
-name|int
-name|delta
-decl_stmt|,
-name|nxtsiz
-decl_stmt|;
 name|debug
 argument_list|(
 name|D_MEMORY

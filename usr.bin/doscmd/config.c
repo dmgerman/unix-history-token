@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -18,19 +24,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"com.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cwd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"video.h"
 end_include
 
 begin_comment
@@ -79,6 +115,7 @@ literal|1
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|buffer
 operator|=
 name|fgets
@@ -92,6 +129,9 @@ argument_list|)
 argument_list|,
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|char
@@ -1090,9 +1130,6 @@ decl_stmt|;
 name|unsigned
 name|char
 name|irq
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(

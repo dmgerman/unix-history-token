@@ -9,6 +9,12 @@ directive|include
 file|"doscmd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -148,9 +154,6 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|int
-name|c
-decl_stmt|;
 if|if
 condition|(
 operator|!
