@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cu.c	4.5 (Berkeley) 81/07/02"
+literal|"@(#)cu.c	4.6 (Berkeley) 81/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,7 +842,7 @@ condition|)
 name|fk
 operator|=
 operator|-
-literal|12345
+literal|1
 expr_stmt|;
 else|else
 name|fk
