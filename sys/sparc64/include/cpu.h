@@ -34,7 +34,7 @@ name|CLKF_USERMODE
 parameter_list|(
 name|cfp
 parameter_list|)
-value|(0)
+value|TRAPF_USERMODE(&(cfp)->cf_tf)
 end_define
 
 begin_define
@@ -192,7 +192,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|rdpr
+name|rd
 argument_list|(
 name|tick
 argument_list|)
