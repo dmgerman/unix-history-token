@@ -1612,8 +1612,13 @@ name|XF86Dists
 condition|)
 name|Dists
 operator||=
+operator|(
 name|DIST_XF86
+operator||
+name|DIST_COMPAT21
+operator|)
 expr_stmt|;
+comment|/* XXX for now we need compat21 for X to work XXX */
 name|msgDebug
 argument_list|(
 literal|"SetXF86 Masks: Server: %0x, Fonts: %0x, XDists: %0x, Dists: %0x\n"
