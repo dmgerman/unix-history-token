@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
@@ -418,6 +424,11 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* default no board */
+name|acnt
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Nuber of args */
 name|signal
 argument_list|(
 literal|2
@@ -563,35 +574,10 @@ name|t
 argument_list|)
 expr_stmt|;
 comment|/* 'random' seed */
-ifdef|#
-directive|ifdef
-name|V7
-while|while
-condition|(
-operator|*
-operator|++
-name|argv
-operator|!=
-literal|0
-condition|)
-comment|/* process arguments */
-else|#
-directive|else
-while|while
-condition|(
-operator|*
-operator|++
-name|argv
-operator|!=
-operator|-
-literal|1
-condition|)
-comment|/* process arguments */
-endif|#
-directive|endif
 name|getarg
 argument_list|(
-operator|&
+name|argc
+argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
@@ -600,7 +586,7 @@ index|[
 name|acnt
 index|]
 operator|=
-literal|'\0'
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -711,15 +697,21 @@ name|old
 argument_list|)
 expr_stmt|;
 comment|/* restore tty */
-name|execl
+name|args
+index|[
+literal|0
+index|]
+operator|=
+name|strdup
+argument_list|(
+literal|"teachgammon"
+argument_list|)
+expr_stmt|;
+name|execv
 argument_list|(
 name|TEACH
 argument_list|,
-literal|"teachgammon"
-argument_list|,
 name|args
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|tflag
@@ -764,6 +756,27 @@ expr_stmt|;
 block|}
 block|}
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|acnt
+condition|;
+name|i
+operator|++
+control|)
+name|free
+argument_list|(
+name|args
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|init
 argument_list|()
 expr_stmt|;

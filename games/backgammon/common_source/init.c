@@ -76,12 +76,12 @@ begin_decl_stmt
 name|int
 name|acnt
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* length of args */
+comment|/* number of args */
 end_comment
 
 begin_decl_stmt
