@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	1.8	87/03/13	*/
+comment|/*	vm_machdep.c	1.9	87/04/06	*/
 end_comment
 
 begin_include
@@ -1431,7 +1431,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * Get a code key.  */
+comment|/*   * Get a code key.  * Strategy: try each of the following in turn  * until a key is allocated.  *  * 1) Find an unreferenced key not yet in the cache.  *    If this fails, a code cache purge will be necessary.  * 2) Find an unreferenced key.  Mark all unreferenced keys  *    as available and purge the cache.  * 3) Free the keys from all processes not sharing keys.  * 4) Free the keys from all processes.  */
 end_comment
 
 begin_macro
@@ -1668,7 +1668,7 @@ name|freekey
 operator|)
 return|;
 block|}
-comment|/* 	 * All keys are marked as in the cache and in use. 	 * Release all unshared keys. 	 */
+comment|/* 	 * All keys are marked as in the cache and in use. 	 * Release all unshared keys, or, on second pass, 	 * release all keys. 	 */
 name|steal
 label|:
 for|for
@@ -1722,6 +1722,12 @@ operator|||
 name|desparate
 condition|)
 block|{
+name|p
+operator|->
+name|p_ckey
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -1729,17 +1735,13 @@ name|ckey_cnt
 index|[
 name|i
 index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|freekey
 operator|=
 name|i
-expr_stmt|;
-name|p
-operator|->
-name|p_ckey
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1785,7 +1787,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * Get a data key.  *  * General strategy:  * 1) Try to find a data key that isn't in the cache. Allocate it.  * 2) If all data keys are in the cache, find one which isn't  *    allocated.  Mark all unallocated keys as not in cache and  *    allocate this one.  * 3) If all of them are allocated, free the all process' keys  *    and let them reclaim then as they run.  */
+comment|/*   * Get a data key.  *  * General strategy:  * 1) Try to find a data key that isn't in the cache. Allocate it.  * 2) If all data keys are in the cache, find one which isn't  *    allocated.  Mark all unallocated keys as not in cache,  *    purge the cache, and allocate this one.  * 3) If all of them are allocated, free all process' keys  *    and let them reclaim then as they run.  */
 end_comment
 
 begin_macro
@@ -2014,7 +2016,7 @@ name|freekey
 operator|)
 return|;
 block|}
-comment|/* 	 * Now, we have to take a code from someone. 	 * May as well take them all, so we get them 	 * from all of the idle procs. 	 */
+comment|/* 	 * Now, we have to take a key from someone. 	 * May as well take them all, so we get them 	 * from all of the idle procs. 	 */
 for|for
 control|(
 name|p
