@@ -974,11 +974,33 @@ if|if
 condition|(
 name|vp
 condition|)
+block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
