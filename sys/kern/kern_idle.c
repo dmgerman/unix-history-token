@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -219,6 +225,16 @@ name|dummy
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|EVENTHANDLER_FAST_DEFINE
+argument_list|(
+name|idle_event
+argument_list|,
+name|idle_eventhandler_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * setup per-cpu idle process contexts  */
@@ -394,6 +410,14 @@ name|KTR_PROC
 argument_list|,
 literal|"idle_proc: timed out waiting"
 literal|" for a process"
+argument_list|)
+expr_stmt|;
+comment|/* call out to any cpu-becoming-idle events */
+name|EVENTHANDLER_FAST_INVOKE
+argument_list|(
+name|idle_event
+argument_list|,
+name|count
 argument_list|)
 expr_stmt|;
 block|}
