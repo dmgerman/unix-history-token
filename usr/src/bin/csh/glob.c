@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.34 (Berkeley) %G%"
+literal|"@(#)glob.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,6 +336,23 @@ operator|*
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pmatch
+name|__P
+argument_list|(
+operator|(
+name|Char
+operator|*
+operator|,
+name|Char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4123,6 +4140,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|int
 name|pmatch
 parameter_list|(
