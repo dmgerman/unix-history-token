@@ -2791,6 +2791,14 @@ literal|0x14
 block|}
 block|,
 block|{
+literal|0x0000151f
+block|,
+literal|"SmartLink 5634PCV SurfRider"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 name|NULL
