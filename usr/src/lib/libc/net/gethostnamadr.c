@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.18 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1449,6 +1449,10 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
 block|}
 return|return
 operator|(
