@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|DBG
-value|printf("ng_device: %s\n", __func__ )
+value|do { printf("ng_device: %s\n", __func__ ); } while (0)
 end_define
 
 begin_else
@@ -25,6 +25,7 @@ begin_define
 define|#
 directive|define
 name|DBG
+value|do {} while (0)
 end_define
 
 begin_endif
