@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	from:@(#)console.h	1.1 940105  *	$Id: console.h,v 1.7 1994/02/04 10:35:29 chmr Exp $  */
+comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	from:@(#)console.h	1.1 940105  *	$Id: console.h,v 1.8 1994/04/07 23:23:01 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -698,12 +698,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|keymap
-block|{
-name|u_short
-name|n_keys
-decl_stmt|;
-struct|struct
 name|key_t
 block|{
 name|u_char
@@ -719,11 +713,23 @@ name|u_char
 name|flgs
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|keymap
+block|{
+name|u_short
+name|n_keys
+decl_stmt|;
+name|struct
+name|key_t
 name|key
 index|[
 name|NUM_KEYS
 index|]
-struct|;
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -733,6 +739,13 @@ define|#
 directive|define
 name|MAXFK
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_FKEYS
+value|60
 end_define
 
 begin_struct
@@ -1049,6 +1062,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BTAB
+value|0x08
+end_define
+
+begin_comment
+comment|/* backwards tab		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LCTR
 value|0x09
 end_define
@@ -1289,6 +1313,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KB_MODE
+value|0x4D
+end_define
+
+begin_comment
+comment|/* kbd mode (trans, ints enable)*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KB_WRITE
 value|0x60
 end_define
@@ -1300,8 +1335,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KB_RESET_DONE
+value|0xAA
+end_define
+
+begin_comment
+comment|/* kbd reset command completed  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KB_SETLEDS
-value|0xed
+value|0xED
+end_define
+
+begin_comment
+comment|/* kbd set leds 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KB_ECHO
+value|0xEE
 end_define
 
 begin_comment
@@ -1312,7 +1369,7 @@ begin_define
 define|#
 directive|define
 name|KB_SETRAD
-value|0xf3
+value|0xF3
 end_define
 
 begin_comment
@@ -1323,7 +1380,7 @@ begin_define
 define|#
 directive|define
 name|KB_ACK
-value|0xfa
+value|0xFA
 end_define
 
 begin_comment
@@ -1333,19 +1390,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KB_RESET_CPU
-value|0xfe
+name|KB_RESEND
+value|0xFE
 end_define
 
 begin_comment
-comment|/* kbd reset main cpu command 	*/
+comment|/* kbd resend cmd answer      	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|KB_RESET
-value|0xff
+value|0xFF
 end_define
 
 begin_comment
