@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,20 +136,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|int
-name|ffs_init
-parameter_list|()
-block|{
-return|return
-operator|(
-name|ufs_init
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Update the access, modified, and inode change times as specified by the  * IACCESS, IUPDATE, and ICHANGE flags respectively. The IMODIFIED flag is  * used to specify that the inode needs to be updated but that the times have  * already been set. The access and modified times are taken from the second  * and third parameters; the inode change time is always taken from the current  * time. If waitfor is set, then wait for the disk write of the inode to  * complete.  */
