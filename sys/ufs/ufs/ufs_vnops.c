@@ -1536,7 +1536,7 @@ name|acl
 modifier|*
 name|acl
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 endif|#
