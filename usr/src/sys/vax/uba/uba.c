@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1797,16 +1797,11 @@ argument_list|(
 name|uban
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
 name|ifubareset
 argument_list|(
 name|uban
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"\n"
@@ -1986,18 +1981,6 @@ begin_comment
 comment|/* in 8 sec */
 end_comment
 
-begin_decl_stmt
-name|int
-name|zvcnt_total
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|zvcnt_time
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * This routine is called by the locore code to process a UBA  * error on an 11/780 or 8600.  The arguments are passed  * on the stack, and value-result (through some trickery).  * In particular, the uvec argument is used for further  * uba processing so the result aspect of it is very important.  * It must not be declared register.  */
 end_comment
@@ -2065,16 +2048,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|long
+comment|/* 		 * Declare dt as unsigned so that negative values 		 * are handled as>8 below, in case time was set back. 		 */
+name|u_long
 name|dt
 init|=
 name|time
 operator|.
 name|tv_sec
 operator|-
-name|zvcnt_time
+name|uh
+operator|->
+name|uh_zvtime
 decl_stmt|;
-name|zvcnt_total
+name|uh
+operator|->
+name|uh_zvtotal
 operator|++
 expr_stmt|;
 if|if
@@ -2084,7 +2072,9 @@ operator|>
 literal|8
 condition|)
 block|{
-name|zvcnt_time
+name|uh
+operator|->
+name|uh_zvtime
 operator|=
 name|time
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -73,7 +73,15 @@ comment|/* number of ticks hung */
 name|int
 name|uh_zvcnt
 decl_stmt|;
-comment|/* number of 0 vectors */
+comment|/* number of recent 0 vectors */
+name|long
+name|uh_zvtime
+decl_stmt|;
+comment|/* time over which zvcnt accumulated */
+name|int
+name|uh_zvtotal
+decl_stmt|;
+comment|/* total number of 0 vectors */
 name|int
 name|uh_errcnt
 decl_stmt|;
