@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.2 (Berkeley) %G%"
+literal|"@(#)misc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,11 +401,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s(%lu): "
-argument_list|,
-name|fname
+literal|"%lu: %s: "
 argument_list|,
 name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 block|}
