@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.16 1998/10/14 09:53:24 peter Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.17 1998/10/14 10:08:35 peter Exp $  */
 end_comment
 
 begin_comment
@@ -2813,11 +2813,10 @@ name|kernend
 condition|)
 name|kernend
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|round_page
 argument_list|(
+name|bootinfo
+operator|.
 name|kernend
 argument_list|)
 expr_stmt|;
@@ -2915,10 +2914,18 @@ name|mddt_cluster_cnt
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|printf("Memory cluster count: %d\n", mddtp->mddt_cluster_cnt);
+ifdef|#
+directive|ifdef
+name|DEBUG_CLUSTER
+name|printf
+argument_list|(
+literal|"Memory cluster count: %d\n"
+argument_list|,
+name|mddtp
+operator|->
+name|mddt_cluster_cnt
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|phys_avail_cnt
@@ -2951,10 +2958,28 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("MEMC %d: pfn 0x%lx cnt 0x%lx usage 0x%lx\n", i, 		       memc->mddt_pfn, memc->mddt_pg_cnt, memc->mddt_usage);
+ifdef|#
+directive|ifdef
+name|DEBUG_CLUSTER
+name|printf
+argument_list|(
+literal|"MEMC %d: pfn 0x%lx cnt 0x%lx usage 0x%lx\n"
+argument_list|,
+name|i
+argument_list|,
+name|memc
+operator|->
+name|mddt_pfn
+argument_list|,
+name|memc
+operator|->
+name|mddt_pg_cnt
+argument_list|,
+name|memc
+operator|->
+name|mddt_usage
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|totalphysmem
@@ -3086,10 +3111,16 @@ name|pfn1
 condition|)
 block|{
 comment|/* 				 * Must compute the location of the kernel 				 * within the segment. 				 */
-if|#
-directive|if
-literal|0
-block|printf("Cluster %d contains kernel\n", i);
+ifdef|#
+directive|ifdef
+name|DEBUG_CLUSTER
+name|printf
+argument_list|(
+literal|"Cluster %d contains kernel\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -3107,10 +3138,19 @@ name|kernstartpfn
 condition|)
 block|{
 comment|/* 				 * There is a chunk before the kernel. 				 */
-if|#
-directive|if
-literal|0
-block|printf("Loading chunk before kernel: " 						       "0x%lx / 0x%lx\n", pfn0, kernstartpfn);
+ifdef|#
+directive|ifdef
+name|DEBUG_CLUSTER
+name|printf
+argument_list|(
+literal|"Loading chunk before kernel: "
+literal|"0x%lx / 0x%lx\n"
+argument_list|,
+name|pfn0
+argument_list|,
+name|kernstartpfn
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|phys_avail
@@ -3149,10 +3189,19 @@ name|pfn1
 condition|)
 block|{
 comment|/* 				 * There is a chunk after the kernel. 				 */
-if|#
-directive|if
-literal|0
-block|printf("Loading chunk after kernel: " 					       "0x%lx / 0x%lx\n", kernendpfn, pfn1);
+ifdef|#
+directive|ifdef
+name|DEBUG_CLUSTER
+name|printf
+argument_list|(
+literal|"Loading chunk after kernel: "
+literal|"0x%lx / 0x%lx\n"
+argument_list|,
+name|kernendpfn
+argument_list|,
+name|pfn1
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|phys_avail
@@ -3186,10 +3235,20 @@ block|}
 else|else
 block|{
 comment|/* 				 * Just load this cluster as one chunk. 				 */
-if|#
-directive|if
-literal|0
-block|printf("Loading cluster %d: 0x%lx / 0x%lx\n", i, 				       pfn0, pfn1);
+ifdef|#
+directive|ifdef
+name|DEBUG_CLUSTER
+name|printf
+argument_list|(
+literal|"Loading cluster %d: 0x%lx / 0x%lx\n"
+argument_list|,
+name|i
+argument_list|,
+name|pfn0
+argument_list|,
+name|pfn1
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|phys_avail
