@@ -871,11 +871,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usbd_add_event
+name|usbd_add_dev_event
 parameter_list|(
 name|int
 parameter_list|,
 name|usbd_device_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_add_drv_event
+parameter_list|(
+name|int
+parameter_list|,
+name|usbd_device_handle
+parameter_list|,
+name|device_ptr_t
 parameter_list|)
 function_decl|;
 end_function_decl

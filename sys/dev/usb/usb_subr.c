@@ -5514,9 +5514,9 @@ name|err
 operator|)
 return|;
 block|}
-name|usbd_add_event
+name|usbd_add_dev_event
 argument_list|(
-name|USB_EVENT_CTRLR_ATTACH
+name|USB_EVENT_DEVICE_ATTACH
 argument_list|,
 name|dev
 argument_list|)
@@ -6147,6 +6147,14 @@ operator|=
 name|dev
 operator|->
 name|address
+expr_stmt|;
+name|di
+operator|->
+name|cookie
+operator|=
+name|dev
+operator|->
+name|cookie
 expr_stmt|;
 name|usbd_devinfo_vp
 argument_list|(
@@ -6848,7 +6856,7 @@ endif|#
 directive|endif
 block|}
 block|}
-comment|/*usbd_add_event(USB_EVENT_DETACH, dev);*/
+comment|/*usbd_add_dev_event(USB_EVENT_DEVICE_DETACH, dev);*/
 name|dev
 operator|->
 name|bus

@@ -2941,6 +2941,13 @@ parameter_list|(
 name|n
 parameter_list|)
 value|((n) == USB_EVENT_CTRLR_ATTACH || (n) == USB_EVENT_DEVICE_ATTACH || (n) == USB_EVENT_DRIVER_ATTACH)
+define|#
+directive|define
+name|USB_EVENT_IS_DETACH
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) == USB_EVENT_CTRLR_DETACH || (n) == USB_EVENT_DEVICE_DETACH || (n) == USB_EVENT_DRIVER_DETACH)
 name|struct
 name|timespec
 name|ue_time
