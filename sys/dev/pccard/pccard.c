@@ -829,6 +829,7 @@ argument_list|(
 name|pf
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX must also actually delete resources created by 		 * pccard_function_init() 		 */
 if|if
 condition|(
 name|pf
@@ -4247,7 +4248,7 @@ name|NULL
 condition|)
 block|{
 return|return
-name|bus_release_resource
+name|bus_deactivate_resource
 argument_list|(
 name|dev
 argument_list|,
