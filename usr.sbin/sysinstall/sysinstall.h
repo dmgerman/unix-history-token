@@ -6302,7 +6302,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|Boolean
-name|package_exists
+name|package_installed
 parameter_list|(
 name|char
 modifier|*
