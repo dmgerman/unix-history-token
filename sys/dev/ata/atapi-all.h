@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.h,v 1.2 1999/03/03 21:10:29 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.h,v 1.3 1999/03/07 21:49:14 sos Exp $  */
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ value|0x70
 end_define
 
 begin_comment
-comment|/* reading read-protected sec */
+comment|/* write protect */
 end_comment
 
 begin_define
@@ -652,9 +652,30 @@ name|ATAPI_PROTO_ATAPI
 value|2
 name|int16_t
 name|reserved1
-index|[
-literal|9
-index|]
+decl_stmt|;
+name|int16_t
+name|reserved2
+decl_stmt|;
+name|int16_t
+name|reserved3
+decl_stmt|;
+name|int16_t
+name|reserved4
+decl_stmt|;
+name|int16_t
+name|reserved5
+decl_stmt|;
+name|int16_t
+name|reserved6
+decl_stmt|;
+name|int16_t
+name|reserved7
+decl_stmt|;
+name|int16_t
+name|reserved8
+decl_stmt|;
+name|int16_t
+name|reserved9
 decl_stmt|;
 name|int8_t
 name|serial
@@ -664,10 +685,13 @@ index|]
 decl_stmt|;
 comment|/* serial number */
 name|int16_t
-name|reserved2
-index|[
-literal|3
-index|]
+name|reserved20
+decl_stmt|;
+name|int16_t
+name|reserved21
+decl_stmt|;
+name|int16_t
+name|reserved22
 decl_stmt|;
 name|int8_t
 name|revision
@@ -684,13 +708,13 @@ index|]
 decl_stmt|;
 comment|/* model name */
 name|int16_t
-name|reserved3
-index|[
-literal|2
-index|]
+name|reserved47
+decl_stmt|;
+name|int16_t
+name|reserved48
 decl_stmt|;
 name|u_int8_t
-name|vendor_cap
+name|vendorcap
 decl_stmt|;
 comment|/* vendor capabilities */
 name|u_int8_t
@@ -738,19 +762,21 @@ literal|1
 decl_stmt|;
 comment|/* interleaved DMA supported */
 name|int16_t
-name|reserved4
+name|capvalidate
 decl_stmt|;
+comment|/* validation for above */
 name|u_int16_t
-name|pio_timing
+name|piotiming
 decl_stmt|;
 comment|/* PIO cycle timing */
 name|u_int16_t
-name|dma_timing
+name|dmatiming
 decl_stmt|;
 comment|/* DMA cycle timing */
 name|u_int16_t
-name|flags
+name|atavalid
 decl_stmt|;
+comment|/* fields valid */
 define|#
 directive|define
 name|ATAPI_FLAG_54_58
@@ -762,64 +788,123 @@ name|ATAPI_FLAG_64_70
 value|2
 comment|/* words 64-70 valid */
 name|int16_t
-name|reserved5
+name|reserved54
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int8_t
-name|swdma_flag
+name|int16_t
+name|sdmamodes
 decl_stmt|;
-comment|/* singleword DMA supported */
-name|u_int8_t
-name|swdma_active
+comment|/* singleword DMA modes */
+name|int16_t
+name|wdmamodes
 decl_stmt|;
-comment|/* singleword DMA active */
-name|u_int8_t
-name|mwdma_flag
+comment|/* multiword DMA modes */
+name|int16_t
+name|apiomodes
 decl_stmt|;
-comment|/* multiword DMA supported */
-name|u_int8_t
-name|mwdma_active
-decl_stmt|;
-comment|/* multiword DMA active */
-name|u_int8_t
-name|apio_flag
-decl_stmt|;
-comment|/* advanced PIO supported */
-name|u_int8_t
-name|reserved6
-decl_stmt|;
+comment|/* advanced PIO modes */
 name|u_int16_t
-name|mwdma_min
+name|mwdmamin
 decl_stmt|;
 comment|/* min. M/W DMA time/word ns */
 name|u_int16_t
-name|mwdma_dflt
+name|mwdmarec
 decl_stmt|;
 comment|/* rec. M/W DMA time ns */
 name|u_int16_t
-name|pio_nfctl_min
+name|pioblind
 decl_stmt|;
 comment|/* min. PIO cycle w/o flow */
 name|u_int16_t
-name|pio_iordy_min
+name|pioiordy
 decl_stmt|;
 comment|/* min. PIO cycle IORDY flow */
 name|int16_t
-name|reserved7
-index|[
-literal|2
-index|]
+name|reserved69
+decl_stmt|;
+name|int16_t
+name|reserved70
 decl_stmt|;
 name|u_int16_t
-name|rls_ovlap
+name|rlsovlap
 decl_stmt|;
 comment|/* rel time (us) for overlap */
 name|u_int16_t
-name|rls_service
+name|rlsservice
 decl_stmt|;
 comment|/* rel time (us) for service */
+name|int16_t
+name|reserved73
+decl_stmt|;
+name|int16_t
+name|reserved74
+decl_stmt|;
+name|int16_t
+name|queuelen
+decl_stmt|;
+name|int16_t
+name|reserved76
+decl_stmt|;
+name|int16_t
+name|reserved77
+decl_stmt|;
+name|int16_t
+name|reserved78
+decl_stmt|;
+name|int16_t
+name|reserved79
+decl_stmt|;
+name|int16_t
+name|versmajor
+decl_stmt|;
+name|int16_t
+name|versminor
+decl_stmt|;
+name|int16_t
+name|featsupp1
+decl_stmt|;
+name|int16_t
+name|featsupp2
+decl_stmt|;
+name|int16_t
+name|featsupp3
+decl_stmt|;
+name|int16_t
+name|featenab1
+decl_stmt|;
+name|int16_t
+name|featenab2
+decl_stmt|;
+name|int16_t
+name|featenab3
+decl_stmt|;
+name|int16_t
+name|udmamodes
+decl_stmt|;
+comment|/* UltraDMA modes */
+name|int16_t
+name|erasetime
+decl_stmt|;
+name|int16_t
+name|enherasetime
+decl_stmt|;
+name|int16_t
+name|apmlevel
+decl_stmt|;
+name|int16_t
+name|reserved92
+index|[
+literal|34
+index|]
+decl_stmt|;
+name|int16_t
+name|rmvcap
+decl_stmt|;
+name|int16_t
+name|securelevel
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1012,6 +1097,14 @@ define|#
 directive|define
 name|A_READ
 value|0x0001
+define|#
+directive|define
+name|ATAPI_F_DMA_ENABLED
+value|0x0002
+define|#
+directive|define
+name|ATAPI_F_DMA_USED
+value|0x0004
 name|u_int32_t
 name|bytecount
 decl_stmt|;

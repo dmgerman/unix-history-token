@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.c,v 1.3 1999/03/05 09:43:30 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.c,v 1.4 1999/03/07 21:49:14 sos Exp $  */
 end_comment
 
 begin_include
@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ata/ata-all.h>
 end_include
 
@@ -162,11 +168,12 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|int32_t
 name|atapi_wait
 parameter_list|(
 name|struct
-name|ata_softc
+name|atapi_softc
 modifier|*
 parameter_list|,
 name|u_int8_t
@@ -276,16 +283,20 @@ init|;
 name|ctlr
 operator|<
 name|MAXATA
-operator|&&
-name|atadevices
-index|[
-name|ctlr
-index|]
 condition|;
 name|ctlr
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|atadevices
+index|[
+name|ctlr
+index|]
+condition|)
+continue|continue;
 for|for
 control|(
 name|dev
@@ -372,11 +383,13 @@ name|unit
 operator|=
 operator|(
 name|dev
+operator|==
+literal|0
 operator|)
 condition|?
-name|ATA_SLAVE
-else|:
 name|ATA_MASTER
+else|:
+name|ATA_SLAVE
 expr_stmt|;
 if|if
 condition|(
@@ -572,6 +585,29 @@ index|[
 name|DEV_BSIZE
 index|]
 decl_stmt|;
+comment|/* select drive */
+name|outb
+argument_list|(
+name|atp
+operator|->
+name|controller
+operator|->
+name|ioaddr
+operator|+
+name|ATA_DRIVE
+argument_list|,
+name|ATA_D_IBM
+operator||
+name|atp
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|ata_command
 argument_list|(
 name|atp
@@ -592,6 +628,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
 expr_stmt|;
@@ -600,8 +638,6 @@ condition|(
 name|atapi_wait
 argument_list|(
 name|atp
-operator|->
-name|controller
 argument_list|,
 name|ATA_S_DRQ
 argument_list|)
@@ -771,36 +807,6 @@ name|revision
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bswap
-argument_list|(
-name|atapi_parm
-operator|->
-name|serial
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|atapi_parm
-operator|->
-name|serial
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* unused SOS */
-name|btrim
-argument_list|(
-name|atapi_parm
-operator|->
-name|serial
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|atapi_parm
-operator|->
-name|serial
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* unused SOS */
 name|atp
 operator|->
 name|atapi_parm
@@ -861,7 +867,7 @@ init|=
 literal|0
 decl_stmt|;
 name|int32_t
-name|x
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -887,11 +893,6 @@ return|return
 operator|-
 literal|1
 return|;
-name|x
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|bzero
 argument_list|(
 name|request
@@ -981,6 +982,11 @@ name|ccbsize
 argument_list|)
 expr_stmt|;
 comment|/* link onto controller queue */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -993,6 +999,11 @@ argument_list|,
 name|request
 argument_list|,
 name|chain
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1016,12 +1027,13 @@ directive|endif
 comment|/* try to start controller */
 if|if
 condition|(
-operator|!
 name|atp
 operator|->
 name|controller
 operator|->
 name|active
+operator|==
+name|ATA_IDLE
 condition|)
 name|ata_start
 argument_list|(
@@ -1083,11 +1095,6 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -1113,7 +1120,7 @@ name|int32_t
 name|timeout
 decl_stmt|;
 name|int8_t
-name|int_reason
+name|reason
 decl_stmt|;
 comment|/* not needed really */
 comment|/* get device params */
@@ -1166,6 +1173,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|ATA_IMMEDIATE
 argument_list|)
 expr_stmt|;
@@ -1193,7 +1202,7 @@ name|timeout
 operator|--
 condition|)
 block|{
-name|int_reason
+name|reason
 operator|=
 name|inb
 argument_list|(
@@ -1203,7 +1212,7 @@ name|controller
 operator|->
 name|ioaddr
 operator|+
-name|ATA_COUNT
+name|ATA_IREASON
 argument_list|)
 expr_stmt|;
 name|atp
@@ -1227,7 +1236,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|int_reason
+name|reason
 operator|&
 operator|(
 name|ATA_I_CMD
@@ -1370,8 +1379,6 @@ condition|(
 name|atapi_wait
 argument_list|(
 name|atp
-operator|->
-name|controller
 argument_list|,
 literal|0
 argument_list|)
@@ -1462,7 +1469,7 @@ name|controller
 operator|->
 name|ioaddr
 operator|+
-name|ATA_COUNT
+name|ATA_IREASON
 argument_list|)
 operator|&
 operator|(
@@ -1613,7 +1620,6 @@ operator|->
 name|data
 operator|)
 argument_list|,
-comment|/* + donecount ?? */
 name|length
 operator|/
 sizeof|sizeof
@@ -1680,7 +1686,6 @@ operator|->
 name|data
 operator|)
 argument_list|,
-comment|/* + donecount ?? */
 name|length
 operator|/
 sizeof|sizeof
@@ -1770,7 +1775,6 @@ operator|->
 name|data
 operator|)
 argument_list|,
-comment|/* + donecount ?? */
 name|length
 operator|/
 sizeof|sizeof
@@ -1835,7 +1839,6 @@ operator|->
 name|data
 operator|)
 argument_list|,
-comment|/* + donecount ?? */
 name|length
 operator|/
 sizeof|sizeof
@@ -2448,13 +2451,14 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|int32_t
 name|atapi_wait
 parameter_list|(
 name|struct
-name|ata_softc
+name|atapi_softc
 modifier|*
-name|scp
+name|atp
 parameter_list|,
 name|u_int8_t
 name|mask
@@ -2481,33 +2485,28 @@ name|status
 operator|=
 name|inb
 argument_list|(
-name|scp
+name|atp
+operator|->
+name|controller
 operator|->
 name|ioaddr
 operator|+
 name|ATA_STATUS
 argument_list|)
 expr_stmt|;
+comment|/* if drive fails status, reselect the drive just to be sure */
 if|if
 condition|(
-operator|(
 name|status
 operator|==
 literal|0xff
-operator|)
-operator|&&
-operator|(
-name|scp
-operator|->
-name|flags
-operator|&
-name|ATA_F_SLAVE_ONLY
-operator|)
 condition|)
 block|{
 name|outb
 argument_list|(
-name|scp
+name|atp
+operator|->
+name|controller
 operator|->
 name|ioaddr
 operator|+
@@ -2515,7 +2514,9 @@ name|ATA_DRIVE
 argument_list|,
 name|ATA_D_IBM
 operator||
-name|ATA_SLAVE
+name|atp
+operator|->
+name|unit
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2527,7 +2528,9 @@ name|status
 operator|=
 name|inb
 argument_list|(
-name|scp
+name|atp
+operator|->
+name|controller
 operator|->
 name|ioaddr
 operator|+
@@ -2592,7 +2595,9 @@ name|status
 operator|=
 name|inb
 argument_list|(
-name|scp
+name|atp
+operator|->
+name|controller
 operator|->
 name|ioaddr
 operator|+

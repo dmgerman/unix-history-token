@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.3 1999/03/05 09:43:30 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.4 1999/03/07 21:49:14 sos Exp $  */
 end_comment
 
 begin_include
@@ -86,7 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
 end_include
 
 begin_include
@@ -154,6 +172,41 @@ end_define
 begin_comment
 comment|/* assume 8 minor # per unit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)>(b)?(b):(a))
+end_define
+
+begin_if
+if|#
+directive|if
+name|NSMP
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|isa_apic_irq
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* prototypes */
@@ -253,6 +306,10 @@ parameter_list|(
 name|int32_t
 parameter_list|,
 name|int32_t
+parameter_list|,
+name|int32_t
+parameter_list|,
+name|pcici_t
 parameter_list|,
 name|int32_t
 modifier|*
@@ -390,6 +447,10 @@ operator|->
 name|id_iobase
 operator|+
 name|ATA_ALTPORT
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|devp
@@ -548,10 +609,10 @@ name|type
 condition|)
 block|{
 case|case
-literal|0x71118086
+literal|0x12308086
 case|:
 return|return
-literal|"Intel PIIX4 IDE controller"
+literal|"Intel PIIX IDE controller"
 return|;
 case|case
 literal|0x70108086
@@ -560,10 +621,10 @@ return|return
 literal|"Intel PIIX3 IDE controller"
 return|;
 case|case
-literal|0x12308086
+literal|0x71118086
 case|:
 return|return
-literal|"Intel PIIX IDE controller"
+literal|"Intel PIIX4 IDE controller"
 return|;
 case|case
 literal|0x4d33105a
@@ -572,23 +633,17 @@ return|return
 literal|"Promise Ultra/33 IDE controller"
 return|;
 case|case
-literal|0x05711106
-case|:
-return|return
-literal|"VIA Apollo IDE controller"
-return|;
-case|case
-literal|0x01021078
-case|:
-return|return
-literal|"Cyrix 5530 IDE controller"
-return|;
-case|case
 literal|0x522910b9
 case|:
 return|return
-literal|"Acer Aladdin IV/V IDE controller"
+literal|"AcerLabs Aladdin IDE controller"
 return|;
+if|#
+directive|if
+literal|0
+block|case 0x05711106: 	    return "VIA Apollo IDE controller"; 	case 0x01021078: 	    return "Cyrix 5530 IDE controller";
+endif|#
+directive|endif
 default|default:
 return|return
 literal|"Unknown PCI IDE controller"
@@ -628,6 +683,15 @@ decl_stmt|,
 name|altiobase_1
 decl_stmt|,
 name|altiobase_2
+decl_stmt|;
+name|int32_t
+name|bmaddr_1
+init|=
+literal|0
+decl_stmt|,
+name|bmaddr_2
+init|=
+literal|0
 decl_stmt|,
 name|irq1
 decl_stmt|,
@@ -669,7 +733,9 @@ directive|ifdef
 name|ATA_DEBUG
 name|printf
 argument_list|(
-literal|"ata: type=%08x class=%08x cmd=%08x\n"
+literal|"ata%d: type=%08x class=%08x cmd=%08x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|type
 argument_list|,
@@ -680,46 +746,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-literal|0x71118086
-case|:
-case|case
-literal|0x70108086
-case|:
-case|case
-literal|0x12308086
-case|:
-comment|/* Intel PIIX, PIIX3, PIIX4 */
-break|break;
-case|case
-literal|0x05711106
-case|:
-comment|/* VIA Apollo chipset family */
-break|break;
-case|case
-literal|0x4d33105a
-case|:
-comment|/* Promise controllers */
-break|break;
-case|case
-literal|0x01021078
-case|:
-comment|/* Cyrix 5530 */
-break|break;
-case|case
-literal|0x522910B9
-case|:
-comment|/* Acer Aladdin IV/V (M5229) */
-break|break;
-default|default:
-comment|/* everybody else */
-break|break;
-block|}
+comment|/* if this is at Promise controller handle it specially */
 if|if
 condition|(
 name|type
@@ -727,7 +754,6 @@ operator|==
 literal|0x4d33105a
 condition|)
 block|{
-comment|/* the Promise is special */
 name|iobase_1
 operator|=
 name|pci_conf_read
@@ -785,6 +811,23 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
+name|bmaddr_1
+operator|=
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0x20
+argument_list|)
+operator|&
+literal|0xfffc
+expr_stmt|;
+name|bmaddr_2
+operator|=
+name|bmaddr_1
+operator|+
+name|ATA_BM_OFFSET1
+expr_stmt|;
 name|sysctrl
 operator|=
 operator|(
@@ -800,7 +843,15 @@ operator|)
 operator|+
 literal|0x1c
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"ata-pci%d: Busmastering DMA supported\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 block|}
+comment|/* everybody else seems to do it this way */
 else|else
 block|{
 if|if
@@ -927,8 +978,99 @@ operator|&
 literal|0xff
 expr_stmt|;
 block|}
+comment|/* is this controller busmaster capable ? */
+if|if
+condition|(
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|)
+operator|&
+literal|0x8000
+condition|)
+block|{
+comment|/* is busmastering support turned on ? */
+if|if
+condition|(
+operator|(
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|)
+operator|&
+literal|5
+operator|)
+operator|==
+literal|5
+condition|)
+block|{
+comment|/* is there a valid port range to connect to ? */
+if|if
+condition|(
+operator|(
+name|bmaddr_1
+operator|=
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0x20
+argument_list|)
+operator|&
+literal|0xfffc
+operator|)
+condition|)
+block|{
+name|bmaddr_2
+operator|=
+name|bmaddr_1
+operator|+
+name|ATA_BM_OFFSET1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ata-pci%d: Busmastering DMA supported\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"ata-pci%d: Busmastering DMA not configured\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"ata-pci%d: Busmastering DMA not enabled\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"ata-pci%d: Busmastering DMA not supported\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* now probe the addresse found for "real" ATA/ATAPI hardware */
+name|lun
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ata_probe
@@ -936,6 +1078,10 @@ argument_list|(
 name|iobase_1
 argument_list|,
 name|altiobase_1
+argument_list|,
+name|bmaddr_1
+argument_list|,
+name|tag
 argument_list|,
 operator|&
 name|lun
@@ -952,7 +1098,10 @@ name|register_intr
 argument_list|(
 name|irq1
 argument_list|,
-literal|0
+operator|(
+name|int
+operator|)
+literal|""
 argument_list|,
 literal|0
 argument_list|,
@@ -1024,12 +1173,19 @@ name|lun
 argument_list|,
 name|iobase_1
 argument_list|,
+name|isa_apic_irq
+argument_list|(
 name|irq1
+argument_list|)
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
 block|}
+name|lun
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ata_probe
@@ -1037,6 +1193,10 @@ argument_list|(
 name|iobase_2
 argument_list|,
 name|altiobase_2
+argument_list|,
+name|bmaddr_2
+argument_list|,
+name|tag
 argument_list|,
 operator|&
 name|lun
@@ -1053,7 +1213,10 @@ name|register_intr
 argument_list|(
 name|irq2
 argument_list|,
-literal|0
+operator|(
+name|int
+operator|)
+literal|""
 argument_list|,
 literal|0
 argument_list|,
@@ -1105,7 +1268,10 @@ name|lun
 argument_list|,
 name|iobase_2
 argument_list|,
+name|isa_apic_irq
+argument_list|(
 name|irq2
+argument_list|)
 argument_list|,
 name|unit
 argument_list|)
@@ -1173,6 +1339,12 @@ name|int32_t
 name|altioaddr
 parameter_list|,
 name|int32_t
+name|bmaddr
+parameter_list|,
+name|pcici_t
+name|tag
+parameter_list|,
+name|int32_t
 modifier|*
 name|unit
 parameter_list|)
@@ -1222,7 +1394,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ata: unit of of range(%d)\n"
+literal|"ata: unit out of range(%d)\n"
 argument_list|,
 name|lun
 argument_list|)
@@ -1295,6 +1467,13 @@ name|scp
 operator|->
 name|unit
 operator|=
+operator|*
+name|unit
+expr_stmt|;
+name|scp
+operator|->
+name|lun
+operator|=
 name|lun
 expr_stmt|;
 name|scp
@@ -1324,7 +1503,7 @@ literal|"ata%d: iobase=0x%04x altiobase=0x%04x\n"
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|lun
 argument_list|,
 name|scp
 operator|->
@@ -1433,7 +1612,7 @@ literal|"ata%d: mask=%02x status0=%02x status1=%02x\n"
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|lun
 argument_list|,
 name|mask
 argument_list|,
@@ -1517,6 +1696,11 @@ operator|->
 name|ioaddr
 operator|+
 name|ATA_ERROR
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1703,7 +1887,7 @@ literal|"ata%d: mask=%02x status0=%02x status1=%02x\n"
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|lun
 argument_list|,
 name|mask
 argument_list|,
@@ -2027,7 +2211,7 @@ literal|"ata%d: devices = 0x%x\n"
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|lun
 argument_list|,
 name|scp
 operator|->
@@ -2036,27 +2220,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-operator|(
-name|scp
-operator|->
-name|devices
-operator|&
-operator|(
-name|ATA_ATA_MASTER
-operator||
-name|ATA_ATAPI_MASTER
-operator|)
-operator|)
-condition|)
-name|scp
-operator|->
-name|flags
-operator||=
-name|ATA_F_SLAVE_ONLY
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2097,13 +2260,29 @@ name|unit
 operator|=
 name|scp
 operator|->
-name|unit
+name|lun
+expr_stmt|;
+name|scp
+operator|->
+name|tag
+operator|=
+name|tag
+expr_stmt|;
+if|if
+condition|(
+name|bmaddr
+condition|)
+name|scp
+operator|->
+name|bmaddr
+operator|=
+name|bmaddr
 expr_stmt|;
 name|atadevices
 index|[
 name|scp
 operator|->
-name|unit
+name|lun
 index|]
 operator|=
 name|scp
@@ -2152,18 +2331,6 @@ name|intcount
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_DEBUG
-name|printf
-argument_list|(
-literal|"ataintr: entered unit=%d\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|unit
@@ -2287,13 +2454,24 @@ condition|(
 name|intcount
 operator|++
 operator|<
-literal|5
+literal|10
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: unwanted interrupt\n"
+literal|"ata%d: unwanted interrupt %d\n"
 argument_list|,
 name|unit
+argument_list|,
+name|intcount
+argument_list|)
+expr_stmt|;
+name|inb
+argument_list|(
+name|scp
+operator|->
+name|ioaddr
+operator|+
+name|ATA_STATUS
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2347,6 +2525,8 @@ condition|(
 name|scp
 operator|->
 name|active
+operator|!=
+name|ATA_IDLE
 condition|)
 block|{
 name|printf
@@ -2356,6 +2536,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+name|NATADISK
+operator|>
+literal|0
 comment|/* find& call the responsible driver if anything on ATA queue */
 if|if
 condition|(
@@ -2383,7 +2568,20 @@ argument_list|(
 name|ata_request
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATA_DEBUG
+name|printf
+argument_list|(
+literal|"ata_start: started ata, leaving\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
 block|}
+endif|#
+directive|endif
 comment|/* find& call the responsible driver if anything on ATAPI queue */
 if|if
 condition|(
@@ -2411,6 +2609,17 @@ argument_list|(
 name|atapi_request
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATA_DEBUG
+name|printf
+argument_list|(
+literal|"ata_start: started atapi, leaving\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
 block|}
 block|}
 end_function
@@ -2423,6 +2632,9 @@ name|struct
 name|ata_softc
 modifier|*
 name|scp
+parameter_list|,
+name|int32_t
+name|device
 parameter_list|,
 name|u_int8_t
 name|mask
@@ -2441,7 +2653,7 @@ condition|(
 name|timeout
 operator|++
 operator|<=
-literal|50000
+literal|500000
 condition|)
 block|{
 comment|/* timeout 5 secs */
@@ -2456,23 +2668,29 @@ operator|+
 name|ATA_STATUS
 argument_list|)
 expr_stmt|;
+comment|/* if drive fails status, reselect the drive just to be sure */
 if|if
 condition|(
-operator|(
 name|status
 operator|==
 literal|0xff
-operator|)
-operator|&&
-operator|(
-name|scp
-operator|->
-name|flags
-operator|&
-name|ATA_F_SLAVE_ONLY
-operator|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"ata%d: %s: no status, reselecting device\n"
+argument_list|,
+name|scp
+operator|->
+name|lun
+argument_list|,
+name|device
+condition|?
+literal|"slave"
+else|:
+literal|"master"
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|scp
@@ -2483,7 +2701,7 @@ name|ATA_DRIVE
 argument_list|,
 name|ATA_D_IBM
 operator||
-name|ATA_SLAVE
+name|device
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2618,16 +2836,49 @@ parameter_list|,
 name|u_int32_t
 name|count
 parameter_list|,
+name|u_int32_t
+name|feature
+parameter_list|,
 name|int32_t
 name|flags
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATA_DEBUG
+name|printf
+argument_list|(
+literal|"ata_command: addr=%04x, device=%02x, cmd=%02x, c=%d, h=%d, s=%d, count=%d, flags=%02x\n"
+argument_list|,
+name|scp
+operator|->
+name|ioaddr
+argument_list|,
+name|device
+argument_list|,
+name|command
+argument_list|,
+name|cylinder
+argument_list|,
+name|head
+argument_list|,
+name|sector
+argument_list|,
+name|count
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* ready to issue command ? */
 if|if
 condition|(
 name|ata_wait
 argument_list|(
 name|scp
+argument_list|,
+name|device
 argument_list|,
 literal|0
 argument_list|)
@@ -2637,13 +2888,27 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ata_command: timeout waiting to give command"
+literal|"ata%d: %s: timeout waiting to give command s=%02x e=%02x\n"
+argument_list|,
+name|scp
+operator|->
+name|lun
+argument_list|,
+name|device
+condition|?
+literal|"slave"
+else|:
+literal|"master"
+argument_list|,
+name|scp
+operator|->
+name|status
+argument_list|,
+name|scp
+operator|->
+name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
 block|}
 name|outb
 argument_list|(
@@ -2651,27 +2916,11 @@ name|scp
 operator|->
 name|ioaddr
 operator|+
-name|ATA_DRIVE
+name|ATA_FEATURE
 argument_list|,
-name|ATA_D_IBM
-operator||
-name|device
-operator||
-name|head
+name|feature
 argument_list|)
 expr_stmt|;
-name|outb
-argument_list|(
-name|scp
-operator|->
-name|ioaddr
-operator|+
-name|ATA_PRECOMP
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* no precompensation */
 name|outb
 argument_list|(
 name|scp
@@ -2702,6 +2951,21 @@ name|scp
 operator|->
 name|ioaddr
 operator|+
+name|ATA_DRIVE
+argument_list|,
+name|ATA_D_IBM
+operator||
+name|device
+operator||
+name|head
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|scp
+operator|->
+name|ioaddr
+operator|+
 name|ATA_SECTOR
 argument_list|,
 name|sector
@@ -2723,6 +2987,8 @@ condition|(
 name|scp
 operator|->
 name|active
+operator|!=
+name|ATA_IDLE
 operator|&&
 name|flags
 operator|!=
@@ -2834,6 +3100,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|ATA_DEBUG
+name|printf
+argument_list|(
+literal|"ata_command: leaving\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3084,6 +3360,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NATA> 0 */
+end_comment
 
 end_unit
 
