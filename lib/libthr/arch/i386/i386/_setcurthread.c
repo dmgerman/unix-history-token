@@ -215,8 +215,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|COMPAT_32BIT
 name|_amd64_set_gsbase
 argument_list|(
