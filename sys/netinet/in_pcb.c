@@ -3185,6 +3185,7 @@ name|sro
 operator|.
 name|ro_rt
 condition|)
+block|{
 name|ia
 operator|=
 name|ifatoia
@@ -3196,12 +3197,6 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sro
-operator|.
-name|ro_rt
-condition|)
 name|RTFREE
 argument_list|(
 name|sro
@@ -3209,6 +3204,7 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ia
