@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctype.c	5.6 (Berkeley) %G%"
+literal|"@(#)ctype.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,7 +45,7 @@ end_include
 
 begin_decl_stmt
 name|char
-name|_ctype_
+name|__ctype
 index|[
 literal|1
 operator|+
