@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1655,11 +1655,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|trapDump
-argument_list|(
-literal|"vm_fault"
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 		 * If this was a stack access we keep track of the maximum 		 * accessed stack size.  Also, if vm_fault gets a protection 		 * failure it is due to accessing the stack region outside 		 * the current limit and we need to reflect that as an access 		 * error. 		 */
 if|if
@@ -4345,12 +4340,14 @@ operator|&
 name|cf
 argument_list|)
 expr_stmt|;
+comment|/* keep clock interrupts enabled */
 name|causeReg
 operator|&=
 operator|~
 name|MACH_INT_MASK_3
 expr_stmt|;
-comment|/* reenable clock interrupts */
+block|}
+comment|/* Re-enable clock interrupts */
 name|splx
 argument_list|(
 name|MACH_INT_MASK_3
@@ -4358,7 +4355,6 @@ operator||
 name|MACH_SR_INT_ENA_CUR
 argument_list|)
 expr_stmt|;
-block|}
 if|#
 directive|if
 name|NSII
@@ -4604,12 +4600,14 @@ operator|&
 name|cf
 argument_list|)
 expr_stmt|;
-comment|/* Re-enable clock interrupts */
+comment|/* keep clock interrupts enabled */
 name|causeReg
 operator|&=
 operator|~
 name|MACH_INT_MASK_1
 expr_stmt|;
+block|}
+comment|/* Re-enable clock interrupts */
 name|splx
 argument_list|(
 name|MACH_INT_MASK_1
@@ -4617,7 +4615,6 @@ operator||
 name|MACH_SR_INT_ENA_CUR
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|mask
@@ -5299,7 +5296,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Maxine hardwark interrupts. (Personal DECstation 5000/xx)  */
+comment|/*  * Maxine hardware interrupts. (Personal DECstation 5000/xx)  */
 end_comment
 
 begin_macro
