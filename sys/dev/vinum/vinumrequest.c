@@ -1772,15 +1772,13 @@ operator|&
 name|launch_requests
 argument_list|,
 name|PRIBIO
-operator||
-name|PCATCH
 argument_list|,
 literal|"vinbuf"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* wait for it to subside */
+comment|/* wait for it to subside, XXX: should PCATCH */
 name|drive
 operator|->
 name|active
