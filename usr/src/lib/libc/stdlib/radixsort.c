@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.11 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,6 +526,15 @@ expr_stmt|;
 name|tr
 operator|=
 name|ltab
+expr_stmt|;
+name|recd
+operator|=
+name|c
+operator|+
+name|tr
+index|[
+name|endbyte
+index|]
 expr_stmt|;
 block|}
 name|last
