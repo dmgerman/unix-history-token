@@ -65,25 +65,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -95,19 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
