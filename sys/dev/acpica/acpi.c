@@ -6337,7 +6337,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|panicstr
+operator|==
+name|NULL
+condition|)
 block|{
 name|printf
 argument_list|(

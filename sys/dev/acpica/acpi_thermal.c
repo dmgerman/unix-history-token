@@ -415,18 +415,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void	acpi_tz_all_off(struct acpi_tz_softc *sc);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -1054,7 +1042,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_OPAQUE
 argument_list|(
 operator|&
 name|sc
@@ -1079,7 +1067,14 @@ name|sc
 operator|->
 name|tz_temperature
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|tz_temperature
+argument_list|)
+argument_list|,
+literal|"IK"
 argument_list|,
 literal|"current thermal zone temperature"
 argument_list|)
@@ -1147,7 +1142,7 @@ argument_list|,
 literal|"thermal zone flags"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_OPAQUE
 argument_list|(
 operator|&
 name|sc
@@ -1174,12 +1169,21 @@ name|tz_zone
 operator|.
 name|psv
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|tz_zone
+operator|.
+name|psv
+argument_list|)
+argument_list|,
+literal|"IK"
 argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_OPAQUE
 argument_list|(
 operator|&
 name|sc
@@ -1206,12 +1210,21 @@ name|tz_zone
 operator|.
 name|hot
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|tz_zone
+operator|.
+name|hot
+argument_list|)
+argument_list|,
+literal|"IK"
 argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_OPAQUE
 argument_list|(
 operator|&
 name|sc
@@ -1238,7 +1251,16 @@ name|tz_zone
 operator|.
 name|crt
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|tz_zone
+operator|.
+name|crt
+argument_list|)
+argument_list|,
+literal|"IK"
 argument_list|,
 literal|""
 argument_list|)
@@ -1279,7 +1301,7 @@ operator|.
 name|ac
 argument_list|)
 argument_list|,
-literal|"I"
+literal|"IK"
 argument_list|,
 literal|""
 argument_list|)
@@ -2566,32 +2588,6 @@ name|return_VOID
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Turn off all the cooling devices.  */
-end_comment
-
-begin_comment
-unit|static void acpi_tz_all_off(struct acpi_tz_softc *sc) {     int		i;      ACPI_FUNCTION_TRACE((char *)(uintptr_t)__func__);
-comment|/* Scan all the _ALx objects and turn them all off. */
-end_comment
-
-begin_comment
-unit|for (i = 0; i< TZ_NUMLEVELS; i++) { 	if (sc->tz_zone.al[i].Pointer == NULL) 	    continue; 	acpi_ForeachPackageObject((ACPI_OBJECT *)sc->tz_zone.al[i].Pointer, 				  acpi_tz_switch_cooler_off, sc);     }
-comment|/*      * XXX revert any passive-cooling options.      */
-end_comment
-
-begin_endif
-unit|return_VOID; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Given an object, verify that it's a reference to a device of some sort,   * and try to switch it off.  */

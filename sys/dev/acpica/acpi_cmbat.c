@@ -844,6 +844,24 @@ operator|->
 name|bst_lastupdated
 argument_list|)
 expr_stmt|;
+comment|/* XXX Should we shut down here? */
+if|if
+condition|(
+name|sc
+operator|->
+name|bst
+operator|.
+name|state
+operator|&
+name|ACPI_BATT_STAT_CRITICAL
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"critically low charge!\n"
+argument_list|)
+expr_stmt|;
 name|end
 label|:
 if|if

@@ -131,5 +131,14 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|acpi_cpu_c1
+parameter_list|()
+block|{
+asm|__asm __volatile("sti; hlt");
+block|}
+end_function
+
 end_unit
 

@@ -200,11 +200,6 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-operator|.
 name|d_open
 operator|=
 name|apmopen
@@ -1426,7 +1421,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*       * Date must be>= 1/1/1999 or we don't trust ACPI.  Note that this      * check must be changed by my 114th birthday.      */
+comment|/*  	 * Date must be>= 1/1/1999 or we don't trust ACPI.  Note that this 	 * check must be changed by my 114th birthday. 	 */
 if|if
 condition|(
 name|year
@@ -1447,6 +1442,15 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|acpi_cpu_c1
+parameter_list|()
+block|{
+asm|__asm __volatile("sti; hlt");
 block|}
 end_function
 

@@ -27,6 +27,12 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pal.h>
+end_include
+
 begin_function
 name|int
 name|acpi_machdep_init
@@ -74,6 +80,25 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|acpi_cpu_c1
+parameter_list|()
+block|{
+name|ia64_call_pal_static
+argument_list|(
+name|PAL_HALT_LIGHT
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
