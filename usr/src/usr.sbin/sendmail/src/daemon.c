@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.41 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.42 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.41 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.42 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2670,6 +2670,15 @@ block|{
 case|case
 name|TRY_AGAIN
 case|:
+if|if
+condition|(
+name|UseNameServer
+condition|)
+name|message
+argument_list|(
+literal|"Recipient domain nameserver timed out"
+argument_list|)
+expr_stmt|;
 operator|*
 name|statp
 operator|=

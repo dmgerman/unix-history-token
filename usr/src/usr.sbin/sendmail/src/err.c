@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.14 (Berkeley) %G%"
+literal|"@(#)err.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -858,6 +858,10 @@ block|{
 name|char
 name|del
 decl_stmt|;
+name|char
+modifier|*
+name|meb
+decl_stmt|;
 comment|/* output the reply code */
 if|if
 condition|(
@@ -1002,6 +1006,10 @@ operator|&=
 literal|0177
 expr_stmt|;
 block|}
+name|meb
+operator|=
+name|eb
+expr_stmt|;
 comment|/* output the message */
 operator|(
 name|void
@@ -1065,6 +1073,23 @@ name|eb
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|)
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|meb
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

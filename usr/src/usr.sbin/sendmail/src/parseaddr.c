@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.46 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,12 +541,33 @@ if|if
 condition|(
 name|queueup
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|20
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"parseaddr: queuing message\n"
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"Transient parse error -- message queued for future delivery"
+argument_list|)
+expr_stmt|;
 name|a
 operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
 expr_stmt|;
+block|}
 comment|/* 	**  Compute return value. 	*/
 if|if
 condition|(
@@ -5543,23 +5564,6 @@ endif|#
 directive|endif
 comment|/* LOG */
 name|usrerr
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|e
-operator|->
-name|e_message
-operator|==
-name|NULL
-condition|)
-name|e
-operator|->
-name|e_message
-operator|=
-name|newstr
 argument_list|(
 name|buf
 argument_list|)
