@@ -873,7 +873,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* 1003.1b-1993 */
+comment|/* 1003.2-1992 */
 end_comment
 
 begin_if
@@ -881,12 +881,8 @@ if|#
 directive|if
 name|__POSIX_VISIBLE
 operator|>=
-literal|199309
+literal|199209
 end_if
-
-begin_comment
-comment|/*  * Need to check old copies of POSIX to determine when each of these  * interfaces was added.  */
-end_comment
 
 begin_function_decl
 name|size_t
@@ -898,47 +894,6 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|fchown
-parameter_list|(
-name|int
-parameter_list|,
-name|uid_t
-parameter_list|,
-name|gid_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|fsync
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* symlink is from .1a and XPG4.2 -- need to check version for the former */
-end_comment
-
-begin_function_decl
-name|int
-name|symlink
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -959,6 +914,15 @@ name|__POSIX_VISIBLE
 operator|>=
 literal|199506
 end_if
+
+begin_function_decl
+name|int
+name|fsync
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * ftruncate() was in the POSIX Realtime Extension (it's used for shared  * memory), but truncate() was not.  */
@@ -1023,6 +987,19 @@ end_if
 
 begin_function_decl
 name|int
+name|fchown
+parameter_list|(
+name|int
+parameter_list|,
+name|uid_t
+parameter_list|,
+name|gid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|gethostname
 parameter_list|(
 name|char
@@ -1048,6 +1025,46 @@ name|int
 name|seteuid
 parameter_list|(
 name|uid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * symlink() was originally in POSIX.1a, which was withdrawn after  * being overtaken by events (1003.1-2001).  It was in XPG4.2, and of  * course has been in BSD practically forever.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+operator|>=
+literal|402
+operator|||
+name|__BSD_VISIBLE
+end_if
+
+begin_function_decl
+name|int
+name|symlink
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
