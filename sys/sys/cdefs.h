@@ -621,6 +621,22 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * We define this here since<stddef.h>,<sys/queue.h>, and<sys/types.h>  * require it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|((size_t)(&((type *)0)->field))
+end_define
+
+begin_comment
 comment|/*  * Compiler-dependent macros to declare that functions take printf-like  * or scanf-like arguments.  They are null except for versions of gcc  * that are known to support the features properly (old versions of gcc-2  * didn't permit keeping the keywords out of the application namespace).  */
 end_comment
 
