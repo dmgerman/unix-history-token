@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.2 %G%"
+literal|"@(#)collect.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -545,7 +545,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"Use \"%cq\" to terminate letter\n"
+literal|"Use \".\" to terminate letter\n"
 argument_list|,
 name|escape
 argument_list|)
