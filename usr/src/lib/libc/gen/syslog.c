@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	4.5 (Berkeley) %G%"
+literal|"@(#)syslog.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,23 @@ end_define
 begin_comment
 comment|/* manifest */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|mask
+parameter_list|(
+name|p
+parameter_list|)
+value|(1<< (p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORTANT
+value|(mask(KERN_EMERG)|mask(KERN_ALERT)|mask(KERN_ERR)|mask(KERN_FAIL)\ 	|mask(KERN_RECOV)|mask(KERN_INFO)|mask(LOG_EMERG)|mask(LOG_ALERT)\ 	|mask(LOG_CRIT)|mask(LOG_ERR)|mask(LOG_FAIL))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -262,11 +279,10 @@ operator|>=
 literal|32
 operator|||
 operator|(
-operator|(
-literal|1
-operator|<<
+name|mask
+argument_list|(
 name|pri
-operator|)
+argument_list|)
 operator|&
 name|LogMask
 operator|)
@@ -282,9 +298,12 @@ literal|0
 condition|)
 name|openlog
 argument_list|(
-name|NULL
+name|LogTag
 argument_list|,
-literal|0
+name|LogStat
+operator|&
+operator|~
+name|LOG_ODELAY
 argument_list|,
 literal|0
 argument_list|)
@@ -563,9 +582,22 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|!
+operator|(
+name|LogStat
+operator|&
+name|LOG_CONS
+operator|)
+operator|&&
+operator|!
+operator|(
+name|mask
+argument_list|(
 name|pri
-operator|>
-name|LOG_CRIT
+argument_list|)
+operator|&
+name|IMPORTANT
+operator|)
 condition|)
 return|return;
 name|pid
@@ -597,6 +629,13 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
+name|strcat
+argument_list|(
+name|o
+argument_list|,
+literal|"\r"
+argument_list|)
+expr_stmt|;
 name|write
 argument_list|(
 name|LogFile
@@ -604,6 +643,8 @@ argument_list|,
 name|outline
 argument_list|,
 name|c
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|close
@@ -727,6 +768,16 @@ operator|.
 name|sa_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|LogStat
+operator|&
+name|LOG_ODELAY
+operator|)
+condition|)
+block|{
 name|LogFile
 operator|=
 name|socket
@@ -747,6 +798,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
