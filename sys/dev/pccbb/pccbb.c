@@ -4578,6 +4578,11 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|int
+name|not_a_card
+init|=
+literal|0
+decl_stmt|;
 name|sc
 operator|->
 name|flags
@@ -4613,6 +4618,72 @@ argument_list|,
 name|CBB_SOCKET_STATE
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"Status is 0x%x\n"
+operator|,
+name|status
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+name|CBB_STATE_NOT_A_CARD
+condition|)
+block|{
+comment|/* 			 * Up to 20 times, try to rescan the card when we 			 * see NOT_A_CARD. 			 */
+if|if
+condition|(
+name|not_a_card
+operator|++
+operator|<
+literal|20
+condition|)
+block|{
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|sc
+operator|->
+name|dev
+operator|,
+literal|"Not a card bit set, rescanning\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|cbb_setb
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_FORCE
+argument_list|,
+name|CBB_FORCE_CV_TEST
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Can't determine card type\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|not_a_card
+operator|=
+literal|0
+expr_stmt|;
+comment|/* We know card type */
 if|if
 condition|(
 operator|(
@@ -4634,6 +4705,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5020,8 +5092,19 @@ expr_stmt|;
 if|if
 condition|(
 name|sockevent
+operator|!=
+literal|0
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"CBB EVENT 0x%x\n"
+operator|,
+name|sockevent
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* ack the interrupt */
 name|cbb_setb
 argument_list|(
@@ -5064,6 +5147,13 @@ operator|&=
 operator|~
 name|CBB_CARD_OK
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"Waking up thread\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cv_signal
 argument_list|(
 operator|&
@@ -5081,52 +5171,19 @@ name|mtx
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sockevent
+block|}
+comment|/* 	 * Some chips also require us to read the old ExCA registe for 	 * card status change when we route CSC vis PCI.  This isn't supposed 	 * to be required, but it clears the interrupt state on some chipsets. 	 * Maybe there's a setting that would obviate its need.  Maybe we 	 * should test the status bits and deal with them, but so far we've 	 * not found any machines that don't also give us the socket status 	 * indication above. 	 * 	 * We have to call this unconditionally because some bridges deliver 	 * the even independent of the CBB_SOCKET_EVENT_CD above. 	 */
+name|exca_getb
+argument_list|(
 operator|&
-name|CBB_SOCKET_EVENT_CSTS
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|" cstsevent occured: 0x%08x\n"
-operator|,
-name|cbb_get
-argument_list|(
 name|sc
+operator|->
+name|exca
 argument_list|,
-name|CBB_SOCKET_STATE
-argument_list|)
-operator|)
+name|EXCA_CSC
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|sockevent
-operator|&
-name|CBB_SOCKET_EVENT_POWER
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|" pwrevent occured: 0x%08x\n"
-operator|,
-name|cbb_get
-argument_list|(
-name|sc
-argument_list|,
-name|CBB_SOCKET_STATE
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Other bits? */
-block|}
+comment|/* 	 * If the card is OK, call all the interrupt handlers.  	 */
 if|if
 condition|(
 name|sc
