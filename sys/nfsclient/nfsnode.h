@@ -659,15 +659,6 @@ name|nfs_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|spec_nfsnodeop_p
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
