@@ -1102,6 +1102,27 @@ modifier|*
 name|helpfile
 decl_stmt|;
 comment|/* Help file for "F1"		*/
+if|#
+directive|if
+operator|(
+name|__STDC_VERSION__
+operator|>=
+literal|199901L
+operator|)
+operator|||
+operator|(
+name|__GNUC__
+operator|>=
+literal|3
+operator|)
+name|dialogMenuItem
+name|items
+index|[]
+decl_stmt|;
+comment|/* Array of menu items		*/
+elif|#
+directive|elif
+name|__GNUC__
 name|dialogMenuItem
 name|items
 index|[
@@ -1109,6 +1130,13 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* Array of menu items		*/
+else|#
+directive|else
+error|#
+directive|error
+literal|"Create hack for C89 and K&R compilers."
+endif|#
+directive|endif
 block|}
 name|DMenu
 typedef|;
