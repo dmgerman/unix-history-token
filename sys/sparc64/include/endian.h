@@ -137,7 +137,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_BUILTIN_CONSTANT_P
 argument_list|)
 operator|&&
 name|defined

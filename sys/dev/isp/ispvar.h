@@ -102,6 +102,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -2913,19 +2930,11 @@ begin_comment
 comment|/*  * Platform Dependent Error and Debug Printout  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ATTRIBUTE_PRINTF
+end_ifdef
 
 begin_function_decl
 name|void

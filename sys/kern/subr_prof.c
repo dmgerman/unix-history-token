@@ -2592,15 +2592,10 @@ name|__i386__
 argument_list|)
 operator|)
 operator|&&
-name|__GNUC__
-operator|>=
-literal|2
-operator|&&
 expr|\
-operator|!
 name|defined
 argument_list|(
-name|__INTEL_COMPILER
+name|__GNUCLIKE_CTOR_SECTION_HANDLING
 argument_list|)
 end_if
 

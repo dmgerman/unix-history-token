@@ -19,6 +19,23 @@ directive|define
 name|MPI_TYPE_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*******************************************************************************  * Define MPI_POINTER if it hasn't already been defined. By default MPI_POINTER  * is defined to be a near pointer. MPI_POINTER can be defined as a far pointer  * by defining MPI_POINTER as "far *" before this header file is included.  */
 end_comment
@@ -94,15 +111,11 @@ name|defined
 argument_list|(
 name|ALPHA
 argument_list|)
+expr|\
 operator|||
 name|defined
 argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
+name|__CC_INT_IS_32BIT
 argument_list|)
 end_if
 

@@ -19,6 +19,23 @@ directive|define
 name|_MACHINE_IEEEFP_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * FP rounding modes  */
 end_comment
@@ -426,8 +443,14 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__CC_SUPPORTS___INLINE__
+argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
@@ -1017,7 +1040,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__&& !__cplusplus */
+comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__&& !__cplusplus */
 end_comment
 
 begin_if
@@ -1034,10 +1057,16 @@ name|defined
 argument_list|(
 name|__cplusplus
 argument_list|)
+expr|\
 operator|&&
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__CC_SUPPORTS___INLINE__
 argument_list|)
 end_if
 
@@ -1130,7 +1159,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUC__ */
+comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__ */
 end_comment
 
 begin_comment
@@ -1168,7 +1197,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUC__ */
+comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__ */
 end_comment
 
 begin_endif

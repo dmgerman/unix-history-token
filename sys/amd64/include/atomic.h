@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE_ATOMIC_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char*)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char*)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char*)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char*)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short*)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short*)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short*)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short*)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int*)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int*)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int*)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int*)(P) -= (V))  * atomic_readandclear_int(P)	(return  *(u_int*)P; *(u_int*)P = 0;)  *  * atomic_set_long(P, V)	(*(u_long*)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long*)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long*)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long*)(P) -= (V))  * atomic_readandclear_long(P)	(return  *(u_long*)P; *(u_long*)P = 0;)  */
 end_comment
@@ -111,11 +128,19 @@ begin_comment
 comment|/* !KLD_MODULE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUCLIKE_ASM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__CC_SUPPORTS___INLINE
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * For userland, assume the SMP case and use lock prefixes so that  * the binaries will run on both types of systems.  */
@@ -188,7 +213,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE) */
 end_comment
 
 begin_define
@@ -216,7 +241,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE */
 end_comment
 
 begin_comment
@@ -228,7 +253,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__CC_SUPPORTS___INLINE
 argument_list|)
 end_if
 
@@ -379,7 +409,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__GNUC__) */
+comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE */
 end_comment
 
 begin_if
@@ -387,7 +417,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__CC_SUPPORTS___INLINE
 argument_list|)
 end_if
 
@@ -422,7 +457,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !defined(__GNUC__) */
+comment|/* !(__GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE) */
 end_comment
 
 begin_function_decl
@@ -478,7 +513,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__GNUC__) */
+comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE */
 end_comment
 
 begin_endif
@@ -1561,7 +1596,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__CC_SUPPORTS___INLINE
 argument_list|)
 end_if
 
@@ -1666,7 +1706,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !defined(__GNUC__) */
+comment|/* !(__GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE) */
 end_comment
 
 begin_function_decl
@@ -1699,7 +1739,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__GNUC__) */
+comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE */
 end_comment
 
 begin_endif

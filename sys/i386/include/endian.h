@@ -94,45 +94,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__INTEL_COMPILER
+name|__GNUCLIKE_ASM
 argument_list|)
-if|#
-directive|if
+operator|&&
 name|defined
 argument_list|(
-name|__cplusplus
-argument_list|)
-if|#
-directive|if
-name|__INTEL_COMPILER
-operator|>=
-literal|800
-define|#
-directive|define
-name|__INTEL_COMPILER_with_FreeBSD_endian
-value|1
-endif|#
-directive|endif
-else|#
-directive|else
-define|#
-directive|define
-name|__INTEL_COMPILER_with_FreeBSD_endian
-value|1
-endif|#
-directive|endif
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER_with_FreeBSD_endian
+name|__GNUCLIKE_BUILTIN_CONSTANT_P
 argument_list|)
 define|#
 directive|define
@@ -425,14 +392,14 @@ parameter_list|)
 value|__bswap16(x)
 else|#
 directive|else
-comment|/* !(__GNUC__ || __INTEL_COMPILER_with_FreeBSD_endian) */
+comment|/* !(__GNUCLIKE_ASM&& __GNUCLIKE_BUILTIN_CONSTANT_P) */
 comment|/*  * No optimizations are available for this compiler.  Fall back to  * non-optimized functions by defining the constant usually used to prevent  * redefinition.  */
 define|#
 directive|define
 name|_BYTEORDER_FUNC_DEFINED
 endif|#
 directive|endif
-comment|/* __GNUC__ || __INTEL_COMPILER_with_FreeBSD_endian */
+comment|/* __GNUCLIKE_ASM&& __GNUCLIKE_BUILTIN_CONSTANT_P */
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -39,17 +39,37 @@ directive|include
 file|<machine/alpha_cpu.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUCLIKE_ASM
+argument_list|)
+end_if
 
 begin_function
 specifier|static

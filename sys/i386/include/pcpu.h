@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE_PCPU_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -102,12 +119,18 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
-operator|||
+operator|&&
 name|defined
 argument_list|(
-name|__INTEL_COMPILER
+name|__GNUCLIKE___TYPEOF
+argument_list|)
+expr|\
+operator|&&
+name|defined
+argument_list|(
+name|__GNUCLIKE___OFFSETOF
 argument_list|)
 end_elif
 
@@ -256,7 +279,7 @@ end_else
 begin_error
 error|#
 directive|error
-error|gcc or lint is required to use this file
+error|this file needs to be ported to your compiler
 end_error
 
 begin_endif

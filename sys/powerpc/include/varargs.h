@@ -15,27 +15,30 @@ directive|define
 name|_MACHINE_VARARGS_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_BUILTIN_VARARGS
 argument_list|)
-operator|&&
-operator|(
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|>
-literal|95
-operator|||
-name|__GNUC__
-operator|>=
-literal|3
-operator|)
 end_if
 
 begin_include
@@ -132,7 +135,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ! __GNUC__ post GCC 2.95 */
+comment|/* !  __GNUCLIKE_BUILTIN_VARARGS */
 end_comment
 
 begin_include
@@ -140,6 +143,12 @@ include|#
 directive|include
 file|<machine/stdarg.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_BUILTIN_VAALIST
+end_ifdef
 
 begin_define
 define|#
@@ -154,6 +163,22 @@ directive|define
 name|va_dcl
 value|int __builtin_va_alist; ...
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|this file needs to be ported to your compiler
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -204,7 +229,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ post GCC 2.95 */
+comment|/* __GNUCLIKE_BUILTIN_VARARGS */
 end_comment
 
 begin_endif

@@ -21,6 +21,23 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and SMP safe.  */
 end_comment
@@ -149,7 +166,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
@@ -213,7 +230,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
@@ -277,7 +294,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
@@ -341,7 +358,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
@@ -404,7 +421,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"\tsync\n"
 comment|/* drain writes */
@@ -874,7 +891,7 @@ name|ret
 block|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */

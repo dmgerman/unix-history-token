@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE__TYPES_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Basic types upon which most other types are built.  */
 end_comment
@@ -389,7 +406,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_BUILTIN_VARARGS
 end_ifdef
 
 begin_typedef
@@ -406,11 +423,17 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__GNUC_VA_LIST_COMPATIBILITY
+argument_list|)
+operator|&&
 operator|!
 name|defined
 argument_list|(
 name|__GNUC_VA_LIST
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
@@ -490,7 +513,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUCLIKE_BUILTIN_VARARGS */
 end_comment
 
 begin_endif

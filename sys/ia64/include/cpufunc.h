@@ -39,6 +39,23 @@ directive|include
 file|<machine/vmparam.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|thread
@@ -55,7 +72,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_function
@@ -86,11 +103,6 @@ name|x
 parameter_list|)
 value|__builtin_ffs(x)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -725,6 +737,15 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUCLIKE_ASM */
+end_comment
 
 begin_endif
 endif|#

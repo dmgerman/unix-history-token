@@ -16,6 +16,23 @@ name|_MACHINE_IN_CKSUM_H_
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * MP safe (alfred)  */
 end_comment
@@ -47,7 +64,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
 operator|&&
 operator|!
@@ -362,7 +379,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
 operator|||
 name|defined

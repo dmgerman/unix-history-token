@@ -83,13 +83,17 @@ parameter_list|)
 value|if ((x)> 0xffff) (x) -= 0xffff
 end_define
 
+begin_comment
+comment|/*  * icc needs to be special cased here, as the asm code below results  * in broken code if compiled with icc.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 operator|!
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
 operator|||
 name|defined
@@ -136,7 +140,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
 operator|||
 name|defined

@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE__TYPES_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Basic types upon which most other types are built.  */
 end_comment
@@ -104,12 +121,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
+name|__GNUCLIKE_ATTRIBUTE_MODE_DI
 argument_list|)
 end_elif
 
@@ -508,36 +520,11 @@ begin_comment
 comment|/*  * Unusual type definitions.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-operator|(
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|>
-literal|95
-operator|||
-name|__GNUC__
-operator|>=
-literal|3
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-operator|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_BUILTIN_VARARGS
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -569,7 +556,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! (__GNUC__ post 2.95 || __INTEL_COMPILER) */
+comment|/* __GNUCLIKE_BUILTIN_VARARGS */
 end_comment
 
 begin_if
@@ -577,7 +564,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUC_VA_LIST_COMPATIBILITY
 argument_list|)
 operator|&&
 operator|!
@@ -585,6 +572,7 @@ name|defined
 argument_list|(
 name|__GNUC_VA_LIST
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined

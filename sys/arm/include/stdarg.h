@@ -51,28 +51,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-operator|(
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|>
-literal|95
-operator|||
-name|__GNUC__
-operator|>=
-literal|3
-operator|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_BUILTIN_STDARG
+end_ifdef
 
 begin_define
 define|#
@@ -143,7 +126,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ! __GNUC__ post GCC 2.95 */
+comment|/* !__GNUCLIKE_BUILTIN_STDARG */
 end_comment
 
 begin_define
@@ -160,7 +143,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_BUILTIN_NEXT_ARG
 end_ifdef
 
 begin_define
@@ -182,7 +165,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* non-GNU compiler */
+comment|/* !__GNUCLIKE_BUILTIN_NEXT_ARG */
 end_comment
 
 begin_define
@@ -204,7 +187,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUCLIKE_BUILTIN_NEXT_ARG */
 end_comment
 
 begin_define
@@ -235,7 +218,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ post GCC 2.95 */
+comment|/* __GNUCLIKE_BUILTIN_STDARG */
 end_comment
 
 begin_endif

@@ -132,11 +132,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CC_SUPPORTS___INLINE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUCLIKE_ASM
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -392,7 +400,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__CC_SUPPORTS___INLINE&& __GNUCLIKE_ASM) */
 end_comment
 
 begin_comment
@@ -411,7 +419,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __CC_SUPPORTS___INLINE&& __GNUCLIKE_ASM */
 end_comment
 
 begin_endif

@@ -7,14 +7,6 @@ begin_comment
 comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efefind.h  Abstract:      EFI to compile bindings     Revision History  --*/
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|)
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -496,7 +488,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__CC_SUPPORTS_FORWARD_REFERENCE_CONSTRUCT
 end_ifdef
 
 begin_define

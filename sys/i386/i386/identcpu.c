@@ -3191,19 +3191,11 @@ name|bluetrap6
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+end_ifdef
 
 begin_asm
 asm|__asm
@@ -3255,19 +3247,11 @@ name|bluetrap13
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+end_ifdef
 
 begin_asm
 asm|__asm

@@ -29,7 +29,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__CC_SUPPORTS___INLINE
 end_ifdef
 
 begin_comment
@@ -94,7 +94,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !__CC_SUPPORTS___INLINE */
 end_comment
 
 begin_function_decl
@@ -127,7 +127,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __CC_SUPPORTS___INLINE */
 end_comment
 
 begin_macro

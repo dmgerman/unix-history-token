@@ -15,6 +15,23 @@ directive|define
 name|_SYS_LINKER_SET_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The following macros are used to declare global sets of objects, which  * are collected by the linker into a `linker_set' as defined below.  * For ELF, this is done by constructing a separate segment for each set.  */
 end_comment
@@ -23,19 +40,11 @@ begin_comment
 comment|/*  * Private macros, not to be used outside this header file.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE___SECTION
+end_ifdef
 
 begin_define
 define|#
@@ -56,7 +65,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(__GNUC__ || __INTEL_COMPILER) */
+comment|/* !__GNUCLIKE___SECTION */
 end_comment
 
 begin_ifndef
@@ -68,7 +77,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-literal|"This file needs to be compiled by GCC, an Intel compiler or lint"
+error|this file needs to be ported to your compiler
 end_error
 
 begin_endif
@@ -98,7 +107,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ || __INTEL_COMPILER */
+comment|/* __GNUCLIKE___SECTION */
 end_comment
 
 begin_comment

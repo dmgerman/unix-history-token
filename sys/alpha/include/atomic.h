@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE_ATOMIC_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -149,7 +166,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %2\n\t"
 comment|/* load old value */
@@ -212,7 +229,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
@@ -269,7 +286,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
@@ -326,7 +343,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
@@ -382,7 +399,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"wmb\n"
 comment|/* ensure pending writes have drained */
@@ -448,7 +465,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
@@ -505,7 +522,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
@@ -562,7 +579,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
@@ -619,7 +636,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
@@ -675,7 +692,7 @@ name|temp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"wmb\n"
 comment|/* ensure pending writes have drained */
@@ -1051,7 +1068,7 @@ name|ret
 block|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
@@ -1138,7 +1155,7 @@ name|ret
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */

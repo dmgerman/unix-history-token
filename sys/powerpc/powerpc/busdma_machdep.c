@@ -1097,7 +1097,7 @@ name|paddr
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__CC_SUPPORTS_DYNAMIC_ARRAY_INIT
 name|bus_dma_segment_t
 name|dm_segments
 index|[
@@ -1736,7 +1736,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__CC_SUPPORTS_DYNAMIC_ARRAY_INIT
 name|bus_dma_segment_t
 name|dm_segments
 index|[
@@ -2111,7 +2111,7 @@ name|lastaddr
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__CC_SUPPORTS_DYNAMIC_ARRAY_INIT
 name|bus_dma_segment_t
 name|dm_segments
 index|[

@@ -15,10 +15,16 @@ directive|define
 name|_MACHINE_IOCTL_METEOR_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__CC_SUPPORTS_WARNING
 end_ifdef
 
 begin_warning

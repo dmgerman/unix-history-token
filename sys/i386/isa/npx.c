@@ -343,22 +343,15 @@ end_define
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|lint
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
 argument_list|)
 end_if
 
@@ -489,7 +482,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !((__GNUC__&& !lint ) || __INTEL_COMPILER) */
+comment|/* !(__GNUCLIKE_ASM&& !lint) */
 end_comment
 
 begin_function_decl
@@ -624,7 +617,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (__GNUC__&& !lint ) || __INTEL_COMPILER */
+comment|/* __GNUCLIKE_ASM&& !lint */
 end_comment
 
 begin_ifdef

@@ -41,7 +41,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__CC_SUPPORTS___INLINE
 end_ifdef
 
 begin_function

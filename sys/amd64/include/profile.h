@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE_PROFILE_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -85,7 +102,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_define
@@ -159,6 +176,7 @@ end_else
 begin_error
 error|#
 directive|error
+error|this file needs to be ported to your compiler
 end_error
 
 begin_endif
@@ -167,7 +185,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC */
+comment|/* __GNUCLIKE_ASM */
 end_comment
 
 begin_else
@@ -348,7 +366,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 end_ifdef
 
 begin_define
@@ -391,7 +409,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !__GNUCLIKE_ASM */
 end_comment
 
 begin_define
@@ -408,7 +426,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUCLIKE_ASM */
 end_comment
 
 begin_typedef
@@ -476,7 +494,7 @@ begin_decl_stmt
 name|__BEGIN_DECLS
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 name|void
 name|mcount
 argument_list|(

@@ -33,6 +33,23 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * To remain compatible with NetBSD's interface, default to both memio and  * pio when neither of them is defined.  */
 end_comment
@@ -920,7 +937,7 @@ directive|endif
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movb (%2),%%al				\n\ 			stosb					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1038,7 +1055,7 @@ directive|endif
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movw (%2),%%ax				\n\ 			stosw					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1156,7 +1173,7 @@ directive|endif
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movl (%2),%%eax				\n\ 			stosl					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1355,7 +1372,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inb %w2,%%al				\n\ 			stosb					\n\ 			incl %2					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1436,7 +1453,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsb"					:
 literal|"=D"
 operator|(
@@ -1540,7 +1557,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inw %w2,%%ax				\n\ 			stosw					\n\ 			addl $2,%2				\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1621,7 +1638,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsw"					:
 literal|"=D"
 operator|(
@@ -1725,7 +1742,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inl %w2,%%eax				\n\ 			stosl					\n\ 			addl $4,%2				\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1806,7 +1823,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsl"					:
 literal|"=D"
 operator|(
@@ -2377,7 +2394,7 @@ directive|endif
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsb					\n\ 			movb %%al,(%2)				\n\ 			loop 1b"				:
 literal|"=S"
 operator|(
@@ -2498,7 +2515,7 @@ directive|endif
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			movw %%ax,(%2)				\n\ 			loop 1b"				:
 literal|"=S"
 operator|(
@@ -2619,7 +2636,7 @@ directive|endif
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsl					\n\ 			movl %%eax,(%2)				\n\ 			loop 1b"				:
 literal|"=S"
 operator|(
@@ -2836,7 +2853,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsb					\n\ 			outb %%al,%w0				\n\ 			incl %0					\n\ 			loop 1b"				:
 literal|"=d"
 operator|(
@@ -2917,7 +2934,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsb"					:
 literal|"=D"
 operator|(
@@ -3022,7 +3039,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			outw %%ax,%w0				\n\ 			addl $2,%0				\n\ 			loop 1b"				:
 literal|"=d"
 operator|(
@@ -3103,7 +3120,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsw"					:
 literal|"=D"
 operator|(
@@ -3208,7 +3225,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsl					\n\ 			outl %%eax,%w0				\n\ 			addl $4,%0				\n\ 			loop 1b"				:
 literal|"=d"
 operator|(
@@ -3289,7 +3306,7 @@ name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsl"					:
 literal|"=D"
 operator|(
@@ -5208,7 +5225,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__GNUCLIKE_ASM
 if|if
 condition|(
 name|flags

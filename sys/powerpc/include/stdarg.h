@@ -56,22 +56,8 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_BUILTIN_STDARG
 argument_list|)
-operator|&&
-operator|(
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|>
-literal|95
-operator|||
-name|__GNUC__
-operator|>=
-literal|3
-operator|)
 end_if
 
 begin_define
@@ -156,7 +142,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ! __GNUC__ post GCC 2.95 */
+comment|/* !__GNUCLIKE_BUILTIN_STDARG */
 end_comment
 
 begin_ifdef
@@ -199,22 +185,8 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUC_VA_LIST_COMPATIBILITY
 argument_list|)
-operator|&&
-operator|(
-name|__GNUC__
-operator|>
-literal|2
-operator|||
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|>=
-literal|95
-operator|)
 end_if
 
 begin_define
@@ -520,7 +492,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ post GCC 2.95 */
+comment|/* __GNUCLIKE_BUILTIN_STDARG */
 end_comment
 
 begin_endif

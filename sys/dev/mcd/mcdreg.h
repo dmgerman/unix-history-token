@@ -15,52 +15,6 @@ directive|define
 name|MCD_H
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>=
-literal|2
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|1
-name|)
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* toc */
 end_comment
@@ -877,6 +831,7 @@ name|data1
 decl_stmt|;
 comment|/* Used	if dma_mode& 0x01 */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -903,6 +858,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -943,6 +899,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -963,6 +920,7 @@ name|u_char
 name|v0ls
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -975,6 +933,7 @@ name|units_of_ten_seconds
 decl_stmt|;
 comment|/* If this is 0, the default (12) is used */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -995,6 +954,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -1015,6 +975,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -1059,54 +1020,9 @@ literal|280
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>=
-literal|2
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|4
-name|)
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

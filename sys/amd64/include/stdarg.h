@@ -56,7 +56,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_BUILTIN_STDARG
 argument_list|)
 end_if
 
@@ -194,6 +194,17 @@ parameter_list|(
 name|ap
 parameter_list|)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|this file needs to be ported to your compiler
+end_error
 
 begin_endif
 endif|#

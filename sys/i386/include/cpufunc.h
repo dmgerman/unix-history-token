@@ -19,6 +19,23 @@ directive|define
 name|_MACHINE_CPUFUNC_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|region_descriptor
@@ -96,12 +113,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
-operator|||
+operator|&&
 name|defined
 argument_list|(
-name|__INTEL_COMPILER
+name|__CC_SUPPORTS___INLINE
 argument_list|)
 end_if
 
@@ -358,9 +375,15 @@ end_function
 begin_if
 if|#
 directive|if
-name|__GNUC__
+operator|!
+name|defined
+argument_list|(
+name|__GNUCLIKE_BUILTIN_CONSTANT_P
+argument_list|)
+operator|||
+name|__GNUCLIKE_ASM
 operator|<
-literal|2
+literal|3
 end_if
 
 begin_define
@@ -391,7 +414,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __GNUC>= 2 */
+comment|/* __GNUCLIKE_BUILTIN_CONSTANT_P&& __GNUCLIKE_ASM>= 3 */
 end_comment
 
 begin_comment
@@ -465,7 +488,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC<= 2 */
+comment|/* __GNUCLIKE_BUILTIN_CONSTANT_P&& __GNUCLIKE_ASM>= 3*/
 end_comment
 
 begin_function
@@ -1615,7 +1638,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(__GNUC__ || __INTEL_COMPILER) */
+comment|/* !(__GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE) */
 end_comment
 
 begin_function_decl
@@ -2282,7 +2305,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ || __INTEL_COMPILER */
+comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE */
 end_comment
 
 begin_function_decl

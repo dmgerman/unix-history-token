@@ -313,17 +313,9 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
 name|uint32_t
 name|retval
 init|=
@@ -425,17 +417,9 @@ modifier|*
 name|iv
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
 comment|/* The .byte line is really VIA C3 "xcrypt-cbc" instruction */
 asm|__asm __volatile(
 literal|"pushf				\n\t"

@@ -170,7 +170,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUCLIKE_ASM
 argument_list|)
 operator|&&
 operator|!
@@ -278,7 +278,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not __GNUC__ */
+comment|/* !__GNUCLIKE_ASM */
 end_comment
 
 begin_function_decl
@@ -373,7 +373,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUCLIKE_ASM */
 end_comment
 
 begin_define

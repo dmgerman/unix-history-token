@@ -23,11 +23,17 @@ directive|define
 name|_MACHINE_LIMITS_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|__GNUC__
-end_if
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__CC_SUPPORTS_WARNING
+end_ifdef
 
 begin_warning
 warning|#

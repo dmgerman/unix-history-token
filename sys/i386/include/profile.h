@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE_PROFILE_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -82,19 +99,11 @@ name|s
 parameter_list|)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+end_ifdef
 
 begin_define
 define|#
@@ -175,7 +184,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !(__GNUC__ || __INTEL_COMPILER) */
+comment|/* !__GNUCLIKE_ASM */
 end_comment
 
 begin_else
@@ -352,19 +361,11 @@ name|_MCOUNT_DECL
 value|static __inline void _mcount
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+end_ifdef
 
 begin_define
 define|#
@@ -384,7 +385,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(__GNUC__ || __INTEL_COMPILER) */
+comment|/* !__GNUCLIKE_ASM */
 end_comment
 
 begin_expr_stmt
@@ -406,7 +407,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ || __INTEL_COMPILER */
+comment|/* __GNUCLIKE_ASM */
 end_comment
 
 begin_typedef
@@ -472,17 +473,9 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
 name|void
 name|mcount
 argument_list|(

@@ -15,52 +15,6 @@ directive|define
 name|SCD_H
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>=
-literal|2
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|1
-name|)
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -398,6 +352,7 @@ name|u_short
 name|config
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -441,6 +396,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -469,6 +425,7 @@ literal|3
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -555,6 +512,7 @@ literal|9
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 

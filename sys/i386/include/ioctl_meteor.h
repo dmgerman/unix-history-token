@@ -15,19 +15,17 @@ directive|define
 name|_MACHINE_IOCTL_METEOR_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__CC_SUPPORTS_WARNING
+end_ifdef
 
 begin_warning
 warning|#
