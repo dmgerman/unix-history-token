@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.7 (Berkeley) %G%"
+literal|"@(#)collect.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,16 +381,17 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|intty
-operator|&&
-name|sflag
-operator|==
-name|NOSTR
-operator|&&
 name|hp
 operator|->
 name|h_subject
 operator|==
+name|NOSTR
+operator|&&
+name|value
+argument_list|(
+literal|"interactive"
+argument_list|)
+operator|!=
 name|NOSTR
 operator|&&
 name|value
@@ -430,10 +431,6 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-name|escape
-operator|=
-name|ESCAPE
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -451,6 +448,11 @@ name|escape
 operator|=
 operator|*
 name|cp
+expr_stmt|;
+else|else
+name|escape
+operator|=
+name|ESCAPE
 expr_stmt|;
 name|eof
 operator|=
@@ -546,7 +548,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|intty
+name|value
+argument_list|(
+literal|"interactive"
+argument_list|)
+operator|!=
+name|NOSTR
 operator|&&
 name|value
 argument_list|(
@@ -583,14 +590,26 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|intty
-operator|&&
-name|equal
-argument_list|(
-literal|"."
-argument_list|,
 name|linebuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|linebuf
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+operator|&&
+name|value
+argument_list|(
+literal|"interactive"
 argument_list|)
+operator|!=
+name|NOSTR
 operator|&&
 operator|(
 name|value
@@ -618,8 +637,11 @@ index|]
 operator|!=
 name|escape
 operator|||
-name|rflag
-operator|!=
+name|value
+argument_list|(
+literal|"interactive"
+argument_list|)
+operator|==
 name|NOSTR
 condition|)
 block|{
@@ -712,9 +734,6 @@ break|break;
 case|case
 literal|':'
 case|:
-case|case
-literal|'_'
-case|:
 comment|/* 			 * Escape to command mode, but be nice! 			 */
 name|execute
 argument_list|(
@@ -740,9 +759,6 @@ goto|;
 case|case
 literal|'q'
 case|:
-case|case
-literal|'Q'
-case|:
 comment|/* 			 * Force a quit of sending mail. 			 * Act like an interrupt happened. 			 */
 name|hadintr
 operator|++
@@ -761,22 +777,6 @@ case|case
 literal|'h'
 case|:
 comment|/* 			 * Grab a bunch of headers. 			 */
-if|if
-condition|(
-operator|!
-name|intty
-operator|||
-operator|!
-name|outtty
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"~h: no can do!?\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|grabh
 argument_list|(
 name|hp
@@ -1330,9 +1330,6 @@ expr_stmt|;
 goto|goto
 name|cont
 goto|;
-case|case
-literal|'^'
-case|:
 case|case
 literal|'|'
 case|:

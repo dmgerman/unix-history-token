@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.10 (Berkeley) %G%"
+literal|"@(#)lex.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -456,8 +456,6 @@ block|{
 name|int
 name|eofloop
 decl_stmt|,
-name|shudprompt
-decl_stmt|,
 name|stop
 argument_list|()
 decl_stmt|;
@@ -530,13 +528,6 @@ name|hangup
 argument_list|)
 expr_stmt|;
 block|}
-name|shudprompt
-operator|=
-name|intty
-operator|&&
-operator|!
-name|sourcing
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -564,7 +555,15 @@ name|top
 label|:
 if|if
 condition|(
-name|shudprompt
+operator|!
+name|sourcing
+operator|&&
+name|value
+argument_list|(
+literal|"interactive"
+argument_list|)
+operator|!=
+name|NOSTR
 condition|)
 block|{
 name|setjmp
@@ -653,12 +652,17 @@ if|if
 condition|(
 name|value
 argument_list|(
-literal|"ignoreeof"
+literal|"interactive"
 argument_list|)
 operator|!=
 name|NOSTR
 operator|&&
-name|shudprompt
+name|value
+argument_list|(
+literal|"ignoreeof"
+argument_list|)
+operator|!=
+name|NOSTR
 condition|)
 block|{
 if|if

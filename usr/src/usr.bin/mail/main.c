@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,18 +150,18 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
-name|intty
-operator|=
+if|if
+condition|(
 name|isatty
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-name|outtty
-operator|=
-name|isatty
+condition|)
+name|assign
 argument_list|(
-literal|1
+literal|"interactive"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|image
@@ -438,9 +438,12 @@ case|case
 literal|'I'
 case|:
 comment|/* 			 * We're interactive 			 */
-name|intty
-operator|=
-literal|1
+name|assign
+argument_list|(
+literal|"interactive"
+argument_list|,
+literal|""
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -971,10 +974,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|fileno
-argument_list|(
-name|stdout
-argument_list|)
+literal|1
 argument_list|,
 name|TIOCGWINSZ
 argument_list|,
@@ -1002,8 +1002,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|outtty
-condition|)
 name|gtty
 argument_list|(
 literal|1
@@ -1011,8 +1009,9 @@ argument_list|,
 operator|&
 name|tbuf
 argument_list|)
-expr_stmt|;
-else|else
+operator|<
+literal|0
+condition|)
 name|tbuf
 operator|.
 name|sg_ospeed

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.8 (Berkeley) %G%"
+literal|"@(#)send.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1043,8 +1043,15 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|intty
-operator|&&
+name|value
+argument_list|(
+literal|"interactive"
+argument_list|)
+operator|!=
+name|NOSTR
+condition|)
+if|if
+condition|(
 name|value
 argument_list|(
 literal|"askcc"
@@ -1059,11 +1066,7 @@ argument_list|,
 name|GCC
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|intty
-condition|)
+else|else
 block|{
 name|printf
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.7 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1445,9 +1445,12 @@ return|;
 block|}
 if|if
 condition|(
-name|intty
-operator|&&
-name|outtty
+name|value
+argument_list|(
+literal|"interactive"
+argument_list|)
+operator|!=
+name|NOSTR
 operator|&&
 operator|(
 name|page
