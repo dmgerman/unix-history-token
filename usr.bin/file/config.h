@@ -281,5 +281,11 @@ name|VERSION
 value|"3.36"
 end_define
 
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
 end_unit
 
