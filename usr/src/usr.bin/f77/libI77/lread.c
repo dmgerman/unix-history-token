@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.11";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.12";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -67,6 +67,10 @@ parameter_list|)
 value|(ltab[x+1]&B)
 end_define
 
+begin_comment
+comment|/* space, tab, newline */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -76,6 +80,10 @@ name|x
 parameter_list|)
 value|(ltab[x+1]&SP)
 end_define
+
+begin_comment
+comment|/* space, tab, newline, comma */
+end_comment
 
 begin_define
 define|#
@@ -87,6 +95,10 @@ parameter_list|)
 value|(ltab[x+1]&AP)
 end_define
 
+begin_comment
+comment|/* apost., quote mark, \02 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -96,6 +108,10 @@ name|x
 parameter_list|)
 value|(ltab[x+1]&EX)
 end_define
+
+begin_comment
+comment|/* d, e, D, E */
+end_comment
 
 begin_define
 define|#
@@ -116,6 +132,10 @@ name|x
 parameter_list|)
 value|(ltab[x+1]&EIN)
 end_define
+
+begin_comment
+comment|/* EOF, newline, / */
+end_comment
 
 begin_define
 define|#
@@ -207,6 +227,8 @@ literal|0
 block|,
 literal|0
 block|,
+name|SP
+operator||
 name|B
 block|,
 name|SP
@@ -1401,7 +1423,11 @@ expr_stmt|;
 if|if
 condition|(
 name|flg
-operator|&&
+condition|)
+comment|/* real */
+block|{
+if|if
+condition|(
 name|lr_comm
 argument_list|()
 condition|)
@@ -1491,6 +1517,19 @@ expr_stmt|;
 name|lcount
 operator|=
 literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+comment|/* complex */
+block|{
+name|db
+operator|=
+name|rd_int
+argument_list|(
+operator|&
+name|b
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2087,11 +2126,6 @@ break|break;
 default|default:
 if|if
 condition|(
-name|isblnk
-argument_list|(
-name|ch
-argument_list|)
-operator|||
 name|issep
 argument_list|(
 name|ch
@@ -2154,12 +2188,6 @@ name|GETC
 argument_list|(
 name|ch
 argument_list|)
-argument_list|)
-operator|&&
-operator|!
-name|isblnk
-argument_list|(
-name|ch
 argument_list|)
 operator|&&
 operator|!
@@ -2265,11 +2293,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|isblnk
-argument_list|(
-name|ch
-argument_list|)
-operator|||
 name|issep
 argument_list|(
 name|ch
@@ -2411,12 +2434,6 @@ name|GETC
 argument_list|(
 name|ch
 argument_list|)
-argument_list|)
-operator|&&
-operator|!
-name|isblnk
-argument_list|(
-name|ch
 argument_list|)
 operator|&&
 operator|!
@@ -2739,17 +2756,11 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-while|while
-condition|(
-name|isblnk
-argument_list|(
 name|GETC
 argument_list|(
 name|ch
 argument_list|)
-argument_list|)
-condition|)
-empty_stmt|;
+expr_stmt|;
 call|(
 modifier|*
 name|ungetn
