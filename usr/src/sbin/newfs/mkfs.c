@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	1.5 (Berkeley) %G%"
+literal|"@(#)mkfs.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2700,7 +2700,15 @@ name|ibc
 argument_list|,
 name|ib
 argument_list|,
+name|ibc
+operator|<
+name|NDADDR
+condition|?
+name|i
+else|:
 name|BSIZE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2839,7 +2847,9 @@ name|in
 operator|.
 name|i_size
 operator|>=
-name|FSIZE
+name|BSIZE
+operator|*
+name|NDADDR
 condition|)
 block|{
 name|printf
@@ -2847,8 +2857,8 @@ argument_list|(
 literal|"can't handle direct of> %d entries\n"
 argument_list|,
 name|NDIRECT
-operator|/
-name|FRAG
+operator|*
+name|NDADDR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2893,14 +2903,6 @@ name|in
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-block|}
-if|if
-condition|(
-name|dbc
-operator|!=
-literal|0
-condition|)
 name|newblk
 argument_list|(
 operator|&
@@ -2917,10 +2919,14 @@ name|roundup
 argument_list|(
 name|dbc
 argument_list|,
-name|BSIZE
+name|FSIZE
 argument_list|)
+argument_list|,
+name|IFDIR
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|iput
 argument_list|(
 operator|&
@@ -3390,9 +3396,14 @@ name|daddr_t
 name|alloc
 parameter_list|(
 name|size
+parameter_list|,
+name|mode
 parameter_list|)
 name|int
 name|size
+decl_stmt|;
+name|int
+name|mode
 decl_stmt|;
 block|{
 name|int
@@ -3526,6 +3537,27 @@ operator|.
 name|cs_nbfree
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|IFDIR
+condition|)
+block|{
+name|acg
+operator|.
+name|cg_ndir
+operator|++
+expr_stmt|;
+name|fscs
+index|[
+literal|0
+index|]
+operator|.
+name|cs_ndir
+operator|++
+expr_stmt|;
+block|}
 name|s
 operator|=
 name|d
@@ -3708,6 +3740,28 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|adbc
+operator|==
+name|NDIRECT
+condition|)
+name|newblk
+argument_list|(
+name|adbc
+argument_list|,
+name|db
+argument_list|,
+name|aibc
+argument_list|,
+name|ib
+argument_list|,
+name|BSIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 operator|(
@@ -3788,26 +3842,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-operator|*
-name|adbc
-operator|>=
-name|NDIRECT
-condition|)
-name|newblk
-argument_list|(
-name|adbc
-argument_list|,
-name|db
-argument_list|,
-name|aibc
-argument_list|,
-name|ib
-argument_list|,
-name|BSIZE
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -3823,6 +3857,8 @@ argument_list|,
 argument|ib
 argument_list|,
 argument|size
+argument_list|,
+argument|mode
 argument_list|)
 end_macro
 
@@ -3856,6 +3892,12 @@ name|size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
@@ -3869,6 +3911,8 @@ operator|=
 name|alloc
 argument_list|(
 name|size
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 name|wtfs
@@ -4241,6 +4285,8 @@ operator|=
 name|alloc
 argument_list|(
 name|BSIZE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
