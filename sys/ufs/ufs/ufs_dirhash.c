@@ -5361,7 +5361,7 @@ name|DH_NBLKOFF
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|doff_t
 argument_list|)
 argument_list|,
 name|NULL
