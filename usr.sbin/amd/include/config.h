@@ -8,7 +8,7 @@ comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/* aux/config.h.in.  Generated automatically from ./aux/configure.in by autoheader.  */
+comment|/* config.h.in.  Generated automatically from configure.in by autoheader.  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_AUTO
+name|HAVE_AMU_FS_AUTO
 value|1
 end_define
 
@@ -49,7 +49,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_DIRECT
+name|HAVE_AMU_FS_DIRECT
 value|1
 end_define
 
@@ -60,7 +60,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_TOPLVL
+name|HAVE_AMU_FS_TOPLVL
 value|1
 end_define
 
@@ -71,7 +71,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_ERROR
+name|HAVE_AMU_FS_ERROR
 value|1
 end_define
 
@@ -82,7 +82,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_INHERIT
+name|HAVE_AMU_FS_INHERIT
 value|1
 end_define
 
@@ -93,7 +93,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_PROGRAM
+name|HAVE_AMU_FS_PROGRAM
 value|1
 end_define
 
@@ -104,7 +104,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_LINK
+name|HAVE_AMU_FS_LINK
 value|1
 end_define
 
@@ -115,7 +115,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_LINKX
+name|HAVE_AMU_FS_LINKX
 value|1
 end_define
 
@@ -126,7 +126,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_HOST
+name|HAVE_AMU_FS_HOST
 value|1
 end_define
 
@@ -137,7 +137,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_NFSL
+name|HAVE_AMU_FS_NFSL
 value|1
 end_define
 
@@ -148,7 +148,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_NFSX
+name|HAVE_AMU_FS_NFSX
 value|1
 end_define
 
@@ -159,7 +159,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_AM_FS_UNION
+name|HAVE_AMU_FS_UNION
 value|1
 end_define
 
@@ -220,9 +220,12 @@ begin_comment
 comment|/* Define if have HESIOD maps */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MAP_HESIOD */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MAP_HESIOD
+value|1
+end_define
 
 begin_comment
 comment|/* Define if have LDAP maps */
@@ -322,12 +325,9 @@ begin_comment
 comment|/* Define if have LOFS filesystem */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_FS_LOFS
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_FS_LOFS */
+end_comment
 
 begin_comment
 comment|/* Define if have HSFS filesystem */
@@ -482,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_NFS3
-value|"nfs"
+value|MOUNT_NFS3
 end_define
 
 begin_comment
@@ -504,12 +504,9 @@ begin_comment
 comment|/* Mount(2) type/name for LOFS filesystem */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MOUNT_TYPE_LOFS
-value|"lofs"
-end_define
+begin_comment
+comment|/* #undef MOUNT_TYPE_LOFS */
+end_comment
 
 begin_comment
 comment|/* Mount(2) type/name for CDFS filesystem */
@@ -577,9 +574,12 @@ begin_comment
 comment|/* Mount(2) type/name for IGNORE filesystem (not real just ignore for df) */
 end_comment
 
-begin_comment
-comment|/* #undef MOUNT_TYPE_IGNORE */
-end_comment
+begin_define
+define|#
+directive|define
+name|MOUNT_TYPE_IGNORE
+value|MNT_IGNORE
+end_define
 
 begin_comment
 comment|/* Mount(2) type/name for NULLFS (loopback on bsd44) filesystem */
@@ -664,7 +664,7 @@ begin_define
 define|#
 directive|define
 name|MNTTAB_TYPE_NFS3
-value|"nfs"
+value|"nfs3"
 end_define
 
 begin_comment
@@ -682,12 +682,9 @@ begin_comment
 comment|/* Mount-table entry name for LOFS filesystem */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MNTTAB_TYPE_LOFS
-value|"lofs"
-end_define
+begin_comment
+comment|/* #undef MNTTAB_TYPE_LOFS */
+end_comment
 
 begin_comment
 comment|/* Mount-table entry name for CDFS filesystem */
@@ -1232,6 +1229,14 @@ comment|/* #undef MNTTAB_OPT_MAXGROUPS */
 end_comment
 
 begin_comment
+comment|/* Mount Table option string: support property lists (ACLs) */
+end_comment
+
+begin_comment
+comment|/* #undef MNTTAB_OPT_PROPLIST */
+end_comment
+
+begin_comment
 comment|/*  * Generic mount(2) options (hex numbers)  */
 end_comment
 
@@ -1252,6 +1257,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MNT2_GEN_OPT_AUTOMNTFS */
+end_comment
+
+begin_comment
+comment|/* directory hardlink */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_GEN_OPT_BIND */
 end_comment
 
 begin_comment
@@ -1282,9 +1295,12 @@ begin_comment
 comment|/* ignore mount entry in df output */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_GEN_OPT_IGNORE */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_GEN_OPT_IGNORE
+value|0x800000
+end_define
 
 begin_comment
 comment|/* journaling filesystem (AIX's UFS/FFS) */
@@ -1335,7 +1351,7 @@ comment|/* #undef MNT2_GEN_OPT_NOCACHE */
 end_comment
 
 begin_comment
-comment|/* not a device */
+comment|/* do not interpret special device files */
 end_comment
 
 begin_define
@@ -1357,7 +1373,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* not a device  */
+comment|/* do not interpret special device files */
 end_comment
 
 begin_comment
@@ -1389,6 +1405,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MNT2_GEN_OPT_NOTRUNC */
+end_comment
+
+begin_comment
+comment|/* Pass mount option string to kernel */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_GEN_OPT_OPTIONSTR */
 end_comment
 
 begin_comment
@@ -1626,6 +1650,14 @@ value|0x40
 end_define
 
 begin_comment
+comment|/* allow interrupts on hard mount */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_INTR */
+end_comment
+
+begin_comment
 comment|/* Bits set internally */
 end_comment
 
@@ -1637,9 +1669,12 @@ begin_comment
 comment|/* Use Kerberos authentication */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_NFS_OPT_KERB */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_NFS_OPT_KERB
+value|0x400
+end_define
 
 begin_comment
 comment|/* use kerberos credentials */
@@ -1758,6 +1793,14 @@ comment|/* #undef MNT2_NFS_OPT_NQLOOKLEASE */
 end_comment
 
 begin_comment
+comment|/* Don't use locking */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_NONLM */
+end_comment
+
+begin_comment
 comment|/* Use Nqnfs protocol */
 end_comment
 
@@ -1793,6 +1836,22 @@ comment|/* #undef MNT2_NFS_OPT_RDIRALOOK */
 end_comment
 
 begin_comment
+comment|/* allow property list operations (ACLs over NFS) */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_PROPLIST */
+end_comment
+
+begin_comment
+comment|/* Use Readdirplus for NFSv3 */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPTS_RDIRPLUS */
+end_comment
+
+begin_comment
 comment|/* set read ahead */
 end_comment
 
@@ -1801,6 +1860,17 @@ define|#
 directive|define
 name|MNT2_NFS_OPT_READAHEAD
 value|0x2000
+end_define
+
+begin_comment
+comment|/* Set readdir size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT2_NFS_OPT_READDIRSIZE
+value|0x20000
 end_define
 
 begin_comment
@@ -1907,6 +1977,14 @@ comment|/* #undef MNT2_NFS_OPT_TCP */
 end_comment
 
 begin_comment
+comment|/* linux NFSv3 */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_VER3 */
+end_comment
+
+begin_comment
 comment|/* Wait for authentication */
 end_comment
 
@@ -1963,6 +2041,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MNT2_NFS_OPT_PGTHRESH */
+end_comment
+
+begin_comment
+comment|/* 32<->64 dir cookie translation */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_XLATECOOKIE */
 end_comment
 
 begin_comment
@@ -2361,9 +2447,12 @@ begin_comment
 comment|/* does struct ifaddrs have field ifa_next? */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
+value|1
+end_define
 
 begin_comment
 comment|/* does struct sockaddr have field sa_len? */
@@ -2401,307 +2490,8 @@ comment|/* #undef REINSTALL_SIGNAL_HANDLER */
 end_comment
 
 begin_comment
-comment|/**************************************************************************/
+comment|/*  * More definitions that depend on configure options.  */
 end_comment
-
-begin_comment
-comment|/*** Everything above this line is part of the "TOP" of acconfig.h.	***/
-end_comment
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Define if on AIX 3.    System headers sometimes define this.    We just want to avoid a redefinition error message.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ALL_SOURCE
-end_ifndef
-
-begin_comment
-comment|/* #undef _ALL_SOURCE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Define if using alloca.c.  */
-end_comment
-
-begin_comment
-comment|/* #undef C_ALLOCA */
-end_comment
-
-begin_comment
-comment|/* Define to empty if the keyword does not work.  */
-end_comment
-
-begin_comment
-comment|/* #undef const */
-end_comment
-
-begin_comment
-comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems.  */
-end_comment
-
-begin_comment
-comment|/* #undef CRAY_STACKSEG_END */
-end_comment
-
-begin_comment
-comment|/* Define to the type of elements in the array set by `getgroups'.    Usually this is either `int' or `gid_t'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GETGROUPS_T
-value|gid_t
-end_define
-
-begin_comment
-comment|/* Define to `int' if<sys/types.h> doesn't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef gid_t */
-end_comment
-
-begin_comment
-comment|/* Define if you have alloca, as a function or macro.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ALLOCA
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have<alloca.h> and it should be used (not on Ultrix).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ALLOCA_H */
-end_comment
-
-begin_comment
-comment|/* Define if you support file names longer than 14 characters.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LONG_FILE_NAMES
-value|1
-end_define
-
-begin_comment
-comment|/* Define if system calls automatically restart after interruption    by a signal.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_RESTARTABLE_SYSCALLS
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your struct stat has st_rdev.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ST_RDEV
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have<sys/wait.h> that is POSIX.1 compatible.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_WAIT_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have<vfork.h>.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_VFORK_H */
-end_comment
-
-begin_comment
-comment|/* Define if you have the wait3 system call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_WAIT3
-value|1
-end_define
-
-begin_comment
-comment|/* Define as __inline if that's what the C compiler calls it.  */
-end_comment
-
-begin_comment
-comment|/* #undef inline */
-end_comment
-
-begin_comment
-comment|/* Define if your C compiler doesn't accept -c and -o together.  */
-end_comment
-
-begin_comment
-comment|/* #undef NO_MINUS_C_MINUS_O */
-end_comment
-
-begin_comment
-comment|/* Define if you need to in order for stat and other things to work.  */
-end_comment
-
-begin_comment
-comment|/* #undef _POSIX_SOURCE */
-end_comment
-
-begin_comment
-comment|/* Define as the return type of signal handlers (int or void).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RETSIGTYPE
-value|void
-end_define
-
-begin_comment
-comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.  STACK_DIRECTION> 0 => grows toward higher addresses  STACK_DIRECTION< 0 => grows toward lower addresses  STACK_DIRECTION = 0 => direction of growth unknown  */
-end_comment
-
-begin_comment
-comment|/* #undef STACK_DIRECTION */
-end_comment
-
-begin_comment
-comment|/* Define if the `S_IS*' macros in<sys/stat.h> do not work properly.  */
-end_comment
-
-begin_comment
-comment|/* #undef STAT_MACROS_BROKEN */
-end_comment
-
-begin_comment
-comment|/* Define if you have the ANSI C header files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STDC_HEADERS
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you can safely include both<sys/time.h> and<time.h>.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIME_WITH_SYS_TIME
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your<sys/time.h> declares struct tm.  */
-end_comment
-
-begin_comment
-comment|/* #undef TM_IN_SYS_TIME */
-end_comment
-
-begin_comment
-comment|/* Define to `int' if<sys/types.h> doesn't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef uid_t */
-end_comment
-
-begin_comment
-comment|/* Define vfork as fork if vfork does not work.  */
-end_comment
-
-begin_comment
-comment|/* #undef vfork */
-end_comment
-
-begin_comment
-comment|/* Define if your processor stores words with the most significant    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
-end_comment
-
-begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|WORDS_BIGENDIAN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Define if lex declares yytext as a char * by default, not a char[].  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YYTEXT_POINTER
-value|1
-end_define
 
 begin_comment
 comment|/* Turn off general debugging by default */
@@ -2717,14 +2507,6 @@ end_comment
 
 begin_comment
 comment|/* #undef DEBUG_MEM */
-end_comment
-
-begin_comment
-comment|/* Enable "amq -M" remote mount code (insecure due to IP spoofing) */
-end_comment
-
-begin_comment
-comment|/* #undef ENABLE_AMQ_MOUNT */
 end_comment
 
 begin_comment
@@ -2746,7 +2528,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.0.3s1"
+value|"6.0.7"
 end_define
 
 begin_comment
@@ -2763,9 +2545,12 @@ begin_comment
 comment|/* Define name of host machine's cpu (eg. sparc) */
 end_comment
 
-begin_comment
-comment|/* #define HOST_CPU "i386" */
-end_comment
+begin_define
+define|#
+directive|define
+name|HOST_CPU
+value|"i386"
+end_define
 
 begin_comment
 comment|/* Define name of host machine's architecture (eg. sun4) */
@@ -2791,7 +2576,7 @@ comment|/* Define name and version of host machine (eg. solaris2.5.1) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS "freebsd3.0" */
+comment|/* #define HOST_OS "freebsd5.0" */
 end_comment
 
 begin_comment
@@ -2799,7 +2584,7 @@ comment|/* Define only name of host machine OS (eg. solaris2) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS_NAME "freebsd3" */
+comment|/* #define HOST_OS_NAME "freebsd5" */
 end_comment
 
 begin_comment
@@ -2807,7 +2592,7 @@ comment|/* Define only version of host machine (eg. 2.5.1) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS_VERSION "3.0" */
+comment|/* #define HOST_OS_VERSION "5.0" */
 end_comment
 
 begin_comment
@@ -2815,7 +2600,7 @@ comment|/* Define the header version of (linux) hosts (eg. 2.2.10) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_HEADER_VERSION "4.0" */
+comment|/* #define HOST_HEADER_VERSION "5.0" */
 end_comment
 
 begin_comment
@@ -2839,7 +2624,7 @@ comment|/* Define configuration date */
 end_comment
 
 begin_comment
-comment|/* #define CONFIG_DATE "Fri Aug 21 19:35:55 PDT 1998" */
+comment|/* #define CONFIG_DATE "Sat Sep  1 18:36:26 PDT 2001" */
 end_comment
 
 begin_comment
@@ -2848,6 +2633,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_TRANSPORT_TYPE_TLI */
+end_comment
+
+begin_comment
+comment|/* Define to `long' if<sys/types.h> doesn't define time_t */
+end_comment
+
+begin_comment
+comment|/* #undef time_t */
 end_comment
 
 begin_comment
@@ -2880,8 +2673,16 @@ begin_define
 define|#
 directive|define
 name|am_nfs_fh3
-value|nfs_fh3
+value|nfs_fh3_freebsd3
 end_define
+
+begin_comment
+comment|/* define if the host has NFS protocol headers in system headers */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NFS_PROT_HEADERS */
+end_comment
 
 begin_comment
 comment|/* define name of am-utils' NFS protocol header */
@@ -2983,14 +2784,6 @@ directive|define
 name|HAVE_STRUCT_NFS_ARGS
 value|1
 end_define
-
-begin_comment
-comment|/* Define if have struct nfs_mount_data in one of the standard nfs headers */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_STRUCT_NFS_MOUNT_DATA */
-end_comment
 
 begin_comment
 comment|/* Define if have struct nfs_gfs_mount in one of the standard nfs headers */
@@ -3140,12 +2933,9 @@ begin_comment
 comment|/* Define a type for the mfs_args structure */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|mfs_args_t
-value|struct mfs_args
-end_define
+begin_comment
+comment|/* #undef mfs_args_t */
+end_comment
 
 begin_comment
 comment|/* Define a type for the rfs_args structure */
@@ -3187,6 +2977,322 @@ begin_define
 define|#
 directive|define
 name|USE_CONNECTED_NFS_SOCKETS
+value|1
+end_define
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*** Everything above this line is part of the "TOP" of acconfig.h.	***/
+end_comment
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Define if on AIX 3.    System headers sometimes define this.    We just want to avoid a redefinition error message.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALL_SOURCE
+end_ifndef
+
+begin_comment
+comment|/* #undef _ALL_SOURCE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define if using alloca.c.  */
+end_comment
+
+begin_comment
+comment|/* #undef C_ALLOCA */
+end_comment
+
+begin_comment
+comment|/* Define to empty if the keyword does not work.  */
+end_comment
+
+begin_comment
+comment|/* #undef const */
+end_comment
+
+begin_comment
+comment|/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.    This function is required for alloca.c support on those systems.  */
+end_comment
+
+begin_comment
+comment|/* #undef CRAY_STACKSEG_END */
+end_comment
+
+begin_comment
+comment|/* Define to the type of elements in the array set by `getgroups'.    Usually this is either `int' or `gid_t'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETGROUPS_T
+value|gid_t
+end_define
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef gid_t */
+end_comment
+
+begin_comment
+comment|/* Define if you have alloca, as a function or macro.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ALLOCA
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<alloca.h> and it should be used (not on Ultrix).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ALLOCA_H */
+end_comment
+
+begin_comment
+comment|/* Define if you support file names longer than 14 characters.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LONG_FILE_NAMES
+value|1
+end_define
+
+begin_comment
+comment|/* Define if system calls automatically restart after interruption    by a signal.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RESTARTABLE_SYSCALLS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<sys/wait.h> that is POSIX.1 compatible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_WAIT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<vfork.h>.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_VFORK_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the wait3 system call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WAIT3
+value|1
+end_define
+
+begin_comment
+comment|/* Define as __inline if that's what the C compiler calls it.  */
+end_comment
+
+begin_comment
+comment|/* #undef inline */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef mode_t */
+end_comment
+
+begin_comment
+comment|/* Define if your C compiler doesn't accept -c and -o together.  */
+end_comment
+
+begin_comment
+comment|/* #undef NO_MINUS_C_MINUS_O */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef pid_t */
+end_comment
+
+begin_comment
+comment|/* Define if you need to in order for stat and other things to work.  */
+end_comment
+
+begin_comment
+comment|/* #undef _POSIX_SOURCE */
+end_comment
+
+begin_comment
+comment|/* Define as the return type of signal handlers (int or void).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RETSIGTYPE
+value|void
+end_define
+
+begin_comment
+comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef size_t */
+end_comment
+
+begin_comment
+comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.  STACK_DIRECTION> 0 => grows toward higher addresses  STACK_DIRECTION< 0 => grows toward lower addresses  STACK_DIRECTION = 0 => direction of growth unknown  */
+end_comment
+
+begin_comment
+comment|/* #undef STACK_DIRECTION */
+end_comment
+
+begin_comment
+comment|/* Define if the `S_IS*' macros in<sys/stat.h> do not work properly.  */
+end_comment
+
+begin_comment
+comment|/* #undef STAT_MACROS_BROKEN */
+end_comment
+
+begin_comment
+comment|/* Define if you have the ANSI C header files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STDC_HEADERS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you can safely include both<sys/time.h> and<time.h>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIME_WITH_SYS_TIME
+value|1
+end_define
+
+begin_comment
+comment|/* Define if your<sys/time.h> declares struct tm.  */
+end_comment
+
+begin_comment
+comment|/* #undef TM_IN_SYS_TIME */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef uid_t */
+end_comment
+
+begin_comment
+comment|/* Define vfork as fork if vfork does not work.  */
+end_comment
+
+begin_comment
+comment|/* #undef vfork */
+end_comment
+
+begin_comment
+comment|/* Define if your processor stores words with the most significant    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
+end_comment
+
+begin_comment
+comment|/* #undef WORDS_BIGENDIAN */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define if lex declares yytext as a char * by default, not a char[].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYTEXT_POINTER
 value|1
 end_define
 
@@ -3280,6 +3386,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_CLNT_SPERRNO
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the clock_gettime function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOCK_GETTIME
 value|1
 end_define
 
@@ -3407,9 +3524,12 @@ begin_comment
 comment|/* Define if you have the getifaddrs function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETIFADDRS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETIFADDRS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getmntinfo function.  */
@@ -3475,17 +3595,23 @@ begin_comment
 comment|/* Define if you have the hes_init function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_HES_INIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_HES_INIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the hesiod_init function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_HESIOD_INIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_HESIOD_INIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the hesiod_reload function.  */
@@ -3499,9 +3625,12 @@ begin_comment
 comment|/* Define if you have the hesiod_to_bind function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_HESIOD_TO_BIND */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_HESIOD_TO_BIND
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the ldap_open function.  */
@@ -3701,9 +3830,12 @@ begin_comment
 comment|/* Define if you have the setresuid function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SETRESUID */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SETRESUID
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the setsid function.  */
@@ -4607,9 +4739,12 @@ begin_comment
 comment|/* Define if you have the<hesiod.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_HESIOD_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_HESIOD_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<hsfs/hsfs.h> header file.  */
@@ -4623,9 +4758,12 @@ begin_comment
 comment|/* Define if you have the<ifaddrs.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_IFADDRS_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_IFADDRS_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<irs.h> header file.  */
@@ -4666,9 +4804,12 @@ begin_comment
 comment|/* Define if you have the<libgen.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_LIBGEN_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_LIBGEN_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<linux/auto_fs.h> header file.  */
@@ -4684,6 +4825,22 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LINUX_FS_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<linux/kdev_t.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_KDEV_T_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<linux/list.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_LIST_H */
 end_comment
 
 begin_comment
@@ -4847,9 +5004,12 @@ begin_comment
 comment|/* Define if you have the<netconfig.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_NETCONFIG_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_NETCONFIG_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<netdb.h> header file.  */
@@ -4999,9 +5159,12 @@ begin_comment
 comment|/* Define if you have the<nsswitch.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_NSSWITCH_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_NSSWITCH_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<pwd.h> header file.  */
@@ -5458,9 +5621,12 @@ begin_comment
 comment|/* Define if you have the<sys/mbuf.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #define HAVE_SYS_MBUF_H 1 XXX NO NO NO!!! */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_MBUF_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<sys/mntctl.h> header file.  */
@@ -5790,12 +5956,9 @@ begin_comment
 comment|/* Define if you have the<ufs/ufs_mount.h> header file.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_UFS_UFS_MOUNT_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_UFS_UFS_MOUNT_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
@@ -5818,14 +5981,6 @@ directive|define
 name|HAVE_VARARGS_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define if you have the<vfork.h> header file.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_VFORK_H */
-end_comment
 
 begin_comment
 comment|/* Define if you have the gdbm library (-lgdbm).  */
@@ -5879,44 +6034,34 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to `int' if<sys/types.h> does not define. */
+comment|/* Define if you have the rt library (-lrt).  */
 end_comment
 
 begin_comment
-comment|/* #undef pid_t */
+comment|/* #undef HAVE_LIBRT */
 end_comment
 
 begin_comment
-comment|/* Define to `int' if<sys/types.h> does not define. */
+comment|/* Name of package */
 end_comment
 
-begin_comment
-comment|/* #undef mode_t */
-end_comment
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"am-utils"
+end_define
 
 begin_comment
-comment|/* Define to `int' if<sys/types.h> does not define. */
+comment|/* Version number of package */
 end_comment
 
-begin_comment
-comment|/* #undef pid_t */
-end_comment
-
-begin_comment
-comment|/* Define to `unsigned' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef size_t */
-end_comment
-
-begin_comment
-comment|/* Define to `long' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef time_t */
-end_comment
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"6.0.7"
+end_define
 
 begin_comment
 comment|/**************************************************************************/
@@ -6068,6 +6213,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_EXTERN_INNETGR
+value|1
 end_define
 
 begin_comment
