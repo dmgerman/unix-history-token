@@ -3041,6 +3041,7 @@ operator|&
 name|desired_irq
 argument_list|)
 condition|)
+block|{
 comment|/* legal IRQ? */
 if|if
 condition|(
@@ -3067,11 +3068,12 @@ operator|<<
 name|desired_irq
 expr_stmt|;
 else|else
-comment|/* illeagal, disable use of IRQ */
+comment|/* illegal, disable use of IRQ */
 name|free_irqs
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|pcic_irq
 operator|=
 name|pccard_alloc_intr
