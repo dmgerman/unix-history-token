@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.42 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1315,7 +1315,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: include %s: transient error: %e"
+literal|"%s: include %s: transient error: %s"
 argument_list|,
 name|e
 operator|->
