@@ -69,7 +69,7 @@ comment|/* !match dest hook */
 name|int32_t
 name|bpf_prog_len
 decl_stmt|;
-comment|/* #isns in program */
+comment|/* #insns in program */
 name|struct
 name|bpf_insn
 name|bpf_prog
