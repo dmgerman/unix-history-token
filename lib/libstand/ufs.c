@@ -665,6 +665,12 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|fp
+operator|->
+name|f_seekp
+operator|=
+literal|0
+expr_stmt|;
 name|out
 label|:
 name|free
@@ -2813,6 +2819,12 @@ block|}
 block|}
 comment|/* 	 * Found terminal component. 	 */
 name|rc
+operator|=
+literal|0
+expr_stmt|;
+name|fp
+operator|->
+name|f_seekp
 operator|=
 literal|0
 expr_stmt|;
