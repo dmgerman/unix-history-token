@@ -1092,9 +1092,11 @@ begin_function_decl
 name|void
 name|gstrbotch
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1109,6 +1111,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1125,6 +1128,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1141,6 +1145,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -5716,6 +5721,7 @@ name|char
 modifier|*
 name|to
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|from
@@ -5769,6 +5775,7 @@ name|char
 modifier|*
 name|to
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|from
@@ -5824,6 +5831,7 @@ name|char
 modifier|*
 name|to
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|from
@@ -5871,10 +5879,12 @@ begin_function
 name|void
 name|gstrbotch
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str2
