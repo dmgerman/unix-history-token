@@ -953,6 +953,20 @@ name|error
 decl_stmt|,
 name|type
 decl_stmt|;
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"ichss"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* 	 * If the ACPI perf driver has attached and is not just offering 	 * info, let it manage things.  Also, if Enhanced SpeedStep is 	 * available, don't attach. 	 */
 name|perf_dev
 operator|=
