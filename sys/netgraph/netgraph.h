@@ -4873,43 +4873,22 @@ comment|/********************************************************************** 
 end_comment
 
 begin_comment
-comment|/* Send previously unpackeged data and metadata. */
+comment|/*  * Assuming the data is already ok, just set the new address and send  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NG_SEND_DATA
+name|NG_FWD_ITEM_HOOK
 parameter_list|(
 name|error
 parameter_list|,
-name|hook
-parameter_list|,
-name|m
-parameter_list|,
-name|meta
-parameter_list|)
-define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_data((m), (meta)))) {		\ 			if (!((error) = ng_address_hook(NULL, item,	\ 							hook, NULL))) {	\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), 0);	\ 			}						\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 		(meta) = NULL;						\ 	} while (0)
-end_define
-
-begin_comment
-comment|/* Send a previously unpackaged mbuf when we have no metadata to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_SEND_DATA_ONLY
-parameter_list|(
-name|error
+name|item
 parameter_list|,
 name|hook
-parameter_list|,
-name|m
 parameter_list|)
 define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_data((m), NULL))) {		\ 			if (!((error) = ng_address_hook(NULL, item,	\ 							hook, NULL))) {	\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), 0);	\ 			}						\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
+value|do {								\ 		(error) =						\ 		    ng_address_hook(NULL, (item), (hook), NULL);	\ 		if (error == 0) {					\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(item) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -4930,26 +4909,47 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {								\ 		NGI_M(item) = m;					\ 		if (!((error) = ng_address_hook(NULL, (item),		\ 						(hook), NULL))) {	\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(item) = NULL;						\ 		(m) = NULL;						\ 	} while (0)
+value|do {								\ 		NGI_M(item) = (m);					\ 		(m) = NULL;						\ 		NG_FWD_ITEM_HOOK(error, item, hook);			\ 	} while (0)
 end_define
 
 begin_comment
-comment|/*  * Assuming the data is already ok, just set the new address and send  */
+comment|/* Send a previously unpackaged mbuf when we have no metadata to send */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NG_FWD_ITEM_HOOK
+name|NG_SEND_DATA_ONLY
 parameter_list|(
 name|error
 parameter_list|,
-name|item
-parameter_list|,
 name|hook
+parameter_list|,
+name|m
 parameter_list|)
 define|\
-value|do {								\ 		if (!((error) = ng_address_hook(NULL, (item),		\ 						(hook), NULL))) {	\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		} else {						\ 			(error) = ENXIO;				\ 		}							\ 		(item) = NULL;						\ 	} while (0)
+value|do {								\ 		item_p item;						\ 		if ((item = ng_package_data((m), NULL))) {		\ 			NG_FWD_ITEM_HOOK(error, item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
+end_define
+
+begin_comment
+comment|/* Send previously unpackeged data and metadata. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_SEND_DATA
+parameter_list|(
+name|error
+parameter_list|,
+name|hook
+parameter_list|,
+name|m
+parameter_list|,
+name|meta
+parameter_list|)
+define|\
+value|do {								\ 		item_p item;						\ 		if ((item = ng_package_data((m), (meta)))) {		\ 			NG_FWD_ITEM_HOOK(error, item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 		(meta) = NULL;						\ 	} while (0)
 end_define
 
 begin_define
@@ -4960,7 +4960,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|do {								\ 		if ((msg)) {						\ 			FREE((msg), M_NETGRAPH_MSG);		\ 			(msg) = NULL;					\ 		}	 						\ 	} while (0)
+value|do {								\ 		if ((msg)) {						\ 			FREE((msg), M_NETGRAPH_MSG);			\ 			(msg) = NULL;					\ 		}	 						\ 	} while (0)
 end_define
 
 begin_define
@@ -5044,25 +5044,6 @@ name|retaddr
 parameter_list|)
 define|\
 value|do {								\ 		item_p item;						\ 		if ((item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_ID((here), (item),		\ 					(ID), (retaddr))) == 0) {	\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NG_QUEUE_MSG
-parameter_list|(
-name|error
-parameter_list|,
-name|here
-parameter_list|,
-name|msg
-parameter_list|,
-name|path
-parameter_list|,
-name|retaddr
-parameter_list|)
-define|\
-value|do {								\ 		item_p item;						\ 		if ((item = ng_package_msg(msg)) == NULL) {		\ 			(msg) = NULL;					\ 			(error) = ENOMEM;				\ 			break;						\ 		}							\ 		if (((error) = ng_address_path((here), (item),		\ 					(path), (retaddr))) == 0) {	\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 1);		\ 		}							\ 		(msg) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
