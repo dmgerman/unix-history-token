@@ -1367,6 +1367,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Verify that this state is supported, ie. one of method or      * reslist must be present.  We need to do this before we go       * dereferencing resources (since we might be trying to go to      * a state we don't support).      *      * Note that if any states are supported, the device has to      * support D0 and D3.  It's never an error to try to go to      * D0.      */
+name|status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
 name|reslist_buffer
 operator|.
 name|Pointer
@@ -1454,7 +1458,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* Turn off the resources listed in _PR0 to go to D3. */
+comment|/* 	 * Turn off the resources listed in _PR0 to go to D3.  If there is 	 * no _PR0 method, this object doesn't support ACPI power states. 	 */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1470,9 +1474,15 @@ name|pr0_handle
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|status
+operator|=
+name|AE_NOT_FOUND
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|reslist_buffer
 operator|.
 name|Length
@@ -1529,11 +1539,9 @@ name|Count
 operator|==
 literal|0
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 name|AcpiOsFree
 argument_list|(
 name|reslist_buffer
@@ -1888,10 +1896,6 @@ operator|,
 name|state
 operator|)
 argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|AE_BAD_PARAMETER
 expr_stmt|;
 name|out
 label|:
