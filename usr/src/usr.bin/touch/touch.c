@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.4 (Berkeley) %G%"
+literal|"@(#)touch.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,8 +544,6 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
-operator||
-name|O_TRUNC
 argument_list|,
 name|DEFFILEMODE
 argument_list|)
