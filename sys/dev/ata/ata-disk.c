@@ -1077,22 +1077,11 @@ block|}
 comment|/* if this disk belongs to an ATA RAID dont print the probe */
 if|if
 condition|(
-name|adp
-operator|->
-name|controller
-operator|->
-name|flags
-operator|&
-name|ATA_RAID
-operator|&&
-operator|!
 name|ar_probe
 argument_list|(
 name|adp
 argument_list|)
 condition|)
-return|return;
-else|else
 name|printf
 argument_list|(
 literal|"ad%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s %s%s\n"

@@ -380,14 +380,7 @@ operator|&
 name|ar_table
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ata-raid: failed to read array configuration\n"
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 return|return
 literal|0
 return|;
@@ -404,14 +397,7 @@ operator|&
 name|ar_table
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ata-raid: failed to read array configuration\n"
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 return|return
 literal|0
 return|;
@@ -989,53 +975,6 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* SOS */
-if|if
-condition|(
-name|plba
-operator|+
-name|chunk
-operator|>
-name|rdp
-operator|->
-name|subdisk
-index|[
-name|buf1
-operator|->
-name|drive
-index|]
-operator|->
-name|total_secs
-operator|-
-name|rdp
-operator|->
-name|reserved
-condition|)
-name|printf
-argument_list|(
-literal|"Oops! SPAN trying lba=%d> %d\n"
-argument_list|,
-name|plba
-operator|+
-name|chunk
-argument_list|,
-name|rdp
-operator|->
-name|subdisk
-index|[
-name|buf1
-operator|->
-name|drive
-index|]
-operator|->
-name|total_secs
-operator|-
-name|rdp
-operator|->
-name|reserved
-argument_list|)
-expr_stmt|;
-comment|/* SOS */
 block|}
 elseif|else
 if|if
@@ -1108,53 +1047,6 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* SOS */
-if|if
-condition|(
-name|plba
-operator|+
-name|chunk
-operator|>
-name|rdp
-operator|->
-name|subdisk
-index|[
-name|buf1
-operator|->
-name|drive
-index|]
-operator|->
-name|total_secs
-operator|-
-name|rdp
-operator|->
-name|reserved
-condition|)
-name|printf
-argument_list|(
-literal|"Oops! RAID0 trying lba=%d> %d\n"
-argument_list|,
-name|plba
-operator|+
-name|chunk
-argument_list|,
-name|rdp
-operator|->
-name|subdisk
-index|[
-name|buf1
-operator|->
-name|drive
-index|]
-operator|->
-name|total_secs
-operator|-
-name|rdp
-operator|->
-name|reserved
-argument_list|)
-expr_stmt|;
-comment|/* SOS */
 block|}
 else|else
 block|{
@@ -1176,53 +1068,6 @@ name|chunk
 operator|=
 name|count
 expr_stmt|;
-comment|/* SOS */
-if|if
-condition|(
-name|lba
-operator|+
-name|chunk
-operator|>
-name|rdp
-operator|->
-name|subdisk
-index|[
-name|buf1
-operator|->
-name|drive
-index|]
-operator|->
-name|total_secs
-operator|-
-name|rdp
-operator|->
-name|reserved
-condition|)
-name|printf
-argument_list|(
-literal|"Oops! RAID1 trying lba=%d> %d\n"
-argument_list|,
-name|lba
-operator|+
-name|chunk
-argument_list|,
-name|rdp
-operator|->
-name|subdisk
-index|[
-name|buf1
-operator|->
-name|drive
-index|]
-operator|->
-name|total_secs
-operator|-
-name|rdp
-operator|->
-name|reserved
-argument_list|)
-expr_stmt|;
-comment|/* SOS */
 block|}
 name|buf1
 operator|->
@@ -1670,7 +1515,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"ar%d: error\n"
+literal|"ar%d: subdisk error\n"
 argument_list|,
 name|rdp
 operator|->
@@ -1875,6 +1720,10 @@ name|info
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"HighPoint read conf failed\n"
@@ -1894,6 +1743,10 @@ operator|!=
 name|HPT_MAGIC_OK
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"HighPoint check1 failed\n"
@@ -2776,6 +2629,10 @@ name|info
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Promise read conf failed\n"
@@ -2803,6 +2660,10 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Promise check1 failed\n"
@@ -2853,6 +2714,10 @@ operator|*
 name|ckptr
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Promise check2 failed\n"
@@ -3193,7 +3058,6 @@ operator|.
 name|device
 condition|)
 block|{
-comment|/*printf("ar%d: RAID subdisk %d->ad%d\n", r, j, adp->lun);*/
 name|raidp
 operator|->
 name|raid
@@ -3345,7 +3209,6 @@ operator|.
 name|device
 condition|)
 block|{
-comment|/*printf("ar%d: RAID mirrordisk %d->ad%d\n", r, j, adp->lun);*/
 name|raidp
 operator|->
 name|raid
@@ -3604,7 +3467,9 @@ name|lba
 operator|&
 literal|0xff
 argument_list|,
-literal|4
+name|count
+operator|/
+name|DEV_BSIZE
 argument_list|,
 literal|0
 argument_list|,

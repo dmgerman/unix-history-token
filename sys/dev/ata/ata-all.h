@@ -1635,10 +1635,6 @@ define|#
 directive|define
 name|ATA_QUEUED
 value|0x10
-define|#
-directive|define
-name|ATA_RAID
-value|0x20
 name|int
 name|devices
 decl_stmt|;
