@@ -231,7 +231,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*                          * This is how things used to be done.                          */
+comment|/* 			 * This is how things used to be done. 			 */
 if|if
 condition|(
 name|variation

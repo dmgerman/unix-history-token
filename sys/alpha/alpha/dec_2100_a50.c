@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  * Additional Copyright (c) 1997 by Matthew Jacob for NASA/Ames Resea
 end_comment
 
 begin_comment
-comment|/*  * Additional Copyright (c) 1998 by Andrew Gallatin for Duke University   */
+comment|/*  * Additional Copyright (c) 1998 by Andrew Gallatin for Duke University.  */
 end_comment
 
 begin_include
@@ -396,16 +396,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|comconsole
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
 
 begin_function
 specifier|static
@@ -466,7 +466,7 @@ case|:
 comment|/* serial console ... */
 comment|/* XXX */
 block|{
-comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
+comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)). 			 */
 name|DELAY
 argument_list|(
 literal|160000000
@@ -474,7 +474,7 @@ operator|/
 name|comcnrate
 argument_list|)
 expr_stmt|;
-comment|/* 			 * force a comconsole on com1 if the SRM has a serial console 			 */
+comment|/* 			 * Force a comconsole on com1 if the SRM has a serial console. 			 */
 name|comconsole
 operator|=
 literal|0
@@ -582,21 +582,25 @@ name|pirqreg
 decl_stmt|;
 name|int
 name|pirq
-init|=
-literal|0
 decl_stmt|;
-comment|/* gcc -Wuninitialized XXX */
 name|pcicfgregs
 modifier|*
 name|cfg
-init|=
+decl_stmt|;
+name|pirq
+operator|=
+literal|0
+expr_stmt|;
+comment|/* gcc -Wuninitialized XXX */
+name|cfg
+operator|=
 operator|(
 name|pcicfgregs
 operator|*
 operator|)
 name|arg
-decl_stmt|;
-comment|/*          * Slot->interrupt translation.  Taken from NetBSD           */
+expr_stmt|;
+comment|/* 	 * Slot->interrupt translation.  Taken from NetBSD. 	 */
 if|if
 condition|(
 name|cfg
@@ -795,9 +799,9 @@ operator|->
 name|slot
 argument_list|)
 expr_stmt|;
-comment|/*                return;*/
+comment|/* return; */
 block|}
-comment|/*  	 *  read the SIO IRQ routing register to determine where the 	 *  interrupt will actually be routed.  Thank you, NetBSD 	 */
+comment|/* 	 *  Read the SIO IRQ routing register to determine where the 	 *  interrupt will actually be routed.  Thank you, NetBSD. 	 */
 name|pirqreg
 operator|=
 name|chipset

@@ -8,7 +8,7 @@ comment|/* $NetBSD: dec_axppci_33.c,v 1.38 1998/07/07 08:49:12 ross Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -438,16 +438,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|comconsole
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
 
 begin_function
 specifier|static
@@ -615,12 +615,6 @@ block|{
 name|pcicfgregs
 modifier|*
 name|cfg
-init|=
-operator|(
-name|pcicfgregs
-operator|*
-operator|)
-name|arg
 decl_stmt|;
 name|int
 name|pirq
@@ -631,6 +625,14 @@ decl_stmt|;
 name|u_int8_t
 name|pirqline
 decl_stmt|;
+name|cfg
+operator|=
+operator|(
+name|pcicfgregs
+operator|*
+operator|)
+name|arg
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DIAGNOSTIC
@@ -641,7 +643,7 @@ expr_stmt|;
 comment|/* XXX gcc -Wuninitialized */
 endif|#
 directive|endif
-comment|/*          * Slot->interrupt translation.  Taken from NetBSD           */
+comment|/* 	 * Slot->interrupt translation.  Taken from NetBSD. 	 */
 if|if
 condition|(
 name|cfg
