@@ -525,7 +525,7 @@ name|EOF
 value|0x08
 define|#
 directive|define
-name|DEBUG
+name|FLAG_DEBUG
 value|0x10
 define|#
 directive|define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.25 1995/12/08 23:20:54 phk Exp $  *  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.26 1995/12/10 13:39:27 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|TRACE
 parameter_list|(
 name|s
 parameter_list|)
@@ -3501,7 +3501,7 @@ operator|==
 name|UNKNOWN
 condition|)
 block|{
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"wtintr() -- device not configured\n"
@@ -3520,7 +3520,7 @@ name|STATPORT
 argument_list|)
 expr_stmt|;
 comment|/* get status */
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"wtintr() status=0x%x -- "
@@ -3556,7 +3556,7 @@ name|NOEXCEP
 operator|)
 condition|)
 block|{
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"busy\n"
@@ -3576,7 +3576,7 @@ operator|&
 name|TPREW
 condition|)
 block|{
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 operator|(
@@ -3650,7 +3650,7 @@ name|TPWMARK
 operator|)
 condition|)
 block|{
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 operator|(
@@ -3749,7 +3749,7 @@ name|TPACTIVE
 operator|)
 condition|)
 block|{
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"unexpected interrupt\n"
@@ -3873,7 +3873,7 @@ name|NOEXCEP
 operator|)
 condition|)
 block|{
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"i/o exception\n"
@@ -3963,7 +3963,7 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"continue i/o, %d\n"
@@ -4004,7 +4004,7 @@ name|t
 argument_list|)
 expr_stmt|;
 comment|/* wake up user level */
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"i/o finished, %d\n"
@@ -4467,7 +4467,7 @@ name|s
 decl_stmt|,
 name|x
 decl_stmt|;
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"wtcmd() cmd=0x%x\n"
@@ -4634,7 +4634,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"wtwait() `%s'\n"
@@ -4831,7 +4831,7 @@ name|s
 decl_stmt|,
 name|x
 decl_stmt|;
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"wtstart()\n"
@@ -5098,7 +5098,7 @@ name|NOEXCEP
 operator|)
 condition|)
 block|{
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"wtimer() -- "
@@ -5326,7 +5326,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|DEBUG
+name|TRACE
 argument_list|(
 operator|(
 literal|"wtsense() ignor=0x%x\n"

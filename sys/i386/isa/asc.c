@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.12 1995/12/15 00:29:27 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.13 1995/12/16 21:32:19 bde Exp $  */
 end_comment
 
 begin_include
@@ -650,7 +650,7 @@ name|PBM_MODE
 value|0x40
 define|#
 directive|define
-name|DEBUG
+name|FLAG_DEBUG
 value|0x80
 name|int
 name|geometry
@@ -1712,7 +1712,7 @@ name|scu
 operator|->
 name|flags
 operator|=
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 if|if
 condition|(
@@ -1889,7 +1889,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 name|scu
 operator|->
@@ -1949,7 +1949,7 @@ name|scu
 operator|->
 name|flags
 operator||=
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1995,7 +1995,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2680,7 +2680,7 @@ name|scu
 operator|->
 name|flags
 operator||=
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 switch|switch
 condition|(
@@ -3131,7 +3131,7 @@ name|flags
 operator|&=
 operator|~
 operator|(
-name|DEBUG
+name|FLAG_DEBUG
 operator||
 name|OPEN
 operator||
@@ -3576,7 +3576,7 @@ name|scu
 operator|->
 name|flags
 operator|&
-name|DEBUG
+name|FLAG_DEBUG
 condition|)
 name|tsleep
 argument_list|(
