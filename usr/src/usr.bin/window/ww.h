@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.21 83/12/02	  */
+comment|/*  *	@(#)ww.h	3.22 83/12/17	  */
 end_comment
 
 begin_include
@@ -21,6 +21,10 @@ directive|define
 name|NWW
 value|30
 end_define
+
+begin_comment
+comment|/* a rectangle */
+end_comment
 
 begin_struct
 struct|struct
@@ -50,6 +54,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* a coordinate */
+end_comment
+
 begin_struct
 struct|struct
 name|ww_pos
@@ -65,6 +73,10 @@ comment|/* column */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* the window structure */
+end_comment
 
 begin_struct
 struct|struct
@@ -212,6 +224,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* state of a tty */
+end_comment
+
 begin_struct
 struct|struct
 name|ww_tty
@@ -233,9 +249,6 @@ name|ww_lmode
 decl_stmt|;
 name|int
 name|ww_ldisc
-decl_stmt|;
-name|int
-name|ww_pgrp
 decl_stmt|;
 block|}
 struct|;
@@ -391,18 +404,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* forked, in parent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWS_INCHILD
-value|2
-end_define
-
-begin_comment
-comment|/* forked, in child */
+comment|/* has process on pty */
 end_comment
 
 begin_define
