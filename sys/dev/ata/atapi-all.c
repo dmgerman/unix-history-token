@@ -632,6 +632,14 @@ name|M_ATAPI
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|atadev
+operator|->
+name|channel
+operator|->
+name|dma
+condition|)
 name|atadev
 operator|->
 name|channel
