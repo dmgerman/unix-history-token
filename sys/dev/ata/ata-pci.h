@@ -866,6 +866,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SIS5517
+value|0x55171039
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SIS5518
 value|0x55181039
 end_define
