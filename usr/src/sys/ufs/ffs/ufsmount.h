@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufsmount.h	4.2	81/02/19	*/
+comment|/*	ufsmount.h	4.3	81/02/26	*/
 end_comment
 
 begin_comment
@@ -28,12 +28,29 @@ name|m_inodp
 decl_stmt|;
 comment|/* pointer to mounted on inode */
 block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|mount
 name|mount
 index|[
 name|NMOUNT
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
