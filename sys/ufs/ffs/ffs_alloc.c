@@ -10071,8 +10071,7 @@ operator|)
 name|cmd
 operator|.
 name|value
-argument_list|)
-expr_stmt|;
+argument_list|,
 operator|(
 name|ino_t
 operator|)
@@ -10085,8 +10084,8 @@ operator|.
 name|size
 operator|-
 literal|1
-block|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -10388,16 +10387,13 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_function
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 
