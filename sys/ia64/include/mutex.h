@@ -33,46 +33,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/*  * Debugging  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MUTEX_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ASS_IEN
-value|MPASS2((save_intr()& IA64_PSR_I), "psr.i")
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASS_IDIS
-value|MPASS2(!(save_intr()& IA64_PSR_I), "!psr.i")
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASS_SIEN
-parameter_list|(
-name|mpp
-parameter_list|)
-value|MPASS2(((mpp)->mtx_saveintr& IA64_PSR_I),	\ 			"mpp->mtx_saveintr& IA64_PSR_I")
-end_define
-
 begin_define
 define|#
 directive|define
 name|mtx_legal2block
 parameter_list|()
-value|(save_intr()& IA64_PSR_I)
+value|(ia64_get_psr()& IA64_PSR_I)
 end_define
 
 begin_define
