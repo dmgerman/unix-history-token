@@ -1108,7 +1108,7 @@ argument_list|)
 expr_stmt|;
 name|rem
 operator|=
-name|rcmd
+name|rcmd_af
 argument_list|(
 operator|&
 name|host
@@ -1127,6 +1127,8 @@ name|args
 argument_list|,
 operator|&
 name|rfd2
+argument_list|,
+name|PF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -1134,7 +1136,7 @@ else|#
 directive|else
 name|rem
 operator|=
-name|rcmd
+name|rcmd_af
 argument_list|(
 operator|&
 name|host
@@ -1153,6 +1155,8 @@ name|args
 argument_list|,
 operator|&
 name|rfd2
+argument_list|,
+name|PF_UNSPEC
 argument_list|)
 expr_stmt|;
 endif|#

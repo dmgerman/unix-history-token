@@ -779,6 +779,13 @@ name|k
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|sockaddr_storage
+name|ss
+decl_stmt|;
+name|int
+name|sslen
+decl_stmt|;
 name|argoff
 operator|=
 name|dflag
@@ -1654,7 +1661,7 @@ directive|endif
 comment|/* CRYPT */
 name|rem
 operator|=
-name|rcmd
+name|rcmd_af
 argument_list|(
 operator|&
 name|host
@@ -1670,6 +1677,8 @@ argument_list|,
 name|term
 argument_list|,
 literal|0
+argument_list|,
+name|PF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -1677,7 +1686,7 @@ else|#
 directive|else
 name|rem
 operator|=
-name|rcmd
+name|rcmd_af
 argument_list|(
 operator|&
 name|host
@@ -1693,6 +1702,8 @@ argument_list|,
 name|term
 argument_list|,
 literal|0
+argument_list|,
+name|PF_UNSPEC
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1765,10 +1776,44 @@ argument_list|(
 literal|"setsockopt NODELAY (ignored)"
 argument_list|)
 expr_stmt|;
+name|sslen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ss
+argument_list|)
+expr_stmt|;
 name|one
 operator|=
 name|IPTOS_LOWDELAY
 expr_stmt|;
+if|if
+condition|(
+name|getsockname
+argument_list|(
+name|rem
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|ss
+argument_list|,
+operator|&
+name|sslen
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|ss
+operator|.
+name|ss_family
+operator|==
+name|AF_INET
+condition|)
+block|{
 if|if
 condition|(
 name|setsockopt
@@ -1797,6 +1842,21 @@ condition|)
 name|warn
 argument_list|(
 literal|"setsockopt TOS (ignored)"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ss
+operator|.
+name|ss_family
+operator|==
+name|AF_INET
+condition|)
+name|warn
+argument_list|(
+literal|"setsockopt getsockname failed"
 argument_list|)
 expr_stmt|;
 operator|(
