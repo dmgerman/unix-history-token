@@ -643,6 +643,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 name|lockinit
@@ -2111,6 +2113,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 name|lockinit
