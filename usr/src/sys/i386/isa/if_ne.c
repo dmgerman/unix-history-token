@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * NE2000 Ethernet driver  * Copyright (C) 1990 W. Jolitz  * @(#)if_ne.c	1.3 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
+comment|/*  * NE2000 Ethernet driver  * Copyright (C) 1990 W. Jolitz  * @(#)if_ne.c	1.4 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
 end_comment
 
 begin_include
@@ -1385,7 +1385,7 @@ name|ETHERMTU
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" physical address %s"
+literal|" ethernet address %s"
 argument_list|,
 name|ether_sprintf
 argument_list|(
