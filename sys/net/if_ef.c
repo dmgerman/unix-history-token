@@ -1207,11 +1207,6 @@ name|ether_header
 modifier|*
 name|eh
 parameter_list|,
-name|struct
-name|llc
-modifier|*
-name|l
-parameter_list|,
 name|u_short
 name|ether_type
 parameter_list|,
@@ -1809,8 +1804,6 @@ argument_list|(
 name|m
 argument_list|,
 name|eh
-argument_list|,
-name|l
 argument_list|,
 name|ether_type
 argument_list|,
