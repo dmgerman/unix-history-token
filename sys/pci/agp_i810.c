@@ -1896,6 +1896,7 @@ name|sc
 operator|->
 name|stolen
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -1906,6 +1907,7 @@ expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 block|}
 name|WRITE4
 argument_list|(
@@ -2435,30 +2437,9 @@ name|chiptype
 operator|==
 name|CHIP_I830
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|offset
-operator|>>
-name|AGP_PAGE_SHIFT
-operator|)
-operator|<
-name|sc
-operator|->
-name|stolen
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"trying to bind into stolen memory"
-argument_list|)
-expr_stmt|;
 return|return
 name|EINVAL
 return|;
-block|}
 for|for
 control|(
 name|i
