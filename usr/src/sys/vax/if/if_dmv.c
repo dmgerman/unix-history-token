@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)if_dmv.c	7.1 (Berkeley) %G%  * DMV-11 Driver  *  * Qbus Sync DDCMP interface - DMV operated in full duplex, point to point mode  *  * Derived from 4.3 release if_dmv.c rev. 6.12 dated 4/23/86  * (which wasn't the 4.3 release!)  *   * Bob Kridle  * mt Xinu  */
+comment|/*  * @(#)if_dmv.c	7.2 (Berkeley) %G%  * DMV-11 Driver  *  * Qbus Sync DDCMP interface - DMV operated in full duplex, point to point mode  *  * Derived from 4.3 release if_dmv.c rev. 6.12 dated 4/23/86  * (which wasn't the 4.3 release!)  *   * Bob Kridle  * mt Xinu  */
 end_comment
 
 begin_include
@@ -387,11 +387,15 @@ name|DMV_RPCXRL
 value|1
 end_define
 
+begin_comment
+comment|/* number of errors to accept before trying a reset */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMV_RPUNKNOWN
-value|1
+value|10
 end_define
 
 begin_struct
@@ -3585,15 +3589,6 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"dmvxint: dmv%d receive threshold error\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3607,9 +3602,15 @@ operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|fatal
-goto|;
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"dmvxint: dmv%d receive threshold error\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|DMV_TTE
@@ -3618,15 +3619,6 @@ name|ifp
 operator|->
 name|if_oerrors
 operator|++
-expr_stmt|;
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"dmvxint: dmv%d transmit threshold error\n"
-argument_list|,
-name|unit
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3641,22 +3633,19 @@ operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|fatal
-goto|;
-break|break;
-case|case
-name|DMV_STE
-case|:
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d select threshold error\n"
+literal|"dmvxint: dmv%d transmit threshold error\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|DMV_STE
+case|:
 if|if
 condition|(
 operator|(
@@ -3670,22 +3659,19 @@ operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|fatal
-goto|;
-break|break;
-case|case
-name|DMV_NXM
-case|:
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d nonexistent memory error\n"
+literal|"dmvxint: dmv%d select threshold error\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|DMV_NXM
+case|:
 if|if
 condition|(
 operator|(
@@ -3699,24 +3685,19 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-goto|goto
-name|fatal
-goto|;
-block|}
-break|break;
-case|case
-name|DMV_MODD
-case|:
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d modem disconnected error\n"
+literal|"dmvxint: dmv%d nonexistent memory error\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|DMV_MODD
+case|:
 if|if
 condition|(
 operator|(
@@ -3730,22 +3711,19 @@ operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|fatal
-goto|;
-break|break;
-case|case
-name|DMV_CXRL
-case|:
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d carrier loss error\n"
+literal|"dmvxint: dmv%d modem disconnected error\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|DMV_CXRL
+case|:
 if|if
 condition|(
 operator|(
@@ -3759,9 +3737,15 @@ operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|fatal
-goto|;
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"dmvxint: dmv%d carrier loss error\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|DMV_QOVF
