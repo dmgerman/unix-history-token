@@ -2712,6 +2712,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|aac_release_sync_fib
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
