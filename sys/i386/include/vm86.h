@@ -414,6 +414,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -430,7 +436,7 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -610,6 +616,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
