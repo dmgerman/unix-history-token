@@ -51,7 +51,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctags.c,v 1.3 1997/07/10 06:43:40 charnier Exp $"
+literal|"$Id: ctags.c,v 1.1.1.2 1997/12/15 23:08:35 cwt Exp $"
 decl_stmt|;
 end_decl_stmt
 
