@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwpty.c	3.11 %G%"
+literal|"@(#)wwpty.c	3.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -279,9 +279,6 @@ name|w
 operator|->
 name|ww_pty
 argument_list|,
-operator|(
-name|int
-operator|)
 name|TIOCPKT
 argument_list|,
 operator|(

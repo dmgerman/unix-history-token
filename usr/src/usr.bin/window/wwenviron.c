@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.14 %G%"
+literal|"@(#)wwenviron.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,9 +88,6 @@ name|ioctl
 argument_list|(
 name|i
 argument_list|,
-operator|(
-name|int
-operator|)
 name|TIOCNOTTY
 argument_list|,
 operator|(
@@ -203,9 +200,6 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-operator|(
-name|int
-operator|)
 name|TIOCSPGRP
 argument_list|,
 operator|(
