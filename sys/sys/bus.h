@@ -102,14 +102,14 @@ comment|/* Driver name */
 name|char
 name|dv_pnpinfo
 index|[
-literal|64
+literal|128
 index|]
 decl_stmt|;
 comment|/* Plug and play info */
 name|char
 name|dv_location
 index|[
-literal|64
+literal|128
 index|]
 decl_stmt|;
 comment|/* Where is the device? */
