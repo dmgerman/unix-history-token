@@ -4448,6 +4448,8 @@ operator|=
 name|facilitynames
 init|;
 name|c
+operator|->
+name|c_name
 condition|;
 name|c
 operator|++
@@ -4478,6 +4480,8 @@ operator|=
 name|prioritynames
 init|;
 name|c
+operator|->
+name|c_name
 condition|;
 name|c
 operator|++
