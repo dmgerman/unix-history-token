@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c 3.1 %G%"
+literal|"@(#)file.c 3.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -710,6 +710,17 @@ case|:
 name|printf
 argument_list|(
 literal|"old archive\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+case|case
+literal|070707
+case|:
+name|printf
+argument_list|(
+literal|"cpio data\n"
 argument_list|)
 expr_stmt|;
 goto|goto
