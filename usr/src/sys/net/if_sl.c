@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -870,8 +870,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -1106,6 +1118,17 @@ name|sc_if
 operator|.
 name|if_snd
 expr_stmt|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -1134,18 +1157,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ip
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-operator|)
 operator|->
 name|ip_p
 operator|==
