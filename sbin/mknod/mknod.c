@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mknod.c,v 1.5 1997/02/22 14:32:38 peter Exp $"
+literal|"$Id: mknod.c,v 1.6 1997/03/12 19:03:40 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_function
@@ -210,23 +216,13 @@ operator||=
 name|S_IFBLK
 expr_stmt|;
 else|else
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mknod: node must be type 'b' or 'c'\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"node must be type 'b' or 'c'"
 argument_list|)
 expr_stmt|;
-block|}
 name|errno
 operator|=
 literal|0
@@ -263,15 +259,11 @@ name|endp
 operator|!=
 literal|'\0'
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mknod: %s: non-numeric major number\n"
+literal|"%s: non-numeric major number"
 argument_list|,
 name|argv
 index|[
@@ -279,12 +271,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|range_error
 operator|=
 name|errno
@@ -325,15 +311,11 @@ name|endp
 operator|!=
 literal|'\0'
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mknod: %s: non-numeric minor number\n"
+literal|"%s: non-numeric minor number"
 argument_list|,
 name|argv
 index|[
@@ -341,12 +323,6 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|range_error
 operator||=
 name|errno
@@ -378,23 +354,13 @@ argument_list|)
 operator|!=
 name|minor
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mknod: major or minor number too large\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"major or minor number too large"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|mknod
@@ -411,33 +377,18 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mknod: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|1
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
