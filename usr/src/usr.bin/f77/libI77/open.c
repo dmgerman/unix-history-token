@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_open[] = "@(#)open.c	1.9";  *  * open.c  -  f77 file open routines  */
+comment|/* char id_open[] = "@(#)open.c	1.10";  *  * open.c  -  f77 file open routines  */
 end_comment
 
 begin_include
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|FROM_OPEN
-value|"\1"
+value|"\2"
 end_define
 
 begin_comment
