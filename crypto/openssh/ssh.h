@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh.h,v 1.74 2003/09/01 13:52:18 markus Exp $	*/
+comment|/*	$OpenBSD: ssh.h,v 1.75 2003/12/02 17:01:15 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -274,6 +274,17 @@ define|#
 directive|define
 name|SSH_RSA_MINIMUM_MODULUS_SIZE
 value|768
+end_define
+
+begin_comment
+comment|/* Listen backlog for sshd, ssh-agent and forwarding sockets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_LISTEN_BACKLOG
+value|128
 end_define
 
 begin_endif

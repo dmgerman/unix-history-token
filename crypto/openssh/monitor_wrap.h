@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor_wrap.h,v 1.11 2003/08/28 12:54:34 markus Exp $	*/
+comment|/*	$OpenBSD: monitor_wrap.h,v 1.13 2003/11/17 11:06:07 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -92,6 +92,15 @@ struct_decl|struct
 name|Authctxt
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|int
+name|mm_is_monitor
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|DH
@@ -378,6 +387,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|OM_uint32
+name|mm_ssh_gssapi_checkmic
+parameter_list|(
+name|Gssctxt
+modifier|*
+parameter_list|,
+name|gss_buffer_t
+parameter_list|,
+name|gss_buffer_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -481,6 +504,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|Session
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|mm_terminate
@@ -512,7 +541,8 @@ begin_function_decl
 name|void
 name|mm_session_pty_cleanup2
 parameter_list|(
-name|void
+name|struct
+name|Session
 modifier|*
 parameter_list|)
 function_decl|;

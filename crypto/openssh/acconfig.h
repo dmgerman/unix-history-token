@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.166 2003/09/16 01:52:19 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.173 2004/02/06 05:24:31 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,14 @@ comment|/* Define if your setregid() is broken */
 undef|#
 directive|undef
 name|BROKEN_SETREGID
+comment|/* Define if your setresuid() is broken */
+undef|#
+directive|undef
+name|BROKEN_SETRESUID
+comment|/* Define if your setresgid() is broken */
+undef|#
+directive|undef
+name|BROKEN_SETRESGID
 comment|/* Define to a Set Process Title type if your system is */
 comment|/* supported by bsd-setproctitle.c */
 undef|#
@@ -72,6 +80,10 @@ comment|/* from environment and PATH */
 undef|#
 directive|undef
 name|LOGIN_PROGRAM_FALLBACK
+comment|/* Full path of your "passwd" program */
+undef|#
+directive|undef
+name|_PATH_PASSWD_PROG
 comment|/* Define if your password has a pw_class field */
 undef|#
 directive|undef
@@ -112,6 +124,10 @@ comment|/* Define if you have the getuserattr function.  */
 undef|#
 directive|undef
 name|HAVE_GETUSERATTR
+comment|/* Define if you have the basename function. */
+undef|#
+directive|undef
+name|HAVE_BASENAME
 comment|/* Work around problematic Linux PAM modules handling of PAM_TTY */
 undef|#
 directive|undef
@@ -348,6 +364,10 @@ comment|/* Define this if you are using the Heimdal version of Kerberos V5 */
 undef|#
 directive|undef
 name|HEIMDAL
+comment|/* Define this if you want to use libkafs' AFS support */
+undef|#
+directive|undef
+name|USE_AFS
 comment|/* Define if you want S/Key support */
 undef|#
 directive|undef
@@ -607,10 +627,6 @@ name|LOCKED_PASSWD_PREFIX
 undef|#
 directive|undef
 name|LOCKED_PASSWD_SUBSTR
-comment|/* Define if DNS support is to be activated */
-undef|#
-directive|undef
-name|DNS
 comment|/* Define if getrrsetbyname() exists */
 undef|#
 directive|undef
@@ -619,6 +635,10 @@ comment|/* Define if HEADER.ad exists in arpa/nameser.h */
 undef|#
 directive|undef
 name|HAVE_HEADER_AD
+comment|/* Define if your resolver libs need this for getrrsetbyname */
+undef|#
+directive|undef
+name|BIND_8_COMPAT
 expr|@
 name|BOTTOM
 expr|@

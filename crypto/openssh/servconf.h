@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.65 2003/09/01 18:15:50 markus Exp $	*/
+comment|/*	$OpenBSD: servconf.h,v 1.67 2003/12/23 16:12:10 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -238,7 +238,7 @@ name|strict_modes
 decl_stmt|;
 comment|/* If true, require string home dir modes. */
 name|int
-name|keepalives
+name|tcp_keep_alive
 decl_stmt|;
 comment|/* If true, set SO_KEEPALIVE. */
 name|char
@@ -299,6 +299,10 @@ name|int
 name|kerberos_ticket_cleanup
 decl_stmt|;
 comment|/* If true, destroy ticket 						 * file on logout. */
+name|int
+name|kerberos_get_afs_token
+decl_stmt|;
+comment|/* If true, try to get AFS token if 						 * authenticated with Kerberos. */
 name|int
 name|gss_authentication
 decl_stmt|;

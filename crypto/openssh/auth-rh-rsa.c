@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rh-rsa.c,v 1.36 2003/06/02 09:17:34 markus Exp $"
+literal|"$OpenBSD: auth-rh-rsa.c,v 1.37 2003/11/04 08:54:09 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -166,10 +166,9 @@ begin_function
 name|int
 name|auth_rhosts_rsa
 parameter_list|(
-name|struct
-name|passwd
+name|Authctxt
 modifier|*
-name|pw
+name|authctxt
 parameter_list|,
 name|char
 modifier|*
@@ -184,6 +183,15 @@ name|char
 modifier|*
 name|chost
 decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+init|=
+name|authctxt
+operator|->
+name|pw
+decl_stmt|;
 name|debug
 argument_list|(
 literal|"Trying rhosts with RSA host authentication for client user %.100s"
@@ -193,9 +201,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pw
-operator|==
-name|NULL
+operator|!
+name|authctxt
+operator|->
+name|valid
 operator|||
 name|client_host_key
 operator|==

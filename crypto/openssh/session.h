@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: session.h,v 1.20 2003/08/22 10:56:09 markus Exp $	*/
+comment|/*	$OpenBSD: session.h,v 1.21 2003/09/23 20:17:11 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -141,6 +141,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|do_cleanup
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|session_open
 parameter_list|(
@@ -209,7 +219,7 @@ begin_function_decl
 name|void
 name|session_pty_cleanup2
 parameter_list|(
-name|void
+name|Session
 modifier|*
 parameter_list|)
 function_decl|;

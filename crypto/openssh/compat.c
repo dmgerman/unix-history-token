@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compat.c,v 1.69 2003/08/29 10:03:15 markus Exp $"
+literal|"$OpenBSD: compat.c,v 1.70 2003/11/02 11:01:03 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -237,17 +237,6 @@ literal|"OpenSSH_3.0*,"
 literal|"OpenSSH_3.1*"
 block|,
 name|SSH_BUG_EXTEOF
-operator||
-name|SSH_BUG_GSSAPI_BER
-block|}
-block|,
-block|{
-literal|"OpenSSH_3.2*,"
-literal|"OpenSSH_3.3*,"
-literal|"OpenSSH_3.4*,"
-literal|"OpenSSH_3.5*"
-block|,
-name|SSH_BUG_GSSAPI_BER
 block|}
 block|,
 block|{

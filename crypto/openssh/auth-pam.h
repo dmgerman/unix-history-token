@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: auth-pam.h,v 1.21 2003/09/02 13:18:53 djm Exp $ */
+comment|/* $Id: auth-pam.h,v 1.24 2004/02/10 02:23:29 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -104,15 +104,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|is_pam_password_change_required
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|do_pam_chauthtok
 parameter_list|(
@@ -135,8 +126,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|print_pam_messages
+name|char
+modifier|*
+modifier|*
+name|fetch_pam_environment
 parameter_list|(
 name|void
 parameter_list|)
@@ -147,7 +140,7 @@ begin_function_decl
 name|char
 modifier|*
 modifier|*
-name|fetch_pam_environment
+name|fetch_pam_child_environment
 parameter_list|(
 name|void
 parameter_list|)
@@ -161,6 +154,24 @@ parameter_list|(
 name|char
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sshpam_thread_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sshpam_cleanup
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

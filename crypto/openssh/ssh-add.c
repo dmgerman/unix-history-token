@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-add.c,v 1.68 2003/06/16 10:22:45 markus Exp $"
+literal|"$OpenBSD: ssh-add.c,v 1.69 2003/11/21 11:57:03 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

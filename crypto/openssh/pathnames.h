@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pathnames.h,v 1.13 2002/05/23 19:24:30 markus Exp $	*/
+comment|/*	$OpenBSD: pathnames.h,v 1.14 2004/01/30 09:48:57 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -432,6 +432,28 @@ define|#
 directive|define
 name|_PATH_PRIVSEP_CHROOT_DIR
 value|"/var/empty"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* for passwd change */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_PASSWD_PROG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_PASSWD_PROG
+value|"/usr/bin/passwd"
 end_define
 
 begin_endif

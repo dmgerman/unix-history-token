@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: cipher.h,v 1.33 2002/03/18 17:13:15 markus Exp $	*/
+comment|/*	$OpenBSD: cipher.h,v 1.34 2003/11/10 16:23:41 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -341,6 +341,7 @@ begin_function_decl
 name|u_int
 name|cipher_blocksize
 parameter_list|(
+specifier|const
 name|Cipher
 modifier|*
 parameter_list|)
@@ -351,6 +352,7 @@ begin_function_decl
 name|u_int
 name|cipher_keylen
 parameter_list|(
+specifier|const
 name|Cipher
 modifier|*
 parameter_list|)
@@ -361,6 +363,7 @@ begin_function_decl
 name|u_int
 name|cipher_get_number
 parameter_list|(
+specifier|const
 name|Cipher
 modifier|*
 parameter_list|)
@@ -399,6 +402,7 @@ begin_function_decl
 name|int
 name|cipher_get_keyiv_len
 parameter_list|(
+specifier|const
 name|CipherContext
 modifier|*
 parameter_list|)
@@ -409,6 +413,7 @@ begin_function_decl
 name|int
 name|cipher_get_keycontext
 parameter_list|(
+specifier|const
 name|CipherContext
 modifier|*
 parameter_list|,

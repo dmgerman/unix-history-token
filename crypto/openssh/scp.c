@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scp.c,v 1.108 2003/07/18 01:54:25 deraadt Exp $"
+literal|"$OpenBSD: scp.c,v 1.113 2003/11/23 23:21:21 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -117,7 +117,7 @@ end_comment
 
 begin_decl_stmt
 name|off_t
-name|limitbw
+name|limit_rate
 init|=
 literal|0
 decl_stmt|;
@@ -1007,7 +1007,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|limitbw
+name|limit_rate
 operator|=
 name|speed
 operator|*
@@ -1060,6 +1060,14 @@ break|break;
 case|case
 literal|'q'
 case|:
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"-q"
+argument_list|)
+expr_stmt|;
 name|showprogress
 operator|=
 literal|0
@@ -1876,13 +1884,18 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|system
 argument_list|(
 name|bp
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errs
+operator|=
+literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -2949,7 +2962,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|limitbw
+name|limit_rate
 condition|)
 name|bwlimit
 argument_list|(
@@ -3504,7 +3517,7 @@ literal|1000000L
 operator|*
 name|lamt
 operator|/
-name|limitbw
+name|limit_rate
 expr_stmt|;
 name|bwstart
 operator|.
@@ -4883,7 +4896,7 @@ condition|)
 do|;
 if|if
 condition|(
-name|limitbw
+name|limit_rate
 condition|)
 name|bwlimit
 argument_list|(
@@ -5480,8 +5493,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: scp [-pqrvBC1246] [-F config] [-S program] [-P port]\n"
-literal|"           [-c cipher] [-i identity] [-l limit] [-o option]\n"
+literal|"usage: scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file]\n"
+literal|"           [-l limit] [-o ssh_option] [-P port] [-S program]\n"
 literal|"           [[user@]host1:]file1 [...] [[user@]host2:]file2\n"
 argument_list|)
 expr_stmt|;

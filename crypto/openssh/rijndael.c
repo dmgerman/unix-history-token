@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: rijndael.c,v 1.14 2002/07/10 17:53:54 deraadt Exp $ */
+comment|/*	$OpenBSD: rijndael.c,v 1.15 2003/11/21 11:57:03 djm Exp $ */
 end_comment
 
 begin_comment

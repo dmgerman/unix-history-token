@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth1.c,v 1.52 2003/08/28 12:54:34 markus Exp $"
+literal|"$OpenBSD: auth1.c,v 1.55 2003/11/08 16:02:40 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -488,7 +488,7 @@ name|authenticated
 operator|=
 name|auth_rhosts_rsa
 argument_list|(
-name|pw
+name|authctxt
 argument_list|,
 name|client_user
 argument_list|,
@@ -560,7 +560,7 @@ name|authenticated
 operator|=
 name|auth_rsa
 argument_list|(
-name|pw
+name|authctxt
 argument_list|,
 name|n
 argument_list|)
@@ -1007,17 +1007,14 @@ comment|/*  * Performs authentication of an incoming connection.  Session key ha
 end_comment
 
 begin_function
-name|Authctxt
-modifier|*
+name|void
 name|do_authentication
 parameter_list|(
-name|void
-parameter_list|)
-block|{
 name|Authctxt
 modifier|*
 name|authctxt
-decl_stmt|;
+parameter_list|)
+block|{
 name|u_int
 name|ulen
 decl_stmt|;
@@ -1068,11 +1065,6 @@ name|style
 operator|++
 operator|=
 literal|'\0'
-expr_stmt|;
-name|authctxt
-operator|=
-name|authctxt_new
-argument_list|()
 expr_stmt|;
 name|authctxt
 operator|->
@@ -1218,11 +1210,6 @@ expr_stmt|;
 name|packet_write_wait
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-name|authctxt
-operator|)
-return|;
 block|}
 end_function
 

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-agent.c,v 1.112 2003/09/18 08:49:45 markus Exp $"
+literal|"$OpenBSD: ssh-agent.c,v 1.117 2003/12/02 17:01:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -684,7 +684,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Accept empty responses and responses consisting  		 * of the word "yes" as affirmative. 		 */
+comment|/* 		 * Accept empty responses and responses consisting 		 * of the word "yes" as affirmative. 		 */
 if|if
 condition|(
 operator|*
@@ -5094,8 +5094,6 @@ name|void
 name|cleanup_socket
 parameter_list|(
 name|void
-modifier|*
-name|p
 parameter_list|)
 block|{
 if|if
@@ -5126,7 +5124,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|cleanup_exit
 parameter_list|(
@@ -5135,11 +5132,9 @@ name|i
 parameter_list|)
 block|{
 name|cleanup_socket
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 name|i
 argument_list|)
@@ -5157,9 +5152,7 @@ name|sig
 parameter_list|)
 block|{
 name|cleanup_socket
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|_exit
 argument_list|(
@@ -5785,7 +5778,7 @@ name|strlcpy
 argument_list|(
 name|socket_dir
 argument_list|,
-literal|"/tmp/ssh-XXXXXXXX"
+literal|"/tmp/ssh-XXXXXXXXXX"
 argument_list|,
 sizeof|sizeof
 name|socket_dir
@@ -5988,7 +5981,7 @@ name|listen
 argument_list|(
 name|sock
 argument_list|,
-literal|128
+name|SSH_LISTEN_BACKLOG
 argument_list|)
 operator|<
 literal|0
@@ -6376,13 +6369,6 @@ endif|#
 directive|endif
 name|skip
 label|:
-name|fatal_add_cleanup
-argument_list|(
-name|cleanup_socket
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|new_socket
 argument_list|(
 name|AUTH_SOCKET

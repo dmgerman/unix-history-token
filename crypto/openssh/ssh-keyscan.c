@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.44 2003/06/28 16:23:06 deraadt Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.46 2003/11/23 23:17:34 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1017,7 +1017,7 @@ operator|==
 name|RLIM_INFINITY
 condition|)
 return|return
-literal|10000
+name|SSH_SYSFDMAX
 return|;
 else|else
 return|return
@@ -1031,22 +1031,10 @@ name|rlfd
 operator|.
 name|rlim_cur
 return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_SYSCONF
-argument_list|)
-return|return
-name|sysconf
-argument_list|(
-name|_SC_OPEN_MAX
-argument_list|)
-return|;
 else|#
 directive|else
 return|return
-literal|10000
+name|SSH_SYSFDMAX
 return|;
 endif|#
 directive|endif
@@ -3612,8 +3600,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|fatal_cleanup
-argument_list|()
+name|exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 end_function

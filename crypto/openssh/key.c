@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: key.c,v 1.54 2003/07/09 13:58:19 avsm Exp $"
+literal|"$OpenBSD: key.c,v 1.55 2003/11/10 16:23:41 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -599,10 +599,12 @@ begin_function
 name|int
 name|key_equal
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|b
@@ -798,6 +800,7 @@ name|u_char
 modifier|*
 name|key_fingerprint_raw
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|k
@@ -1673,6 +1676,7 @@ name|char
 modifier|*
 name|key_fingerprint
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|k
@@ -2573,6 +2577,7 @@ begin_function
 name|int
 name|key_write
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -2790,10 +2795,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|key_type
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|k
@@ -2835,10 +2842,12 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|key_ssh_name
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|k
@@ -2876,6 +2885,7 @@ begin_function
 name|u_int
 name|key_size
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|k
@@ -3123,6 +3133,7 @@ name|Key
 modifier|*
 name|key_from_private
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|k
@@ -3512,6 +3523,7 @@ name|Key
 modifier|*
 name|key_from_blob
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|blob
@@ -3783,6 +3795,7 @@ begin_function
 name|int
 name|key_to_blob
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -4032,6 +4045,7 @@ begin_function
 name|int
 name|key_sign
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -4045,6 +4059,7 @@ name|u_int
 modifier|*
 name|lenp
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -4123,10 +4138,12 @@ begin_function
 name|int
 name|key_verify
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|signature
@@ -4134,6 +4151,7 @@ parameter_list|,
 name|u_int
 name|signaturelen
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -4223,6 +4241,7 @@ name|Key
 modifier|*
 name|key_demote
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|k

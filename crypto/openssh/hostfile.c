@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: hostfile.c,v 1.31 2003/04/08 20:21:28 itojun Exp $"
+literal|"$OpenBSD: hostfile.c,v 1.32 2003/11/10 16:23:41 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -156,6 +156,7 @@ parameter_list|(
 name|int
 name|bits
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -278,6 +279,7 @@ name|char
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -587,6 +589,7 @@ name|char
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -699,6 +702,7 @@ name|char
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|key

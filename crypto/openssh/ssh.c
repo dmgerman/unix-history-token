@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Ssh client program.  This program can be used to log into a remote machine.  * The software supports strong authentication, encryption, and forwarding  * of X11, TCP/IP, and authentication connections.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * Copyright (c) 1999 Niels Provos.  All rights reserved.  * Copyright (c) 2000, 2001, 2002 Markus Friedl.  All rights reserved.  *  * Modified to work with SSL by Niels Provos<provos@citi.umich.edu>  * in Canada (German citizen).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Ssh client program.  This program can be used to log into a remote machine.  * The software supports strong authentication, encryption, and forwarding  * of X11, TCP/IP, and authentication connections.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * Copyright (c) 1999 Niels Provos.  All rights reserved.  * Copyright (c) 2000, 2001, 2002, 2003 Markus Friedl.  All rights reserved.  *  * Modified to work with SSL by Niels Provos<provos@citi.umich.edu>  * in Canada (German citizen).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh.c,v 1.201 2003/09/01 18:15:50 markus Exp $"
+literal|"$OpenBSD: ssh.c,v 1.206 2003/12/16 15:49:51 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -495,6 +495,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"  -Y          Enable trusted X11 connection forwarding.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"  -x          Disable X11 connection forwarding (default).\n"
 argument_list|)
 expr_stmt|;
@@ -787,6 +794,9 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|,
+modifier|*
+name|line
+decl_stmt|,
 name|buf
 index|[
 literal|256
@@ -956,7 +966,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"1246ab:c:e:fgi:kl:m:no:p:qstvxACD:F:I:L:NPR:TVX"
+literal|"1246ab:c:e:fgi:kl:m:no:p:qstvxACD:F:I:L:NPR:TVXY"
 argument_list|)
 operator|)
 operator|!=
@@ -1050,6 +1060,22 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'Y'
+case|:
+name|options
+operator|.
+name|forward_x11
+operator|=
+literal|1
+expr_stmt|;
+name|options
+operator|.
+name|forward_x11_trusted
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'g'
 case|:
 name|options
@@ -1093,7 +1119,12 @@ break|break;
 case|case
 literal|'k'
 case|:
-comment|/* ignored for backward compatibility */
+name|options
+operator|.
+name|gss_deleg_creds
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'i'
@@ -1800,6 +1831,13 @@ name|dummy
 operator|=
 literal|1
 expr_stmt|;
+name|line
+operator|=
+name|xstrdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|process_config_line
@@ -1813,7 +1851,7 @@ name|host
 else|:
 literal|""
 argument_list|,
-name|optarg
+name|line
 argument_list|,
 literal|"command-line"
 argument_list|,
@@ -1828,6 +1866,11 @@ condition|)
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|line
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3056,7 +3099,7 @@ expr_stmt|;
 name|packet_close
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Send SIGHUP to proxy command if used. We don't wait() in  	 * case it hangs and instead rely on init to reap the child 	 */
+comment|/* 	 * Send SIGHUP to proxy command if used. We don't wait() in 	 * case it hangs and instead rely on init to reap the child 	 */
 if|if
 condition|(
 name|proxy_command_pid
@@ -3076,6 +3119,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|SSH_X11_PROTO
+value|"MIT-MAGIC-COOKIE-1"
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -3093,7 +3143,19 @@ name|_data
 parameter_list|)
 block|{
 name|char
+name|cmd
+index|[
+literal|1024
+index|]
+decl_stmt|;
+name|char
 name|line
+index|[
+literal|512
+index|]
+decl_stmt|;
+name|char
+name|xdisplay
 index|[
 literal|512
 index|]
@@ -3119,16 +3181,36 @@ name|got_data
 init|=
 literal|0
 decl_stmt|,
+name|generated
+init|=
+literal|0
+decl_stmt|,
+name|do_unlink
+init|=
+literal|0
+decl_stmt|,
 name|i
 decl_stmt|;
 name|char
 modifier|*
 name|display
+decl_stmt|,
+modifier|*
+name|xauthdir
+decl_stmt|,
+modifier|*
+name|xauthfile
 decl_stmt|;
 name|struct
 name|stat
 name|st
 decl_stmt|;
+name|xauthdir
+operator|=
+name|xauthfile
+operator|=
+name|NULL
+expr_stmt|;
 operator|*
 name|_proto
 operator|=
@@ -3203,7 +3285,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Try to get Xauthority information for the display. */
+comment|/* 		 * Handle FamilyLocal case where $DISPLAY does 		 * not match an authorization entry.  For this we 		 * just try "xauth list unix:displaynum.screennum". 		 * XXX: "localhost" match to determine FamilyLocal 		 *      is not perfect. 		 */
 if|if
 condition|(
 name|strncmp
@@ -3217,40 +3299,104 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* 			 * Handle FamilyLocal case where $DISPLAY does 			 * not match an authorization entry.  For this we 			 * just try "xauth list unix:displaynum.screennum". 			 * XXX: "localhost" match to determine FamilyLocal 			 *      is not perfect. 			 */
+block|{
 name|snprintf
 argument_list|(
-name|line
+name|xdisplay
 argument_list|,
 sizeof|sizeof
-name|line
+argument_list|(
+name|xdisplay
+argument_list|)
 argument_list|,
-literal|"%s list unix:%s 2>"
-name|_PATH_DEVNULL
-argument_list|,
-name|options
-operator|.
-name|xauth_location
+literal|"unix:%s"
 argument_list|,
 name|display
 operator|+
 literal|10
 argument_list|)
 expr_stmt|;
-else|else
+name|display
+operator|=
+name|xdisplay
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|options
+operator|.
+name|forward_x11_trusted
+operator|==
+literal|0
+condition|)
+block|{
+name|xauthdir
+operator|=
+name|xmalloc
+argument_list|(
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+name|xauthfile
+operator|=
+name|xmalloc
+argument_list|(
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|xauthdir
+argument_list|,
+literal|"/tmp/ssh-XXXXXXXXXX"
+argument_list|,
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mkdtemp
+argument_list|(
+name|xauthdir
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|do_unlink
+operator|=
+literal|1
+expr_stmt|;
 name|snprintf
 argument_list|(
-name|line
+name|xauthfile
+argument_list|,
+name|MAXPATHLEN
+argument_list|,
+literal|"%s/xauthfile"
+argument_list|,
+name|xauthdir
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|cmd
 argument_list|,
 sizeof|sizeof
-name|line
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|,
-literal|"%s list %.200s 2>"
+literal|"%s -f %s generate %s "
+name|SSH_X11_PROTO
+literal|" untrusted timeout 120 2>"
 name|_PATH_DEVNULL
 argument_list|,
 name|options
 operator|.
 name|xauth_location
+argument_list|,
+name|xauthfile
 argument_list|,
 name|display
 argument_list|)
@@ -3259,14 +3405,67 @@ name|debug2
 argument_list|(
 literal|"x11_get_proto: %s"
 argument_list|,
-name|line
+name|cmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|system
+argument_list|(
+name|cmd
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|generated
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+name|snprintf
+argument_list|(
+name|cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
+argument_list|,
+literal|"%s %s%s list %s . 2>"
+name|_PATH_DEVNULL
+argument_list|,
+name|options
+operator|.
+name|xauth_location
+argument_list|,
+name|generated
+condition|?
+literal|"-f "
+else|:
+literal|""
+argument_list|,
+name|generated
+condition|?
+name|xauthfile
+else|:
+literal|""
+argument_list|,
+name|display
+argument_list|)
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"x11_get_proto: %s"
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
 name|f
 operator|=
 name|popen
 argument_list|(
-name|line
+name|cmd
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3314,6 +3513,40 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlink
+condition|)
+block|{
+name|unlink
+argument_list|(
+name|xauthfile
+argument_list|)
+expr_stmt|;
+name|rmdir
+argument_list|(
+name|xauthdir
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|xauthdir
+condition|)
+name|xfree
+argument_list|(
+name|xauthdir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xauthfile
+condition|)
+name|xfree
+argument_list|(
+name|xauthfile
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we didn't get authentication data, just make up some 	 * data.  The forwarding code will check the validity of the 	 * response anyway, and substitute this data.  The X11 	 * server, however, will ignore this fake data and use 	 * whatever authentication mechanisms it was using otherwise 	 * for the local connection. 	 */
 if|if
 condition|(
@@ -3328,14 +3561,15 @@ literal|0
 decl_stmt|;
 name|logit
 argument_list|(
-literal|"Warning: No xauth data; using fake authentication data for X11 forwarding."
+literal|"Warning: No xauth data; "
+literal|"using fake authentication data for X11 forwarding."
 argument_list|)
 expr_stmt|;
 name|strlcpy
 argument_list|(
 name|proto
 argument_list|,
-literal|"MIT-MAGIC-COOKIE-1"
+name|SSH_X11_PROTO
 argument_list|,
 sizeof|sizeof
 name|proto
@@ -4264,7 +4498,7 @@ end_function
 
 begin_function
 name|void
-name|client_global_request_reply
+name|client_global_request_reply_fwd
 parameter_list|(
 name|int
 name|type
@@ -4293,20 +4527,7 @@ name|options
 operator|.
 name|num_remote_forwards
 condition|)
-block|{
-name|debug
-argument_list|(
-literal|"client_global_request_reply: too many replies %d> %d"
-argument_list|,
-name|i
-argument_list|,
-name|options
-operator|.
-name|num_remote_forwards
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|debug
 argument_list|(
 literal|"remote forward %s for: listen %d, connect %s:%d"

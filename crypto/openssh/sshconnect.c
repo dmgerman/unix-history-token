@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.148 2003/09/18 07:52:54 markus Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.156 2004/01/25 03:49:09 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -113,22 +113,11 @@ directive|include
 file|"readpass.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DNS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"dns.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -148,24 +137,13 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DNS
-end_ifdef
-
 begin_decl_stmt
 name|int
-name|verified_host_key_dns
+name|matching_host_key_dns
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* import */
@@ -244,6 +222,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|warn_changed_key
+parameter_list|(
+name|Key
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Connect to the given ssh server using a proxy command.  */
 end_comment
@@ -312,7 +301,7 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Build the final command string in the buffer by making the 	 * appropriate substitutions to the given proxy command. 	 * 	 * Use "exec" to avoid "sh -c" processes on some platforms  	 * (e.g. Solaris) 	 */
+comment|/* 	 * Build the final command string in the buffer by making the 	 * appropriate substitutions to the given proxy command. 	 * 	 * Use "exec" to avoid "sh -c" processes on some platforms 	 * (e.g. Solaris) 	 */
 name|buffer_init
 argument_list|(
 operator|&
@@ -1089,25 +1078,11 @@ name|addrlen
 argument_list|)
 operator|)
 return|;
-if|if
-condition|(
-name|fcntl
+name|set_nonblock
 argument_list|(
 name|sockfd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|O_NONBLOCK
 argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+expr_stmt|;
 name|rc
 operator|=
 name|connect
@@ -1125,11 +1100,18 @@ name|rc
 operator|==
 literal|0
 condition|)
+block|{
+name|unset_nonblock
+argument_list|(
+name|sockfd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|errno
@@ -1328,6 +1310,11 @@ block|}
 name|result
 operator|=
 literal|0
+expr_stmt|;
+name|unset_nonblock
+argument_list|(
+name|sockfd
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -1827,12 +1814,12 @@ argument_list|(
 literal|"Connection established."
 argument_list|)
 expr_stmt|;
-comment|/* Set keepalives if requested. */
+comment|/* Set SO_KEEPALIVE if requested. */
 if|if
 condition|(
 name|options
 operator|.
-name|keepalives
+name|tcp_keep_alive
 operator|&&
 name|setsockopt
 argument_list|(
@@ -2567,6 +2554,7 @@ name|Key
 modifier|*
 name|file_key
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|type
@@ -3242,9 +3230,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DNS
 if|if
 condition|(
 name|options
@@ -3254,7 +3239,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verified_host_key_dns
+name|matching_host_key_dns
 condition|)
 name|snprintf
 argument_list|(
@@ -3284,8 +3269,6 @@ literal|" found in DNS.\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|snprintf
 argument_list|(
 name|msg
@@ -3508,61 +3491,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* The host key has changed. */
-name|fp
-operator|=
-name|key_fingerprint
+name|warn_changed_key
 argument_list|(
 name|host_key
-argument_list|,
-name|SSH_FP_MD5
-argument_list|,
-name|SSH_FP_HEX
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Someone could be eavesdropping on you right now (man-in-the-middle attack)!"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"It is also possible that the %s host key has just been changed."
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"The fingerprint for the %s key sent by the remote host is\n%s."
-argument_list|,
-name|type
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Please contact your system administrator."
 argument_list|)
 expr_stmt|;
 name|error
@@ -3579,11 +3510,6 @@ argument_list|,
 name|host_file
 argument_list|,
 name|host_line
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|fp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If strict host key checking is in use, the user will have 		 * to edit the key manually and we can only abort. 		 */
@@ -3952,18 +3878,17 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DNS
+name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|options
 operator|.
 name|verify_host_key_dns
-condition|)
-block|{
-switch|switch
-condition|(
+operator|&&
 name|verify_host_key_dns
 argument_list|(
 name|host
@@ -3971,50 +3896,68 @@ argument_list|,
 name|hostaddr
 argument_list|,
 name|host_key
+argument_list|,
+operator|&
+name|flags
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-case|case
-name|DNS_VERIFY_OK
-case|:
-ifdef|#
-directive|ifdef
-name|DNSSEC
+if|if
+condition|(
+name|flags
+operator|&
+name|DNS_VERIFY_FOUND
+condition|)
+block|{
+if|if
+condition|(
+name|options
+operator|.
+name|verify_host_key_dns
+operator|==
+literal|1
+operator|&&
+name|flags
+operator|&
+name|DNS_VERIFY_MATCH
+operator|&&
+name|flags
+operator|&
+name|DNS_VERIFY_SECURE
+condition|)
 return|return
 literal|0
 return|;
-else|#
-directive|else
-name|verified_host_key_dns
+if|if
+condition|(
+name|flags
+operator|&
+name|DNS_VERIFY_MATCH
+condition|)
+block|{
+name|matching_host_key_dns
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-endif|#
-directive|endif
-case|case
-name|DNS_VERIFY_FAILED
-case|:
-return|return
-operator|-
-literal|1
-return|;
-case|case
-name|DNS_VERIFY_ERROR
-case|:
-break|break;
-default|default:
-name|debug3
+block|}
+else|else
+block|{
+name|warn_changed_key
 argument_list|(
-literal|"bad return value from verify_host_key_dns"
+name|host_key
 argument_list|)
 expr_stmt|;
-break|break;
+name|error
+argument_list|(
+literal|"Update the SSHFP RR in DNS with the new "
+literal|"host key to get rid of this message."
+argument_list|)
+expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* DNS */
+block|}
 comment|/* return ok if the key can be found in an old keyfile */
 if|if
 condition|(
@@ -4656,6 +4599,95 @@ operator|(
 name|found
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|warn_changed_key
+parameter_list|(
+name|Key
+modifier|*
+name|host_key
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|fp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|type
+init|=
+name|key_type
+argument_list|(
+name|host_key
+argument_list|)
+decl_stmt|;
+name|fp
+operator|=
+name|key_fingerprint
+argument_list|(
+name|host_key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Someone could be eavesdropping on you right now (man-in-the-middle attack)!"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"It is also possible that the %s host key has just been changed."
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"The fingerprint for the %s key sent by the remote host is\n%s."
+argument_list|,
+name|type
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Please contact your system administrator."
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.61 2003/06/28 16:23:06 deraadt Exp $"
+literal|"$OpenBSD: authfd.c,v 1.63 2003/11/21 11:57:03 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -354,7 +354,8 @@ parameter_list|)
 block|{
 name|int
 name|l
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|len
 decl_stmt|;
 name|char
@@ -516,7 +517,7 @@ literal|1024
 condition|)
 name|fatal
 argument_list|(
-literal|"Authentication response too long: %d"
+literal|"Authentication response too long: %u"
 argument_list|,
 name|len
 argument_list|)
@@ -1032,6 +1033,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|auth
 operator|->
 name|howmany
