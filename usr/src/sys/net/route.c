@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	8.2.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1201,7 +1201,7 @@ name|data
 parameter_list|,
 name|p
 parameter_list|)
-name|int
+name|u_long
 name|req
 decl_stmt|;
 name|caddr_t

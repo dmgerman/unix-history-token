@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	8.3 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	8.4 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
 end_comment
 
 begin_comment
@@ -191,7 +191,7 @@ expr|struct
 name|ifnet
 operator|*
 operator|,
-name|int
+name|u_long
 operator|,
 name|caddr_t
 operator|)
@@ -265,7 +265,7 @@ expr|struct
 name|tty
 operator|*
 operator|,
-name|int
+name|u_long
 operator|,
 name|caddr_t
 operator|,
