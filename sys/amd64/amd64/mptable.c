@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.102 1999/06/01 18:19:42 jlemon Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.103 1999/06/22 20:54:25 msmith Exp $  */
 end_comment
 
 begin_include
@@ -1279,8 +1279,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
-name|boot_cpuid
+name|bootAP
 decl_stmt|;
 end_decl_stmt
 
@@ -1950,7 +1951,7 @@ name|x
 decl_stmt|,
 name|myid
 init|=
-name|boot_cpuid
+name|bootAP
 decl_stmt|;
 name|gdt_segs
 index|[
@@ -2181,15 +2182,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX! */
 name|pmap_set_opt
-argument_list|(
-operator|(
-name|unsigned
-operator|*
-operator|)
-name|PTD
-argument_list|)
-expr_stmt|;
-name|invltlb
 argument_list|()
 expr_stmt|;
 block|}
@@ -7767,7 +7759,7 @@ operator|*
 name|PAGE_SIZE
 index|]
 expr_stmt|;
-name|boot_cpuid
+name|bootAP
 operator|=
 name|x
 expr_stmt|;
@@ -7968,7 +7960,7 @@ name|PTD
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_set_opt_bsp
+name|pmap_set_opt
 argument_list|()
 expr_stmt|;
 comment|/* number of APs actually started */
@@ -8851,6 +8843,10 @@ block|{
 name|u_int
 name|apic_id
 decl_stmt|;
+comment|/* BSP may have changed PTD while we're waiting for the lock */
+name|cpu_invltlb
+argument_list|()
+expr_stmt|;
 name|smp_cpus
 operator|++
 expr_stmt|;

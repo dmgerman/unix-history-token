@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.238 1999/06/05 16:16:37 luoqi Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.239 1999/06/08 17:14:22 dt Exp $  */
 end_comment
 
 begin_comment
@@ -1552,15 +1552,6 @@ block|{
 name|unsigned
 name|ptditmp
 decl_stmt|;
-comment|/* 		 * Enable the PSE mode 		 */
-name|load_cr4
-argument_list|(
-name|rcr4
-argument_list|()
-operator||
-name|CR4_PSE
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Note that we have enabled PSE mode 		 */
 name|pseflag
 operator|=
@@ -1614,6 +1605,15 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
+comment|/* 		 * Enable the PSE mode. 		 */
+name|load_cr4
+argument_list|(
+name|rcr4
+argument_list|()
+operator||
+name|CR4_PSE
+argument_list|)
+expr_stmt|;
 comment|/* 		 * We can do the mapping here for the single processor 		 * case.  We simply ignore the old page table page from 		 * now on. 		 */
 comment|/* 		 * For SMP, we still need 4K pages to bootstrap APs, 		 * PSE will be enabled as soon as all APs are up. 		 */
 name|PTD
@@ -1967,21 +1967,16 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * Set 4mb pdir for mp startup, and global flags  */
+comment|/*  * Set 4mb pdir for mp startup  */
 end_comment
 
 begin_function
 name|void
 name|pmap_set_opt
 parameter_list|(
-name|unsigned
-modifier|*
-name|pdir
+name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|pseflag
@@ -2004,107 +1999,35 @@ expr_stmt|;
 if|if
 condition|(
 name|pdir4mb
-condition|)
-block|{
-name|pdir
-index|[
-name|KPTDI
-index|]
-operator|=
-name|pdir4mb
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|pgeflag
 operator|&&
-operator|(
-name|cpu_feature
-operator|&
-name|CPUID_PGE
-operator|)
+name|cpuid
+operator|==
+literal|0
 condition|)
 block|{
-name|load_cr4
-argument_list|(
-name|rcr4
-argument_list|()
-operator||
-name|CR4_PGE
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|KPTDI
-init|;
-name|i
-operator|<
-name|KPTDI
-operator|+
-name|nkpt
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|pdir
-index|[
-name|i
-index|]
-condition|)
-block|{
-name|pdir
-index|[
-name|i
-index|]
-operator||=
-name|PG_G
-expr_stmt|;
-block|}
-block|}
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Setup the PTD for the boot processor  */
-end_comment
-
-begin_function
-name|void
-name|pmap_set_opt_bsp
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|pmap_set_opt
-argument_list|(
-operator|(
-name|unsigned
-operator|*
-operator|)
+comment|/* only on BSP */
 name|kernel_pmap
 operator|->
 name|pm_pdir
-argument_list|)
-expr_stmt|;
-name|pmap_set_opt
-argument_list|(
-operator|(
-name|unsigned
-operator|*
-operator|)
+index|[
+name|KPTDI
+index|]
+operator|=
 name|PTD
-argument_list|)
+index|[
+name|KPTDI
+index|]
+operator|=
+operator|(
+name|pd_entry_t
+operator|)
+name|pdir4mb
 expr_stmt|;
-name|invltlb
+name|cpu_invltlb
 argument_list|()
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
