@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.218 1996/12/11 05:52:15 dyson Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.219 1996/12/12 04:20:50 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1766,19 +1766,21 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|USERCONFIG_BOOT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|USERCONFIG
 argument_list|)
-name|boothowto
-operator||=
-name|RB_CONFIG
-expr_stmt|;
-endif|#
-directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USERCONFIG_BOOT
+argument_list|)
+if|if
+condition|(
+literal|1
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|boothowto
@@ -1786,9 +1788,8 @@ operator|&
 name|RB_CONFIG
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USERCONFIG
+endif|#
+directive|endif
 name|userconfig
 argument_list|()
 expr_stmt|;
@@ -1796,16 +1797,9 @@ name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* the preferred console may have changed */
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"Sorry! no userconfig in this kernel\n"
-argument_list|)
-expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 ifdef|#
 directive|ifdef
 name|BOUNCE_BUFFERS
@@ -1951,9 +1945,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 name|int
 name|register_netisr
 parameter_list|(
@@ -2017,9 +2008,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|setup_netisrs
@@ -2086,13 +2074,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * at top to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
-end_comment
-
-begin_function
 name|void
 name|sendsig
 parameter_list|(
@@ -2703,13 +2685,7 @@ operator|=
 name|_udatasel
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  */
-end_comment
-
-begin_function
 name|int
 name|sigreturn
 parameter_list|(
@@ -3124,13 +3100,7 @@ name|EJUSTRETURN
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Machine depdnetnt boot() routine  *  * I haven't seen anything too put here yet  * Possibly some stuff might be grafted back here from boot()  */
-end_comment
-
-begin_function
 name|void
 name|cpu_boot
 parameter_list|(
@@ -3138,13 +3108,7 @@ name|int
 name|howto
 parameter_list|)
 block|{ }
-end_function
-
-begin_comment
 comment|/*  * Shutdown the CPU as much as possible  */
-end_comment
-
-begin_function
 name|void
 name|cpu_halt
 parameter_list|(
@@ -3158,13 +3122,7 @@ condition|;
 control|)
 asm|__asm__ ("hlt");
 block|}
-end_function
-
-begin_comment
 comment|/*  * Clear registers on exec  */
-end_comment
-
-begin_function
 name|void
 name|setregs
 parameter_list|(
@@ -3376,9 +3334,6 @@ endif|#
 directive|endif
 comment|/* NNPX> 0 */
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|int
 name|sysctl_machdep_adjkerntz
@@ -3422,9 +3377,6 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
 name|_machdep
@@ -3449,9 +3401,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
@@ -3470,9 +3419,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_STRUCT
 argument_list|(
 name|_machdep
@@ -3491,9 +3437,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
@@ -3512,29 +3455,14 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Initialize 386 and configure to run kernel  */
-end_comment
-
-begin_comment
 comment|/*  * Initialize segments& interrupt table  */
-end_comment
-
-begin_decl_stmt
 name|int
 name|currentldt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|_default_ldt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|union
 name|descriptor
 name|gdt
@@ -3542,13 +3470,7 @@ index|[
 name|NGDT
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* global descriptor table */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|gate_descriptor
 name|idt
@@ -3556,13 +3478,7 @@ index|[
 name|NIDT
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* interrupt descriptor table */
-end_comment
-
-begin_decl_stmt
 name|union
 name|descriptor
 name|ldt
@@ -3570,21 +3486,12 @@ index|[
 name|NLDT
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* local descriptor table */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|i386tss
 name|dblfault_tss
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 name|dblfault_stack
@@ -3592,22 +3499,13 @@ index|[
 name|PAGE_SIZE
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|struct
 name|user
 modifier|*
 name|proc0paddr
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* software prototypes -- in more palatable form */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|soft_segment_descriptor
 name|gdt_segs
@@ -3963,9 +3861,6 @@ comment|/* limit granularity (byte/page units)*/
 block|}
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|soft_segment_descriptor
@@ -4114,9 +4009,6 @@ comment|/* limit granularity (byte/page units)*/
 block|}
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|setidt
 parameter_list|(
@@ -4215,9 +4107,6 @@ operator|>>
 literal|16
 expr_stmt|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|IDTVEC
@@ -4225,9 +4114,6 @@ parameter_list|(
 name|name
 parameter_list|)
 value|__CONCAT(X,name)
-end_define
-
-begin_decl_stmt
 specifier|extern
 name|inthand_t
 name|IDTVEC
@@ -4330,9 +4216,6 @@ argument_list|(
 name|int0x80_syscall
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|sdtossd
 parameter_list|(
@@ -4424,9 +4307,6 @@ operator|->
 name|sd_gran
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|init386
 parameter_list|(
@@ -6278,13 +6158,7 @@ operator|=
 name|IdlePTD
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * The registers are in the frame; the frame is in the user area of  * the process in question; when the process is active, the registers  * are in "the kernel stack"; when it's not, they're still there, but  * things get flipped around.  So, since p->p_md.md_regs is the whole address  * of the register set, take its offset from the kernel stack, and  * index into the user block.  Don't you just *love* virtual memory?  * (I'm starting to think seymour is right...)  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|TF_REGP
@@ -6292,9 +6166,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct trapframe *) \ 			 ((char *)(p)->p_addr \ 			  + ((char *)(p)->p_md.md_regs - kstack)))
-end_define
-
-begin_function
 name|int
 name|ptrace_set_pc
 parameter_list|(
@@ -6327,9 +6198,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|ptrace_single_step
 parameter_list|(
@@ -6356,9 +6224,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|ptrace_write_u
 parameter_list|(
@@ -6586,9 +6451,6 @@ name|EFAULT
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|fill_regs
 parameter_list|(
@@ -6737,9 +6599,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|set_regs
 parameter_list|(
@@ -6915,15 +6774,9 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|DDB
-end_ifndef
-
-begin_function
 name|void
 name|Debugger
 parameter_list|(
@@ -6941,28 +6794,13 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* no DDB */
-end_comment
-
-begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
-end_include
-
-begin_comment
 comment|/*  * Determine the size of the transfer, and make sure it is  * within the boundaries of the partition. Adjust transfer  * if needed, and signal errors or early completion.  */
-end_comment
-
-begin_function
 name|int
 name|bounds_check_with_label
 parameter_list|(
