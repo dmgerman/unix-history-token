@@ -3917,16 +3917,6 @@ operator|->
 name|sack_enable
 operator|&&
 name|sack_rxmit
-operator|&&
-operator|(
-name|p
-operator|->
-name|rxmit
-operator|!=
-name|tp
-operator|->
-name|snd_nxt
-operator|)
 condition|)
 goto|goto
 name|timer
