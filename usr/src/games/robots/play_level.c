@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)play_level.c	5.1 (Berkeley) %G%"
+literal|"@(#)play_level.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,15 @@ name|cp
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|cp
+operator|->
+name|y
+operator|<
+literal|0
+condition|)
+continue|continue;
 name|move
 argument_list|(
 name|cp
