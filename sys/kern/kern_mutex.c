@@ -3064,9 +3064,10 @@ argument_list|(
 name|SMP
 argument_list|)
 operator|&&
+operator|!
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|NO_ADAPTIVE_MUTEXES
 argument_list|)
 if|if
 condition|(
