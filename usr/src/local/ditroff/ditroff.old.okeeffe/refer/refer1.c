@@ -858,40 +858,17 @@ end_macro
 
 begin_block
 block|{
-name|SIG_TYP
-name|oldint
-decl_stmt|;
-name|oldint
-operator|=
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-operator|&
 name|intr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|oldint
-operator|==
-operator|(
-name|SIG_TYP
-operator|)
-literal|1
-condition|)
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-operator|&
 name|intr
 argument_list|)
 expr_stmt|;
@@ -899,7 +876,6 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-operator|&
 name|intr
 argument_list|)
 expr_stmt|;
@@ -907,7 +883,6 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-operator|&
 name|intr
 argument_list|)
 expr_stmt|;
@@ -921,9 +896,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|oldsig
-decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
