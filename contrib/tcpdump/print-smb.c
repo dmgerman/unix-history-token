@@ -42,6 +42,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -5057,7 +5061,23 @@ name|print_data
 argument_list|(
 name|p
 argument_list|,
+name|min
+argument_list|(
 name|rdlen
+argument_list|,
+name|length
+operator|-
+operator|(
+operator|(
+specifier|const
+name|uchar
+operator|*
+operator|)
+name|p
+operator|-
+name|data
+operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
