@@ -1513,7 +1513,7 @@ comment|/* number of running tasks */
 name|nprocs
 argument_list|,
 comment|/* number of tasks */
-name|nextpid
+name|lastpid
 comment|/* the last pid */
 argument_list|)
 expr_stmt|;
