@@ -1920,7 +1920,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|PORTMAP
+comment|/* PORTMAP */
 comment|/* 	 * Basic loop: broadcast the packets to transports which 	 * support data packets of size such that one can encode 	 * all the arguments. 	 * Wait a while for response(s). 	 * The response timeout grows larger per iteration. 	 */
 for|for
 control|(
