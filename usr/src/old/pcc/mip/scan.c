@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	1.2 (Berkeley) %G%"
+literal|"@(#)scan.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -454,11 +454,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|oldway
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* allocate storage so lint will compile as well */
+end_comment
 
 begin_ifndef
 ifndef|#

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.2 (Berkeley) %G%"
+literal|"@(#)stab.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,7 @@ comment|/*  * Flag for producing either sdb or dbx symbol information.  */
 end_comment
 
 begin_decl_stmt
-name|Boolean
+name|int
 name|oldway
 init|=
 name|false
