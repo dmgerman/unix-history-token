@@ -424,6 +424,9 @@ decl_stmt|;
 name|int
 name|minimum_command_size
 decl_stmt|;
+name|int
+name|outstanding_cmds
+decl_stmt|;
 name|struct
 name|sysctl_ctx_list
 name|sysctl_ctx
@@ -4403,9 +4406,7 @@ name|changer
 operator|->
 name|cur_device
 operator|->
-name|device_stats
-operator|->
-name|busy_count
+name|outstanding_cmds
 operator|==
 literal|0
 operator|)
@@ -4756,9 +4757,7 @@ name|changer
 operator|->
 name|cur_device
 operator|->
-name|device_stats
-operator|->
-name|busy_count
+name|outstanding_cmds
 operator|>
 literal|0
 condition|)
@@ -4781,9 +4780,7 @@ name|changer
 operator|->
 name|cur_device
 operator|->
-name|device_stats
-operator|->
-name|busy_count
+name|outstanding_cmds
 expr_stmt|;
 if|if
 condition|(
@@ -5149,9 +5146,7 @@ operator|&&
 operator|(
 name|softc
 operator|->
-name|device_stats
-operator|->
-name|busy_count
+name|outstanding_cmds
 operator|==
 literal|0
 operator|)
@@ -6123,6 +6118,11 @@ operator|.
 name|le
 argument_list|)
 expr_stmt|;
+name|softc
+operator|->
+name|outstanding_cmds
+operator|++
+expr_stmt|;
 name|splx
 argument_list|(
 name|oldspl
@@ -6645,6 +6645,11 @@ name|periph_links
 operator|.
 name|le
 argument_list|)
+expr_stmt|;
+name|softc
+operator|->
+name|outstanding_cmds
+operator|--
 expr_stmt|;
 name|splx
 argument_list|(
