@@ -3001,7 +3001,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-name|RF_ACTIVE
+literal|0
 argument_list|)
 expr_stmt|;
 name|rid
@@ -3026,7 +3026,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-name|RF_ACTIVE
+literal|0
 argument_list|)
 expr_stmt|;
 name|rid
@@ -3051,7 +3051,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-name|RF_ACTIVE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
