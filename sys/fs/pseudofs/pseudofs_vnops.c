@@ -2507,7 +2507,7 @@ block|{
 name|sx_assert
 argument_list|(
 operator|&
-name|allproc
+name|allproc_lock
 argument_list|,
 name|SX_LOCKED
 argument_list|)
