@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.23 1997/05/30 20:39:32 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.24 1997/06/04 12:55:49 jb Exp $  *  */
 end_comment
 
 begin_comment
@@ -810,6 +810,17 @@ begin_decl_stmt
 specifier|static
 name|int
 name|malloc_xmalloc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sysv behaviour for malloc(0) ?  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|malloc_sysv
 decl_stmt|;
 end_decl_stmt
 
@@ -2209,6 +2220,22 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+name|malloc_sysv
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+name|malloc_sysv
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'x'
 case|:
 name|malloc_xmalloc
@@ -3381,6 +3408,18 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|malloc_sysv
+operator|&&
+operator|!
+name|size
+condition|)
+name|result
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
@@ -5071,25 +5110,6 @@ name|imalloc
 argument_list|(
 name|size
 argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ptr
-operator|&&
-operator|!
-name|size
-condition|)
-block|{
-name|ifree
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
