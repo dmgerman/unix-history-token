@@ -334,49 +334,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_BUS
+name|ACPI_AC_ADAPTER
 value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_SYSTEM
+name|ACPI_BATTERY
 value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_POWER
+name|ACPI_BUS
 value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_EC
+name|ACPI_BUTTON
 value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_AC_ADAPTER
+name|ACPI_EC
 value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BATTERY
+name|ACPI_FAN
 value|0x00200000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BUTTON
+name|ACPI_POWERRES
 value|0x00400000
 end_define
 
@@ -397,15 +397,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_FAN
+name|ACPI_TIMER
 value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TOSHIBA
-value|0x04000000
 end_define
 
 begin_comment

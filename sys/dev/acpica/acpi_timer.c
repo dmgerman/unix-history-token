@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_SYSTEM
+value|ACPI_TIMER
 end_define
 
 begin_macro

@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_POWER
+value|ACPI_POWERRES
 end_define
 
 begin_macro
