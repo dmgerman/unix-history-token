@@ -59,6 +59,11 @@ name|selinfo
 name|kq_sel
 decl_stmt|;
 name|struct
+name|sigio
+modifier|*
+name|kq_sigio
+decl_stmt|;
+name|struct
 name|filedesc
 modifier|*
 name|kq_fdp
@@ -74,6 +79,10 @@ define|#
 directive|define
 name|KQ_SLEEP
 value|0x02
+define|#
+directive|define
+name|KQ_ASYNC
+value|0x04
 name|struct
 name|kevent
 name|kq_kev
