@@ -616,6 +616,14 @@ name|nstart
 decl_stmt|,
 name|nend
 decl_stmt|;
+comment|/* Two fields for the implementing class to use */
+name|void
+modifier|*
+name|private
+decl_stmt|;
+name|u_int
+name|index
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -666,9 +674,6 @@ argument|g_provider
 argument_list|)
 name|orphan
 expr_stmt|;
-name|u_int
-name|index
-decl_stmt|;
 name|off_t
 name|mediasize
 decl_stmt|;
@@ -706,6 +711,14 @@ define|#
 directive|define
 name|G_PF_ORPHAN
 value|0x4
+comment|/* Two fields for the implementing class to use */
+name|void
+modifier|*
+name|private
+decl_stmt|;
+name|u_int
+name|index
+decl_stmt|;
 block|}
 struct|;
 end_struct
