@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	3.29 %G%"
+literal|"@(#)cmd1.c	3.30 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,7 +667,7 @@ name|terse
 operator|)
 name|wwputs
 argument_list|(
-literal|"\nCanceled.  "
+literal|"\nCancelled.  "
 argument_list|,
 name|cmdwin
 argument_list|)
