@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_systm.h 4.8 82/03/19 */
+comment|/* in_systm.h 4.9 82/04/11 */
 end_comment
 
 begin_comment
@@ -67,8 +67,12 @@ begin_define
 define|#
 directive|define
 name|splimp
-value|spl5
+value|spl6
 end_define
+
+begin_comment
+comment|/* temporary hack, usually spl5 */
+end_comment
 
 begin_define
 define|#
