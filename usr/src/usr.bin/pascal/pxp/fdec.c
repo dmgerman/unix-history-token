@@ -1,14 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)fdec.c	1.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
@@ -16,6 +6,16 @@ end_comment
 begin_empty
 empty|#
 end_empty
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)fdec.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * pxp - Pascal execution profiler  *  * Bill Joy UCB  * Version 1.2 January 1979  */
@@ -1061,6 +1061,83 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Segend is called at the end of a routine segment (a separately  * compiled segment that is not the main program). Since pxp only works  * with a single pascal file, this routine should never be called.  */
+end_comment
+
+begin_macro
+name|segend
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|error
+argument_list|(
+literal|"Missing program statement and program body"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * External declaration i.e. the second line of  *  *	procedure fum(var i: integer);  *	    external;  */
+end_comment
+
+begin_function
+name|struct
+name|nl
+modifier|*
+name|funcext
+parameter_list|(
+name|fp
+parameter_list|)
+name|struct
+name|nl
+modifier|*
+name|fp
+decl_stmt|;
+block|{
+name|baroff
+argument_list|()
+expr_stmt|;
+name|ppgoin
+argument_list|(
+name|DECL
+argument_list|)
+expr_stmt|;
+name|ppnl
+argument_list|()
+expr_stmt|;
+name|indent
+argument_list|()
+expr_stmt|;
+name|ppkw
+argument_list|(
+literal|"external"
+argument_list|)
+expr_stmt|;
+name|ppsep
+argument_list|(
+literal|";"
+argument_list|)
+expr_stmt|;
+name|ppgoout
+argument_list|(
+name|DECL
+argument_list|)
+expr_stmt|;
+name|baron
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|fp
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
