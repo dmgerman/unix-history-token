@@ -1680,6 +1680,10 @@ name|b_data
 expr_stmt|;
 if|if
 condition|(
+name|ftype
+operator|!=
+name|ISO_FTYPE_HIGH_SIERRA
+operator|&&
 name|isonum_711
 argument_list|(
 name|ap
