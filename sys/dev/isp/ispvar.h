@@ -1064,6 +1064,7 @@ name|isp_fwoptions
 range|:
 literal|16
 decl_stmt|,
+name|isp_gbspeed
 range|:
 literal|2
 decl_stmt|,
@@ -1650,6 +1651,28 @@ end_define
 
 begin_comment
 comment|/* ignore NVRAM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_TWOGB
+value|0x20
+end_define
+
+begin_comment
+comment|/* force 2GB connection (23XX only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_ONEGB
+value|0x10
+end_define
+
+begin_comment
+comment|/* force 1GB connection (23XX only) */
 end_comment
 
 begin_define

@@ -487,7 +487,7 @@ begin_define
 define|#
 directive|define
 name|MBOX_ENABLE_TARGET_MODE
-value|0x55
+value|0x0055
 end_define
 
 begin_define
@@ -515,179 +515,225 @@ begin_define
 define|#
 directive|define
 name|MBOX_GET_TARGET_STATUS
-value|0x56
+value|0x0056
 end_define
 
 begin_comment
-comment|/* These are for the ISP2100 FC cards */
+comment|/* These are for the ISP2X00 FC cards */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_LOOP_ID
-value|0x20
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_FIRMWARE_OPTIONS
-value|0x28
+value|0x0028
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_SET_FIRMWARE_OPTIONS
-value|0x38
+value|0x0038
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_RESOURCE_COUNT
-value|0x42
+value|0x0042
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_ENHANCED_GET_PDB
-value|0x47
+value|0x0047
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_EXEC_COMMAND_IOCB_A64
-value|0x54
+value|0x0054
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_INIT_FIRMWARE
-value|0x60
+value|0x0060
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_INIT_CONTROL_BLOCK
-value|0x61
+value|0x0061
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_INIT_LIP
-value|0x62
+value|0x0062
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_FC_AL_POSITION_MAP
-value|0x63
+value|0x0063
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_PORT_DB
-value|0x64
+value|0x0064
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_CLEAR_ACA
-value|0x65
+value|0x0065
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_TARGET_RESET
-value|0x66
+value|0x0066
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_CLEAR_TASK_SET
-value|0x67
+value|0x0067
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_ABORT_TASK_SET
-value|0x68
+value|0x0068
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_FW_STATE
-value|0x69
+value|0x0069
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_PORT_NAME
-value|0x6a
+value|0x006A
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_GET_LINK_STATUS
-value|0x6b
+value|0x006B
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_INIT_LIP_RESET
-value|0x6c
+value|0x006C
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_SEND_SNS
-value|0x6e
+value|0x006E
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_FABRIC_LOGIN
-value|0x6f
+value|0x006F
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_SEND_CHANGE_REQUEST
-value|0x70
+value|0x0070
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_FABRIC_LOGOUT
-value|0x71
+value|0x0071
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBOX_INIT_LIP_LOGIN
-value|0x72
+value|0x0072
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_SET_DATA_RATE
+value|0x005D
+end_define
+
+begin_comment
+comment|/* 23XX only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBGSD_GET_RATE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_SET_RATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_ONEGB
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_TWOGB
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBGSD_AUTO
+value|2
 end_define
 
 begin_define
@@ -3070,21 +3116,21 @@ begin_define
 define|#
 directive|define
 name|ICBXOPT_RATE_ONEGB
-value|(0<< 14)
+value|(MBGSD_ONEGB<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBXOPT_RATE_TWOGB
-value|(1<< 14)
+value|(MBGSD_TWOGB<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBXOPT_RATE_AUTO
-value|(2<< 14)
+value|(MBGSD_AUTO<< 14)
 end_define
 
 begin_define
