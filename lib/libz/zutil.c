@@ -3,9 +3,19 @@ begin_comment
 comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-1998 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
-begin_comment
-comment|/* @(#) $FreeBSD$ */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

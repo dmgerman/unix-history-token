@@ -7,9 +7,19 @@ begin_comment
 comment|/*  * minigzip is a minimal implementation of the gzip utility. This is  * only an example of using zlib and isn't meant to replace the  * full-featured gzip. No attempt is made to deal with file systems  * limiting names to 14 or 8+3 characters, etc... Error checking is  * very limited. So use minigzip only for testing; use gzip for the  * real thing. On MSDOS, use only on file names without extension  * or in pipe mode.  */
 end_comment
 
-begin_comment
-comment|/* @(#) $FreeBSD$ */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
