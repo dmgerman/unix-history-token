@@ -120,13 +120,6 @@ name|ETHER_MAX_FRAME_LEN
 value|(ETHER_MAX_LEN + ETHER_CRC_LEN)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ETHER_ALIGN
-value|2
-end_define
-
 begin_comment
 comment|/* This is driver's structure to define EPIC descriptors */
 end_comment
