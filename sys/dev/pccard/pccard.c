@@ -6389,7 +6389,7 @@ name|doisr
 init|=
 literal|1
 decl_stmt|;
-comment|/* 	 * MFC cards know if they interrupted, so we have to ack the 	 * interrupt and call the ISR.  Non-MFC cards don't have these 	 * bits, so they always get called.  Many non-MFC cards have 	 * this bit set always upon read, but some do not. 	 * 	 * We always ack the interrupt, even if there's no ISR 	 * for the card.  This is done on the theory that acking 	 * the interrupt will pacify the card enough to keep an 	 * interrupt storm from happening.  Of course this won't 	 * help in the non-MFC case. 	 */
+comment|/* 	 * MFC cards know if they interrupted, so we have to ack the 	 * interrupt and call the ISR.  Non-MFC cards don't have these 	 * bits, so they always get called.  Many non-MFC cards have 	 * this bit set always upon read, but some do not. 	 * 	 * We always ack the interrupt, even if there's no ISR 	 * for the card.  This is done on the theory that acking 	 * the interrupt will pacify the card enough to keep an 	 * interrupt storm from happening.  Of course this won't 	 * help in the non-MFC case. 	 * 	 * This has no impact for MPSAFEness of the client drivers. 	 * We register this with whatever flags the intr_handler 	 * was registered with.  All these functions are MPSAFE. 	 */
 if|if
 condition|(
 name|pccard_mfc
