@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.28 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,10 +35,6 @@ end_endif
 
 begin_comment
 comment|/* LIBC_SCCS and not lint */
-end_comment
-
-begin_comment
-comment|/*  * SYSLOG -- print message on log file  *  * This routine looks a lot like printf, except that it outputs to the  * log file instead of the standard output.  Also:  *	adds a timestamp,  *	prints the module name in front of the message,  *	has some other formatting types (or will sometime),  *	adds a newline on the end of the message.  *  * The output of this routine is intended to be read by syslogd(8).  *  * Author: Eric Allman  * Modified to use UNIX domain IPC by Ralph Campbell  */
 end_comment
 
 begin_include
@@ -62,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -80,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -112,13 +102,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|_PATH_LOGNAME
-value|"/dev/log"
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -185,6 +168,10 @@ begin_comment
 comment|/* default facility code */
 end_comment
 
+begin_comment
+comment|/*  * syslog, vsyslog --  *	print message on log file; output is intended for syslogd(8).  */
+end_comment
+
 begin_macro
 name|syslog
 argument_list|(
@@ -213,6 +200,8 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
 name|vsyslog
 argument_list|(
 name|pri
@@ -222,7 +211,8 @@ argument_list|,
 operator|&
 name|args
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -259,10 +249,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 specifier|register
 name|int
 name|cnt
@@ -305,16 +291,13 @@ name|saved_errno
 operator|=
 name|errno
 expr_stmt|;
-comment|/* see if we should just throw out this message */
+comment|/* discard if invalid bits or no priority set */
 if|if
 condition|(
 operator|!
-name|LOG_MASK
-argument_list|(
 name|LOG_PRI
 argument_list|(
 name|pri
-argument_list|)
 argument_list|)
 operator|||
 operator|(
@@ -328,27 +311,11 @@ name|LOG_FACMASK
 operator|)
 operator|)
 condition|)
-return|return;
-if|if
-condition|(
-name|LogFile
-operator|<
+return|return
+operator|(
 literal|0
-operator|||
-operator|!
-name|connected
-condition|)
-name|openlog
-argument_list|(
-name|LogTag
-argument_list|,
-name|LogStat
-operator||
-name|LOG_NDELAY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* set default facility if none specified */
 if|if
 condition|(
@@ -662,9 +629,25 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* output the message to the local logger */
+comment|/* get connected, output the message to the local logger */
 if|if
 condition|(
+operator|(
+name|connected
+operator|||
+operator|!
+name|openlog
+argument_list|(
+name|LogTag
+argument_list|,
+name|LogStat
+operator||
+name|LOG_NDELAY
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|&&
 name|send
 argument_list|(
 name|LogFile
@@ -677,7 +660,15 @@ literal|0
 argument_list|)
 operator|>=
 literal|0
-operator|||
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* see if should attempt the console */
+if|if
+condition|(
 operator|!
 operator|(
 name|LogStat
@@ -685,8 +676,17 @@ operator|&
 name|LOG_CONS
 operator|)
 condition|)
-return|return;
-comment|/* 	 * output the message to the console; don't worry about 	 * blocking, if console blocks everything will. 	 */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* 	 * Output the message to the console; don't worry about blocking, 	 * if console blocks everything will.  Make sure the error reported 	 * is the one from the syslogd failure. 	 */
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -701,10 +701,10 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
-operator|<
+operator|>=
 literal|0
 condition|)
-return|return;
+block|{
 operator|(
 name|void
 operator|)
@@ -757,6 +757,18 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 end_block
 
 begin_decl_stmt
@@ -769,10 +781,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* AF_UNIX address of local logger */
-end_comment
-
-begin_comment
-comment|/*  * OPENLOG -- open system log  */
 end_comment
 
 begin_macro
@@ -803,6 +811,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|saved_errno
+decl_stmt|;
 if|if
 condition|(
 name|ident
@@ -850,13 +861,16 @@ name|sa_family
 operator|=
 name|AF_UNIX
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|SyslogAddr
 operator|.
 name|sa_data
 argument_list|,
-name|_PATH_LOGNAME
+name|_PATH_LOG
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -873,6 +887,9 @@ operator|&
 name|LOG_NDELAY
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|LogFile
 operator|=
 name|socket
@@ -883,7 +900,20 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+operator|(
+name|void
+operator|)
 name|fcntl
 argument_list|(
 name|LogFile
@@ -904,7 +934,9 @@ literal|1
 operator|&&
 operator|!
 name|connected
-operator|&&
+condition|)
+if|if
+condition|(
 name|connect
 argument_list|(
 name|LogFile
@@ -917,20 +949,51 @@ argument_list|(
 name|SyslogAddr
 argument_list|)
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|LogFile
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
+name|LogFile
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+else|else
 name|connected
 operator|=
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * CLOSELOG -- close the system log  */
-end_comment
 
 begin_macro
 name|closelog
@@ -939,9 +1002,11 @@ end_macro
 
 begin_block
 block|{
-operator|(
-name|void
-operator|)
+name|int
+name|rval
+decl_stmt|;
+name|rval
+operator|=
 name|close
 argument_list|(
 name|LogFile
@@ -956,6 +1021,11 @@ name|connected
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 block|}
 end_block
 
@@ -973,7 +1043,7 @@ comment|/* mask of priorities to be logged */
 end_comment
 
 begin_comment
-comment|/*  * SETLOGMASK -- set the log mask level  */
+comment|/* setlogmask -- set the log mask level */
 end_comment
 
 begin_macro
