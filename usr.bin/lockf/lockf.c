@@ -525,8 +525,10 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|0
