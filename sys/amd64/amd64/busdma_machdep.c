@@ -897,7 +897,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1347,7 +1347,7 @@ operator|=
 name|newtag
 expr_stmt|;
 block|}
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1500,7 +1500,7 @@ block|}
 block|}
 name|out
 label|:
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1589,7 +1589,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1681,7 +1681,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1853,7 +1853,7 @@ operator|->
 name|map_count
 operator|++
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1918,7 +1918,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1950,7 +1950,7 @@ operator|->
 name|map_count
 operator|--
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -2069,7 +2069,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -2177,7 +2177,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -2200,7 +2200,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -2299,7 +2299,7 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -3081,7 +3081,7 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -3143,7 +3143,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -3380,7 +3380,7 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -3564,7 +3564,7 @@ operator|++
 operator|*
 name|nsegs
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -3869,7 +3869,7 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -4000,7 +4000,7 @@ operator|->
 name|total_bounced
 operator|++
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,

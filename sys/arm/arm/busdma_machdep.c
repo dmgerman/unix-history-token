@@ -584,7 +584,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -894,7 +894,7 @@ name|dmat
 operator|=
 name|newtag
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1020,7 +1020,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1095,7 +1095,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1136,7 +1136,7 @@ operator|->
 name|map_count
 operator|++
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1188,7 +1188,7 @@ operator|->
 name|map_count
 operator|--
 expr_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -1295,11 +1295,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
 literal|"%s: tag %p tag flags 0x%x error %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|dmat
 argument_list|,
@@ -1508,7 +1510,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -2269,7 +2271,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -2525,7 +2527,7 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -2719,7 +2721,7 @@ operator|++
 operator|*
 name|nsegs
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -3047,7 +3049,7 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
@@ -3258,7 +3260,7 @@ operator|&
 name|DMAMAP_COHERENT
 condition|)
 return|return;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
