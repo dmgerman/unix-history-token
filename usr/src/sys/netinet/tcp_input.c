@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.73	82/07/24	*/
+comment|/*	tcp_input.c	1.74	82/09/26	*/
 end_comment
 
 begin_include
@@ -147,12 +147,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sockaddr_in
-name|tcp_in
-init|=
-block|{
-name|AF_INET
-block|}
+name|mbuf
+name|tcp_mb
 decl_stmt|;
 end_decl_stmt
 
@@ -764,7 +760,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Locate pcb for segment.  On match, update the local 	 * address stored in the block to reflect anchoring. 	 */
+comment|/* 	 * Locate pcb for segment. 	 */
 name|inp
 operator|=
 name|in_pcblookup
@@ -982,6 +978,48 @@ comment|/* 	 * If the state is LISTEN then ignore segment if it contains an RST.
 case|case
 name|TCPS_LISTEN
 case|:
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+name|m_get
+argument_list|(
+name|M_DONTWAIT
+argument_list|)
+decl_stmt|;
+specifier|register
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
+decl_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+goto|goto
+name|drop
+goto|;
+name|m
+operator|->
+name|m_off
+operator|=
+name|MMINOFF
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tiflags
@@ -1013,16 +1051,33 @@ condition|)
 goto|goto
 name|drop
 goto|;
-name|tcp_in
-operator|.
+name|sin
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|sockaddr_in
+operator|*
+argument_list|)
+expr_stmt|;
+name|sin
+operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|sin
+operator|->
 name|sin_addr
 operator|=
 name|ti
 operator|->
 name|ti_src
 expr_stmt|;
-name|tcp_in
-operator|.
+name|sin
+operator|->
 name|sin_port
 operator|=
 name|ti
@@ -1059,13 +1114,7 @@ name|in_pcbconnect
 argument_list|(
 name|inp
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|tcp_in
+name|m
 argument_list|)
 condition|)
 block|{
@@ -1075,10 +1124,20 @@ name|inp_laddr
 operator|=
 name|laddr
 expr_stmt|;
+name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
 block|}
+name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_template
@@ -1164,6 +1223,7 @@ expr_stmt|;
 goto|goto
 name|trimthenstep6
 goto|;
+block|}
 comment|/* 	 * If the state is SYN_SENT: 	 *	if seg contains an ACK, but not for our SYN, drop the input. 	 *	if seg contains a RST, then drop the connection. 	 *	if seg does not contain SYN, then drop it. 	 * Otherwise this is an acceptable SYN segment 	 *	initialize tp->rcv_nxt and tp->irs 	 *	if seg contains ack then advance tp->snd_una 	 *	if SYN has been acked change to ESTABLISHED else SYN_RCVD state 	 *	arrange for segment to be acked (eventually) 	 *	continue processing rest of data/controls, beginning with URG 	 */
 case|case
 name|TCPS_SYN_SENT
