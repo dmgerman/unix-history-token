@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.23 81/12/09 */
+comment|/* ip_input.c 1.24 81/12/09 */
 end_comment
 
 begin_include
@@ -287,11 +287,6 @@ name|hlen
 decl_stmt|,
 name|s
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"ipintr\n"
-argument_list|)
-expr_stmt|;
 name|COUNT
 argument_list|(
 name|IPINTR
@@ -324,21 +319,7 @@ name|m
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ipintr returns\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
-name|printf
-argument_list|(
-literal|"ipintr dequeued %x\n"
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -364,16 +345,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ipintr pullup drop\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 name|ip
 operator|=
 name|mtod
@@ -383,15 +357,6 @@ argument_list|,
 expr|struct
 name|ip
 operator|*
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ipintr ip->ip_hl %d\n"
-argument_list|,
-name|ip
-operator|->
-name|ip_hl
 argument_list|)
 expr_stmt|;
 if|if
@@ -474,11 +439,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|printf
-argument_list|(
-literal|"cksum passed\n"
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|vax
@@ -556,17 +516,6 @@ name|m
 operator|=
 name|m0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ip->ip_len %d, i %d\n"
-argument_list|,
-name|ip
-operator|->
-name|ip_len
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -607,11 +556,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on. 	 */
-name|printf
-argument_list|(
-literal|"ipintr at option code\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|hlen
@@ -903,15 +847,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Switch out to protocol's input routine. 	 */
-name|printf
-argument_list|(
-literal|"ipintr switching out to protocol %d\n"
-argument_list|,
-name|ip
-operator|->
-name|ip_p
-argument_list|)
-expr_stmt|;
 operator|(
 operator|*
 name|protosw
