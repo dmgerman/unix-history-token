@@ -333,6 +333,11 @@ name|at
 operator|->
 name|at_context
 expr_stmt|;
+name|TASK_DESTROY
+argument_list|(
+name|at
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|at
