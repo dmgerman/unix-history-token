@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vipw.c,v 1.5 1997/10/27 07:53:22 charnier Exp $"
+literal|"$Id: vipw.c,v 1.6 1999/06/26 07:16:42 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,7 +602,7 @@ literal|0
 condition|)
 name|pw_error
 argument_list|(
-name|_PATH_MASTERPASSWD
+name|masterpasswd
 argument_list|,
 literal|1
 argument_list|,
