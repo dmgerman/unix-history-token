@@ -94,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/esp/lsi64854reg.h>
+file|<sparc64/sbus/lsi64854reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/esp/lsi64854var.h>
+file|<sparc64/sbus/lsi64854var.h>
 end_include
 
 begin_include
