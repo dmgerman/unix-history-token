@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.3	82/02/12	*/
+comment|/*	if_acc.c	4.4	82/02/16	*/
 end_comment
 
 begin_include
@@ -1086,17 +1086,6 @@ argument_list|(
 name|ACCSTART
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"accstart: active=%d\n"
-argument_list|,
-name|sc
-operator|->
-name|acc_ic
-operator|->
-name|ic_oactive
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1117,13 +1106,6 @@ operator|->
 name|acc_if
 operator|->
 name|if_snd
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"accstart: dequeue m=%x\n"
 argument_list|,
 name|m
 argument_list|)
@@ -1157,15 +1139,6 @@ operator|->
 name|acc_ifuba
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"accstart: olen=%d\n"
-argument_list|,
-name|sc
-operator|->
-name|acc_olen
 argument_list|)
 expr_stmt|;
 name|restart
@@ -1367,17 +1340,6 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"accxint: ocsr=%b\n"
-argument_list|,
-name|addr
-operator|->
-name|ocsr
-argument_list|,
-name|ACC_OUTBITS
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|acc_if
@@ -1459,10 +1421,7 @@ operator|->
 name|if_snd
 operator|.
 name|ifq_head
-operator|==
-literal|0
 condition|)
-return|return;
 name|accstart
 argument_list|(
 name|unit
@@ -1572,21 +1531,6 @@ index|]
 operator|->
 name|ui_addr
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"accrint: icsr=%b, flush=%d\n"
-argument_list|,
-name|addr
-operator|->
-name|icsr
-argument_list|,
-name|ACC_INBITS
-argument_list|,
-name|sc
-operator|->
-name|acc_flush
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|addr
@@ -1660,13 +1604,6 @@ operator|<<
 literal|1
 operator|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"accrint: len=%d\n"
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|len
@@ -1709,13 +1646,6 @@ argument_list|,
 name|len
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"accrint: m=%x\n"
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 if|if

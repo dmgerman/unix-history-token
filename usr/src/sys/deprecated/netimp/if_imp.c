@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.4	82/02/12	*/
+comment|/*	if_imp.c	4.5	82/02/16	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * ARPAnet IMP interface driver.  *  * The IMP-host protocol is handled here, leaving  * hardware specifics to the lower level interface driver.  *  * TODO:  *	rethink coupling between this module and device driver  *	pass more error indications up to protocol modules  *	test raw imp interface  */
+comment|/*  * ARPAnet IMP interface driver.  *  * The IMP-host protocol is handled here, leaving  * hardware specifics to the lower level interface driver.  *  * TODO:  *	rethink coupling between this module and device driver  *	pass more error indications up to protocol modules  */
 end_comment
 
 begin_include
@@ -111,12 +111,6 @@ directive|include
 file|"../net/if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|IMPLEADERS
-end_define
-
 begin_include
 include|#
 directive|include
@@ -126,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/host.h"
+file|"../net/if_imphost.h"
 end_include
 
 begin_include
@@ -530,33 +524,6 @@ argument_list|(
 name|IMP_INPUT
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"impinput(%d, %x), len=%d\n"
-argument_list|,
-name|unit
-argument_list|,
-name|m
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-name|printleader
-argument_list|(
-literal|"impinput"
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|imp_leader
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Verify leader length.  Be careful with control 	 * message which don't get a length included. 	 * We should generate a "bad leader" message 	 * to the IMP about messages too short. 	 */
 if|if
 condition|(
@@ -693,6 +660,9 @@ case|:
 case|case
 name|IMPTYPE_BADDATA
 case|:
+ifdef|#
+directive|ifdef
+name|notdef
 name|addr
 operator|.
 name|s_net
@@ -701,6 +671,16 @@ name|ip
 operator|->
 name|il_network
 expr_stmt|;
+else|#
+directive|else
+name|addr
+operator|.
+name|s_net
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|.
 name|s_imp
@@ -1084,7 +1064,9 @@ name|hp
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+goto|goto
+name|rawlinkin
+goto|;
 comment|/* 	 * Host or IMP can't be reached.  Flush any packets 	 * awaiting transmission and release the host structure. 	 * 	 * TODO: NOTIFY THE PROTOCOL 	 */
 case|case
 name|IMPTYPE_HOSTDEAD
@@ -1125,7 +1107,9 @@ name|hp
 argument_list|)
 expr_stmt|;
 comment|/* won't work right */
-break|break;
+goto|goto
+name|rawlinkin
+goto|;
 comment|/* 	 * Error in data.  Clear RFNM status for this host and send 	 * noops to the IMP to clear the interface. 	 */
 case|case
 name|IMPTYPE_BADDATA
@@ -1152,7 +1136,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|rawlinkin
+goto|;
 comment|/* 	 * Interface reset. 	 */
 case|case
 name|IMPTYPE_RESET
@@ -1231,6 +1217,8 @@ break|break;
 endif|#
 directive|endif
 default|default:
+name|rawlinkin
+label|:
 name|impproto
 operator|.
 name|sp_protocol
@@ -1476,17 +1464,6 @@ argument_list|(
 name|IMPOUTPUT
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"impoutput(%x, %x, %x)\n"
-argument_list|,
-name|ifp
-argument_list|,
-name|m0
-argument_list|,
-name|pf
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -1579,19 +1556,6 @@ argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"impoutput: net=%d,host=%d,imp=%d,len=%d\n"
-argument_list|,
-name|dnet
-argument_list|,
-name|dhost
-argument_list|,
-name|dimp
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1723,6 +1687,12 @@ name|IMP_NFF
 expr_stmt|;
 name|imp
 operator|->
+name|il_mtype
+operator|=
+name|IMPTYPE_DATA
+expr_stmt|;
+name|imp
+operator|->
 name|il_network
 operator|=
 name|dnet
@@ -1763,6 +1733,20 @@ operator|->
 name|il_link
 operator|=
 name|dlink
+expr_stmt|;
+name|imp
+operator|->
+name|il_flags
+operator|=
+name|imp
+operator|->
+name|il_htype
+operator|=
+name|imp
+operator|->
+name|il_subtype
+operator|=
+literal|0
 expr_stmt|;
 name|leaderexists
 label|:
@@ -1848,15 +1832,6 @@ argument_list|(
 name|IMPSND
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"impsnd(%x, %x)\n"
-argument_list|,
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 name|ip
 operator|=
 name|mtod
@@ -1882,6 +1857,9 @@ name|struct
 name|in_addr
 name|addr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|addr
 operator|.
 name|s_net
@@ -1890,6 +1868,16 @@ name|ip
 operator|->
 name|il_network
 expr_stmt|;
+else|#
+directive|else
+name|addr
+operator|.
+name|s_net
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|.
 name|s_host
@@ -1905,6 +1893,11 @@ operator|=
 name|ip
 operator|->
 name|il_imp
+expr_stmt|;
+name|x
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1954,6 +1947,11 @@ name|hp
 operator|->
 name|h_rfnm
 operator|++
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 goto|goto
 name|enque
@@ -2043,6 +2041,11 @@ operator|=
 name|m
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 goto|goto
 name|start
 goto|;
@@ -2054,6 +2057,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2062,20 +2070,6 @@ return|;
 block|}
 name|enque
 label|:
-name|printleader
-argument_list|(
-literal|"impsnd"
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|imp_leader
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|x
 operator|=
 name|splimp
@@ -2309,13 +2303,6 @@ expr_stmt|;
 comment|/* XXX */
 endif|#
 directive|endif
-name|printleader
-argument_list|(
-literal|"impnoops"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 name|x
 operator|=
 name|splimp
@@ -2367,6 +2354,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IMPLEADERS
+end_ifdef
 
 begin_macro
 name|printleader
@@ -2618,6 +2611,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
