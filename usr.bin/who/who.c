@@ -546,6 +546,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -568,6 +569,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|heading
 parameter_list|(
@@ -637,6 +639,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|row
 parameter_list|(
@@ -943,6 +946,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_utmp
 parameter_list|(
@@ -993,6 +997,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|quick
 parameter_list|(
@@ -1122,6 +1127,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|whoami
 parameter_list|(
@@ -1319,6 +1325,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ttywidth
 parameter_list|(
