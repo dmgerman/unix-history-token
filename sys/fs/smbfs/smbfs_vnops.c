@@ -1501,14 +1501,16 @@ operator|->
 name|n_opencount
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|vp
 operator|->
 name|v_type
 operator|!=
 name|VDIR
 condition|)
-block|{
 name|SMBERROR
 argument_list|(
 literal|"Negative opencount\n"
