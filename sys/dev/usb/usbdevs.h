@@ -3836,6 +3836,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRODUCT_EPSON_1240
+value|0x010b
+end_define
+
+begin_comment
+comment|/* Perfection 1240U / 1240Photo scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PRODUCT_EPSON_1600
 value|0x0107
 end_define

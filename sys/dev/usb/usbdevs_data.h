@@ -1125,6 +1125,18 @@ block|,
 block|{
 name|USB_VENDOR_EPSON
 block|,
+name|USB_PRODUCT_EPSON_1240
+block|,
+literal|0
+block|,
+literal|"Seiko Epson Corp."
+block|,
+literal|"Perfection 1240U / 1240Photo scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_EPSON
+block|,
 name|USB_PRODUCT_EPSON_1600
 block|,
 literal|0
