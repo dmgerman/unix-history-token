@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	1.6	86/11/25	*/
+comment|/*	conf.c	1.7	87/02/19	*/
 end_comment
 
 begin_include
@@ -81,6 +81,9 @@ decl_stmt|,
 name|vdwrite
 argument_list|()
 decl_stmt|,
+name|vdioctl
+argument_list|()
+decl_stmt|,
 name|vddump
 argument_list|()
 decl_stmt|,
@@ -119,6 +122,13 @@ begin_define
 define|#
 directive|define
 name|vdwrite
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|vdioctl
 value|nodev
 end_define
 
@@ -1333,7 +1343,7 @@ block|,
 name|vdwrite
 block|,
 comment|/*5*/
-name|nodev
+name|vdioctl
 block|,
 name|nodev
 block|,
