@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.14 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -681,16 +681,29 @@ name|delimptr
 operator|!=
 name|NULL
 condition|)
+block|{
 name|savedelim
 operator|=
 operator|*
 name|delimptr
 expr_stmt|;
+if|if
+condition|(
+name|savedelim
+operator|!=
+literal|'\0'
+condition|)
+operator|*
+name|delimptr
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
 comment|/* for testing.... */
-block|if (strcmp(addr, "INvalidADDR") == 0) 	{ 		usrerr("553 INvalid ADDRess"); 		if (delimptr != NULL) 			*delimptr = savedelim; 		return TRUE; 	}
+block|if (strcmp(addr, "INvalidADDR") == 0) 	{ 		usrerr("553 INvalid ADDRess"); 		goto addrfailure; 	}
 endif|#
 directive|endif
 for|for
@@ -720,6 +733,18 @@ break|break;
 block|}
 if|if
 condition|(
+operator|*
+name|addr
+operator|==
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|savedelim
+operator|!=
+literal|'\0'
+operator|&&
 name|delimptr
 operator|!=
 name|NULL
@@ -729,16 +754,10 @@ name|delimptr
 operator|=
 name|savedelim
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|addr
-operator|==
-literal|'\0'
-condition|)
 return|return
 name|FALSE
 return|;
+block|}
 name|setstat
 argument_list|(
 name|EX_USAGE
@@ -748,6 +767,23 @@ name|usrerr
 argument_list|(
 literal|"553 Address contained invalid control characters"
 argument_list|)
+expr_stmt|;
+name|addrfailure
+label|:
+if|if
+condition|(
+name|savedelim
+operator|!=
+literal|'\0'
+operator|&&
+name|delimptr
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|delimptr
+operator|=
+name|savedelim
 expr_stmt|;
 return|return
 name|TRUE
