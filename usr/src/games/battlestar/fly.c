@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fly.c	1.3 %G%"
+literal|"@(#)fly.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,14 +129,13 @@ end_macro
 
 begin_block
 block|{
-switch|switch
+if|if
 condition|(
 name|oldsig
+operator|==
+name|SIG_DFL
 condition|)
 block|{
-case|case
-name|SIG_DFL
-case|:
 name|endfly
 argument_list|()
 expr_stmt|;
@@ -145,11 +144,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-case|case
+block|}
+if|if
+condition|(
+name|oldsig
+operator|!=
 name|SIG_IGN
-case|:
-break|break;
-default|default:
+condition|)
+block|{
 name|endfly
 argument_list|()
 expr_stmt|;
