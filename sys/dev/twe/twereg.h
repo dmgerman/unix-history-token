@@ -442,6 +442,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TWE_OP_ATA_PASSTHROUGH
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
 name|TWE_OP_GET_PARAM
 value|0x12
 end_define
@@ -493,13 +500,6 @@ define|#
 directive|define
 name|TWE_OP_CMD_PACKET
 value|0x1d
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWE_OP_ATA_PASSTHROUGH
-value|0x1e
 end_define
 
 begin_define

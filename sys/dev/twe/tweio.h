@@ -193,5 +193,34 @@ name|TWEIO_RESET
 value|_IO  ('T', 106)
 end_define
 
+begin_comment
+comment|/*  * Request a drive addition or deletion  */
+end_comment
+
+begin_struct
+struct|struct
+name|twe_drivecommand
+block|{
+name|int
+name|td_unit
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TWEIO_ADD_UNIT
+value|_IOW ('U', 107, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWEIO_DEL_UNIT
+value|_IOW ('U', 108, int)
+end_define
+
 end_unit
 
