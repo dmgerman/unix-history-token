@@ -167,13 +167,16 @@ block|{
 name|int
 name|d_type
 decl_stmt|;
-comment|/* CONTROLLER, DEVICE, bus adaptor */
-name|struct
-name|device
+comment|/* DEVICE, bus adaptor */
+name|char
 modifier|*
 name|d_conn
 decl_stmt|;
 comment|/* what it is connected to */
+name|int
+name|d_connunit
+decl_stmt|;
+comment|/* unit of connection */
 name|char
 modifier|*
 name|d_name
@@ -196,9 +199,9 @@ name|d_lun
 decl_stmt|;
 comment|/* unit number */
 name|int
-name|d_slave
+name|d_bus
 decl_stmt|;
-comment|/* slave number */
+comment|/* controller bus number */
 name|int
 name|d_count
 decl_stmt|;
@@ -259,13 +262,6 @@ comment|/* Next one in list */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|TO_NEXUS
-value|(struct device *)-1
-end_define
 
 begin_struct
 struct|struct
