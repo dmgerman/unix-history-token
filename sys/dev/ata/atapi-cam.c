@@ -705,23 +705,19 @@ name|path
 operator|=
 name|path
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Registered SIM for ata%d\n"
 argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"Registered SIM for ata%d\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|setup_async_cb
 argument_list|(
 name|scp
@@ -1343,25 +1339,21 @@ case|case
 name|XPT_RESET_DEV
 case|:
 comment|/* should reset the device */
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"dev reset\n"
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"dev reset"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ccb
 operator|->
 name|ccb_h
@@ -1380,25 +1372,21 @@ case|case
 name|XPT_RESET_BUS
 case|:
 comment|/* should reset the ATA bus */
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"bus reset\n"
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"bus reset"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ccb
 operator|->
 name|ccb_h
@@ -1417,6 +1405,21 @@ case|case
 name|XPT_SET_TRAN_SETTINGS
 case|:
 comment|/* ignore these, we're not doing SCSI here */
+name|CAM_DEBUG
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"SET_TRAN_SETTINGS not supported\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -1446,6 +1449,21 @@ operator|->
 name|cts
 decl_stmt|;
 comment|/* 	 * XXX The default CAM transport code is very scsi specific and 	 * doesn't understand IDE speeds very well.  Be silent about it 	 * here and let it default to what is set in XPT_PATH_INQ 	 */
+name|CAM_DEBUG
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"GET_TRAN_SETTINGS\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cts
 operator|->
 name|valid
@@ -1502,6 +1520,21 @@ decl_stmt|;
 name|int
 name|extended
 decl_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"CALC_GEOMETRY\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ccg
 operator|=
 operator|&
@@ -1642,36 +1675,19 @@ argument_list|,
 name|tid
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|char
-name|cdb_str
-index|[
-operator|(
-name|SCSI_MAX_CDBLEN
-operator|*
-literal|3
-operator|)
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|printf
+name|CAM_DEBUG
 argument_list|(
-literal|"XPT_SCSI_IO (b%d u%d t%d l%d)\n"
+name|ccb_h
+operator|->
+name|path
 argument_list|,
-name|bus
+name|CAM_DEBUG_SUBTRACE
 argument_list|,
-name|unit
-argument_list|,
-name|tid
-argument_list|,
-name|lid
+operator|(
+literal|"XPT_SCSI_IO\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* check that this request was not aborted already */
 if|if
 condition|(
@@ -1686,16 +1702,11 @@ operator|!=
 name|CAM_REQ_INPROG
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
 name|printf
 argument_list|(
-literal|"Already in progress\n"
+literal|"XPT_SCSI_IO received but already in progress?\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|xpt_done
 argument_list|(
 name|ccb
@@ -1710,18 +1721,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|printf
+name|CAM_DEBUG
 argument_list|(
-literal|"Invalid target %d\n"
+name|ccb_h
+operator|->
+name|path
 argument_list|,
-name|tid
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"SCSI IO received for invalid device\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ccb_h
 operator|->
 name|status
@@ -1742,18 +1754,21 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|printf
+name|CAM_DEBUG
 argument_list|(
-literal|"Invalid LUN %d\n"
+name|ccb_h
+operator|->
+name|path
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"SCSI IO received for invalid lun %d\n"
+operator|,
 name|lid
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ccb_h
 operator|->
 name|status
@@ -1855,9 +1870,33 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CAMDEBUG
+if|if
+condition|(
+name|CAM_DEBUGGED
+argument_list|(
+name|ccb_h
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_CDB
+argument_list|)
+condition|)
+block|{
+name|char
+name|cdb_str
+index|[
+operator|(
+name|SCSI_MAX_CDBLEN
+operator|*
+literal|3
+operator|)
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"hcb@%p: %s\n"
+literal|"atapi_action: hcb@%p: %s\n"
 argument_list|,
 name|hcb
 argument_list|,
@@ -1876,6 +1915,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|len
@@ -1971,20 +2011,17 @@ case|case
 name|MODE_SENSE_6
 case|:
 comment|/* 	     * not supported by ATAPI/MMC devices (per SCSI MMC spec) 	     * translate to _10 equivalent. 	     * (actually we should do this only if we have tried  	     * MODE_foo_6 and received ILLEGAL_REQUEST or 	     * INVALID COMMAND OPERATION CODE) 	     * alternative fix: behave like a honest CAM transport,  	     * do not muck with CDB contents, and change scsi_cd to  	     * always use MODE_SENSE_10 in cdgetmode(), or let scsi_cd 	     * know that this specific unit is an ATAPI/MMC one,  	     * and in /that case/ use MODE_SENSE_10 	     */
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|ccb_h
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Translating %s into _10 equivalent\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"Translating %s into _10 equivalent\n"
+operator|,
 operator|(
 name|hcb
 operator|->
@@ -1999,10 +2036,9 @@ condition|?
 literal|"MODE_SELECT_6"
 else|:
 literal|"MODE_SENSE_6"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|hcb
 operator|->
 name|cmd
@@ -2084,20 +2120,17 @@ comment|/* FALLTHROUGH */
 case|case
 name|WRITE_6
 case|:
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|ccb_h
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Translating %s into _10 equivalent\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"Translating %s into _10 equivalent\n"
+operator|,
 operator|(
 name|hcb
 operator|->
@@ -2112,10 +2145,9 @@ condition|?
 literal|"READ_6"
 else|:
 literal|"WRITE_6"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|hcb
 operator|->
 name|cmd
@@ -2347,13 +2379,21 @@ return|return;
 break|break;
 block|}
 default|default:
-name|printf
+name|CAM_DEBUG
 argument_list|(
-literal|"atapi-cam: unsupported function code 0x%02x\n"
+name|ccb_h
+operator|->
+name|path
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"unsupported function code 0x%02x\n"
+operator|,
 name|ccb_h
 operator|->
 name|func_code
+operator|)
 argument_list|)
 expr_stmt|;
 name|ccb_h
@@ -2391,7 +2431,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Out of memory: freezing queue."
+literal|"out of memory, freezing queue.\n"
 argument_list|)
 expr_stmt|;
 name|softc
@@ -2494,6 +2534,20 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CAMDEBUG
+if|if
+condition|(
+name|CAM_DEBUGGED
+argument_list|(
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+name|CAM_DEBUG_CDB
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"atapi_cb: hcb@%p status = %02x: (sk = %02x%s%s%s)\n"
@@ -2539,7 +2593,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %s: cmd %02x - sk=%02x asc=%02x ascq=%02x\n"
+literal|"    %s: cmd %02x - sk=%02x asc=%02x ascq=%02x\n"
 argument_list|,
 name|req
 operator|->
@@ -2573,6 +2627,7 @@ operator|.
 name|ascq
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -2975,18 +3030,6 @@ modifier|*
 name|ccb
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ccb
@@ -2997,25 +3040,47 @@ name|status
 operator|!=
 name|CAM_REQ_CMP
 condition|)
-name|printf
+block|{
+name|CAM_DEBUG
 argument_list|(
-literal|"Rescan failed, 0x%04x\n"
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
 argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"Rescan failed, 0x%04x\n"
+operator|,
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|status
+operator|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
-name|printf
+block|{
+name|CAM_DEBUG
 argument_list|(
-literal|"rescan succeeded\n"
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"Rescan succeeded\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|xpt_free_path
 argument_list|(
 name|ccb
@@ -3093,21 +3158,21 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
 name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"Rescanning ATAPI bus.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"rescanning ATAPI bus.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|xpt_setup_ccb
 argument_list|(
 operator|&
