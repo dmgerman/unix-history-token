@@ -1678,6 +1678,13 @@ name|ke
 parameter_list|)
 block|{
 comment|/* 	 * Adjust counters and watermark for pctcpu calc. 	 */
+comment|/* 	 * Shift the tick count out so that the divide doesn't round away 	 * our results. 	 */
+name|ke
+operator|->
+name|ke_ticks
+operator|<<=
+literal|10
+expr_stmt|;
 name|ke
 operator|->
 name|ke_ticks
@@ -1699,6 +1706,12 @@ operator|)
 operator|)
 operator|*
 name|SCHED_CPU_TICKS
+expr_stmt|;
+name|ke
+operator|->
+name|ke_ticks
+operator|>>=
+literal|10
 expr_stmt|;
 name|ke
 operator|->
@@ -2663,8 +2676,7 @@ comment|/* Adjust ticks for pctcpu */
 name|ke
 operator|->
 name|ke_ticks
-operator|+=
-literal|10000
+operator|++
 expr_stmt|;
 name|ke
 operator|->
@@ -3388,11 +3400,7 @@ name|ke
 operator|->
 name|ke_ticks
 operator|/
-operator|(
 name|SCHED_CPU_TIME
-operator|*
-literal|10000
-operator|)
 expr_stmt|;
 name|pctcpu
 operator|=
