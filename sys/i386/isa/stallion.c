@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * stallion.c  -- stallion multiport serial driver.  *  * Copyright (c) 1995-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * stallion.c  -- stallion multiport serial driver.  *  * Copyright (c) 1995-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: stallion.c,v 1.6 1997/02/22 09:37:13 peter Exp $  */
 end_comment
 
 begin_comment
@@ -409,7 +409,7 @@ name|char
 name|stl_drvversion
 index|[]
 init|=
-literal|"0.0.5"
+literal|"1.0.0"
 decl_stmt|;
 end_decl_stmt
 
@@ -2017,6 +2017,17 @@ name|panelnr
 parameter_list|,
 name|int
 name|portnr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|stlintr
+parameter_list|(
+name|int
+name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5986,6 +5997,8 @@ name|tail
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -6015,7 +6028,9 @@ operator|)
 name|NULL
 condition|)
 return|return;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -6222,8 +6237,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -8156,6 +8173,7 @@ comment|/*  *	Interrupt handler for EIO and ECH boards. This code ain't all that
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|stlintr
 parameter_list|(
@@ -9059,7 +9077,6 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-comment|/* Hmmm, do we need this??? */
 for|for
 control|(
 name|brdnr
@@ -9899,6 +9916,9 @@ name|clk
 decl_stmt|,
 name|div
 decl_stmt|;
+name|int
+name|x
+decl_stmt|;
 name|portp
 operator|=
 operator|(
@@ -10473,7 +10493,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -10849,8 +10871,10 @@ argument_list|,
 name|tiosp
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -10896,6 +10920,8 @@ name|int
 name|len
 decl_stmt|,
 name|hwflow
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -11032,7 +11058,9 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -11166,8 +11194,10 @@ operator|->
 name|brdnr
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -11202,6 +11232,9 @@ name|char
 name|msvr1
 decl_stmt|,
 name|msvr2
+decl_stmt|;
+name|int
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -11250,7 +11283,9 @@ name|msvr2
 operator|=
 name|MSVR2_RTS
 expr_stmt|;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -11316,8 +11351,10 @@ operator|->
 name|brdnr
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11348,6 +11385,8 @@ name|msvr2
 decl_stmt|;
 name|int
 name|sigs
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -11364,7 +11403,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -11416,6 +11457,11 @@ argument_list|(
 name|portp
 operator|->
 name|brdnr
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
 argument_list|)
 expr_stmt|;
 name|sigs
@@ -11494,9 +11540,6 @@ name|TIOCM_RTS
 else|:
 literal|0
 expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|sigs
@@ -11532,6 +11575,9 @@ block|{
 name|unsigned
 name|char
 name|ccr
+decl_stmt|;
+name|int
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -11598,7 +11644,9 @@ name|ccr
 operator||=
 name|CCR_RXENABLE
 expr_stmt|;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -11653,8 +11701,10 @@ operator|->
 name|brdnr
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11688,6 +11738,9 @@ name|char
 name|sreron
 decl_stmt|,
 name|sreroff
+decl_stmt|;
+name|int
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -11773,7 +11826,9 @@ name|sreron
 operator||=
 name|SRER_RXDATA
 expr_stmt|;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -11846,8 +11901,10 @@ name|t_state
 operator||=
 name|TS_BUSY
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11870,6 +11927,9 @@ modifier|*
 name|portp
 parameter_list|)
 block|{
+name|int
+name|x
+decl_stmt|;
 if|#
 directive|if
 name|DEBUG
@@ -11885,7 +11945,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -11930,8 +11992,10 @@ operator|->
 name|brdnr
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11953,6 +12017,9 @@ name|long
 name|len
 parameter_list|)
 block|{
+name|int
+name|x
+decl_stmt|;
 if|#
 directive|if
 name|DEBUG
@@ -11973,7 +12040,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|BRDENABLE
@@ -12087,15 +12156,17 @@ operator|=
 name|len
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 name|portp
 operator|->
 name|stats
 operator|.
 name|txbreaks
 operator|++
-expr_stmt|;
-name|enable_intr
-argument_list|()
 expr_stmt|;
 block|}
 end_function
