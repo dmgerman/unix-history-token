@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.15.2.11 1998/05/01 19:25:59 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.16 1998/05/21 21:48:27 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_include
@@ -1549,6 +1549,9 @@ name|struct
 name|slstat
 modifier|*
 name|slstat
+parameter_list|,
+name|int
+name|max_state
 parameter_list|)
 block|{
 specifier|register
@@ -1603,8 +1606,8 @@ condition|(
 name|ip
 operator|->
 name|ip_p
-operator|>=
-name|MAX_VJ_STATES
+operator|>
+name|max_state
 condition|)
 goto|goto
 name|bad
@@ -1782,8 +1785,8 @@ if|if
 condition|(
 operator|*
 name|cp
-operator|>=
-name|MAX_VJ_STATES
+operator|>
+name|max_state
 operator|||
 name|comp
 operator|->
@@ -1791,9 +1794,11 @@ name|last_recv
 operator|==
 literal|255
 condition|)
+block|{
 goto|goto
 name|bad
 goto|;
+block|}
 name|comp
 operator|->
 name|flags
@@ -1856,6 +1861,16 @@ name|ip_hl
 operator|<<
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|==
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+comment|/* We've been pointed at a not-yet-used slot ! */
 name|th
 operator|=
 operator|(
