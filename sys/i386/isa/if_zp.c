@@ -1,13 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|ZP_DEBUG
-value|1
-end_define
-
 begin_comment
-comment|/*  * This code is based on  *  (1) FreeBSD implementation on ISA/EISA Ethelink III by Herb Peyerl  *  (2) Linux implementation on PCMCIA Etherlink III by Devid Hinds  *  (3) FreeBSD implementation on PCMCIA IBM Ethernet Card I/II   *      by David Greenman  *  (4) RT-Mach implementation on PCMCIA/ISA/EISA Etherlink III  *      by Seiji Murata  *  *  Copyright (c) by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  Copyright (c) by Seiji Murata<seiji@mt.cs.keio.ac.jp>  */
+comment|/*  * This code is based on  *  (1) FreeBSD implementation on ISA/EISA Ethelink III by Herb Peyerl  *  (2) Linux implementation on PCMCIA Etherlink III by Devid Hinds  *  (3) FreeBSD implementation on PCMCIA IBM Ethernet Card I/II  *      by David Greenman  *  (4) RT-Mach implementation on PCMCIA/ISA/EISA Etherlink III  *      by Seiji Murata  *  *  Copyright (c) by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  Copyright (c) by Seiji Murata<seiji@mt.cs.keio.ac.jp>  */
 end_comment
 
 begin_comment
@@ -15,15 +8,15 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights r
 end_comment
 
 begin_comment
-comment|/*-  * TODO:  * [1] integrate into current if_ed.c  * [2] parse tuples to find out where to map the shared memory buffer,  *     and what to write into the configuration register  * [3] move pcic-specific code into a separate module.  *   * Device driver for IBM PCMCIA Credit Card Adapter for Ethernet,  * if_ze.c  *  * Based on the Device driver for National Semiconductor DS8390 ethernet  * adapters by David Greenman.  Modifications for PCMCIA by Keith Moore.  * Adapted for FreeBSD 1.1.5 by Jordan Hubbard.  *  * Currently supports only the IBM Credit Card Adapter for Ethernet, but  * could probably work with other PCMCIA cards also, if it were modified  * to get the locations of the PCMCIA configuration option register (COR)  * by parsing the configuration tuples, rather than by hard-coding in  * the value expected by IBM's card.  *  * Sources for data on the PCMCIA/IBM CCAE specific portions of the driver:  *  * [1] _Local Area Network Credit Card Adapters Technical Reference_,  *     IBM Corp., SC30-3585-00, part # 33G9243.  * [2] "pre-alpha" PCMCIA support code for Linux by Barry Jaspan.  * [3] Intel 82536SL PC Card Interface Controller Data Sheet, Intel  *     Order Number 290423-002  * [4] National Semiconductor DP83902A ST-NIC (tm) Serial Network  *     Interface Controller for Twisted Pair data sheet.  *  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*-  * TODO:  * [1] integrate into current if_ed.c  * [2] parse tuples to find out where to map the shared memory buffer,  *     and what to write into the configuration register  * [3] move pcic-specific code into a separate module.  *  * Device driver for IBM PCMCIA Credit Card Adapter for Ethernet,  * if_ze.c  *  * Based on the Device driver for National Semiconductor DS8390 ethernet  * adapters by David Greenman.  Modifications for PCMCIA by Keith Moore.  * Adapted for FreeBSD 1.1.5 by Jordan Hubbard.  *  * Currently supports only the IBM Credit Card Adapter for Ethernet, but  * could probably work with other PCMCIA cards also, if it were modified  * to get the locations of the PCMCIA configuration option register (COR)  * by parsing the configuration tuples, rather than by hard-coding in  * the value expected by IBM's card.  *  * Sources for data on the PCMCIA/IBM CCAE specific portions of the driver:  *  * [1] _Local Area Network Credit Card Adapters Technical Reference_,  *     IBM Corp., SC30-3585-00, part # 33G9243.  * [2] "pre-alpha" PCMCIA support code for Linux by Barry Jaspan.  * [3] Intel 82536SL PC Card Interface Controller Data Sheet, Intel  *     Order Number 290423-002  * [4] National Semiconductor DP83902A ST-NIC (tm) Serial Network  *     Interface Controller for Twisted Pair data sheet.  *  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
-comment|/*======================================================================      A PCMCIA ethernet driver for the 3com 3c589 card.          Written by David Hinds, dhinds@allegro.stanford.edu      The network driver code is based on Donald Becker's 3c589 code:          Written 1994 by Donald Becker.     Copyright 1993 United States Government as represented by the     Director, National Security Agency.  This software may be used and     distributed according to the terms of the GNU Public License,     incorporated herein by reference.     Donald Becker may be reached at becker@cesdis1.gsfc.nasa.gov      ======================================================================*/
+comment|/*======================================================================      A PCMCIA ethernet driver for the 3com 3c589 card.      Written by David Hinds, dhinds@allegro.stanford.edu      The network driver code is based on Donald Becker's 3c589 code:      Written 1994 by Donald Becker.     Copyright 1993 United States Government as represented by the     Director, National Security Agency.  This software may be used and     distributed according to the terms of the GNU Public License,     incorporated herein by reference.     Donald Becker may be reached at becker@cesdis1.gsfc.nasa.gov  ======================================================================*/
 end_comment
 
 begin_comment
-comment|/*  * I doubled delay loops in this file because it is not enough for some  * laptop machines' PCIC (especially, on my Chaplet ILFA 350 ^^;).   *                        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  */
+comment|/*  * I doubled delay loops in this file because it is not enough for some  * laptop machines' PCIC (especially, on my Chaplet ILFA 350 ^^;).  *                        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  */
 end_comment
 
 begin_comment
@@ -525,9 +518,6 @@ name|ETHER_ADDR_LEN
 value|6
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*****************************************************************************  *                       Driver for Ethernet Adapter                         *  *****************************************************************************/
 end_comment
@@ -562,12 +552,12 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
-comment|/* Ethernet common part		*/
+comment|/* Ethernet common part		 */
 define|#
 directive|define
 name|MAX_MBS
 value|8
-comment|/* # of mbufs we keep around	*/
+comment|/* # of mbufs we keep around	 */
 name|struct
 name|mbuf
 modifier|*
@@ -576,38 +566,38 @@ index|[
 name|MAX_MBS
 index|]
 decl_stmt|;
-comment|/* spare mbuf storage.		*/
+comment|/* spare mbuf storage.		 */
 name|int
 name|next_mb
 decl_stmt|;
-comment|/* Which mbuf to use next. 	*/
+comment|/* Which mbuf to use next. 	 */
 name|int
 name|last_mb
 decl_stmt|;
-comment|/* Last mbuf.			*/
+comment|/* Last mbuf.			 */
 name|caddr_t
 name|bpf
 decl_stmt|;
-comment|/* BPF  "magic cookie"		*/
+comment|/* BPF  "magic cookie"		 */
 endif|#
 directive|endif
 comment|/* MACH_KERNEL */
 name|short
 name|ep_io_addr
 decl_stmt|;
-comment|/* i/o bus address		*/
+comment|/* i/o bus address		 */
 name|char
 name|ep_connectors
 decl_stmt|;
-comment|/* Connectors on this card.	*/
+comment|/* Connectors on this card.	 */
 name|int
 name|tx_start_thresh
 decl_stmt|;
-comment|/* Current TX_start_thresh.	*/
+comment|/* Current TX_start_thresh.	 */
 name|char
 name|bus32bit
 decl_stmt|;
-comment|/* 32bit access possible	*/
+comment|/* 32bit access possible	 */
 ifdef|#
 directive|ifdef
 name|MACH_KERNEL
@@ -1169,7 +1159,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|printf ("[%02x] %02x ", i, link); 	for (j = 4; j< 2 * link + 4&& j< 32; j += 2) 	    printf ("%02x ", scratch[j + i]); 	printf ("\n");
+block|printf("[%02x] %02x ", i, link); 	for (j = 4; j< 2 * link + 4&& j< 32; j += 2) 	    printf("%02x ", scratch[j + i]); 	printf("\n");
 endif|#
 directive|endif
 if|if
@@ -1182,7 +1172,7 @@ operator|==
 literal|0x15
 condition|)
 block|{
-comment|/* 	     * level 1 version/product info 	     * copy to card_info, translating '\0' to '~' 	     */
+comment|/* 	     * level 1 version/product info copy to card_info, translating 	     * '\0' to '~' 	     */
 name|k
 operator|=
 literal|0
@@ -1303,7 +1293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe each slot looking for an IBM Credit Card Adapter for Ethernet  * For each card that we find, map its card information structure  * into system memory at 'scratch' and see whether it's one of ours.  * Return the slot number if we find a card, or -1 otherwise.   *  * Side effects:  * + On success, leaves CIS mapped into memory at 'scratch';  *   caller must free it.  * + On success, leaves ethernet address in enet_addr.  * + Leaves product/vendor id of last card probed in 'card_info'  */
+comment|/*  * Probe each slot looking for an IBM Credit Card Adapter for Ethernet  * For each card that we find, map its card information structure  * into system memory at 'scratch' and see whether it's one of ours.  * Return the slot number if we find a card, or -1 otherwise.  *  * Side effects:  * + On success, leaves CIS mapped into memory at 'scratch';  *   caller must free it.  * + On success, leaves ethernet address in enet_addr.  * + Leaves product/vendor id of last card probed in 'card_info'  */
 end_comment
 
 begin_decl_stmt
@@ -1345,7 +1335,7 @@ operator|++
 name|slot
 control|)
 block|{
-comment|/* 	 * see if there's a PCMCIA controller here 	 * Intel PCMCIA controllers use 0x82 and 0x83 	 * IBM clone chips use 0x88 and 0x89, apparently 	 */
+comment|/* 	 * see if there's a PCMCIA controller here Intel PCMCIA controllers 	 * use 0x82 and 0x83 IBM clone chips use 0x88 and 0x89, apparently 	 */
 comment|/* 	 * IBM ThinkPad230Cs use 0x84. 	 */
 name|unsigned
 name|char
@@ -1385,7 +1375,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf ("ibmccae: pcic slot %d: wierd id/rev code 0x%02x\n", 		    slot, idbyte);
+block|printf("ibmccae: pcic slot %d: wierd id/rev code 0x%02x\n", 		   slot, idbyte);
 endif|#
 directive|endif
 continue|continue;
@@ -1445,7 +1435,7 @@ argument_list|(
 name|slot
 argument_list|)
 expr_stmt|;
-comment|/* 	 * map the card's attribute memory and examine its  	 * card information structure tuples for something 	 * we recognize. 	 */
+comment|/* 	 * map the card's attribute memory and examine its card information 	 * structure tuples for something we recognize. 	 */
 ifdef|#
 directive|ifdef
 name|MACH_KERNEL
@@ -1809,8 +1799,8 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* 	 * okay, we found a card, so set it up 	 */
-comment|/* 	 * Inhibit 16 bit memory delay. 	 * POINTETH.SYS apparently does this, for what reason I don't know. 	 */
+comment|/*      * okay, we found a card, so set it up      */
+comment|/*      * Inhibit 16 bit memory delay. POINTETH.SYS apparently does this, for      * what reason I don't know.      */
 name|pcic_putb
 argument_list|(
 name|slot
@@ -1827,11 +1817,11 @@ operator||
 name|PCIC_16_DL_INH
 argument_list|)
 expr_stmt|;
-comment|/* 	 * things to map 	 * (1) card's EEPROM is already mapped by the find_adapter routine 	 *     but we still need to get the card's ethernet address. 	 *     after that we unmap that part of attribute memory. 	 * (2) card configuration registers need to be mapped in so we 	 *     can set the configuration and socket # registers. 	 * (3) shared memory packet buffer 	 * (4) i/o ports 	 * (5) IRQ 	 */
+comment|/*      * things to map (1) card's EEPROM is already mapped by the find_adapter      * routine but we still need to get the card's ethernet address. after      * that we unmap that part of attribute memory. (2) card configuration      * registers need to be mapped in so we can set the configuration and      * socket # registers. (3) shared memory packet buffer (4) i/o ports (5)      * IRQ      */
 ifdef|#
 directive|ifdef
 name|notdef
-comment|/* 	 * Sigh.  Location of the ethernet address isn't documented in [1]. 	 * It was derived by doing a hex dump of all of attribute memory 	 * and looking for the IBM vendor prefix. 	 */
+comment|/*      * Sigh.  Location of the ethernet address isn't documented in [1]. It      * was derived by doing a hex dump of all of attribute memory and looking      * for the IBM vendor prefix.      */
 name|enet_addr
 index|[
 literal|0
@@ -1921,7 +1911,7 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|pcic_unmap_memory (slot, 0);
+block|pcic_unmap_memory(slot, 0);
 endif|#
 directive|endif
 name|re_init_flag
@@ -1930,7 +1920,7 @@ literal|0
 expr_stmt|;
 name|re_init
 label|:
-comment|/* 	 * (2) map card configuration registers.  these are offset 	 * in card memory space by 0x20000.  normally we could get 	 * this offset from the card information structure, but I'm 	 * too lazy and am not quite sure if I understand the CIS anyway. 	 * 	 * XXX IF YOU'RE TRYING TO PORT THIS DRIVER FOR A DIFFERENT 	 * PCMCIA CARD, the most likely thing to change is the constant 	 * 0x20000 in the next statement.  Oh yes, also change the 	 * card id string that we probe for. 	 */
+comment|/*      * (2) map card configuration registers.  these are offset in card memory      * space by 0x20000.  normally we could get this offset from the card      * information structure, but I'm too lazy and am not quite sure if I      * understand the CIS anyway.      *       * XXX IF YOU'RE TRYING TO PORT THIS DRIVER FOR A DIFFERENT PCMCIA CARD, the      * most likely thing to change is the constant 0x20000 in the next      * statement.  Oh yes, also change the card id string that we probe for.      */
 ifdef|#
 directive|ifdef
 name|MACH_KERNEL
@@ -2012,7 +2002,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Set the configuration index.  According to [1], the adapter won't 	 * respond to any i/o signals until we do this; it uses the 	 * Memory Only interface (whatever that is; it's not documented). 	 * Also turn on "level" (not pulse) interrupts. 	 * 	 * XXX probably should init the socket and copy register also, 	 * so that we can deal with multiple instances of the same card. 	 */
+comment|/*      * Set the configuration index.  According to [1], the adapter won't      * respond to any i/o signals until we do this; it uses the Memory Only      * interface (whatever that is; it's not documented). Also turn on      * "level" (not pulse) interrupts.      *       * XXX probably should init the socket and copy register also, so that we      * can deal with multiple instances of the same card.      */
 ifdef|#
 directive|ifdef
 name|MACH_KERNEL
@@ -2056,11 +2046,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MACH_KERNEL*/
+comment|/* MACH_KERNEL */
 ifdef|#
 directive|ifdef
 name|notdef
-comment|/* 	 * (3) now map in the shared memory buffer.  This has to be mapped 	 * as words, not bytes, and on a 16k boundary.  The offset value 	 * was derived by installing IBM's POINTETH.SYS under DOS and 	 * looking at the PCIC registers; it's not documented in IBM's 	 * tech ref manual ([1]). 	 */
+comment|/*      * (3) now map in the shared memory buffer.  This has to be mapped as      * words, not bytes, and on a 16k boundary.  The offset value was derived      * by installing IBM's POINTETH.SYS under DOS and looking at the PCIC      * registers; it's not documented in IBM's tech ref manual ([1]).      */
 name|pcic_map_memory
 argument_list|(
 name|slot
@@ -2085,7 +2075,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * (4) map i/o ports. 	 * 	 * XXX is it possible that the config file leaves this unspecified, 	 * in which case we have to pick one? 	 * 	 * At least one PCMCIA device driver I'v seen maps a block 	 * of 32 consecutive i/o ports as two windows of 16 ports each. 	 * Maybe some other pcic chips are restricted to 16-port windows; 	 * the 82365SL doesn't seem to have that problem.  But since 	 * we have an extra window anyway... 	 */
+comment|/*      * (4) map i/o ports.      *       * XXX is it possible that the config file leaves this unspecified, in which      * case we have to pick one?      *       * At least one PCMCIA device driver I'v seen maps a block of 32 consecutive      * i/o ports as two windows of 16 ports each. Maybe some other pcic chips      * are restricted to 16-port windows; the 82365SL doesn't seem to have      * that problem.  But since we have an extra window anyway...      */
 ifdef|#
 directive|ifdef
 name|MACH_KERNEL
@@ -2162,7 +2152,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* 	 * (5) configure the card for the desired interrupt 	 * 	 * XXX is it possible that the config file leaves this unspecified? 	 */
+comment|/*      * (5) configure the card for the desired interrupt      *       * XXX is it possible that the config file leaves this unspecified?      */
 name|pcic_map_irq
 argument_list|(
 name|slot
@@ -2199,7 +2189,7 @@ directive|if
 literal|0
 comment|/* tell the PCIC to use level-mode interrupts */
 comment|/* XXX this register may not be present on all controllers */
-block|pcic_putb (slot, PCIC_GLO_CTRL, 		   pcic_getb (slot, PCIC_GLO_CTRL) | PCIC_LVL_MODE);
+block|pcic_putb(slot, PCIC_GLO_CTRL, 	      pcic_getb(slot, PCIC_GLO_CTRL) | PCIC_LVL_MODE);
 endif|#
 directive|endif
 ifdef|#
@@ -2216,7 +2206,7 @@ ifdef|#
 directive|ifdef
 name|notdef
 comment|/* I couldn't find the following part in linux. seiji */
-comment|/* 	 * Setup i/o addresses 	 */
+comment|/*      * Setup i/o addresses      */
 name|sc
 operator|->
 name|nic_addr
@@ -2245,7 +2235,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|sc->vendor = ZE_VENDOR_IBM; 	sc->type = xxx;
+block|sc->vendor = ZE_VENDOR_IBM;     sc->type = xxx;
 endif|#
 directive|endif
 comment|/* reset card to force it into a known state */
@@ -2281,7 +2271,7 @@ argument_list|(
 literal|20000
 argument_list|)
 expr_stmt|;
-comment|/* 	 * query MAM bit in misc register for 10base2 	 */
+comment|/*      * query MAM bit in misc register for 10base2      */
 name|tmp
 operator|=
 name|inb
@@ -3238,7 +3228,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EP_DEBUG */
+comment|/* ZP_DEBUG */
 endif|#
 directive|endif
 comment|/* ORIGINAL */
@@ -3483,7 +3473,7 @@ value|0x8000
 ifdef|#
 directive|ifdef
 name|ORIGINAL
-comment|/*       * This is a temporary.       * Mach can not select link with ifconfig,      * so I select AUI statically.      */
+comment|/*      * This is a temporary. Mach can not select link with ifconfig, so I      * select AUI statically.      */
 name|ifp
 operator|->
 name|if_flags
@@ -3492,8 +3482,8 @@ name|IFF_ALTPHYS
 expr_stmt|;
 else|#
 directive|else
-else|ORIGINAL
-comment|/*       * Select connector according to board setting.      */
+comment|/* ORIGINAL */
+comment|/*      * Select connector according to board setting.      */
 if|if
 condition|(
 name|sc
@@ -3512,7 +3502,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|ORIGINAL
+comment|/* ORIGINAL */
 name|if_init_queues
 argument_list|(
 name|ifp
@@ -3581,7 +3571,7 @@ name|if_watchdog
 operator|=
 name|zpwatchdog
 expr_stmt|;
-comment|/*  	 * Select connector according to board setting. 	 */
+comment|/*      * Select connector according to board setting.      */
 if|#
 directive|if
 name|defined
@@ -3596,7 +3586,7 @@ argument_list|)
 if|#
 directive|if
 literal|0
-block|if (sc->if_port != 3) { 		ifp->if_flags |= IFF_LINK0; 	}
+block|if (sc->if_port != 3) { 	ifp->if_flags |= IFF_LINK0;     }
 else|#
 directive|else
 name|ifp
@@ -3621,7 +3611,7 @@ comment|/* MACH_KERNEL */
 ifndef|#
 directive|ifndef
 name|MACH_KERNEL
-comment|/* 	 * Fill the hardware address into ifa_addr if we find an 	 * AF_LINK entry. We need to do this so bpf's can get the hardware 	 * addr of this card. netstat likes this too! 	 */
+comment|/*      * Fill the hardware address into ifa_addr if we find an AF_LINK entry.      * We need to do this so bpf's can get the hardware addr of this card.      * netstat likes this too!      */
 name|ifa
 operator|=
 name|ifp
@@ -4259,7 +4249,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|MACH_KERNEL
+comment|/* MACH_KERNEL */
 else|#
 directive|else
 comment|/* ORIGINAL */
@@ -4281,7 +4271,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ORIGINAL */
-comment|/* 	 * you can `ifconfig (link0|-link0) ep0' to get the following 	 * behaviour: 	 *	-link0	disable AUI/UTP. enable BNC. 	 *	link0	disable BNC. enable AUI. if the card has a UTP 	 *		connector, that is enabled too. not sure, but it 	 * 		seems you have to be careful to not plug things 	 *		into both AUI& UTP. 	 */
+comment|/*      * you can `ifconfig (link0|-link0) ep0' to get the following behaviour:      * -link0	disable AUI/UTP. enable BNC. link0	disable BNC. enable      * AUI. if the card has a UTP connector, that is enabled too. not sure,      * but it seems you have to be careful to not plug things into both AUI&      * UTP.      */
 if|#
 directive|if
 name|defined
@@ -4495,7 +4485,7 @@ comment|/* probably a good starting point. */
 ifndef|#
 directive|ifndef
 name|MACH_KERNEL
-comment|/* 	 * Store up a bunch of mbuf's for use later. (MAX_MBS). First we 	 * free up any that we had in case we're being called from intr or 	 * somewhere else. 	 */
+comment|/*      * Store up a bunch of mbuf's for use later. (MAX_MBS). First we free up      * any that we had in case we're being called from intr or somewhere      * else.      */
 name|sc
 operator|->
 name|last_mb
@@ -4755,7 +4745,7 @@ if|#
 directive|if
 literal|0
 comment|/* seiji */
-block|if (sc->tbusy) { 	    return; 	}
+block|if (sc->tbusy) { 	return;     }
 endif|#
 directive|endif
 comment|/* Sneak a peek at the next packet */
@@ -4826,14 +4816,14 @@ block|}
 if|#
 directive|if
 literal|0
-block|IF_DEQUEUE(&ifp->if_snd, m); 	if (NULL == m) { 	    return; 	}
+block|IF_DEQUEUE(&ifp->if_snd, m);     if (NULL == m) { 	return;     }
 endif|#
 directive|endif
 if|#
 directive|if
 literal|0
 comment|/* seiji */
-block|sc->tbusy++; 	zp_cntrs[unit].xmt++;
+block|sc->tbusy++;     zp_cntrs[unit].xmt++;
 endif|#
 directive|endif
 name|len
@@ -4947,7 +4937,7 @@ operator|&
 literal|3
 index|]
 expr_stmt|;
-comment|/* 	 * The 3c509 automatically pads short packets to minimum ethernet 	 * length, but we drop packets that are too large. Perhaps we should 	 * truncate them instead? 	 */
+comment|/*      * The 3c509 automatically pads short packets to minimum ethernet length,      * but we drop packets that are too large. Perhaps we should truncate      * them instead?      */
 if|if
 condition|(
 name|len
@@ -5566,18 +5556,18 @@ block|{
 if|#
 directive|if
 literal|0
-block|u_short etype; 		int     off, datasize, resid; 		struct ether_header *eh; 		struct trailer_header { 			u_short ether_type; 			u_short ether_residual; 		}       trailer_header; 		char    ether_packet[ETHER_MAX_LEN]; 		char   *ep;  		ep = ether_packet;
-comment|/* 		 * We handle trailers below: 		 * Copy ether header first, then residual data, 		 * then data. Put all this in a temporary buffer 		 * 'ether_packet' and send off to bpf. Since the 		 * system has generated this packet, we assume 		 * that all of the offsets in the packet are 		 * correct; if they're not, the system will almost 		 * certainly crash in m_copydata. 		 * We make no assumptions about how the data is 		 * arranged in the mbuf chain (i.e. how much 		 * data is in each mbuf, if mbuf clusters are 		 * used, etc.), which is why we use m_copydata 		 * to get the ether header rather than assume 		 * that this is located in the first mbuf. 		 */
+block|u_short         etype; 	int             off, datasize, resid; 	struct ether_header *eh; 	struct trailer_header { 	    u_short         ether_type; 	    u_short         ether_residual; 	}               trailer_header; 	char            ether_packet[ETHER_MAX_LEN]; 	char           *ep;  	ep = ether_packet;
+comment|/* 	 * We handle trailers below: Copy ether header first, then residual 	 * data, then data. Put all this in a temporary buffer 'ether_packet' 	 * and send off to bpf. Since the system has generated this packet, 	 * we assume that all of the offsets in the packet are correct; if 	 * they're not, the system will almost certainly crash in m_copydata. 	 * We make no assumptions about how the data is arranged in the mbuf 	 * chain (i.e. how much data is in each mbuf, if mbuf clusters are 	 * used, etc.), which is why we use m_copydata to get the ether 	 * header rather than assume that this is located in the first mbuf. 	 */
 comment|/* copy ether header */
-block|m_copydata(top, 0, sizeof(struct ether_header), ep); 		eh = (struct ether_header *) ep; 		ep += sizeof(struct ether_header); 		eh->ether_type = etype = ntohs(eh->ether_type); 		if (etype>= ETHERTYPE_TRAIL&& 		    etype< ETHERTYPE_TRAIL + ETHERTYPE_NTRAILER) { 			datasize = ((etype - ETHERTYPE_TRAIL)<< 9); 			off = datasize + sizeof(struct ether_header);
+block|m_copydata(top, 0, sizeof(struct ether_header), ep); 	eh = (struct ether_header *) ep; 	ep += sizeof(struct ether_header); 	eh->ether_type = etype = ntohs(eh->ether_type); 	if (etype>= ETHERTYPE_TRAIL&& 	    etype< ETHERTYPE_TRAIL + ETHERTYPE_NTRAILER) { 	    datasize = ((etype - ETHERTYPE_TRAIL)<< 9); 	    off = datasize + sizeof(struct ether_header);
 comment|/* copy trailer_header into a data structure */
-block|m_copydata(top, off, sizeof(struct trailer_header), 			    (caddr_t)&trailer_header.ether_type);
+block|m_copydata(top, off, sizeof(struct trailer_header), 		       (caddr_t)& trailer_header.ether_type);
 comment|/* copy residual data */
-block|resid = trailer_header.ether_residual - 			    sizeof(struct trailer_header); 			resid = ntohs(resid); 			m_copydata(top, off + sizeof(struct trailer_header), 			    resid, ep); 			ep += resid;
+block|resid = trailer_header.ether_residual - 		sizeof(struct trailer_header); 	    resid = ntohs(resid); 	    m_copydata(top, off + sizeof(struct trailer_header), 		       resid, ep); 	    ep += resid;
 comment|/* copy data */
-block|m_copydata(top, sizeof(struct ether_header), 			    datasize, ep); 			ep += datasize;
+block|m_copydata(top, sizeof(struct ether_header), 		       datasize, ep); 	    ep += datasize;
 comment|/* restore original ether packet type */
-block|eh->ether_type = trailer_header.ether_type;  			bpf_tap(sc->bpf, ether_packet, ep - ether_packet); 		} else 			bpf_mtap(sc->bpf, top);
+block|eh->ether_type = trailer_header.ether_type;  	    bpf_tap(sc->bpf, ether_packet, ep - ether_packet); 	} else 	    bpf_mtap(sc->bpf, top);
 endif|#
 directive|endif
 name|bpf_mtap
@@ -5630,7 +5620,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MACH_KERNEL */
-comment|/* 	 * Is another packet coming in? We don't want to overflow the 	 * tiny RX fifo. 	 */
+comment|/*      * Is another packet coming in? We don't want to overflow the tiny RX      * fifo.      */
 name|readcheck
 label|:
 if|if
@@ -6309,7 +6299,7 @@ operator|&=
 operator|~
 name|S_TX_COMPLETE
 expr_stmt|;
-comment|/* 		 * We need to read TX_STATUS until we get a 0 status in 		 * order to turn off the interrupt flag. 		 */
+comment|/* 	 * We need to read TX_STATUS until we get a 0 status in order to turn 	 * off the interrupt flag. 	 */
 while|while
 condition|(
 operator|(
@@ -6737,7 +6727,7 @@ operator|.
 name|if_rcvdrops
 operator|)
 expr_stmt|;
-comment|/*  	     * Is this true ? 	     * Do I have to remove the packet ? 	     * Maybe out discard incoming packet.  	     */
+comment|/* 	 * Is this true ? Do I have to remove the packet ? Maybe out discard 	 * incoming packet. 	 */
 goto|goto
 name|out
 goto|;
@@ -7137,7 +7127,7 @@ expr|struct
 name|ether_header
 argument_list|)
 expr_stmt|;
-comment|/*  	 * mostly deal with trailer here.  (untested) 	 * We do this in a couple of parts.  First we check for a trailer, if 	 * we have one we convert the mbuf back to a regular mbuf and set the offset and 	 * subtract sizeof(struct ether_header) from the pktlen. 	 * After we've read the packet off the interface (all except for the trailer 	 * header, we then get a header mbuf, read the trailer into it, and fix up 	 * the mbuf pointer chain. 	 */
+comment|/*      * mostly deal with trailer here.  (untested) We do this in a couple of      * parts.  First we check for a trailer, if we have one we convert the      * mbuf back to a regular mbuf and set the offset and subtract      * sizeof(struct ether_header) from the pktlen. After we've read the      * packet off the interface (all except for the trailer header, we then      * get a header mbuf, read the trailer into it, and fix up the mbuf      * pointer chain.      */
 name|eh
 operator|=
 name|mtod
@@ -7149,98 +7139,24 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-name|eh
-operator|->
-name|ether_type
-operator|=
-name|etype
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|etype
-operator|>=
-name|ETHERTYPE_TRAIL
-operator|&&
-name|etype
-operator|<
-name|ETHERTYPE_TRAIL
-operator|+
-name|ETHERTYPE_NTRAILER
-condition|)
-block|{
-name|m
-operator|->
-name|m_data
-operator|=
-name|m
-operator|->
-name|m_dat
-expr_stmt|;
-comment|/* Convert back to regular mbuf.  */
-name|m
-operator|->
-name|m_flags
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* by nor@aecl.ntt.jp */
+block|eh->ether_type = etype = ntohs((u_short) eh->ether_type);     if (etype>= ETHERTYPE_TRAIL&& 	etype< ETHERTYPE_TRAIL + ETHERTYPE_NTRAILER) { 	m->m_data = m->m_dat;
+comment|/* Convert back to regular mbuf.  */
+block|m->m_flags = 0;
 comment|/* This sucks but non-trailers are the norm */
-name|off
-operator|=
-operator|(
-name|etype
-operator|-
-name|ETHERTYPE_TRAIL
-operator|)
-operator|*
-literal|512
-expr_stmt|;
-if|if
-condition|(
-name|off
-operator|>=
-name|ETHERMTU
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+block|off = (etype - ETHERTYPE_TRAIL) * 512; 	if (off>= ETHERMTU) { 	    m_freem(m); 	    return;
 comment|/* sanity */
-block|}
-name|totlen
-operator|-=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-expr_stmt|;
+block|} 	totlen -= sizeof(struct ether_header);
 comment|/* We don't read the trailer */
-name|m
-operator|->
-name|m_data
-operator|+=
-literal|2
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-expr_stmt|;
+block|m->m_data += 2 * sizeof(u_short);
 comment|/* Get rid of type& len */
 block|}
+endif|#
+directive|endif
+comment|/* by nor@aecl.ntt.jp */
 while|while
 condition|(
 name|totlen
@@ -7752,7 +7668,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Note that the interface cannot be in promiscuous mode if 		 * there are no BPF listeners.  And if we are in promiscuous 		 * mode, we have to check if this packet is really ours. 		 */
+comment|/* 	 * Note that the interface cannot be in promiscuous mode if there are 	 * no BPF listeners.  And if we are in promiscuous mode, we have to 	 * check if this packet is really ours. 	 */
 if|if
 condition|(
 operator|(
