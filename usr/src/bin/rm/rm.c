@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.18 (Berkeley) %G%"
+literal|"@(#)rm.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -913,31 +913,6 @@ return|;
 block|}
 if|if
 condition|(
-name|iflg
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"rm: remove %s? "
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|yes
-argument_list|()
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
 operator|!
 name|fflg
 condition|)
@@ -988,8 +963,37 @@ operator|(
 literal|0
 operator|)
 return|;
+goto|goto
+name|rm
+goto|;
 block|}
 block|}
+if|if
+condition|(
+name|iflg
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rm: remove %s? "
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|yes
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|rm
+label|:
 if|if
 condition|(
 name|unlink
