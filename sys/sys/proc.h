@@ -4593,15 +4593,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|lwpid_t
-name|thread_new_tid
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|thread_reap
 parameter_list|(

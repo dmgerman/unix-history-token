@@ -1998,14 +1998,6 @@ directive|undef
 name|RANGEOF
 name|td2
 operator|->
-name|td_tid
-operator|=
-name|p2
-operator|->
-name|p_pid
-expr_stmt|;
-name|td2
-operator|->
 name|td_sigstk
 operator|=
 name|td

@@ -412,13 +412,6 @@ operator|=
 name|thread_alloc
 argument_list|()
 expr_stmt|;
-name|td0
-operator|->
-name|td_tid
-operator|=
-name|thread_new_tid
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Try the copyout as soon as we allocate the td so we don't have to 	 * tear things down in a failure case below. 	 */
 if|if
 condition|(
