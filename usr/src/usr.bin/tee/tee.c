@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tee.c	5.2 (Berkeley) %G%"
+literal|"@(#)tee.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,18 +284,19 @@ condition|(
 operator|(
 name|cc
 operator|=
-name|fread
+name|read
 argument_list|(
-name|buf
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
 argument_list|,
-literal|1
+name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-argument_list|,
-name|stdin
 argument_list|)
 operator|)
 operator|>
