@@ -2503,10 +2503,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* write out the checkin/update prog files if necessary */
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
+comment|/* run/write out the checkin/update prog files if necessary */
 if|if
 condition|(
 name|err
@@ -2520,7 +2517,15 @@ name|m_type
 operator|==
 name|CHECKOUT
 operator|&&
-name|server_expanding
+name|run_module_prog
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
 condition|)
 block|{
 if|if
@@ -2534,6 +2539,10 @@ argument_list|(
 name|where
 condition|?
 name|where
+else|:
+name|mwhere
+condition|?
+name|mwhere
 else|:
 name|mname
 argument_list|,
@@ -2554,6 +2563,10 @@ name|where
 condition|?
 name|where
 else|:
+name|mwhere
+condition|?
+name|mwhere
+else|:
 name|mname
 argument_list|,
 name|update_prog
@@ -2562,25 +2575,10 @@ name|PROG_UPDATE
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 endif|#
 directive|endif
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-operator|&&
-operator|!
-name|noexec
-operator|&&
-name|m_type
-operator|==
-name|CHECKOUT
-operator|&&
-name|run_module_prog
-condition|)
-block|{
 name|FILE
 modifier|*
 name|fp
@@ -2683,6 +2681,12 @@ name|CVSADM_UPROG
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+block|}
+endif|#
+directive|endif
 block|}
 comment|/* cd back to where we started */
 if|if

@@ -1268,9 +1268,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"bad CVSroot: %s"
-argument_list|,
-name|root_in
+literal|"No closing `:' on method in CVSROOT."
 argument_list|)
 expr_stmt|;
 name|free
@@ -1426,9 +1424,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"unknown method in CVSroot: %s"
+literal|"Unknown method (`%s') in CVSROOT."
 argument_list|,
-name|root_in
+name|method
 argument_list|)
 expr_stmt|;
 name|free
@@ -1443,7 +1441,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* If the method isn't specified, assume 	   SERVER_METHOD/EXT_METHOD if the string contains a colon or 	   LOCAL_METHOD otherwise.  */
+comment|/* If the method isn't specified, assume 	   SERVER_METHOD/EXT_METHOD if the string looks like a relative path or 	   LOCAL_METHOD otherwise.  */
 name|newroot
 operator|->
 name|method
@@ -1531,18 +1529,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT (\"%s\")"
-argument_list|,
-name|root_in
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"requires a path spec"
+literal|"CVSROOT requires a path spec:"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1731,18 +1718,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT (\"%s\")"
-argument_list|,
-name|root_in
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"may only specify a positive, non-zero, integer port (not \"%s\")."
+literal|"CVSROOT may only specify a positive, non-zero, integer port (not `%s')."
 argument_list|,
 name|p
 argument_list|)
@@ -1753,7 +1729,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"perhaps you entered a relative pathname?"
+literal|"Perhaps you entered a relative pathname?"
 argument_list|)
 expr_stmt|;
 name|free
@@ -1788,18 +1764,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT (\"%s\")"
-argument_list|,
-name|root_in
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"may only specify a positive, non-zero, integer port (not \"%s\")."
+literal|"CVSROOT may only specify a positive, non-zero, integer port (not `%s')."
 argument_list|,
 name|p
 argument_list|)
@@ -1810,7 +1775,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"perhaps you entered a relative pathname?"
+literal|"Perhaps you entered a relative pathname?"
 argument_list|)
 expr_stmt|;
 name|free
@@ -1897,9 +1862,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT \"%s\""
-argument_list|,
-name|root_in
+literal|"CVSROOT is set for a remote access method but your"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1908,16 +1871,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"is set for a remote access method but your"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"CVS executable doesn't support it"
+literal|"CVS executable doesn't support it."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1954,9 +1908,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT \"%s\""
-argument_list|,
-name|root_in
+literal|"CVSROOT is set to use the :fork: access method but your"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1965,16 +1917,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"is set to use the :fork: access method but your"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"CVS executable doesn't support it"
+literal|"CVS executable doesn't support it."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2001,9 +1944,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"missing hostname in CVSROOT: \"%s\""
-argument_list|,
-name|root_in
+literal|"Missing hostname in CVSROOT."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2049,7 +1990,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"can't specify hostname and username in CVSROOT"
+literal|"Can't specify hostname and username in CVSROOT"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2058,18 +1999,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"(\"%s\")"
-argument_list|,
-name|root_in
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"when using local access method"
+literal|"when using local access method."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2094,11 +2024,20 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT \"%s\" must be an absolute pathname"
+literal|"CVSROOT must be an absolute pathname (not `%s')"
 argument_list|,
 name|newroot
 operator|->
 name|directory
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"when using local access method."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2135,7 +2074,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"can't specify hostname and username in CVSROOT"
+literal|"Can't specify hostname and username in CVSROOT"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2144,18 +2083,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"(\"%s\")"
-argument_list|,
-name|root_in
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"when using fork access method"
+literal|"when using fork access method."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2179,11 +2107,20 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT \"%s\" must be an absolute pathname"
+literal|"CVSROOT must be an absolute pathname (not `%s')"
 argument_list|,
 name|newroot
 operator|->
 name|directory
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"when using fork access method."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2211,9 +2148,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT \"%s\""
-argument_list|,
-name|root_in
+literal|"CVSROOT is set for a kerberos access method but your"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2222,16 +2157,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"is set for a kerberos access method but your"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"CVS executable doesn't support it"
+literal|"CVS executable doesn't support it."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2258,9 +2184,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"CVSROOT \"%s\""
-argument_list|,
-name|root_in
+literal|"CVSROOT is set for a GSSAPI access method but your"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2269,16 +2193,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"is set for a GSSAPI access method but your"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"CVS executable doesn't support it"
+literal|"CVS executable doesn't support it."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2320,6 +2235,16 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Invalid method found in parse_cvsroot"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2368,9 +2293,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"didn't specify hostname in CVSROOT: %s"
-argument_list|,
-name|root_in
+literal|"Didn't specify hostname in CVSROOT."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2424,9 +2347,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"missing directory in CVSROOT: %s"
-argument_list|,
-name|root_in
+literal|"Missing directory in CVSROOT."
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -955,6 +955,35 @@ name|tag
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|vers
+operator|->
+name|date
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Commit will just give an error, and so there seems to be 	   little reason to allow the remove.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"\ cannot remove file `%s' which has a sticky date of `%s'"
+argument_list|,
+name|finfo
+operator|->
+name|fullname
+argument_list|,
+name|vers
+operator|->
+name|date
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|char

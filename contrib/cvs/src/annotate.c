@@ -24,6 +24,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|force_binary
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|tag
@@ -130,13 +139,15 @@ name|annotate_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lRf] [-r rev] [-D date] [files...]\n"
+literal|"Usage: %s %s [-lRfF] [-r rev] [-D date] [files...]\n"
 block|,
 literal|"\t-l\tLocal directory only, no recursion.\n"
 block|,
 literal|"\t-R\tProcess directories recursively.\n"
 block|,
 literal|"\t-f\tUse head revision if tag/date not found.\n"
+block|,
+literal|"\t-F\tAnnotate binary files.\n"
 block|,
 literal|"\t-r rev\tAnnotate file as of specified revision/tag.\n"
 block|,
@@ -223,7 +234,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+lr:D:fR"
+literal|"+lr:D:fFR"
 argument_list|)
 operator|)
 operator|!=
@@ -277,6 +288,14 @@ case|:
 name|force_tag_match
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|force_binary
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -351,6 +370,15 @@ condition|)
 name|send_arg
 argument_list|(
 literal|"-f"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|force_binary
+condition|)
+name|send_arg
+argument_list|(
+literal|"-F"
 argument_list|)
 expr_stmt|;
 name|option_with_arg
@@ -502,7 +530,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|local
 argument_list|,
 literal|0
 argument_list|,
@@ -556,7 +584,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|local
 argument_list|,
 operator|(
 name|char
@@ -1138,6 +1166,9 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
+name|expand
+decl_stmt|,
+modifier|*
 name|version
 decl_stmt|;
 if|if
@@ -1184,6 +1215,15 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+name|expand
+operator|=
+name|RCS_getexpand
+argument_list|(
+name|finfo
+operator|->
+name|rcs
+argument_list|)
+expr_stmt|;
 name|version
 operator|=
 name|RCS_getversion
@@ -1217,7 +1257,7 @@ return|;
 comment|/* Distinguish output for various files if we are processing        several files.  */
 name|cvs_outerr
 argument_list|(
-literal|"Annotations for "
+literal|"\nAnnotations for "
 argument_list|,
 literal|0
 argument_list|)
@@ -1238,6 +1278,31 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|force_binary
+operator|&&
+name|expand
+operator|&&
+name|expand
+index|[
+literal|0
+index|]
+operator|==
+literal|'b'
+condition|)
+block|{
+name|cvs_outerr
+argument_list|(
+literal|"Skipping binary file -- -F not specified.\n"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|RCS_deltas
 argument_list|(
 name|finfo
@@ -1270,6 +1335,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|version

@@ -135,9 +135,9 @@ argument_list|)
 name|PROTO
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|buffer
 operator|*
-name|closure
 operator|)
 argument_list|)
 expr_stmt|;
@@ -299,7 +299,8 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|void
+expr|struct
+name|buffer
 operator|*
 argument_list|)
 operator|,
@@ -369,6 +370,8 @@ argument_list|(
 operator|(
 name|FILE
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|,

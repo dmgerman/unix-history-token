@@ -212,6 +212,14 @@ operator|-
 literal|1
 return|;
 block|}
+operator|*
+name|lineptr
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 name|nchars_avail
 operator|=
