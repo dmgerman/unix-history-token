@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.61 (Berkeley) %G%"
+literal|"@(#)main.c	6.62 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4189,12 +4189,20 @@ name|OpMode
 operator|==
 name|MD_VERIFY
 condition|)
+block|{
 name|CurEnv
 operator|->
 name|e_sendmode
 operator|=
 name|SM_VERIFY
 expr_stmt|;
+name|CurEnv
+operator|->
+name|e_errormode
+operator|=
+name|EM_QUIET
+expr_stmt|;
+block|}
 end_if
 
 begin_comment
@@ -4383,7 +4391,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	** All done. 	*/
+comment|/* 	**  All done. 	**	Don't send return error message if in VERIFY mode. 	*/
 end_comment
 
 begin_expr_stmt
