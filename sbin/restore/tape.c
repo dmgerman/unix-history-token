@@ -223,14 +223,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|long
-name|tpblksread
+name|tapeaddr
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* TP_BSIZE blocks read */
+comment|/* current TP_BSIZE tape record */
 end_comment
 
 begin_decl_stmt
@@ -1032,9 +1032,6 @@ comment|/* push back this block */
 name|blksread
 operator|--
 expr_stmt|;
-name|tpblksread
-operator|--
-expr_stmt|;
 name|cvtflag
 operator|++
 expr_stmt|;
@@ -1502,6 +1499,17 @@ argument_list|,
 name|dumpmap
 argument_list|)
 expr_stmt|;
+comment|/* 'r' restores don't call getvol() for tape 1, so mark it as read. */
+if|if
+condition|(
+name|command
+operator|==
+literal|'r'
+condition|)
+name|tapesread
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1522,9 +1530,9 @@ block|{
 name|long
 name|newvol
 decl_stmt|,
-name|savecnt
+name|prevtapea
 decl_stmt|,
-name|wantnext
+name|savecnt
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -1558,6 +1566,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|prevtapea
+operator|=
+name|tapeaddr
+expr_stmt|;
+name|savecnt
+operator|=
+name|blksread
+expr_stmt|;
 if|if
 condition|(
 name|pipein
@@ -1607,10 +1623,6 @@ goto|goto
 name|gethdr
 goto|;
 block|}
-name|savecnt
-operator|=
-name|blksread
-expr_stmt|;
 name|again
 label|:
 if|if
@@ -1639,27 +1651,15 @@ name|action
 operator|!=
 name|SKIP
 condition|)
-block|{
 name|newvol
 operator|=
 name|nextvol
 expr_stmt|;
-name|wantnext
-operator|=
-literal|1
-expr_stmt|;
-block|}
 else|else
-block|{
 name|newvol
 operator|=
 literal|0
 expr_stmt|;
-name|wantnext
-operator|=
-literal|0
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|newvol
@@ -1678,17 +1678,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s%s%s%s"
+literal|"%s%s%s%s%s%s%s"
 argument_list|,
 literal|"You have not read any tapes yet.\n"
 argument_list|,
-literal|"Unless you know which volume your"
+literal|"If you are extracting just a few files,"
 argument_list|,
-literal|" file(s) are on you should start\n"
+literal|" start with the last volume\n"
 argument_list|,
-literal|"with the last volume and work"
+literal|"and work towards the first; restore"
 argument_list|,
-literal|" towards the first.\n"
+literal|" can quickly skip tapes that\n"
+argument_list|,
+literal|"have no further files to extract."
+argument_list|,
+literal|" Otherwise, begin with volume 1.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1712,7 +1716,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
 operator|<
@@ -1741,6 +1745,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1839,7 +1845,11 @@ name|tapesread
 operator||=
 literal|1
 operator|<<
+operator|(
 name|volno
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 return|return;
 block|}
@@ -2132,7 +2142,11 @@ name|tapesread
 operator||=
 literal|1
 operator|<<
+operator|(
 name|volno
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|blksread
 operator|=
@@ -2143,13 +2157,13 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"read %ld recs, tape starts with %ld\n"
+literal|"last rec %ld, tape starts with %ld\n"
 argument_list|,
-name|tpblksread
+name|prevtapea
 argument_list|,
 name|tmpbuf
 operator|.
-name|c_firstrec
+name|c_tapea
 argument_list|)
 expr_stmt|;
 if|if
@@ -2171,16 +2185,20 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|wantnext
+name|curfile
+operator|.
+name|action
+operator|!=
+name|USING
 condition|)
 block|{
-name|tpblksread
-operator|=
-name|tmpbuf
-operator|.
-name|c_firstrec
-expr_stmt|;
+comment|/* 			 * XXX Dump incorrectly sets c_count to 1 in the 			 * volume header of the first tape, so ignore 			 * c_count when volno == 1. 			 */
+if|if
+condition|(
+name|volno
+operator|!=
+literal|1
+condition|)
 for|for
 control|(
 name|i
@@ -2207,29 +2225,21 @@ if|if
 condition|(
 name|tmpbuf
 operator|.
-name|c_firstrec
-operator|>
-literal|0
-operator|&&
-name|tmpbuf
-operator|.
-name|c_firstrec
-operator|<
-name|tpblksread
-operator|-
-literal|1
+name|c_tapea
+operator|<=
+name|prevtapea
 condition|)
 block|{
-comment|/* 			 * -1 since we've read the volume header 			 */
+comment|/* 			 * Normally the value of c_tapea in the volume 			 * header is the record number of the header itself. 			 * However in the volume header following an EOT- 			 * terminated tape, it is the record number of the 			 * first continuation data block (dump bug?). 			 * 			 * The next record we want is `prevtapea + 1'. 			 */
 name|i
 operator|=
-name|tpblksread
+name|prevtapea
+operator|+
+literal|1
 operator|-
 name|tmpbuf
 operator|.
-name|c_firstrec
-operator|-
-literal|1
+name|c_tapea
 expr_stmt|;
 name|dprintf
 argument_list|(
@@ -2269,12 +2279,6 @@ operator|.
 name|action
 operator|==
 name|USING
-operator|||
-name|curfile
-operator|.
-name|action
-operator|==
-name|SKIP
 condition|)
 block|{
 if|if
@@ -2290,43 +2294,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Skip up to the beginning of the next record 	 */
-if|if
-condition|(
-name|tmpbuf
-operator|.
-name|c_type
-operator|==
-name|TS_TAPE
-operator|&&
-operator|(
-name|tmpbuf
-operator|.
-name|c_flags
-operator|&
-name|DR_NEWHEADER
-operator|)
-condition|)
-for|for
-control|(
-name|i
-operator|=
-name|tmpbuf
-operator|.
-name|c_count
-init|;
-name|i
-operator|>
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-name|readtape
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4238,7 +4205,7 @@ expr_stmt|;
 name|blksread
 operator|++
 expr_stmt|;
-name|tpblksread
+name|tapeaddr
 operator|++
 expr_stmt|;
 return|return;
@@ -4737,7 +4704,7 @@ expr_stmt|;
 name|blksread
 operator|++
 expr_stmt|;
-name|tpblksread
+name|tapeaddr
 operator|++
 expr_stmt|;
 block|}
@@ -5782,6 +5749,12 @@ operator|.
 name|di_ogid
 expr_stmt|;
 block|}
+name|tapeaddr
+operator|=
+name|buf
+operator|->
+name|c_tapea
+expr_stmt|;
 if|if
 condition|(
 name|dflag
@@ -6058,7 +6031,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find an inode header.  * Complain if had to skip, and complain is set.  */
+comment|/*  * Find an inode header.  * Complain if had to skip.  */
 end_comment
 
 begin_function
@@ -6088,6 +6061,9 @@ name|buf
 index|[
 name|TP_BSIZE
 index|]
+decl_stmt|;
+name|int
+name|htype
 decl_stmt|;
 name|curfile
 operator|.
@@ -6146,11 +6122,15 @@ name|skipcnt
 operator|++
 expr_stmt|;
 block|}
-switch|switch
-condition|(
+name|htype
+operator|=
 name|header
 operator|->
 name|c_type
+expr_stmt|;
+switch|switch
+condition|(
+name|htype
 condition|)
 block|{
 case|case
@@ -6229,6 +6209,25 @@ break|break;
 case|case
 name|TS_END
 case|:
+comment|/* If we missed some tapes, get another volume. */
+if|if
+condition|(
+name|tapesread
+operator|&
+operator|(
+name|tapesread
+operator|+
+literal|1
+operator|)
+condition|)
+block|{
+name|getvol
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|curfile
 operator|.
 name|ino
@@ -6280,9 +6279,7 @@ block|}
 block|}
 do|while
 condition|(
-name|header
-operator|->
-name|c_type
+name|htype
 operator|==
 name|TS_ADDR
 condition|)

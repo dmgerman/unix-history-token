@@ -2572,6 +2572,10 @@ init|;
 condition|;
 control|)
 block|{
+name|curvol
+operator|=
+name|volno
+expr_stmt|;
 name|first
 operator|=
 name|lowerbnd
@@ -2594,14 +2598,24 @@ operator|>
 name|last
 condition|)
 return|return;
-comment|/* 		 * Reject any volumes with inodes greater 		 * than the last one needed 		 */
-while|while
+comment|/* 		 * Reject any volumes with inodes greater than the last 		 * one needed, so that we can quickly skip backwards to 		 * a volume containing useful inodes. We can't do this 		 * if there are no further volumes available (curfile.ino 		 *>= maxino) or if we are already at the first tape. 		 */
+if|if
 condition|(
 name|curfile
 operator|.
 name|ino
 operator|>
 name|last
+operator|&&
+name|curfile
+operator|.
+name|ino
+operator|<
+name|maxino
+operator|&&
+name|volno
+operator|>
+literal|1
 condition|)
 block|{
 name|curfile
@@ -2624,8 +2638,18 @@ expr_stmt|;
 name|skipdirs
 argument_list|()
 expr_stmt|;
+continue|continue;
 block|}
-comment|/* 		 * Decide on the next inode needed. 		 * Skip across the inodes until it is found 		 * or an out of order volume change is encountered 		 */
+comment|/* 		 * Decide on the next inode needed. 		 * Skip across the inodes until it is found 		 * or a volume change is encountered 		 */
+if|if
+condition|(
+name|curfile
+operator|.
+name|ino
+operator|<
+name|maxino
+condition|)
+block|{
 name|next
 operator|=
 name|lowerbnd
@@ -2634,12 +2658,6 @@ name|curfile
 operator|.
 name|ino
 argument_list|)
-expr_stmt|;
-do|do
-block|{
-name|curvol
-operator|=
-name|volno
 expr_stmt|;
 while|while
 condition|(
@@ -2656,30 +2674,30 @@ condition|)
 name|skipfile
 argument_list|()
 expr_stmt|;
-name|skipmaps
-argument_list|()
-expr_stmt|;
-name|skipdirs
-argument_list|()
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|volno
-operator|==
-name|curvol
-operator|+
-literal|1
-condition|)
-do|;
-comment|/* 		 * If volume change out of order occurred the 		 * current state must be recalculated 		 */
 if|if
 condition|(
 name|volno
 operator|!=
 name|curvol
 condition|)
+block|{
+name|skipmaps
+argument_list|()
+expr_stmt|;
+name|skipdirs
+argument_list|()
+expr_stmt|;
 continue|continue;
+block|}
+block|}
+else|else
+block|{
+comment|/* 			 * No further volumes or inodes available. Set 			 * `next' to the first inode, so that a warning 			 * is emitted below for each missing file. 			 */
+name|next
+operator|=
+name|first
+expr_stmt|;
+block|}
 comment|/* 		 * If the current inode is greater than the one we were 		 * looking for then we missed the one we were looking for. 		 * Since we only attempt to extract files listed in the 		 * dump map, the lost files must have been due to a tape 		 * read error, or a file that was removed while the dump 		 * was in progress. Thus we report all requested files 		 * between the one we were looking for, and the one we 		 * found as missing, and delete their request flags. 		 */
 while|while
 condition|(
