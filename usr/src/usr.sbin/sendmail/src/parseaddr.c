@@ -17,6 +17,16 @@ directive|include
 file|"dlvrmail.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)parseaddr.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  PARSE -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	addrq header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none ** **	Defined Constants: **		none ** **	Requires: **		usrerr **		strcpy (sys) **		isalpha (sys) **		xalloc **		prescan **		flagset **		makelower **		printf (sys) **		ParseTab -- the parse table. ** **	Called By: **		main **		sendto **		alias **		savemail ** **	History: **		12/26/79 -- written. */
 end_comment

@@ -29,6 +29,16 @@ directive|endif
 endif|LOG
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)err.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  ERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		-1 always ** **	Side Effects: **		Sets Error. **		Sets ExitStat. ** **	Requires: **		sprintf (sys) **		printf (sys) **		logmsg ** **	History: **		12/29/79 -- written. */
 end_comment

@@ -17,6 +17,16 @@ directive|include
 file|"dlvrmail.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)conf.c	1.3	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include

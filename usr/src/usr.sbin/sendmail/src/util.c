@@ -11,6 +11,16 @@ directive|include
 file|"useful.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)util.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  UTIL.C -- General Purpose Routines ** **	Defines: **		stripquotes **		xalloc **		any */
 end_comment

@@ -17,6 +17,16 @@ directive|include
 file|"dlvrmail.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)savemail.c	1.3	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. ** **		WARNING: the user id is reset to the original user. ** **	Requires: **		fopen (sys) **		bmove **		parse **		deliver **		strcpy (sys) **		strcat (sys) **		fclose (sys) **		fgets (sys) **		fputs (sys) **		setpwent (sys) **		getuid (sys) **		setuid (sys) **		getgid (sys) **		setgid (sys) **		getpwnam (sys) **		fprintf (sys) **		ttypath **		freopen (sys) **		printf (sys) **		syserr **		rewind (sys) **		time (sys) **		ferror (sys) ** **	Called By: **		finis ** **	History: **		12/30/79 -- written. */
 end_comment

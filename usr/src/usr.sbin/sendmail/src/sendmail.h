@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  DELIVERMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	History: **		12/26/79 -- written. */
+comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	1.3	%G% */
 end_comment
 
 begin_comment

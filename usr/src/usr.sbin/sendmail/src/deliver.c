@@ -41,6 +41,16 @@ directive|endif
 endif|LOG
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)deliver.c	1.3	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  DELIVER -- Deliver a message to a particular address. ** **	Algorithm: **		Compute receiving network (i.e., mailer), host,& user. **		If local, see if this is really a program name. **		Build argument for the mailer. **		Create pipe through edit fcn if appropriate. **		Fork. **			Child: call mailer **		Parent: call editfcn if specified. **		Wait for mailer to finish. **		Interpret exit status. ** **	Parameters: **		to -- the address to deliver the message to. **		editfcn -- if non-NULL, we want to call this function **			to output the letter (instead of just out- **			putting it raw). ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. ** **	WARNING: **		The standard input is shared amongst all children, **		including the file pointer.  It is critical that the **		parent waits for the child to finish before forking **		another child. ** **	Requires: **		buildargv **		giveresponse **		fork (sys) **		rewind (sys) **		execv (sys) **		exit (sys) **		wait (sys) **		syserr **		getpwnam (sys) **		endpwent (sys) **		initlog **		flagset **		usrerr **		pipe (sys) **		close (sys) **		dup (sys) **		setuid (sys) **		getuid (sys) **		signal (sys) **		fdopen (sys[v7] or conf.c[v6]) **		fclose (sys) **		printf (sys) **		stripquotes **		mailfile **		index (sys) ** **	Called By: **		main **		savemail ** **	Files: **		standard input -- must be openned to the message to **			deliver. ** **	History: **		3/5/80 -- modified rather extensively to change the **			internal form of addresses. **		12/26/79 -- written. */
 end_comment

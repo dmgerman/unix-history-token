@@ -23,6 +23,16 @@ directive|include
 file|"dlvrmail.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)alias.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/mailaliases for a set of aliases. **	If found, it arranges to deliver to them by inserting the **	new names onto the SendQ queue. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Aliases found on SendQ are removed and put onto **		AliasQ; replacements are added to SendQ.  This is **		done until no such replacement occurs. ** **	Defined Constants: **		MAXRCRSN -- the maximum recursion depth. **		ALIASFILE -- the pathname of the alias file. ** **	Requires: **		fopen (stdio) **		fgets (stdio) **		rewind (stdio) **		isspace (sys) **		printf (sys) **		sendto **		syserr **		parse **		nxtinq **		sameaddr **		tkoffq **		putonq **		fclose (sys) ** **	Called By: **		main ** **	Files: **		/usr/lib/mailaliases -- the mail aliases. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. ** **	History: **		3/5/80 -- extensive mods to change internal address **			format. **		12/27/79 -- written. */
 end_comment

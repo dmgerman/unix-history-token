@@ -6,6 +6,16 @@ file|<sysexits.h>
 end_include
 
 begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)sysexits.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|SysExMsg
