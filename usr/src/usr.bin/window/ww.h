@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.7 83/08/18	  */
+comment|/*  *	@(#)ww.h	3.8 83/08/18	  */
 end_comment
 
 begin_include
@@ -124,11 +124,11 @@ name|ww_dim
 name|ww_w
 decl_stmt|;
 comment|/* window dimemsions */
-name|short
+name|int
 name|ww_nline
 decl_stmt|;
 comment|/* size of the buffer */
-name|short
+name|int
 name|ww_scroll
 decl_stmt|;
 comment|/* where the window is relative to the buffer */
