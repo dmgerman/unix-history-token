@@ -1088,12 +1088,12 @@ break|break;
 case|case
 literal|'h'
 case|:
-comment|/* Linux LSB for 'tar'; synonym for -H */
+comment|/* Linux Standards Base, gtar; synonym for -L */
 name|bsdtar
 operator|->
 name|symlink_mode
 operator|=
-literal|'H'
+literal|'L'
 expr_stmt|;
 break|break;
 ifdef|#
