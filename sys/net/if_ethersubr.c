@@ -257,6 +257,10 @@ parameter_list|,
 name|short
 modifier|*
 name|tp
+parameter_list|,
+name|int
+modifier|*
+name|hlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1040,6 +1044,9 @@ name|dst
 argument_list|,
 operator|&
 name|type
+argument_list|,
+operator|&
+name|hlen
 argument_list|)
 expr_stmt|;
 if|if
