@@ -2380,46 +2380,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove from free queue 	 */
-block|{
-name|struct
-name|vpgqueues
-modifier|*
-name|pq
-init|=
-operator|&
-name|vm_page_queues
-index|[
-name|m
-operator|->
-name|queue
-index|]
-decl_stmt|;
-name|TAILQ_REMOVE
+name|vm_page_unqueue_nowakeup
 argument_list|(
-operator|&
-name|pq
-operator|->
-name|pl
-argument_list|,
 name|m
-argument_list|,
-name|pageq
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|pq
-operator|->
-name|cnt
-operator|)
-operator|--
-expr_stmt|;
-name|pq
-operator|->
-name|lcnt
-operator|--
-expr_stmt|;
-block|}
 comment|/* 	 * Initialize structure.  Only the PG_ZERO flag is inherited. 	 */
 if|if
 condition|(
@@ -2495,12 +2460,6 @@ operator|,
 name|m
 operator|)
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|queue
-operator|=
-name|PQ_NONE
 expr_stmt|;
 comment|/* 	 * vm_page_insert() is safe prior to the splx().  Note also that 	 * inserting a page here does not insert it into the pmap (which 	 * could cause us to block allocating memory).  We cannot block  	 * anywhere. 	 */
 name|vm_page_insert
@@ -3151,21 +3110,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|printf
+name|panic
 argument_list|(
 literal|"vm_page_free: freeing wired page\n"
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|wire_count
-operator|=
-literal|0
-expr_stmt|;
-name|cnt
-operator|.
-name|v_wire_count
-operator|--
 expr_stmt|;
 block|}
 comment|/* 	 * If we've exhausted the object's resident pages we want to free 	 * it up. 	 */
