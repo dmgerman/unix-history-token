@@ -11459,7 +11459,7 @@ name|sc
 operator|->
 name|sc_bus
 argument_list|,
-literal|10
+name|USB_PORT_ROOT_RESET_DELAY
 argument_list|)
 expr_stmt|;
 if|if
