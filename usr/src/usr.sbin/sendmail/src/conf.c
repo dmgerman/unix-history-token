@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	1.5	%G%"
+literal|"@(#)conf.c	1.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -554,8 +554,6 @@ block|{
 literal|"/bin/mail"
 block|,
 name|M_ROPT
-operator||
-name|M_NOHOST
 operator||
 name|M_STRIPQ
 block|,
