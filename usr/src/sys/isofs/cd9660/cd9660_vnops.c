@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4555,7 +4555,7 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
-name|cd9660_create
+name|spec_create
 block|}
 block|,
 comment|/* create */
@@ -4563,7 +4563,7 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
-name|cd9660_mknod
+name|spec_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -4675,7 +4675,7 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
-name|cd9660_remove
+name|spec_remove
 block|}
 block|,
 comment|/* remove */
@@ -4683,7 +4683,7 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
-name|cd9660_link
+name|spec_link
 block|}
 block|,
 comment|/* link */
@@ -4691,7 +4691,7 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
-name|cd9660_rename
+name|spec_rename
 block|}
 block|,
 comment|/* rename */
@@ -4699,7 +4699,7 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
-name|cd9660_mkdir
+name|spec_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -4707,7 +4707,7 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
-name|cd9660_rmdir
+name|spec_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -4715,7 +4715,7 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
-name|cd9660_symlink
+name|spec_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -4783,12 +4783,11 @@ name|spec_bmap
 block|}
 block|,
 comment|/* bmap */
-comment|/* XXX strategy: panics, should be notsupp instead? */
 block|{
 operator|&
 name|vop_strategy_desc
 block|,
-name|cd9660_strategy
+name|spec_strategy
 block|}
 block|,
 comment|/* strategy */
@@ -4949,7 +4948,7 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
-name|cd9660_create
+name|fifo_create
 block|}
 block|,
 comment|/* create */
@@ -4957,7 +4956,7 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
-name|cd9660_mknod
+name|fifo_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -5069,7 +5068,7 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
-name|cd9660_remove
+name|fifo_remove
 block|}
 block|,
 comment|/* remove */
@@ -5077,7 +5076,7 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
-name|cd9660_link
+name|fifo_link
 block|}
 block|,
 comment|/* link */
@@ -5085,7 +5084,7 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
-name|cd9660_rename
+name|fifo_rename
 block|}
 block|,
 comment|/* rename */
@@ -5093,7 +5092,7 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
-name|cd9660_mkdir
+name|fifo_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -5101,7 +5100,7 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
-name|cd9660_rmdir
+name|fifo_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -5109,7 +5108,7 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
-name|cd9660_symlink
+name|fifo_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -5181,7 +5180,7 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
-name|fifo_badop
+name|fifo_strategy
 block|}
 block|,
 comment|/* strategy */
