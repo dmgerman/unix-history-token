@@ -1371,11 +1371,6 @@ name|bd_flags
 argument_list|)
 condition|)
 block|{
-name|u_char
-name|c
-decl_stmt|,
-name|c1
-decl_stmt|;
 comment|/* the original SB16 (non-PnP, or PnP, or Vibra16C) 	     * can do full duplex using one 16-bit channel 	     * and one 8-bit channel. It needs to be programmed to 	     * use split format though. 	     * I DON'T do this for the Vibra16X because I have no idea 	     * of what needs to be done there... 	     * 	     * I use the following algorithm: 	     * 1. check which direction(s) are active; 	     * 2. check if we should swap dma channels 	     * 3. check if we can do the swap. 	     */
 name|int
 name|swap
@@ -1975,11 +1970,6 @@ name|BD_F_SB16X
 condition|)
 block|{
 comment|/* just a guess: on the Vibra16X, the first                  * op started takes the first dma channel,                  * the second one takes the next...                  * The default is to be ready for play.                  */
-name|int
-name|swap
-init|=
-literal|0
-decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
@@ -3386,12 +3376,6 @@ operator|==
 literal|0x80
 condition|)
 block|{
-name|u_char
-name|cfg
-decl_stmt|;
-name|u_char
-name|bits
-decl_stmt|;
 name|int
 name|rev
 init|=
@@ -5456,11 +5440,6 @@ name|snddev_info
 name|tmp_d
 decl_stmt|;
 comment|/* patched copy of the basic snddev_info */
-name|int
-name|the_irq
-init|=
-literal|0
-decl_stmt|;
 name|tmp_d
 operator|=
 name|sb_op_desc

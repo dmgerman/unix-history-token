@@ -489,6 +489,19 @@ directive|define
 name|SND_CB_INIT
 value|0x05
 comment|/* init board parameters */
+comment|/*      * callback extensions      */
+define|#
+directive|define
+name|SND_CB_DMADONE
+value|0x10
+define|#
+directive|define
+name|SND_CB_DMAUPDATE
+value|0x11
+define|#
+directive|define
+name|SND_CB_DMASTOP
+value|0x12
 comment|/* init can only be called with int enabled and 	 * no pending DMA activity. 	 */
 comment|/*      * whereas from here, parameters are set at runtime.      * io_base == 0 means that the board is not configured.      */
 name|int
@@ -721,6 +734,10 @@ modifier|*
 name|device_data
 decl_stmt|;
 comment|/* just in case it is needed...*/
+name|int
+name|special_dma
+decl_stmt|;
+comment|/* when this is set, dsp_wr_dmaupdate etc. 	 * are processed using callback extensions. 	 */
 block|}
 struct|;
 end_struct
@@ -1390,6 +1407,20 @@ name|struct
 name|isa_device
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pcminit
+parameter_list|(
+name|snddev_info
+modifier|*
+name|d
+parameter_list|,
+name|int
+name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
