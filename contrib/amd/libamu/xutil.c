@@ -1614,7 +1614,24 @@ argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
-comment|/*    * XXX: ptr is 1024 bytes long.  It is possible to write into it    * more than 1024 bytes, if efmt is already large, and vargs expand    * as well.    */
+ifdef|#
+directive|ifdef
+name|HAVE_VSNPRINTF
+name|vsnprintf
+argument_list|(
+name|ptr
+argument_list|,
+literal|1024
+argument_list|,
+name|efmt
+argument_list|,
+name|vargs
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_VSNPRINTF */
+comment|/*    * XXX: ptr is 1024 bytes long.  It is possible to write into it    * more than 1024 bytes, if efmt is already large, and vargs expand    * as well.  This is not as safe as using vsnprintf().    */
 name|vsprintf
 argument_list|(
 name|ptr
@@ -1632,6 +1649,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* null terminate, to be sure */
+endif|#
+directive|endif
+comment|/* not HAVE_VSNPRINTF */
 name|ptr
 operator|+=
 name|strlen
