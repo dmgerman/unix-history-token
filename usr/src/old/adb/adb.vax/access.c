@@ -3,13 +3,6 @@ begin_comment
 comment|/*  * Adb: access data in file/process address space.  *  * The routines in this file access referenced data using  * the maps to access files, ptrace to access subprocesses,  * or the system page tables when debugging the kernel,  * to translate virtual to physical addresses.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|dprintf
-value|if (var[varchk('d')]) printf
-end_define
-
 begin_include
 include|#
 directive|include
@@ -22,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)access.c 4.3 %G%"
+literal|"@(#)access.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,13 +235,6 @@ name|file
 decl_stmt|,
 name|w
 decl_stmt|;
-name|dprintf
-argument_list|(
-literal|"access(%X)\n"
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|space
@@ -348,18 +334,11 @@ argument_list|,
 name|space
 argument_list|)
 condition|)
-block|{
-name|dprintf
-argument_list|(
-literal|"chkmap failed\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|file
 operator|=
 operator|(
@@ -385,13 +364,6 @@ operator|==
 name|DSP
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|"calling vtophys(%X)... "
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 name|vtophys
@@ -410,13 +382,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|dprintf
-argument_list|(
-literal|"got %X\n"
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -488,15 +453,6 @@ operator|=
 name|btop
 argument_list|(
 name|addr
-argument_list|)
-expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"addr %X v %X\n"
-argument_list|,
-name|addr
-argument_list|,
-name|v
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -591,11 +547,6 @@ expr_stmt|;
 break|break;
 name|oor
 label|:
-name|dprintf
-argument_list|(
-literal|"out of range\n"
-argument_list|)
-expr_stmt|;
 name|errflg
 operator|=
 literal|"address out of segment"
@@ -623,11 +574,6 @@ name|errflg
 operator|=
 literal|"bad p0br or p1br in pcb"
 expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"bad p0/p1br\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -635,24 +581,10 @@ literal|1
 operator|)
 return|;
 block|}
-name|dprintf
-argument_list|(
-literal|"calling vtophys recursively(%X)\n"
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 name|vtophys
 argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"result %X\n"
-argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
@@ -806,13 +738,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|dprintf
-argument_list|(
-literal|"physrw(%X)... "
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|longseek
@@ -860,14 +785,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|dprintf
-argument_list|(
-literal|"got %X\n"
-argument_list|,
-operator|*
-name|aw
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
