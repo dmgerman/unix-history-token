@@ -152,7 +152,7 @@ literal|0x20
 block|,
 literal|0xbe
 block|,
-literal|0x65
+literal|0x62
 block|,
 literal|0x7c
 block|,
@@ -204,7 +204,7 @@ literal|0x00
 block|,
 literal|0x50
 block|,
-literal|0x5a
+literal|0x1f
 block|,
 literal|0xc7
 block|,
@@ -218,15 +218,9 @@ literal|0x34
 block|,
 literal|0x12
 block|,
-literal|0xea
+literal|0xcd
 block|,
-literal|0xf0
-block|,
-literal|0xff
-block|,
-literal|0x00
-block|,
-literal|0xf0
+literal|0x19
 block|,
 literal|0x07
 block|,
@@ -1049,6 +1043,12 @@ block|,
 literal|0x55
 block|,
 literal|0xaa
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
 block|, }
 decl_stmt|;
 end_decl_stmt
