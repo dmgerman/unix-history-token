@@ -1127,23 +1127,18 @@ value|0x0001
 comment|/* this unit is locked */
 define|#
 directive|define
-name|F_WRITING
-value|0x0002
-comment|/* this unit is writing */
-define|#
-directive|define
 name|F_WRITTEN
-value|0x0004
+value|0x0002
 comment|/* medium has been written to */
 define|#
 directive|define
 name|F_DISK_OPEN
-value|0x0008
+value|0x0004
 comment|/* disk open for writing */
 define|#
 directive|define
 name|F_TRACK_OPEN
-value|0x0010
+value|0x0008
 comment|/* track open for writing */
 name|struct
 name|buf_queue_head
@@ -1230,6 +1225,11 @@ name|u_int32_t
 name|block_size
 decl_stmt|;
 comment|/* blocksize currently used */
+name|struct
+name|disklabel
+name|disklabel
+decl_stmt|;
+comment|/* fake disk label */
 name|struct
 name|devstat
 modifier|*
