@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.8 1995/09/22 18:28:21 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.9 1995/09/22 20:00:12 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -423,7 +423,7 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|bdnum
+name|unit
 operator|)
 argument_list|)
 decl_stmt|;
@@ -647,11 +647,6 @@ begin_struct
 struct|struct
 name|si_softc
 block|{
-name|struct
-name|device
-name|sc_dev
-decl_stmt|;
-comment|/* base device */
 name|int
 name|sc_type
 decl_stmt|;
@@ -7944,6 +7939,11 @@ literal|"si_poll()\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|oldspl
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|in_intr
@@ -7951,11 +7951,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|oldspl
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|lost
 operator|=
 literal|0
@@ -8060,13 +8055,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* call intr with fake vector */
+name|out
+label|:
 name|splx
 argument_list|(
 name|oldspl
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 name|timeout
 argument_list|(
 name|si_poll
@@ -8114,16 +8109,9 @@ name|void
 name|siintr
 parameter_list|(
 name|int
-name|bdnum
+name|unit
 parameter_list|)
 block|{
-name|struct
-name|si_softc
-modifier|*
-name|Isc
-init|=
-name|NULL
-decl_stmt|;
 specifier|register
 name|struct
 name|si_softc
@@ -8178,47 +8166,14 @@ decl_stmt|;
 name|BYTE
 name|c
 decl_stmt|;
-specifier|static
-name|int
-name|in_poll
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|bdnum
-operator|<
-literal|0
-condition|)
-block|{
-name|Isc
-operator|=
-name|NULL
-expr_stmt|;
-name|in_poll
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|Isc
-operator|=
-operator|&
-name|si_softc
-index|[
-name|bdnum
-index|]
-expr_stmt|;
-block|}
 name|DPRINT
 argument_list|(
 operator|(
 literal|0
 operator|,
 operator|(
-name|Isc
-operator|==
+name|unit
+operator|<
 literal|0
 operator|)
 condition|?
@@ -8226,24 +8181,22 @@ name|DBG_POLL
 else|:
 name|DBG_INTR
 operator|,
-literal|"siintr(0x%x)\n"
+literal|"siintr(%d)\n"
 operator|,
-name|Isc
+name|unit
 operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|in_intr
-operator|!=
-literal|0
 condition|)
 block|{
 if|if
 condition|(
-name|Isc
-operator|==
-name|NULL
+name|unit
+operator|<
+literal|0
 condition|)
 comment|/* should never happen */
 return|return;
@@ -8251,18 +8204,7 @@ name|printf
 argument_list|(
 literal|"SLXOS si%d: Warning interrupt handler re-entered\n"
 argument_list|,
-name|Isc
-operator|==
-literal|0
-condition|?
-operator|-
-literal|1
-else|:
-name|Isc
-operator|->
-name|sc_dev
-operator|.
-name|dv_unit
+name|unit
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9127,8 +9069,6 @@ block|}
 comment|/* end of for (all ports on this controller) */
 block|}
 comment|/* end of for (all controllers) */
-name|in_poll
-operator|=
 name|in_intr
 operator|=
 literal|0
@@ -9139,8 +9079,8 @@ operator|(
 literal|0
 operator|,
 operator|(
-name|Isc
-operator|==
+name|unit
+operator|<
 literal|0
 operator|)
 condition|?
@@ -9148,7 +9088,9 @@ name|DBG_POLL
 else|:
 name|DBG_INTR
 operator|,
-literal|"end of siintr()\n"
+literal|"end siintr(%d)\n"
+operator|,
+name|unit
 operator|)
 argument_list|)
 expr_stmt|;
