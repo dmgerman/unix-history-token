@@ -7829,7 +7829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, or NULL for layer3 packet.  *	args->oif	Outgoing interface, or NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  *  * Return value:  *  *	IP_FW_PORT_DENY_FLAG	the packet must be dropped.  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
+comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, or NULL for layer3 packet.  *	args->oif	Outgoing interface, or NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->cookie	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *  */
 end_comment
 
 begin_function
@@ -7980,7 +7980,9 @@ operator|&
 name|M_SKIP_FIREWALL
 condition|)
 return|return
-literal|0
+operator|(
+name|IP_FW_PASS
+operator|)
 return|;
 comment|/* accept */
 comment|/* 	 * dyn_dir = MATCH_UNKNOWN when rules unchecked, 	 * 	MATCH_NONE when checked and not matched (q = NULL), 	 *	MATCH_FORWARD or MATCH_REVERSE otherwise (q != NULL) 	 */
@@ -8382,7 +8384,9 @@ name|chain
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|IP_FW_PASS
+operator|)
 return|;
 block|}
 name|f
@@ -8457,7 +8461,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IP_FW_PORT_DENY_FLAG
+name|IP_FW_DENY
 operator|)
 return|;
 comment|/* invalid */
@@ -8493,7 +8497,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IP_FW_PORT_DENY_FLAG
+name|IP_FW_DENY
 operator|)
 return|;
 block|}
@@ -10492,7 +10496,7 @@ condition|)
 block|{
 name|retval
 operator|=
-name|IP_FW_PORT_DENY_FLAG
+name|IP_FW_DENY
 expr_stmt|;
 goto|goto
 name|done
@@ -10632,13 +10636,17 @@ operator|=
 name|f
 expr_stmt|;
 comment|/* report matching rule */
-name|retval
+name|args
+operator|->
+name|cookie
 operator|=
 name|cmd
 operator|->
 name|arg1
-operator||
-name|IP_FW_PORT_DYNT_FLAG
+expr_stmt|;
+name|retval
+operator|=
+name|IP_FW_DUMMYNET
 expr_stmt|;
 goto|goto
 name|done
@@ -10693,7 +10701,9 @@ name|chain
 argument_list|)
 expr_stmt|;
 return|return
-name|IP_FW_PORT_DENY_FLAG
+operator|(
+name|IP_FW_DENY
+operator|)
 return|;
 block|}
 name|dt
@@ -10721,23 +10731,9 @@ name|dt
 operator|->
 name|info
 operator|=
-operator|(
-name|cmd
-operator|->
-name|opcode
-operator|==
-name|O_DIVERT
-operator|)
-condition|?
 name|cmd
 operator|->
 name|arg1
-else|:
-name|cmd
-operator|->
-name|arg1
-operator||
-name|IP_FW_PORT_TEE_FLAG
 expr_stmt|;
 name|m_tag_prepend
 argument_list|(
@@ -10748,9 +10744,17 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|dt
+operator|(
+name|cmd
 operator|->
-name|info
+name|opcode
+operator|==
+name|O_DIVERT
+operator|)
+condition|?
+name|IP_FW_DIVERT
+else|:
+name|IP_FW_TEE
 expr_stmt|;
 goto|goto
 name|done
@@ -10886,7 +10890,7 @@ name|O_DENY
 case|:
 name|retval
 operator|=
-name|IP_FW_PORT_DENY_FLAG
+name|IP_FW_DENY
 expr_stmt|;
 goto|goto
 name|done
@@ -10928,7 +10932,7 @@ name|sa
 expr_stmt|;
 name|retval
 operator|=
-literal|0
+name|IP_FW_PASS
 expr_stmt|;
 goto|goto
 name|done
@@ -11013,7 +11017,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IP_FW_PORT_DENY_FLAG
+name|IP_FW_DENY
 operator|)
 return|;
 name|done
@@ -11042,7 +11046,9 @@ name|chain
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 name|pullup_failed
 label|:
@@ -11057,7 +11063,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IP_FW_PORT_DENY_FLAG
+name|IP_FW_DENY
 operator|)
 return|;
 block|}

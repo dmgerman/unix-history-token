@@ -913,26 +913,33 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|IP_FW_PORT_DYNT_FLAG
-value|0x00010000
-end_define
+begin_comment
+comment|/* Return values from ipfw_chk() */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_FW_PORT_TEE_FLAG
-value|0x00020000
-end_define
+begin_enum
+enum|enum
+block|{
+name|IP_FW_PASS
+init|=
+literal|0
+block|,
+name|IP_FW_DENY
+block|,
+name|IP_FW_DIVERT
+block|,
+name|IP_FW_TEE
+block|,
+name|IP_FW_DUMMYNET
+block|,
+name|IP_FW_NETGRAPH
+block|, }
+enum|;
+end_enum
 
-begin_define
-define|#
-directive|define
-name|IP_FW_PORT_DENY_FLAG
-value|0x00040000
-end_define
+begin_comment
+comment|/* flags for divert mtag */
+end_comment
 
 begin_define
 define|#
@@ -996,8 +1003,9 @@ name|f_id
 decl_stmt|;
 comment|/* grabbed from IP header	*/
 name|u_int32_t
-name|retval
+name|cookie
 decl_stmt|;
+comment|/* a cookie depending on rule action */
 name|struct
 name|inpcb
 modifier|*

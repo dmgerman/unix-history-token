@@ -2215,25 +2215,30 @@ name|rule
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|i
-operator|&
-name|IP_FW_PORT_DENY_FLAG
-operator|)
-operator|||
-name|m
 operator|==
-name|NULL
+name|IP_FW_DENY
 condition|)
 comment|/* drop */
 return|return
 literal|0
 return|;
+name|KASSERT
+argument_list|(
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"ether_ipfw_chk: m is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
 operator|==
-literal|0
+name|IP_FW_PASS
 condition|)
 comment|/* a PASS rule.  */
 return|return
@@ -2245,8 +2250,8 @@ name|DUMMYNET_LOADED
 operator|&&
 operator|(
 name|i
-operator|&
-name|IP_FW_PORT_DYNT_FLAG
+operator|==
+name|IP_FW_DUMMYNET
 operator|)
 condition|)
 block|{
@@ -2288,11 +2293,9 @@ name|ip_dn_io_ptr
 argument_list|(
 name|m
 argument_list|,
-operator|(
-name|i
-operator|&
-literal|0xffff
-operator|)
+name|args
+operator|.
+name|cookie
 argument_list|,
 name|dst
 condition|?
