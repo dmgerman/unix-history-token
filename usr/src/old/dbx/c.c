@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c	5.7 (Berkeley) %G%"
+literal|"@(#)c.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: c.c,v 1.4 88/01/12 00:46:21 donn Exp $"
+literal|"$Header: c.c,v 1.5 88/04/02 01:25:44 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,6 +452,13 @@ argument_list|,
 literal|"int"
 argument_list|)
 name|and
+operator|!
+name|isdouble
+argument_list|(
+argument|t1
+argument_list|)
+comment|/* sigh */
+name|and
 argument_list|(
 argument|t2 == t_int->type or t2 == t_char->type
 argument_list|)
@@ -472,7 +479,7 @@ argument|t1->class == RANGE and t2->class == RANGE and 		t1->symvalue.rangev.low
 argument_list|)
 name|or
 argument_list|(
-argument|t1->type == t2->type and ( 		    (t1->class == t2->class) or 		    (t1->class == SCAL and t2->class == CONST) or 		    (t1->class == CONST and t2->class == SCAL) 		)
+argument|t1->class != RANGE and t1->type == t2->type and ( 		    (t1->class == t2->class) or 		    (t1->class == SCAL and t2->class == CONST) or 		    (t1->class == CONST and t2->class == SCAL) 		)
 argument_list|)
 name|or
 argument_list|(
