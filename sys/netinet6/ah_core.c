@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah_core.c,v 1.44 2001/03/12 11:24:39 itojun Exp $	*/
+comment|/*	$KAME: ah_core.c,v 1.59 2003/07/25 10:17:14 itojun Exp $	*/
 end_comment
 
 begin_comment

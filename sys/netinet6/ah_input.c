@@ -1923,13 +1923,6 @@ argument_list|,
 name|stripsiz
 argument_list|)
 expr_stmt|;
-name|m_cat
-argument_list|(
-name|m
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
 comment|/* m_cat does not update m_pkthdr.len */
 name|m
 operator|->
@@ -1942,6 +1935,13 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+name|m_cat
+argument_list|(
+name|m
+argument_list|,
+name|n
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -3281,7 +3281,6 @@ name|ip6
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * m_pullup is prohibited in KAME IPv6 input processing 			 * but there's no other way! 			 */
 name|m
 operator|=
 name|m_pullup
@@ -3670,13 +3669,6 @@ argument_list|,
 name|stripsiz
 argument_list|)
 expr_stmt|;
-name|m_cat
-argument_list|(
-name|m
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
 comment|/* m_cat does not update m_pkthdr.len */
 name|m
 operator|->
@@ -3689,6 +3681,13 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+name|m_cat
+argument_list|(
+name|m
+argument_list|,
+name|n
+argument_list|)
 expr_stmt|;
 block|}
 endif|#

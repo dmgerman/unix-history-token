@@ -395,9 +395,6 @@ decl_stmt|;
 name|size_t
 name|esplen
 decl_stmt|;
-name|int
-name|proto
-decl_stmt|;
 comment|/* sanity check for alignment. */
 if|if
 condition|(
@@ -502,12 +499,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-expr_stmt|;
-name|proto
-operator|=
-name|ip
-operator|->
-name|ip_p
 expr_stmt|;
 name|esp
 operator|=
@@ -867,13 +858,13 @@ goto|;
 block|}
 comment|/* check ICV */
 block|{
-name|u_char
+name|u_int8_t
 name|sum0
 index|[
 name|AH_MAXSUMSIZE
 index|]
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|sum
 index|[
 name|AH_MAXSUMSIZE
@@ -998,6 +989,9 @@ name|siz
 argument_list|,
 name|siz
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|sum0
 index|[
@@ -2838,6 +2832,9 @@ name|siz
 argument_list|,
 name|siz
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|sum0
 index|[
@@ -3685,7 +3682,7 @@ comment|/* 		 * strip off ESP header and IV. 		 * even in m_pulldown case, we ne
 name|size_t
 name|stripsiz
 decl_stmt|;
-name|char
+name|u_int8_t
 modifier|*
 name|prvnxtp
 decl_stmt|;
@@ -3811,13 +3808,6 @@ argument_list|,
 name|stripsiz
 argument_list|)
 expr_stmt|;
-name|m_cat
-argument_list|(
-name|m
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
 comment|/* m_cat does not update m_pkthdr.len */
 name|m
 operator|->
@@ -3830,6 +3820,13 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+name|m_cat
+argument_list|(
+name|m
+argument_list|,
+name|n
+argument_list|)
 expr_stmt|;
 block|}
 ifndef|#

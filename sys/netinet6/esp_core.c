@@ -2765,7 +2765,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|char
+name|u_int8_t
 modifier|*
 name|k
 decl_stmt|;
@@ -3404,6 +3404,9 @@ name|ivoff
 argument_list|,
 name|ivlen
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|iv
 argument_list|)
 expr_stmt|;
@@ -4440,6 +4443,9 @@ name|ivoff
 argument_list|,
 name|ivlen
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|iv
 argument_list|)
 expr_stmt|;
@@ -4465,6 +4471,9 @@ name|ivoff
 argument_list|,
 name|ivlen
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|iv
 argument_list|)
 expr_stmt|;
@@ -4796,6 +4805,9 @@ name|sn
 argument_list|,
 name|blocklen
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sbuf
 argument_list|)
 expr_stmt|;
