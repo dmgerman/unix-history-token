@@ -35,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)bad144.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)bad144.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,13 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<paths.h>
 end_include
 
 begin_include
@@ -129,12 +141,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
 end_include
 
 begin_define
@@ -350,20 +356,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|Perror
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|op
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|shift
 name|__P
 argument_list|(
@@ -391,6 +383,19 @@ expr|struct
 name|dkbad
 operator|*
 name|oldbad
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -511,11 +516,11 @@ condition|(
 operator|!
 name|nargv
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|20
 argument_list|,
-literal|"Out of memory, malloc failed\n"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|i
@@ -540,9 +545,9 @@ name|n
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"Couldn't set disk in \"badscan\" mode"
+literal|"couldn't set disk in \"badscan\" mode"
 argument_list|)
 expr_stmt|;
 name|nargc
@@ -590,11 +595,11 @@ operator|*
 operator|)
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|20
 argument_list|,
-literal|"Out of memory, alloca failed"
+literal|"alloca failed"
 argument_list|)
 expr_stmt|;
 comment|/* scan the entire disk a sector at a time.  Because of all the 	 * clustering in the kernel, we cannot scan a track at a time, 	 * If we do, we may have to read twice over the block to find 	 * exactly which one failed, and it may not fail second time. 	 */
@@ -686,11 +691,9 @@ name|curr_sec
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"found bad sector: %d\n"
+literal|"found bad sector: %d"
 argument_list|,
 name|curr_sec
 argument_list|)
@@ -721,22 +724,15 @@ name|nargc
 operator|>=
 name|DKBAD_MAXBAD
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Too many bad sectors, can only handle %d per slice.\n"
+literal|"too many bad sectors, can only handle %d per slice"
 argument_list|,
 name|DKBAD_MAXBAD
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 name|fprintf
@@ -789,9 +785,9 @@ name|n
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"Couldn't reset disk from \"badscan\" mode"
+literal|"couldn't reset disk from \"badscan\" mode"
 argument_list|)
 expr_stmt|;
 block|}
@@ -971,9 +967,9 @@ literal|'0'
 expr_stmt|;
 break|break;
 block|}
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 operator|(
 operator|*
@@ -995,78 +991,9 @@ name|argc
 operator|<
 literal|1
 condition|)
-block|{
 name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: bad144 [ -f ] disk [ snum [ bn ... ] ]\n"
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"to read or overwrite bad-sector table, e.g.: bad144 hp0\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"or bad144 -a [ -f ] [ -c ] disk  bn ...\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"or bad144 -s [ -v ] disk\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"where options are:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-a  add new bad sectors to the table\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-f  reformat listed sectors as bad\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-c  copy original sector to replacement\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-s  scan entire slice for bad sectors\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|argv
@@ -1142,8 +1069,12 @@ name|f
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -1163,8 +1094,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"read"
 argument_list|)
 expr_stmt|;
@@ -1251,20 +1184,13 @@ name|d_magic2
 operator|!=
 name|DISKMAGIC
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad pack magic number (pack is unlabeled)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad pack magic number (pack is unlabeled)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|dp
@@ -1279,24 +1205,17 @@ name|d_secsize
 operator|<=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|7
 argument_list|,
-literal|"Disk sector size too large/small (%lu)\n"
+literal|"disk sector size too large/small (%lu)"
 argument_list|,
 name|dp
 operator|->
 name|d_secsize
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|7
-argument_list|)
-expr_stmt|;
-block|}
 name|size
 operator|=
 name|dp
@@ -1868,20 +1787,13 @@ if|if
 condition|(
 name|dups
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: bad sectors have been duplicated; can't add existing sectors\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|3
+argument_list|,
+literal|"bad sectors have been duplicated; can't add existing sectors"
 argument_list|)
 expr_stmt|;
-block|}
 name|shift
 argument_list|(
 name|f
@@ -1958,8 +1870,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
@@ -2021,15 +1935,17 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"bad144: write bad sector file %d"
+literal|"write bad sector file %d"
 argument_list|,
 name|i
 operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -2132,25 +2048,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't write disklabel to enable bad sector handling: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't write disklabel to enable bad sector handling"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -2176,11 +2080,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't sync bad-sector file; reboot for changes to take effect\n"
+literal|"can't sync bad-sector file; reboot for changes to take effect"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2188,6 +2090,33 @@ directive|endif
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: bad144 [-f] disk [snum [bn ...]]"
+argument_list|,
+literal|"       bad144 -a [-f] [-c] disk  bn ..."
+argument_list|,
+literal|"       bad144 -s [-v] disk"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2289,8 +2218,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
@@ -2344,13 +2275,15 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"bad144: read bad sector file at sn %ld"
+literal|"read bad sector file at sn %ld"
 argument_list|,
 name|sn
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -2363,18 +2296,13 @@ literal|1
 condition|)
 break|break;
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: %s: can't read bad block info\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s: can't read bad block info"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -2428,11 +2356,9 @@ operator|!=
 name|DKBAD_MAGIC
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: %s: bad flag in bad-sector table\n"
+literal|"%s: bad flag in bad-sector table"
 argument_list|,
 name|name
 argument_list|)
@@ -2450,11 +2376,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: %s: bad magic number\n"
+literal|"%s: bad magic number"
 argument_list|,
 name|name
 argument_list|)
@@ -2542,18 +2466,9 @@ name|d_nsectors
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: cyl/trk/sect out of range in existing entry: "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"sn=%ld, cn=%d, tn=%d, sn=%d\n"
+literal|"cyl/trk/sect out of range in existing entry: sn=%ld, cn=%d, tn=%d, sn=%d"
 argument_list|,
 name|badsn
 argument_list|(
@@ -2627,11 +2542,9 @@ operator|!
 name|warned
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: bad sector file is out of order\n"
+literal|"bad sector file is out of order"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -2652,11 +2565,9 @@ operator|==
 name|lsn
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: bad sector file contains duplicates (sn %ld)\n"
+literal|"bad sector file contains duplicates (sn %ld)"
 argument_list|,
 name|sn
 argument_list|)
@@ -2824,11 +2735,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't copy replacement sector %ld to %ld\n"
+literal|"can't copy replacement sector %ld to %ld"
 argument_list|,
 name|repl
 operator|-
@@ -2904,11 +2813,11 @@ operator|*
 operator|)
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|20
 argument_list|,
-literal|"Out of memory, alloca failed\n"
+literal|"alloca failed"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2945,8 +2854,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
@@ -2982,28 +2893,25 @@ operator|->
 name|d_secsize
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: can't read sector, %ld: "
-argument_list|,
-name|s1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|n
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+literal|"can't read sector, %ld"
+argument_list|,
+name|s1
+argument_list|)
+expr_stmt|;
+else|else
+name|warnx
+argument_list|(
+literal|"can't read sector, %ld"
+argument_list|,
+name|s1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3032,8 +2940,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
@@ -3072,22 +2982,11 @@ operator|->
 name|d_secsize
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: can't write replacement sector, %ld: "
+literal|"can't write replacement sector, %ld"
 argument_list|,
 name|s2
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3145,11 +3044,11 @@ operator|*
 operator|)
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|20
 argument_list|,
-literal|"Out of memory, alloca failed\n"
+literal|"alloca failed"
 argument_list|)
 expr_stmt|;
 name|memset
@@ -3183,8 +3082,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"lseek"
 argument_list|)
 expr_stmt|;
@@ -3220,26 +3121,13 @@ name|dp
 operator|->
 name|d_secsize
 condition|)
-block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: can't write replacement sector, %ld: "
+literal|"can't write replacement sector, %ld"
 argument_list|,
 name|sn
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3834,11 +3722,9 @@ name|rp06hdr
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't read header on blk %ld, can't reformat\n"
+literal|"can't read header on blk %ld, can't reformat"
 argument_list|,
 name|blk
 argument_list|)
@@ -3940,24 +3826,17 @@ name|f_name
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"bad144: don't know how to format %s disks\n"
+literal|"don't know how to format %s disks"
 argument_list|,
 name|dp
 operator|->
 name|d_typename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|buf
@@ -4003,20 +3882,13 @@ name|buf
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: can't allocate sector buffer\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|3
+argument_list|,
+literal|"can't allocate sector buffer"
 argument_list|)
 expr_stmt|;
-block|}
 name|bufsize
 operator|=
 name|fp
@@ -4093,9 +3965,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"bad144: read format"
+literal|"read format"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4210,8 +4082,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"write format"
 argument_list|)
 expr_stmt|;
@@ -4239,13 +4113,15 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"bad144: write format %ld"
+literal|"write format %ld"
 argument_list|,
 name|blk
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -4257,37 +4133,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-name|void
-name|Perror
-parameter_list|(
-name|op
-parameter_list|)
-name|char
-modifier|*
-name|op
-decl_stmt|;
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad144: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-name|op
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 
