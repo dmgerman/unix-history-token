@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	1.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	1.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -139,6 +139,7 @@ init|;
 condition|;
 control|)
 block|{
+comment|/* 			 * Don't do the NOCROSSMOUNT check 			 * at this level.  By definition, 			 * union fs deals with namespaces, not 			 * filesystems. 			 */
 if|if
 condition|(
 operator|(
@@ -150,14 +151,6 @@ name|VROOT
 operator|)
 operator|==
 literal|0
-operator|||
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|NOCROSSMOUNT
-operator|)
 condition|)
 break|break;
 name|tdvp
@@ -235,7 +228,7 @@ name|dvp
 operator|=
 name|tdvp
 expr_stmt|;
-comment|/* 	 * Lastly check if the current node is a mount point in 	 * which cse walk up the mount hierarchy making sure not to 	 * bump into the root of the mount tree (ie. dvp != udvp). 	 */
+comment|/* 	 * Lastly check if the current node is a mount point in 	 * which case walk up the mount hierarchy making sure not to 	 * bump into the root of the mount tree (ie. dvp != udvp). 	 */
 while|while
 condition|(
 name|dvp
@@ -257,16 +250,6 @@ name|dvp
 operator|->
 name|v_mountedhere
 operator|)
-operator|&&
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|NOCROSSMOUNT
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.9 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -12,9 +12,53 @@ modifier|*
 name|target
 decl_stmt|;
 comment|/* Target of loopback  */
+name|int
+name|mntflags
+decl_stmt|;
+comment|/* Options on the mount */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|UNMNT_ABOVE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Target appears below mount point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNMNT_BELOW
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Target appears below mount point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNMNT_REPLACE
+value|0x0003
+end_define
+
+begin_comment
+comment|/* Target replaces mount point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNMNT_OPMASK
+value|0x0003
+end_define
 
 begin_struct
 struct|struct

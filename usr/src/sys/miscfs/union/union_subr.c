@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	1.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	1.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1340,7 +1340,7 @@ name|struct
 name|componentname
 name|cn
 decl_stmt|;
-comment|/* 	 * policy: when creating the shadow directory in the 	 * upper layer, create it owned by the current user, 	 * group from parent directory, and mode 777 modified 	 * by umask (ie mostly identical to the mkdir syscall). 	 * (jsp, kb) 	 * TODO: create the directory owned by the user who 	 * did the mount (um->um_cred). 	 */
+comment|/* 	 * policy: when creating the shadow directory in the 	 * upper layer, create it owned by the user who did 	 * the mount, group from parent directory, and mode 	 * 777 modified by umask (ie mostly identical to the 	 * mkdir syscall).  (jsp, kb) 	 */
 comment|/* 	 * A new componentname structure must be faked up because 	 * there is no way to know where the upper level cnp came 	 * from or what it is being used for.  This must duplicate 	 * some of the work done by NDINIT, some of the work done 	 * by namei, some of the work done by lookup and some of 	 * the work done by VOP_LOOKUP when given a CREATE flag. 	 * Conclusion: Horrible. 	 * 	 * The pathname buffer will be FREEed by VOP_MKDIR. 	 */
 name|cn
 operator|.
@@ -1417,9 +1417,9 @@ name|cn
 operator|.
 name|cn_cred
 operator|=
-name|cnp
+name|um
 operator|->
-name|cn_cred
+name|um_cred
 expr_stmt|;
 name|cn
 operator|.
@@ -1534,14 +1534,9 @@ name|va
 operator|.
 name|va_mode
 operator|=
-name|UN_DIRMODE
-operator|&
-operator|~
-name|p
+name|um
 operator|->
-name|p_fd
-operator|->
-name|fd_cmask
+name|um_cmode
 expr_stmt|;
 comment|/* LEASE_CHECK: dvp is locked */
 name|LEASE_CHECK
@@ -1684,6 +1679,7 @@ name|vpp
 operator|=
 name|NULLVP
 expr_stmt|;
+comment|/* 	 * Build a new componentname structure (for the same 	 * reasons outlines in union_mkshadow). 	 * The difference here is that the file is owned by 	 * the current user, rather than by the person who 	 * did the mount, since the current user needs to be 	 * able to write the file (that's why it is being 	 * copied in the first place). 	 */
 name|cn
 operator|.
 name|cn_namelen
@@ -1831,6 +1827,7 @@ operator|==
 name|NULLVP
 condition|)
 block|{
+comment|/* 		 * Good - there was no race to create the file 		 * so go ahead and create it.  The permissions 		 * on the file will be 0666 modified by the 		 * current user's umask.  Access to the file, while 		 * it is unioned, will require access to the top *and* 		 * bottom files.  Access when not unioned will simply 		 * require access to the top-level file. 		 * TODO: confirm choice of access permissions. 		 */
 name|VATTR_NULL
 argument_list|(
 name|vap
