@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)computer.c	4.6 (Berkeley) %G%"
+literal|"@(#)computer.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1043,10 +1043,12 @@ name|printf
 argument_list|(
 literal|"Starsystem %s in quadrant %d,%d is distressed\n"
 argument_list|,
-name|systemname
-argument_list|(
+name|Systemname
+index|[
 name|e
-argument_list|)
+operator|->
+name|systemname
+index|]
 argument_list|,
 name|e
 operator|->
