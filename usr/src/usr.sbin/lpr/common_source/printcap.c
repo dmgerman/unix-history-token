@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	printcap.c	1.3	81/06/01	*/
+end_comment
+
+begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
