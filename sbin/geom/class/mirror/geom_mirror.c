@@ -534,7 +534,7 @@ literal|"       %s remove [-v] name prov [prov [...]]\n"
 literal|"       %s activate [-v] name prov [prov [...]]\n"
 literal|"       %s deactivate [-v] name prov [prov [...]]\n"
 literal|"       %s forget prov [prov [...]]\n"
-literal|"       %s stop [-fv] name\n"
+literal|"       %s stop [-fv] name [...]\n"
 argument_list|,
 name|comm
 argument_list|,
