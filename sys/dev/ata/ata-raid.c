@@ -611,6 +611,12 @@ case|case
 literal|0x6268105a
 case|:
 case|case
+literal|0x4d69105a
+case|:
+case|case
+literal|0x5275105a
+case|:
+case|case
 literal|0x6269105a
 case|:
 comment|/* test RAID bit in PCI reg XXX */
