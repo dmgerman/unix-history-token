@@ -1084,11 +1084,6 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ata_start
 argument_list|(
 name|atadev
@@ -1101,9 +1096,16 @@ if|if
 condition|(
 name|callback
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 comment|/* wait for request to complete */
 name|tsleep
 argument_list|(
@@ -1117,6 +1119,11 @@ argument_list|,
 literal|"atprq"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|error
