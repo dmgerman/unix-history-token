@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.5 83/08/16"
+literal|"@(#)cmd2.c	3.6 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ name|openiwin
 argument_list|(
 name|wwnrow
 operator|-
-literal|2
+literal|3
 argument_list|,
 literal|"Help"
 argument_list|)
@@ -818,7 +818,7 @@ name|w
 operator|=
 name|openiwin
 argument_list|(
-literal|6
+literal|4
 argument_list|,
 literal|"IO Statics"
 argument_list|)
