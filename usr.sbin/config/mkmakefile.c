@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -80,6 +86,16 @@ name|wd
 parameter_list|)
 define|\
 value|{ register char *word = get_quoted_word(fp); \ 	  if (word == (char *)EOF) \ 		return; \ 	  else \ 		wd = word; \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns
+parameter_list|(
+name|s
+parameter_list|)
+value|strdup(s)
 end_define
 
 begin_decl_stmt

@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -55,6 +61,31 @@ include|#
 directive|include
 file|"y.tab.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|ns
+parameter_list|(
+name|s
+parameter_list|)
+value|strdup(s)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|lower
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|options
@@ -131,9 +162,12 @@ name|op
 operator|->
 name|op_name
 operator|=
+name|ns
+argument_list|(
 name|cp
 operator|->
 name|cpu_name
+argument_list|)
 expr_stmt|;
 name|op
 operator|->
@@ -977,11 +1011,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|lower
-parameter_list|()
-function_decl|;
 name|otab
 operator|=
 literal|0
@@ -1364,6 +1393,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|lower

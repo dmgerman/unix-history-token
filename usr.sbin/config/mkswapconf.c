@@ -62,6 +62,22 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ns
+parameter_list|(
+name|s
+parameter_list|)
+value|strdup(s)
+end_define
+
 begin_macro
 name|swapconf
 argument_list|()

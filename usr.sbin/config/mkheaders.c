@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -55,6 +61,16 @@ include|#
 directive|include
 file|"y.tab.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|ns
+parameter_list|(
+name|s
+parameter_list|)
+value|strdup(s)
+end_define
 
 begin_macro
 name|headers
@@ -740,7 +756,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* malloced */
 name|fl
 operator|->
 name|f_type
