@@ -4053,6 +4053,29 @@ name|sa_tag
 modifier|*
 name|stag
 decl_stmt|;
+comment|/* Avoid reentrantly sending on the socket */
+if|if
+condition|(
+name|SOCKBUF_OWNED
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+condition|)
+block|{
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EDEADLK
+operator|)
+return|;
+block|}
 comment|/* Extract data */
 name|NGI_GET_M
 argument_list|(
