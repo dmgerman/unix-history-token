@@ -8940,7 +8940,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_comment
-unit|static int sysctl_vnode (SYSCTL_HANDLER_ARGS) { 	struct proc *p = curproc;
+unit|static int sysctl_vnode(SYSCTL_HANDLER_ARGS) { 	struct proc *p = curproc;
 comment|/* XXX */
 end_comment
 
