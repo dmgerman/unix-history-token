@@ -763,6 +763,13 @@ name|logFacility
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|log_ipfw_denied
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -864,6 +871,10 @@ expr_stmt|;
 name|logFacility
 operator|=
 name|LOG_DAEMON
+expr_stmt|;
+name|log_ipfw_denied
+operator|=
+literal|0
 expr_stmt|;
 comment|/*  * Mark packet buffer empty.  */
 name|packetSock
@@ -2395,7 +2406,15 @@ name|aliasOverhead
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|errno
+operator|==
+name|EACCES
+operator|&&
+name|log_ipfw_denied
+condition|)
 block|{
 name|sprintf
 argument_list|(
@@ -3537,6 +3556,8 @@ block|,
 name|LogFacility
 block|,
 name|PunchFW
+block|,
+name|LogIpfwDenied
 block|}
 enum|;
 end_enum
@@ -3984,7 +4005,23 @@ literal|"punch_fw"
 block|,
 name|NULL
 block|}
+block|,
+block|{
+name|LogIpfwDenied
+block|,
+literal|0
+block|,
+name|YesNo
+block|,
+literal|"[yes|no]"
+block|,
+literal|"log packets converted by natd, but denied by ipfw"
+block|,
+literal|"log_ipfw_denied"
+block|,
+name|NULL
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4582,6 +4619,13 @@ name|strValue
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|LogIpfwDenied
+case|:
+name|log_ipfw_denied
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 end_function
