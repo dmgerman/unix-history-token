@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_local.h	4.1	83/03/13	*/
+comment|/*	in_local.h	4.2	83/03/13	*/
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ parameter_list|,
 name|in
 parameter_list|)
 define|\
-value|(in)& 0x8000 ? (n)& ~0xef00 : (h)
+value|(in)& 0x8000 ? (h)& ~0xef00 : (h)
 end_define
 
 begin_define
