@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.21 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,10 +397,21 @@ block|}
 ifdef|#
 directive|ifdef
 name|KERBEROS
+ifdef|#
+directive|ifdef
+name|CRYPT
 define|#
 directive|define
 name|OPTIONS
 value|"8KLdek:l:nwx"
+else|#
+directive|else
+define|#
+directive|define
+name|OPTIONS
+value|"8KLdek:l:nw"
+endif|#
+directive|endif
 else|#
 directive|else
 define|#
@@ -508,9 +519,17 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 case|case
 literal|'x'
 case|:
@@ -657,9 +676,17 @@ name|pw
 operator|->
 name|pw_name
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 comment|/* -x turns off -n */
 if|if
 condition|(
@@ -800,6 +827,9 @@ argument_list|(
 name|host
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|encrypt
@@ -831,6 +861,8 @@ name|schedule
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|rem
 operator|=
 name|krcmd
@@ -1239,9 +1271,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -1496,9 +1536,17 @@ condition|)
 goto|goto
 name|rewrite
 goto|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -1678,9 +1726,17 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -1764,9 +1820,17 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -1854,9 +1918,17 @@ name|char
 name|signo
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPT
+argument_list|)
 if|if
 condition|(
 name|encrypt
@@ -2160,21 +2232,49 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-ndx]%s[-l login] host [command]\n"
+literal|"usage: rsh [-nd%s]%s[-l login] host [command]\n"
 argument_list|,
 ifdef|#
 directive|ifdef
 name|KERBEROS
+ifdef|#
+directive|ifdef
+name|CRYPT
+literal|"x"
+argument_list|,
 literal|" [-k realm] "
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-literal|" "
+literal|""
+operator|,
+literal|" [-k realm] "
 block|)
 end_block
 
 begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+literal|""
+operator|,
+literal|" "
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
 empty_stmt|;
 end_empty_stmt
 

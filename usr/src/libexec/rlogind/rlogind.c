@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.48 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,6 +483,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CRYPT
 case|case
 literal|'x'
 case|:
@@ -491,6 +494,8 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 endif|#
 directive|endif
 case|case
@@ -1214,6 +1219,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|KERBEROS
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|encrypt
@@ -1233,6 +1241,8 @@ name|SECURE_MESSAGE
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|use_kerberos
