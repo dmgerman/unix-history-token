@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.13 (Berkeley) %G%"
+literal|"@(#)w.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,6 +155,10 @@ name|dev_t
 name|w_tty
 decl_stmt|;
 comment|/* tty device of process */
+name|int
+name|w_uid
+decl_stmt|;
+comment|/* uid of process */
 name|char
 name|w_comm
 index|[
@@ -341,6 +345,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|uid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|doing
 index|[
@@ -398,7 +408,7 @@ begin_define
 define|#
 directive|define
 name|TTYEQ
-value|(tty == pr[i].w_tty)
+value|(tty == pr[i].w_tty&& uid == pr[i].w_uid)
 end_define
 
 begin_define
@@ -1796,6 +1806,12 @@ name|statbuf
 operator|.
 name|st_rdev
 expr_stmt|;
+name|uid
+operator|=
+name|statbuf
+operator|.
+name|st_uid
+expr_stmt|;
 block|}
 end_block
 
@@ -3135,6 +3151,17 @@ operator|=
 name|up
 operator|.
 name|u_ttyd
+expr_stmt|;
+name|pr
+index|[
+name|np
+index|]
+operator|.
+name|w_uid
+operator|=
+name|mproc
+operator|.
+name|p_uid
 expr_stmt|;
 name|up
 operator|.
