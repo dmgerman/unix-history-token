@@ -137,6 +137,10 @@ name|unsigned
 name|short
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;

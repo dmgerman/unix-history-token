@@ -444,6 +444,10 @@ expr|struct
 name|air_vcc_rsp
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|air
 operator|.
 name|air_buf_addr
@@ -607,6 +611,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -1095,6 +1103,10 @@ expr|struct
 name|air_cfg_rsp
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|air
 operator|.
 name|air_buf_addr
@@ -1205,6 +1217,10 @@ operator|=
 operator|(
 expr|struct
 name|air_int_rsp
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|air
