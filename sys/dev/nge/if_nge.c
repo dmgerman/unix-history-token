@@ -6180,8 +6180,6 @@ name|struct
 name|nge_desc
 modifier|*
 name|cur_tx
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ifnet
@@ -6199,13 +6197,6 @@ operator|->
 name|arpcom
 operator|.
 name|ac_if
-expr_stmt|;
-comment|/* Clear the timeout timer. */
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Go through our tx list and free mbufs for those 	 * frames that have been transmitted. 	 */
 name|idx
@@ -6357,6 +6348,13 @@ name|nge_mbuf
 operator|=
 name|NULL
 expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_OACTIVE
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -6372,12 +6370,6 @@ argument_list|,
 name|NGE_TX_LIST_CNT
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -6389,16 +6381,19 @@ name|idx
 expr_stmt|;
 if|if
 condition|(
-name|cur_tx
-operator|!=
-name|NULL
+name|idx
+operator|==
+name|sc
+operator|->
+name|nge_cdata
+operator|.
+name|nge_tx_prod
 condition|)
 name|ifp
 operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_OACTIVE
+name|if_timer
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
