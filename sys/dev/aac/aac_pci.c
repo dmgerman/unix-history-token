@@ -1115,7 +1115,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* algnmnt, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -1172,7 +1172,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* algnmnt, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
