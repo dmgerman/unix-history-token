@@ -544,7 +544,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|NULL
+literal|0
 operator|)
 condition|)
 name|nettype
