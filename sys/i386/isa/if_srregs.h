@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by [your name]  *	and [any other names deserving credit ]  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY [your name] AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (c) 1995 John Hay.  * Copyright (c) 1996 SDL Communications, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_srregs.h,v 1.1 1996/07/05 18:49:22 jhay Exp $  */
 end_comment
 
 begin_ifndef
@@ -42,6 +42,24 @@ end_define
 
 begin_comment
 comment|/* Sepperate sets of tx buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_CRD_N2
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SR_CRD_N2PCI
+value|2
+end_define
+
+begin_comment
+comment|/*  * RISCom/N2 ISA card.  */
 end_comment
 
 begin_define
@@ -464,6 +482,244 @@ end_define
 begin_comment
 comment|/* Enable Ext Clock out */
 end_comment
+
+begin_comment
+comment|/*  * RISCom/N2 PCI card.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Front End Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_ETC0
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Enable Ext Clock out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_ETC1
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Enable Ext Clock out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_TE0
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Enable RS422 TXD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_TE1
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Enable RS422 TXD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_GPO0
+value|0x0010
+end_define
+
+begin_comment
+comment|/* General Purpose Output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_GPO1
+value|0x0020
+end_define
+
+begin_comment
+comment|/* General Purpose Output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_DTR0
+value|0x0040
+end_define
+
+begin_comment
+comment|/* 0 for active, 1 for inactive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_DTR1
+value|0x0080
+end_define
+
+begin_comment
+comment|/* 0 for active, 1 for inactive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_DSR0
+value|0x0100
+end_define
+
+begin_comment
+comment|/* DSR0 Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_ID0
+value|0x0E00
+end_define
+
+begin_comment
+comment|/* ID of channel 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_DSR1
+value|0x1000
+end_define
+
+begin_comment
+comment|/* DSR1 Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FECR_ID1
+value|0xE000
+end_define
+
+begin_comment
+comment|/* ID of channel 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID_V35
+value|0x00
+end_define
+
+begin_comment
+comment|/* V.35 Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID_RS232
+value|0x01
+end_define
+
+begin_comment
+comment|/* RS232 Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID_TEST
+value|0x02
+end_define
+
+begin_comment
+comment|/* Test Board */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID_RS422
+value|0x03
+end_define
+
+begin_comment
+comment|/* RS422 Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID_HSSI
+value|0x05
+end_define
+
+begin_comment
+comment|/* HSSI Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID_X21
+value|0x06
+end_define
+
+begin_comment
+comment|/* X.21 Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID_NONE
+value|0x07
+end_define
+
+begin_comment
+comment|/* No card present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID0_SHFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SR_FE_ID1_SHFT
+value|13
+end_define
 
 begin_endif
 endif|#
