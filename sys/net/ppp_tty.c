@@ -81,12 +81,6 @@ directive|include
 file|<sys/uio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1286,7 +1280,7 @@ name|TS_ASYNC
 operator|||
 name|flag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 block|{
 name|splx
