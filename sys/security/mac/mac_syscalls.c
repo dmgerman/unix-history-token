@@ -853,6 +853,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_security_mac_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|counters
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"TrustedBSD MAC object counters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -884,7 +902,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -905,7 +923,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -926,7 +944,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -947,7 +965,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -968,7 +986,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -989,7 +1007,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1010,7 +1028,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1031,7 +1049,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1052,7 +1070,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1073,7 +1091,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1094,7 +1112,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-name|_security_mac_debug
+name|_security_mac_debug_counters
 argument_list|,
 name|OID_AUTO
 argument_list|,
