@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.5 (Berkeley) %G%"
+literal|"@(#)input.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"histedit.h"
+file|"myhistedit.h"
 end_include
 
 begin_define

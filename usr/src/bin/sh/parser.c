@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	5.6 (Berkeley) %G%"
+literal|"@(#)parser.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,7 +123,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"histedit.h"
+file|"myhistedit.h"
 end_include
 
 begin_comment
