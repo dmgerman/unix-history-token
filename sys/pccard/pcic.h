@@ -73,5 +73,12 @@ name|PCIC_RF_MDF_WP
 value|(0x20<< 16)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|pcic_devclass
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
