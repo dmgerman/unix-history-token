@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	4.8 %G%"
+literal|"@(#)trpt.c	4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,6 +1251,9 @@ name|TA_INPUT
 case|:
 case|case
 name|TA_OUTPUT
+case|:
+case|case
+name|TA_DROP
 case|:
 if|if
 condition|(
