@@ -345,6 +345,13 @@ name|cdevsw
 name|nfs4dev_cdevsw
 init|=
 block|{
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|502102
+operator|)
 operator|.
 name|d_version
 operator|=
@@ -355,6 +362,8 @@ name|d_flags
 operator|=
 name|D_NEEDGIANT
 block|,
+endif|#
+directive|endif
 operator|.
 name|d_open
 operator|=
@@ -379,7 +388,7 @@ operator|.
 name|d_name
 operator|=
 name|NFS4DEV_NAME
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
