@@ -380,30 +380,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_SHLOCK
-value|0x0020
-end_define
-
-begin_comment
-comment|/* File has shared lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_EXLOCK
-value|0x0040
-end_define
-
-begin_comment
-comment|/* File has exclusive lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IN_HASHED
-value|0x0080
+value|0x0020
 end_define
 
 begin_comment
@@ -414,11 +392,22 @@ begin_define
 define|#
 directive|define
 name|IN_LAZYMOD
-value|0x0100
+value|0x0040
 end_define
 
 begin_comment
 comment|/* Modified, but don't write yet. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_SPACECOUNTED
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Blocks to be freed in free count. */
 end_comment
 
 begin_ifdef

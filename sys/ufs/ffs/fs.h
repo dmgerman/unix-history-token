@@ -631,10 +631,18 @@ comment|/* expected # of files per directory */
 name|int32_t
 name|fs_sparecon
 index|[
-literal|28
+literal|26
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
+name|int32_t
+name|fs_pendingblocks
+decl_stmt|;
+comment|/* blocks in process of being freed */
+name|int32_t
+name|fs_pendinginodes
+decl_stmt|;
+comment|/* inodes in process of being freed */
 name|int32_t
 name|fs_contigsumsize
 decl_stmt|;

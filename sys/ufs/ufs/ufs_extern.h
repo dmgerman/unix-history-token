@@ -775,6 +775,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|softdep_releasefile
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|softdep_slowdown
 name|__P

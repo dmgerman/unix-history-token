@@ -760,6 +760,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|softdep_releasefile
+parameter_list|(
+name|ip
+parameter_list|)
+name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
+comment|/* inode with the zero effective link count */
+block|{
+name|panic
+argument_list|(
+literal|"softdep_releasefile called"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
