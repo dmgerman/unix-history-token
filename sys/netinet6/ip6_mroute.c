@@ -574,10 +574,6 @@ name|pim6stat
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * one-back cache used by ipip_input to locate a tunnel's mif  * given a datagram's src ip address.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
