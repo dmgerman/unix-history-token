@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.49 %G%"
+literal|"@(#)sccs.c	1.50 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,28 @@ begin_endif
 endif|#
 directive|endif
 endif|INGVAX
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CORY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PROGPATH
+parameter_list|(
+name|name
+parameter_list|)
+value|"/usr/eecs/bin/name"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|CORY
 end_endif
 
 begin_comment
