@@ -636,6 +636,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* per/if statistics printing routine */
+specifier|const
 name|char
 modifier|*
 name|pr_name
@@ -1528,6 +1529,7 @@ name|struct
 name|protox
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -3115,6 +3117,7 @@ name|protox
 modifier|*
 name|tp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
