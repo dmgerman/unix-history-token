@@ -11410,6 +11410,13 @@ name|td
 operator|->
 name|td_frame
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|curthread
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|mcp
 operator|->
 name|mc_onstack
@@ -11419,6 +11426,13 @@ argument_list|(
 name|tp
 operator|->
 name|tf_esp
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|curthread
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|mcp
