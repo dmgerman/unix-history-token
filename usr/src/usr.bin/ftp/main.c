@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.3 (Berkeley) %G%"
+literal|"@(#)main.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,7 +412,7 @@ name|char
 modifier|*
 name|xargv
 index|[
-literal|3
+literal|5
 index|]
 decl_stmt|;
 specifier|extern
@@ -488,6 +488,13 @@ name|argv
 index|[
 literal|2
 index|]
+expr_stmt|;
+name|xargv
+index|[
+literal|4
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 name|setpeer
 argument_list|(
