@@ -74,6 +74,8 @@ parameter_list|(
 name|caddr_t
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|my_fsid
 modifier|*
 parameter_list|,

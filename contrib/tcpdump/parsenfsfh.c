@@ -329,6 +329,8 @@ name|Parse_fh
 parameter_list|(
 name|fh
 parameter_list|,
+name|len
+parameter_list|,
 name|fsidp
 parameter_list|,
 name|inop
@@ -343,6 +345,9 @@ specifier|register
 name|caddr_t
 modifier|*
 name|fh
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 name|my_fsid
 modifier|*
