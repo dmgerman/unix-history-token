@@ -678,7 +678,10 @@ name|struct
 name|ipvcc
 modifier|*
 name|ivp
+init|=
+name|NULL
 decl_stmt|;
+comment|/* XXX pacify gcc-3.1 */
 name|Atm_attributes
 modifier|*
 name|ap
@@ -1279,7 +1282,10 @@ name|struct
 name|ipvcc
 modifier|*
 name|ivp
+init|=
+name|NULL
 decl_stmt|;
+comment|/* XXX pacify gcc-3.1 */
 name|struct
 name|in_addr
 modifier|*
