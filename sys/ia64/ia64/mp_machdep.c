@@ -457,8 +457,7 @@ end_expr_stmt
 begin_expr_stmt
 name|panic
 argument_list|(
-name|__func__
-literal|": cpu_throw() returned"
+literal|"ia64_ap_startup: cpu_throw() returned"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -559,8 +558,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
+literal|"%s: cpu%d already in CPU map"
+operator|,
 name|__func__
-literal|": cpu%d already in CPU map"
 operator|,
 name|acpiid
 operator|)
@@ -594,8 +594,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
+literal|"%s: the BSP must be cpu0"
+operator|,
 name|__func__
-literal|": the BSP must be cpu0"
 operator|)
 argument_list|)
 expr_stmt|;
