@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.24 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.25 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.24 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.25 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1297,7 +1297,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-specifier|const
 name|u_char
 modifier|*
 name|comp_dn
