@@ -234,13 +234,20 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Config has a global notion of which machine type is  * being used.  It uses the name of the machine in choosing  * files and directories.  Thus if the name of the machine is ``i386'',  * it will build from ``Makefile.i386'' and use ``../i386/inline''  * in the makerules, etc.  */
+comment|/*  * Config has a global notion of which machine type is  * being used.  It uses the name of the machine in choosing  * files and directories.  Thus if the name of the machine is ``i386'',  * it will build from ``Makefile.i386'' and use ``../i386/inline''  * in the makerules, etc.  machinearch is the global notion of the  * MACHINE_ARCH for this MACHINE.  */
 end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
 name|machinename
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|machinearch
 decl_stmt|;
 end_decl_stmt
 
