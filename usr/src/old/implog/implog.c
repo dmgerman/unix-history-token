@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implog.c	5.6 (Berkeley) %G%"
+literal|"@(#)implog.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,8 +91,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|IMPMESSAGES
+end_define
 
 begin_define
 define|#
@@ -1618,24 +1630,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
-name|char
-modifier|*
-name|down
-index|[]
-init|=
-block|{
-literal|"in 30 secs"
-block|,
-literal|"for hardware pm"
-block|,
-literal|"for software reload"
-block|,
-literal|"for emergency restart"
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|impdown
 argument_list|(
@@ -1660,7 +1654,7 @@ name|printf
 argument_list|(
 literal|"imp going down %s"
 argument_list|,
-name|down
+name|impmessage
 index|[
 name|ip
 operator|->
@@ -1678,21 +1672,25 @@ name|ip
 operator|->
 name|il_link
 operator|>>
-literal|2
+name|IMPDOWN_WHENSHIFT
 operator|)
 operator|&
-literal|0xf
+name|IMPDOWN_WHENMASK
 operator|)
 operator|*
-literal|5
+name|IMPDOWN_WHENUNIT
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ip
 operator|->
 name|il_link
 operator|&
 name|IMP_DMASK
+operator|)
+operator|!=
+name|IMPDOWN_GOING
 condition|)
 name|printf
 argument_list|(
@@ -1707,7 +1705,7 @@ name|ip
 operator|->
 name|il_subtype
 operator|*
-literal|5
+name|IMPDOWN_WHENUNIT
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1917,7 +1915,7 @@ name|printf
 argument_list|(
 literal|"down %s, "
 argument_list|,
-name|down
+name|impmessage
 index|[
 name|ip
 operator|->
