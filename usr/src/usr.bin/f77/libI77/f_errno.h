@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errno[] = "@(#)f_errno.h	1.4";  *  * f77 I/O error definitions  */
+comment|/* char id_f_errno[] = "@(#)f_errno.h	1.5";  *  * f77 I/O error definitions  */
 end_comment
 
 begin_include
@@ -285,6 +285,17 @@ end_define
 
 begin_comment
 comment|/* negative repeat count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_ERILLOP
+value|123
+end_define
+
+begin_comment
+comment|/* illegal operation for channel or device */
 end_comment
 
 begin_define

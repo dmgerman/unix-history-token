@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.2";  *  * f77 I/O error messages  */
+comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.3";  *  * f77 I/O error messages  */
 end_comment
 
 begin_decl_stmt
@@ -78,6 +78,9 @@ literal|"illegal argument"
 block|,
 comment|/* 122 */
 literal|"negative repeat count"
+block|,
+comment|/* 123 */
+literal|"illegal operation for unit"
 block|, }
 decl_stmt|;
 end_decl_stmt
