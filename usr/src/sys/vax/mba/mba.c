@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.13	81/03/03	*/
+comment|/*	mba.c	4.14	81/03/06	*/
 end_comment
 
 begin_include
@@ -446,7 +446,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%c%d not ready\n"
+literal|"%c%d: not ready\n"
 argument_list|,
 name|mi
 operator|->
@@ -707,11 +707,20 @@ name|mbastat
 operator|&
 name|MBS_CBHUNG
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"mba CBHUNG"
+literal|"mba%d: control bus hung\n"
+argument_list|,
+name|mbanum
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"cbhung"
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* note: the mbd_as register is shared between drives */
@@ -1472,8 +1481,36 @@ operator|)
 return|;
 end_return
 
+begin_expr_stmt
+unit|}  mbainit
+operator|(
+name|mp
+operator|)
+expr|struct
+name|mba_regs
+operator|*
+name|mp
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+name|mp
+operator|->
+name|mba_cr
+operator|=
+name|MBAINIT
+expr_stmt|;
+name|mp
+operator|->
+name|mba_cr
+operator|=
+name|MBAIE
+expr_stmt|;
+block|}
+end_block
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
