@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	4.6 (Berkeley) %G%"
+literal|"@(#)ping.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1762,6 +1762,11 @@ name|sum
 init|=
 literal|0
 decl_stmt|;
+name|u_short
+name|odd_byte
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 *  Our algorithm is simple, using a 32 bit accumulator (sum), 	 *  we add sequential 16 bit words to it, and at the end, fold 	 *  back all the carry bits from the top 16 bits into the lower 	 *  16 bits. 	 */
 while|while
 condition|(
@@ -1788,8 +1793,17 @@ name|nleft
 operator|==
 literal|1
 condition|)
-name|sum
-operator|+=
+block|{
+operator|*
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|(
+operator|&
+name|odd_byte
+operator|)
+operator|=
 operator|*
 operator|(
 name|u_char
@@ -1797,6 +1811,11 @@ operator|*
 operator|)
 name|w
 expr_stmt|;
+name|sum
+operator|+=
+name|odd_byte
+expr_stmt|;
+block|}
 comment|/* 	 * add back carry outs from top 16 bits to low 16 bits 	 */
 name|sum
 operator|=
