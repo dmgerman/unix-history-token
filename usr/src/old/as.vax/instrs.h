@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)instrs.h 4.3 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)instrs.h 4.4 %G%  */
 end_comment
 
 begin_comment
@@ -237,6 +237,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACCV
+value|(8<<TYPLG)
+end_define
+
+begin_comment
+comment|/* address only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACCM
 value|(ACCR | ACCW)
 end_define
@@ -272,7 +283,7 @@ comment|/*  *	Construction of TYPX and ACCX, to make the instrs table  *	easy to
 end_comment
 
 begin_comment
-comment|/*  *	For address  */
+comment|/*  *	For real memory address  */
 end_comment
 
 begin_define
@@ -336,6 +347,73 @@ define|#
 directive|define
 name|A_AH
 value|A_CONS(ACCA, TYPH)
+end_define
+
+begin_comment
+comment|/*  *	For real memory addresses, or register addresses [sic]  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_VB
+value|A_CONS(ACCV, TYPB)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VW
+value|A_CONS(ACCV, TYPW)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VL
+value|A_CONS(ACCV, TYPL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VQ
+value|A_CONS(ACCV, TYPQ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VO
+value|A_CONS(ACCV, TYPO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VF
+value|A_CONS(ACCV, TYPF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VD
+value|A_CONS(ACCV, TYPD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VG
+value|A_CONS(ACCV, TYPG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_VH
+value|A_CONS(ACCV, TYPH)
 end_define
 
 begin_comment
