@@ -1,20 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vmmeter.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vmmeter.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Virtual memory related instrumentation  */
+comment|/*  * System wide statistics counters.  */
 end_comment
 
 begin_struct
 struct|struct
 name|vmmeter
 block|{
-define|#
-directive|define
-name|v_first
-value|v_swtch
+comment|/* 	 * General system activity. 	 */
 name|unsigned
 name|v_swtch
 decl_stmt|;
@@ -36,9 +33,34 @@ name|v_soft
 decl_stmt|;
 comment|/* software interrupts */
 name|unsigned
-name|v_pdma
+name|v_faults
 decl_stmt|;
-comment|/* pseudo-dma interrupts */
+comment|/* total faults taken */
+comment|/* 	 * Virtual memory activity. 	 */
+name|unsigned
+name|v_lookups
+decl_stmt|;
+comment|/* object cache lookups */
+name|unsigned
+name|v_hits
+decl_stmt|;
+comment|/* object cache hits */
+name|unsigned
+name|v_vm_faults
+decl_stmt|;
+comment|/* number of address memory faults */
+name|unsigned
+name|v_cow_faults
+decl_stmt|;
+comment|/* number of copy-on-writes */
+name|unsigned
+name|v_swpin
+decl_stmt|;
+comment|/* swapins */
+name|unsigned
+name|v_swpout
+decl_stmt|;
+comment|/* swapouts */
 name|unsigned
 name|v_pswpin
 decl_stmt|;
@@ -48,13 +70,13 @@ name|v_pswpout
 decl_stmt|;
 comment|/* pages swapped out */
 name|unsigned
-name|v_pgin
+name|v_pageins
 decl_stmt|;
-comment|/* pageins */
+comment|/* number of pageins */
 name|unsigned
-name|v_pgout
+name|v_pageouts
 decl_stmt|;
-comment|/* pageouts */
+comment|/* number of pageouts */
 name|unsigned
 name|v_pgpgin
 decl_stmt|;
@@ -68,94 +90,70 @@ name|v_intrans
 decl_stmt|;
 comment|/* intransit blocking page faults */
 name|unsigned
-name|v_pgrec
+name|v_reactivated
 decl_stmt|;
-comment|/* total page reclaims */
-name|unsigned
-name|v_xsfrec
-decl_stmt|;
-comment|/* found in free list rather than on swapdev */
-name|unsigned
-name|v_xifrec
-decl_stmt|;
-comment|/* found in free list rather than in filsys */
-name|unsigned
-name|v_exfod
-decl_stmt|;
-comment|/* pages filled on demand from executables */
-name|unsigned
-name|v_zfod
-decl_stmt|;
-comment|/* pages zero filled on demand */
-name|unsigned
-name|v_vrfod
-decl_stmt|;
-comment|/* fills of pages mapped by vread() */
-name|unsigned
-name|v_nexfod
-decl_stmt|;
-comment|/* number of exfod's created */
-name|unsigned
-name|v_nzfod
-decl_stmt|;
-comment|/* number of zfod's created */
-name|unsigned
-name|v_nvrfod
-decl_stmt|;
-comment|/* number of vrfod's created */
-name|unsigned
-name|v_pgfrec
-decl_stmt|;
-comment|/* page reclaims from free list */
-name|unsigned
-name|v_faults
-decl_stmt|;
-comment|/* total faults taken */
-name|unsigned
-name|v_scan
-decl_stmt|;
-comment|/* scans in page out daemon */
+comment|/* number of pages reactivated from free list */
 name|unsigned
 name|v_rev
 decl_stmt|;
 comment|/* revolutions of the hand */
 name|unsigned
-name|v_seqfree
+name|v_scan
 decl_stmt|;
-comment|/* pages taken from sequential programs */
+comment|/* scans in page out daemon */
 name|unsigned
 name|v_dfree
 decl_stmt|;
 comment|/* pages freed by daemon */
 name|unsigned
-name|v_fastpgrec
+name|v_pfree
 decl_stmt|;
-comment|/* fast reclaims in locore */
-ifdef|#
-directive|ifdef
-name|tahoe
+comment|/* pages freed by exiting processes */
 name|unsigned
-name|v_fpe
+name|v_zfod
 decl_stmt|;
-comment|/* floating point emulation traps */
+comment|/* pages zero filled on demand */
 name|unsigned
-name|v_align
+name|v_nzfod
 decl_stmt|;
-comment|/* alignment emulation traps */
-endif|#
-directive|endif
-define|#
-directive|define
-name|v_last
-value|v_fastpgrec
+comment|/* number of zfod's created */
+comment|/* 	 * Distribution of page usages. 	 */
 name|unsigned
-name|v_swpin
+name|v_page_size
 decl_stmt|;
-comment|/* swapins */
+comment|/* page size in bytes */
 name|unsigned
-name|v_swpout
+name|v_kernel_pages
 decl_stmt|;
-comment|/* swapouts */
+comment|/* number of pages in use by kernel */
+name|unsigned
+name|v_free_target
+decl_stmt|;
+comment|/* number of pages desired free */
+name|unsigned
+name|v_free_min
+decl_stmt|;
+comment|/* minimum number of pages desired free */
+name|unsigned
+name|v_free_count
+decl_stmt|;
+comment|/* number of pages free */
+name|unsigned
+name|v_wire_count
+decl_stmt|;
+comment|/* number of pages wired down */
+name|unsigned
+name|v_active_count
+decl_stmt|;
+comment|/* number of pages active */
+name|unsigned
+name|v_inactive_target
+decl_stmt|;
+comment|/* number of pages desired inactive */
+name|unsigned
+name|v_inactive_count
+decl_stmt|;
+comment|/* number of pages inactive */
 block|}
 struct|;
 end_struct
@@ -170,10 +168,6 @@ begin_decl_stmt
 name|struct
 name|vmmeter
 name|cnt
-decl_stmt|,
-name|rate
-decl_stmt|,
-name|sum
 decl_stmt|;
 end_decl_stmt
 
@@ -227,21 +221,21 @@ name|t_arm
 decl_stmt|;
 comment|/* active real memory */
 name|long
-name|t_vmtxt
+name|t_vmshr
 decl_stmt|;
-comment|/* virtual memory used by text */
+comment|/* shared virtual memory */
 name|long
-name|t_avmtxt
+name|t_avmshr
 decl_stmt|;
-comment|/* active virtual memory used by text */
+comment|/* active shared virtual memory */
 name|long
-name|t_rmtxt
+name|t_rmshr
 decl_stmt|;
-comment|/* real memory used by text */
+comment|/* shared real memory */
 name|long
-name|t_armtxt
+name|t_armshr
 decl_stmt|;
-comment|/* active real memory used by text */
+comment|/* active shared real memory */
 name|long
 name|t_free
 decl_stmt|;
