@@ -98,6 +98,22 @@ file|<sys/param.h>
 end_include
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|usage
 name|__P
@@ -245,6 +261,9 @@ name|getcwd
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
