@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	8.2 (Berkeley) %G%"
+literal|"@(#)inet.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,16 +521,12 @@ condition|)
 block|{
 name|mask
 operator|=
-name|i
-operator|&
 name|IN_CLASSB_NET
 expr_stmt|;
 block|}
 else|else
 name|mask
 operator|=
-name|i
-operator|&
 name|IN_CLASSC_NET
 expr_stmt|;
 comment|/* 	 * Check whether network is a subnet; 	 * if so, use the modified interpretation of `host'. 	 */
