@@ -2495,6 +2495,12 @@ name|interrupt_save
 argument_list|)
 expr_stmt|;
 comment|/* 	 *	All signals are inherited... 	 */
+name|setproctitle
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Restore the proctitle. */
 name|childpid
 operator|=
 name|fork
@@ -2899,6 +2905,13 @@ name|enslave
 argument_list|()
 expr_stmt|;
 comment|/* Share open tape file descriptor with slaves */
+name|signal
+argument_list|(
+name|SIGINFO
+argument_list|,
+name|infosch
+argument_list|)
+expr_stmt|;
 name|asize
 operator|=
 literal|0
