@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.190 (Berkeley) %G%"
+literal|"@(#)conf.c	8.191 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5491,7 +5491,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		none. ** **	Returns: **		TRUE if incoming SMTP connections should be refused **			(for now). **		FALSE if we should accept new work. ** **	Side Effects: **		none. */
+comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		none. ** **	Returns: **		TRUE if incoming SMTP connections should be refused **			(for now). **		FALSE if we should accept new work. ** **	Side Effects: **		Sets process title when it is rejecting connections. */
 end_comment
 
 begin_function
@@ -5502,6 +5502,11 @@ block|{
 specifier|extern
 name|bool
 name|enoughdiskspace
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|setproctitle
 parameter_list|()
 function_decl|;
 ifdef|#
@@ -5518,12 +5523,24 @@ name|TRUE
 return|;
 endif|#
 directive|endif
-comment|/* this is probably too simplistic */
-return|return
+if|if
+condition|(
 name|CurrentLA
 operator|>=
 name|RefuseLA
-operator|||
+condition|)
+block|{
+name|setproctitle
+argument_list|(
+literal|"rejecting connections: load average: %d"
+argument_list|,
+name|CurrentLA
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|!
 name|enoughdiskspace
 argument_list|(
@@ -5531,6 +5548,42 @@ name|MinBlocksFree
 operator|+
 literal|1
 argument_list|)
+condition|)
+block|{
+name|setproctitle
+argument_list|(
+literal|"rejecting connections: min free: %d"
+argument_list|,
+name|MinBlocksFree
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|MaxChildren
+operator|>
+literal|0
+operator|&&
+name|CurChildren
+operator|>=
+name|MaxChildren
+condition|)
+block|{
+name|setproctitle
+argument_list|(
+literal|"rejecting connections: maximum children: %d"
+argument_list|,
+name|CurChildren
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+return|return
+name|FALSE
+return|;
+return|return
+name|TRUE
 return|;
 block|}
 end_function
@@ -6178,6 +6231,9 @@ endif|#
 directive|endif
 break|break;
 block|}
+name|CurChildren
+operator|--
+expr_stmt|;
 block|}
 else|#
 directive|else
@@ -6207,7 +6263,9 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-continue|continue;
+name|CurChildren
+operator|--
+expr_stmt|;
 else|#
 directive|else
 comment|/* WNOHANG */
@@ -6225,7 +6283,9 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-continue|continue;
+name|CurChildren
+operator|--
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* WNOHANG */
