@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cbcp.c,v 1.12 1999/05/08 11:06:10 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cbcp.c,v 1.13 1999/06/02 15:58:53 brian Exp $  */
 end_comment
 
 begin_include
@@ -1968,7 +1968,35 @@ block|{
 case|case
 name|CBCP_NONUM
 case|:
-comment|/*        * If the callee offers no callback, we send our desired response        * anyway.  This is what Win95 does - although I can't find this        * behaviour documented in the spec....        */
+if|if
+condition|(
+name|cbcp
+operator|->
+name|p
+operator|->
+name|dl
+operator|->
+name|cfg
+operator|.
+name|callback
+operator|.
+name|opmask
+operator|&
+name|CALLBACK_BIT
+argument_list|(
+name|CALLBACK_NONE
+argument_list|)
+condition|)
+comment|/*          * if ``none'' is a configured callback possibility          * (ie, ``set callback cbcp none''), go along with the callees          * request          */
+name|cbcp
+operator|->
+name|fsm
+operator|.
+name|type
+operator|=
+name|CBCP_NONUM
+expr_stmt|;
+comment|/*        * Otherwise, we send our desired response anyway.  This seems to be        * what Win95 does - although I can't find this behaviour documented        * in the CBCP spec....        */
 return|return
 literal|1
 return|;
@@ -4007,6 +4035,39 @@ operator|->
 name|id
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cbcp
+operator|->
+name|fsm
+operator|.
+name|type
+operator|==
+name|CBCP_NONUM
+condition|)
+block|{
+comment|/*          * Don't change state in case the peer doesn't get our ACK,          * just bring the layer up.          */
+name|timer_Stop
+argument_list|(
+operator|&
+name|cbcp
+operator|->
+name|fsm
+operator|.
+name|timer
+argument_list|)
+expr_stmt|;
+name|datalink_NCPUp
+argument_list|(
+name|cbcp
+operator|->
+name|p
+operator|->
+name|dl
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|cbcp
