@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.7 1994/10/27 18:44:31 pst Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.8 1994/11/01 21:14:45 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -3720,9 +3720,6 @@ name|fddep
 operator|->
 name|de_pmp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 comment|/* Check for cross-device rename */
 if|if
 condition|(
@@ -3765,8 +3762,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Convert the filename in tcnp into a dos filename. We copy this 	 * into the denode and directory entry for the destination 	 * file/directory. 	 */
 name|unix2dosfn
 argument_list|(
