@@ -174,7 +174,7 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-name|int
+name|long
 name|len
 decl_stmt|;
 block|{
@@ -211,7 +211,7 @@ condition|(
 name|len
 operator|<
 operator|(
-name|int
+name|long
 operator|)
 name|xdrs
 operator|->
