@@ -17,7 +17,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asinh.c	1.1 (Berkeley) %G%"
+literal|"@(#)asinh.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* ASINH(X)  * RETURN THE INVERSE HYPERBOLIC SINE OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 2/16/85;  * REVISED BY K.C. NG on 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions :  *	copysign(x,y)  *	sqrt(x)  *  * Required kernel function:  *	L(x) 		...return log(1+x)  *  * Method :  *	Based on   *		asinh(x) = sign(x) * log [ |x| + sqrt(x*x+1) ]  *	we have  *	asinh(x) := x  if  1+x*x=1,  *		 := sign(x)*(L(x)+ln2))	 if sqrt(1+x*x)=x, else  *		 := sign(x)*L( |x| + |x|/(1/|x| + sqrt(1+(1/|x|)^2)) )    *  * Accuracy:  *	asinh(x) returns the exact inverse hyperbolic sine of x nearly rounded.  *	In a test run with 52,000 random arguments on a VAX, the maximum   *	observed error was 1.58 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* ASINH(X)  * RETURN THE INVERSE HYPERBOLIC SINE OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 2/16/85;  * REVISED BY K.C. NG on 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions :  *	copysign(x,y)  *	sqrt(x)  *  * Required kernel function:  *	log1p(x) 		...return log(1+x)  *  * Method :  *	Based on   *		asinh(x) = sign(x) * log [ |x| + sqrt(x*x+1) ]  *	we have  *	asinh(x) := x  if  1+x*x=1,  *		 := sign(x)*(log1p(x)+ln2))	 if sqrt(1+x*x)=x, else  *		 := sign(x)*log1p(|x| + |x|/(1/|x| + sqrt(1+(1/|x|)^2)) )    *  * Accuracy:  *	asinh(x) returns the exact inverse hyperbolic sine of x nearly rounded.  *	In a test run with 52,000 random arguments on a VAX, the maximum   *	observed error was 1.58 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -101,7 +101,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double format */
+comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
@@ -145,7 +145,7 @@ name|double
 name|copysign
 argument_list|()
 decl_stmt|,
-name|L
+name|log1p
 argument_list|()
 decl_stmt|,
 name|sqrt
@@ -173,6 +173,9 @@ name|one
 init|=
 literal|1.0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VAX
 if|if
 condition|(
 name|x
@@ -184,6 +187,9 @@ operator|(
 name|x
 operator|)
 return|;
+comment|/* x is NaN */
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -216,7 +222,7 @@ return|return
 operator|(
 name|copysign
 argument_list|(
-name|L
+name|log1p
 argument_list|(
 name|t
 operator|+
@@ -246,7 +252,7 @@ comment|/* if |x|> big */
 block|{
 name|s
 operator|=
-name|L
+name|log1p
 argument_list|(
 name|t
 argument_list|)

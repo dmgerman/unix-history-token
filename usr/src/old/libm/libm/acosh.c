@@ -17,7 +17,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acosh.c	1.1 (Berkeley) %G%"
+literal|"@(#)acosh.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* ACOSH(X)  * RETURN THE INVERSE HYPERBOLIC COSINE OF X  * DOUBLE PRECISION (VAX D FORMAT 56 BITS, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 2/16/85;  * REVISED BY K.C. NG on 3/6/85, 3/24/85, 4/16/85.  *  * Required system supported functions :  *	sqrt(x)  *  * Required kernel function:  *	L(x) 		...return log(1+x)  *  * Method :  *	Based on   *		acosh(x) = log [ x + sqrt(x*x-1) ]  *	we have  *		acosh(x) := L(x)+ln2,	if (x> 1.0E20); else		  *		acosh(x) := L( sqrt(x-1) * (sqrt(x-1) + sqrt(x+1)) ) .  *	These formulae avoid the over/underflow complication.  *  * Special cases:  *	acosh(x) is NAN with signal if x<1.  *	acosh(NAN) is NAN without signal.  *  * Accuracy:  *	acosh(x) returns the exact inverse hyperbolic cosine of x nearly   *	rounded. In a test run with 500,000 random arguments on a VAX, the  *	maximum observed error was 3.20 ulps (units of the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* ACOSH(X)  * RETURN THE INVERSE HYPERBOLIC COSINE OF X  * DOUBLE PRECISION (VAX D FORMAT 56 BITS, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 2/16/85;  * REVISED BY K.C. NG on 3/6/85, 3/24/85, 4/16/85, 8/17/85.  *  * Required system supported functions :  *	sqrt(x)  *  * Required kernel function:  *	log1p(x) 		...return log(1+x)  *  * Method :  *	Based on   *		acosh(x) = log [ x + sqrt(x*x-1) ]  *	we have  *		acosh(x) := log1p(x)+ln2,	if (x> 1.0E20); else		  *		acosh(x) := log1p( sqrt(x-1) * (sqrt(x-1) + sqrt(x+1)) ) .  *	These formulae avoid the over/underflow complication.  *  * Special cases:  *	acosh(x) is NaN with signal if x<1.  *	acosh(NaN) is NaN without signal.  *  * Accuracy:  *	acosh(x) returns the exact inverse hyperbolic cosine of x nearly   *	rounded. In a test run with 512,000 random arguments on a VAX, the  *	maximum observed error was 3.30 ulps (units of the last place) at  *	x=1.0070493753568216 .  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -101,7 +101,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double format */
+comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
@@ -142,7 +142,7 @@ name|x
 decl_stmt|;
 block|{
 name|double
-name|L
+name|log1p
 argument_list|()
 decl_stmt|,
 name|sqrt
@@ -155,7 +155,9 @@ init|=
 literal|1.E20
 decl_stmt|;
 comment|/* big+1==big */
-comment|/* x is NaN */
+ifndef|#
+directive|ifndef
+name|VAX
 if|if
 condition|(
 name|x
@@ -167,7 +169,10 @@ operator|(
 name|x
 operator|)
 return|;
-comment|/* return L(2x) for large x */
+comment|/* x is NaN */
+endif|#
+directive|endif
+comment|/* return log1p(x) + log(2) if x is large */
 if|if
 condition|(
 name|x
@@ -177,7 +182,7 @@ condition|)
 block|{
 name|t
 operator|=
-name|L
+name|log1p
 argument_list|(
 name|x
 argument_list|)
@@ -203,7 +208,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|L
+name|log1p
 argument_list|(
 name|t
 operator|*
