@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ranlib.c 3.1 %G%"
+literal|"@(#)ranlib.c 3.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<newar.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<newa.out.h>
+file|<a.out.h>
 end_include
 
 begin_include
@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|TABSZ
-value|1500
+value|2000
 end_define
 
 begin_decl_stmt
@@ -817,7 +817,7 @@ name|sprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-literal|"/usr/new/ar rlb %s %s %s\n"
+literal|"ar rlb %s %s %s\n"
 argument_list|,
 name|firstname
 argument_list|,
@@ -832,7 +832,7 @@ name|sprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-literal|"/usr/new/ar rl %s %s\n"
+literal|"ar rl %s %s\n"
 argument_list|,
 operator|*
 name|argv
