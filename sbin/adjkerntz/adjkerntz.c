@@ -510,6 +510,9 @@ return|return
 literal|0
 return|;
 block|}
+name|tzset
+argument_list|()
+expr_stmt|;
 name|mib
 index|[
 literal|0
