@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.28 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -428,19 +434,24 @@ name|panicstr
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|off_t
+begin_decl_stmt
+name|void
 name|Lseek
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+name|fd
+operator|,
+name|off_t
+name|off
+operator|,
+name|int
+name|flag
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1199,7 +1210,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|current_nl
 index|[
@@ -1233,7 +1244,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|current_nl
 index|[
@@ -1284,7 +1295,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|current_nl
 index|[
@@ -2618,7 +2629,7 @@ block|}
 end_block
 
 begin_function
-name|off_t
+name|void
 name|Lseek
 parameter_list|(
 name|fd
@@ -2632,7 +2643,7 @@ name|fd
 decl_stmt|,
 name|flag
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 block|{
@@ -2673,11 +2684,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
