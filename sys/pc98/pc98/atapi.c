@@ -888,10 +888,10 @@ name|ata
 operator|->
 name|debug
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
-break|break;
+block|{
 comment|/* Device attached successfully. */
 name|ata
 operator|->
@@ -907,6 +907,15 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|NWCD
+operator|>
+literal|0
+comment|/* FALLTHROUGH */
 else|#
 directive|else
 name|printf
