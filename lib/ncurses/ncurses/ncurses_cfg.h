@@ -12,7 +12,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: ncurses_cfg.hin,v 1.2 1998/02/11 12:13:46 tom Exp $  *  * This is a template-file used to generate the "ncurses_cfg.h" file.  *  * Rather than list every definition, the configuration script substitutes  * the definitions that it finds using 'sed'.  You need a patch (971222)  * to autoconf 2.12 to do this.  */
+comment|/*  * $Id: ncurses_cfg.hin,v 1.3 2000/09/02 17:13:32 tom Exp $  *  * This is a template-file used to generate the "ncurses_cfg.h" file.  *  * Rather than list every definition, the configuration script substitutes the  * definitions that it finds using 'sed'.  You need a patch (original date  * 971222) to autoconf 2.12 or 2.13 to do this.  *  * See:  *	http://dickey.his.com/autoconf/  *	ftp://dickey.his.com/autoconf/  */
 end_comment
 
 begin_comment
@@ -49,20 +49,6 @@ begin_define
 define|#
 directive|define
 name|CC_HAS_PROTOS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_HAS_PARAM_INIT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETIP_NEEDS_MATH_H
 value|1
 end_define
 
@@ -111,6 +97,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_CURSES_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_DIRENT_H
 value|1
 end_define
@@ -146,6 +139,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_GETEGID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETEUID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_GETTIMEOFDAY
 value|1
 end_define
@@ -168,6 +175,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_ISASCII
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISSETUGID
 value|1
 end_define
 
@@ -461,7 +475,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_TYPEINFO
+name|HAVE_UNISTD_H
 value|1
 end_define
 
@@ -503,13 +517,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NCURSES_EXT_FUNCS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_WORKING_POLL
 value|1
 end_define
@@ -518,6 +525,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_WRESIZE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIXEDCASE_FILENAMES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCURSES_EXT_FUNCS
 value|1
 end_define
 
@@ -559,6 +580,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TERMINFO
+value|"/usr/share/misc/terminfo"
+end_define
+
+begin_define
+define|#
+directive|define
 name|TERMINFO_DIRS
 value|"/usr/share/misc/terminfo"
 end_define
@@ -568,6 +596,20 @@ define|#
 directive|define
 name|TYPEOF_CHTYPE
 value|long
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_ASSUMED_COLOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_COLORFGBG
+value|1
 end_define
 
 begin_define
@@ -597,6 +639,12 @@ directive|define
 name|USE_SIGWINCH
 value|1
 end_define
+
+begin_include
+include|#
+directive|include
+file|<ncurses_def.h>
+end_include
 
 begin_comment
 comment|/* The C compiler may not treat these properly but C++ has to */
