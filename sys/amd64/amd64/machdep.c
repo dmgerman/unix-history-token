@@ -2077,6 +2077,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|mp_grab_cpu_hlt
+argument_list|()
+condition|)
+return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpu_idle_hlt
