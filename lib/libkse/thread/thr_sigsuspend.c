@@ -197,6 +197,26 @@ name|curthread
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|curthread
+operator|->
+name|cancelflags
+operator|&
+name|THR_CANCELLING
+operator|)
+operator|!=
+literal|0
+condition|)
+name|curthread
+operator|->
+name|oldsigmask
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
 name|THR_ASSERT
 argument_list|(
 name|curthread
@@ -208,6 +228,7 @@ argument_list|,
 literal|"oldsigmask is not cleared"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Always return an interrupted error: */
 name|errno
 operator|=
