@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	8.2 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	8.3 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -2573,6 +2573,42 @@ end_function
 
 begin_function
 name|int
+name|lofs_pathconf
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_pathconf_args
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|VOP_PATHCONF
+argument_list|(
+name|LOFSVP
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+argument_list|,
+name|ap
+operator|->
+name|a_name
+argument_list|,
+name|ap
+operator|->
+name|a_retval
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|lofs_advlock
 parameter_list|(
 name|ap
@@ -3067,6 +3103,14 @@ name|lofs_islocked
 block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_pathconf_desc
+block|,
+name|lofs_pathconf
+block|}
+block|,
+comment|/* pathconf */
 block|{
 operator|&
 name|vop_advlock_desc
