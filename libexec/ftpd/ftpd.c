@@ -1318,7 +1318,7 @@ parameter_list|,
 name|FILE
 modifier|*
 parameter_list|,
-name|off_t
+name|size_t
 parameter_list|,
 name|off_t
 parameter_list|,
@@ -1376,8 +1376,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -4533,9 +4542,6 @@ name|new
 init|=
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|strlen
 argument_list|(
 name|s
@@ -4551,11 +4557,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror_reply
+name|reply
 argument_list|(
 literal|421
 argument_list|,
-literal|"Local resource failure: malloc"
+literal|"Ran out of memory."
 argument_list|)
 expr_stmt|;
 name|dologout
@@ -5088,11 +5094,6 @@ argument_list|)
 expr_stmt|;
 name|pw
 operator|=
-operator|(
-expr|struct
-name|passwd
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 return|return;
@@ -5206,9 +5207,6 @@ name|login_attempts
 condition|)
 name|sleep
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|login_attempts
 argument_list|)
 expr_stmt|;
@@ -7419,7 +7417,7 @@ name|lreply
 argument_list|(
 literal|230
 argument_list|,
-literal|"No directory! Logging in with home=/"
+literal|"No directory! Logging in with home=/."
 argument_list|)
 expr_stmt|;
 block|}
@@ -8342,7 +8340,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"Appending to existing file denied"
+literal|"Appending to existing file denied."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8381,7 +8379,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"Modifying existing file denied"
+literal|"Modifying existing file denied."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9618,9 +9616,6 @@ condition|)
 block|{
 name|sleep
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|swaitint
 argument_list|)
 expr_stmt|;
@@ -9710,7 +9705,7 @@ name|FILE
 modifier|*
 name|outstr
 parameter_list|,
-name|off_t
+name|size_t
 name|blksize
 parameter_list|,
 name|off_t
@@ -9933,11 +9928,6 @@ name|offset
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-expr|struct
-name|sf_hdtr
-operator|*
-operator|)
 name|NULL
 argument_list|,
 operator|&
@@ -10033,9 +10023,6 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|blksize
 argument_list|)
 operator|)
@@ -10047,11 +10034,11 @@ name|transflag
 operator|=
 literal|0
 expr_stmt|;
-name|perror_reply
+name|reply
 argument_list|(
 literal|451
 argument_list|,
-literal|"Local resource failure: malloc"
+literal|"Ran out of memory."
 argument_list|)
 expr_stmt|;
 return|return
@@ -10072,9 +10059,6 @@ name|filefd
 argument_list|,
 name|buf
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|blksize
 argument_list|)
 operator|)
@@ -10100,9 +10084,6 @@ name|transflag
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|buf
@@ -10149,7 +10130,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"Unimplemented TYPE %d in send_data"
+literal|"Unimplemented TYPE %d in send_data."
 argument_list|,
 name|type
 argument_list|)
@@ -10522,7 +10503,7 @@ name|lreply
 argument_list|(
 literal|226
 argument_list|,
-literal|"WARNING! %d bare linefeeds received in ASCII mode"
+literal|"WARNING! %d bare linefeeds received in ASCII mode."
 argument_list|,
 name|bare_lfs
 argument_list|)
@@ -10546,7 +10527,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"Unimplemented TYPE %d in receive_data"
+literal|"Unimplemented TYPE %d in receive_data."
 argument_list|,
 name|type
 argument_list|)
@@ -10572,7 +10553,7 @@ name|perror_reply
 argument_list|(
 literal|426
 argument_list|,
-literal|"Data Connection"
+literal|"Data connection"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10591,7 +10572,7 @@ name|perror_reply
 argument_list|(
 literal|452
 argument_list|,
-literal|"Error writing file"
+literal|"Error writing to file"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10707,7 +10688,7 @@ name|lreply
 argument_list|(
 name|code
 argument_list|,
-literal|"status of %s:"
+literal|"Status of %s:"
 argument_list|,
 name|filename
 argument_list|)
@@ -10749,7 +10730,7 @@ name|perror_reply
 argument_list|(
 literal|421
 argument_list|,
-literal|"control connection"
+literal|"Control connection"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -10854,7 +10835,7 @@ name|reply
 argument_list|(
 name|code
 argument_list|,
-literal|"End of Status"
+literal|"End of status."
 argument_list|)
 expr_stmt|;
 block|}
@@ -11594,7 +11575,7 @@ name|reply
 argument_list|(
 literal|211
 argument_list|,
-literal|"End of status"
+literal|"End of status."
 argument_list|)
 expr_stmt|;
 block|}
@@ -11926,7 +11907,7 @@ name|reply
 argument_list|(
 literal|500
 argument_list|,
-literal|"'%s': command not understood."
+literal|"%s: command not understood."
 argument_list|,
 name|cbuf
 argument_list|)
@@ -11978,15 +11959,12 @@ return|return;
 block|}
 if|if
 condition|(
-operator|(
+name|S_ISDIR
+argument_list|(
 name|st
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|==
-name|S_IFDIR
+argument_list|)
 condition|)
 block|{
 if|if
@@ -12023,7 +12001,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"Operation not permitted"
+literal|"Operation not permitted."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12121,9 +12099,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"%s: permission denied"
-argument_list|,
-name|name
+literal|"Operation not permitted."
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -12244,24 +12220,23 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|getwd
+name|getcwd
+argument_list|(
+name|path
+argument_list|,
+sizeof|sizeof
 argument_list|(
 name|path
 argument_list|)
+argument_list|)
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
-name|reply
+name|perror_reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"%s."
-argument_list|,
-name|path
+literal|"Get current directory"
 argument_list|)
 expr_stmt|;
 else|else
@@ -12327,7 +12302,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"Operation not permitted"
+literal|"Operation not permitted."
 argument_list|)
 expr_stmt|;
 return|return
@@ -12366,7 +12341,7 @@ name|reply
 argument_list|(
 literal|350
 argument_list|,
-literal|"File exists, ready for destination name"
+literal|"File exists, ready for destination name."
 argument_list|)
 expr_stmt|;
 return|return
@@ -12424,7 +12399,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"%s: permission denied"
+literal|"%s: permission denied."
 argument_list|,
 name|to
 argument_list|)
@@ -12780,7 +12755,7 @@ name|reply
 argument_list|(
 literal|226
 argument_list|,
-literal|"Abort successful"
+literal|"Abort successful."
 argument_list|)
 expr_stmt|;
 block|}
@@ -12814,7 +12789,7 @@ name|reply
 argument_list|(
 literal|213
 argument_list|,
-literal|"Status: %jd of %jd bytes transferred"
+literal|"Status: %jd of %jd bytes transferred."
 argument_list|,
 operator|(
 name|intmax_t
@@ -12832,7 +12807,7 @@ name|reply
 argument_list|(
 literal|213
 argument_list|,
-literal|"Status: %jd bytes transferred"
+literal|"Status: %jd bytes transferred."
 argument_list|,
 operator|(
 name|intmax_t
@@ -13419,7 +13394,7 @@ name|reply
 argument_list|(
 literal|501
 argument_list|,
-literal|"Network protocol mismatch"
+literal|"Network protocol mismatch."
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
@@ -14204,7 +14179,7 @@ name|reply
 argument_list|(
 literal|553
 argument_list|,
-literal|"Pathname too long"
+literal|"Pathname too long."
 argument_list|)
 expr_stmt|;
 return|return
@@ -14550,7 +14525,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"not found"
+literal|"No matching files found."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -15132,13 +15107,14 @@ parameter_list|)
 block|{
 while|while
 condition|(
-name|wait3
+name|waitpid
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|NULL
 argument_list|,
 name|WNOHANG
-argument_list|,
-name|NULL
 argument_list|)
 operator|>
 literal|0
