@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2175,7 +2175,7 @@ name|fvp
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|LEASE_CHECK
+name|VOP_LEASE
 argument_list|(
 name|fvp
 argument_list|,
@@ -2198,7 +2198,7 @@ name|tvp
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|LEASE_CHECK
+name|VOP_LEASE
 argument_list|(
 name|tvp
 argument_list|,
@@ -2697,6 +2697,8 @@ parameter_list|,
 name|cn
 parameter_list|,
 name|path
+parameter_list|,
+name|pathlen
 parameter_list|)
 name|struct
 name|union_mount
@@ -2728,6 +2730,9 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
+name|int
+name|pathlen
+decl_stmt|;
 block|{
 name|int
 name|error
@@ -2737,10 +2742,7 @@ name|cn
 operator|->
 name|cn_namelen
 operator|=
-name|strlen
-argument_list|(
-name|path
-argument_list|)
+name|pathlen
 expr_stmt|;
 name|cn
 operator|->
@@ -2972,6 +2974,10 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_nameptr
+argument_list|,
+name|cnp
+operator|->
+name|cn_namelen
 argument_list|)
 expr_stmt|;
 if|if
@@ -3040,8 +3046,8 @@ name|um
 operator|->
 name|um_cmode
 expr_stmt|;
-comment|/* LEASE_CHECK: dvp is locked */
-name|LEASE_CHECK
+comment|/* VOP_LEASE: dvp is locked */
+name|VOP_LEASE
 argument_list|(
 name|dvp
 argument_list|,
@@ -3160,17 +3166,29 @@ operator|&
 name|cn
 argument_list|,
 name|path
+argument_list|,
+name|strlen
+argument_list|(
+name|path
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
 condition|)
+block|{
+name|VOP_LOCK
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|*
@@ -3207,8 +3225,8 @@ name|EEXIST
 operator|)
 return|;
 block|}
-comment|/* LEASE_CHECK: dvp is locked */
-name|LEASE_CHECK
+comment|/* VOP_LEASE: dvp is locked */
+name|VOP_LEASE
 argument_list|(
 name|dvp
 argument_list|,
@@ -3236,8 +3254,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
 name|VOP_ABORTOP
 argument_list|(
@@ -3567,7 +3583,7 @@ name|va_mode
 operator|=
 name|cmode
 expr_stmt|;
-name|LEASE_CHECK
+name|VOP_LEASE
 argument_list|(
 name|un
 operator|->
