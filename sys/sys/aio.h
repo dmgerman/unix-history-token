@@ -152,13 +152,13 @@ begin_struct
 struct|struct
 name|__aiocb_private
 block|{
-name|int
+name|long
 name|status
 decl_stmt|;
-name|int
+name|long
 name|error
 decl_stmt|;
-name|int
+name|long
 name|privatemodes
 decl_stmt|;
 name|int
