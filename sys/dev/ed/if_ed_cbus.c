@@ -536,9 +536,16 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+name|ed_Novell_read_mac
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
+block|}
 break|break;
 comment|/* 	 * NE2000-like boards probe routine 	 */
 case|case
