@@ -345,6 +345,7 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attrname

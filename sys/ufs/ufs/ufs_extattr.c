@@ -155,6 +155,7 @@ name|ufsmount
 modifier|*
 name|ump
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attrname
@@ -182,6 +183,7 @@ name|ufsmount
 modifier|*
 name|ump
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attrname
@@ -204,6 +206,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -236,6 +239,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -268,6 +272,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -373,13 +378,14 @@ specifier|static
 name|struct
 name|ufs_extattr_list_entry
 modifier|*
-name|ufs_exttatr_find_attr
+name|ufs_extattr_find_attr
 parameter_list|(
 name|struct
 name|ufsmount
 modifier|*
 name|ump
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attrname
@@ -785,6 +791,7 @@ name|ufsmount
 modifier|*
 name|ump
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attrname
@@ -885,7 +892,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|ufs_exttatr_find_attr
+name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
@@ -1200,6 +1207,7 @@ name|ufsmount
 modifier|*
 name|ump
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attrname
@@ -1222,7 +1230,7 @@ literal|0
 decl_stmt|;
 name|uele
 operator|=
-name|ufs_exttatr_find_attr
+name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
@@ -1305,6 +1313,7 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attrname
@@ -1747,7 +1756,7 @@ name|vop_getextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_getextattr {         IN struct vnode *a_vp;         IN char *a_name;         INOUT struct uio *a_uio;         IN struct ucred *a_cred;         IN struct proc *a_p; }; */
+comment|/* vop_getextattr {         IN struct vnode *a_vp;         IN const char *a_name;         INOUT struct uio *a_uio;         IN struct ucred *a_cred;         IN struct proc *a_p; }; */
 block|{
 name|struct
 name|mount
@@ -1838,6 +1847,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1937,7 +1947,7 @@ operator|)
 return|;
 name|attribute
 operator|=
-name|ufs_exttatr_find_attr
+name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
@@ -2380,7 +2390,7 @@ name|vop_setextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_setextattr {         IN struct vnode *a_vp;         IN char *a_name;         INOUT struct uio *a_uio;         IN struct ucred *a_cred;         IN struct proc *a_p; }; */
+comment|/* vop_setextattr {         IN struct vnode *a_vp;         IN const char *a_name;         INOUT struct uio *a_uio;         IN struct ucred *a_cred;         IN struct proc *a_p; }; */
 block|{
 name|struct
 name|mount
@@ -2499,6 +2509,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2608,7 +2619,7 @@ operator|)
 return|;
 name|attribute
 operator|=
-name|ufs_exttatr_find_attr
+name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
@@ -2955,6 +2966,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3059,7 +3071,7 @@ operator|)
 return|;
 name|attribute
 operator|=
-name|ufs_exttatr_find_attr
+name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
