@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.6 (Berkeley) %G%"
+literal|"@(#)dir.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1214,9 +1214,21 @@ operator|!=
 name|word
 condition|)
 block|{
+name|char
+name|sc
+decl_stmt|;
 comment|/* 		     * If the glob isn't in the first component, try and find 		     * all the components up to the one with a wildcard. 		     */
-operator|*
+name|sc
+operator|=
 name|cp
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|cp
+index|[
+literal|1
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1229,10 +1241,12 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-operator|*
 name|cp
+index|[
+literal|1
+index|]
 operator|=
-literal|'/'
+name|sc
 expr_stmt|;
 comment|/* 		     * dirpath is null if can't find the leading component 		     * XXX: Dir_FindFile won't find internal components. 		     * i.e. if the path contains ../Etc/Object and we're 		     * looking for Etc, it won't be found. Ah well. 		     * Probably not important. 		     */
 if|if
@@ -1246,6 +1260,33 @@ operator|)
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|dp
+init|=
+operator|&
+name|dirpath
+index|[
+name|strlen
+argument_list|(
+name|dirpath
+argument_list|)
+operator|-
+literal|1
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|dp
+operator|==
+literal|'/'
+condition|)
+operator|*
+name|dp
+operator|=
+literal|'\0'
+expr_stmt|;
 name|path
 operator|=
 name|Lst_Init
