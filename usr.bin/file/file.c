@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: file.c,v 1.2 1995/05/30 06:30:01 rgrimes Exp $"
+literal|"@(#)$Id: file.c,v 1.3 1996/01/23 12:40:11 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1461,6 +1461,19 @@ argument_list|)
 condition|)
 return|return
 literal|'a'
+return|;
+comment|/* see if it's international language text */
+if|if
+condition|(
+name|internatmagic
+argument_list|(
+name|buf
+argument_list|,
+name|nb
+argument_list|)
+condition|)
+return|return
+literal|'i'
 return|;
 comment|/* abandon hope, all ye who remain here */
 name|ckfputs
