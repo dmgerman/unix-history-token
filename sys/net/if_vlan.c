@@ -1169,21 +1169,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|m_freem
+name|m_free
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ifv
-operator|->
-name|ifv_p
-operator|->
-name|if_data
-operator|.
-name|ifi_noproto
-operator|++
-expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
+comment|/* So the parent can take note */
 block|}
 comment|/* 	 * Having found a valid vlan interface corresponding to 	 * the given source interface and vlan tag, run the 	 * the real packet through ethert_input(). 	 */
 name|m
@@ -1268,7 +1263,9 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -268,7 +268,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|vlan_input_tag
 parameter_list|(
 name|struct
