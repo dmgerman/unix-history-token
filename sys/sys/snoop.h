@@ -19,22 +19,22 @@ begin_define
 define|#
 directive|define
 name|SNOOP_MINLEN
-value|(2*1024)
+value|(4*1024)
 end_define
 
 begin_comment
-comment|/* This should be 2^X */
+comment|/* This should be power of 2. 						 * 4K tested to be the minimum 						 * for which on normal tty 						 * usage there is no need to 						 * allocate more. 						 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SNOOP_MAXLEN
-value|(256*1024)
+value|(64*1024)
 end_define
 
 begin_comment
-comment|/* This one also,256K */
+comment|/* This one also,64K enough  						 * If we grow more,something 						 * really bad in this world.. 						 */
 end_comment
 
 begin_comment
@@ -92,6 +92,10 @@ define|#
 directive|define
 name|SNOOP_OFLOW
 value|0x0010
+define|#
+directive|define
+name|SNOOP_DOWN
+value|0x0020
 name|struct
 name|selinfo
 name|snp_sel
