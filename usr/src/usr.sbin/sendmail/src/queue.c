@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.65
+literal|3.66
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.65
+literal|3.66
 operator|%
 name|G
 operator|%
@@ -1108,7 +1108,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ORDERQ -- order the work queue. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Sets WorkQ to the queue of available work, in order. */
+comment|/* **  ORDERQ -- order the work queue. ** **	Parameters: **		none. ** **	Returns: **		The number of request in the queue (not necessarily **		the number of requests in WorkQ however). ** **	Side Effects: **		Sets WorkQ to the queue of available work, in order. */
 end_comment
 
 begin_define
@@ -1223,6 +1223,8 @@ name|WORK
 name|wlist
 index|[
 name|WLSIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -1579,7 +1581,12 @@ name|qsort
 argument_list|(
 name|wlist
 argument_list|,
+name|min
+argument_list|(
 name|wn
+argument_list|,
+name|WLSIZE
+argument_list|)
 argument_list|,
 sizeof|sizeof
 expr|*
@@ -1607,14 +1614,18 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
-init|;
-name|i
-operator|<
+name|min
+argument_list|(
 name|wn
-condition|;
+argument_list|,
+name|WLSIZE
+argument_list|)
+init|;
+operator|--
 name|i
-operator|++
+operator|>=
+literal|0
+condition|;
 control|)
 block|{
 name|w
@@ -1741,18 +1752,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  WORKCMPF -- compare function for ordering work. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		-1 if a< b **		0 if a == b **		1 if a> b ** **	Side Effects: **		none. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRIFACT
-value|1800
-end_define
-
-begin_comment
-comment|/* bytes each priority point is worth */
+comment|/* **  WORKCMPF -- compare function for ordering work. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		1 if a< b **		0 if a == b **		-1 if a> b ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -1807,13 +1807,13 @@ name|w_pri
 condition|)
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
 else|else
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;
