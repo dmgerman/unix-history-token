@@ -274,17 +274,6 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Flags for kse_switchin */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KSE_SWITCHIN_SETTMBX
-value|0x01
-end_define
-
-begin_comment
 comment|/* Commands for kse_thr_interrupt */
 end_comment
 
