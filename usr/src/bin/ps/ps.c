@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.5 (Berkeley) %G%"
+literal|"@(#)ps.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3388,6 +3388,8 @@ condition|(
 name|mproc
 operator|->
 name|p_textp
+operator|&&
+name|text
 condition|)
 block|{
 name|xp
