@@ -1296,12 +1296,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|FIFO
-end_if
-
 begin_decl_stmt
 name|vop_t
 modifier|*
@@ -1843,15 +1837,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FIFO */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -1877,12 +1862,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|FIFO
-end_if
-
 begin_expr_stmt
 name|VNODEOP_SET
 argument_list|(
@@ -1890,11 +1869,6 @@ name|ext2fs_fifoop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
