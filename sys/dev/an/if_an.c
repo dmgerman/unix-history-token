@@ -9326,10 +9326,6 @@ begin_return
 return|return;
 end_return
 
-begin_break
-break|break;
-end_break
-
 begin_comment
 unit|}
 comment|/* Reinitialize the card. */
@@ -9387,6 +9383,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* XXX: indentation bug or braces bug ? */
 if|if
 condition|(
 name|sc
