@@ -4,7 +4,7 @@ comment|/*  * Various setup functions for truss.  Not the cleanest-written code,
 end_comment
 
 begin_comment
-comment|/*  * $Id: setup.c,v 1.2 1997/12/06 08:01:00 sef Exp $  */
+comment|/*  * $Id: setup.c,v 1.3 1997/12/06 14:42:58 peter Exp $  */
 end_comment
 
 begin_include
@@ -214,6 +214,31 @@ argument_list|(
 literal|3
 argument_list|,
 literal|"PIOCBIS"
+argument_list|)
+expr_stmt|;
+name|flags
+operator|=
+name|PF_LINGER
+expr_stmt|;
+comment|/*      * The PF_LINGER flag tells procfs not to wake up the      * process on last close; normally, this is the behaviour      * we want.      */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|PIOCSFL
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"cannot set PF_LINGER"
 argument_list|)
 expr_stmt|;
 name|execvp
@@ -497,6 +522,31 @@ argument_list|(
 literal|9
 argument_list|,
 literal|"cannot set procfs event bit mask"
+argument_list|)
+expr_stmt|;
+comment|/*    * This clears the PF_LINGER set above in setup_and_wait();    * if truss happens to die before this, then the process    * needs to be woken up via procctl.    */
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|PIOCSFL
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"cannot clear PF_LINGER"
 argument_list|)
 expr_stmt|;
 return|return
