@@ -452,6 +452,9 @@ operator|++
 operator|=
 name|character
 expr_stmt|;
+name|column
+operator|++
+expr_stmt|;
 block|}
 end_function
 
