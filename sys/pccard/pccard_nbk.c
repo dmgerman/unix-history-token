@@ -251,6 +251,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_comment
 comment|/*  * glue for NEWCARD/OLDCARD compat layer  */
 end_comment
@@ -300,6 +308,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1469,10 +1482,17 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 parameter_list|,
 name|u_int32_t
 modifier|*
 name|deltap
+endif|#
+directive|endif
 parameter_list|)
 block|{
 return|return
@@ -1489,8 +1509,15 @@ argument_list|,
 name|rid
 argument_list|,
 name|offset
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 argument_list|,
 name|deltap
+endif|#
+directive|endif
 argument_list|)
 operator|)
 return|;
@@ -1535,6 +1562,14 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
 
 begin_function
 specifier|static
@@ -1637,6 +1672,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1795,6 +1835,11 @@ argument_list|,
 name|pccard_get_memory_offset
 argument_list|)
 block|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|DEVMETHOD
 argument_list|(
 name|card_get_function
@@ -1830,6 +1875,8 @@ argument_list|,
 name|pccard_compat_do_attach
 argument_list|)
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
