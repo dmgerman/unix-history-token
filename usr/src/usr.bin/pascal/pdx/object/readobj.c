@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readobj.c 1.2 %G%"
+literal|"@(#)readobj.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"main.h"
 end_include
 
 begin_include
@@ -141,6 +147,22 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
+name|get
+argument_list|(
+name|fp
+argument_list|,
+name|hdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hdr
+operator|.
+name|magicnum
+operator|!=
+name|MAGICNUM
+condition|)
+block|{
 name|fseek
 argument_list|(
 name|fp
@@ -168,6 +190,41 @@ argument_list|,
 name|hdr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hdr
+operator|.
+name|magicnum
+operator|!=
+name|MAGICNUM
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"%s is not a Pascal object file"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|hdr
+operator|.
+name|symtabsize
+operator|==
+literal|0
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"%s doesn't have symbolic information"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+block|}
 name|objsize
 operator|=
 name|hdr
@@ -200,7 +257,73 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"readobj:  get failed"
+literal|"can't read nlhdr"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|option
+argument_list|(
+literal|'h'
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nHeader information:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tobject size %d\n"
+argument_list|,
+name|objsize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tsymtab size %d\n"
+argument_list|,
+name|hdr
+operator|.
+name|symtabsize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tstringsize  %d\n"
+argument_list|,
+name|nlhdr
+operator|.
+name|stringsize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tnsyms       %d\n"
+argument_list|,
+name|nlhdr
+operator|.
+name|nsyms
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tnfiles      %d\n"
+argument_list|,
+name|nlhdr
+operator|.
+name|nfiles
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tnlines      %d\n"
+argument_list|,
+name|nlhdr
+operator|.
+name|nlines
 argument_list|)
 expr_stmt|;
 block|}
