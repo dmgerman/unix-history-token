@@ -934,21 +934,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mod_loadobj
-parameter_list|(
-name|char
-modifier|*
-name|type
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mod_loadkld
 parameter_list|(
 specifier|const
