@@ -992,6 +992,25 @@ directive|endif
 block|}
 end_function
 
+begin_function
+name|void
+name|cpu_set_upcall_kse
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|kse
+modifier|*
+name|ke
+parameter_list|)
+block|{
+comment|/* XXX */
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
