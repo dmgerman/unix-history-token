@@ -6395,21 +6395,6 @@ operator|->
 name|nt_scangen
 operator|++
 expr_stmt|;
-name|IEEE80211_DPRINTF
-argument_list|(
-name|nt
-operator|->
-name|nt_ic
-argument_list|,
-name|IEEE80211_MSG_NODE
-argument_list|,
-literal|"%s: sta scangen %u\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|gen
-argument_list|)
-expr_stmt|;
 name|restart
 label|:
 name|IEEE80211_NODE_LOCK
