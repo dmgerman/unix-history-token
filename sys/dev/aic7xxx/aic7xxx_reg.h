@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.2 1996/01/03 06:25:32 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.3 1996/01/07 19:18:28 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -2348,6 +2348,77 @@ end_define
 begin_comment
 comment|/* sizeof SCB to DMA */
 end_comment
+
+begin_comment
+comment|/* --------------------- AHA-2840-only definitions -------------------- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEECTL_2840
+value|0xcc0
+end_define
+
+begin_comment
+comment|/*	UNUSED			0xf8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CS_2840
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CK_2840
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_2840
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATUS_2840
+value|0xcc1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_TF
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOS_SEL
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADSEL
+value|0x1e
+end_define
+
+begin_define
+define|#
+directive|define
+name|DI_2840
+value|0x01
+end_define
 
 begin_comment
 comment|/* --------------------- AIC-7870-only definitions -------------------- */
