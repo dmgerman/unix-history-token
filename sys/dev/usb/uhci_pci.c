@@ -1394,7 +1394,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-comment|/* Set the PIRQD enable bit and switch off all the others. We don't 	 * want legacy support to interfere with us 	 * XXX Does this also mean that the BIOS won't touch the keyboard 	 * anymore if it is connected to the ports of the root hub? 	 */
+comment|/* 	 * Set the PIRQD enable bit and switch off all the others. We don't 	 * want legacy support to interfere with us XXX Does this also mean 	 * that the BIOS won't touch the keyboard anymore if it is connected 	 * to the ports of the root hub? 	 */
 ifdef|#
 directive|ifdef
 name|UHCI_DEBUG
@@ -1508,14 +1508,14 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-comment|/* XXX This function is not yet complete and should not be added 	 *     method list. 	 */
+comment|/* 	 * XXX This function is not yet complete and should not be added 	 * method list. 	 */
 if|#
 directive|if
 literal|0
-block|if uhci_init was successful 		we should call something like uhci_deinit
+block|if uhci_init 		was successful 		    we should call something like uhci_deinit
 endif|#
 directive|endif
-comment|/* disable interrupts that might have been switched on 	 * in uhci_init. 	 */
+comment|/* 		 * disable interrupts that might have been switched on in 		 * uhci_init. 		 */
 if|if
 condition|(
 name|sc
