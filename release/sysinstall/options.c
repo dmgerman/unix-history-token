@@ -405,6 +405,34 @@ name|varCheck
 block|}
 block|,
 block|{
+literal|"Browser Pkg"
+block|,
+literal|"This is the browser package that will be used for viewing HTML docs"
+block|,
+name|OPT_IS_VAR
+block|,
+name|BPKG_PROMPT
+block|,
+name|VAR_BROWSER_PACKAGE
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Browser Exec"
+block|,
+literal|"This is the path to the main binary of the browser package"
+block|,
+name|OPT_IS_VAR
+block|,
+name|BBIN_PROMPT
+block|,
+name|VAR_BROWSER_BINARY
+block|,
+name|varCheck
+block|}
+block|,
+block|{
 literal|"Media Type"
 block|,
 literal|"The current installation media type."
@@ -442,34 +470,6 @@ block|,
 name|PKG_PROMPT
 block|,
 name|VAR_PKG_TMPDIR
-block|,
-name|varCheck
-block|}
-block|,
-block|{
-literal|"Browser Exec"
-block|,
-literal|"This is the path to the main binary of the browser package"
-block|,
-name|OPT_IS_VAR
-block|,
-name|BBIN_PROMPT
-block|,
-name|VAR_BROWSER_BINARY
-block|,
-name|varCheck
-block|}
-block|,
-block|{
-literal|"Browser Pkg"
-block|,
-literal|"This is the browser package that will be used for viewing HTML docs"
-block|,
-name|OPT_IS_VAR
-block|,
-name|BPKG_PROMPT
-block|,
-name|VAR_BROWSER_PACKAGE
 block|,
 name|varCheck
 block|}

@@ -533,7 +533,7 @@ literal|16
 argument_list|,
 literal|0
 argument_list|,
-literal|"A = Use Entire Disk    B = Bad Block Scan     C = Create Partition"
+literal|"A = Use Entire Disk    B = Bad Block Scan       C = Create Slice"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -542,7 +542,7 @@ literal|17
 argument_list|,
 literal|0
 argument_list|,
-literal|"D = Delete Partition   G = Set Drive Geometry S = Set Bootable"
+literal|"D = Delete Slice       G = Set Drive Geometry   S = Set Bootable"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -563,7 +563,7 @@ name|mvprintw
 argument_list|(
 literal|18
 argument_list|,
-literal|46
+literal|48
 argument_list|,
 literal|"W = Write Changes"
 argument_list|)
@@ -1090,7 +1090,7 @@ name|freebsd
 condition|)
 name|msg
 operator|=
-literal|"Can only scan for bad blocks in FreeBSD partition."
+literal|"Can only scan for bad blocks in FreeBSD slice."
 expr_stmt|;
 elseif|else
 if|if
@@ -1166,7 +1166,7 @@ name|unused
 condition|)
 name|msg
 operator|=
-literal|"Partition in use, delete it first or move to an unused one."
+literal|"Slice in use, delete it first or move to an unused one."
 expr_stmt|;
 else|else
 block|{
@@ -1212,7 +1212,7 @@ name|msgGetInput
 argument_list|(
 name|tmp
 argument_list|,
-literal|"Please specify the size for new FreeBSD partition in blocks\n"
+literal|"Please specify the size for new FreeBSD slice in blocks\n"
 literal|"or append a trailing `M' for megabytes (e.g. 20M)."
 argument_list|)
 expr_stmt|;
@@ -1269,7 +1269,7 @@ name|tmp
 argument_list|,
 literal|"Enter type of partition to create:\n\n"
 literal|"Pressing Enter will choose the default, a native FreeBSD\n"
-literal|"partition (type 165).  You can choose other types, 6 for a\n"
+literal|"slice (type 165).  You can choose other types, 6 for a\n"
 literal|"DOS partition or 131 for a Linux partition, for example.\n\n"
 literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
 literal|"be formatted or otherwise prepared, it will simply reserve space\n"
@@ -1390,7 +1390,7 @@ name|unused
 condition|)
 name|msg
 operator|=
-literal|"Partition is already unused!"
+literal|"Slice is already unused!"
 expr_stmt|;
 else|else
 block|{
@@ -1893,7 +1893,7 @@ argument_list|()
 expr_stmt|;
 name|use_helpline
 argument_list|(
-literal|"Press F1 to read more about disk partitioning."
+literal|"Press F1 to read more about disk slices."
 argument_list|)
 expr_stmt|;
 name|use_helpfile
@@ -1908,7 +1908,7 @@ argument_list|)
 expr_stmt|;
 name|dialog_mesgbox
 argument_list|(
-literal|"Disk partitioning warning:"
+literal|"Disk slicing warning:"
 argument_list|,
 name|p
 argument_list|,
@@ -2487,7 +2487,7 @@ name|ret
 decl_stmt|;
 name|msgNotify
 argument_list|(
-literal|"Running bad block scan on partition %s"
+literal|"Running bad block scan on slice %s"
 argument_list|,
 name|c1
 operator|->
