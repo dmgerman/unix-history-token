@@ -106,6 +106,28 @@ directive|endif
 endif|CSVAX
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INGVAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PROGPATH
+parameter_list|(
+name|name
+parameter_list|)
+value|"/usr/local/name"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|INGVAX
+end_endif
+
 begin_comment
 comment|/* end of berkeley systems defines */
 end_comment
