@@ -34,14 +34,21 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * FIBs are allocated up-front, and the pool isn't grown.  We should allocate  * enough here to let us keep the adapter busy without wasting large amounts  * of kernel memory.  The current interface implementation limits us to 512  * FIBs queued for the adapter at any one time.  */
+comment|/*  * FIBs are allocated in page-size chunks and can grow up to the 512  * limit imposed by the hardware.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AAC_FIB_COUNT
-value|128
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_MAX_FIBS
+value|512
 end_define
 
 begin_comment
@@ -398,6 +405,34 @@ decl_stmt|;
 comment|/* command creation time */
 name|int
 name|cm_queue
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aac_fibmap
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|aac_fibmap
+argument_list|)
+name|fm_link
+expr_stmt|;
+comment|/* list linkage */
+name|struct
+name|aac_fib
+modifier|*
+name|aac_fibs
+decl_stmt|;
+name|bus_dmamap_t
+name|aac_fibmap
+decl_stmt|;
+name|struct
+name|aac_command
+modifier|*
+name|aac_commands
 decl_stmt|;
 block|}
 struct|;
@@ -1038,23 +1073,20 @@ name|bus_dma_tag_t
 name|aac_fib_dmat
 decl_stmt|;
 comment|/* DMA tag for allocing FIBs */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aac_fibmap
+argument_list|)
+name|aac_fibmap_tqh
+expr_stmt|;
+name|uint
+name|total_fibs
+decl_stmt|;
 name|struct
-name|aac_fib
+name|aac_command
 modifier|*
-name|aac_fibs
-decl_stmt|;
-name|bus_dmamap_t
-name|aac_fibmap
-decl_stmt|;
-name|u_int32_t
-name|aac_fibphys
-decl_stmt|;
-name|struct
-name|aac_command
-name|aac_command
-index|[
-name|AAC_FIB_COUNT
-index|]
+name|aac_commands
 decl_stmt|;
 comment|/* command management */
 name|TAILQ_HEAD
