@@ -3886,6 +3886,8 @@ name|codec
 operator|=
 name|ac97_create
 argument_list|(
+name|dev
+argument_list|,
 name|tr
 argument_list|,
 name|tr_rdcd

@@ -216,6 +216,9 @@ begin_struct
 struct|struct
 name|ac97_info
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|ac97_read
 modifier|*
 name|read
@@ -1296,9 +1299,13 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ac97: codec id 0x%8x"
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"ac97 codec id 0x%8x"
 argument_list|,
 name|id
 argument_list|)
@@ -1346,7 +1353,16 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\nac97: codec features "
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"ac97 codec features "
 argument_list|)
 expr_stmt|;
 for|for
@@ -1457,9 +1473,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ac97: dac not ready\n"
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"ac97 codec reports dac not ready\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1474,6 +1494,9 @@ name|ac97_info
 modifier|*
 name|ac97_create
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
 name|void
 modifier|*
 name|devinfo
@@ -1517,6 +1540,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|codec
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|codec
 operator|->
 name|read

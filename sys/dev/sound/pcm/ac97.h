@@ -59,6 +59,9 @@ name|ac97_info
 modifier|*
 name|ac97_create
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
 name|void
 modifier|*
 name|devinfo

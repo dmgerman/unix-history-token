@@ -4931,6 +4931,8 @@ name|codec
 operator|=
 name|ac97_create
 argument_list|(
+name|dev
+argument_list|,
 name|es
 argument_list|,
 name|es1371_rdcodec
