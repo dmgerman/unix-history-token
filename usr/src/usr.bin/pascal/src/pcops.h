@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pcops.h 1.3 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pcops.h 2.1 %G%"; */
 end_comment
 
 begin_comment

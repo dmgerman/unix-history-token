@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.16 %G%"
+literal|"@(#)p2put.c 2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

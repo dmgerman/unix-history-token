@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1984 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[]="@(#)tree_ty.h	1.5	(Berkeley)	84/02/08"; */
+comment|/* static char sccsid[]="@(#)tree_ty.h	2.1	(Berkeley)	84/02/08"; */
 end_comment
 
 begin_typedef

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)CONFIG.c	2.6 (Berkeley) 84/02/08"
+literal|"@(#)CONFIG.c	2.7 (Berkeley) 84/02/08"
 decl_stmt|;
 end_decl_stmt
 

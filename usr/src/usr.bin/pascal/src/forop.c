@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forop.c	1.19	(Berkeley)	83/10/11"
+literal|"@(#)forop.c	2.1	(Berkeley)	84/02/08"
 decl_stmt|;
 end_decl_stmt
 

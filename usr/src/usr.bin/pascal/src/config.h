@@ -4,7 +4,7 @@ comment|/*      *	external declarations of things from       *		CONFIG.c      * 
 end_comment
 
 begin_comment
-comment|/*	sccsid: @(#)config.h	1.2 (Berkeley) 83/09/19 */
+comment|/*	sccsid: @(#)config.h	2.1 (Berkeley) 84/02/08 */
 end_comment
 
 begin_comment
