@@ -693,14 +693,6 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* Loopback avoidance option */
-if|if
-condition|(
-name|sin
-operator|&&
-name|sin
-operator|->
-name|sin_port
-condition|)
 name|ip_divert_ignore
 operator|=
 name|ntohs

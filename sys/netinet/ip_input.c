@@ -1478,6 +1478,10 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
+name|ip_divert_ignore
+operator|=
+literal|0
+expr_stmt|;
 else|#
 directive|else
 name|action
