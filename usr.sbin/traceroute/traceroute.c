@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.9 1996/08/21 04:31:28 peter Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.10 1996/08/21 05:59:19 peter Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1466,7 +1466,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|hnamebuf
 argument_list|,
@@ -1474,6 +1474,11 @@ name|av
 index|[
 literal|0
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hnamebuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hostname
@@ -3913,7 +3918,10 @@ name|gethostname
 argument_list|(
 name|domain
 argument_list|,
-name|MAXHOSTNAMELEN
+sizeof|sizeof
+argument_list|(
+name|domain
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -3932,13 +3940,18 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|domain
 argument_list|,
 name|cp
 operator|+
 literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|domain
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -4035,11 +4048,16 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|line
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
