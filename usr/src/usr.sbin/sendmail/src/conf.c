@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.125 (Berkeley) %G%"
+literal|"@(#)conf.c	8.126 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3270,6 +3270,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX3
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FSHIFT
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -3433,6 +3454,28 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_AIX3
+if|if
+condition|(
+name|knlist
+argument_list|(
+name|Nl
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+name|Nl
+index|[
+literal|0
+index|]
+argument_list|)
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|nlist
@@ -3444,6 +3487,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
 block|{
 if|if
 condition|(
@@ -3562,7 +3607,7 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-
@@ -6964,10 +7009,12 @@ init|=
 block|{
 literal|"/bin/sh"
 block|,
+comment|/* standard shell */
 literal|"/usr/bin/sh"
 block|,
 literal|"/bin/csh"
 block|,
+comment|/* C shell */
 literal|"/usr/bin/csh"
 block|,
 ifdef|#
@@ -6975,15 +7022,39 @@ directive|ifdef
 name|__hpux
 literal|"/bin/rsh"
 block|,
+comment|/* restricted Bourne shell */
 literal|"/bin/ksh"
 block|,
+comment|/* Korn shell */
 literal|"/bin/rksh"
 block|,
+comment|/* restricted Korn shell */
 literal|"/bin/pam"
 block|,
 literal|"/usr/bin/keysh"
 block|,
+comment|/* key shell (extended Korn shell) */
 literal|"/bin/posix/sh"
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|_AIX3
+literal|"/bin/ksh"
+block|,
+comment|/* Korn shell */
+literal|"/usr/bin/ksh"
+block|,
+literal|"/bin/tsh"
+block|,
+comment|/* trusted shell */
+literal|"/usr/bin/tsh"
+block|,
+literal|"/bin/bsh"
+block|,
+comment|/* Bourne shell */
+literal|"/usr/bin/bsh"
 block|,
 endif|#
 directive|endif
