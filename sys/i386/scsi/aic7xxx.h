@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.28 1996/05/30 07:19:59 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.10.2.10 1996/06/08 07:10:48 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -324,9 +324,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
-name|int
+name|u_int32_t
 name|physaddr
 typedef|;
 end_typedef
@@ -359,7 +357,7 @@ block|{
 name|physaddr
 name|addr
 decl_stmt|;
-name|long
+name|u_int32_t
 name|len
 decl_stmt|;
 block|}
@@ -425,6 +423,11 @@ init|=
 literal|0x210
 block|,
 comment|/* VL/ISA Based Controller */
+name|AHC_294AU
+init|=
+literal|0x421
+block|,
+comment|/* aic7860 based '2940' */
 name|AHC_294
 init|=
 literal|0x440
@@ -497,51 +500,59 @@ enum|enum
 block|{
 name|SCB_FREE
 init|=
-literal|0x000
+literal|0x0000
 block|,
 name|SCB_ACTIVE
 init|=
-literal|0x001
+literal|0x0001
 block|,
 name|SCB_ABORTED
 init|=
-literal|0x002
+literal|0x0002
 block|,
 name|SCB_DEVICE_RESET
 init|=
-literal|0x004
+literal|0x0004
 block|,
 name|SCB_IMMED
 init|=
-literal|0x008
+literal|0x0008
 block|,
 name|SCB_SENSE
 init|=
-literal|0x010
+literal|0x0010
 block|,
 name|SCB_TIMEDOUT
 init|=
-literal|0x020
+literal|0x0020
 block|,
 name|SCB_QUEUED_FOR_DONE
 init|=
-literal|0x040
+literal|0x0040
 block|,
 name|SCB_PAGED_OUT
 init|=
-literal|0x080
+literal|0x0080
 block|,
 name|SCB_WAITINGQ
 init|=
-literal|0x100
+literal|0x0100
 block|,
 name|SCB_ASSIGNEDQ
 init|=
-literal|0x200
+literal|0x0200
 block|,
 name|SCB_SENTORDEREDTAG
 init|=
-literal|0x400
+literal|0x0400
+block|,
+name|SCB_MSGOUT_SDTR
+init|=
+literal|0x0800
+block|,
+name|SCB_MSGOUT_WDTR
+init|=
+literal|0x1000
 block|}
 name|scb_flag
 typedef|;
@@ -593,7 +604,7 @@ name|physaddr
 name|data
 decl_stmt|;
 comment|/*16*/
-name|u_long
+name|u_int32_t
 name|datalen
 decl_stmt|;
 comment|/* Really only three bits, but its 					 * faster to treat it as a long on 					 * a quad boundary. 					 */
