@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assizetab.c 4.3 %G%"
+literal|"@(#)assizetab.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,6 +364,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ADB
+end_ifndef
+
 begin_comment
 comment|/*  *	Convert TYP[BWLQOFDGH] into {1 if a floating point number}  */
 end_comment
@@ -406,6 +412,11 @@ comment|/* TYPNONE */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -505,6 +516,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ADB
+end_ifndef
+
 begin_comment
 comment|/*  *	Convert TYP[BWLQOFDGH] into lg{1 ... 16}  */
 end_comment
@@ -595,6 +612,11 @@ comment|/* TYPNONE */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
