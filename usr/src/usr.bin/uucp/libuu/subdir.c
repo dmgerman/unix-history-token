@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subdir.c	5.3 (Berkeley) %G%"
+literal|"@(#)subdir.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,10 @@ file|"uucp.h"
 end_include
 
 begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
 comment|/*  * By Tom Truscott, March 1983  *  * Prefix table.  * If a prefix is "abc", for example,  * then any file Spool/abc... is mapped to Spool/abc/abc... .  * The first prefix found is used, so D.foo should preceed D. in table.  *  * Each prefix must be a subdirectory of Spool, owned by uucp!  * Remember: use cron to uuclean these directories daily,  * and check them manually every now and then.  Beware complacency!  */
 end_comment
 
@@ -34,7 +38,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|prefix
+name|dprefix
 index|[]
 init|=
 block|{
@@ -235,7 +239,7 @@ control|(
 name|p
 operator|=
 operator|&
-name|prefix
+name|dprefix
 index|[
 literal|0
 index|]
