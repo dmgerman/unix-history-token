@@ -2390,6 +2390,7 @@ comment|/* CMPEXCH8 instruction */
 literal|"\012APIC"
 comment|/* SMP local APIC */
 literal|"\013oldMTRR"
+comment|/* Previous implementation of MTRR */
 literal|"\014SEP"
 comment|/* Fast System Call */
 literal|"\015MTRR"
@@ -2423,6 +2424,10 @@ literal|"\033SSE2"
 comment|/* Streaming SIMD Extensions #2 */
 literal|"\034SS"
 comment|/* Self snoop */
+literal|"\035HTT"
+comment|/* Hyperthreading (see EBX bit 16-23) */
+literal|"\036TM"
+comment|/* Thermal Monintor clock slowdown */
 literal|"\035<b28>"
 literal|"\036ACC"
 comment|/* Auto Clock Correction (TCC/ACPI) */
@@ -3977,8 +3982,10 @@ literal|"\021PAT"
 comment|/* Page attributes table */
 literal|"\022PGE36"
 comment|/* 36 bit address space support */
-literal|"\023<b18>"
-literal|"\024<b19>"
+literal|"\023RSVD"
+comment|/* Reserved, unknown */
+literal|"\024MP"
+comment|/* Multiprocessor Capable */
 literal|"\025<b20>"
 literal|"\026<b21>"
 literal|"\027AMIE"
