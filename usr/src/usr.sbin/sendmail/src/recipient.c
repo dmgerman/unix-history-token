@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.23 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1206,7 +1206,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USERDB
-comment|/* if not  aliased, look it up in the user database */
+comment|/* if not aliased, look it up in the user database */
 if|if
 condition|(
 operator|!
@@ -1221,13 +1221,83 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
+block|{
+specifier|extern
+name|int
+name|udbexpand
+parameter_list|()
+function_decl|;
+if|if
+condition|(
 name|udbexpand
 argument_list|(
 name|a
 argument_list|,
 name|sendq
 argument_list|)
+operator|==
+name|EX_TEMPFAIL
+condition|)
+block|{
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
 expr_stmt|;
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|)
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+literal|"Deferred: user database error"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|3
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: deferred: udbexpand"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"queued (user database error)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|a
+operator|)
+return|;
+block|}
+block|}
 endif|#
 directive|endif
 block|}

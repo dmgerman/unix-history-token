@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.13 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.14 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.13 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.14 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -266,7 +272,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  UDBEXPAND -- look up user in database and expand ** **	Parameters: **		a -- address to expand. **		sendq -- pointer to head of sendq to put the expansions in. ** **	Returns: **		none. ** **	Side Effects: **		Modifies sendq. */
+comment|/* **  UDBEXPAND -- look up user in database and expand ** **	Parameters: **		a -- address to expand. **		sendq -- pointer to head of sendq to put the expansions in. ** **	Returns: **		EX_TEMPFAIL -- if something "odd" happened -- probably due **			to accessing a file on an NFS server that is down. **		EX_OK -- otherwise. ** **	Side Effects: **		Modifies sendq. */
 end_comment
 
 begin_decl_stmt
@@ -307,7 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|udbexpand
 parameter_list|(
 name|a
@@ -399,7 +405,9 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-return|return;
+return|return
+name|EX_OK
+return|;
 name|CurEnv
 operator|->
 name|e_to
@@ -415,13 +423,20 @@ name|firstcall
 condition|)
 block|{
 specifier|extern
-name|void
+name|int
 name|_udbx_init
 parameter_list|()
 function_decl|;
+if|if
+condition|(
 name|_udbx_init
 argument_list|()
-expr_stmt|;
+operator|==
+name|EX_TEMPFAIL
+condition|)
+return|return
+name|EX_TEMPFAIL
+return|;
 name|firstcall
 operator|=
 name|FALSE
@@ -441,7 +456,9 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-return|return;
+return|return
+name|EX_OK
+return|;
 comment|/* if name is too long, assume it won't match */
 if|if
 condition|(
@@ -457,7 +474,9 @@ name|keybuf
 operator|-
 literal|12
 condition|)
-return|return;
+return|return
+name|EX_OK
+return|;
 comment|/* if name begins with a colon, it indicates our metadata */
 if|if
 condition|(
@@ -470,7 +489,9 @@ index|]
 operator|==
 literal|':'
 condition|)
-return|return;
+return|return
+name|EX_OK
+return|;
 comment|/* build actual database key */
 operator|(
 name|void
@@ -579,7 +600,7 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|!=
+operator|>
 literal|0
 operator|||
 name|info
@@ -589,17 +610,6 @@ operator|<=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-name|syserr
-argument_list|(
-literal|"udbexpand: db-get stat %s"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -756,6 +766,22 @@ name|R_NEXT
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"udbexpand: db-get stat %s"
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
 break|break;
 case|case
 name|UDB_REMOTE
@@ -875,6 +901,9 @@ comment|/* unknown entry type */
 continue|continue;
 block|}
 block|}
+return|return
+name|EX_OK
+return|;
 block|}
 end_function
 
@@ -886,7 +915,7 @@ value|27
 end_define
 
 begin_function
-name|void
+name|int
 name|_udbx_init
 parameter_list|()
 block|{
@@ -1307,6 +1336,10 @@ name|udb_dbname
 operator|=
 name|spec
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|up
 operator|->
 name|udb_dbp
@@ -1332,7 +1365,22 @@ name|udb_dbp
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+operator|&&
+name|errno
+operator|!=
+name|EACCES
+condition|)
+return|return
+name|EX_TEMPFAIL
+return|;
 break|break;
+block|}
 name|up
 operator|->
 name|udb_type
@@ -1382,7 +1430,9 @@ block|{
 case|case
 name|UDB_EOLIST
 case|:
-return|return;
+return|return
+name|EX_OK
+return|;
 case|case
 name|UDB_REMOTE
 case|:
@@ -1609,7 +1659,7 @@ comment|/* not USERDB */
 end_comment
 
 begin_function
-name|void
+name|int
 name|udbexpand
 parameter_list|(
 name|a
@@ -1626,7 +1676,9 @@ modifier|*
 name|sendq
 decl_stmt|;
 block|{
-return|return;
+return|return
+name|EX_OK
+return|;
 block|}
 end_function
 
