@@ -3642,7 +3642,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|200
+literal|500
 init|;
 name|i
 operator|>
@@ -3652,6 +3652,7 @@ name|i
 operator|--
 control|)
 block|{
+comment|/* 5s */
 if|if
 condition|(
 operator|!
@@ -3847,6 +3848,10 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
+define|#
+directive|define
+name|WI_INIT_TRIES
+value|5
 name|int
 name|i
 decl_stmt|;
@@ -3858,7 +3863,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+name|WI_INIT_TRIES
 condition|;
 name|i
 operator|++
@@ -3880,15 +3885,18 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|100000
+literal|50
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
+comment|/* 50ms */
 block|}
 if|if
 condition|(
 name|i
 operator|==
-literal|5
+name|WI_INIT_TRIES
 condition|)
 name|device_printf
 argument_list|(
