@@ -1,24 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.17 89/11/30$  *  *	@(#)clock.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.17 89/11/30$  *  *	@(#)clock.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
@@ -31,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"clockreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/vm.h"
 end_include
 
 begin_include
@@ -625,8 +625,11 @@ operator|(
 name|caddr_t
 operator|)
 literal|0
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|stopclock
 argument_list|()
 expr_stmt|;
@@ -656,6 +659,8 @@ argument_list|,
 argument|data
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -668,6 +673,14 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -697,6 +710,8 @@ name|caddr_t
 operator|*
 operator|)
 name|data
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -715,6 +730,8 @@ name|caddr_t
 operator|*
 operator|)
 name|data
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -797,6 +814,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|addrp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -813,18 +832,16 @@ name|addrp
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 name|int
 name|error
 decl_stmt|;
@@ -890,11 +907,12 @@ name|error
 operator|=
 name|vm_mmap
 argument_list|(
-name|u
-operator|.
-name|u_procp
+operator|&
+name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -931,6 +949,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|addr
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -946,18 +966,16 @@ name|addr
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 name|int
 name|rv
 decl_stmt|;
@@ -977,11 +995,11 @@ name|rv
 operator|=
 name|vm_deallocate
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1211,6 +1229,12 @@ name|PRF_KERNEL
 value|0x80
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notcalled
+end_ifdef
+
 begin_macro
 name|initprofclock
 argument_list|()
@@ -1223,15 +1247,25 @@ directive|if
 name|NCLOCK
 operator|>
 literal|0
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 comment|/* 	 * If the high-res timer is running, force profiling off. 	 * Unfortunately, this gets reflected back to the user not as 	 * an error but as a lack of results. 	 */
 if|if
 condition|(
 name|clockon
 condition|)
 block|{
-name|u
-operator|.
-name|u_prof
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_prof
 operator|.
 name|pr_scale
 operator|=
@@ -1242,9 +1276,11 @@ block|}
 comment|/* 	 * Keep track of the number of user processes that are profiling 	 * by checking the scale value. 	 * 	 * XXX: this all assumes that the profiling code is well behaved; 	 * i.e. profil() is called once per process with pcscale non-zero 	 * to turn it on, and once with pcscale zero to turn it off. 	 * Also assumes you don't do any forks or execs.  Oh well, there 	 * is always adb... 	 */
 if|if
 condition|(
-name|u
-operator|.
-name|u_prof
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_prof
 operator|.
 name|pr_scale
 condition|)
@@ -1284,6 +1320,11 @@ name|profint
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|startprofclock
@@ -1431,9 +1472,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|u
+name|p
+operator|->
+name|p_stats
 operator|.
-name|u_prof
+name|p_prof
 operator|.
 name|pr_scale
 condition|)
@@ -1442,9 +1485,11 @@ argument_list|(
 name|pc
 argument_list|,
 operator|&
-name|u
+name|curproc
+operator|->
+name|p_stats
 operator|.
-name|u_prof
+name|p_prof
 argument_list|,
 literal|1
 argument_list|)
