@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcport.c,v 1.4 1996/06/08 22:54:52 jraynard Exp $"
+literal|"$Id: getrpcport.c,v 1.5 1996/08/12 14:00:22 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/pmap_clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -74,23 +80,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_function_decl
-name|u_short
-name|pmap_getport
-parameter_list|(
-name|struct
-name|sockaddr_in
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -156,26 +145,6 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
-argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|addr
-operator|.
-name|sin_addr
-argument_list|,
-name|hp
-operator|->
-name|h_length
-argument_list|)
-expr_stmt|;
 name|addr
 operator|.
 name|sin_len
@@ -197,6 +166,26 @@ operator|.
 name|sin_port
 operator|=
 literal|0
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|addr
+operator|.
+name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr
+argument_list|,
+name|hp
+operator|->
+name|h_length
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
