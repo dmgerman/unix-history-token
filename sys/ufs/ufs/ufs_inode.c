@@ -648,11 +648,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|UFS_IFREE
+comment|/* 	 * Lock the clearing of v_data so ffs_lock() can inspect it 	 * prior to obtaining the lock. 	 */
+name|VI_LOCK
 argument_list|(
-name|ump
-argument_list|,
-name|ip
+name|vp
 argument_list|)
 expr_stmt|;
 name|vp
@@ -660,6 +659,18 @@ operator|->
 name|v_data
 operator|=
 literal|0
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|UFS_IFREE
+argument_list|(
+name|ump
+argument_list|,
+name|ip
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
