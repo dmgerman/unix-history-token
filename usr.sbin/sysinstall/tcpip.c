@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.82 1999/07/18 10:18:06 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.83 1999/07/19 10:06:18 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -959,7 +959,7 @@ decl_stmt|;
 name|int
 name|use_dhcp
 init|=
-literal|0
+name|FALSE
 decl_stmt|;
 name|char
 modifier|*
@@ -1083,16 +1083,6 @@ name|name
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Successful return from dhclient"
-argument_list|)
-expr_stmt|;
 name|dhcpGetInfo
 argument_list|(
 name|devp
@@ -1103,29 +1093,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-else|else
-block|{
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Unsuccessful return from dhclient"
-argument_list|)
-expr_stmt|;
-name|use_dhcp
-operator|=
-name|FALSE
-expr_stmt|;
 block|}
-block|}
-else|else
-name|use_dhcp
-operator|=
-name|FALSE
-expr_stmt|;
 comment|/* Get old IP address from variable space, if available */
 if|if
 condition|(
@@ -1627,12 +1595,11 @@ block|{
 comment|/* Insert a default value for the netmask, 0xffffff00 is 	     * the most appropriate one (entire class C, or subnetted 	     * class A/B network). 	     */
 if|if
 condition|(
+operator|!
 name|netmask
 index|[
 literal|0
 index|]
-operator|==
-literal|'\0'
 condition|)
 block|{
 name|strcpy
@@ -1882,6 +1849,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ipaddr
+index|[
+literal|0
+index|]
+condition|)
+name|variable_set2
+argument_list|(
+name|VAR_IPADDR
+argument_list|,
+name|ipaddr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|devp
 operator|->
@@ -2049,22 +2032,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ipaddr
-index|[
-literal|0
-index|]
-condition|)
-name|variable_set2
-argument_list|(
-name|VAR_IPADDR
-argument_list|,
-name|ipaddr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
