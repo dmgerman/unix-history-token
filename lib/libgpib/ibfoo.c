@@ -2525,6 +2525,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buffer
@@ -2553,7 +2554,13 @@ name|io
 operator|.
 name|buffer
 operator|=
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|buffer
+argument_list|)
 expr_stmt|;
 name|io
 operator|.
@@ -2590,6 +2597,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buffer
@@ -2618,7 +2626,13 @@ name|io
 operator|.
 name|buffer
 operator|=
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|buffer
+argument_list|)
 expr_stmt|;
 name|io
 operator|.
@@ -2655,6 +2669,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flname
@@ -2680,7 +2695,13 @@ name|io
 operator|.
 name|flname
 operator|=
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|flname
+argument_list|)
 expr_stmt|;
 name|io
 operator|.
@@ -2709,6 +2730,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buffer
@@ -2737,7 +2759,13 @@ name|io
 operator|.
 name|buffer
 operator|=
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|buffer
+argument_list|)
 expr_stmt|;
 name|io
 operator|.

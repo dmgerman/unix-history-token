@@ -1187,6 +1187,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buffer
@@ -1204,6 +1205,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buffer
@@ -1221,6 +1223,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flname
@@ -1235,6 +1238,7 @@ parameter_list|(
 name|int
 name|handle
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buffer
