@@ -207,6 +207,9 @@ decl_stmt|;
 name|mode_t
 name|si_mode
 decl_stmt|;
+name|u_long
+name|si_usecount
+decl_stmt|;
 union|union
 block|{
 struct|struct
