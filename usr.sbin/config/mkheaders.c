@@ -249,6 +249,7 @@ operator|&
 name|DEVDONE
 operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Warning: pseudo-device \"%s\" is unknown\n"
@@ -258,6 +259,12 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -283,6 +290,7 @@ operator|&
 name|DEVDONE
 operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Warning: device \"%s\" is unknown\n"
@@ -292,6 +300,12 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}

@@ -930,7 +930,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"WARNING: version of config(8) does not match kernel!\n"
+literal|"ERROR: version of config(8) does not match kernel!\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -998,6 +998,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"conventions\n\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1117,11 +1122,6 @@ name|fname
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|;
-name|int
-name|ddwarned
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|nreqs
@@ -1638,6 +1638,11 @@ argument_list|,
 name|this
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Your version of config(8) is out of sync with your kernel source.\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -1995,26 +2000,18 @@ literal|"device-driver"
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|ddwarned
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|"%s: `device-driver' flag ignored.\n"
+literal|"%s: `device-driver' flag obsolete.\n"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|ddwarned
-operator|++
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
-block|}
-goto|goto
-name|nextparam
-goto|;
 block|}
 if|if
 condition|(
