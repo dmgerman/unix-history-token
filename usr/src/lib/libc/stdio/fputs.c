@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fputs.c	4.1 (Berkeley) %G% */
+comment|/* @(#)fputs.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -35,6 +35,8 @@ begin_block
 block|{
 specifier|register
 name|r
+operator|=
+literal|0
 expr_stmt|;
 specifier|register
 name|c
