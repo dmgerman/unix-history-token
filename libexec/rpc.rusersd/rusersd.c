@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rusersd.c,v 1.6 1997/11/26 07:36:51 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rusers_proc.c,v 1.7 1997/11/26 07:36:50 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,23 +29,22 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<rpc/rpc.h>
+file|<errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -68,25 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -1190,7 +1171,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1793,13 +1774,20 @@ operator|&
 name|argument
 argument_list|)
 condition|)
-name|errx
+block|{
+name|syslog
 argument_list|(
-literal|1
+name|LOG_ERR
 argument_list|,
 literal|"unable to free arguments"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|leave
 label|:
 if|if
