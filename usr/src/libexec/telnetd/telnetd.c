@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.38 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1687,19 +1687,6 @@ condition|(
 operator|!
 name|myopts
 index|[
-name|TELOPT_ECHO
-index|]
-condition|)
-name|dooption
-argument_list|(
-name|TELOPT_ECHO
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|myopts
-index|[
 name|TELOPT_SGA
 index|]
 condition|)
@@ -1792,6 +1779,37 @@ index|]
 condition|)
 name|ttloop
 argument_list|()
+expr_stmt|;
+comment|/* 	 * On the off chance that the telnet client is broken and does not 	 * respond to the DO ECHO we sent, (after all, we did send the 	 * DO NAWS negotiation after the DO ECHO, and we won't get here 	 * until a response to the DO NAWS comes back) simulate the 	 * receipt of a will echo.  This will also send a WONT ECHO 	 * to the client, since we assume that the client failed to 	 * respond because it believes that it is already in DO ECHO 	 * mode, which we do not want. 	 */
+if|if
+condition|(
+name|hiswants
+index|[
+name|TELOPT_ECHO
+index|]
+operator|==
+name|OPT_YES
+condition|)
+name|willoption
+argument_list|(
+name|TELOPT_ECHO
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Finally, to clean things up, we turn on our echo.  This 	 * will break stupid 4.2 telnets out of local terminal echo. 	 */
+if|if
+condition|(
+operator|!
+name|myopts
+index|[
+name|TELOPT_ECHO
+index|]
+condition|)
+name|dooption
+argument_list|(
+name|TELOPT_ECHO
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn on packet mode, and default to line at at time mode. 	 */
 operator|(
