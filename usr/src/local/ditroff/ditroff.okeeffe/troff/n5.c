@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n5.c	2.1 (CWI) 85/07/18"
+literal|"@(#)n5.c	2.2 (CWI) 87/03/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -1818,7 +1818,11 @@ argument_list|()
 expr_stmt|;
 name|errprint
 argument_list|(
-literal|"cannot do ev."
+literal|"cannot do ev %d. (evi %d)"
+argument_list|,
+name|nxev
+argument_list|,
+name|evi
 argument_list|)
 expr_stmt|;
 if|if
