@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.6	%G%	*/
+comment|/*	ubavar.h	4.7	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * unibus adapter  */
+comment|/*  * UNIBUS adaptor  */
 end_comment
 
 begin_if
@@ -654,15 +654,18 @@ name|um_addr
 decl_stmt|;
 comment|/* address of device in i/o space */
 name|struct
-name|uba_info
-modifier|*
-name|um_forw
-decl_stmt|;
-name|struct
 name|uba_hd
 modifier|*
 name|um_hd
 decl_stmt|;
+name|int
+name|um_cmd
+decl_stmt|;
+comment|/* communication to dgo() */
+name|int
+name|um_ubinfo
+decl_stmt|;
+comment|/* save unibus registers, etc */
 name|struct
 name|buf
 name|um_tab
@@ -715,6 +718,14 @@ name|ui_addr
 decl_stmt|;
 comment|/* address of device in i/o space */
 name|short
+name|ui_dk
+decl_stmt|;
+comment|/* if init 1 set to number for iostat */
+name|short
+name|ui_flags
+decl_stmt|;
+comment|/* param to device init. */
+name|short
 name|ui_alive
 decl_stmt|;
 comment|/* device exists */
@@ -722,14 +733,15 @@ name|short
 name|ui_type
 decl_stmt|;
 comment|/* driver specific type information */
-name|short
-name|ui_dk
-decl_stmt|;
-comment|/* device number for iostat */
 name|caddr_t
 name|ui_physaddr
 decl_stmt|;
 comment|/* phys addr, for standalone (dump) code */
+name|struct
+name|uba_dinfo
+modifier|*
+name|ui_forw
+decl_stmt|;
 comment|/* if the driver isn't also a controller, this is the controller it is on */
 name|struct
 name|uba_minfo
@@ -823,13 +835,13 @@ parameter_list|()
 function_decl|;
 comment|/* interrupt vector */
 name|struct
-name|uba_minfo
+name|uba_dinfo
 modifier|*
 name|uh_actf
 decl_stmt|;
 comment|/* head of queue to transfer */
 name|struct
-name|uba_minfo
+name|uba_dinfo
 modifier|*
 name|uh_actl
 decl_stmt|;
@@ -870,41 +882,6 @@ name|MAXNUBA
 index|]
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uba_minfo
-name|ubminit
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uba_dinfo
-name|ubdinit
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|numuba
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Each UNIBUS driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  */
@@ -950,8 +927,9 @@ decl_stmt|;
 comment|/* device csr addresses */
 name|char
 modifier|*
-name|ud_pname
+name|ud_dname
 decl_stmt|;
+comment|/* name of a device */
 name|struct
 name|uba_dinfo
 modifier|*
@@ -959,6 +937,11 @@ modifier|*
 name|ud_dinfo
 decl_stmt|;
 comment|/* backpointers to ubdinit structs */
+name|char
+modifier|*
+name|ud_mname
+decl_stmt|;
+comment|/* name of a controller */
 name|struct
 name|uba_minfo
 modifier|*
@@ -1038,6 +1021,118 @@ end_define
 begin_comment
 comment|/* need 16 bit addresses only */
 end_comment
+
+begin_comment
+comment|/*  * UNIBUS related kernel variables  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uba_minfo
+name|ubminit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uba_dinfo
+name|ubdinit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|numuba
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pte
+name|UMEMmap
+index|[
+name|MAXNUBA
+index|]
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|umem
+index|[
+name|MAXNUBA
+index|]
+index|[
+literal|16
+operator|*
+name|NBPG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|UNIvec
+index|[]
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_extern
+extern|extern	Xua0int(
+end_extern
+
+begin_operator
+unit|)
+operator|,
+end_operator
+
+begin_expr_stmt
+name|Xua1int
+argument_list|()
+operator|,
+name|Xua2int
+argument_list|()
+operator|,
+name|Xua3int
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
