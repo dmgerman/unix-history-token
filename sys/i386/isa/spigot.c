@@ -69,9 +69,6 @@ file|<sys/errno.h>
 include|#
 directive|include
 file|<sys/mman.h>
-include|#
-directive|include
-file|<sys/conf.h>
 ifdef|#
 directive|ifdef
 name|DEVFS
