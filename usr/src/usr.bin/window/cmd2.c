@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.11 83/09/01"
+literal|"@(#)cmd2.c	3.12 83/09/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -936,10 +936,6 @@ name|i
 expr_stmt|;
 name|int
 name|n
-decl_stmt|;
-name|char
-modifier|*
-name|msg
 decl_stmt|;
 for|for
 control|(
