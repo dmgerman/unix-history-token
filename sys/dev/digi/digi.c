@@ -7906,14 +7906,14 @@ break|break;
 case|case
 name|TIOCSBRK
 case|:
-comment|/* 		 * now it sends 250 millisecond break because I don't know 		 * how to send an infinite break 		 */
+comment|/* 		 * now it sends 400 millisecond break because I don't know 		 * how to send an infinite break 		 */
 name|fepcmd_w
 argument_list|(
 name|port
 argument_list|,
 name|SENDBREAK
 argument_list|,
-literal|250
+literal|400
 argument_list|,
 literal|10
 argument_list|)
