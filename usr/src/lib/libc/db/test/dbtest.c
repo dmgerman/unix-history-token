@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.8 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,22 +616,30 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
-while|while
-condition|(
-operator|(
+for|for
+control|(
 name|p
 operator|=
-name|strsep
+name|strtok
 argument_list|(
-operator|&
 name|infoarg
 argument_list|,
 literal|",\t "
 argument_list|)
-operator|)
+init|;
+name|p
 operator|!=
 name|NULL
-condition|)
+condition|;
+name|p
+operator|=
+name|strtok
+argument_list|(
+literal|0
+argument_list|,
+literal|",\t "
+argument_list|)
+control|)
 if|if
 condition|(
 operator|*
