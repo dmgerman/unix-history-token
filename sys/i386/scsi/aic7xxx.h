@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.3 1995/02/03 17:15:12 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.4 1995/02/22 01:43:25 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -91,6 +91,13 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|AHC_NONE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHC_WIDE
 value|0x02
 end_define
@@ -135,8 +142,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AHC_294
+name|AHC_AIC7870
 value|0x40
+end_define
+
+begin_comment
+comment|/* PCI Based Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_294
+value|0xc0
 end_define
 
 begin_comment
@@ -457,8 +475,11 @@ decl_stmt|;
 name|u_char
 name|maxscbs
 decl_stmt|;
-name|int
+name|u_char
 name|unpause
+decl_stmt|;
+name|u_char
+name|pause
 decl_stmt|;
 block|}
 struct|;

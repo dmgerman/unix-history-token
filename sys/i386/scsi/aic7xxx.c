@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.16 1995/03/07 08:59:28 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.17 1995/03/17 23:58:27 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -1284,27 +1284,6 @@ name|CHIPRST
 value|0x01
 end_define
 
-begin_define
-define|#
-directive|define
-name|REQ_PAUSE
-value|IRQMS | PAUSE | INTEN
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNPAUSE_274X
-value|IRQMS | INTEN
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNPAUSE_284X
-value|INTEN
-end_define
-
 begin_comment
 comment|/*  * SCB Pointer (p. 3-49)  * Gate one of the four SCBs into the SCBARRAY window.  */
 end_comment
@@ -1397,6 +1376,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RESIDUAL
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|BRKADRINT
 value|0x08
 end_define
@@ -1426,12 +1412,8 @@ begin_define
 define|#
 directive|define
 name|INT_PEND
-value|(SEQINT | SCSIINT | CMDCMPLT)
+value|(BRKADRINT | SEQINT | SCSIINT | CMDCMPLT)
 end_define
-
-begin_comment
-comment|/* For polling */
-end_comment
 
 begin_comment
 comment|/*  * Hard Error (p. 3-53)  * Reporting of catastrophic errors.  You usually cannot recover from   * these without a full board reset.  */
@@ -1497,13 +1479,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLRINTSTAT
+name|CLRSCSIINT
 value|0x04
 end_define
-
-begin_comment
-comment|/* UNDOCUMENTED - must be unpaused */
-end_comment
 
 begin_define
 define|#
@@ -1722,6 +1700,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SINGLE_BUS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
 name|TWIN_BUS
 value|0x01
 end_define
@@ -1843,7 +1828,7 @@ parameter_list|(
 name|ahc
 parameter_list|)
 define|\
-value|outb(HCNTRL + ahc->baseport, REQ_PAUSE);   \ 				\         while ((inb(HCNTRL + ahc->baseport)& PAUSE) == 0)             \                         ;
+value|outb(HCNTRL + ahc->baseport, ahc->pause);   \ 				\         while ((inb(HCNTRL + ahc->baseport)& PAUSE) == 0)             \                         ;
 end_define
 
 begin_define
@@ -2873,49 +2858,6 @@ name|xs
 init|=
 name|NULL
 decl_stmt|;
-comment|/* 	 * Check that we are in the "running" state, and should be  	 * receiving interrupts.  The reason for doing this is that  	 * we have a choice of edge or level sensitive interrupts,  	 * and if we have the wrong type set, we'll get spurrious  	 * interrupts.  Toggle to the other type if need be. 	 */
-if|if
-condition|(
-name|ahc
-operator|->
-name|flags
-operator|!=
-name|AHC_RUNNING
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ahc%d: Switching interrupt type\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|ahc
-operator|->
-name|unpause
-operator|^=
-literal|0x8
-expr_stmt|;
-name|outb
-argument_list|(
-name|HCNTRL
-operator|+
-name|iobase
-argument_list|,
-name|inb
-argument_list|(
-name|HCNTRL
-operator|+
-name|iobase
-argument_list|)
-operator|^
-literal|0x8
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 name|intstat
 operator|=
 name|inb
@@ -2925,6 +2867,19 @@ operator|+
 name|iobase
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Is this interrupt for me? or for 	 * someone who is sharing my interrupt 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|intstat
+operator|&
+name|INT_PEND
+operator|)
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|intstat
@@ -2985,7 +2940,7 @@ literal|1
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ahc%d: brkadrint, %s at seqaddr = 0x%lx\n"
+literal|"ahc%d: brkadrint, %s at seqaddr = 0x%x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3821,8 +3776,8 @@ name|AHC_SHOWMISC
 condition|)
 name|printf
 argument_list|(
-literal|"Ignored message "
-literal|"reject!!\n"
+literal|"Message reject -- "
+literal|"ignored\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3948,41 +3903,6 @@ operator|=
 name|scb
 operator|->
 name|target_status
-expr_stmt|;
-name|xs
-operator|->
-name|resid
-operator|=
-operator|(
-operator|(
-name|scb
-operator|->
-name|residual_data_count
-index|[
-literal|2
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|scb
-operator|->
-name|residual_data_count
-index|[
-literal|1
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-name|scb
-operator|->
-name|residual_data_count
-index|[
-literal|0
-index|]
-operator|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -4354,7 +4274,7 @@ break|break;
 case|case
 name|SCSI_QUEUE_FULL
 case|:
-comment|/* 				 * Stick this command into the "waiting" 				 * slot to be retarted on the next command 				 * complete 				 */
+comment|/* 				 * The upper level SCSI code will eventually 				 * handle this properly. 				 */
 name|printf
 argument_list|(
 literal|"ahc%d: Queue Full\n"
@@ -4387,6 +4307,86 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 break|break;
 block|}
+break|break;
+block|}
+case|case
+name|RESIDUAL
+case|:
+block|{
+name|int
+name|scb_index
+decl_stmt|;
+name|scb_index
+operator|=
+name|inb
+argument_list|(
+name|SCBPTR
+operator|+
+name|iobase
+argument_list|)
+expr_stmt|;
+name|scb
+operator|=
+name|ahc
+operator|->
+name|scbarray
+index|[
+name|scb_index
+index|]
+expr_stmt|;
+comment|/* 			 * Don't clobber valid resid info with 			 * a resid coming from a check sense 			 * operation. 			 */
+if|if
+condition|(
+operator|!
+operator|(
+name|scb
+operator|->
+name|flags
+operator|&
+name|SCB_SENSE
+operator|)
+condition|)
+name|scb
+operator|->
+name|xs
+operator|->
+name|resid
+operator|=
+operator|(
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|SCBARRAY
+operator|+
+literal|17
+argument_list|)
+operator|<<
+literal|16
+operator|)
+operator||
+operator|(
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|SCBARRAY
+operator|+
+literal|16
+argument_list|)
+operator|<<
+literal|8
+operator|)
+operator||
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|SCBARRAY
+operator|+
+literal|15
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 default|default:
@@ -4508,7 +4508,7 @@ name|CLRINT
 operator|+
 name|iobase
 argument_list|,
-name|CLRINTSTAT
+name|CLRSCSIINT
 argument_list|)
 expr_stmt|;
 name|scb
@@ -4651,7 +4651,7 @@ name|CLRINT
 operator|+
 name|iobase
 argument_list|,
-name|CLRINTSTAT
+name|CLRSCSIINT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4664,10 +4664,27 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahc%d: parity error on channel A "
+literal|"ahc%d: parity error on channel %c "
 literal|"target %d, lun %d\n"
 argument_list|,
 name|unit
+argument_list|,
+operator|(
+operator|(
+name|u_long
+operator|)
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|fordriver
+operator|&
+literal|0x08
+operator|)
+condition|?
+literal|'B'
+else|:
+literal|'A'
 argument_list|,
 name|xs
 operator|->
@@ -4708,7 +4725,7 @@ name|CLRINT
 operator|+
 name|iobase
 argument_list|,
-name|CLRINTSTAT
+name|CLRSCSIINT
 argument_list|)
 expr_stmt|;
 name|scb
@@ -4763,7 +4780,7 @@ name|CLRINT
 operator|+
 name|iobase
 argument_list|,
-name|CLRINTSTAT
+name|CLRSCSIINT
 argument_list|)
 expr_stmt|;
 name|scb
@@ -5203,6 +5220,12 @@ name|int
 name|intdef
 decl_stmt|,
 name|i
+decl_stmt|,
+name|max_targ
+init|=
+literal|16
+decl_stmt|,
+name|wait
 decl_stmt|;
 comment|/* 	 * Assume we have a board at this stage 	 * Find out the configured interupt and the card type. 	 */
 ifdef|#
@@ -5239,6 +5262,43 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+comment|/* Save the IRQ type before we do a chip reset */
+name|ahc
+operator|->
+name|unpause
+operator|=
+operator|(
+name|inb
+argument_list|(
+name|HCNTRL
+operator|+
+name|iobase
+argument_list|)
+operator|&
+name|IRQMS
+operator|)
+operator||
+name|INTEN
+expr_stmt|;
+name|ahc
+operator|->
+name|pause
+operator|=
+operator|(
+name|inb
+argument_list|(
+name|HCNTRL
+operator|+
+name|iobase
+argument_list|)
+operator|&
+name|IRQMS
+operator|)
+operator||
+name|INTEN
+operator||
+name|PAUSE
+expr_stmt|;
 name|outb
 argument_list|(
 name|HCNTRL
@@ -5248,6 +5308,58 @@ argument_list|,
 name|CHIPRST
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ensure that the reset has finished 	 */
+name|wait
+operator|=
+literal|1000
+expr_stmt|;
+while|while
+condition|(
+name|wait
+operator|--
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+name|HCNTRL
+operator|+
+name|iobase
+argument_list|)
+operator|&
+name|CHIPRST
+operator|)
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|wait
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ahc%d: Failed chip reset - probe failed!\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|ahc
@@ -5264,12 +5376,6 @@ literal|"ahc%d: 274x "
 argument_list|,
 name|unit
 argument_list|)
-expr_stmt|;
-name|ahc
-operator|->
-name|unpause
-operator|=
-name|UNPAUSE_274X
 expr_stmt|;
 name|ahc
 operator|->
@@ -5290,32 +5396,39 @@ argument_list|)
 expr_stmt|;
 name|ahc
 operator|->
-name|unpause
-operator|=
-name|UNPAUSE_284X
-expr_stmt|;
-name|ahc
-operator|->
 name|maxscbs
 operator|=
 literal|0x4
 expr_stmt|;
 break|break;
 case|case
+name|AHC_AIC7870
+case|:
+case|case
 name|AHC_294
 case|:
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
+name|AHC_AIC7870
+condition|)
+name|printf
+argument_list|(
+literal|"ahc%d: aic7870 "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"ahc%d: 294x "
 argument_list|,
 name|unit
 argument_list|)
-expr_stmt|;
-name|ahc
-operator|->
-name|unpause
-operator|=
-name|UNPAUSE_274X
 expr_stmt|;
 name|ahc
 operator|->
@@ -5412,6 +5525,15 @@ argument_list|,
 name|ahc
 operator|->
 name|our_id
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|HA_FLAGS
+operator|+
+name|iobase
+argument_list|,
+name|SINGLE_BUS
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5556,11 +5678,11 @@ name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_294
+name|AHC_AIC7870
 operator|)
 condition|)
 block|{
-comment|/*  		 * See if we have a Rev E or higher 		 * aic7770.  If so, use 16 SCBs. 		 * Anything below a Rev E will have a 		 * R/O autoflush diable configuration bit. 		 */
+comment|/*  		 * See if we have a Rev E or higher 		 * aic7770.  If so, use 16 SCBs. 		 * Anything below a Rev E will have a 		 * R/O autoflush disable configuration bit. 		 */
 name|u_char
 name|sblkctl_orig
 decl_stmt|;
@@ -5661,7 +5783,7 @@ name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_294
+name|AHC_AIC7870
 operator|)
 condition|)
 block|{
@@ -5896,6 +6018,21 @@ name|needwdtr_orig
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_WIDE
+operator|)
+condition|)
+name|max_targ
+operator|=
+literal|8
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5904,7 +6041,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|max_targ
 condition|;
 name|i
 operator|++
@@ -5939,10 +6076,10 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
-comment|/* Default to a syncronous offset of 15 */
+comment|/* Default to a asyncronous transfers (0 offset) */
 name|target_settings
-operator||=
-literal|0x0f
+operator|&=
+literal|0xf0
 expr_stmt|;
 block|}
 if|if
@@ -6116,7 +6253,7 @@ name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_294
+name|AHC_AIC7870
 operator|)
 condition|)
 name|outb
@@ -6319,13 +6456,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* 	 * Set a flag that states, yes, we can receive interrupts 	 * the reason for doing this is that we have a choice of 	 * edge or level sensitive interrupts, and if we have the 	 * wrong type, we'll get spurrious interrupts.  We check 	 * this flag in the interrupt handler and toggle to the 	 * other type if need be. 	 */
-name|ahc
-operator|->
-name|flags
-operator|=
-name|AHC_RUNNING
-expr_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|xs
@@ -6470,6 +6600,20 @@ block|}
 comment|/*          * Put all the arguments for the xfer in the scb          */
 if|if
 condition|(
+name|ahc
+operator|->
+name|tagenable
+operator|&
+name|mask
+condition|)
+name|scb
+operator|->
+name|control
+operator||=
+name|SCB_TE
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|ahc
 operator|->
@@ -6501,7 +6645,6 @@ operator||=
 name|mask
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -6535,21 +6678,6 @@ operator||=
 name|mask
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ahc
-operator|->
-name|tagenable
-operator|&
-name|mask
-condition|)
-name|scb
-operator|->
-name|control
-operator||=
-name|SCB_TE
-expr_stmt|;
 name|scb
 operator|->
 name|target_channel_lun
@@ -6609,6 +6737,12 @@ name|xs
 operator|->
 name|cmd
 argument_list|)
+expr_stmt|;
+name|xs
+operator|->
+name|resid
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -7746,7 +7880,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|10000
+literal|1000
 argument_list|)
 expr_stmt|;
 if|if
