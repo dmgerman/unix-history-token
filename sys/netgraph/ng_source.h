@@ -134,6 +134,9 @@ comment|/* stop sending queued data */
 name|NGM_SOURCE_CLR_DATA
 block|,
 comment|/* clear the queued data */
+name|NGM_SOURCE_START_NOW
+block|,
+comment|/* start on non-ether output */
 block|}
 enum|;
 end_enum
