@@ -242,6 +242,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IANAHOST
+value|"whois.iana.org"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_PORT
 value|"whois"
 end_define
@@ -472,7 +479,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAc:dgh:ilmp:QrR6"
+literal|"aAc:dgh:iIlmp:QrR6"
 argument_list|)
 operator|)
 operator|!=
@@ -539,6 +546,14 @@ case|:
 name|host
 operator|=
 name|INICHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+name|host
+operator|=
+name|IANAHOST
 expr_stmt|;
 break|break;
 case|case
@@ -1709,7 +1724,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-aAdgilmQrR6] [-c country-code | -h hostname] "
+literal|"usage: whois [-aAdgiIlmQrR6] [-c country-code | -h hostname] "
 literal|"[-p port] name ...\n"
 argument_list|)
 expr_stmt|;
