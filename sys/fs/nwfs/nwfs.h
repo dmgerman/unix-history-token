@@ -231,6 +231,11 @@ name|int
 name|nwfs_doio
 parameter_list|(
 name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 name|bp
