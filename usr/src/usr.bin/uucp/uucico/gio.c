@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gio.c	5.6 (Berkeley) 10/9/85"
+literal|"@(#)gio.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
