@@ -5063,6 +5063,12 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|setuid
+argument_list|(
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|SSLeay_add_all_algorithms
 argument_list|()
 expr_stmt|;
