@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.12 1997/06/25 20:59:15 fsmp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.5 1997/07/06 23:36:49 smp Exp smp $  *  */
 end_comment
 
 begin_ifndef
@@ -97,7 +97,18 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * For sending values to POST displays.  */
+comment|/*  * For sending values to POST displays.  * XXX FIXME: where does this really belong, isa.h/isa.c perhaps?  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_postcode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** XXX currently in mp_machdep.c */
 end_comment
 
 begin_define
@@ -107,7 +118,27 @@ name|POSTCODE
 parameter_list|(
 name|X
 parameter_list|)
-value|outb(0x80, (X))
+value|current_postcode = (X), \ 			outb(0x80, current_postcode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSTCODE_LO
+parameter_list|(
+name|X
+parameter_list|)
+value|current_postcode&= 0xf0, \ 			current_postcode |= ((X)& 0x0f), \ 			outb(0x80, current_postcode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSTCODE_HI
+parameter_list|(
+name|X
+parameter_list|)
+value|current_postcode&= 0x0f, \ 			current_postcode |= (((X)<< 4)& 0xf0), \ 			outb(0x80, current_postcode)
 end_define
 
 begin_include
