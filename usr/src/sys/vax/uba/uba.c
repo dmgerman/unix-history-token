@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.55	82/10/22	*/
+comment|/*	uba.c	4.56	82/10/23	*/
 end_comment
 
 begin_include
@@ -1618,12 +1618,6 @@ expr_stmt|;
 name|uh
 operator|->
 name|uh_xclu
-operator|=
-literal|0
-expr_stmt|;
-name|uh
-operator|->
-name|uh_hangcnt
 operator|=
 literal|0
 expr_stmt|;
