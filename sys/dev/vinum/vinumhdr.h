@@ -230,13 +230,5 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cdevsw
-name|vinum_cdevsw
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 
