@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.29.2.14 1996/05/21 18:46:05 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.29.2.15 1996/05/21 23:33:52 dima Exp $  */
 end_comment
 
 begin_comment
@@ -1399,6 +1399,9 @@ block|{
 name|u_char
 name|ultra_enb
 decl_stmt|;
+name|u_char
+name|sxfrctl0
+decl_stmt|;
 name|u_long
 name|ultra_enb_addr
 decl_stmt|;
@@ -1492,6 +1495,17 @@ argument_list|(
 name|ultra_enb_addr
 argument_list|)
 expr_stmt|;
+name|sxfrctl0
+operator|=
+name|inb
+argument_list|(
+name|SXFRCTL0
+operator|+
+name|ahc
+operator|->
+name|baseport
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ahc_syncrates
@@ -1503,6 +1517,7 @@ name|sxfr
 operator|&
 name|ULTRA_SXFR
 condition|)
+block|{
 name|ultra_enb
 operator||=
 literal|0x01
@@ -1513,7 +1528,13 @@ operator|&
 literal|0x07
 operator|)
 expr_stmt|;
+name|sxfrctl0
+operator||=
+name|ULTRAEN
+expr_stmt|;
+block|}
 else|else
+block|{
 name|ultra_enb
 operator|&=
 operator|~
@@ -1527,11 +1548,28 @@ literal|0x07
 operator|)
 operator|)
 expr_stmt|;
+name|sxfrctl0
+operator|&=
+operator|~
+name|ULTRAEN
+expr_stmt|;
+block|}
 name|outb
 argument_list|(
 name|ultra_enb_addr
 argument_list|,
 name|ultra_enb
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|SXFRCTL0
+operator|+
+name|ahc
+operator|->
+name|baseport
+argument_list|,
+name|sxfrctl0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3694,13 +3732,13 @@ comment|/* 						 * This is not a simple tagged command 						 * so its position
 name|int
 name|i
 decl_stmt|;
-name|int
+name|u_char
 name|saved_queue
 index|[
 name|AHC_SCB_MAX
 index|]
 decl_stmt|;
-name|int
+name|u_char
 name|queued
 init|=
 name|inb
@@ -10768,13 +10806,13 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Search the QINFIFO. 	 */
 block|{
-name|int
+name|u_char
 name|saved_queue
 index|[
 name|AHC_SCB_MAX
 index|]
 decl_stmt|;
-name|int
+name|u_char
 name|queued
 init|=
 name|inb
