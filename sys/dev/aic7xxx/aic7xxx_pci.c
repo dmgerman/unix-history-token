@@ -1,12 +1,41 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995-2000 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_pci.c#28 $  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx_pci.c#37 $  *  * $FreeBSD$  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<dev/aic7xxx/aic7xxx_freebsd.h>
+file|"aic7xxx_osm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"aic7xxx_inline.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"aic7xxx_93cx6.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<dev/aic7xxx/aic7xxx_osm.h>
 end_include
 
 begin_include
@@ -20,6 +49,11 @@ include|#
 directive|include
 file|<dev/aic7xxx/aic7xxx_93cx6.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -631,7 +665,7 @@ value|0x5
 end_define
 
 begin_comment
-comment|/* Low Cost Card */
+comment|/* Container ROMB */
 end_comment
 
 begin_define
@@ -901,7 +935,7 @@ value|((SUBID_9005_TYPE(id) == SUBID_9005_TYPE_MB)			\ 	 ? ((id)& 0x800)>> 11			
 end_define
 
 begin_comment
-comment|/*  * Informational only. Should use chip register to be  * ceratian, but may be use in identification strings.  */
+comment|/*  * Informational only. Should use chip register to be  * certain, but may be use in identification strings.  */
 end_comment
 
 begin_define
@@ -1996,6 +2030,26 @@ end_define
 begin_function_decl
 specifier|static
 name|int
+name|ahc_9005_subdevinfo_valid
+parameter_list|(
+name|uint16_t
+name|vendor
+parameter_list|,
+name|uint16_t
+name|device
+parameter_list|,
+name|uint16_t
+name|subvendor
+parameter_list|,
+name|uint16_t
+name|subdevice
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|ahc_ext_scbram_present
 parameter_list|(
 name|struct
@@ -2175,37 +2229,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|acquire_seeprom
-parameter_list|(
-name|struct
-name|ahc_softc
-modifier|*
-name|ahc
-parameter_list|,
-name|struct
-name|seeprom_descriptor
-modifier|*
-name|sd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|release_seeprom
-parameter_list|(
-name|struct
-name|seeprom_descriptor
-modifier|*
-name|sd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|write_brdctl
 parameter_list|(
@@ -2232,6 +2255,103 @@ name|ahc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|int
+name|ahc_9005_subdevinfo_valid
+parameter_list|(
+name|uint16_t
+name|device
+parameter_list|,
+name|uint16_t
+name|vendor
+parameter_list|,
+name|uint16_t
+name|subdevice
+parameter_list|,
+name|uint16_t
+name|subvendor
+parameter_list|)
+block|{
+name|int
+name|result
+decl_stmt|;
+comment|/* Default to invalid. */
+name|result
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|vendor
+operator|==
+literal|0x9005
+operator|&&
+name|subvendor
+operator|==
+literal|0x9005
+operator|&&
+name|subdevice
+operator|!=
+name|device
+operator|&&
+name|SUBID_9005_TYPE_KNOWN
+argument_list|(
+name|subdevice
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+switch|switch
+condition|(
+name|SUBID_9005_TYPE
+argument_list|(
+name|subdevice
+argument_list|)
+condition|)
+block|{
+case|case
+name|SUBID_9005_TYPE_MB
+case|:
+break|break;
+case|case
+name|SUBID_9005_TYPE_CARD
+case|:
+case|case
+name|SUBID_9005_TYPE_LCCARD
+case|:
+comment|/* 			 * Currently only trust Adaptec cards to 			 * get the sub device info correct. 			 */
+if|if
+condition|(
+name|DEVID_9005_TYPE
+argument_list|(
+name|device
+argument_list|)
+operator|==
+name|DEVID_9005_TYPE_HBA
+condition|)
+name|result
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|SUBID_9005_TYPE_RAID
+case|:
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|struct
@@ -2327,14 +2447,39 @@ argument_list|,
 name|subvendor
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Some IBM motherboards with embedded controllers, having 	 *	non-standard SubSystem IDs, hit the following test. 	 *	On these systems, we fail to attach the second channel. 	 *	The only HBA that doesn't have the second channel hooked 	 *	up is the 29160C, a compact PCI card that has been shipped 	 *	to very few customers.  Even in that case, probing the 	 *	second channel is not fatal, just cosmetically undesirable. 	 *      Disable this code until a more selective test is developed 	 *      and tested. 	 */
-if|#
-directive|if
-literal|0
 comment|/* 	 * If the second function is not hooked up, ignore it. 	 * Unfortunately, not all MB vendors implement the 	 * subdevice ID as per the Adaptec spec, so do our best 	 * to sanity check it prior to accepting the subdevice 	 * ID as valid. 	 */
-block|if (ahc_get_pci_function(pci)> 0&& subvendor == 0x9005&& subdevice != device&& SUBID_9005_TYPE_KNOWN(subdevice) != 0&& SUBID_9005_MFUNCENB(subdevice) == 0) 		return (NULL);
-endif|#
-directive|endif
+if|if
+condition|(
+name|ahc_get_pci_function
+argument_list|(
+name|pci
+argument_list|)
+operator|>
+literal|0
+operator|&&
+name|ahc_9005_subdevinfo_valid
+argument_list|(
+name|vendor
+argument_list|,
+name|device
+argument_list|,
+name|subvendor
+argument_list|,
+name|subdevice
+argument_list|)
+operator|&&
+name|SUBID_9005_MFUNCENB
+argument_list|(
+name|subdevice
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -2482,6 +2627,13 @@ name|entry
 operator|->
 name|name
 expr_stmt|;
+name|ahc_power_state_change
+argument_list|(
+name|ahc
+argument_list|,
+name|AHC_POWER_STATE_D0
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ahc_pci_map_registers
@@ -2500,11 +2652,12 @@ operator|(
 name|error
 operator|)
 return|;
-name|ahc_power_state_change
+comment|/* 	 * Before we continue probing the card, ensure that 	 * its interrupts are *disabled*.  We don't want 	 * a misstep to hang the machine in an interrupt 	 * storm. 	 */
+name|ahc_intr_enable
 argument_list|(
 name|ahc
 argument_list|,
-name|AHC_POWER_STATE_D0
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we need to support high memory, enable dual 	 * address cycles.  This bit must be set to enable 	 * high address bit generation even if we are on a 	 * 64bit bus (PCI64BIT set in devconfig). 	 */
@@ -3338,6 +3491,22 @@ elseif|else
 if|if
 condition|(
 name|chip
+operator|==
+name|AHC_AIC7895
+operator|||
+name|chip
+operator|==
+name|AHC_AIC7895C
+condition|)
+comment|/* 		 * External SCBRAM arbitration is flakey 		 * on these chips.  Unfortunately this means 		 * we don't use the extra SCB ram space on the 		 * 3940AUW. 		 */
+name|ramps
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|chip
 operator|>=
 name|AHC_AIC7870
 condition|)
@@ -4122,7 +4291,7 @@ name|SEEDI
 expr_stmt|;
 name|have_seeprom
 operator|=
-name|acquire_seeprom
+name|ahc_acquire_seeprom
 argument_list|(
 name|ahc
 argument_list|,
@@ -4172,7 +4341,7 @@ operator|)
 expr_stmt|;
 name|have_seeprom
 operator|=
-name|read_seeprom
+name|ahc_read_seeprom
 argument_list|(
 operator|&
 name|sd
@@ -4200,7 +4369,7 @@ name|have_seeprom
 condition|)
 name|have_seeprom
 operator|=
-name|verify_cksum
+name|ahc_verify_cksum
 argument_list|(
 operator|&
 name|sc
@@ -4251,7 +4420,7 @@ operator|=
 name|C56_66
 expr_stmt|;
 block|}
-name|release_seeprom
+name|ahc_release_seeprom
 argument_list|(
 operator|&
 name|sd
@@ -4388,13 +4557,32 @@ expr_stmt|;
 block|}
 name|have_seeprom
 operator|=
-name|verify_cksum
+name|ahc_verify_cksum
 argument_list|(
 operator|&
 name|sc
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Clear any SCB parity errors in case this data and 		 * its associated parity was not initialized by the BIOS 		 */
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRPARERR
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRBRKADRINT
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5118,7 +5306,7 @@ condition|(
 name|have_autoterm
 condition|)
 block|{
-name|acquire_seeprom
+name|ahc_acquire_seeprom
 argument_list|(
 name|ahc
 argument_list|,
@@ -5138,7 +5326,7 @@ argument_list|,
 name|sxfrctl1
 argument_list|)
 expr_stmt|;
-name|release_seeprom
+name|ahc_release_seeprom
 argument_list|(
 operator|&
 name|sd
@@ -5612,6 +5800,19 @@ argument_list|(
 name|ahc
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Pretend there are no cables in the hope 			 * that having all of the termination on 			 * gives us a more stable bus. 			 */
+name|internal50_present
+operator|=
+literal|0
+expr_stmt|;
+name|internal68_present
+operator|=
+literal|0
+expr_stmt|;
+name|externalcable_present
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -6313,9 +6514,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|acquire_seeprom
+name|ahc_acquire_seeprom
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -6442,9 +6642,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|release_seeprom
+name|ahc_release_seeprom
 parameter_list|(
 name|struct
 name|seeprom_descriptor
