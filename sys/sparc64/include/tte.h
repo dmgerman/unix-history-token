@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|TTE_SHIFT
-value|(4)
+value|(5)
 end_define
 
 begin_define
@@ -399,6 +399,28 @@ define|\
 value|((tp)->tte_vpn<< PAGE_SHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TTE_GET_PMAP
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|((tp)->tte_pmap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTE_ZERO
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|bzero(tp, sizeof(*tp))
+end_define
+
 begin_struct
 struct|struct
 name|tte
@@ -408,6 +430,17 @@ name|tte_vpn
 decl_stmt|;
 name|u_long
 name|tte_data
+decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|tte
+argument_list|)
+name|tte_link
+expr_stmt|;
+name|struct
+name|pmap
+modifier|*
+name|tte_pmap
 decl_stmt|;
 block|}
 struct|;
