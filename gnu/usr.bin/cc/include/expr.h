@@ -2004,6 +2004,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Expand the absolute value operation.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|expand_abs
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Expand the complex absolute value operation.  */
 end_comment
 

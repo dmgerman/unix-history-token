@@ -5051,6 +5051,13 @@ argument_list|(
 name|objtype
 argument_list|)
 expr_stmt|;
+name|objtype
+operator|=
+name|TYPE_MAIN_VARIANT
+argument_list|(
+name|objtype
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

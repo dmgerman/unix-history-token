@@ -13,6 +13,16 @@ directive|define
 name|YES_UNDERSCORES
 end_define
 
+begin_comment
+comment|/* Don't assume anything about the header files. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_IMPLICIT_EXTERN_C
+end_define
+
 begin_include
 include|#
 directive|include
@@ -161,17 +171,7 @@ name|HAVE_ATEXIT
 end_define
 
 begin_comment
-comment|/* Tell final.c that we don't need a label passed to mcount.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_PROFILE_DATA
-end_define
-
-begin_comment
-comment|/* Redefine this to not pass an unused label in %edx.  */
+comment|/* Redefine this to use %eax instead of %edx.  */
 end_comment
 
 begin_undef
@@ -466,79 +466,6 @@ parameter_list|)
 define|\
 value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
 end_define
-
-begin_comment
-comment|/* This is defined when gcc is compiled in the BSD-directory-tree, and must  * make up for the gap to all the stuff done in the GNU-makefiles.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREEBSD_NATIVE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|MD_EXEC_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MD_EXEC_PREFIX
-value|"/usr/libexec/"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|STANDARD_STARTFILE_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STANDARD_STARTFILE_PREFIX
-value|"/usr/lib"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_TARGET_MACHINE
-value|"i386-unknown-freebsd_1.0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPLUSPLUS_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|TOOL_INCLUDE_DIR
-value|"/usr/local/i386-unknown-freebsd_1.0/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GCC_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FREEBSD_NATIVE */
-end_comment
 
 end_unit
 

@@ -8864,6 +8864,8 @@ index|]
 operator|++
 expr_stmt|;
 block|}
+else|else
+return|return;
 comment|/* If we haven't returned, it means we were able to make the 	     auto-inc, so update the status.  First, record that this insn 	     has an implicit side effect.  */
 name|REG_NOTES
 argument_list|(

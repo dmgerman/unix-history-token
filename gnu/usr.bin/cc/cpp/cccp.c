@@ -23348,6 +23348,9 @@ case|:
 case|case
 literal|' '
 case|:
+case|case
+literal|'\r'
+case|:
 comment|/* Skip spaces and tabs.  */
 while|while
 condition|(
@@ -23366,6 +23369,11 @@ operator|*
 name|bp
 operator|==
 literal|'\t'
+operator|||
+operator|*
+name|bp
+operator|==
+literal|'\r'
 operator|)
 condition|)
 continue|continue;

@@ -7088,20 +7088,15 @@ block|{
 case|case
 name|FUNCTION_DECL
 case|:
-comment|/* Nested functions aren't static.  Since taking their address 	 involves a trampoline.  */
-if|if
-condition|(
+comment|/* Nested functions aren't static, since taking their address 	 involves a trampoline.  */
+return|return
 name|decl_function_context
 argument_list|(
 name|arg
 argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
+operator|==
 literal|0
 return|;
-comment|/* ... fall through ... */
 case|case
 name|VAR_DECL
 case|:

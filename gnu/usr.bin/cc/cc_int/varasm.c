@@ -12490,7 +12490,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* Eliminate the NON_LVALUE_EXPR_EXPR that makes a cast not be an lvalue.      That way we get the constant (we hope) inside it.  Also, strip      off any NOP_EXPR that converts between two record or union types.  */
+comment|/* Eliminate the NON_LVALUE_EXPR_EXPR that makes a cast not be an lvalue.      That way we get the constant (we hope) inside it.  Also, strip off any      NOP_EXPR that converts between two record, union, or array types.  */
 while|while
 condition|(
 operator|(
@@ -12516,6 +12516,16 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|exp
+argument_list|)
+argument_list|)
+operator|==
+name|ARRAY_TYPE
 operator|||
 name|TREE_CODE
 argument_list|(

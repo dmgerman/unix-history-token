@@ -2568,7 +2568,7 @@ name|T_UL
 block|,
 name|T_ULL
 block|,
-name|NULL
+name|T_ULL
 block|,
 literal|"-wp0"
 block|}

@@ -5681,15 +5681,14 @@ operator|||
 name|preserve_subexpressions_p
 argument_list|()
 operator|)
-condition|)
 else|#
 directive|else
 operator|&&
 name|preserve_subexpressions_p
 argument_list|()
-block|)
 endif|#
 directive|endif
+condition|)
 name|args
 index|[
 name|i
@@ -5715,9 +5714,6 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -5729,19 +5725,10 @@ name|defined
 argument_list|(
 name|REG_PARM_STACK_SPACE
 argument_list|)
-end_if
-
-begin_comment
 comment|/* The argument list is the property of the called routine and it      may clobber it.  If the fixed area has been used for previous      parameters, we must save and restore it.       Here we compute the boundary of the that needs to be saved, if any.  */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|ARGS_GROW_DOWNWARD
-end_ifdef
-
-begin_for
 for|for
 control|(
 name|i
@@ -5805,9 +5792,6 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-end_for
-
-begin_if
 if|if
 condition|(
 name|low_to_save
@@ -5959,18 +5943,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* Now store (and compute if necessary) all non-register parms.      These come before register parms, since they can require block-moves,      which could clobber the registers used for register parms.      Parms which have partial registers are not stored here,      but we do preallocate space here if they want that.  */
-end_comment
-
-begin_for
 for|for
 control|(
 name|i
@@ -6025,19 +6000,10 @@ argument_list|,
 name|reg_parm_stack_space
 argument_list|)
 expr_stmt|;
-end_for
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|STRICT_ALIGNMENT
-end_ifdef
-
-begin_comment
 comment|/* If we have a parm that is passed in registers but not in memory      and whose alignment does not permit a direct copy into registers,      make a group of pseudos that correspond to each register that we      will later fill.  */
-end_comment
-
-begin_for
 for|for
 control|(
 name|i
@@ -6366,18 +6332,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_for
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* Now store any partially-in-registers parm.      This is the last place a block-move can happen.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|reg_parm_seen
@@ -6437,25 +6394,13 @@ argument_list|,
 name|reg_parm_stack_space
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|PUSH_ARGS_REVERSED
-end_ifndef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|STACK_BOUNDARY
-end_ifdef
-
-begin_comment
 comment|/* If we pushed args in forward order, perform stack alignment      after pushing the last arg.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|argblock
@@ -6476,23 +6421,11 @@ name|constant
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* If register arguments require space on the stack and stack space      was not preallocated, allocate stack space here for arguments      passed in registers.  */
-end_comment
-
-begin_if
 if|#
 directive|if
 operator|!
@@ -6505,9 +6438,6 @@ name|defined
 argument_list|(
 name|OUTGOING_REG_PARM_STACK_SPACE
 argument_list|)
-end_if
-
-begin_if
 if|if
 condition|(
 name|must_preallocate
@@ -6526,18 +6456,9 @@ name|reg_parm_stack_space
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* Pass the function the address in which to return a structure value.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|structure_value_addr
@@ -6581,9 +6502,6 @@ name|struct_value_rtx
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|funexp
 operator|=
 name|prepare_call_address
@@ -6598,13 +6516,7 @@ argument_list|,
 name|reg_parm_seen
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Now do the register loads required for any wholly-register parms or any      parms which are passed both on the stack and in a register.  Their      expressions were already evaluated.        Mark all register-parms as living through the call, putting these USE      insns in the CALL_INSN_FUNCTION_USAGE field.  */
-end_comment
-
-begin_for
 for|for
 control|(
 name|i
@@ -6912,27 +6824,12 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_for
-
-begin_comment
 comment|/* Perform postincrements before actually calling the function.  */
-end_comment
-
-begin_expr_stmt
 name|emit_queue
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* All arguments and registers used for the call must be set up by now!  */
-end_comment
-
-begin_comment
 comment|/* Generate the actual call instruction.  */
-end_comment
-
-begin_expr_stmt
 name|emit_call_1
 argument_list|(
 name|funexp
@@ -6965,13 +6862,7 @@ argument_list|,
 name|is_const
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* If call is cse'able, make appropriate pair of reg-notes around it.      Test valreg so we don't crash; may safely ignore `const'      if return type is void.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|is_const
@@ -7109,13 +7000,29 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
+elseif|else
+if|if
+condition|(
+name|is_const
+condition|)
+block|{
+comment|/* Otherwise, just write out the sequence without a note.  */
+name|rtx
+name|insns
+init|=
+name|get_insns
+argument_list|()
+decl_stmt|;
+name|end_sequence
+argument_list|()
+expr_stmt|;
+name|emit_insns
+argument_list|(
+name|insns
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* For calls to `setjmp', etc., inform flow.c it should complain      if nonvolatile values are live.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|returns_twice
@@ -7133,9 +7040,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|is_longjmp
@@ -7144,13 +7048,7 @@ name|current_function_calls_longjmp
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* Notice functions that cannot return.      If optimizing, insns emitted below will be dead.      If not optimizing, they will exist, which is useful      if the user uses the `return' command in the debugger.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|is_volatile
@@ -7160,17 +7058,8 @@ condition|)
 name|emit_barrier
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* If value type not void, return an rtx for the value.  */
-end_comment
-
-begin_comment
 comment|/* If there are cleanups to be called, don't use a hard reg as target.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|cleanups_this_call
@@ -7195,9 +7084,6 @@ name|target
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|TYPE_MODE
@@ -7473,19 +7359,10 @@ argument_list|(
 name|valreg
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|PROMOTE_FUNCTION_RETURN
-end_ifdef
-
-begin_comment
 comment|/* If we promoted this return value, make the proper SUBREG.  TARGET      might be const0_rtx here, so be careful.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|GET_CODE
@@ -7582,14 +7459,8 @@ operator|=
 name|unsignedp
 expr_stmt|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|if
 condition|(
 name|flag_short_temps
@@ -7602,13 +7473,7 @@ name|old_cleanups
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* If size of args is variable or this was a constructor call for a stack      argument, restore saved stack-pointer value.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|old_stack_level
@@ -7867,18 +7732,9 @@ operator|=
 name|initial_stack_usage_map
 expr_stmt|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* If this was alloca, record the new stack level for nonlocal gotos.        Check for the handler slots since we might not have a save area      for non-local gotos. */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|may_be_alloca
@@ -7897,22 +7753,16 @@ argument_list|,
 name|NULL_RTX
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|pop_temp_slots
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|target
 return|;
-end_return
+block|}
+end_function
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
@@ -7920,7 +7770,7 @@ comment|/* Output a library call to function FUN (a SYMBOL_REF rtx)    (emitting
 end_comment
 
 begin_decl_stmt
-unit|void
+name|void
 name|emit_library_call
 name|VPROTO
 argument_list|(

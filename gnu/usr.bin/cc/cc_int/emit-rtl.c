@@ -2269,7 +2269,7 @@ name|GET_MODE_BITSIZE
 argument_list|(
 name|mode
 argument_list|)
-operator|==
+operator|>=
 literal|2
 operator|*
 name|HOST_BITS_PER_WIDE_INT

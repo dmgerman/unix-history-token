@@ -2048,6 +2048,10 @@ condition|)
 name|OB_INIT
 argument_list|()
 expr_stmt|;
+name|numeric_outputed_need_bar
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3649,10 +3653,6 @@ name|parms
 argument_list|)
 expr_stmt|;
 name|nofold
-operator|=
-literal|0
-expr_stmt|;
-name|numeric_outputed_need_bar
 operator|=
 literal|0
 expr_stmt|;

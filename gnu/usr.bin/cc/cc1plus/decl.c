@@ -41350,13 +41350,7 @@ condition|(
 name|write_symbols
 operator|!=
 name|NO_DEBUG
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|fntype
-argument_list|)
-operator|!=
-name|METHOD_TYPE
+comment|/*&& TREE_CODE (fntype) != METHOD_TYPE*/
 condition|)
 block|{
 name|tree
