@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memcpy.c	5.5 (Berkeley) %G%"
+literal|"@(#)memcpy.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,12 +48,6 @@ include|#
 directive|include
 file|<sys/stdc.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|memcpy
-end_undef
 
 begin_comment
 comment|/*  * Copy a block of memory.  */
@@ -83,16 +77,27 @@ name|size_t
 name|n
 decl_stmt|;
 block|{
-return|return
-operator|(
-name|memmove
+name|bcopy
 argument_list|(
-name|dst
-argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|src
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|dst
 argument_list|,
 name|n
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|dst
 operator|)
 return|;
 block|}
