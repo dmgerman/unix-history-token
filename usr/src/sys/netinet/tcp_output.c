@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.42	82/06/20	*/
+comment|/*	tcp_output.c	4.43	82/08/02	*/
 end_comment
 
 begin_include
@@ -1477,8 +1477,35 @@ comment|/* drag it along */
 end_comment
 
 begin_comment
-comment|/* PUSH */
+comment|/* 	 * If anything to send and we can send it all, set PUSH. 	 * (This will keep happy those implementations which only 	 * give data to the user when a buffer fills or a PUSH comes in. 	 */
 end_comment
+
+begin_comment
+comment|/*	if (len&& (ti->ti_flags& (TH_FIN|TH_RST|TH_SYN)) == 0) */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|len
+operator|&&
+name|off
+operator|+
+name|len
+operator|==
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_cc
+condition|)
+name|ti
+operator|->
+name|ti_flags
+operator||=
+name|TH_PUSH
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* 	 * Put TCP length in extended header, and then 	 * checksum extended header and data. 	 */
