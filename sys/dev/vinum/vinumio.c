@@ -264,6 +264,30 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|dname
+argument_list|,
+literal|"idad"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|devmajor
+operator|=
+literal|109
+expr_stmt|;
+name|dname
+operator|+=
+literal|2
+expr_stmt|;
+block|}
 else|else
 return|return
 name|ENODEV
@@ -370,7 +394,11 @@ return|;
 name|devminor
 operator|=
 operator|(
+operator|(
 name|unit
+operator|&
+literal|31
+operator|)
 operator|<<
 literal|3
 operator|)
@@ -400,8 +428,20 @@ operator|)
 operator|<<
 literal|16
 operator|)
-expr_stmt|;
 comment|/* slice */
+operator|+
+operator|(
+operator|(
+name|unit
+operator|&
+operator|~
+literal|31
+operator|)
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+comment|/* high-order unit bits */
 block|}
 else|else
 block|{
@@ -437,12 +477,28 @@ operator|)
 comment|/* partition */
 operator|+
 operator|(
+operator|(
 name|unit
+operator|&
+literal|31
+operator|)
 operator|<<
 literal|3
 operator|)
-expr_stmt|;
 comment|/* unit */
+operator|+
+operator|(
+operator|(
+name|unit
+operator|&
+operator|~
+literal|31
+operator|)
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+comment|/* high-order unit bits */
 block|}
 name|drive
 operator|->
