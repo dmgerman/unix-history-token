@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.74 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.74.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -867,22 +867,13 @@ operator|=
 literal|"$0-$9"
 expr_stmt|;
 break|break;
-case|case
-name|CANONNET
-case|:
-name|botch
-operator|=
-literal|"$#"
-expr_stmt|;
-break|break;
-case|case
-name|CANONUSER
-case|:
-name|botch
-operator|=
-literal|"$:"
-expr_stmt|;
-break|break;
+if|#
+directive|if
+literal|0
+block|case CANONNET: 						botch = "$#"; 						break;  					  case CANONUSER: 						botch = "$:"; 						break;
+endif|#
+directive|endif
+comment|/* 0 */
 case|case
 name|CALLSUBR
 case|:
