@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.7 1997/08/02 05:19:32 msmith Exp $ */
+comment|/* $Id: if_wl.c,v 1.8 1997/08/25 22:34:25 bde Exp $ */
 end_comment
 
 begin_comment
@@ -307,6 +307,10 @@ name|u_short
 name|freq24
 decl_stmt|;
 comment|/* 2.4 Gz: resulting frequency  */
+name|struct
+name|callout_handle
+name|watchdog_ch
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|WLCACHE
@@ -1474,6 +1478,14 @@ operator|->
 name|hacr
 operator|=
 name|HACR_RESET
+expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|watchdog_ch
+argument_list|)
 expr_stmt|;
 name|CMD
 argument_list|(
@@ -2841,6 +2853,10 @@ argument_list|(
 name|wlwatchdog
 argument_list|,
 name|sc
+argument_list|,
+name|sc
+operator|->
+name|watchdog_ch
 argument_list|)
 expr_stmt|;
 name|wlstart
@@ -3655,6 +3671,10 @@ argument_list|(
 name|wlwatchdog
 argument_list|,
 name|sc
+argument_list|,
+name|sc
+operator|->
+name|watchdog_ch
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3813,6 +3833,10 @@ operator|++
 expr_stmt|;
 comment|/* set the watchdog timer so that if the board 	 * fails to interrupt we will restart 	 */
 comment|/* try 10 ticks, not very long */
+name|sc
+operator|->
+name|watchdog_ch
+operator|=
 name|timeout
 argument_list|(
 name|wlwatchdog
@@ -6797,6 +6821,10 @@ argument_list|(
 name|wlwatchdog
 argument_list|,
 name|sc
+argument_list|,
+name|sc
+operator|->
+name|watchdog_ch
 argument_list|)
 expr_stmt|;
 name|sc

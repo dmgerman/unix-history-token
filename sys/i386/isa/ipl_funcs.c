@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.14 1997/09/05 20:22:10 smp Exp smp $  */
+comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.8 1997/09/07 22:03:05 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -104,6 +104,28 @@ end_macro
 begin_macro
 name|DO_SETBITS
 argument_list|(
+argument|setsoftcamnet
+argument_list|,
+argument|&ipending
+argument_list|,
+argument|SWI_CAMNET_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
+argument|setsoftcambio
+argument_list|,
+argument|&ipending
+argument_list|,
+argument|SWI_CAMBIO_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
 argument|schedsoftnet
 argument_list|,
 argument|&idelayed
@@ -120,6 +142,28 @@ argument_list|,
 argument|&idelayed
 argument_list|,
 argument|SWI_TTY_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
+argument|schedsoftcamnet
+argument_list|,
+argument|&idelayed
+argument_list|,
+argument|SWI_CAMNET_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
+argument|schedsoftcambio
+argument_list|,
+argument|&idelayed
+argument_list|,
+argument|SWI_CAMBIO_PENDING
 argument_list|)
 end_macro
 
@@ -195,6 +239,42 @@ argument_list|(
 argument|splnet
 argument_list|,
 argument|cpl |= SWI_NET_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splcam
+argument_list|,
+argument|cpl |= cam_imask
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcam
+argument_list|,
+argument|cpl |= SWI_CAMBIO_MASK | SWI_CAMNET_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcambio
+argument_list|,
+argument|cpl |= SWI_CAMBIO_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcamnet
+argument_list|,
+argument|cpl |= SWI_CAMNET_MASK
 argument_list|)
 end_macro
 
@@ -450,6 +530,28 @@ end_macro
 begin_macro
 name|DO_SETBITS
 argument_list|(
+argument|setsoftcamnet
+argument_list|,
+argument|&ipending
+argument_list|,
+argument|SWI_CAMNET_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
+argument|setsoftcambio
+argument_list|,
+argument|&ipending
+argument_list|,
+argument|SWI_CAMBIO_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
 argument|schedsoftnet
 argument_list|,
 argument|&idelayed
@@ -466,6 +568,28 @@ argument_list|,
 argument|&idelayed
 argument_list|,
 argument|SWI_TTY_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
+argument|schedsoftcamnet
+argument_list|,
+argument|&idelayed
+argument_list|,
+argument|SWI_CAMNET_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
+argument|schedsoftcambio
+argument_list|,
+argument|&idelayed
+argument_list|,
+argument|SWI_CAMBIO_PENDING
 argument_list|)
 end_macro
 
@@ -612,7 +736,7 @@ value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }
 end_define
 
 begin_comment
-comment|/*    NAME:            OP:     MODIFIER:               PC: */
+comment|/*    NAME:            OP:     MODIFIER:				PC: */
 end_comment
 
 begin_macro
@@ -683,13 +807,64 @@ end_macro
 begin_macro
 name|GENSPL
 argument_list|(
+argument|splcam
+argument_list|,
+argument||=
+argument_list|,
+argument|cam_imask
+argument_list|,
+literal|7
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcam
+argument_list|,
+argument||=
+argument_list|,
+argument|SWI_CAMBIO_MASK | SWI_CAMNET_MASK
+argument_list|,
+literal|8
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcambio
+argument_list|,
+argument||=
+argument_list|,
+argument|SWI_CAMBIO_MASK
+argument_list|,
+literal|9
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcamnet
+argument_list|,
+argument||=
+argument_list|,
+argument|SWI_CAMNET_MASK
+literal|10
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
 argument|splsoftclock
 argument_list|,
 argument|=
 argument_list|,
 argument|SWI_CLOCK_MASK
 argument_list|,
-literal|7
+literal|11
 argument_list|)
 end_macro
 
@@ -702,7 +877,7 @@ argument||=
 argument_list|,
 argument|SWI_TTY_MASK
 argument_list|,
-literal|8
+literal|12
 argument_list|)
 end_macro
 
@@ -715,7 +890,7 @@ argument||=
 argument_list|,
 argument|stat_imask
 argument_list|,
-literal|9
+literal|13
 argument_list|)
 end_macro
 
@@ -728,7 +903,7 @@ argument||=
 argument_list|,
 argument|tty_imask
 argument_list|,
-literal|10
+literal|14
 argument_list|)
 end_macro
 
@@ -741,7 +916,7 @@ argument||=
 argument_list|,
 argument|net_imask | bio_imask
 argument_list|,
-literal|11
+literal|15
 argument_list|)
 end_macro
 
@@ -809,6 +984,42 @@ argument_list|(
 argument|splnet
 argument_list|,
 argument|cpl |= SWI_NET_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splcam
+argument_list|,
+argument|cpl |= cam_imask
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcam
+argument_list|,
+argument|cpl |= SWI_CAMBIO_MASK | SWI_CAMNET_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcambio
+argument_list|,
+argument|cpl |= SWI_CAMBIO_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcamnet
+argument_list|,
+argument|cpl |= SWI_CAMNET_MASK
 argument_list|)
 end_macro
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.29 1997/03/24 11:23:38 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.30 1997/07/20 14:09:50 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -4767,6 +4767,14 @@ operator|)
 name|aic
 operator|->
 name|nexus
+argument_list|,
+name|aic
+operator|->
+name|nexus
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|aic_done
@@ -4809,7 +4817,17 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|acb
+name|aic
+operator|->
+name|nexus
+argument_list|,
+name|aic
+operator|->
+name|nexus
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|aic_done
@@ -5215,6 +5233,10 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
+name|xs
+operator|->
+name|timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|aic_timeout
@@ -7085,6 +7107,12 @@ operator|(
 name|caddr_t
 operator|)
 name|acb
+argument_list|,
+name|acb
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|aic_done
@@ -9963,6 +9991,12 @@ operator|(
 name|caddr_t
 operator|)
 name|acb
+argument_list|,
+name|acb
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|aic_done
@@ -10067,6 +10101,12 @@ operator|(
 name|caddr_t
 operator|)
 name|acb
+argument_list|,
+name|acb
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|aic_done
@@ -10468,6 +10508,12 @@ operator|(
 name|caddr_t
 operator|)
 name|acb
+argument_list|,
+name|acb
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|aic_done
@@ -10578,6 +10624,12 @@ operator|(
 name|caddr_t
 operator|)
 name|acb
+argument_list|,
+name|acb
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|aic_done

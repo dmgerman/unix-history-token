@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.31 1997/05/10 12:13:13 joerg Exp $ */
+comment|/* $Id: scd.c,v 1.32 1997/07/20 14:10:10 bde Exp $ */
 end_comment
 
 begin_comment
@@ -928,6 +928,24 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* For canceling our timeout */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|tohandle
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|tohanle
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -1084,7 +1102,7 @@ name|audio_status
 operator|=
 name|CD_AS_AUDIO_INVALID
 expr_stmt|;
-name|TAILQ_INIT
+name|bufq_init
 argument_list|(
 operator|&
 name|cd
@@ -1831,7 +1849,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|tqdisksort
+name|bufqdisksort
 argument_list|(
 operator|&
 name|cd
@@ -1932,7 +1950,7 @@ return|return;
 block|}
 name|bp
 operator|=
-name|TAILQ_FIRST
+name|bufq_first
 argument_list|(
 operator|&
 name|cd
@@ -1948,7 +1966,7 @@ literal|0
 condition|)
 block|{
 comment|/* block found to process, dequeue */
-name|TAILQ_REMOVE
+name|bufq_remove
 argument_list|(
 operator|&
 name|cd
@@ -1956,8 +1974,6 @@ operator|->
 name|head
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 name|cd
@@ -4184,6 +4200,8 @@ operator|(
 name|caddr_t
 operator|)
 name|SCD_S_WAITSTAT
+argument_list|,
+name|tohandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -4217,6 +4235,8 @@ name|port
 argument_list|)
 condition|)
 block|{
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout
@@ -4401,6 +4421,8 @@ name|count
 operator|=
 literal|100
 expr_stmt|;
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout
@@ -4428,6 +4450,8 @@ operator|(
 name|caddr_t
 operator|)
 name|SCD_S_WAITSPIN
+argument_list|,
+name|tohandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -4462,6 +4486,8 @@ name|SBIT_RESULT_READY
 argument_list|)
 condition|)
 block|{
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout
@@ -4574,6 +4600,8 @@ operator|(
 name|caddr_t
 operator|)
 name|SCD_S_WAITFIFO
+argument_list|,
+name|tohandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -4608,6 +4636,8 @@ name|FBIT_WPARAM_READY
 argument_list|)
 condition|)
 block|{
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout
@@ -4684,6 +4714,8 @@ name|count
 operator|=
 literal|300
 expr_stmt|;
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout
@@ -4812,6 +4844,8 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout
@@ -4839,6 +4873,8 @@ operator|(
 name|caddr_t
 operator|)
 name|SCD_S_WAITREAD
+argument_list|,
+name|tohandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -4904,6 +4940,8 @@ condition|)
 goto|goto
 name|changed
 goto|;
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout
@@ -5025,6 +5063,8 @@ operator|(
 name|caddr_t
 operator|)
 name|SCD_S_WAITPARAM
+argument_list|,
+name|tohandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -5061,6 +5101,8 @@ name|SBIT_RESULT_READY
 argument_list|)
 condition|)
 block|{
+name|tohandle
+operator|=
 name|timeout
 argument_list|(
 name|scd_timeout

@@ -560,6 +560,11 @@ name|int
 name|sc_nextout
 decl_stmt|;
 comment|/* First used slot in circular buffer */
+comment|/* Callout for canceling our abortrcv timeout */
+name|struct
+name|callout_handle
+name|abortrcv_ch
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HIRESTIME
@@ -1272,6 +1277,14 @@ operator|->
 name|sc_rcount
 operator|=
 literal|0
+expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|abortrcv_ch
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4482,6 +4495,10 @@ operator|=
 name|newphase
 expr_stmt|;
 comment|/* 3 cycles of silence = 3/60 = 1/20 = 50 msec */
+name|sc
+operator|->
+name|abortrcv_ch
+operator|=
 name|timeout
 argument_list|(
 name|twabortrcv
@@ -4523,8 +4540,16 @@ operator|(
 name|caddr_t
 operator|)
 name|sc
+argument_list|,
+name|sc
+operator|->
+name|abortrcv_ch
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|abortrcv_ch
+operator|=
 name|timeout
 argument_list|(
 name|twabortrcv
@@ -4697,6 +4722,10 @@ operator|(
 name|caddr_t
 operator|)
 name|sc
+argument_list|,
+name|sc
+operator|->
+name|abortrcv_ch
 argument_list|)
 expr_stmt|;
 name|log
@@ -5091,6 +5120,10 @@ operator|(
 name|caddr_t
 operator|)
 name|sc
+argument_list|,
+name|sc
+operator|->
+name|abortrcv_ch
 argument_list|)
 expr_stmt|;
 if|if

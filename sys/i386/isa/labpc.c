@@ -323,6 +323,11 @@ name|dcr_val
 decl_stmt|,
 name|dcr_is
 decl_stmt|;
+comment|/* 	 * Handle for canceling our timeout. 	 */
+name|struct
+name|callout_handle
+name|ch
+decl_stmt|;
 comment|/* Device configuration structure: 	 */
 ifdef|#
 directive|ifdef
@@ -1326,6 +1331,10 @@ argument_list|(
 name|tmo_stop
 argument_list|,
 name|ctlr
+argument_list|,
+name|ctlr
+operator|->
+name|ch
 argument_list|)
 expr_stmt|;
 name|start
@@ -1705,9 +1714,6 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
 return|return
 literal|0
@@ -1967,6 +1973,14 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|ctlr
+operator|->
+name|ch
+argument_list|)
+expr_stmt|;
 name|ctlr
 operator|->
 name|sample_us
@@ -3472,6 +3486,10 @@ name|ctlr
 argument_list|)
 expr_stmt|;
 block|}
+name|ctlr
+operator|->
+name|ch
+operator|=
 name|timeout
 argument_list|(
 name|tmo_stop

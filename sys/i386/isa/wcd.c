@@ -2760,7 +2760,7 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/* Place it in the queue of disk activities for this disk. */
-name|tqdisksort
+name|bufqdisksort
 argument_list|(
 operator|&
 name|t
@@ -2804,7 +2804,7 @@ name|buf
 modifier|*
 name|bp
 init|=
-name|TAILQ_FIRST
+name|bufq_first
 argument_list|(
 operator|&
 name|t
@@ -2825,7 +2825,7 @@ name|bp
 condition|)
 return|return;
 comment|/* Unqueue the request. */
-name|TAILQ_REMOVE
+name|bufq_remove
 argument_list|(
 operator|&
 name|t
@@ -2833,8 +2833,6 @@ operator|->
 name|buf_queue
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 comment|/* Should reject all queued entries if media have changed. */

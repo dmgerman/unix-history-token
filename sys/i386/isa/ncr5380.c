@@ -3382,6 +3382,10 @@ operator|(
 name|SUCCESSFULLY_QUEUED
 operator|)
 return|;
+name|xs
+operator|->
+name|timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|nca_timeout
@@ -3467,6 +3471,12 @@ name|void
 operator|*
 operator|)
 name|scb
+argument_list|,
+name|scb
+operator|->
+name|xfer
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 if|if
@@ -3753,6 +3763,12 @@ name|scb
 argument_list|)
 expr_stmt|;
 comment|/* 2 seconds for the abort */
+name|scb
+operator|->
+name|xfer
+operator|->
+name|timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|nca_timeout
@@ -5376,6 +5392,10 @@ operator|(
 name|caddr_t
 operator|)
 name|scb
+argument_list|,
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 comment|/* How much of the buffer was not touched. */
