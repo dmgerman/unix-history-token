@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_input.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_input.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -81,6 +81,27 @@ directive|include
 file|<netccitt/x25.h>
 end_include
 
+begin_expr_stmt
+specifier|static
+name|frame_reject
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|rej_routine
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|free_iframes
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *      HDLC INPUT INTERFACE  *  *      This routine is called when the HDLC physical device has  *      completed reading a frame.  */
 end_comment
@@ -113,11 +134,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|s
-decl_stmt|;
-specifier|extern
-name|struct
-name|ifqueue
-name|pkintrq
 decl_stmt|;
 specifier|static
 name|struct
@@ -296,15 +312,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|pkintrq
-operator|.
-name|ifq_len
-condition|)
-name|pkintr
-argument_list|()
-expr_stmt|;
 block|}
 end_block
 
