@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	1.9 %G%";  */
+comment|/*  * sccsid = "@(#)machdep.h	1.10 %G%";  */
 end_comment
 
 begin_define
@@ -13,15 +13,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRIVER
+name|DRIVER1
+value|"driver"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVER2
 value|"/usr/games/lib/saildriver"
 end_define
 
 begin_define
 define|#
 directive|define
-name|DEBUGDRIVER
-value|"driver"
+name|DRIVER3
+value|"/usr/public/.driver"
 end_define
 
 begin_define
