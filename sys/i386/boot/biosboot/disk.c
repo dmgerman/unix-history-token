@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.17 1996/07/12 05:35:47 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.18 1996/09/10 21:18:39 phk Exp $  */
 end_comment
 
 begin_comment
@@ -234,13 +234,6 @@ literal|0
 decl_stmt|,
 name|di
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Save space, already have hard error for cyl> 1023 in Bread */
-block|u_long bend;
-endif|#
-directive|endif
 name|di
 operator|=
 name|get_diskinfo
@@ -282,13 +275,9 @@ argument_list|(
 name|di
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* save a little more space and avoid surprises when booting from fd2 */
-block|if (dosdev == 2) 	{ 		boff = 0; 		part = (spt == 15 ? 3 : 1); 	} 	else
-endif|#
-directive|endif
+ifndef|#
+directive|ifndef
+name|RAWBOOT
 block|{
 ifdef|#
 directive|ifdef
@@ -495,13 +484,6 @@ index|]
 operator|.
 name|p_size
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Save space, already have hard error for cyl> 1023 in Bread */
-block|bend = boff + bsize - 1 ; 		if (bend / spc>= 1024) { 			printf("boot partition end>= cyl 1024, BIOS can't load kernel stored beyond this limit\n");
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DO_BAD144
@@ -719,13 +701,20 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DO_BAD144
+comment|/* DO_BAD144 */
 block|}
+endif|#
+directive|endif
+comment|/* RAWBOOT */
 return|return
 literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Be aware that cnt is rounded up to N*BPS  */
+end_comment
 
 begin_function
 name|void
@@ -998,12 +987,21 @@ name|int
 name|sector
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DO_BAD144
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|RAWBOOT
+argument_list|)
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DO_BAD144
 if|if
 condition|(
 name|do_bad144
@@ -1240,11 +1238,10 @@ return|return
 name|newsec
 return|;
 block|}
-endif|#
-directive|endif
-endif|DO_BAD144
 name|no_remap
 label|:
+endif|#
+directive|endif
 return|return
 name|sector
 return|;
