@@ -462,28 +462,19 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|+=
-name|strftime
+name|sprintf
 argument_list|(
 name|p
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tbuf
-argument_list|)
-operator|-
-operator|(
-name|p
-operator|-
-name|tbuf
-operator|)
+literal|"%.15s "
 argument_list|,
-literal|"%h %e %T "
-argument_list|,
-name|localtime
+name|ctime
 argument_list|(
 operator|&
 name|now
 argument_list|)
+operator|+
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
