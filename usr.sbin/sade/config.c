@@ -1951,7 +1951,12 @@ block|}
 block|}
 block|}
 comment|/* Now write it all back out again */
-name|msgNotify
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
 argument_list|(
 literal|"Writing configuration changes to %s file.."
 argument_list|,
@@ -1962,14 +1967,6 @@ if|if
 condition|(
 name|Fake
 condition|)
-block|{
-name|msgDebug
-argument_list|(
-literal|"Writing %s out to debugging screen..\n"
-argument_list|,
-name|config
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|fdopen
@@ -1979,7 +1976,6 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 operator|(
