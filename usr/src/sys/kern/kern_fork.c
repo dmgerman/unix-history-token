@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -707,6 +707,13 @@ name|p_startcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|p2
+operator|->
+name|p_wmesg
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX - should be in zero range */
 name|p2
 operator|->
 name|p_spare
