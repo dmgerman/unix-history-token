@@ -374,6 +374,34 @@ name|TPL_BAR_REG_AS
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|TPL_BAR_REG_PREFETCHABLE_ONLY
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPL_BAR_REG_PREFETCHABLE_CACHEABLE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPL_BAR_REG_PREFETCHABLE
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPL_BAR_REG_BELOW1MB
+value|0x80
+end_define
+
 begin_comment
 comment|/* CISTPL_FUNC */
 end_comment

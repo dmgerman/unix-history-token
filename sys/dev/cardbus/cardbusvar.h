@@ -9,6 +9,32 @@ end_comment
 
 begin_struct
 struct|struct
+name|cardbus_intrlist
+block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|cardbus_intrlist
+argument_list|)
+name|link
+expr_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|irq
+decl_stmt|;
+name|void
+modifier|*
+name|cookie
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|cardbus_devinfo
 block|{
 name|struct
@@ -22,6 +48,32 @@ name|struct
 name|pci_conf
 name|conf
 decl_stmt|;
+name|u_int8_t
+name|mprefetchable
+decl_stmt|;
+comment|/* bit mask of prefetchable BARs */
+name|u_int8_t
+name|mbelow1mb
+decl_stmt|;
+comment|/* bit mask of BARs which require below 1Mb */
+name|u_int8_t
+name|ibelow1mb
+decl_stmt|;
+comment|/* bit mask of BARs which require below 1Mb */
+define|#
+directive|define
+name|BARBIT
+parameter_list|(
+name|RID
+parameter_list|)
+value|(1<<((RID)-CARDBUS_BASE0_REG)/4)
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|cardbus_intrlist
+argument_list|)
+name|intrlist
+expr_stmt|;
 block|}
 struct|;
 end_struct

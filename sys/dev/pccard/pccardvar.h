@@ -569,9 +569,6 @@ name|int
 name|sc_enabled_count
 decl_stmt|;
 comment|/* num functions enabled */
-name|int
-name|intr_handler_count
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -823,7 +820,7 @@ parameter_list|,
 name|idx2
 parameter_list|)
 define|\
-value|(pccard_tuple_read_1((tuple), (idx2)) | 			\ 	 (pccard_tuple_read_1((tuple), (idx2)+1)<<8))
+value|(pccard_tuple_read_1((tuple), (idx2)) |				\ 	 (pccard_tuple_read_1((tuple), (idx2)+1)<<8))
 end_define
 
 begin_define
@@ -883,34 +880,6 @@ name|PCCARD_SPACE_IO
 value|2
 end_define
 
-begin_function_decl
-name|int
-name|pccard_ccr_read
-parameter_list|(
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pccard_ccr_write
-parameter_list|(
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -920,43 +889,6 @@ name|sc
 parameter_list|)
 value|(STAILQ_FIRST(&(sc)->card.pf_head)&&		\ 		 STAILQ_NEXT(STAILQ_FIRST(&(sc)->card.pf_head),pf_list))
 end_define
-
-begin_comment
-comment|/* The following is the vestages of the NetBSD driver api */
-end_comment
-
-begin_function_decl
-name|void
-name|pccard_function_init
-parameter_list|(
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pccard_function_enable
-parameter_list|(
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pccard_function_disable
-parameter_list|(
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -1190,7 +1122,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|__inline static int							\ pccard_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev, 		\ 	    PCCARD_IVAR_ ## B, (uintptr_t *) t);			\ }
+value|__inline static int							\ pccard_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev,		\ 	    PCCARD_IVAR_ ## B, (uintptr_t *) t);			\ }
 end_define
 
 begin_macro

@@ -102,6 +102,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RF_PREFETCHABLE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* resource is prefetchable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RF_ALIGNMENT_SHIFT
 value|10
 end_define
