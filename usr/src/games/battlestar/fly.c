@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fly.c	5.6 (Berkeley) %G%"
+literal|"@(#)fly.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,9 +179,6 @@ function_decl|;
 name|destroyed
 operator|=
 literal|0
-expr_stmt|;
-name|savetty
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
