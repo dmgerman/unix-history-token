@@ -2710,6 +2710,8 @@ sizeof|sizeof
 argument_list|(
 name|arginfo
 argument_list|)
+operator|-
+name|SPARE_USRSPACE
 argument_list|,
 operator|(
 name|char
