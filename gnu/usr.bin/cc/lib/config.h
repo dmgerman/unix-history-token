@@ -123,6 +123,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|" %| %{fpic:-k} %{fPIC:-k}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+define|\
+value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*}"
+end_define
+
 begin_comment
 comment|/* target machine dependencies.    tm.h is a symbolic link to the actual target specific file.   */
 end_comment
