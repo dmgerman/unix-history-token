@@ -37,6 +37,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|cflag
+decl_stmt|,
 name|eval
 decl_stmt|,
 name|fscale
@@ -46,8 +48,6 @@ decl_stmt|,
 name|nlistread
 decl_stmt|,
 name|rawcpu
-decl_stmt|,
-name|cflag
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +150,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|lattr
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|,
+name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|logname
 parameter_list|(
 name|KINFO
@@ -203,6 +216,19 @@ end_function_decl
 begin_function_decl
 name|void
 name|mtxname
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|,
+name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mwchan
 parameter_list|(
 name|KINFO
 modifier|*
@@ -278,6 +304,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|printheader
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|priorityr
 parameter_list|(
 name|KINFO
@@ -291,16 +326,20 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|printheader
+name|runame
 parameter_list|(
-name|void
+name|KINFO
+modifier|*
+parameter_list|,
+name|VARENT
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|runame
+name|rvar
 parameter_list|(
 name|KINFO
 modifier|*
@@ -322,13 +361,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|rvar
+name|int
+name|s_uname
 parameter_list|(
 name|KINFO
-modifier|*
-parameter_list|,
-name|VARENT
 modifier|*
 parameter_list|)
 function_decl|;
@@ -435,16 +471,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|s_uname
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vsize
 parameter_list|(
@@ -460,32 +486,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|wchan
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|,
-name|VARENT
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mwchan
-parameter_list|(
-name|KINFO
-modifier|*
-parameter_list|,
-name|VARENT
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|lattr
 parameter_list|(
 name|KINFO
 modifier|*
