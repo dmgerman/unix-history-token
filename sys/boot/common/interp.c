@@ -1342,6 +1342,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ev
 argument_list|)
 expr_stmt|;

@@ -748,6 +748,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|p
 operator|->
 name|fts_path

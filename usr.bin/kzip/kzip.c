@@ -381,6 +381,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|kernname
 argument_list|)
 expr_stmt|;
@@ -416,6 +418,8 @@ condition|)
 name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|argv
 index|[
@@ -500,6 +504,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
@@ -1202,6 +1208,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
@@ -1237,6 +1245,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
@@ -1343,6 +1353,8 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
@@ -1382,6 +1394,8 @@ condition|)
 name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file
 argument_list|)
@@ -1456,6 +1470,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|file
 argument_list|)

@@ -2593,6 +2593,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|myprompt
 argument_list|)
 expr_stmt|;

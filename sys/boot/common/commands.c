@@ -1452,6 +1452,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
@@ -1669,6 +1671,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;

@@ -767,6 +767,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|in_name
 argument_list|)
 expr_stmt|;
@@ -829,6 +831,8 @@ comment|/* check for create error */
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|out_name
 argument_list|)
@@ -5370,6 +5374,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
@@ -5407,6 +5413,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
@@ -5419,6 +5427,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|in_name
 argument_list|)
@@ -5453,6 +5463,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
@@ -5481,6 +5493,8 @@ expr_stmt|;
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|in_name
 argument_list|)

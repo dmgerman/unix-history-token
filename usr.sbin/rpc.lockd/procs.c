@@ -521,6 +521,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|clnt_spcreateerror
 argument_list|(
 literal|"clntudp_create"

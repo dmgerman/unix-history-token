@@ -479,6 +479,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;

@@ -851,6 +851,8 @@ literal|'\032'
 case|:
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|CL
 argument_list|)
 expr_stmt|;

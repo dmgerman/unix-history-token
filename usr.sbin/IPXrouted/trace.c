@@ -1386,6 +1386,8 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
+literal|"%s"
+argument_list|,
 name|lstr
 argument_list|)
 expr_stmt|;

@@ -1487,6 +1487,8 @@ name|boring
 condition|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|format
 argument_list|)
 expr_stmt|;

@@ -3731,6 +3731,8 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
+literal|"%s"
+argument_list|,
 name|p
 operator|->
 name|if_name
