@@ -160,7 +160,7 @@ name|NS
 end_ifdef
 
 begin_function_decl
-name|exter
+specifier|extern
 name|char
 modifier|*
 name|ns_print

@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 3.3 88/12/08 14:44:49 hagens Exp $  * $Source: /usr/argo/src/ucb/netstat/RCS/iso.c,v $  */
+comment|/*  * $Header: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v 1.1.1.1 1993/06/12 14:47:55 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v $  */
 end_comment
 
 begin_comment
@@ -819,13 +819,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s control block: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* 		printf("%s control block: symbol not in namelist\n", name); 		*/
 return|return;
 block|}
 name|kget
@@ -1832,13 +1826,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s control block: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* 		printf("%s control block: symbol not in namelist\n", name); 		*/
 return|return;
 block|}
 name|kvm_read
