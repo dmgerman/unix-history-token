@@ -2662,6 +2662,42 @@ name|METHOD_NEITHER
 value|3
 end_define
 
+begin_comment
+comment|/* File access types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILE_ANY_ACCESS
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SPECIAL_ACCESS
+value|FILE_ANY_ACCESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_READ_ACCESS
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_WRITE_ACCESS
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Recover I/O access method from IOCTL code. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2670,6 +2706,41 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)& 0xFFFFFFFC)
+end_define
+
+begin_comment
+comment|/* Recover function code from IOCTL code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_FUNC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x7FFC)>> 2)
+end_define
+
+begin_comment
+comment|/* Macro to construct an IOCTL code. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCTL_CODE
+parameter_list|(
+name|dev
+parameter_list|,
+name|func
+parameter_list|,
+name|iomethod
+parameter_list|,
+name|acc
+parameter_list|)
+define|\
+value|((dev)<< 16) | (acc<< 14) | (func<< 2) | (iomethod))
 end_define
 
 begin_struct
