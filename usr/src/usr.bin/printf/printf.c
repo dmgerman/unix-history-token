@@ -3,11 +3,21 @@ begin_comment
 comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|BUILTIN
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SHELL
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -50,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.10 (Berkeley) %G%"
+literal|"@(#)printf.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,11 +85,22 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHELL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -92,6 +113,37 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHELL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|main
+value|printfcmd
+end_define
+
+begin_define
+define|#
+directive|define
+name|err
+value|error
+end_define
+
+begin_include
+include|#
+directive|include
+file|"/usr/src/devel/sh/bltin/bltin.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -118,6 +170,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHELL
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -135,6 +193,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -784,10 +847,12 @@ name|int
 name|ch
 decl_stmt|;
 block|{
-specifier|register
+specifier|static
 name|char
-modifier|*
 name|copy
+index|[
+literal|64
+index|]
 decl_stmt|;
 name|int
 name|len
@@ -801,20 +866,6 @@ argument_list|)
 operator|+
 literal|2
 expr_stmt|;
-if|if
-condition|(
-name|copy
-operator|=
-name|malloc
-argument_list|(
-operator|(
-name|u_int
-operator|)
-name|len
-argument_list|)
-condition|)
-block|{
-comment|/* never freed; XXX */
 name|bcopy
 argument_list|(
 name|str
@@ -852,18 +903,6 @@ literal|1
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-block|}
-else|else
-name|err
-argument_list|(
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1191,7 +1230,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|number
+name|Number
 init|=
 literal|"+-.0123456789"
 decl_stmt|;
@@ -1218,7 +1257,7 @@ if|if
 condition|(
 name|index
 argument_list|(
-name|number
+name|Number
 argument_list|,
 operator|*
 operator|*
@@ -1268,7 +1307,7 @@ if|if
 condition|(
 name|index
 argument_list|(
-name|number
+name|Number
 argument_list|,
 operator|*
 operator|*
@@ -1330,7 +1369,7 @@ if|if
 condition|(
 name|index
 argument_list|(
-name|number
+name|Number
 argument_list|,
 operator|*
 operator|*
@@ -1405,6 +1444,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHELL
+end_ifndef
 
 begin_if
 if|#
@@ -1526,6 +1571,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SHELL */
+end_comment
 
 end_unit
 
