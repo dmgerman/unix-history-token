@@ -974,9 +974,12 @@ name|sa6_src
 init|=
 name|NULL
 decl_stmt|;
-name|void
+name|struct
+name|inpcb
+modifier|*
 argument_list|(
-argument|*notify
+operator|*
+name|notify
 argument_list|)
 name|__P
 argument_list|(
@@ -988,9 +991,9 @@ operator|,
 name|int
 operator|)
 argument_list|)
-operator|=
+init|=
 name|in6_rtchange
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|sa

@@ -647,7 +647,9 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|tcp_notify
 parameter_list|(
 name|struct
@@ -3678,7 +3680,9 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|tcp_notify
 parameter_list|(
 name|inp
@@ -3732,7 +3736,9 @@ name|EHOSTDOWN
 operator|)
 condition|)
 block|{
-return|return;
+return|return
+name|inp
+return|;
 block|}
 elseif|else
 if|if
@@ -3753,6 +3759,7 @@ name|tp
 operator|->
 name|t_softerror
 condition|)
+block|{
 name|tcp_drop
 argument_list|(
 name|tp
@@ -3760,13 +3767,27 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+literal|0
+return|;
+block|}
 else|else
+block|{
 name|tp
 operator|->
 name|t_softerror
 operator|=
 name|error
 expr_stmt|;
+return|return
+name|inp
+return|;
+block|}
 if|#
 directive|if
 literal|0
@@ -5038,7 +5059,9 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|void
+name|struct
+name|inpcb
+modifier|*
 function_decl|(
 modifier|*
 name|notify
@@ -5300,6 +5323,8 @@ operator|->
 name|snd_max
 argument_list|)
 condition|)
+name|inp
+operator|=
 call|(
 modifier|*
 name|notify
@@ -5314,6 +5339,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|inp
+condition|)
 name|INP_UNLOCK
 argument_list|(
 name|inp
@@ -5440,7 +5469,9 @@ name|struct
 name|tcphdr
 name|th
 decl_stmt|;
-name|void
+name|struct
+name|inpcb
+modifier|*
 function_decl|(
 modifier|*
 name|notify
@@ -6143,7 +6174,9 @@ comment|/*  * When a source quench is received, close congestion window  * to on
 end_comment
 
 begin_function
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|tcp_quench
 parameter_list|(
 name|inp
@@ -6181,6 +6214,11 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
+return|return
+operator|(
+name|inp
+operator|)
+return|;
 block|}
 end_function
 
@@ -6189,7 +6227,9 @@ comment|/*  * When a specific ICMP unreachable message is received and the  * co
 end_comment
 
 begin_function
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|tcp_drop_syn_sent
 parameter_list|(
 name|inp
@@ -6225,6 +6265,7 @@ name|t_state
 operator|==
 name|TCPS_SYN_SENT
 condition|)
+block|{
 name|tcp_drop
 argument_list|(
 name|tp
@@ -6232,6 +6273,18 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+literal|0
+return|;
+block|}
+return|return
+name|inp
+return|;
 block|}
 end_function
 
@@ -6240,7 +6293,9 @@ comment|/*  * When `need fragmentation' ICMP is received, update our idea of the
 end_comment
 
 begin_function
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|tcp_mtudisc
 parameter_list|(
 name|inp
@@ -6381,7 +6436,9 @@ directive|endif
 comment|/* INET6 */
 name|tcp_mssdflt
 expr_stmt|;
-return|return;
+return|return
+name|inp
+return|;
 block|}
 name|taop
 operator|=
@@ -6462,7 +6519,9 @@ name|t_maxopd
 operator|<=
 name|mss
 condition|)
-return|return;
+return|return
+name|inp
+return|;
 name|tp
 operator|->
 name|t_maxopd
@@ -6624,6 +6683,9 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|inp
+return|;
 block|}
 end_function
 

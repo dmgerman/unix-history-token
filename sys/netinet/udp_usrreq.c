@@ -2443,7 +2443,9 @@ comment|/*  * Notify a udp user of an asynchronous error;  * just wake up so tha
 end_comment
 
 begin_function
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|udp_notify
 parameter_list|(
 name|inp
@@ -2482,6 +2484,9 @@ operator|->
 name|inp_socket
 argument_list|)
 expr_stmt|;
+return|return
+name|inp
+return|;
 block|}
 end_function
 
@@ -2520,7 +2525,9 @@ name|udphdr
 modifier|*
 name|uh
 decl_stmt|;
-name|void
+name|struct
+name|inpcb
+modifier|*
 function_decl|(
 modifier|*
 name|notify

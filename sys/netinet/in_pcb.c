@@ -3328,7 +3328,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
+name|struct
+name|inpcb
+modifier|*
 function_decl|(
 modifier|*
 name|notify
@@ -3827,7 +3829,9 @@ comment|/*  * After a routing change, flush old routing  * and allocate a (hopef
 end_comment
 
 begin_function
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|in_rtchange
 parameter_list|(
 name|inp
@@ -3872,6 +3876,9 @@ literal|0
 expr_stmt|;
 comment|/* 		 * A new route can be allocated the next time 		 * output is attempted. 		 */
 block|}
+return|return
+name|inp
+return|;
 block|}
 end_function
 

@@ -295,10 +295,12 @@ name|u_int
 operator|,
 name|int
 operator|,
-name|void
-argument_list|(
+expr|struct
+name|inpcb
 operator|*
-argument_list|)
+call|(
+modifier|*
+call|)
 argument_list|(
 expr|struct
 name|inpcb
@@ -312,7 +314,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|inpcb
+modifier|*
 name|in6_rtchange
 name|__P
 argument_list|(
