@@ -86,8 +86,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|EISA_DEVICE_ID_SDC3222B
+value|0x0ab34281
+end_define
+
+begin_define
+define|#
+directive|define
 name|EISA_DEVICE_ID_SDC3222F
 value|0x0ab34781
+end_define
+
+begin_define
+define|#
+directive|define
+name|EISA_DEVICE_ID_SDC3222WS
+value|0x0ab34981
+end_define
+
+begin_define
+define|#
+directive|define
+name|EISA_DEVICE_ID_SDC3222WB
+value|0x0ab34982
 end_define
 
 begin_define
@@ -700,11 +721,38 @@ operator|)
 return|;
 break|break;
 case|case
+name|EISA_DEVICE_ID_SDC3222B
+case|:
+return|return
+operator|(
+literal|"Storage Dimensions SDC3222B SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
 name|EISA_DEVICE_ID_SDC3222F
 case|:
 return|return
 operator|(
 literal|"Storage Dimensions SDC3222F SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|EISA_DEVICE_ID_SDC3222WS
+case|:
+return|return
+operator|(
+literal|"Storage Dimensions SDC3222WS SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|EISA_DEVICE_ID_SDC3222WB
+case|:
+return|return
+operator|(
+literal|"Storage Dimensions SDC3222WB SCSI host adapter"
 operator|)
 return|;
 break|break;

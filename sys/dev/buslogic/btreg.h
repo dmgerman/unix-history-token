@@ -2235,6 +2235,9 @@ expr_stmt|;
 name|bus_addr_t
 name|mailbox_physbase
 decl_stmt|;
+name|bus_addr_t
+name|mailbox_addrlimit
+decl_stmt|;
 name|u_int
 name|num_ccbs
 decl_stmt|;
