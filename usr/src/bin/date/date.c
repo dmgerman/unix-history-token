@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.11 (Berkeley) %G%"
+literal|"@(#)date.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -756,6 +756,12 @@ operator|!=
 name|EADDRINUSE
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EADDRNOTAVAIL
+condition|)
 name|perror
 argument_list|(
 literal|"bind"
