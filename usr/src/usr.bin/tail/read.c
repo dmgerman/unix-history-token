@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)read.c	5.1 (Berkeley) %G%"
+literal|"@(#)read.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +146,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -209,9 +211,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|rflag
@@ -486,6 +491,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -549,6 +556,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -634,6 +643,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -698,9 +709,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|cnt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reverse.c	5.3 (Berkeley) %G%"
+literal|"@(#)reverse.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,8 +324,11 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -334,6 +337,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|p
 operator|+=
 name|size
@@ -547,6 +552,8 @@ name|mark
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror

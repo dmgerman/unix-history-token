@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.1 (Berkeley) %G%"
+literal|"@(#)misc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,8 @@ parameter_list|()
 block|{
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|fname
@@ -103,6 +105,8 @@ parameter_list|()
 block|{
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"stdout: %s"
 argument_list|,
 name|strerror
@@ -149,6 +153,9 @@ directive|if
 name|__STDC__
 name|err
 parameter_list|(
+name|int
+name|fatal
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -160,10 +167,15 @@ else|#
 directive|else
 function|err
 parameter_list|(
+name|fatal
+parameter_list|,
 name|fmt
 parameter_list|,
 name|va_alist
 parameter_list|)
+name|int
+name|fatal
+decl_stmt|;
 name|char
 modifier|*
 name|fmt
@@ -231,12 +243,19 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fatal
+condition|)
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+name|rval
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forward.c	5.4 (Berkeley) %G%"
+literal|"@(#)forward.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,9 +211,12 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 block|}
 else|else
 while|while
@@ -242,9 +245,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 break|break;
 block|}
 break|break;
@@ -285,9 +291,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 break|break;
 block|}
 if|if
@@ -337,9 +346,12 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 block|}
 elseif|else
 if|if
@@ -366,9 +378,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 block|}
 else|else
 name|bytes
@@ -411,9 +426,12 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 block|}
 else|else
 name|rlines
@@ -450,9 +468,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 block|}
 else|else
 name|lines
@@ -527,9 +548,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)
@@ -569,6 +593,8 @@ literal|1
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"select: %s"
 argument_list|,
 name|strerror
@@ -668,8 +694,11 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -678,6 +707,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* Last char is special, ignore whether newline or not. */
 for|for
 control|(
@@ -741,9 +772,12 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 block|}
 end_function
 

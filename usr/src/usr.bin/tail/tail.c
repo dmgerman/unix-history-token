@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.7 (Berkeley) %G%"
+literal|"@(#)tail.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,6 +178,8 @@ name|style
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|first
 decl_stmt|;
 name|char
 modifier|*
@@ -194,7 +196,7 @@ name|forward
 parameter_list|,
 name|backward
 parameter_list|)
-value|{ \ 	if (style) \ 		usage(); \ 	off = strtol(optarg,&p, 10) * (units); \ 	if (*p) \ 		err("illegal offset -- %s", optarg); \ 	switch(optarg[0]) { \ 	case '+': \ 		if (off) \ 			off -= (units); \ 			style = (forward); \ 		break; \ 	case '-': \ 		off = -off; \
+value|{ \ 	if (style) \ 		usage(); \ 	off = strtol(optarg,&p, 10) * (units); \ 	if (*p) \ 		err(1, "illegal offset -- %s", optarg); \ 	switch(optarg[0]) { \ 	case '+': \ 		if (off) \ 			off -= (units); \ 			style = (forward); \ 		break; \ 	case '-': \ 		off = -off; \
 comment|/* FALLTHROUGH */
 value|\ 	default: \ 		style = (backward); \ 		break; \ 	} \ }
 name|obsolete
@@ -367,11 +369,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|*
+name|argv
+condition|)
+for|for
+control|(
+name|first
+operator|=
+literal|1
+init|;
 name|fname
 operator|=
 operator|*
 name|argv
-condition|)
+operator|++
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -388,8 +401,68 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|ierr
 argument_list|()
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s==> %s<==\n"
+argument_list|,
+name|first
+condition|?
+literal|""
+else|:
+literal|"\n"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rflag
+condition|)
+name|reverse
+argument_list|(
+name|fp
+argument_list|,
+name|style
+argument_list|,
+name|off
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
+else|else
+name|forward
+argument_list|(
+name|fp
+argument_list|,
+name|style
+argument_list|,
+name|off
+argument_list|,
+operator|&
+name|sb
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -402,7 +475,6 @@ name|fname
 operator|=
 literal|"stdin"
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|fstat
@@ -416,10 +488,17 @@ operator|&
 name|sb
 argument_list|)
 condition|)
+block|{
 name|ierr
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Determine if input is a pipe.  4.4BSD will set the SOCKET 	 * bit in the st_mode field for pipes.  Fix this then. 	 */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * Determine if input is a pipe.  4.4BSD will set the SOCKET 		 * bit in the st_mode field for pipes.  Fix this then. 		 */
 if|if
 condition|(
 name|lseek
@@ -481,6 +560,7 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|rval
@@ -632,6 +712,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -768,6 +850,8 @@ break|break;
 default|default:
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal option -- %s"
 argument_list|,
 operator|*
