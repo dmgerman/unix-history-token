@@ -253,14 +253,9 @@ comment|/* .PATH */
 name|Phony
 block|,
 comment|/* .PHONY */
-ifdef|#
-directive|ifdef
-name|POSIX
 name|Posix
 block|,
 comment|/* .POSIX */
-endif|#
-directive|endif
 name|Precious
 block|,
 comment|/* .PRECIOUS */
@@ -522,9 +517,6 @@ block|,
 name|OP_PHONY
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|POSIX
 block|{
 literal|".POSIX"
 block|,
@@ -533,8 +525,6 @@ block|,
 literal|0
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|".PRECIOUS"
 block|,
@@ -3261,9 +3251,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|POSIX
 case|case
 name|Posix
 case|:
@@ -3277,8 +3264,6 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 break|break;
 block|}
@@ -7358,13 +7343,6 @@ literal|'\t'
 condition|)
 block|{
 comment|/* 		 * If a line starts with a tab, it can only hope to be 		 * a creation command. 		 */
-ifndef|#
-directive|ifndef
-name|POSIX
-name|shellCommand
-label|:
-endif|#
-directive|endif
 for|for
 control|(
 name|cp
@@ -7513,16 +7491,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * We now know it's a dependency line so it needs to have all 		 * variables expanded before being parsed. Tell the variable 		 * module to complain if some variable is undefined... 		 * To make life easier on novices, if the line is indented we 		 * first make sure the line has a dependency operator in it. 		 * If it doesn't have an operator and we're in a dependency 		 * line's script, we assume it's actually a shell command 		 * and add it to the current list of targets. 		 */
-ifndef|#
-directive|ifndef
-name|POSIX
-name|Boolean
-name|nonSpace
-init|=
-name|FALSE
-decl_stmt|;
-endif|#
-directive|endif
 name|cp
 operator|=
 name|line
@@ -7578,90 +7546,7 @@ goto|goto
 name|nextLine
 goto|;
 block|}
-ifndef|#
-directive|ifndef
-name|POSIX
-while|while
-condition|(
-operator|(
-operator|*
-name|cp
-operator|!=
-literal|':'
-operator|)
-operator|&&
-operator|(
-operator|*
-name|cp
-operator|!=
-literal|'!'
-operator|)
-operator|&&
-operator|(
-operator|*
-name|cp
-operator|!=
-literal|'\0'
-operator|)
-condition|)
-block|{
-name|nonSpace
-operator|=
-name|TRUE
-expr_stmt|;
-name|cp
-operator|++
-expr_stmt|;
 block|}
-endif|#
-directive|endif
-block|}
-ifndef|#
-directive|ifndef
-name|POSIX
-if|if
-condition|(
-operator|*
-name|cp
-operator|==
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-name|inLine
-condition|)
-block|{
-name|Parse_Error
-argument_list|(
-name|PARSE_WARNING
-argument_list|,
-literal|"Shell command needs a leading tab"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|shellCommand
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|nonSpace
-condition|)
-block|{
-name|Parse_Error
-argument_list|(
-name|PARSE_FATAL
-argument_list|,
-literal|"Missing operator"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-endif|#
-directive|endif
 name|ParseFinishLine
 argument_list|()
 expr_stmt|;
@@ -7687,7 +7572,7 @@ name|line
 operator|=
 name|cp
 expr_stmt|;
-comment|/* 		     * Need a non-circular list for the target nodes 		     */
+comment|/* 		 * Need a non-circular list for the target nodes 		 */
 if|if
 condition|(
 name|targets
@@ -7715,12 +7600,6 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|POSIX
-block|}
-endif|#
-directive|endif
 block|}
 name|nextLine
 label|:

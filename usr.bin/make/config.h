@@ -48,16 +48,6 @@ name|RECHECK
 end_define
 
 begin_comment
-comment|/*  * POSIX  *	Adhere to the POSIX 1003.2 draft for the make(1) program.  *	- Use MAKEFLAGS instead of MAKE to pick arguments from the  *	  environment.  *	- Allow empty command lines if starting with tab.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POSIX
-end_define
-
-begin_comment
 comment|/*  * SYSVINCLUDE  *	Recognize system V like include directives [include "filename"]  * SYSVVARSUB  *	Recognize system V like ${VAR:x=y} variable substitutions  */
 end_comment
 
