@@ -485,6 +485,10 @@ break|break;
 block|}
 if|if
 condition|(
+name|cmd
+operator|==
+name|SIOCDIFADDR
+operator|&&
 name|ia
 operator|==
 name|NULL
