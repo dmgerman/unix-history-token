@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bitstring.h>
+file|<sys/bitstring.h>
 end_include
 
 begin_include
