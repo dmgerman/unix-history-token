@@ -825,6 +825,7 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+comment|/* 		 * UNIX is a registered trademark of someone. 		 * Unfortunately, it is also a mandatory part of 		 * the protocol we talk with the server FTP, so 		 * we are stuck with it now. 		 */
 if|if
 condition|(
 operator|!
