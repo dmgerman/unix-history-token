@@ -19,6 +19,9 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
 argument|cbb_intrhand

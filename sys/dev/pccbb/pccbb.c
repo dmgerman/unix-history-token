@@ -3465,6 +3465,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_AV
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|cbb_intr
 argument_list|,
@@ -4231,6 +4233,14 @@ name|arg
 operator|=
 name|arg
 expr_stmt|;
+name|ih
+operator|->
+name|flags
+operator|=
+name|flags
+operator|&
+name|INTR_MPSAFE
+expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4557,7 +4567,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-comment|/* 	 * We take out Giant here because we need it deep, down in 	 * the bowels of the vm system for mapping the memory we need 	 * to read the CIS.  We also need it for kthread_exit, which 	 * drops it. 	 */
 name|sc
 operator|->
 name|flags
@@ -4566,19 +4575,24 @@ name|CBB_KTHREAD_RUNNING
 expr_stmt|;
 while|while
 condition|(
-literal|1
-condition|)
-block|{
-comment|/* 		 * Check to see if we have anything first so that 		 * if there's a card already inserted, we do the 		 * right thing. 		 */
-if|if
-condition|(
+operator|(
 name|sc
 operator|->
 name|flags
 operator|&
 name|CBB_KTHREAD_DONE
+operator|)
+operator|==
+literal|0
 condition|)
-break|break;
+block|{
+comment|/* 		 * We take out Giant here because we need it deep, 		 * down in the bowels of the vm system for mapping the 		 * memory we need to read the CIS.  In addition, since 		 * we are adding/deleting devices from the dev tree, 		 * and that code isn't MP safe, we have to hold Giant. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|cbb_get
@@ -4586,12 +4600,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|CBB_SOCKET_STATE
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -4621,7 +4629,17 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Wait until it has been 1s since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop. 		 */
+comment|/* 		 * In our ISR, we turn off the card changed interrupt.  Turn 		 * them back on here before we wait for them to happen.  We 		 * turn them on/off so that we can tolerate a large latency 		 * between the time we signal cbb_event_thread and it gets 		 * a chance to run. 		 */
+name|cbb_setb
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_MASK
+argument_list|,
+name|CBB_SOCKET_MASK_CD
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Wait until it has been 1s since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop.  Although we clear the bit in the 		 * ISR, we signal sc->cv from the detach path after we've 		 * set the CBB_KTHREAD_DONE bit, so we can't do a simple 		 * 1s sleep here. 		 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4704,6 +4722,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* kthread_exit drops */
 name|kthread_exit
 argument_list|(
 literal|0
@@ -5010,6 +5029,15 @@ operator|&
 name|CBB_SOCKET_EVENT_CD
 condition|)
 block|{
+name|cbb_clrb
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_MASK
+argument_list|,
+name|CBB_SOCKET_MASK_CD
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5106,6 +5134,24 @@ argument_list|,
 argument|entries
 argument_list|)
 block|{
+if|if
+condition|(
+operator|(
+name|ih
+operator|->
+name|flags
+operator|&
+name|INTR_MPSAFE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ih
@@ -5116,6 +5162,24 @@ argument_list|(
 name|ih
 operator|->
 name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ih
+operator|->
+name|flags
+operator|&
+name|INTR_MPSAFE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -9275,7 +9339,7 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-name|cbb_setb
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
