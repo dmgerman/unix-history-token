@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -68,6 +68,16 @@ directive|define
 name|TCP_TTL
 value|30
 end_define
+
+begin_comment
+comment|/* default time to live for TCP segs */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tcp_ttl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* time to live for TCP segs */
