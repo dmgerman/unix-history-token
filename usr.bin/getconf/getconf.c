@@ -492,7 +492,6 @@ literal|"undefined\n"
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* 		 * SUSv2 specifies that the value, if defined, is to be 		 * printed using the format "%d\n".  This is clearly 		 * erroneous, since sysconf is defined to return a long 		 * and not an int. 		 */
 name|printf
 argument_list|(
 literal|"%ld\n"
@@ -572,7 +571,6 @@ literal|"undefined\n"
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* 		 * SUSv2 specifies that the value, if defined, is to be 		 * printed using the format "%d\n".  This is clearly 		 * erroneous, since sysconf is defined to return a long 		 * and not an int. 		 */
 name|printf
 argument_list|(
 literal|"%ld\n"
