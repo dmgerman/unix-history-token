@@ -1067,6 +1067,13 @@ case|:
 return|return;
 comment|/* Never reply to TM will's/wont's */
 default|default:
+name|hisopts
+index|[
+name|option
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|fmt
 operator|=
 name|dont
