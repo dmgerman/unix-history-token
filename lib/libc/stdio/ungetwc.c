@@ -65,6 +65,12 @@ directive|include
 file|"local.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_comment
 comment|/*  * Non-MT-safe version.  */
 end_comment
@@ -106,7 +112,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|wcrtomb
+name|__wcrtomb
 argument_list|(
 name|buf
 argument_list|,

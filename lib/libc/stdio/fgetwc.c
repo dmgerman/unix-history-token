@@ -65,6 +65,12 @@ directive|include
 file|"local.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_comment
 comment|/*  * MT-safe version.  */
 end_comment
@@ -181,7 +187,7 @@ do|do
 block|{
 name|nconv
 operator|=
-name|mbrtowc
+name|__mbrtowc
 argument_list|(
 operator|&
 name|wc
