@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	@(#)conf.h	4.2		%G% */
+comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	@(#)conf.h	4.3		%G% */
 end_comment
 
 begin_comment
@@ -196,6 +196,17 @@ end_define
 
 begin_comment
 comment|/* include the daemon (requires IPC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* use flock file locking */
 end_comment
 
 end_unit
