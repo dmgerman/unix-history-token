@@ -363,7 +363,7 @@ name|MNAMELEN
 argument_list|)
 condition|)
 block|{
-comment|/* "this is not the filesystem you're looking for */
+comment|/* "this is not the filesystem you're looking for" */
 name|free
 argument_list|(
 operator|*
@@ -1408,7 +1408,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* Verfiy size of summary block */
+comment|/* Verify size of summary block */
 name|sumsize
 operator|=
 sizeof|sizeof

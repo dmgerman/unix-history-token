@@ -67,7 +67,7 @@ name|MIN_SEGS
 parameter_list|(
 name|lfsp
 parameter_list|)
-value|(3)
+value|(5)
 end_define
 
 begin_define

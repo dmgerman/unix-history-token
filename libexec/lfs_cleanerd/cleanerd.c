@@ -1083,7 +1083,7 @@ index|[
 name|ONE_MIN
 index|]
 operator|==
-literal|0.0
+literal|0.2
 operator|&&
 name|loadavg
 index|[
@@ -1110,7 +1110,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Cleaner Running  at %s (system idle)\n"
+literal|"Cleaner running (system idle) at %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1126,9 +1126,12 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|VERBOSE
 name|printf
 argument_list|(
-literal|"Cleaner Not Running at %s\n"
+literal|"Cleaner not running at %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1137,6 +1140,8 @@ name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
