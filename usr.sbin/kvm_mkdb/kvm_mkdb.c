@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kvm_mkdb.c,v 1.7 1997/09/24 06:44:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,24 +272,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* If the existing db file matches the currently running kernel, exit */
-if|if
-condition|(
-name|testdb
-argument_list|()
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-define|#
-directive|define
-name|basename
-parameter_list|(
-name|cp
-parameter_list|)
-value|((p = rindex((cp), '/')) != NULL ? p + 1 : (cp))
 name|nlistpath
 operator|=
 name|argc
@@ -308,6 +290,26 @@ operator|)
 name|getbootfile
 argument_list|()
 expr_stmt|;
+comment|/* If the existing db file matches the currently running kernel, exit */
+if|if
+condition|(
+name|testdb
+argument_list|(
+name|nlistpath
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|basename
+parameter_list|(
+name|cp
+parameter_list|)
+value|((p = rindex((cp), '/')) != NULL ? p + 1 : (cp))
 name|nlistname
 operator|=
 name|basename

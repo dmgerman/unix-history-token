@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: testdb.c,v 1.3 1997/09/24 06:44:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,13 @@ end_comment
 begin_function
 name|int
 name|testdb
-parameter_list|()
+parameter_list|(
+name|uf
+parameter_list|)
+name|char
+modifier|*
+name|uf
+decl_stmt|;
 block|{
 specifier|register
 name|DB
@@ -135,9 +141,6 @@ specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|uf
 decl_stmt|;
 name|DBT
 name|rec
@@ -191,15 +194,6 @@ condition|)
 goto|goto
 name|close
 goto|;
-name|uf
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|getbootfile
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
