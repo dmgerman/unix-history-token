@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcoll.c	5.2 (Berkeley) %G%"
+literal|"@(#)strcoll.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,25 +53,23 @@ begin_comment
 comment|/*  * Compare strings according to LC_COLLATE category of current locale.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|strcoll
-argument_list|(
-argument|s1
-argument_list|,
-argument|s2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s1
 decl_stmt|,
-modifier|*
+decl|*
 name|s2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

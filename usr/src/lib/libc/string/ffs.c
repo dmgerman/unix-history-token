@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ffs.c	5.4 (Berkeley) %G%"
+literal|"@(#)ffs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,18 +47,16 @@ begin_comment
 comment|/*  * ffs -- vax ffs instruction  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ffs
-argument_list|(
+parameter_list|(
 name|mask
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|mask
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -101,7 +99,7 @@ name|bit
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcmp.c	5.6 (Berkeley) %G%"
+literal|"@(#)bcmp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,27 +47,25 @@ begin_comment
 comment|/*  * bcmp -- vax cmpc3 instruction  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|bcmp
-argument_list|(
-argument|b1
-argument_list|,
-argument|b2
-argument_list|,
-argument|length
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|b1
+parameter_list|,
+name|b2
+parameter_list|,
+name|length
+parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|b1
 decl_stmt|,
-modifier|*
+decl|*
 name|b2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 specifier|register
