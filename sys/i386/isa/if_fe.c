@@ -1354,6 +1354,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Initialize "minimum" parts of our softc.  */
 name|sc
 operator|=
 operator|&
@@ -1366,27 +1367,119 @@ operator|.
 name|id_unit
 index|]
 expr_stmt|;
-name|memcpy
+name|sc
+operator|->
+name|sc_unit
+operator|=
+name|dp
+operator|->
+name|isahd
+operator|.
+name|id_unit
+expr_stmt|;
+name|sc
+operator|->
+name|iobase
+operator|=
+name|dp
+operator|->
+name|isahd
+operator|.
+name|id_iobase
+expr_stmt|;
+comment|/* Use Ethernet address got from CIS, if one is available.  */
+if|if
+condition|(
+operator|(
+name|dp
+operator|->
+name|misc
+index|[
+literal|0
+index|]
+operator|&
+literal|0x03
+operator|)
+operator|==
+literal|0x00
+operator|&&
+operator|(
+name|dp
+operator|->
+name|misc
+index|[
+literal|0
+index|]
+operator||
+name|dp
+operator|->
+name|misc
+index|[
+literal|1
+index|]
+operator||
+name|dp
+operator|->
+name|misc
+index|[
+literal|2
+index|]
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Yes, it looks like a valid Ether address.  */
+name|bcopy
+argument_list|(
+name|dp
+operator|->
+name|misc
+argument_list|,
+name|sc
+operator|->
+name|sc_enaddr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Indicate we have no Ether address in CIS.  */
+name|bzero
 argument_list|(
 name|sc
 operator|->
 name|sc_enaddr
 argument_list|,
-name|dp
-operator|->
-name|misc
-argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Probe supported PC card models.  */
 if|if
 condition|(
-name|fe_probe
+name|fe_probe_tdk
 argument_list|(
 operator|&
 name|dp
 operator|->
 name|isahd
+argument_list|,
+name|sc
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|fe_probe_mbh
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|isahd
+argument_list|,
+name|sc
 argument_list|)
 operator|==
 literal|0
@@ -1647,26 +1740,13 @@ block|,
 name|fe_ati_addr
 block|}
 block|,
-if|#
-directive|if
-name|NCRD
-operator|>
-literal|0
 block|{
-name|fe_probe_mbh
+name|fe_probe_gwy
 block|,
 name|NULL
 block|}
 block|,
-comment|/* PCMCIAs cannot be auto-detected.  */
-block|{
-name|fe_probe_tdk
-block|,
-name|NULL
-block|}
-block|,
-endif|#
-directive|endif
+comment|/* GWYs cannot be auto detected.  */
 block|{
 name|NULL
 block|,
@@ -5309,7 +5389,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Probe and initialization for TDK/CONTEC PCMCIA Ethernet interface.  * by MASUI Kenji<masui@cs.titech.ac.jp>  *  * (Contec uses TDK Ethenet chip -- hosokawa)  *  * This version of fe_probe_tdk has been rewrote to handle  * *generic* PC card implementation of Fujitsu MB8696x family.  The  * name _tdk is just for a historical reason. :-)  */
+comment|/*  * Probe and initialization for TDK/CONTEC PCMCIA Ethernet interface.  * by MASUI Kenji<masui@cs.titech.ac.jp>  *  * (Contec uses TDK Ethenet chip -- hosokawa)  *  * This version of fe_probe_tdk has been rewrote to handle  * *generic* PC card implementation of Fujitsu MB8696x and compatibles.  * The name _tdk is just for a historical reason.<seki> :-)  */
 end_comment
 
 begin_function
@@ -5359,6 +5439,7 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+comment|/* We need an IRQ.  */
 if|if
 condition|(
 name|dev
@@ -5374,12 +5455,82 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Setup an I/O address mapping table.  */
+comment|/* Generic driver needs Ethernet address taken from CIS.  */
+if|if
+condition|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+operator|&&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+operator|&&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+index|[
+literal|2
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/* Setup an I/O address mapping table; we need only 16 ports.  */
 for|for
 control|(
 name|i
 operator|=
 literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|i
+index|]
+operator|=
+name|sc
+operator|->
+name|iobase
+operator|+
+name|i
+expr_stmt|;
+block|}
+comment|/* Fill unused slots with a safe address.  */
+for|for
+control|(
+name|i
+operator|=
+literal|16
 init|;
 name|i
 operator|<
@@ -5399,8 +5550,6 @@ operator|=
 name|sc
 operator|->
 name|iobase
-operator|+
-name|i
 expr_stmt|;
 block|}
 comment|/*          * See if C-NET(PC)C is on its address.          */
@@ -5570,7 +5719,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*          * That's all.  C-NET(PC)C occupies 16 I/O addresses. 	 * XXX: Are there any card with 32 I/O addresses?  FIXME.          */
+comment|/*          * That's all.  C-NET(PC)C occupies 16 I/O addresses. 	 * 	 * Some PC cards (e.g., TDK and Contec) have 16 I/O addresses, 	 * while some others (e.g., Fujitsu) have 32.  Fortunately, 	 * this generic driver never accesses latter 16 ports in 32 	 * ports cards.  So, we can assume the *generic* PC cards 	 * always have 16 ports. 	 * 	 * Moreover, PC card probe is isolated from ISA probe, and PC 	 * card probe routine doesn't use "# of ports" returned by this 	 * function.  16 v.s. 32 is not important now. 	 */
 return|return
 literal|16
 return|;
@@ -7843,7 +7992,7 @@ if|#
 directive|if
 name|FE_DEBUG
 operator|>=
-literal|1
+literal|2
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -7884,7 +8033,12 @@ operator|->
 name|proto_dlcr5
 argument_list|)
 expr_stmt|;
-comment|/* 	 * When we come here, the receive buffer management should 	 * have been broken.  So, we cannot use skip operation. 	 */
+name|DELAY
+argument_list|(
+literal|1300
+argument_list|)
+expr_stmt|;
+comment|/* 	 * When we come here, the receive buffer management should 	 * have been broken.  So, we cannot use skip operation. 	 * Just discard everything in the buffer. 	 */
 for|for
 control|(
 name|i
@@ -7893,13 +8047,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|sc
-operator|->
-name|txb_size
+literal|32768
 condition|;
 name|i
-operator|+=
-literal|2
+operator|++
 control|)
 block|{
 if|if
@@ -8328,7 +8479,7 @@ if|#
 directive|if
 name|FE_DEBUG
 operator|>=
-literal|3
+literal|2
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -8384,7 +8535,7 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * MB86960 has a flag indicating "receive queue empty." 	 * We just loop, checking the flag, to pull out all received 	 * packets. 	 * 	 * We limit the number of iterations to avoid infinite-loop. 	 * It can be caused by a very slow CPU (some broken 	 * peripheral may insert incredible number of wait cycles) 	 * or, worse, by a broken MB86960 chip. 	 */
+comment|/* 	 * MB86960 has a flag indicating "receive queue empty." 	 * We just loop, checking the flag, to pull out all received 	 * packets. 	 * 	 * We limit the number of iterations to avoid infinite-loop. 	 * The upper bound is set to unrealistic high value. 	 */
 for|for
 control|(
 name|i
@@ -8394,6 +8545,8 @@ init|;
 name|i
 operator|<
 name|FE_MAX_RECV_COUNT
+operator|*
+literal|2
 condition|;
 name|i
 operator|++
@@ -8464,49 +8617,62 @@ name|FE_BMPR8
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If there was an error, update statistics and drop 		 * the packet, unless the interface is in promiscuous 		 * mode. 		 */
-if|if
-condition|(
-operator|(
-name|status
-operator|&
-literal|0xF0
-operator|)
-operator|!=
-literal|0x20
-condition|)
-block|{
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|1
+comment|/* 		 * If there was an error with the received packet, it 		 * must be an indication of out-of-sync on receive 		 * buffer, because we have programmed the 8696x to 		 * to discard errored packets, even when the interface 		 * is in promiscuous mode.  We have to re-synchronize. 		 */
 if|if
 condition|(
 operator|!
 operator|(
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_flags
+name|status
 operator|&
-name|IFF_PROMISC
+name|FE_RPH_GOOD
 operator|)
 condition|)
 block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fe%d: corrupted receive status byte (%02x)\n"
+argument_list|,
 name|sc
 operator|->
-name|sc_if
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_unit
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
-name|fe_droppacket
+name|fe_emptybuffer
 argument_list|(
 name|sc
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
-block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|1
 comment|/* 		 * MB86960 checks the packet length and drop big packet 		 * before passing it to us.  There are no chance we can 		 * get big packets through it, even if they are actually 		 * sent over a line.  Hence, if the length exceeds 		 * the specified limit, it means some serious failure, 		 * such as out-of-sync on receive buffer management. 		 * 		 * Same for short packets, since we have programmed 		 * 86960 to drop short packets. 		 */
 if|if
 condition|(
@@ -8523,11 +8689,6 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
-if|#
-directive|if
-name|FE_DEBUG
-operator|>=
-literal|1
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -8551,8 +8712,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_if
@@ -8565,8 +8724,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * Go get a packet. 		 */
 if|if
 condition|(
@@ -8580,7 +8741,6 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Skip a packet, updating statistics.  */
 if|#
 directive|if
 name|FE_DEBUG
@@ -8602,6 +8762,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Skip a packet, updating statistics.  */
 name|sc
 operator|->
 name|sc_if
@@ -8616,8 +8777,8 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We stop receiving packets, even if there are 			 * more in the buffer.  We hope we can get more 			 * mbuf next time. 			 */
-return|return;
+comment|/* 			 * Try extracting other packets, although they will 			 * cause out-of-mbuf error again.  This is required 			 * to keep receiver interrupt comming. 			 * (Earlier versions had a bug on this point.) 			 */
+continue|continue;
 block|}
 comment|/* Successfully received a packet.  Update stat.  */
 name|sc
@@ -8711,6 +8872,80 @@ argument_list|)
 operator|&
 name|FE_RMASK
 expr_stmt|;
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|1
+comment|/* Test for a "dead-lock" condition.  */
+if|if
+condition|(
+operator|(
+name|rstat
+operator|&
+name|FE_D1_PKTRDY
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_DLCR5
+index|]
+argument_list|)
+operator|&
+name|FE_D5_BUFEMP
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_DLCR1
+index|]
+argument_list|)
+operator|&
+name|FE_D1_PKTRDY
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * PKTRDY is off, while receive buffer is not empty. 			 * We did a double check to avoid a race condition... 			 * So, we should have missed an interrupt. 			 */
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"fe%d: missed a receiver interrupt?\n"
+argument_list|,
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_unit
+argument_list|)
+expr_stmt|;
+comment|/* Simulate the missed interrupt condition.  */
+name|rstat
+operator||=
+name|FE_D1_PKTRDY
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* Stop processing if there are no interrupts to handle.  */
 if|if
 condition|(
 name|tstat
@@ -9982,7 +10217,7 @@ if|#
 directive|if
 name|FE_DEBUG
 operator|>=
-literal|2
+literal|1
 comment|/* First, count up the total number of bytes to copy */
 name|length
 operator|=
@@ -10012,6 +10247,24 @@ operator|->
 name|m_len
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* Just use the length value in the packet header.  */
+name|length
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|2
 comment|/* Check if this matches the one in the packet header.  */
 if|if
 condition|(
@@ -10044,17 +10297,6 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* Just use the length value in the packet header.  */
-name|length
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
 endif|#
 directive|endif
 if|#

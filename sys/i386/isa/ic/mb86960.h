@@ -3,15 +3,8 @@ begin_comment
 comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This software may be used, modified, copied, distributed, and sold, in  * both source and binary form provided that the above copyright, these  * terms and the following disclaimer are retained.  The name of the author  * and/or the contributor may not be used to endorse or promote products  * derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND THE CONTRIBUTOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR THE CONTRIBUTOR BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|FE_MB86960_H_VERSION
-value|"mb86960.h ver. 0.8"
-end_define
-
 begin_comment
-comment|/*  * Registers of Fujitsu MB86960A/MB86965A Ethernet controller.  * Written and contributed by M.S.<seki@sysrap.cs.fujitsu.co.jp>  */
+comment|/*  * Registers of Fujitsu MB86960A/MB86965A series Ethernet controllers.  * Written and contributed by M.S.<seki@sysrap.cs.fujitsu.co.jp>  */
 end_comment
 
 begin_comment
@@ -259,7 +252,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* More BMPRs, only on MB86965A, accessible only when JLI mode.  */
+comment|/* More BMPRs, only on 86965, accessible only when JLI mode.  */
 end_comment
 
 begin_define
@@ -291,7 +284,7 @@ value|19
 end_define
 
 begin_comment
-comment|/*  * Definitions of registers.  * I don't have Fujitsu documents of MB86960A/MB86965A, so I don't  * know the official names for each flags and fields.  The following  * names are assigned by me (the author of this file,) since I cannot  * mnemorize hexadecimal constants for all of these functions.  * Comments?  FIXME.  */
+comment|/*  * Definitions of registers.  * I don't have Fujitsu documents of MB86960A/MB86965A, so I don't  * know the official names for each flags and fields.  The following  * names are assigned by me (the author of this file,) since I cannot  * mnemorize hexadecimal constants for all of these functions.  * Comments?  *  * I've got documents from Fujitsu web site, recently.  However, it's  * too late.  Names for some fields (bits) are kept different from  * those used in the Fujitsu documents...  */
 end_comment
 
 begin_comment
@@ -306,7 +299,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Bus write error			*/
+comment|/* Bus write error?			*/
 end_comment
 
 begin_define
@@ -361,7 +354,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* No corrision on last transmission	*/
+comment|/* Last packet looped back correctly	*/
 end_comment
 
 begin_define
@@ -618,7 +611,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* - ???				*/
+comment|/* - tied to CNTRL pin of the chip	*/
 end_comment
 
 begin_define
@@ -1160,9 +1153,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FE_D7_IDENT_TDK
+value|0x00
+end_define
+
+begin_comment
+comment|/* TDK chips?			*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FE_D7_IDENT_NICE
 value|0x80
 end_define
+
+begin_comment
+comment|/* Fujitsu NICE (86960)		*/
+end_comment
 
 begin_define
 define|#
@@ -1172,11 +1180,15 @@ value|0xC0
 end_define
 
 begin_comment
+comment|/* Fujitsu EtherCoupler (86965)	*/
+end_comment
+
+begin_comment
 comment|/* DLCR8 thru DLCR13 are for Ethernet station address.  */
 end_comment
 
 begin_comment
-comment|/* DLCR14 and DLCR15 are for TDR.  (BTW, what is TDR?  FIXME.)  */
+comment|/* DLCR14 and DLCR15 are for TDR.  (TDR is used for cable diagnostic.)  */
 end_comment
 
 begin_comment
@@ -1365,7 +1377,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* Change I/O base address		*/
+comment|/* Change I/O base address, on JLI mode	*/
 end_comment
 
 begin_define
@@ -1639,11 +1651,11 @@ comment|/* EEPROM data bit			*/
 end_comment
 
 begin_comment
-comment|/* BMPR18 ??? */
+comment|/* BMPR18 -- cycle I/O address setting in JLI mode */
 end_comment
 
 begin_comment
-comment|/* BMPR19 -- ISA interface configuration */
+comment|/* BMPR19 -- ISA interface configuration in JLI mode */
 end_comment
 
 begin_define
@@ -1689,6 +1701,60 @@ value|0
 end_define
 
 begin_comment
+comment|/*  * An extra I/O port address to reset 86965.  This location is called  * "ID ROM area" by Fujitsu document.  */
+end_comment
+
+begin_comment
+comment|/*  * Flags in Receive Packet Header... Basically same layout as DLCR1.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FE_RPH_OVRFLO
+value|FE_D1_OVRFLO
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RPH_CRCERR
+value|FE_D1_CRCERR
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RPH_ALGERR
+value|FE_D1_ALGERR
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RPH_SRTPKT
+value|FE_D1_SRTPKT
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RPH_RMTRST
+value|FE_D1_RMTRST
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RPH_GOOD
+value|0x20
+end_define
+
+begin_comment
+comment|/* Good packet follows			*/
+end_comment
+
+begin_comment
 comment|/*  * EEPROM specification (of JLI mode).  */
 end_comment
 
@@ -1715,7 +1781,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Some 86960 specific constants.  */
+comment|/*  * Some 8696x specific constants.  */
 end_comment
 
 begin_comment
