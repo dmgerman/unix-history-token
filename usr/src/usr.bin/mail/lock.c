@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lock.c	2.1 %G%"
+literal|"@(#)lock.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,7 @@ comment|/* To note that we locked it */
 end_comment
 
 begin_comment
-comment|/*  * Lock the specified mail file by setting the file mailfile.lock.  * We must, of course, be careful to remove the lock file by a call  * to unlock before we stop.  The algorithm used here is to see if  * the lock exists, and if it does, to check its modify time.  If it  * is older than 30 seconds, we assume error and set our own file.  * Otherwise, we wait for 5 seconds and try again.  */
+comment|/*  * Lock the specified mail file by setting the file mailfile.lock.  * We must, of course, be careful to remove the lock file by a call  * to unlock before we stop.  The algorithm used here is to see if  * the lock exists, and if it does, to check its modify time.  If it  * is older than 5 minutes, we assume error and set our own file.  * Otherwise, we wait for 5 seconds and try again.  */
 end_comment
 
 begin_macro
@@ -243,7 +243,7 @@ name|sbuf
 operator|.
 name|st_ctime
 operator|+
-literal|30
+literal|300
 condition|)
 block|{
 name|sleep
