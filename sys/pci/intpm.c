@@ -3841,7 +3841,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s %x\n"
+literal|"%s %lx\n"
 argument_list|,
 operator|(
 name|sciic
@@ -3855,9 +3855,10 @@ literal|"I/O mapped"
 else|:
 literal|"Memory"
 argument_list|,
-name|sciic
-operator|->
-name|smbsh
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
