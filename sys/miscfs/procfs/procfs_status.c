@@ -189,9 +189,9 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
-name|PROCTREE_LOCK
+name|PROC_LOCK
 argument_list|(
-name|PT_SHARED
+name|p
 argument_list|)
 expr_stmt|;
 name|ppid
@@ -208,9 +208,9 @@ name|p_pid
 else|:
 literal|0
 expr_stmt|;
-name|PROCTREE_LOCK
+name|PROC_UNLOCK
 argument_list|(
-name|PT_RELEASE
+name|p
 argument_list|)
 expr_stmt|;
 name|pgid
