@@ -74,6 +74,13 @@ end_include
 begin_decl_stmt
 specifier|static
 name|int
+name|force
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|primary_only
 decl_stmt|;
 end_decl_stmt
@@ -90,7 +97,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-p] device ...\n"
+literal|"usage: %s [-fp] device ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -192,14 +199,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
+name|map
+operator|=
 name|map_find
 argument_list|(
 name|MAP_TYPE_MBR
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|map
 operator|!=
 name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|force
 condition|)
 block|{
 name|warnx
@@ -210,6 +227,14 @@ name|device_name
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+comment|/* Nuke the MBR in our internal map. */
+name|map
+operator|->
+name|map_type
+operator|=
+name|MAP_TYPE_UNUSED
+expr_stmt|;
 block|}
 comment|/* 	 * Create PMBR. 	 */
 if|if
@@ -1127,7 +1152,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p"
+literal|"fp"
 argument_list|)
 operator|)
 operator|!=
@@ -1140,6 +1165,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|force
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
