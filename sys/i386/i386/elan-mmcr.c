@@ -632,17 +632,6 @@ name|ELAN_ERRLED
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|100
-end_define
-
-begin_comment
-comment|/* Share with xrpu */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -669,11 +658,6 @@ operator|.
 name|d_name
 operator|=
 literal|"elan"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -756,8 +740,6 @@ argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_MIDDLE
-operator|+
-name|CDEV_MAJOR
 argument_list|,
 name|elan_drvinit
 argument_list|,
