@@ -28,14 +28,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|unsigned
+name|int
 name|pc98_getmemsize
 name|__P
 argument_list|(
 operator|(
-name|unsigned
-operator|*
-operator|,
 name|unsigned
 operator|*
 operator|,

@@ -146,19 +146,6 @@ directive|ifdef
 name|EPSON_MEMWIN
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|void
-name|init_epson_memwin
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Disconnect phisical memory in 15-16MB region.  *  * EPSON PC-486GR, P, SR, SE, HX, HG and HA only.  Other system support  * this feature with software DIP switch.  */
 end_comment
@@ -380,24 +367,25 @@ comment|/*  * Get physical memory size  */
 end_comment
 
 begin_function
-name|void
+name|unsigned
+name|int
 name|pc98_getmemsize
 parameter_list|(
 name|unsigned
+name|int
 modifier|*
 name|base
 parameter_list|,
 name|unsigned
+name|int
 modifier|*
 name|ext
-parameter_list|,
-name|unsigned
-modifier|*
-name|under16
 parameter_list|)
 block|{
 name|unsigned
 name|int
+name|under16
+decl_stmt|,
 name|over16
 decl_stmt|;
 comment|/* available conventional memory size */
@@ -420,7 +408,6 @@ operator|*
 literal|128
 expr_stmt|;
 comment|/* available protected memory size under 16MB */
-operator|*
 name|under16
 operator|=
 name|PC98_SYSTEM_PARAMETER
@@ -444,7 +431,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|*
 name|under16
 operator|>
 operator|(
@@ -455,7 +441,6 @@ operator|)
 condition|)
 block|{
 comment|/* chop under16 memory to 15MB */
-operator|*
 name|under16
 operator|=
 literal|15
@@ -486,12 +471,6 @@ argument_list|)
 operator|*
 literal|256
 expr_stmt|;
-operator|*
-name|ext
-operator|=
-operator|*
-name|under16
-expr_stmt|;
 if|if
 condition|(
 name|over16
@@ -509,14 +488,23 @@ name|over16
 operator|)
 operator|*
 literal|1024
-expr_stmt|;
-block|}
-operator|*
-name|ext
-operator|-=
+operator|-
 literal|1024
 expr_stmt|;
-comment|/* subtract base memory space */
+block|}
+else|else
+block|{
+operator|*
+name|ext
+operator|=
+name|under16
+operator|-
+literal|1024
+expr_stmt|;
+block|}
+return|return
+name|under16
+return|;
 block|}
 end_function
 
