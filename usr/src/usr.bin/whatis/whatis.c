@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whatis.c	8.3 (Berkeley) %G%"
+literal|"@(#)whatis.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,8 @@ name|ep
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|rv
 decl_stmt|;
 name|char
 modifier|*
@@ -274,6 +276,11 @@ operator|(
 name|u_int
 operator|)
 name|argc
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -443,6 +450,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|rv
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -457,7 +468,6 @@ name|p
 control|)
 if|if
 condition|(
-operator|!
 name|found
 index|[
 name|p
@@ -465,12 +475,22 @@ operator|-
 name|argv
 index|]
 condition|)
+name|rv
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%s: not found\n"
 argument_list|,
 operator|*
 name|p
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|rv
 argument_list|)
 expr_stmt|;
 block|}
