@@ -756,6 +756,9 @@ else|:
 name|datalen
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FreeBSD
 name|memcopy
 argument_list|(
 name|ti
@@ -767,6 +770,31 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NetBSD */
+name|bus_mem_read_multi_4
+argument_list|(
+name|bsc
+operator|->
+name|sc_bc
+argument_list|,
+name|bsc
+operator|->
+name|sc_memh
+argument_list|,
+literal|0
+argument_list|,
+name|data
+argument_list|,
+name|count
+operator|>>
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NetBSD */
 name|data
 operator|+=
 name|count
@@ -818,6 +846,9 @@ else|:
 name|datalen
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FreeBSD
 name|memcopy
 argument_list|(
 name|data
@@ -829,6 +860,31 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NetBSD */
+name|bus_mem_write_multi_4
+argument_list|(
+name|bsc
+operator|->
+name|sc_bc
+argument_list|,
+name|bsc
+operator|->
+name|sc_memh
+argument_list|,
+literal|0
+argument_list|,
+name|data
+argument_list|,
+name|count
+operator|>>
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NetBSD */
 name|data
 operator|+=
 name|count
@@ -861,6 +917,9 @@ else|:
 name|datalen
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FreeBSD
 name|memcopy
 argument_list|(
 name|data
@@ -874,6 +933,31 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NetBSD */
+name|bus_mem_write_multi_4
+argument_list|(
+name|bsc
+operator|->
+name|sc_bc
+argument_list|,
+name|bsc
+operator|->
+name|sc_memh
+argument_list|,
+name|LC_SFSZ
+argument_list|,
+name|data
+argument_list|,
+name|count
+operator|>>
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NetBSD */
 name|data
 operator|+=
 name|count
