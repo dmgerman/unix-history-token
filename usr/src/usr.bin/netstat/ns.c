@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.4 (Berkeley) %G%"
+literal|"@(#)ns.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -705,7 +705,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|((x) ? printf("\t%d %s%s%s\n",x,y,plural(x),z) : 0)
+value|((x) ? printf("\t%u %s%s%s\n",x,y,plural(x),z) : 0)
 end_define
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.7 (Berkeley) 86/08/11"
+literal|"@(#)route.c	5.8 (Berkeley) 86/12/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1661,7 +1661,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad routing redirect%s\n"
+literal|"\t%u bad routing redirect%s\n"
 argument_list|,
 name|rtstat
 operator|.
@@ -1677,7 +1677,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d dynamically created route%s\n"
+literal|"\t%u dynamically created route%s\n"
 argument_list|,
 name|rtstat
 operator|.
@@ -1693,7 +1693,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d new gateway%s due to redirects\n"
+literal|"\t%u new gateway%s due to redirects\n"
 argument_list|,
 name|rtstat
 operator|.
@@ -1709,7 +1709,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d destination%s found unreachable\n"
+literal|"\t%u destination%s found unreachable\n"
 argument_list|,
 name|rtstat
 operator|.
@@ -1725,7 +1725,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d use%s of a wildcard route\n"
+literal|"\t%u use%s of a wildcard route\n"
 argument_list|,
 name|rtstat
 operator|.

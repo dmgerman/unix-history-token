@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.5 (Berkeley) %G%"
+literal|"@(#)inet.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -778,7 +778,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d incomplete header%s\n"
+literal|"%s:\n\t%u incomplete header%s\n"
 argument_list|,
 name|name
 argument_list|,
@@ -796,7 +796,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad checksum%s\n"
+literal|"\t%u bad checksum%s\n"
 argument_list|,
 name|tcpstat
 operator|.
@@ -812,7 +812,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad header offset field%s\n"
+literal|"\t%u bad header offset field%s\n"
 argument_list|,
 name|tcpstat
 operator|.
@@ -831,7 +831,7 @@ directive|ifdef
 name|notdef
 name|printf
 argument_list|(
-literal|"\t%d bad segment%s\n"
+literal|"\t%u bad segment%s\n"
 argument_list|,
 name|tcpstat
 operator|.
@@ -847,7 +847,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d unacknowledged packet%s\n"
+literal|"\t%u unacknowledged packet%s\n"
 argument_list|,
 name|tcpstat
 operator|.
@@ -933,7 +933,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d incomplete header%s\n"
+literal|"%s:\n\t%u incomplete header%s\n"
 argument_list|,
 name|name
 argument_list|,
@@ -951,7 +951,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad data length field%s\n"
+literal|"\t%u bad data length field%s\n"
 argument_list|,
 name|udpstat
 operator|.
@@ -967,7 +967,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad checksum%s\n"
+literal|"\t%u bad checksum%s\n"
 argument_list|,
 name|udpstat
 operator|.
@@ -1051,7 +1051,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d total packets received\n"
+literal|"%s:\n\t%u total packets received\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1062,7 +1062,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad header checksum%s\n"
+literal|"\t%u bad header checksum%s\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1078,7 +1078,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d with size smaller than minimum\n"
+literal|"\t%u with size smaller than minimum\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1087,7 +1087,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d with data size< data length\n"
+literal|"\t%u with data size< data length\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1096,7 +1096,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d with header length< data size\n"
+literal|"\t%u with header length< data size\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1105,7 +1105,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d with data length< header length\n"
+literal|"\t%u with data length< header length\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1114,7 +1114,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d fragment%s received\n"
+literal|"\t%u fragment%s received\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1130,7 +1130,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d fragment%s dropped (dup or out of space)\n"
+literal|"\t%u fragment%s dropped (dup or out of space)\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1146,7 +1146,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d fragment%s dropped after timeout\n"
+literal|"\t%u fragment%s dropped after timeout\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1162,7 +1162,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d packet%s forwarded\n"
+literal|"\t%u packet%s forwarded\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1178,7 +1178,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d packet%s not forwardable\n"
+literal|"\t%u packet%s not forwardable\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1194,7 +1194,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d redirect%s sent\n"
+literal|"\t%u redirect%s sent\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1333,7 +1333,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d call%s to icmp_error\n"
+literal|"%s:\n\t%u call%s to icmp_error\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1351,7 +1351,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d error%s not generated 'cuz old message was icmp\n"
+literal|"\t%u error%s not generated 'cuz old message was icmp\n"
 argument_list|,
 name|icmpstat
 operator|.
@@ -1413,7 +1413,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: %d\n"
+literal|"\t\t%s: %u\n"
 argument_list|,
 name|icmpnames
 index|[
@@ -1431,7 +1431,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t%d message%s with bad code fields\n"
+literal|"\t%u message%s with bad code fields\n"
 argument_list|,
 name|icmpstat
 operator|.
@@ -1447,7 +1447,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d message%s< minimum length\n"
+literal|"\t%u message%s< minimum length\n"
 argument_list|,
 name|icmpstat
 operator|.
@@ -1463,7 +1463,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad checksum%s\n"
+literal|"\t%u bad checksum%s\n"
 argument_list|,
 name|icmpstat
 operator|.
@@ -1479,7 +1479,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d message%s with bad length\n"
+literal|"\t%u message%s with bad length\n"
 argument_list|,
 name|icmpstat
 operator|.
@@ -1541,7 +1541,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: %d\n"
+literal|"\t\t%s: %u\n"
 argument_list|,
 name|icmpnames
 index|[
@@ -1559,7 +1559,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t%d message response%s generated\n"
+literal|"\t%u message response%s generated\n"
 argument_list|,
 name|icmpstat
 operator|.
