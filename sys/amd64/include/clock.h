@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id$  */
 end_comment
 
 begin_ifndef
@@ -46,7 +46,7 @@ parameter_list|,
 name|ntime
 parameter_list|)
 define|\
-value|do { \ 	if(pentium_mhz) { \ 		disable_intr(); \ 		i586_ctr_bias = i586_last_tick; \ 		*(otime) = *(ntime); \ 		enable_intr(); \ 	} else { \ 		*(otime) = *(ntime); \ 	} \ 	} while(0)
+value|do { \ 	if(i586_ctr_rate) { \ 		disable_intr(); \ 		i586_ctr_bias = i586_last_tick; \ 		*(otime) = *(ntime); \ 		enable_intr(); \ 	} else { \ 		*(otime) = *(ntime); \ 	} \ 	} while(0)
 end_define
 
 begin_define
@@ -91,6 +91,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|I586_CTR_RATE_SHIFT
+value|8
+end_define
 
 begin_if
 if|#
@@ -145,10 +152,14 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|pentium_mhz
+name|unsigned
+name|i586_ctr_rate
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* fixed point */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -268,7 +279,7 @@ name|rv
 decl_stmt|;
 if|if
 condition|(
-name|pentium_mhz
+name|i586_ctr_rate
 condition|)
 block|{
 name|old
@@ -283,12 +294,16 @@ expr_stmt|;
 name|rv
 operator|=
 operator|(
+operator|(
 name|i586_last_tick
 operator|-
 name|old
 operator|)
+operator|<<
+name|I586_CTR_RATE_SHIFT
+operator|)
 operator|/
-name|pentium_mhz
+name|i586_ctr_rate
 expr_stmt|;
 block|}
 else|else
