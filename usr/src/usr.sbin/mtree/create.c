@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.9 (Berkeley) %G%"
+literal|"@(#)create.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,7 +190,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"#\n#\t  fs: %s\n#\t  by: %s\n#\tdate: %s#\n"
+literal|"#\t  fs: %s\n#\t  by: %s\n#\tdate: %s\n"
 argument_list|,
 name|curp
 argument_list|,
