@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.60 1997/08/02 14:32:51 bde Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.61 1997/08/06 00:19:05 alex Exp $  */
 end_comment
 
 begin_comment
@@ -1454,6 +1454,28 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+name|count
+operator|=
+name|f
+condition|?
+name|f
+operator|->
+name|fw_pcnt
+else|:
+operator|++
+name|counter
+expr_stmt|;
+if|if
+condition|(
+name|fw_verbose_limit
+operator|!=
+literal|0
+operator|&&
+name|count
+operator|>
+name|fw_verbose_limit
+condition|)
+return|return;
 comment|/* Print command name */
 name|printf
 argument_list|(
@@ -1591,28 +1613,6 @@ argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
-name|f
-condition|?
-name|f
-operator|->
-name|fw_pcnt
-else|:
-operator|++
-name|counter
-expr_stmt|;
-if|if
-condition|(
-name|fw_verbose_limit
-operator|!=
-literal|0
-operator|&&
-name|count
-operator|>
-name|fw_verbose_limit
-condition|)
-return|return;
 switch|switch
 condition|(
 name|ip
