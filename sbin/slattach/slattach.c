@@ -37,15 +37,9 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)slattach.c	4.6 (Berkeley) 6/1/90"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)slattach.c	4.6 (Berkeley) 6/1/90";*/
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -53,7 +47,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.12 1993/09/22 23:39:19 jkh Exp $"
+literal|"$Id"
 decl_stmt|;
 end_decl_stmt
 
