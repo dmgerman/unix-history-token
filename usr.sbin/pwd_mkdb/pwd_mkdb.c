@@ -118,11 +118,9 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|PW_COMPACT
-end_define
+begin_comment
+comment|/* #define PW_COMPACT */
+end_comment
 
 begin_comment
 comment|/* Compact pwd.db/spwd.db structure by Alex G. Bulushev, bag@demos.su */
