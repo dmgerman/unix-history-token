@@ -199,11 +199,6 @@ operator|=
 literal|"ast"
 block|,
 operator|.
-name|d_maj
-operator|=
-literal|119
-block|,
-operator|.
 name|d_flags
 operator|=
 name|D_TAPE
