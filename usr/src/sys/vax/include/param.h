@@ -7,6 +7,13 @@ begin_comment
 comment|/*  * Machine dependent constants for vax.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MACHINE
+value|"vax"
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

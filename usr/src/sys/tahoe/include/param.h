@@ -1,11 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	1.9	87/05/13	*/
+comment|/*	param.h	1.9	87/05/21	*/
 end_comment
 
 begin_comment
 comment|/*  * Machine dependent constants for TAHOE.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MACHINE
+value|"tahoe"
+end_define
 
 begin_ifndef
 ifndef|#
