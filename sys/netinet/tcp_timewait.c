@@ -2376,6 +2376,12 @@ condition|(
 name|tp
 operator|!=
 name|NULL
+operator|&&
+name|tp
+operator|->
+name|t_inpcb
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Packet is associated with a socket, so allow the 		 * label of the response to reflect the socket label. 		 */
