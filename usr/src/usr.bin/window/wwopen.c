@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwopen.c	3.13 83/11/23"
+literal|"@(#)wwopen.c	3.14 83/12/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,13 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|w
+operator|->
+name|ww_pty
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -398,12 +405,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|w
-operator|->
-name|ww_haspty
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|wwsettty
@@ -981,23 +982,6 @@ name|t
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|w
-operator|->
-name|ww_haspty
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|w
-operator|->
-name|ww_tty
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1008,7 +992,6 @@ operator|->
 name|ww_pty
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 operator|(

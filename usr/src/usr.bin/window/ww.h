@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.19 83/11/23	  */
+comment|/*  *	@(#)ww.h	3.20 83/12/01	  */
 end_comment
 
 begin_include
@@ -106,12 +106,6 @@ literal|1
 decl_stmt|;
 comment|/* map \n to \r\n */
 name|char
-name|ww_haspty
-range|:
-literal|1
-decl_stmt|;
-comment|/* has pty */
-name|char
 name|ww_hascursor
 range|:
 literal|1
@@ -182,10 +176,6 @@ name|int
 name|ww_pty
 decl_stmt|;
 comment|/* file descriptor of pty */
-name|int
-name|ww_tty
-decl_stmt|;
-comment|/* . . . tty */
 name|int
 name|ww_pid
 decl_stmt|;
@@ -1213,6 +1203,41 @@ parameter_list|,
 name|v
 parameter_list|)
 value|sigset((s), (v))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|sigmask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<< (s) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sighold
+parameter_list|(
+name|s
+parameter_list|)
+value|sigblock(sigmask(s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigrelse
+parameter_list|(
+name|s
+parameter_list|)
+value|sigsetmask(sigblock(0)& ~sigmask(s))
 end_define
 
 begin_endif

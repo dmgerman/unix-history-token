@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwiomux.c	3.4 83/10/27"
+literal|"@(#)wwiomux.c	3.5 83/12/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,13 +84,6 @@ operator|*
 name|w
 operator|)
 operator|->
-name|ww_haspty
-operator|&&
-operator|(
-operator|*
-name|w
-operator|)
-operator|->
 name|ww_pty
 operator|>=
 literal|0
@@ -118,6 +111,11 @@ return|return
 operator|-
 literal|1
 return|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|select
@@ -183,13 +181,6 @@ operator|*
 name|w
 operator|)
 operator|->
-name|ww_haspty
-operator|&&
-operator|(
-operator|*
-name|w
-operator|)
-operator|->
 name|ww_pty
 operator|>=
 literal|0
@@ -232,15 +223,6 @@ literal|0
 condition|)
 block|{
 operator|(
-operator|*
-name|w
-operator|)
-operator|->
-name|ww_haspty
-operator|=
-literal|0
-expr_stmt|;
-operator|(
 name|void
 operator|)
 name|close
@@ -254,17 +236,14 @@ name|ww_pty
 argument_list|)
 expr_stmt|;
 operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-operator|(
 operator|*
 name|w
 operator|)
 operator|->
-name|ww_tty
-argument_list|)
+name|ww_pty
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -279,10 +258,8 @@ name|void
 operator|)
 name|wwwrite
 argument_list|(
-operator|(
 operator|*
 name|w
-operator|)
 argument_list|,
 name|buf
 argument_list|,

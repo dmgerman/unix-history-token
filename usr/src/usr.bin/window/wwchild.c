@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwchild.c	3.2 83/09/01"
+literal|"@(#)wwchild.c	3.3 83/12/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,10 @@ end_macro
 
 begin_block
 block|{
+extern|extern errno;
+name|int
+name|olderrno
+decl_stmt|;
 specifier|register
 name|struct
 name|ww
@@ -53,6 +57,10 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
+name|olderrno
+operator|=
+name|errno
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -134,6 +142,10 @@ break|break;
 block|}
 block|}
 block|}
+name|errno
+operator|=
+name|olderrno
+expr_stmt|;
 block|}
 end_block
 

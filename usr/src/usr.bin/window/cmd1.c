@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.16 83/11/30"
+literal|"@(#)cmd1.c	3.17 83/12/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,7 +1005,9 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"%s."
+literal|"%s: %s."
+argument_list|,
+name|shell
 argument_list|,
 name|wwerror
 argument_list|()
