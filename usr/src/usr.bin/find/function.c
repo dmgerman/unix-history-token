@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.21 (Berkeley) %G%"
+literal|"@(#)function.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<fts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fnmatch.h>
 end_include
 
 begin_include
