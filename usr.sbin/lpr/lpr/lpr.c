@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpr.c,v 1.22 1997/12/02 20:46:10 wollman Exp $"
+literal|"$Id: lpr.c,v 1.23 1997/12/06 17:55:07 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1030,11 +1030,10 @@ break|break;
 case|case
 literal|'h'
 case|:
-comment|/* toggle want of header page */
+comment|/* nulifiy header page */
 name|hdr
 operator|=
-operator|!
-name|hdr
+literal|0
 expr_stmt|;
 break|break;
 case|case
