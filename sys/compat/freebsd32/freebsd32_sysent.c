@@ -1013,16 +1013,21 @@ block|}
 block|,
 comment|/* 64 = obsolete ogetpagesize */
 block|{
-literal|0
+name|SYF_MPSAFE
+operator||
+name|AS
+argument_list|(
+name|msync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|msync
 block|}
 block|,
-comment|/* 65 = obsolete omsync */
+comment|/* 65 = msync */
 block|{
 name|SYF_MPSAFE
 operator||

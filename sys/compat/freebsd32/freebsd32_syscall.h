@@ -399,9 +399,12 @@ begin_comment
 comment|/* 64 is obsolete ogetpagesize */
 end_comment
 
-begin_comment
-comment|/* 65 is obsolete omsync */
-end_comment
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_msync
+value|65
+end_define
 
 begin_define
 define|#

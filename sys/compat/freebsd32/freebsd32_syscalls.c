@@ -206,9 +206,9 @@ comment|/* 63 = obsolete ogetkerninfo */
 literal|"obs_ogetpagesize"
 block|,
 comment|/* 64 = obsolete ogetpagesize */
-literal|"obs_omsync"
+literal|"msync"
 block|,
-comment|/* 65 = obsolete omsync */
+comment|/* 65 = msync */
 literal|"vfork"
 block|,
 comment|/* 66 = vfork */
