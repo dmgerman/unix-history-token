@@ -5,7 +5,7 @@ name|char
 name|junk
 index|[]
 init|=
-literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 19990503\n"
+literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 19991115\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,7 +18,7 @@ name|char
 name|__G77_LIBI77_VERSION__
 index|[]
 init|=
-literal|"0.5.25 19991024 (release)"
+literal|"0.5.25 20000603 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 
@@ -392,6 +392,58 @@ end_comment
 
 begin_comment
 comment|/* 3 May 1999:	open.c: insert two casts for machines with 64-bit longs. */
+end_comment
+
+begin_comment
+comment|/* 18 June 1999: backspace.c: allow for b->ufd changing in t_runc */
+end_comment
+
+begin_comment
+comment|/* 27 June 1999: rsne.c: fix bug in namelist input: a misplaced increment */
+end_comment
+
+begin_comment
+comment|/*		 could cause wrong array elements to be assigned; e.g.,	*/
+end_comment
+
+begin_comment
+comment|/*		 "&input k(5)=10*1&end" assigned k(5) and k(15..23)	*/
+end_comment
+
+begin_comment
+comment|/* 15 Nov. 1999: endfile.c: set state to writing (b->uwrt = 1) when an */
+end_comment
+
+begin_comment
+comment|/*		endfile statement requires copying the file. */
+end_comment
+
+begin_comment
+comment|/*		(Otherwise an immediately following rewind statement */
+end_comment
+
+begin_comment
+comment|/*		could make the file appear empty.)  Also, supply a */
+end_comment
+
+begin_comment
+comment|/*		missing (long) cast in the sprintf call. */
+end_comment
+
+begin_comment
+comment|/*		 sfe.c: add #ifdef ALWAYS_FLUSH logic, for formatted I/O: */
+end_comment
+
+begin_comment
+comment|/*		Compiling libf2c with -DALWAYS_FLUSH should prevent losing */
+end_comment
+
+begin_comment
+comment|/*		any data in buffers should the program fault.  It also */
+end_comment
+
+begin_comment
+comment|/*		makes the program run more slowly. */
 end_comment
 
 begin_comment

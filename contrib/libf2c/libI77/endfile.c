@@ -199,6 +199,9 @@ name|nbuf
 argument_list|,
 literal|"fort.%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|a
 operator|->
 name|aunit

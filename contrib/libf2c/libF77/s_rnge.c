@@ -107,6 +107,9 @@ name|stderr
 argument_list|,
 literal|"Subscript out of range on file line %ld, procedure "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|line
 argument_list|)
 expr_stmt|;
@@ -142,6 +145,9 @@ name|stderr
 argument_list|,
 literal|".\nAttempt to access the %ld-th element of variable "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|offset
 operator|+
 literal|1

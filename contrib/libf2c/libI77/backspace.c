@@ -145,13 +145,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|f
-operator|=
 name|b
 operator|->
 name|ufd
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -201,21 +197,11 @@ operator|->
 name|uwrt
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|t_runc
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|f
-operator|=
-name|b
-operator|->
-name|ufd
-expr_stmt|;
-comment|/* t_runc might change b->ufd */
 if|if
 condition|(
 name|f__nowreading
@@ -235,6 +221,13 @@ literal|"backspace"
 argument_list|)
 expr_stmt|;
 block|}
+name|f
+operator|=
+name|b
+operator|->
+name|ufd
+expr_stmt|;
+comment|/* may have changed in t_runc() */
 if|if
 condition|(
 name|b

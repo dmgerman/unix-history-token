@@ -322,7 +322,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* no STDC way to get this */
+comment|/* no STDC/POSIX way to get this */
 comment|/* GNUish way; maybe use `ftime' on other systems. */
 if|#
 directive|if
@@ -334,12 +334,26 @@ name|tp
 decl_stmt|;
 if|#
 directive|if
+name|GETTIMEOFDAY_ONE_ARGUMENT
+if|if
+condition|(
+operator|!
+name|gettimeofday
+argument_list|(
+operator|&
+name|tp
+argument_list|)
+condition|)
+else|#
+directive|else
+if|#
+directive|if
 name|HAVE_STRUCT_TIMEZONE
 name|struct
 name|timezone
 name|tzp
 decl_stmt|;
-comment|/* This is still not strictly correct on some systems such as HPUX,         which does have struct timezone, but gettimeofday takes void* as         the 2nd arg.  However, the effect of passing anything other than a null         pointer is unspecified on HPUX. */
+comment|/* Some systems such as HPUX, do have struct timezone, but        gettimeofday takes void* as the 2nd arg.  However, the effect        of passing anything other than a null pointer is unspecified on        HPUX.  Configure checks if gettimeofday actually fails with a        non-NULL arg and pretends that struct timezone is missing if it        does fail.  */
 if|if
 condition|(
 operator|!
@@ -371,6 +385,10 @@ argument_list|)
 condition|)
 endif|#
 directive|endif
+comment|/* HAVE_STRUCT_TIMEZONE */
+endif|#
+directive|endif
+comment|/* GETTIMEOFDAY_ONE_ARGUMENT */
 name|vals
 index|[
 literal|7
@@ -385,6 +403,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* HAVE_GETTIMEOFDAY */
 if|if
 condition|(
 name|values
