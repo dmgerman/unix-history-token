@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	6.10	84/08/29	*/
+comment|/*	uipc_usrreq.c	6.11	84/12/20	*/
 end_comment
 
 begin_include
@@ -460,9 +460,9 @@ name|rcv
 operator|->
 name|sb_cc
 expr_stmt|;
-name|sbwakeup
+name|sowwakeup
 argument_list|(
-name|snd
+name|so2
 argument_list|)
 expr_stmt|;
 undef|#
@@ -585,9 +585,8 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * There's no record of source socket's 				 * name, so send null name for the moment. 				 */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|sbappendaddr
 argument_list|(
 operator|&
@@ -602,19 +601,18 @@ name|m
 argument_list|,
 name|rights
 argument_list|)
-expr_stmt|;
-name|sbwakeup
+condition|)
+block|{
+name|sorwakeup
 argument_list|(
-operator|&
 name|so2
-operator|->
-name|so_rcv
 argument_list|)
 expr_stmt|;
 name|m
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/* END XXX */
 if|if
@@ -722,10 +720,14 @@ name|rcv
 operator|->
 name|sb_cc
 expr_stmt|;
-name|sbwakeup
+name|sorwakeup
 argument_list|(
-name|rcv
+name|so2
 argument_list|)
+expr_stmt|;
+name|m
+operator|=
+literal|0
 expr_stmt|;
 undef|#
 directive|undef
@@ -741,10 +743,6 @@ literal|"uipc 4"
 argument_list|)
 expr_stmt|;
 block|}
-name|m
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|PRU_ABORT
@@ -844,6 +842,10 @@ return|;
 case|case
 name|PRU_SENDOOB
 case|:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
 break|break;
 case|case
 name|PRU_SOCKADDR
@@ -1559,6 +1561,33 @@ comment|/* XXX */
 block|}
 if|if
 condition|(
+name|access
+argument_list|(
+name|ip
+argument_list|,
+name|IWRITE
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|u
+operator|.
+name|u_error
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+goto|goto
+name|bad
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|ip
 operator|->
@@ -1790,6 +1819,11 @@ operator|->
 name|unp_refs
 operator|=
 name|unp
+expr_stmt|;
+name|soisconnected
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
