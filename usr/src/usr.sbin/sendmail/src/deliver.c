@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.18 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -70,6 +76,27 @@ name|int
 name|h_errno
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WEXITSTATUS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|st
+parameter_list|)
+value|(((st)>> 8)& 0377)
+end_define
 
 begin_endif
 endif|#
@@ -5819,18 +5846,25 @@ name|EX_SOFTWARE
 operator|)
 return|;
 block|}
-comment|/* see if it died a horrid death */
 if|if
 condition|(
-operator|(
+name|WIFEXITED
+argument_list|(
 name|st
-operator|&
-literal|0377
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
+comment|/* normal death -- return status */
+return|return
+operator|(
+name|WEXITSTATUS
+argument_list|(
+name|st
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/* it died a horrid death */
 name|syserr
 argument_list|(
 literal|"mailer %s died with signal %o"
@@ -5911,23 +5945,6 @@ expr_stmt|;
 return|return
 operator|(
 name|EX_TEMPFAIL
-operator|)
-return|;
-block|}
-comment|/* normal death -- return status */
-name|st
-operator|=
-operator|(
-name|st
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0377
-expr_stmt|;
-return|return
-operator|(
-name|st
 operator|)
 return|;
 block|}
@@ -7873,29 +7890,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|WIFEXITED
+argument_list|(
 name|st
-operator|&
-literal|0377
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
-name|EX_UNAVAILABLE
+name|WEXITSTATUS
+argument_list|(
+name|st
+argument_list|)
 operator|)
 return|;
 else|else
 return|return
 operator|(
-operator|(
-name|st
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0377
+name|EX_UNAVAILABLE
 operator|)
 return|;
 comment|/*NOTREACHED*/
