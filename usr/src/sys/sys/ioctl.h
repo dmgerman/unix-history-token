@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.18	82/03/03	*/
+comment|/*	ioctl.h	4.19	82/03/11	*/
 end_comment
 
 begin_comment
@@ -798,7 +798,7 @@ begin_define
 define|#
 directive|define
 name|TIOCPKT_DATA
-value|0
+value|0x00
 end_define
 
 begin_comment
@@ -809,7 +809,7 @@ begin_define
 define|#
 directive|define
 name|TIOCPKT_FLUSHREAD
-value|1
+value|0x01
 end_define
 
 begin_comment
@@ -820,7 +820,7 @@ begin_define
 define|#
 directive|define
 name|TIOCPKT_FLUSHWRITE
-value|2
+value|0x02
 end_define
 
 begin_comment
@@ -831,7 +831,7 @@ begin_define
 define|#
 directive|define
 name|TIOCPKT_STOP
-value|4
+value|0x04
 end_define
 
 begin_comment
@@ -842,11 +842,33 @@ begin_define
 define|#
 directive|define
 name|TIOCPKT_START
-value|8
+value|0x08
 end_define
 
 begin_comment
 comment|/* start output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_NOSTOP
+value|0x10
+end_define
+
+begin_comment
+comment|/* no more ^S, ^Q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_DOSTOP
+value|0x20
+end_define
+
+begin_comment
+comment|/* now do ^S ^Q */
 end_comment
 
 begin_define
