@@ -1710,9 +1710,9 @@ name|dialog_msgbox
 argument_list|(
 name|TITLE
 argument_list|,
-literal|"This is an example of how the disklabel configuration\nwill look. It doesn't pass the data back into the real\nstructures yet but you can play around with the\n field editing to get an idea of how it will work.\nHit escape to quit the editor."
+literal|"This is an experimental disklabel configuration\nmenu. It doesn't perform any validation of the entries\nas yet so BE SURE YOU TYPE THINGS CORRECTLY.\n\n    Hit escape to quit the editor.\n\nThere may be some delay exiting because of a dialog bug"
 argument_list|,
-literal|10
+literal|20
 argument_list|,
 literal|70
 argument_list|,
@@ -1723,6 +1723,15 @@ name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|edit_disklabel
+argument_list|(
+operator|&
+name|avail_disklabels
+index|[
+name|inst_disk
+index|]
+argument_list|)
+expr_stmt|;
+name|build_disklabel
 argument_list|(
 operator|&
 name|avail_disklabels
