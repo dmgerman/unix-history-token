@@ -1,20 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tdef.h	4.2 %G%  */
+comment|/*  *	@(#)tdef.h	4.3 %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|BUFSIZ
-value|MAXBSIZE
-end_define
 
 begin_define
 define|#
@@ -387,9 +374,11 @@ begin_comment
 comment|/*vert space; 12points*/
 end_comment
 
-begin_comment
-comment|/* #define NN 132	/*number registers*/
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
 
 begin_define
 define|#
@@ -397,6 +386,35 @@ directive|define
 name|NN
 value|528
 end_define
+
+begin_comment
+comment|/*number registers*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NN
+value|132
+end_define
+
+begin_comment
+comment|/*number registers*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #define NN 200	*/
+end_comment
 
 begin_define
 define|#
@@ -464,20 +482,38 @@ begin_comment
 comment|/*size of ev stack*/
 end_comment
 
+begin_comment
+comment|/* #define EVS 4*256	*/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NM
+value|600
+end_define
+
 begin_define
 define|#
 directive|define
 name|EVS
-value|3*256
+value|6*256
 end_define
 
 begin_comment
 comment|/*environment size in words*/
 end_comment
 
-begin_comment
-comment|/* #define EVS 4*256	*/
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -489,6 +525,22 @@ end_define
 begin_comment
 comment|/*requests + macros*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EVS
+value|3*256
+end_define
+
+begin_comment
+comment|/*environment size in words*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -545,6 +597,39 @@ begin_comment
 comment|/*"so" depth*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WDSIZE
+value|340
+end_define
+
+begin_comment
+comment|/*word buffer size*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNSIZE
+value|960
+end_define
+
+begin_comment
+comment|/*line buffer size*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -566,6 +651,11 @@ end_define
 begin_comment
 comment|/*line buffer size*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* #define LNSIZE 680	*/
@@ -647,12 +737,6 @@ end_define
 begin_comment
 comment|/*macro mask indicator*/
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CMASK
-end_undef
 
 begin_define
 define|#
@@ -851,6 +935,24 @@ begin_comment
 comment|/*pads per field*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FBUFSZ
+value|1024
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -862,11 +964,16 @@ begin_comment
 comment|/*field buf size words*/
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|OBUFSZ
-value|BUFSIZ
+value|512
 end_define
 
 begin_comment
@@ -877,7 +984,7 @@ begin_define
 define|#
 directive|define
 name|IBUFSZ
-value|BUFSIZ
+value|512
 end_define
 
 begin_comment
