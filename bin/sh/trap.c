@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trap.c,v 1.16 1998/09/10 14:51:06 cracauer Exp $"
+literal|"$Id: trap.c,v 1.18 1999/04/01 13:27:36 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1451,6 +1451,8 @@ expr_stmt|;
 comment|/*  	 * If a trap is set, not ignored and not the null command, we need  	 * to make sure traps are executed even when a child blocks signals. 	 */
 if|if
 condition|(
+name|Tflag
+operator|&&
 name|trap
 index|[
 name|signo
