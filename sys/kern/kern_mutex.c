@@ -765,6 +765,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* SWAG: sbuf size = avg stat. line size * number of locks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPROF_SBUF_SIZE
+value|256 * 400
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1023,6 +1034,12 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+specifier|static
+name|int
+name|multiplier
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|first_free_mprof_buf
@@ -1044,6 +1061,8 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
+name|retry_sbufops
+label|:
 name|sb
 operator|=
 name|sbuf_new
@@ -1052,9 +1071,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|1024
+name|MPROF_SBUF_SIZE
+operator|*
+name|multiplier
 argument_list|,
-name|SBUF_AUTOEXTEND
+name|SBUF_FIXEDLEN
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -1094,6 +1115,7 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -1179,6 +1201,33 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sbuf_overflowed
+argument_list|(
+name|sb
+argument_list|)
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|mprof_mtx
+argument_list|)
+expr_stmt|;
+name|sbuf_delete
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
+name|multiplier
+operator|++
+expr_stmt|;
+goto|goto
+name|retry_sbufops
+goto|;
+block|}
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1578,6 +1627,10 @@ name|m
 operator|->
 name|mtx_filename
 init|;
+name|p
+operator|!=
+name|NULL
+operator|&&
 name|strncmp
 argument_list|(
 name|p
