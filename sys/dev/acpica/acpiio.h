@@ -33,7 +33,7 @@ block|{
 name|int
 name|type
 decl_stmt|;
-comment|/* battery type: e.g. CMBAT */
+comment|/* battery type */
 name|int
 name|phys_unit
 decl_stmt|;
@@ -67,7 +67,7 @@ comment|/* percent */
 name|int
 name|min
 decl_stmt|;
-comment|/* remaining time */
+comment|/* remaining time (in minutes) */
 name|int
 name|state
 decl_stmt|;
@@ -234,18 +234,16 @@ name|struct
 name|acpi_bif
 name|bif
 decl_stmt|;
-comment|/* for acpi_cmbat */
 name|struct
 name|acpi_bst
 name|bst
 decl_stmt|;
-comment|/* for acpi_cmbat */
 block|}
 union|;
 end_union
 
 begin_comment
-comment|/* Common battery ioctl */
+comment|/* Common battery ioctls */
 end_comment
 
 begin_define
@@ -276,22 +274,36 @@ name|ACPIIO_BATT_GET_BATTDESC
 value|_IOWR('B', 0x04, union acpi_battery_ioctl_arg)
 end_define
 
-begin_comment
-comment|/* Cotrol Method battery ioctl */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ACPIIO_CMBAT_GET_BIF
+name|ACPIIO_BATT_GET_BIF
 value|_IOWR('B', 0x10, union acpi_battery_ioctl_arg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPIIO_CMBAT_GET_BST
+name|ACPIIO_BATT_GET_BST
 value|_IOWR('B', 0x11, union acpi_battery_ioctl_arg)
+end_define
+
+begin_comment
+comment|/* Control Method battery ioctls (deprecated) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_CMBAT_GET_BIF
+value|ACPIIO_BATT_GET_BIF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_CMBAT_GET_BST
+value|ACPIIO_BATT_GET_BST
 end_define
 
 begin_comment

@@ -194,7 +194,7 @@ name|int
 name|acpi_battery_get_battdesc
 parameter_list|(
 name|int
-name|logical_unit
+name|unit
 parameter_list|,
 name|struct
 name|acpi_battdesc
@@ -223,11 +223,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|logical_unit
+name|unit
 operator|<
 literal|0
 operator|||
-name|logical_unit
+name|unit
 operator|>=
 name|acpi_batteries_units
 condition|)
@@ -249,7 +249,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|logical_unit
+name|unit
 operator|==
 name|i
 condition|)
@@ -430,7 +430,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|logical_unit
+name|unit
 decl_stmt|;
 name|ioctl_arg
 operator|=
@@ -468,7 +468,7 @@ break|break;
 case|case
 name|ACPIIO_BATT_GET_BATTDESC
 case|:
-name|logical_unit
+name|unit
 operator|=
 name|ioctl_arg
 operator|->
@@ -478,7 +478,7 @@ name|error
 operator|=
 name|acpi_battery_get_battdesc
 argument_list|(
-name|logical_unit
+name|unit
 argument_list|,
 operator|&
 name|ioctl_arg
@@ -490,7 +490,7 @@ break|break;
 case|case
 name|ACPIIO_BATT_GET_BATTINFO
 case|:
-name|logical_unit
+name|unit
 operator|=
 name|ioctl_arg
 operator|->
@@ -500,7 +500,7 @@ name|error
 operator|=
 name|acpi_battery_get_battinfo
 argument_list|(
-name|logical_unit
+name|unit
 argument_list|,
 operator|&
 name|ioctl_arg
