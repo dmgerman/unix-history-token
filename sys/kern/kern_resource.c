@@ -1040,13 +1040,9 @@ return|;
 comment|/* disallow setting rtprio in most cases if not superuser */
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
-name|NULL
-argument_list|,
 name|curp
-argument_list|,
-name|PRISON_ROOT
 argument_list|)
 operator|!=
 literal|0
