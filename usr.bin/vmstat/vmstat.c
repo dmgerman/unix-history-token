@@ -4402,7 +4402,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%13s%6ld%6ldK%7ldK%6ldK%9lld%5u%6u"
+literal|"%13s%6ld%6ldK%7ldK%6ldK%9llu%5u%6u"
 argument_list|,
 name|ks
 operator|->
@@ -4443,6 +4443,7 @@ operator|/
 literal|1024
 argument_list|,
 operator|(
+name|unsigned
 name|long
 name|long
 operator|)
@@ -4580,7 +4581,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\nMemory Totals:  In Use    Free                Requests\n"
+literal|"\nMemory Totals:  In Use    Free      Requests\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4588,7 +4589,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"              %7ldK %6ldK    %20llu\n"
+literal|"              %7ldK %6ldK    %13llu\n"
 argument_list|,
 operator|(
 name|totuse
