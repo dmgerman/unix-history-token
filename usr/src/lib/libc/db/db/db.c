@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)db.c	5.1 (Berkeley) %G%"
+literal|"@(#)db.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,43 +182,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|DB
-modifier|*
-name|__hash_open
-parameter_list|(
-name|fname
-parameter_list|,
-name|flags
-parameter_list|,
-name|mode
-parameter_list|,
-name|openinfo
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|,
-name|mode
-decl_stmt|;
-specifier|const
-name|HASHINFO
-modifier|*
-name|openinfo
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -251,6 +214,7 @@ specifier|const
 name|DB
 operator|*
 operator|,
+specifier|const
 name|DBT
 operator|*
 operator|,
@@ -427,22 +391,18 @@ name|DB
 modifier|*
 name|dbp
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|DBT
+modifier|*
 name|data
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|u_int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -450,7 +410,7 @@ name|RET_ERROR
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
