@@ -8258,23 +8258,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* do historical conversions */
-if|if
-condition|(
-name|t
-operator|->
-name|c_ispeed
-operator|==
-literal|0
-condition|)
-name|t
-operator|->
-name|c_ispeed
-operator|=
-name|t
-operator|->
-name|c_ospeed
-expr_stmt|;
 name|unit
 operator|=
 name|DEV_TO_UNIT
@@ -8318,7 +8301,7 @@ expr_stmt|;
 if|if
 condition|(
 name|idivisor
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return
@@ -8333,6 +8316,16 @@ argument_list|(
 name|t
 operator|->
 name|c_ospeed
+operator|!=
+literal|0
+condition|?
+name|t
+operator|->
+name|c_ospeed
+else|:
+name|tp
+operator|->
+name|t_ospeed
 argument_list|,
 name|cy_clock
 argument_list|,
@@ -8343,7 +8336,7 @@ expr_stmt|;
 if|if
 condition|(
 name|odivisor
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return
@@ -8359,7 +8352,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|odivisor
+name|t
+operator|->
+name|c_ospeed
 operator|==
 literal|0
 condition|)
@@ -8402,13 +8397,6 @@ name|c_ispeed
 argument_list|)
 expr_stmt|;
 comment|/* XXX we don't actually change the speed atomically. */
-if|if
-condition|(
-name|idivisor
-operator|!=
-literal|0
-condition|)
-block|{
 name|cd_setreg
 argument_list|(
 name|com
@@ -8427,14 +8415,6 @@ argument_list|,
 name|iprescaler
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|odivisor
-operator|!=
-literal|0
-condition|)
-block|{
 name|cd_setreg
 argument_list|(
 name|com
@@ -8453,7 +8433,6 @@ argument_list|,
 name|oprescaler
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * channel control 	 *	receiver enable 	 *	transmitter enable (always set) 	 */
 name|cflag
 operator|=
@@ -8769,25 +8748,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Set receive time-out period, normally to max(one char time, 5 ms). 	 */
-if|if
-condition|(
-name|t
-operator|->
-name|c_ispeed
-operator|==
-literal|0
-condition|)
-name|itimeout
-operator|=
-name|cd_getreg
-argument_list|(
-name|com
-argument_list|,
-name|CD1400_RTPR
-argument_list|)
-expr_stmt|;
-else|else
-block|{
 name|itimeout
 operator|=
 operator|(
@@ -8831,7 +8791,6 @@ name|itimeout
 operator|=
 name|MIN_RTP
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
