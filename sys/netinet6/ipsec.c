@@ -351,6 +351,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
+end_include
+
 begin_decl_stmt
 name|struct
 name|ipsecstat
