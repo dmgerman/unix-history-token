@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.9 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1357,22 +1357,28 @@ return|;
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|_MAX_PASSWD_SIZE
+value|50
+end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+name|pwbuf
+index|[
+name|_MAX_PASSWD_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|getpw
 argument_list|()
 block|{
-specifier|static
-name|char
-name|pwbuf
-index|[
-literal|50
-index|]
-block|;
-name|off_t
-name|lseek
-argument_list|()
-block|;
 name|long
 name|pos
 block|,
@@ -1387,6 +1393,10 @@ block|;
 name|char
 operator|*
 name|p
+block|;
+name|off_t
+name|lseek
+argument_list|()
 block|;
 if|if
 condition|(
