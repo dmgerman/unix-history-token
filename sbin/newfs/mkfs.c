@@ -1374,8 +1374,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block size (%d) cannot be smaller than "
-literal|"fragment size (%d)\n"
+literal|"block size (%d) cannot be smaller than fragment size (%d)\n"
 argument_list|,
 name|sblock
 operator|.
@@ -1542,8 +1541,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fragment size %d is too small, minimum with "
-literal|"block size %d is %d\n"
+literal|"fragment size %d is too small, minimum with block size %d is %d\n"
 argument_list|,
 name|sblock
 operator|.
@@ -3575,8 +3573,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Warning: inode blocks/cyl group (%ld)>= "
-literal|"data blocks (%ld) in last\n"
+literal|"Warning: inode blocks/cyl group (%ld)>= data blocks (%ld) in last\n"
 argument_list|,
 operator|(
 name|cgdmin
@@ -3609,8 +3606,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    cylinder group. This implies %ld sector(s) "
-literal|"cannot be allocated.\n"
+literal|"    cylinder group. This implies %ld sector(s) cannot be allocated.\n"
 argument_list|,
 name|i
 operator|*
