@@ -2063,11 +2063,17 @@ name|pos
 argument_list|,
 literal|"%lu s"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|time_second
 operator|-
 name|sch
 operator|->
 name|last_recv
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2109,11 +2115,17 @@ name|pos
 argument_list|,
 literal|"%lu s"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|time_second
 operator|-
 name|sch
 operator|->
 name|last_rxerr
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2155,11 +2167,17 @@ name|pos
 argument_list|,
 literal|"%lu s\n"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|time_second
 operator|-
 name|sch
 operator|->
 name|last_xmit
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
