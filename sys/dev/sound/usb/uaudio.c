@@ -2138,13 +2138,13 @@ name|id
 operator|->
 name|bInterfaceClass
 operator|!=
-name|UCLASS_AUDIO
+name|UICLASS_AUDIO
 operator|||
 name|id
 operator|->
 name|bInterfaceSubClass
 operator|!=
-name|USUBCLASS_AUDIOCONTROL
+name|UISUBCLASS_AUDIOCONTROL
 operator|||
 operator|(
 name|usbd_get_quirks
@@ -3398,7 +3398,7 @@ name|d
 operator|->
 name|bInterfaceClass
 operator|==
-name|UCLASS_AUDIO
+name|UICLASS_AUDIO
 operator|&&
 name|d
 operator|->
@@ -7390,7 +7390,7 @@ argument_list|,
 operator|&
 name|offs
 argument_list|,
-name|USUBCLASS_AUDIOSTREAM
+name|UISUBCLASS_AUDIOSTREAM
 argument_list|)
 expr_stmt|;
 if|if
@@ -7530,7 +7530,7 @@ argument_list|,
 operator|&
 name|offs
 argument_list|,
-name|USUBCLASS_AUDIOSTREAM
+name|UISUBCLASS_AUDIOSTREAM
 argument_list|)
 expr_stmt|;
 if|if
@@ -7712,7 +7712,7 @@ argument_list|,
 operator|&
 name|offs
 argument_list|,
-name|USUBCLASS_AUDIOCONTROL
+name|UISUBCLASS_AUDIOCONTROL
 argument_list|)
 expr_stmt|;
 if|if
