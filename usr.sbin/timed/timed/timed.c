@@ -60,7 +60,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision$"
+empty|#ident "$Revision: 1.2.6.1 $"
 end_empty
 
 begin_endif
@@ -743,7 +743,8 @@ literal|"Mtdn:i:F:G:P:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

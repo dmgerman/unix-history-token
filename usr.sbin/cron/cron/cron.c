@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cron.c,v 1.1.1.1 1994/08/27 13:43:03 jkh Exp $"
+literal|"$Id: cron.c,v 1.2 1996/06/30 22:11:51 wosch Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1106,7 +1106,8 @@ name|argch
 decl_stmt|;
 while|while
 condition|(
-name|EOF
+operator|-
+literal|1
 operator|!=
 operator|(
 name|argch

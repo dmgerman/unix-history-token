@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.9 1995/12/21 12:39:25 phk Exp $"
+literal|"$Id: sysctl.c,v 1.10 1996/04/10 00:53:22 smpatel Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,8 @@ literal|"AabnwX"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

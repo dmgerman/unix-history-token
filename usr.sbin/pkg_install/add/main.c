@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.10 1996/03/12 06:12:36 jkh Exp $"
+literal|"$Id: main.c,v 1.11 1996/07/30 10:48:09 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,7 +222,8 @@ name|Options
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

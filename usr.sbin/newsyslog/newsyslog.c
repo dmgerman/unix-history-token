@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.7 1996/09/09 15:32:26 jkh Exp $"
+literal|"$Id: newsyslog.c,v 1.7.2.1 1997/02/22 07:34:11 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,7 +1207,8 @@ literal|"nrvf:t:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: crontab.c,v 1.5 1996/08/05 00:31:27 pst Exp $"
+literal|"$Id: crontab.c,v 1.6 1996/08/05 00:50:02 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,7 +657,8 @@ name|opt_unknown
 expr_stmt|;
 while|while
 condition|(
-name|EOF
+operator|-
+literal|1
 operator|!=
 operator|(
 name|argch
