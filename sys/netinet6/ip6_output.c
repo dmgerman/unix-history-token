@@ -9489,6 +9489,13 @@ block|{
 name|int
 name|needfree
 decl_stmt|;
+if|if
+condition|(
+name|pktopt
+operator|==
+name|NULL
+condition|)
+return|return;
 name|needfree
 operator|=
 name|pktopt
