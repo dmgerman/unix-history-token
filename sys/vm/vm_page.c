@@ -1044,37 +1044,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_copy:  *  *	Copy one page to another  */
-end_comment
-
-begin_function
-name|void
-name|vm_page_copy
-parameter_list|(
-name|vm_page_t
-name|src_m
-parameter_list|,
-name|vm_page_t
-name|dest_m
-parameter_list|)
-block|{
-name|pmap_copy_page
-argument_list|(
-name|src_m
-argument_list|,
-name|dest_m
-argument_list|)
-expr_stmt|;
-name|dest_m
-operator|->
-name|valid
-operator|=
-name|VM_PAGE_BITS_ALL
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	vm_page_free:  *  *	Free a page  *  *	The clearing of PG_ZERO is a temporary safety until the code can be  *	reviewed to determine that PG_ZERO is being properly cleared on  *	write faults or maps.  PG_ZERO was previously cleared in  *	vm_page_alloc().  */
 end_comment
 
@@ -5497,26 +5466,22 @@ block|{
 comment|/* clear COW& copy page */
 if|if
 condition|(
+operator|!
 name|so_zerocp_fullpage
 condition|)
-block|{
-name|mnew
-operator|->
-name|valid
-operator|=
-name|VM_PAGE_BITS_ALL
-expr_stmt|;
-block|}
-else|else
-block|{
-name|vm_page_copy
+name|pmap_copy_page
 argument_list|(
 name|m
 argument_list|,
 name|mnew
 argument_list|)
 expr_stmt|;
-block|}
+name|mnew
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
 name|vm_page_dirty
 argument_list|(
 name|mnew

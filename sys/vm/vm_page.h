@@ -1269,19 +1269,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_copy
-parameter_list|(
-name|vm_page_t
-name|src_m
-parameter_list|,
-name|vm_page_t
-name|dest_m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_free
 parameter_list|(
 name|vm_page_t

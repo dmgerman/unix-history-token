@@ -2352,7 +2352,7 @@ block|}
 else|else
 block|{
 comment|/* 				 * Oh, well, lets copy it. 				 */
-name|vm_page_copy
+name|pmap_copy_page
 argument_list|(
 name|fs
 operator|.
@@ -2362,6 +2362,14 @@ name|fs
 operator|.
 name|first_m
 argument_list|)
+expr_stmt|;
+name|fs
+operator|.
+name|first_m
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
 if|if
@@ -3912,12 +3920,18 @@ argument_list|(
 literal|"vm_fault_copy_wired: page missing"
 argument_list|)
 expr_stmt|;
-name|vm_page_copy
+name|pmap_copy_page
 argument_list|(
 name|src_m
 argument_list|,
 name|dst_m
 argument_list|)
+expr_stmt|;
+name|dst_m
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 comment|/* 		 * Enter it in the pmap... 		 */
 name|pmap_enter
