@@ -771,12 +771,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|d_ioctl_t
-name|uscannerioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|d_poll_t
 name|uscannerpoll
 decl_stmt|;
@@ -809,7 +803,7 @@ comment|/* write */
 name|uscannerwrite
 block|,
 comment|/* ioctl */
-name|uscannerioctl
+name|noioctl
 block|,
 comment|/* poll */
 name|uscannerpoll
@@ -2921,36 +2915,6 @@ expr_stmt|;
 return|return
 operator|(
 name|revents
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|uscannerioctl
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 block|}
