@@ -4468,11 +4468,6 @@ name|fcntl_args
 name|fcntl_args
 decl_stmt|;
 name|struct
-name|filedesc
-modifier|*
-name|fdp
-decl_stmt|;
-name|struct
 name|file
 modifier|*
 name|fp
