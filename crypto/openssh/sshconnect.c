@@ -3146,6 +3146,9 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|ret
 operator|=
