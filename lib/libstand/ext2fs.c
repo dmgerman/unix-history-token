@@ -2387,7 +2387,7 @@ decl_stmt|;
 name|daddr_t
 name|ind_block_num
 decl_stmt|;
-name|daddr_t
+name|int32_t
 modifier|*
 name|ind_p
 decl_stmt|;
@@ -2651,7 +2651,7 @@ block|}
 name|ind_p
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|fp
