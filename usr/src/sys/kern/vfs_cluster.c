@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cluster.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cluster.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3435,6 +3435,8 @@ modifier|*
 name|hp
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
 name|dirty
 init|=
 literal|0
@@ -3497,6 +3499,49 @@ name|B_INVAL
 operator|)
 condition|)
 continue|continue;
+name|loop
+label|:
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_BUSY
+condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_WANTED
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|bp
+argument_list|,
+name|PRIBIO
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
 name|notavail
 argument_list|(
 name|bp
