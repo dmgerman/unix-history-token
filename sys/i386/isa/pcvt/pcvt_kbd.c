@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_kbd.c, 3.20, Last Edit-Date: [Sun Feb 26 13:28:00 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_kbd.c, 3.20, Last Edit-Date: [Fri Mar 24 18:38:16 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	patch from joerg for timeout in kbd_emulate_pc()  *	-hm	starting to implement alt-shift/ctrl key mappings  *	-hm	Gateway 2000 Keyboard fix from Brian Moore  *	-hm	some #if adjusting for NetBSD 0.9  *	-hm	split off pcvt_kbd.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Martin, PCVT_NO_LED_UPDATE  *	-hm	PCVT_VT220KEYB patches from Lon Willet  *	-hm	PR #399, patch from Bill Sommerfeld: Return with PCVT_META_ESC  *	-hm	allow keyboard-less kernel boot for serial consoles and such ..  *	-hm	patch from Lon Willett for led-update and showkey()  *	-hm	patch from Lon Willett to fix mapping of Control-R scancode  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	patch from joerg for timeout in kbd_emulate_pc()  *	-hm	starting to implement alt-shift/ctrl key mappings  *	-hm	Gateway 2000 Keyboard fix from Brian Moore  *	-hm	some #if adjusting for NetBSD 0.9  *	-hm	split off pcvt_kbd.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Martin, PCVT_NO_LED_UPDATE  *	-hm	PCVT_VT220KEYB patches from Lon Willet  *	-hm	PR #399, patch from Bill Sommerfeld: Return with PCVT_META_ESC  *	-hm	allow keyboard-less kernel boot for serial consoles and such ..  *	-hm	patch from Lon Willett for led-update and showkey()  *	-hm	patch from Lon Willett to fix mapping of Control-R scancode  *	-hm	delay patch from Martin Husemann after port-i386 ml-discussion  *	-hm	added PCVT_NONRESP_KEYB_TRY definition to doreset()  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -1226,6 +1226,32 @@ begin_comment
 comment|/* PCVT_SCANSET> 1 */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCVT_NONRESP_KEYB_TRY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCVT_NONRESP_KEYB_TRY
+value|25
+end_define
+
+begin_comment
+comment|/* no of times to try to detect	*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* a nonresponding keyboard	*/
+end_comment
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	try to force keyboard into a known state ..  *---------------------------------------------------------------------------*/
 end_comment
@@ -1240,6 +1266,11 @@ parameter_list|)
 block|{
 name|int
 name|again
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|once
 init|=
 literal|0
 decl_stmt|;
@@ -1379,9 +1410,15 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|again
+condition|)
+comment|/* print message only once ! */
 name|printf
 argument_list|(
-literal|"pcvt: doreset() - response != ack and response< 0\n"
+literal|"pcvt: doreset() - response != ack and response< 0 [one time only msg]\n"
 argument_list|)
 expr_stmt|;
 name|response
@@ -1401,9 +1438,10 @@ condition|(
 operator|!
 name|again
 condition|)
+comment|/* print message only once ! */
 name|printf
 argument_list|(
-literal|"pcvt: doreset() - got KEYB_R_RESEND response ...\n"
+literal|"pcvt: doreset() - got KEYB_R_RESEND response ... [one time only msg]\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1411,7 +1449,7 @@ condition|(
 operator|++
 name|again
 operator|>
-literal|100
+name|PCVT_NONRESP_KEYB_TRY
 condition|)
 block|{
 name|printf
@@ -1432,18 +1470,32 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|kbd_cmd
 argument_list|(
 name|KEYB_C_RESET
 argument_list|)
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+name|once
+operator|==
+literal|0
+operator|)
 condition|)
+block|{
+name|once
+operator|++
+expr_stmt|;
+comment|/* print message only once ! */
 name|printf
 argument_list|(
-literal|"pcvt: doreset() - timeout for loop keyboard reset command\n"
+literal|"pcvt: doreset() - timeout for loop keyboard reset command [one time only msg]\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Wait for the second response to reset */
@@ -3426,6 +3478,34 @@ name|noblock
 condition|)
 comment|/* source = 8042 */
 block|{
+if|#
+directive|if
+name|PCVT_NETBSD
+operator|>
+literal|9
+name|delay
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+elif|#
+directive|elif
+name|PCVT_FREEBSD
+operator|||
+operator|(
+name|PCVT_NETBSD
+operator|<=
+literal|9
+operator|)
+name|DELAY
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+endif|#
+directive|endif
 name|dt
 operator|=
 name|inb
@@ -3480,6 +3560,34 @@ operator|&
 name|STATUS_OUTPBF
 condition|)
 block|{
+if|#
+directive|if
+name|PCVT_NETBSD
+operator|>
+literal|9
+name|delay
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+elif|#
+directive|elif
+name|PCVT_FREEBSD
+operator|||
+operator|(
+name|PCVT_NETBSD
+operator|<=
+literal|9
+operator|)
+name|DELAY
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+endif|#
+directive|endif
 name|dt
 operator|=
 name|inb
@@ -4480,6 +4588,34 @@ name|noblock
 condition|)
 comment|/* source = 8042 */
 block|{
+if|#
+directive|if
+name|PCVT_NETBSD
+operator|>
+literal|9
+name|delay
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+elif|#
+directive|elif
+name|PCVT_FREEBSD
+operator|||
+operator|(
+name|PCVT_NETBSD
+operator|<=
+literal|9
+operator|)
+name|DELAY
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+endif|#
+directive|endif
 name|dt
 operator|=
 name|inb
@@ -4535,6 +4671,34 @@ operator|&
 name|STATUS_OUTPBF
 condition|)
 block|{
+if|#
+directive|if
+name|PCVT_NETBSD
+operator|>
+literal|9
+name|delay
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+elif|#
+directive|elif
+name|PCVT_FREEBSD
+operator|||
+operator|(
+name|PCVT_NETBSD
+operator|<=
+literal|9
+operator|)
+name|DELAY
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Gateway 2000 fix - ziff */
+endif|#
+directive|endif
 name|dt
 operator|=
 name|inb
