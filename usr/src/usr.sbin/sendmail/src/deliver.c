@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.22 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -75,6 +81,11 @@ include|#
 directive|include
 file|<resolv.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  DELIVER -- Deliver a message to a list of addresses. ** **	This routine delivers to everyone on the same host as the **	user on the head of the list.  It is clever about mailers **	that don't handle multiple users.  It is NOT guaranteed **	that it will deliver to all these addresses however -- so **	deliver should be called once for each address on the **	list. ** **	Parameters: **		e -- the envelope to deliver. **		firstto -- head of the address list to deliver to. ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */
@@ -236,6 +247,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 comment|/* unless interactive, try twice, over a minute */
 if|if
 condition|(
@@ -261,6 +275,9 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|NAMED_BIND
 name|m
 operator|=
 name|to
@@ -1304,6 +1321,9 @@ name|e
 operator|->
 name|e_from
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 name|_res
 operator|.
 name|options
@@ -1316,6 +1336,8 @@ name|RES_DNSRCH
 operator|)
 expr_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMTP
@@ -1348,29 +1370,19 @@ name|rcode
 operator|=
 name|EX_OK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 if|if
 condition|(
 name|host
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'['
 condition|)
 block|{
-name|Nmx
-operator|=
-literal|1
-expr_stmt|;
-name|MxHosts
-index|[
-literal|0
-index|]
-operator|=
-name|host
-expr_stmt|;
-block|}
-else|else
 name|Nmx
 operator|=
 name|getmxrr
@@ -1385,6 +1397,23 @@ operator|&
 name|rcode
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+block|{
+name|Nmx
+operator|=
+literal|1
+expr_stmt|;
+name|MxHosts
+index|[
+literal|0
+index|]
+operator|=
+name|host
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|Nmx
@@ -1608,6 +1637,9 @@ name|ctladdr
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 name|_res
 operator|.
 name|options
@@ -1617,6 +1649,8 @@ operator||
 name|RES_DNSRCH
 expr_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
 comment|/* 	**  Do final status disposal. 	**	We check for something in tobuf for the SMTP case. 	**	If we got a temporary failure, arrange to queue the 	**		addressees. 	*/
 if|if
 condition|(

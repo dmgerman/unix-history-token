@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.26 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.27 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.26 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.27 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -628,34 +628,21 @@ comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another 
 end_comment
 
 begin_expr_stmt
-unit|int
-name|h_errno
+unit|makeconnection
+operator|(
+name|host
+operator|,
+name|port
+operator|,
+name|outfile
+operator|,
+name|infile
+operator|)
+name|char
+operator|*
+name|host
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*this will go away when code implemented*/
-end_comment
-
-begin_macro
-name|makeconnection
-argument_list|(
-argument|host
-argument_list|,
-argument|port
-argument_list|,
-argument|outfile
-argument_list|,
-argument|infile
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|host
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|u_short
@@ -709,11 +696,25 @@ function_decl|;
 name|int
 name|sav_errno
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	**  Set up the address for the mailer. 	**	Accept "[a.b.c.d]" syntax for host name. 	*/
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 name|h_errno
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0
@@ -822,6 +823,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 if|if
 condition|(
 name|errno
@@ -837,6 +841,22 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+comment|/* if name server is specified, assume temp fail */
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNREFUSED
+operator|&&
+name|UseNameServer
+condition|)
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* 			**  XXX Should look for mail forwarder record here 			**  XXX if (h_errno == NO_ADDRESS). 			*/
 return|return
 operator|(

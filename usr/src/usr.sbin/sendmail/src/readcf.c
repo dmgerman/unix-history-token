@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.13 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2746,6 +2746,18 @@ else|else
 name|HelpFile
 operator|=
 name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+comment|/* use internet domain name server */
+name|UseNameServer
+operator|=
+name|atobool
 argument_list|(
 name|val
 argument_list|)
