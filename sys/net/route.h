@@ -874,6 +874,17 @@ begin_comment
 comment|/* iface arrival/departure */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211
+value|0x12
+end_define
+
+begin_comment
+comment|/* IEEE80211 wireless event */
+end_comment
+
 begin_comment
 comment|/*  * Bitmask values for rtm_inits and rmx_locks.  */
 end_comment
@@ -1334,6 +1345,24 @@ parameter_list|(
 name|struct
 name|rt_addrinfo
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rt_ieee80211msg
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
