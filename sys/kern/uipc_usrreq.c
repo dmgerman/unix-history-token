@@ -6905,6 +6905,14 @@ block|}
 endif|#
 directive|endif
 comment|/* 			 * So, Ok, it's one of our sockets and it IS externally 			 * accessible (or was defered). Now we look 			 * to see if we hold any file descriptors in its 			 * message buffers. Follow those links and mark them 			 * as accessible too. 			 */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 name|unp_scan
 argument_list|(
 name|so
@@ -6914,6 +6922,14 @@ operator|.
 name|sb_mb
 argument_list|,
 name|unp_mark
+argument_list|)
+expr_stmt|;
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 block|}
