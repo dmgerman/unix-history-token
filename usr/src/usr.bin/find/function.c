@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	8.4 (Berkeley) %G%"
+literal|"@(#)function.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1315,6 +1315,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strrchr
@@ -1325,6 +1326,9 @@ name|fts_accpath
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|++
 name|p
@@ -3856,6 +3860,7 @@ name|new
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|new
 operator|=
 name|malloc
@@ -3865,8 +3870,17 @@ argument_list|(
 name|PLAN
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
-block|{
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|new
 operator|->
 name|type
@@ -3896,15 +3910,6 @@ operator|(
 name|new
 operator|)
 return|;
-block|}
-name|err
-argument_list|(
-literal|1
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_block
 

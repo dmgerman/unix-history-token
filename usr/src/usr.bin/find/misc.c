@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	8.1 (Berkeley) %G%"
+literal|"@(#)misc.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,10 +144,14 @@ operator|=
 operator|*
 name|store
 init|;
+operator|(
 name|ch
 operator|=
 operator|*
 name|orig
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|orig
@@ -408,18 +412,17 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|malloc
 argument_list|(
 name|len
 argument_list|)
-condition|)
-return|return
-operator|(
-name|p
 operator|)
-return|;
+operator|==
+name|NULL
+condition|)
 name|err
 argument_list|(
 literal|1
@@ -427,6 +430,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|p
+operator|)
+return|;
 block|}
 end_function
 
