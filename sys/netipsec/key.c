@@ -10064,11 +10064,6 @@ name|state
 operator|=
 name|IPSEC_SPSTATE_DEAD
 expr_stmt|;
-name|SECPOLICY_LOCK_DESTROY
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
 name|KEY_FREESP
 argument_list|(
 operator|&
@@ -10368,11 +10363,6 @@ operator|->
 name|state
 operator|=
 name|IPSEC_SPSTATE_DEAD
-expr_stmt|;
-name|SECPOLICY_LOCK_DESTROY
-argument_list|(
-name|sp
-argument_list|)
 expr_stmt|;
 name|KEY_FREESP
 argument_list|(
