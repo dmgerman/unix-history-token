@@ -437,6 +437,10 @@ decl_stmt|,
 name|outputcharge
 decl_stmt|;
 name|struct
+name|callout_handle
+name|timeouthandle
+decl_stmt|;
+name|struct
 name|buf
 modifier|*
 name|bp
