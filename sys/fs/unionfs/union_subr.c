@@ -3292,6 +3292,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|un
+operator|->
+name|un_openl
+condition|)
+block|{
+if|if
+condition|(
 name|vn_canvmio
 argument_list|(
 name|uvp
@@ -3310,6 +3317,7 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
+block|}
 name|un
 operator|->
 name|un_openl

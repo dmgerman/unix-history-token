@@ -1790,7 +1790,10 @@ operator|!=
 name|NULLVP
 condition|)
 block|{
-name|lerror
+name|int
+name|terror
+decl_stmt|;
+name|terror
 operator|=
 name|VOP_GETATTR
 argument_list|(
@@ -1810,7 +1813,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lerror
+name|terror
 operator|==
 literal|0
 operator|&&
