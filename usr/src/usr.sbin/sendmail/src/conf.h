@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -634,6 +634,35 @@ name|_PATH_SENDMAILCF
 value|"/etc/mail/sendmail.cf"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILFC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILFC
+value|"/etc/mail/sendmail.fc"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -721,17 +750,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* has setenv(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNSETENV
 value|1
 end_define
@@ -793,17 +811,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|HASSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* has setenv(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNSETENV
 value|1
 end_define
@@ -843,13 +850,6 @@ define|#
 directive|define
 name|LA_TYPE
 value|LA_INT
-end_define
-
-begin_define
-define|#
-directive|define
-name|LA_AVENRUN
-value|"avenrun"
 end_define
 
 begin_endif
@@ -910,6 +910,60 @@ name|pid_t
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/etc/sendmail/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILFC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILFC
+value|"/etc/sendmail/sendmail.fc"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -924,6 +978,17 @@ ifdef|#
 directive|ifdef
 name|BSD4_4
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
 
 begin_include
 include|#
@@ -940,6 +1005,24 @@ end_define
 begin_comment
 comment|/* don't declare sys_errlist */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1209,17 +1292,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|HASSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* has setenv(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNSETENV
 value|1
 end_define
@@ -1279,28 +1351,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|HASSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* has setenv(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASUNSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* has unsetenv(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASGETDTABLESIZE
 value|1
 end_define
@@ -1341,24 +1391,6 @@ end_define
 begin_comment
 comment|/* has flock(2) call */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LA_TYPE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LA_TYPE
-value|LA_SUBR
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2054,10 +2086,16 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCK_SH
+end_ifndef
 
 begin_define
 define|#
