@@ -103,6 +103,10 @@ name|DV
 operator|=
 name|NOSTR
 expr_stmt|;
+name|BR
+operator|=
+name|DEFBR
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -186,6 +190,10 @@ literal|'s'
 case|:
 if|if
 condition|(
+name|argc
+operator|<
+literal|3
+operator|||
 name|speed
 argument_list|(
 name|atoi
