@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.14 (Berkeley) %G%"
+literal|"@(#)printf.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,8 +163,10 @@ parameter_list|(
 name|a
 parameter_list|,
 name|b
+parameter_list|,
+name|c
 parameter_list|)
-value|{							\ 	char buf[64];							\ 	(void)sprintf(buf, sizeof(buf), a, b);				\ 	error(buf);							\ }
+value|{						\ 	char buf[64];							\ 	(void)sprintf(buf, sizeof(buf), a, b, c);			\ 	error(buf);							\ }
 end_define
 
 begin_include
@@ -523,6 +525,8 @@ argument_list|(
 literal|"missing format character"
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -733,6 +737,8 @@ argument_list|(
 literal|"missing format character"
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -910,6 +916,8 @@ default|default:
 name|warnx
 argument_list|(
 literal|"illegal format character"
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -1372,16 +1380,17 @@ operator|>
 name|INT_MAX
 condition|)
 block|{
-name|errno
-operator|=
-name|ERANGE
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
 literal|"%s"
 argument_list|,
 operator|*
 name|gargv
+argument_list|,
+name|strerror
+argument_list|(
+name|ERANGE
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1483,6 +1492,8 @@ literal|"%s: illegal number"
 argument_list|,
 operator|*
 name|gargv
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1504,12 +1515,17 @@ operator|==
 name|LONG_MAX
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s"
 argument_list|,
 operator|*
 name|gargv
+argument_list|,
+name|strerror
+argument_list|(
+name|ERANGE
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1525,12 +1541,17 @@ operator|==
 name|LONG_MIN
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s"
 argument_list|,
 operator|*
 name|gargv
+argument_list|,
+name|strerror
+argument_list|(
+name|ERANGE
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
