@@ -92,22 +92,6 @@ name|mbr
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|boot1
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|boot2
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|write_bootblocks

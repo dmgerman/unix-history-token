@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.19 1995/01/29 02:31:35 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.20 1995/01/30 03:19:52 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
 end_include
 
 begin_include
@@ -78,16 +72,6 @@ include|#
 directive|include
 file|"sysinstall.h"
 end_include
-
-begin_decl_stmt
-name|jmp_buf
-name|jmp_restart
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * XXX: utils: Mkdir must do "-p".  * XXX: stage2: do mkdir for msdos-mounts.  * XXX: label: Import dos-slice.  * XXX: mbr: edit geometry  */
-end_comment
 
 begin_function
 name|void
@@ -142,6 +126,11 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* Are we running as init? */
+name|cpio_fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|getpid
@@ -153,6 +142,76 @@ block|{
 name|setsid
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strchr
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|'C'
+argument_list|)
+condition|)
+block|{
+comment|/* Kernel told us that we are on a CDROM root */
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|open
+argument_list|(
+literal|"/bootcd/dev/console"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|dup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|cpio_fd
+operator|=
+name|open
+argument_list|(
+literal|"/floppies/cpio.flp"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+name|on_cdrom
+operator|++
+expr_stmt|;
+name|chroot
+argument_list|(
+literal|"/bootcd"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|close
 argument_list|(
 literal|0
@@ -185,6 +244,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"sysinstall running as init\n\r"
@@ -331,9 +391,6 @@ block|}
 else|else
 block|{
 name|stage3
-argument_list|()
-expr_stmt|;
-name|stage4
 argument_list|()
 expr_stmt|;
 name|stage5

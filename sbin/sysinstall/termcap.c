@@ -151,6 +151,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|on_serial
+operator|++
+expr_stmt|;
 block|}
 elseif|else
 if|if

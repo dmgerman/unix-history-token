@@ -24,20 +24,6 @@ name|ACTIVE
 value|0x80
 end_define
 
-begin_define
-define|#
-directive|define
-name|BOOT1
-value|"/stand/sdboot"
-end_define
-
-begin_define
-define|#
-directive|define
-name|BOOT2
-value|"/stand/bootsd"
-end_define
-
 begin_comment
 comment|/* XXX -- calculate these, this is nasty */
 end_comment

@@ -230,6 +230,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|boot0
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|boot1
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|boot2
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* All this "disk" stuff */
 end_comment
@@ -394,6 +421,27 @@ begin_decl_stmt
 name|EXTERN
 name|int
 name|fixit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|on_serial
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|on_cdrom
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|cpio_fd
 decl_stmt|;
 end_decl_stmt
 
@@ -828,22 +876,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* stage4.c */
-end_comment
-
-begin_decl_stmt
-name|void
-name|stage4
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* stage5.c */
 end_comment
 
@@ -972,6 +1004,22 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|read_dospart
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|dos_partition
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

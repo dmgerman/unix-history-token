@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.23 1995/02/02 05:35:36 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.24 1995/02/02 05:49:06 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sysinstall.h"
 end_include
 
@@ -107,6 +113,21 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|k
+decl_stmt|;
+name|int
+name|ffd
+decl_stmt|,
+name|pfd
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+name|zpid
+decl_stmt|,
+name|cpid
 decl_stmt|;
 name|memset
 argument_list|(
@@ -482,6 +503,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+block|{
 name|Mkdir
 argument_list|(
 name|dbuf
@@ -489,6 +512,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|Mkdir
 argument_list|(
@@ -893,33 +917,6 @@ argument_list|(
 name|f1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-block|{
-include|#
-directive|include
-file|<sys/wait.h>
-name|int
-name|ffd
-decl_stmt|,
-name|pfd
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|int
-name|zpid
-decl_stmt|,
-name|cpid
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|k
-decl_stmt|;
 name|j
 operator|=
 name|fork
@@ -941,11 +938,17 @@ argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
+name|ffd
+operator|=
+name|cpio_fd
+expr_stmt|;
 name|retry
 label|:
 while|while
 condition|(
-literal|1
+name|ffd
+operator|<
+literal|0
 condition|)
 block|{
 name|dialog_msgbox
@@ -1265,6 +1268,11 @@ argument_list|(
 literal|"CPIO floppy was bad!  Please check media for defects and retry."
 argument_list|)
 expr_stmt|;
+name|ffd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
@@ -1308,9 +1316,6 @@ argument_list|,
 name|k
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|sync
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.34 1994/12/27 23:26:59 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.35 1995/01/14 10:31:29 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -317,6 +317,12 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|on_serial
+condition|)
+block|{
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -335,6 +341,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|p
@@ -399,6 +406,9 @@ expr_stmt|;
 if|if
 condition|(
 name|dialog_active
+operator|&&
+operator|!
+name|on_serial
 condition|)
 name|dialog_msgbox
 argument_list|(
