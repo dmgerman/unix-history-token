@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.11	81/05/05	*/
+comment|/*	param.h	4.12	81/06/11	*/
 end_comment
 
 begin_comment
@@ -754,17 +754,6 @@ end_define
 
 begin_comment
 comment|/* clist rounding; sizeof(int *) + CBSIZE -1*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLKTICK
-value|(1000000/(HZ))
-end_define
-
-begin_comment
-comment|/* microseconds in a clock tick */
 end_comment
 
 begin_comment
