@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.3 (Berkeley) %G%"
+literal|"@(#)errlst.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,6 +276,12 @@ index|[
 literal|0
 index|]
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|errno
 decl_stmt|;
 end_decl_stmt
 
