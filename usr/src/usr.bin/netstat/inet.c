@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.16 (Berkeley) 84/05/17"
+literal|"@(#)inet.c	4.17 (Berkeley) 84/07/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -1658,6 +1658,12 @@ if|if
 condition|(
 operator|!
 name|nflag
+operator|&&
+name|in
+operator|.
+name|s_addr
+operator|!=
+name|INADDR_ANY
 condition|)
 block|{
 name|int
@@ -1713,13 +1719,10 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|subnet
 operator|!=
 name|net
-operator|)
 operator|&&
-operator|(
 operator|(
 name|lna
 operator|&
@@ -1727,7 +1730,6 @@ literal|0xff
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|np
@@ -1799,8 +1801,7 @@ name|in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|in_addr
+name|in
 argument_list|)
 argument_list|,
 name|AF_INET
