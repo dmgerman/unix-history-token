@@ -1187,6 +1187,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Libc internal.  */
+end_comment
+
 begin_function
 name|int
 name|_pthread_mutex_trylock
@@ -1201,6 +1205,9 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|_thread_sigblock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|mutex
@@ -1243,6 +1250,15 @@ name|mutex
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|_thread_sigunblock
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
