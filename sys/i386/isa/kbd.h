@@ -1,7 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Keyboard definitions  *	from: unknown origin, 386BSD 0.1  *	$Id$  */
+comment|/*  * Keyboard definitions  *	from: unknown origin, 386BSD 0.1  *	$Id: kbd.h,v 1.2 1993/10/16 13:46:04 rgrimes Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBD_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_I386_ISA_KBD_H_
+value|1
+end_define
 
 begin_comment
 comment|/* Reference:	IBM AT Technical Reference Manual,   * pp. 1-38 to 1-43, 4-3 to 4-22   */
@@ -413,6 +426,15 @@ end_define
 
 begin_comment
 comment|/* Keyboard needs resend of command */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBD_H_ */
 end_comment
 
 end_unit
