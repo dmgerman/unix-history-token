@@ -40,12 +40,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -61,18 +55,7 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-name|long
-name|r
-decl_stmt|;
-name|int
-name|saverr
-decl_stmt|;
-name|saverr
-operator|=
-name|errno
-expr_stmt|;
-name|r
-operator|=
+return|return
 name|strtol
 argument_list|(
 name|str
@@ -86,13 +69,6 @@ name|NULL
 argument_list|,
 literal|10
 argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|saverr
-expr_stmt|;
-return|return
-name|r
 return|;
 block|}
 end_function
