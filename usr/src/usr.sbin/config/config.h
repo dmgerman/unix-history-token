@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)config.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)config.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -278,7 +278,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Config has a global notion of which machine type is  * being used.  It uses the name of the machine in choosing  * files and directories.  Thus if the name of the machine is ``vax'',  * it will build from ``makefile.vax'' and use ``../vax/inline''  * in the makerules, etc.  */
+comment|/*  * Config has a global notion of which machine type is  * being used.  It uses the name of the machine in choosing  * files and directories.  Thus if the name of the machine is ``vax'',  * it will build from ``Makefile.vax'' and use ``../vax/inline''  * in the makerules, etc.  */
 end_comment
 
 begin_decl_stmt
