@@ -4,11 +4,11 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.a
 end_comment
 
 begin_comment
-comment|/* $Revision: 1.7 $ */
+comment|/* $Revision: 1.8 $ */
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *	$Id: st.c,v 1.7 1993/09/05 15:42:22 rgrimes Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *	$Id: st.c,v 1.8 1993/09/07 15:58:00 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -1037,6 +1037,17 @@ literal|0
 operator|)
 return|;
 block|}
+name|bzero
+argument_list|(
+name|st
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|st_data
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*******************************************************\ 	* Store information needed to contact our base driver	* 	\*******************************************************/
 name|st
 operator|->
