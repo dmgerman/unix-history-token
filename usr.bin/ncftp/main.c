@@ -1915,12 +1915,16 @@ init|;
 condition|;
 control|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|cmdscanner
 argument_list|(
 name|top
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|top
@@ -2823,7 +2827,7 @@ comment|/*  * Command parser.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|cmdscanner
 parameter_list|(
 name|int
@@ -2835,6 +2839,13 @@ name|struct
 name|cmd
 modifier|*
 name|c
+decl_stmt|;
+name|int
+name|cmd_status
+decl_stmt|,
+name|rcode
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -3011,8 +3022,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
+name|cmd_status
+operator|=
 call|(
 modifier|*
 name|c
@@ -3024,6 +3035,10 @@ name|margc
 argument_list|,
 name|margv
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmd_status
 operator|==
 name|USAGE
 condition|)
@@ -3031,6 +3046,17 @@ name|cmd_usage
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cmd_status
+operator|==
+name|CMDERR
+condition|)
+name|rcode
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3062,6 +3088,9 @@ argument_list|,
 name|lostpeer
 argument_list|)
 expr_stmt|;
+return|return
+name|rcode
+return|;
 block|}
 end_function
 

@@ -1317,6 +1317,9 @@ block|{
 name|int
 name|tmpverbose
 decl_stmt|;
+name|int
+name|cmdstatus
+decl_stmt|;
 comment|/* How do we tell if colonmodepath is a file or a directory? 	 * We first try cd'ing to the path first.  If we can, then it 	 * was a directory.  If we could not, we'll assume it was a file. 	 */
 comment|/* Shut up, so cd won't print 'foobar: Not a directory.' */
 name|tmpverbose
@@ -1430,9 +1433,8 @@ name|openopt
 operator|->
 name|ftpcat
 condition|)
-operator|(
-name|void
-operator|)
+name|cmdstatus
+operator|=
 name|get
 argument_list|(
 name|margc
@@ -1441,9 +1443,8 @@ name|margv
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
+name|cmdstatus
+operator|=
 name|mget
 argument_list|(
 name|margc
@@ -1464,6 +1465,13 @@ name|void
 operator|)
 name|quit
 argument_list|(
+name|cmdstatus
+operator|==
+name|CMDERR
+condition|?
+operator|-
+literal|1
+else|:
 literal|0
 argument_list|,
 name|NULL

@@ -3055,6 +3055,9 @@ decl_stmt|;
 name|Sig_t
 name|oldintr
 decl_stmt|;
+name|int
+name|errs
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -3118,6 +3121,9 @@ operator|=
 name|remglob
 argument_list|(
 name|argv
+argument_list|,
+operator|&
+name|errs
 argument_list|)
 operator|)
 operator|!=
@@ -3216,8 +3222,17 @@ name|activemcmd
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|errs
+condition|)
 return|return
 name|NOERR
+return|;
+else|else
+return|return
+name|CMDERR
 return|;
 block|}
 end_function
@@ -3235,6 +3250,10 @@ name|char
 modifier|*
 name|argv
 index|[]
+parameter_list|,
+name|int
+modifier|*
+name|errs
 parameter_list|)
 block|{
 specifier|static
@@ -3264,8 +3283,6 @@ name|str
 decl_stmt|;
 name|int
 name|result
-decl_stmt|,
-name|errs
 decl_stmt|;
 if|if
 condition|(
@@ -3330,6 +3347,7 @@ name|verbose
 operator|=
 name|V_QUIET
 expr_stmt|;
+operator|*
 name|errs
 operator|=
 literal|0
@@ -3428,8 +3446,11 @@ else|:
 literal|"No such file"
 argument_list|)
 expr_stmt|;
-name|errs
 operator|++
+operator|(
+operator|*
+name|errs
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -3439,6 +3460,7 @@ name|oldverbose
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|errs
 operator|==
 operator|(
@@ -4316,6 +4338,9 @@ decl_stmt|;
 name|string
 name|str
 decl_stmt|;
+name|int
+name|errs
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -4379,6 +4404,9 @@ operator|=
 name|remglob
 argument_list|(
 name|argv
+argument_list|,
+operator|&
+name|errs
 argument_list|)
 operator|)
 operator|!=
@@ -4473,8 +4501,17 @@ name|activemcmd
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|errs
+condition|)
 return|return
 name|NOERR
+return|;
+else|else
+return|return
+name|CMDERR
 return|;
 block|}
 end_function
@@ -6345,15 +6382,26 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|int
+name|rc
+decl_stmt|;
+comment|/* slightly kludge.  argc == -1 means failure from some other caller */
+name|rc
+operator|=
 name|close_up_shop
 argument_list|()
+operator|||
+name|argc
+operator|==
+operator|-
+literal|1
 expr_stmt|;
 name|trim_log
 argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6557,7 +6605,7 @@ comment|/* disconnect */
 end_comment
 
 begin_function
-name|void
+name|int
 name|close_up_shop
 parameter_list|(
 name|void
@@ -6566,6 +6614,11 @@ block|{
 specifier|static
 name|int
 name|only_once
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|rcode
 init|=
 literal|0
 decl_stmt|;
@@ -6591,6 +6644,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|rcode
+operator|=
 name|WriteRecentSitesFile
 argument_list|()
 expr_stmt|;
@@ -6614,6 +6669,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+return|return
+name|rcode
+return|;
 block|}
 end_function
 

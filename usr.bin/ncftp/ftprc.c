@@ -1357,7 +1357,7 @@ comment|/* SortRecentList */
 end_comment
 
 begin_function
-name|void
+name|int
 name|WriteRecentSitesFile
 parameter_list|(
 name|void
@@ -1373,6 +1373,11 @@ name|r
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|retcode
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1504,8 +1509,14 @@ argument_list|(
 name|recent_file
 argument_list|)
 expr_stmt|;
+operator|++
+name|retcode
+expr_stmt|;
 block|}
 block|}
+return|return
+name|retcode
+return|;
 block|}
 end_function
 
