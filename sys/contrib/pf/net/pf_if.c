@@ -4419,11 +4419,18 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+comment|/* 	 * It seems that the value of time_second is in unintialzied state when 	 * pf sets interface statistics clear time in boot phase if pf was 	 * statically linked to kernel. Instead of setting the bogus time value 	 * have pfi_get_ifaces handle this case. In pfi_get_ifaces it uses 	 * boottime.tv_sec if it sees the time is 0. 	 */
 name|p
 operator|->
 name|pfik_tzero
 operator|=
 name|time_second
+operator|>
+literal|1
+condition|?
+name|time_second
+else|:
+literal|0
 expr_stmt|;
 else|#
 directive|else
