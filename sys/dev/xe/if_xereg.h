@@ -3,23 +3,21 @@ begin_comment
 comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xereg.h,v 1.5 1999/05/20 21:53:58 scott Exp $  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_XE_IF_XEREG_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEV_XE_IF_XEREG_H
+end_define
+
 begin_comment
 comment|/*  * Register definitions for Xircom PCMCIA Ethernet controllers, based on  * Rev. B of the "Dingo" 10/100 controller used in Xircom CEM56 and RealPort  * Ethernet/modem cards.  The Dingo can be configured to be register  * compatible with the "Mohawk" 10/100 controller used in Xircom CE3 cards  * (also some Intel and Compaq OEM versions of the CE3).  The older 10Mbps CE2  * cards seem to use earlier revisions of the same device.  Some registers and  * bits below are marked 'CE2 only'; these are used by Werner Koch's xirc2ps  * driver that was originally for the CE2 but, according to the spec, aren't  * present on the Dingo.  They often seem to relate to operation on coax  * cables, which Mohawk can do in theory (it has the SSI interface) so they  * _might_ also work on Mohawk. I've also noted the few registers that are  * specific to Dingo.  *  * As far as I can tell, the Dingo is basically a Mohawk device with a few  * registers and support for a second PCMCIA function (the modem) added.  In  * Dingo mode the SSI (non-MII) PHY interface of the Mohawk is not available.  * The CE2 chip is most likely a Mohawk without the MII and definitely with a  * slightly different register set.  *  * In all cases, the controller uses a paged model of register access.  The  * first eight registers are always the same, the function of the second eight   * is selected by the value in the Page Register (reg 0x01).  *  * References:  * 1. Dingo External Reference Specification, Revision B.  Xircom Inc.,  *    Thousand Oaks, California.  August 1998.  Available under licence from  *    Xircom, http://www.xircom.com/  * 2. ML6692 100BASE-TX Physical Layer with MII specification.  MicroLinear  *    Corp, San Jose, California.  May 1997.  Available for download from  *    http://www.microlinear.com/  * 3. DP83840 10/100 Mb/s Ethernet Physical Layer specification.  National  *    Semiconductor Corp., Arlington, Texas.  March 1997.  Available for  *    download from http://www.ns.com/  * 4. Werner Koch's xirc2ps driver for Linux, for all the CE2 and CE3 frobs  *    that aren't documented in the Xircom spec.  Available for download from  *    http://www.d.shuttle.de/isil/xircom/xirc2ps.html  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"xe.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NXE
-operator|>
-literal|0
-end_if
 
 begin_comment
 comment|/*******************  * PCMCIA registers  *******************/
@@ -3705,7 +3703,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NXE> 0 */
+comment|/* DEV_XE_IF_XEREG_H */
 end_comment
 
 end_unit
