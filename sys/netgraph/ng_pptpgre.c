@@ -3681,11 +3681,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ng_unref
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|arg
@@ -3696,6 +3691,11 @@ name|rackTimerPtr
 condition|)
 block|{
 comment|/* timer stopped race condition */
+name|ng_unref
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3863,6 +3863,11 @@ operator|->
 name|xmitWin
 expr_stmt|;
 comment|/* reset win expand time */
+name|ng_unref
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -4113,11 +4118,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ng_unref
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|a
@@ -4128,6 +4128,11 @@ name|arg
 condition|)
 block|{
 comment|/* timer stopped race condition */
+name|ng_unref
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -4149,6 +4154,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|ng_unref
+argument_list|(
+name|node
 argument_list|)
 expr_stmt|;
 name|splx
