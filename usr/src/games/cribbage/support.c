@@ -911,7 +911,7 @@ return|return
 operator|(
 operator|*
 name|scr
-operator|>
+operator|>=
 name|glimit
 operator|)
 return|;
