@@ -7775,7 +7775,7 @@ condition|(
 name|uap
 operator|->
 name|nent
-operator|>=
+operator|>
 name|AIO_LISTIO_MAX
 condition|)
 return|return
