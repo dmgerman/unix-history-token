@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)column.c	5.3 (Berkeley) %G%"
+literal|"@(#)column.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,18 +95,6 @@ comment|/* default terminal width */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|list
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* array of pointers to records */
-end_comment
-
-begin_decl_stmt
 name|int
 name|entries
 decl_stmt|;
@@ -134,6 +122,31 @@ end_decl_stmt
 
 begin_comment
 comment|/* longest record */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|list
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* array of pointers to records */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|separator
+init|=
+literal|"\t "
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* field separator for table option */
 end_comment
 
 begin_function
@@ -246,7 +259,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:tx"
+literal|"c:s:tx"
 argument_list|)
 operator|)
 operator|!=
@@ -266,6 +279,14 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|separator
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -988,7 +1009,7 @@ name|strtok
 argument_list|(
 name|p
 argument_list|,
-literal|"\t "
+name|separator
 argument_list|)
 condition|;
 name|p
