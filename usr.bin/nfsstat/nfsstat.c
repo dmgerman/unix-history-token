@@ -324,6 +324,7 @@ value|(nfsstats.field - lastst.field)
 end_define
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc

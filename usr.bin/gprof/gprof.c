@@ -1699,9 +1699,9 @@ modifier|*
 name|pfile
 decl_stmt|;
 block|{
-specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|intmax_t
 name|sample
 decl_stmt|;

@@ -3264,10 +3264,11 @@ name|cleanup
 parameter_list|()
 block|{
 specifier|static
+name|int
 name|in_cleanup
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
