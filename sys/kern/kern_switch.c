@@ -594,11 +594,6 @@ name|ke_thread
 operator|=
 name|td
 expr_stmt|;
-name|sched_add
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_RUNQ
@@ -607,6 +602,11 @@ literal|"kse_reassign: ke%p -> td%p"
 argument_list|,
 name|ke
 argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|sched_add
+argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
@@ -905,13 +905,27 @@ name|thread
 modifier|*
 name|tda
 decl_stmt|;
-name|CTR1
+name|CTR4
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"setrunqueue: td%p"
+literal|"setrunqueue: td:%p ke:%p kg:%p pid:%d"
 argument_list|,
 name|td
+argument_list|,
+name|td
+operator|->
+name|td_kse
+argument_list|,
+name|td
+operator|->
+name|td_ksegrp
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -1017,6 +1031,17 @@ operator|->
 name|kg_iq
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_RUNQ
+argument_list|,
+literal|"setrunqueue: kg:%p: Use free ke:%p"
+argument_list|,
+name|kg
+argument_list|,
+name|ke
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1063,6 +1088,19 @@ operator|=
 name|tda
 operator|->
 name|td_kse
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_RUNQ
+argument_list|,
+literal|"setrunqueue: kg:%p: take ke:%p from td: %p"
+argument_list|,
+name|kg
+argument_list|,
+name|ke
+argument_list|,
+name|tda
+argument_list|)
 expr_stmt|;
 name|sched_rem
 argument_list|(
@@ -1288,6 +1326,28 @@ argument_list|(
 name|ke
 operator|->
 name|ke_thread
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|CTR3
+argument_list|(
+name|KTR_RUNQ
+argument_list|,
+literal|"setrunqueue: held: td%p kg%p pid%d"
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_ksegrp
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2079,15 +2139,17 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_add: p=%p pri=%d %d rqh=%p"
+literal|"runq_add: td=%p ke=%p pri=%d %d rqh=%p"
 argument_list|,
 name|ke
 operator|->
-name|ke_proc
+name|ke_thread
+argument_list|,
+name|ke
 argument_list|,
 name|ke
 operator|->
@@ -2375,11 +2437,15 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_remove: p=%p pri=%d %d rqh=%p"
+literal|"runq_remove: td=%p, ke=%p pri=%d %d rqh=%p"
+argument_list|,
+name|ke
+operator|->
+name|ke_thread
 argument_list|,
 name|ke
 argument_list|,

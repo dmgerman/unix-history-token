@@ -2865,13 +2865,13 @@ name|td_state
 operator|=
 name|TDS_INACTIVE
 expr_stmt|;
-comment|/* XXX Shouldn't cpu_throw() here. */
-name|mtx_assert
+name|CTR1
 argument_list|(
-operator|&
-name|sched_lock
+name|KTR_PROC
 argument_list|,
-name|MA_OWNED
+literal|"thread_exit: cpu_throw() thread %p"
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|cpu_throw

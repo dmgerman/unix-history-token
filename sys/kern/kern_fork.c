@@ -3179,13 +3179,17 @@ expr_stmt|;
 name|cpu_critical_fork_exit
 argument_list|()
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"fork_exit: new thread %p (pid %d, %s)"
+literal|"fork_exit: new thread %p (kse %p, pid %d, %s)"
 argument_list|,
 name|td
+argument_list|,
+name|td
+operator|->
+name|td_kse
 argument_list|,
 name|p
 operator|->

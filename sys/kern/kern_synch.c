@@ -1336,17 +1336,21 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: old thread %p (pid %ld, %s)"
+literal|"mi_switch: old thread %p (kse %p, pid %ld, %s)"
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
 name|td
+argument_list|,
+name|td
+operator|->
+name|td_kse
 argument_list|,
 operator|(
 name|long
@@ -1382,17 +1386,21 @@ argument_list|,
 name|newtd
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: new thread %p (pid %ld, %s)"
+literal|"mi_switch: new thread %p (kse %p, pid %ld, %s)"
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
 name|td
+argument_list|,
+name|td
+operator|->
+name|td_kse
 argument_list|,
 operator|(
 name|long

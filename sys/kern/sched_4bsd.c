@@ -95,13 +95,6 @@ directive|include
 file|<sys/sx.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KTR_4BSD
-value|0x0
-end_define
-
 begin_comment
 comment|/*  * INVERSE_ESTCPU_WEIGHT is only suitable for statclock() frequencies in  * the range 100-256 Hz (approximately).  */
 end_comment
@@ -2615,13 +2608,15 @@ name|ke
 argument_list|)
 condition|)
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
-name|KTR_4BSD
+name|KTR_RUNQ
 argument_list|,
-literal|"adding kse:%p to gbl runq"
+literal|"sched_add: adding kse:%p (td:%p) to gbl runq"
 argument_list|,
 name|ke
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|ke
@@ -2634,13 +2629,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
-name|KTR_4BSD
+name|KTR_RUNQ
 argument_list|,
-literal|"adding kse:%p to pcpu runq"
+literal|"sched_add: adding kse:%p (td:%p)to pcpu runq"
 argument_list|,
 name|ke
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2667,6 +2664,17 @@ expr_stmt|;
 block|}
 else|#
 directive|else
+name|CTR2
+argument_list|(
+name|KTR_RUNQ
+argument_list|,
+literal|"sched_add: adding kse:%p (td:%p) to runq"
+argument_list|,
+name|ke
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|ke
 operator|->
 name|ke_runq
@@ -2894,7 +2902,7 @@ condition|)
 block|{
 name|CTR2
 argument_list|(
-name|KTR_4BSD
+name|KTR_RUNQ
 argument_list|,
 literal|"choosing kse %p from pcpu runq %d"
 argument_list|,
@@ -2926,7 +2934,7 @@ else|else
 block|{
 name|CTR1
 argument_list|(
-name|KTR_4BSD
+name|KTR_RUNQ
 argument_list|,
 literal|"choosing kse %p from main runq"
 argument_list|,
