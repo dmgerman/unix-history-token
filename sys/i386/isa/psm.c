@@ -626,6 +626,9 @@ name|dvp
 operator|->
 name|id_unit
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PSM_NO_RESET
 name|psm_write_dev
 argument_list|(
 name|ioport
@@ -637,6 +640,8 @@ comment|/* Reset aux device */
 name|psm_poll_status
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|ioport
