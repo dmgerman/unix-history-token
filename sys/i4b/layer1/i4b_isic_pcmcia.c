@@ -27,6 +27,19 @@ directive|include
 file|"card.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|NCARD
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NCARD
+value|0
+end_define
+
 begin_if
 if|#
 directive|if

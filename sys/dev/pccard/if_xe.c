@@ -59,6 +59,19 @@ operator|>
 literal|0
 end_if
 
+begin_undef
+undef|#
+directive|undef
+name|NCARD
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NCARD
+value|0
+end_define
+
 begin_if
 if|#
 directive|if
