@@ -3291,7 +3291,7 @@ name|Buf_GetAll
 argument_list|(
 name|buf
 argument_list|,
-name|FALSE
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
