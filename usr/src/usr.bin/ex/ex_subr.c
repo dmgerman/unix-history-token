@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.5	%G%"
+literal|"@(#)ex_subr.c	7.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2656,259 +2656,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_define
-define|#
-directive|define
-name|std_nerrs
-value|(sizeof std_errlist / sizeof std_errlist[0])
-end_define
-
-begin_define
-define|#
-directive|define
-name|error
-parameter_list|(
-name|i
-parameter_list|)
-value|i
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|lint
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
-name|std_errlist
-index|[]
-init|=
-block|{
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|VMUNIX
-name|char
-operator|*
-name|std_errlist
-index|[]
-operator|=
-block|{
-else|#
-directive|else
-name|short
-name|std_errlist
-index|[]
-operator|=
-block|{
-endif|#
-directive|endif
-endif|#
-directive|endif
-name|error
-argument_list|(
-literal|"Error 0"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Not super-user"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"No such file or directory"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"No such process"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Interrupted system call"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Physical I/O error"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"No such device or address"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Argument list too long"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Exec format error"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Bad file number"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"No children"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"No more processes"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Not enough core"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Permission denied"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Bad address"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Block device required"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Mount device busy"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"File exists"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Cross-device link"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"No such device"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Not a directory"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Is a directory"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Invalid argument"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"File table overflow"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Too many open files"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Not a typewriter"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Text file busy"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"File too large"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"No space left on device"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Illegal seek"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Read-only file system"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Too many links"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Broken pipe"
-argument_list|)
-block|,
-ifndef|#
-directive|ifndef
-name|V6
-name|error
-argument_list|(
-literal|"Math argument"
-argument_list|)
-block|,
-name|error
-argument_list|(
-literal|"Result too large"
-argument_list|)
-block|,
-endif|#
-directive|endif
-name|error
-argument_list|(
-literal|"Quota exceeded"
-argument_list|)
-comment|/* Berkeley quota systems only */
-block|}
-block|;
-undef|#
-directive|undef
-name|error
-name|char
-operator|*
 name|strend
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-block|;
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -2924,14 +2683,23 @@ name|cp
 operator|)
 return|;
 block|}
+end_function
+
+begin_macro
 name|strcLIN
 argument_list|(
 argument|dp
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|dp
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|CP
 argument_list|(
@@ -2939,38 +2707,55 @@ name|linebuf
 argument_list|,
 name|dp
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|syserror
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
 name|e
-operator|=
+init|=
 name|errno
-block|;
+decl_stmt|;
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
 name|dirtcnt
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|' '
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|e
 operator|>=
 literal|0
 operator|&&
-name|errno
+name|e
 operator|<=
-name|std_nerrs
+name|sys_nerr
 condition|)
 name|error
 argument_list|(
-name|std_errlist
+name|sys_errlist
 index|[
 name|e
 index|]
@@ -2985,24 +2770,36 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Return the column number that results from being in column col and  * hitting a tab, where tabs are set every ts columns.  Work right for  * the case where col> COLUMNS, even if ts does not divide COLUMNS.  */
+end_comment
+
+begin_macro
 name|tabcol
 argument_list|(
 argument|col
 argument_list|,
 argument|ts
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|col
-block|,
+decl_stmt|,
 name|ts
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|offset
-block|,
+decl_stmt|,
 name|result
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|col
@@ -3043,14 +2840,14 @@ name|ts
 operator|)
 operator|+
 name|offset
-block|;
+expr_stmt|;
 return|return
 operator|(
 name|result
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_function
 name|char
