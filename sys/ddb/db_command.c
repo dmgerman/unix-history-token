@@ -1762,7 +1762,7 @@ literal|"trace"
 block|,
 name|db_stack_trace
 block|,
-literal|0
+name|CS_OWN
 block|,
 literal|0
 block|}
@@ -1772,7 +1772,7 @@ literal|"where"
 block|,
 name|db_stack_trace
 block|,
-literal|0
+name|CS_OWN
 block|,
 literal|0
 block|}
