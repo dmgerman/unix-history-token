@@ -56,25 +56,6 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
-begin_struct
-struct|struct
-name|parms
-block|{
-name|int
-name|start
-decl_stmt|;
-name|union
-name|descriptor
-modifier|*
-name|descs
-decl_stmt|;
-name|int
-name|num
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function
 name|int
 name|i386_get_ldt
@@ -92,7 +73,7 @@ name|num
 parameter_list|)
 block|{
 name|struct
-name|parms
+name|i386_ldt_args
 name|p
 decl_stmt|;
 name|p

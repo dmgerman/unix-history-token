@@ -44,25 +44,6 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
-begin_struct
-struct|struct
-name|parms
-block|{
-name|unsigned
-name|int
-name|start
-decl_stmt|;
-name|unsigned
-name|int
-name|length
-decl_stmt|;
-name|int
-name|enable
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function
 name|int
 name|i386_set_ioperm
@@ -80,7 +61,7 @@ name|enable
 parameter_list|)
 block|{
 name|struct
-name|parms
+name|i386_ioperm_args
 name|p
 decl_stmt|;
 name|p

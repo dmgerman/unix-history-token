@@ -44,21 +44,6 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
-begin_struct
-struct|struct
-name|parms
-block|{
-name|int
-name|sub_op
-decl_stmt|;
-name|void
-modifier|*
-name|sub_args
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function
 name|int
 name|i386_vm86
@@ -72,7 +57,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|parms
+name|i386_vm86_args
 name|p
 decl_stmt|;
 name|p
@@ -85,6 +70,10 @@ name|p
 operator|.
 name|sub_args
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|data
 expr_stmt|;
 return|return
