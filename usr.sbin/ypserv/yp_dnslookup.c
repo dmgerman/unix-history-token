@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_dnslookup.c,v 1.13 1997/10/29 07:25:02 charnier Exp $"
+literal|"$Id: yp_dnslookup.c,v 1.14 1998/06/09 05:06:27 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1926,16 +1926,6 @@ name|xprt
 operator|->
 name|xp_raddr
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|'.'
-argument_list|)
-condition|)
 name|q
 operator|->
 name|domain
@@ -1943,13 +1933,6 @@ operator|=
 name|_res
 operator|.
 name|dnsrch
-expr_stmt|;
-else|else
-name|q
-operator|->
-name|domain
-operator|=
-name|NULL
 expr_stmt|;
 name|q
 operator|->
