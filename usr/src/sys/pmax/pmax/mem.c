@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -131,8 +131,8 @@ init|=
 name|NULL
 decl_stmt|;
 specifier|extern
-name|u_int
-name|lowram
+name|vm_offset_t
+name|avail_end
 decl_stmt|;
 while|while
 condition|(
@@ -250,6 +250,19 @@ comment|/* minor device 1 is kernel memory */
 case|case
 literal|1
 case|:
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_offset
+operator|<
+name|MACH_CACHED_MEMORY_ADDR
+condition|)
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 name|c
 operator|=
 name|iov
@@ -258,7 +271,20 @@ name|iov_len
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|uio
+operator|->
+name|uio_offset
+operator|+
+name|c
+operator|<=
+name|avail_end
+operator|||
+name|uio
+operator|->
+name|uio_offset
+operator|>=
+name|MACH_KSEG2_ADDR
+operator|&&
 name|kernacc
 argument_list|(
 operator|(
@@ -281,11 +307,7 @@ else|:
 name|B_WRITE
 argument_list|)
 condition|)
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|uiomove
@@ -306,6 +328,12 @@ name|uio
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 comment|/* minor device 2 is EOF/RATHOLE */
 case|case
 literal|2
