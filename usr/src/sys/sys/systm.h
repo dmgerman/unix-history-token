@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|/* system version */
 end_comment
 
 begin_comment
-comment|/*  * Nblkdev is the number of entries  * (rows) in the block switch. It is  * set in binit/bio.c by making  * a pass over the switch.  * Used in bounds checking on major  * device numbers.  */
+comment|/*  * Nblkdev is the number of entries (rows) in the block switch.  * Used in bounds checking on major device numbers.  */
 end_comment
 
 begin_decl_stmt
@@ -30,7 +30,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Number of character switch entries.  * Set by cinit/prim.c  */
+comment|/*  * Number of character switch entries.  */
 end_comment
 
 begin_decl_stmt
