@@ -4491,6 +4491,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ACPI_DISABLE_IRQS
+argument_list|()
+expr_stmt|;
 name|status
 operator|=
 name|AcpiEnterSleepState
