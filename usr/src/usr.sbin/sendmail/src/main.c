@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.129 (Berkeley) %G%"
+literal|"@(#)main.c	8.130 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5879,8 +5879,8 @@ operator|->
 name|e_header
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|LOG
 if|if
 condition|(

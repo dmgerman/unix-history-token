@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.195 (Berkeley) %G%"
+literal|"@(#)conf.c	8.196 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13128,8 +13128,8 @@ literal|"HESIOD"
 block|,
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|LOG
 literal|"LOG"
 block|,
