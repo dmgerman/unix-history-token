@@ -8739,6 +8739,76 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_decl_stmt
+name|DMenu
+name|MenuSysconsKeymap
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"System Console Keymap"
+block|,
+literal|"The default system console driver for FreeBSD (syscons) defaults\n"
+literal|"to a standard \"PC-98x1\" keyboard map.  Users may wish to choose\n"
+literal|"one of the other keymaps below.\n"
+literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
+literal|"which is required to generate the ANSI character subset, but your\n"
+literal|"choice of keymap will also be saved for later (fuller) use."
+block|,
+literal|"Choose a keyboard map"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"Japanese PC-98x1"
+block|,
+literal|"Japanese PC-98x1 keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=jp.pc98"
+block|}
+block|,
+block|{
+literal|" Japanese PC-98x1 (ISO)"
+block|,
+literal|"Japanese PC-98x1 (ISO) keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=jp.pc98.iso"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|DMenu
 name|MenuSysconsKeymap
@@ -9470,6 +9540,11 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|DMenu
