@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -68,12 +69,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
-name|int
-name|n
-init|=
-literal|0
-decl_stmt|;
 name|char
 modifier|*
 name|os1
@@ -331,16 +326,12 @@ name|s
 parameter_list|)
 name|char
 modifier|*
+modifier|*
 name|s
 decl_stmt|;
 block|{
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|s
 operator|==
 operator|&

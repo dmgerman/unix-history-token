@@ -378,13 +378,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|Schedule
-name|sched
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 name|challenge
 index|[

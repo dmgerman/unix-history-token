@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -335,12 +336,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|res
 operator|=
 name|getpass
 argument_list|(
 name|prompt
 argument_list|)
+operator|)
 condition|)
 block|{
 name|strncpy

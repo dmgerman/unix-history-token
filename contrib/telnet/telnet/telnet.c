@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -77,6 +78,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ring.h"
 end_include
 
@@ -102,6 +121,52 @@ begin_include
 include|#
 directive|include
 file|"general.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/auth.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/misc.h>
 end_include
 
 begin_escape
@@ -323,6 +388,10 @@ name|dontlecho
 decl_stmt|,
 comment|/* do we suppress local echoing right now? */
 name|globalmode
+decl_stmt|,
+name|clienteof
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3329,7 +3398,7 @@ operator|*
 operator|)
 name|temp
 argument_list|,
-literal|"%c%c%c%c%d,%d%c%c"
+literal|"%c%c%c%c%ld,%ld%c%c"
 argument_list|,
 name|IAC
 argument_list|,
@@ -4762,7 +4831,7 @@ name|func
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 					spcp =&spc_data[func]; \ 					if (spcp->valp = tcval(func)) { \ 					    spcp->val = *spcp->valp; \ 					    spcp->mylevel = SLC_VARIABLE|flags; \ 					} else { \ 					    spcp->val = 0; \ 					    spcp->mylevel = SLC_DEFAULT; \ 					} \ 				    }
+value|{ \ 					spcp =&spc_data[func]; \ 					if ((spcp->valp = tcval(func))) { \ 					    spcp->val = *spcp->valp; \ 					    spcp->mylevel = SLC_VARIABLE|flags; \ 					} else { \ 					    spcp->val = 0; \ 					    spcp->mylevel = SLC_DEFAULT; \ 					} \ 				    }
 name|initfunc
 argument_list|(
 name|SLC_SYNCH
@@ -6568,6 +6637,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|ep
 operator|=
 name|env_default
@@ -6576,6 +6646,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 name|env_opt_add
 argument_list|(
@@ -6592,6 +6663,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|ep
 operator|=
 name|env_default
@@ -6600,6 +6672,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 condition|)
 name|env_opt_add
 argument_list|(
@@ -6764,11 +6837,13 @@ control|)
 block|{
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|ep
 operator|++
+operator|)
 condition|)
 block|{
 switch|switch
@@ -6817,9 +6892,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|vp
+operator|)
 condition|)
 block|{
 ifdef|#
@@ -8774,6 +8851,12 @@ name|ttyiring
 argument_list|)
 operator|&&
 operator|(
+name|clienteof
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
 name|shell_active
 operator|==
 literal|0
@@ -8789,6 +8872,12 @@ argument_list|(
 operator|&
 name|ttyiring
 argument_list|)
+operator|&&
+operator|(
+name|clienteof
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 endif|#
 directive|endif

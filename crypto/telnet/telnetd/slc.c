@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -965,6 +966,9 @@ name|mylevel
 operator|=
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -984,6 +988,9 @@ condition|)
 block|{
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -995,6 +1002,9 @@ name|flag
 expr_stmt|;
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1039,6 +1049,9 @@ condition|)
 block|{
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1053,6 +1066,9 @@ else|else
 block|{
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1062,6 +1078,9 @@ name|flag
 operator|=
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1072,6 +1091,9 @@ expr_stmt|;
 block|}
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1081,6 +1103,9 @@ name|val
 operator|=
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1094,6 +1119,9 @@ name|func
 argument_list|,
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1103,6 +1131,9 @@ name|flag
 argument_list|,
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1118,6 +1149,9 @@ if|if
 condition|(
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1127,6 +1161,9 @@ block|{
 comment|/* 		 * We can change this one. 		 */
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1140,6 +1177,9 @@ operator|*
 operator|(
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1150,6 +1190,9 @@ name|val
 expr_stmt|;
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1189,6 +1232,9 @@ condition|)
 block|{
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1200,6 +1246,9 @@ name|flag
 expr_stmt|;
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1237,6 +1286,9 @@ name|SLC_NOSUPPORT
 expr_stmt|;
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1260,6 +1312,9 @@ name|mylevel
 expr_stmt|;
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1278,6 +1333,9 @@ condition|)
 block|{
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1287,6 +1345,9 @@ name|val
 operator|=
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.
@@ -1298,6 +1359,9 @@ name|val
 operator|=
 name|slctab
 index|[
+operator|(
+name|int
+operator|)
 name|func
 index|]
 operator|.

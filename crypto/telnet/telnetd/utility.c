@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -28,6 +29,23 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -39,6 +57,46 @@ include|#
 directive|include
 file|"telnetd.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/auth.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * utility functions performing io related tasks  */
@@ -215,6 +273,21 @@ name|s
 argument_list|,
 operator|&
 name|excepts
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|timeout
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|timeout
 argument_list|)
 expr_stmt|;
 name|value
@@ -1419,6 +1492,29 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|fmtstr
+index|[]
+init|=
+block|{
+literal|"%+"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/*  * This is split on two lines so that SCCS will not see the M  * between two % signs and expand it...  */
 end_comment
@@ -1434,6 +1530,11 @@ literal|"%l:%M\ %P on %A, %d %B %Y"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -1588,6 +1689,18 @@ break|break;
 case|case
 literal|'d'
 case|:
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -4217,8 +4330,6 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
-name|def_case
-label|:
 if|if
 condition|(
 name|isprint
@@ -5128,11 +5239,6 @@ argument_list|(
 name|nfrontp
 argument_list|,
 literal|" ENC_KEYID"
-argument_list|,
-name|pointer
-index|[
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -5153,11 +5259,6 @@ argument_list|(
 name|nfrontp
 argument_list|,
 literal|" DEC_KEYID"
-argument_list|,
-name|pointer
-index|[
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|nfrontp

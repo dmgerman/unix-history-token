@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -60,6 +61,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|altlogin
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|cleanopen
+parameter_list|(
+name|char
+modifier|*
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|scrub_env
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -85,6 +114,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|utmp_len
+init|=
+name|MAXHOSTNAMELEN
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -96,18 +133,6 @@ include|#
 directive|include
 file|<initreq.h>
 end_include
-
-begin_decl_stmt
-name|int
-name|utmp_len
-init|=
-name|MAXHOSTNAMELEN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sizeof(init_request.host) */
-end_comment
 
 begin_else
 else|#
@@ -164,24 +189,31 @@ begin_comment
 comment|/* UTMPX */
 end_comment
 
-begin_decl_stmt
-name|int
-name|utmp_len
-init|=
-sizeof|sizeof
-argument_list|(
-name|wtmp
-operator|.
-name|ut_host
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|PARENT_DOES_UTMP
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PATH_WTMP
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|wtmpf
+index|[]
+init|=
+name|_PATH_WTMP
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|char
@@ -192,6 +224,31 @@ literal|"/usr/adm/wtmp"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PATH_UTMP
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|utmpf
+index|[]
+init|=
+name|_PATH_UTMP
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|char
 name|utmpf
@@ -200,6 +257,11 @@ init|=
 literal|"/etc/utmp"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -227,6 +289,12 @@ end_endif
 begin_comment
 comment|/* PARENT_DOES_UTMP */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -2598,7 +2666,7 @@ for|for
 control|(
 name|cp
 operator|=
-literal|"pqrstuvwxyzPQRST"
+literal|"pqrsPQRS"
 init|;
 operator|*
 name|cp
@@ -2644,7 +2712,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+literal|32
 condition|;
 name|i
 operator|++
@@ -2653,7 +2721,7 @@ block|{
 operator|*
 name|p2
 operator|=
-literal|"0123456789abcdef"
+literal|"0123456789abcdefghijklmnopqrstuv"
 index|[
 name|i
 index|]
@@ -4934,7 +5002,7 @@ comment|/*  * getptyslave()  *  * Open the slave side of the pty, and do any ini
 end_comment
 
 begin_function
-name|int
+name|void
 name|getptyslave
 parameter_list|()
 block|{
@@ -4944,6 +5012,9 @@ name|t
 init|=
 operator|-
 literal|1
+decl_stmt|;
+name|char
+name|erase
 decl_stmt|;
 if|#
 directive|if
@@ -4987,7 +5058,7 @@ name|def_tspeed
 decl_stmt|,
 name|def_rspeed
 decl_stmt|;
-comment|/* 	 * Opening the slave side may cause initilization of the 	 * kernel tty structure.  We need remember the state of 	 * 	if linemode was turned on 	 *	terminal window size 	 *	terminal speed 	 * so that we can re-set them if we need to. 	 */
+comment|/* 	 * Opening the slave side may cause initilization of the 	 * kernel tty structure.  We need remember the state of 	 * 	if linemode was turned on 	 *	terminal window size 	 *	terminal speed 	 *	erase character 	 * so that we can re-set them if we need to. 	 */
 ifdef|#
 directive|ifdef
 name|LINEMODE
@@ -4998,6 +5069,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|erase
+operator|=
+name|termbuf
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+expr_stmt|;
 comment|/* 	 * Make sure that we don't have a controlling tty, and 	 * that we are the session (process group) leader. 	 */
 ifdef|#
 directive|ifdef
@@ -5402,6 +5482,19 @@ name|def_tspeed
 else|:
 literal|9600
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|erase
+condition|)
+name|termbuf
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+operator|=
+name|erase
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6330,12 +6423,6 @@ name|long
 name|time
 parameter_list|()
 function_decl|;
-name|char
-name|name
-index|[
-literal|256
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NEWINIT
@@ -7034,6 +7121,7 @@ name|envinit
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|envp
 operator|=
@@ -7041,6 +7129,7 @@ name|getenv
 argument_list|(
 literal|"TZ"
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|envp
@@ -7115,11 +7204,6 @@ block|{
 specifier|register
 name|char
 modifier|*
-name|cp
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
 modifier|*
 name|argv
 decl_stmt|;
@@ -7127,8 +7211,11 @@ name|char
 modifier|*
 modifier|*
 name|addarg
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|user
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -7588,6 +7675,15 @@ name|addarg
 argument_list|(
 name|argv
 argument_list|,
+literal|"--"
+argument_list|)
+expr_stmt|;
+name|argv
+operator|=
+name|addarg
+argument_list|(
+name|argv
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -7845,6 +7941,15 @@ name|addarg
 argument_list|(
 name|argv
 argument_list|,
+literal|"--"
+argument_list|)
+expr_stmt|;
+name|argv
+operator|=
+name|addarg
+argument_list|(
+name|argv
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -7864,6 +7969,15 @@ literal|"USER"
 argument_list|)
 condition|)
 block|{
+name|argv
+operator|=
+name|addarg
+argument_list|(
+name|argv
+argument_list|,
+literal|"--"
+argument_list|)
+expr_stmt|;
 name|argv
 operator|=
 name|addarg
@@ -8006,15 +8120,21 @@ directive|endif
 name|closelog
 argument_list|()
 expr_stmt|;
-comment|/* 	 * This sleep(1) is in here so that telnetd can 	 * finish up with the tty.  There's a race condition 	 * the login banner message gets lost... 	 */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
+if|if
+condition|(
+name|altlogin
+operator|==
+name|NULL
+condition|)
+block|{
+name|altlogin
+operator|=
+name|_PATH_LOGIN
 expr_stmt|;
+block|}
 name|execv
 argument_list|(
-name|_PATH_LOGIN
+name|altlogin
 argument_list|,
 name|argv
 argument_list|)
@@ -8025,14 +8145,14 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m\n"
 argument_list|,
-name|_PATH_LOGIN
+name|altlogin
 argument_list|)
 expr_stmt|;
 name|fatalperror
 argument_list|(
 name|net
 argument_list|,
-name|_PATH_LOGIN
+name|altlogin
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -8271,12 +8391,10 @@ begin_comment
 comment|/*  * scrub_env()  *  * Remove a few things from the environment that  * don't need to be there.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|scrub_env
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -8303,6 +8421,33 @@ name|cpp
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|strncmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"LD_LIBRARY_PATH="
+argument_list|,
+literal|16
+argument_list|)
+operator|&&
+name|strncmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"LD_PRELOAD="
+argument_list|,
+literal|11
+argument_list|)
+operator|&&
+else|#
+directive|else
 if|if
 condition|(
 name|strncmp
@@ -8335,6 +8480,8 @@ argument_list|,
 literal|8
 argument_list|)
 operator|&&
+endif|#
+directive|endif
 name|strncmp
 argument_list|(
 operator|*
@@ -8359,7 +8506,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * cleanup()  *  * This is the routine to call when we are all through, to  * clean up anything that needs to be cleaned up.  */

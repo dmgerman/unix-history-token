@@ -64,7 +64,7 @@ typedef|typedef
 struct|struct
 block|{
 name|Block
-name|_
+name|__
 decl_stmt|;
 block|}
 name|Schedule

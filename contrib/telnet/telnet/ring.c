@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -42,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifdef
@@ -216,39 +223,28 @@ begin_comment
 comment|/* Buffer state transition routines */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ring_init
-argument_list|(
-argument|ring
-argument_list|,
-argument|buffer
-argument_list|,
-argument|count
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ring
+parameter_list|,
+name|buffer
+parameter_list|,
+name|count
+parameter_list|)
 name|Ring
 modifier|*
 name|ring
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|char
 modifier|*
 name|buffer
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|memset
 argument_list|(
@@ -313,7 +309,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Mark routines */

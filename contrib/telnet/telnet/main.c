@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -62,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ring.h"
 end_include
 
@@ -76,6 +84,46 @@ include|#
 directive|include
 file|"defines.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/auth.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* These values need to be the same as defined in libtelnet/kerberos5.c */
@@ -115,6 +163,51 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|init_terminal
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_network
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_telnet
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_sys
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_3270
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Initialize variables.  */
@@ -233,6 +326,7 @@ comment|/*  * main.  Parse arguments, invoke the protocol or command parser.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -305,6 +399,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|prompt
 operator|=
 name|strrchr
@@ -316,6 +411,7 @@ index|]
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|prompt
@@ -1101,6 +1197,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
