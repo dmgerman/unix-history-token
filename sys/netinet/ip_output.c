@@ -1367,11 +1367,9 @@ name|ro_rt
 operator|==
 literal|0
 condition|)
-name|rtalloc_ign
+name|rtalloc
 argument_list|(
 name|ro
-argument_list|,
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 if|if
@@ -3523,11 +3521,9 @@ name|ro_rt
 operator|=
 literal|0
 expr_stmt|;
-name|rtalloc_ign
+name|rtalloc
 argument_list|(
 name|ro_fwd
-argument_list|,
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 if|if

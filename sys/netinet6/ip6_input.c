@@ -2103,7 +2103,7 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
-name|rtalloc_ign
+name|rtalloc
 argument_list|(
 operator|(
 expr|struct
@@ -2112,8 +2112,6 @@ operator|*
 operator|)
 operator|&
 name|ip6_forward_rt
-argument_list|,
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 block|}

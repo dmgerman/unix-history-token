@@ -2010,8 +2010,6 @@ operator|&
 name|ro
 argument_list|,
 name|RTF_CLONING
-operator||
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 block|}

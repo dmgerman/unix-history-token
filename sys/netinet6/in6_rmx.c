@@ -249,7 +249,6 @@ name|radix_node
 modifier|*
 name|ret
 decl_stmt|;
-comment|/* 	 * For IPv6, all unicast non-host routes are automatically cloning. 	 */
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -266,31 +265,6 @@ name|rt_flags
 operator||=
 name|RTF_MULTICAST
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|rt
-operator|->
-name|rt_flags
-operator|&
-operator|(
-name|RTF_HOST
-operator||
-name|RTF_CLONING
-operator||
-name|RTF_MULTICAST
-operator|)
-operator|)
-condition|)
-block|{
-name|rt
-operator|->
-name|rt_flags
-operator||=
-name|RTF_PRCLONING
-expr_stmt|;
-block|}
 comment|/* 	 * A little bit of help for both IPv6 output and input: 	 *   For local addresses, we make sure that RTF_LOCAL is set, 	 *   with the thought that this might one day be used to speed up 	 *   ip_input(). 	 * 	 * We also mark routes to multicast addresses as such, because 	 * it's easy to do and might be useful (but this is much more 	 * dubious since it's so easy to inspect the address).  (This 	 * is done above.) 	 * 	 * XXX 	 * should elaborate the code. 	 */
 if|if
 condition|(
@@ -415,8 +389,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_CLONING
-operator||
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 if|if
@@ -517,8 +489,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_CLONING
-operator||
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 if|if

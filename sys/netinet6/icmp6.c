@@ -4906,8 +4906,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_CLONING
-operator||
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 if|if
@@ -9333,7 +9331,7 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
-name|rtalloc_ign
+name|rtalloc
 argument_list|(
 operator|(
 expr|struct
@@ -9344,8 +9342,6 @@ operator|&
 name|icmp6_reflect_rt
 operator|.
 name|ro_rt
-argument_list|,
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 block|}

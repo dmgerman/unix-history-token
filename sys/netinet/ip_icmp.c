@@ -1787,8 +1787,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_CLONING
-operator||
-name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 if|if

@@ -482,6 +482,16 @@ begin_comment
 comment|/* protocol specific routing flag */
 end_comment
 
+begin_comment
+comment|/* XXX: temporary to stay API/ABI compatible with userland */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -490,8 +500,13 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* protocol requires cloning */
+comment|/* unused, for compatibility */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -1673,11 +1673,7 @@ argument_list|(
 operator|&
 name|ro
 argument_list|,
-operator|(
-name|RTF_PRCLONING
-operator||
 name|RTF_CLONING
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Route there and interface still up? 	 */
@@ -2603,11 +2599,7 @@ argument_list|(
 operator|&
 name|ro
 argument_list|,
-operator|(
-name|RTF_PRCLONING
-operator||
 name|RTF_CLONING
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Route there and interface still up? 		 */
