@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lwrite.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lwrite.c	5.3	%G%  */
 end_comment
 
 begin_comment
@@ -650,11 +650,6 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|chk_len
-argument_list|(
-name|LSTRW
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|formatted
@@ -662,14 +657,11 @@ operator|==
 name|LISTDIRECTED
 condition|)
 block|{
-name|PUT
+name|chk_len
 argument_list|(
-literal|' '
+name|len
 argument_list|)
-name|PUT
-argument_list|(
-literal|' '
-argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -690,6 +682,13 @@ argument_list|)
 block|}
 else|else
 block|{
+name|chk_len
+argument_list|(
+name|len
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
 name|PUT
 argument_list|(
 literal|'\''
