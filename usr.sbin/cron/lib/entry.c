@@ -1256,9 +1256,6 @@ comment|/* temp buffer */
 name|char
 modifier|*
 name|s
-decl_stmt|,
-modifier|*
-name|group
 decl_stmt|;
 name|struct
 name|group
@@ -2016,7 +2013,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"strdup(\"%d\")"
+literal|"strdup(\"%s\")"
 argument_list|,
 name|cmd
 argument_list|)
