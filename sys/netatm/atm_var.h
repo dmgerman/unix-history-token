@@ -31,6 +31,19 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|atm_init_fn
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * Global variable declarations  */
 end_comment
