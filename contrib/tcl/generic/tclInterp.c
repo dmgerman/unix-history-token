@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclInterp.c --  *  *	This file implements the "interp" command which allows creation  *	and manipulation of Tcl interpreters from within Tcl scripts.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclInterp.c 1.125 97/08/05 15:22:51  */
+comment|/*   * tclInterp.c --  *  *	This file implements the "interp" command which allows creation  *	and manipulation of Tcl interpreters from within Tcl scripts.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclInterp.c 1.128 97/11/05 09:35:12  */
 end_comment
 
 begin_include
@@ -2397,6 +2397,27 @@ argument_list|,
 name|TCL_GLOBAL_ONLY
 argument_list|)
 expr_stmt|;
+comment|/*      * Inherit the recursion limit.      */
+operator|(
+operator|(
+name|Interp
+operator|*
+operator|)
+name|slaveInterp
+operator|)
+operator|->
+name|maxNestingDepth
+operator|=
+operator|(
+operator|(
+name|Interp
+operator|*
+operator|)
+name|masterInterp
+operator|)
+operator|->
+name|maxNestingDepth
+expr_stmt|;
 if|if
 condition|(
 name|safe
@@ -2521,6 +2542,15 @@ argument_list|(
 name|masterInterp
 argument_list|,
 name|slavePath
+argument_list|)
+expr_stmt|;
+name|ckfree
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|argv
 argument_list|)
 expr_stmt|;
 return|return

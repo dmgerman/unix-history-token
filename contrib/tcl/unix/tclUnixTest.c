@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixTest.c --  *  *	Contains platform specific test commands for the Unix platform.  *  * Copyright (c) 1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTest.c 1.4 97/05/14 13:24:29  */
+comment|/*   * tclUnixTest.c --  *  *	Contains platform specific test commands for the Unix platform.  *  * Copyright (c) 1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTest.c 1.5 97/10/31 17:23:42  */
 end_comment
 
 begin_include
@@ -1736,6 +1736,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|ClientData
+name|data
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -1903,7 +1906,7 @@ name|ClientData
 operator|*
 operator|)
 operator|&
-name|fd
+name|data
 argument_list|)
 operator|!=
 name|TCL_OK
@@ -1922,6 +1925,13 @@ return|return
 name|TCL_ERROR
 return|;
 block|}
+name|fd
+operator|=
+operator|(
+name|int
+operator|)
+name|data
+expr_stmt|;
 if|if
 condition|(
 name|Tcl_GetInt

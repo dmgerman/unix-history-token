@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tcl.h --  *  *	This header file describes the externally-visible facilities  *	of the Tcl interpreter.  *  * Copyright (c) 1987-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  * Copyright (c) 1993-1996 Lucent Technologies.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tcl.h 1.324 97/08/07 10:26:49  */
+comment|/*  * tcl.h --  *  *	This header file describes the externally-visible facilities  *	of the Tcl interpreter.  *  * Copyright (c) 1987-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  * Copyright (c) 1993-1996 Lucent Technologies.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tcl.h 1.326 97/11/20 12:40:43  */
 end_comment
 
 begin_ifndef
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|TCL_RELEASE_SERIAL
-value|0
+value|2
 end_define
 
 begin_define
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|TCL_PATCH_LEVEL
-value|"8.0"
+value|"8.0p2"
 end_define
 
 begin_comment

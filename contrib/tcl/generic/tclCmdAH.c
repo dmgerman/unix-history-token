@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCmdAH.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	A to H.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdAH.c 1.156 97/08/12 18:10:15  */
+comment|/*   * tclCmdAH.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	A to H.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdAH.c 1.159 97/10/31 13:06:07  */
 end_comment
 
 begin_include
@@ -1806,6 +1806,9 @@ argument_list|)
 expr_stmt|;
 comment|/* done with the result object */
 block|}
+return|return
+name|result
+return|;
 block|}
 comment|/*      * Create a new object holding the concatenated argument strings.      * THIS FAILS IF AN OBJECT'S STRING REP HAS A NULL BYTE.      */
 name|bytes
@@ -6586,6 +6589,8 @@ name|char
 name|staticBuf
 index|[
 name|MAX_FLOAT_SIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* A static buffer to copy the format results  				 * into */

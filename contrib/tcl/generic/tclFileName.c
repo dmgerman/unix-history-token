@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclFileName.c --  *  *	This file contains routines for converting file names betwen  *	native and network form.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFileName.c 1.31 97/08/05 15:23:04  */
+comment|/*   * tclFileName.c --  *  *	This file contains routines for converting file names betwen  *	native and network form.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFileName.c 1.32 97/08/19 18:44:03  */
 end_comment
 
 begin_include
@@ -4262,10 +4262,15 @@ condition|(
 name|noComplain
 condition|)
 block|{
+comment|/* 		 * We should in fact pass down the nocomplain flag  		 * or save the interp result or use another mecanism 		 * so the interp result is not mangled on errors in that case. 		 * but that would a bigger change than reasonable for a patch 		 * release. 		 * (see fileName.test 15.2-15.4 for expected behaviour) 		 */
 name|Tcl_ResetResult
 argument_list|(
 name|interp
 argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|TCL_OK
 expr_stmt|;
 continue|continue;
 block|}

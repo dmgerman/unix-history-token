@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclXtTest.c --  *  *	Contains commands for Xt notifier specific tests on Unix.  *  * Copyright (c) 1997 by Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclXtTest.c 1.1 97/03/24 14:30:42  */
+comment|/*   * tclXtTest.c --  *  *	Contains commands for Xt notifier specific tests on Unix.  *  * Copyright (c) 1997 by Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclXtTest.c 1.2 97/09/15 15:26:52  */
 end_comment
 
 begin_include
@@ -238,8 +238,13 @@ operator|!
 name|done
 condition|)
 block|{
-name|XtProcessEvent
+name|XtAppProcessEvent
 argument_list|(
+name|TclSetAppContext
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|,
 name|XtIMAll
 argument_list|)
 expr_stmt|;

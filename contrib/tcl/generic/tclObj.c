@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclObj.c --  *  *	This file contains Tcl object-related procedures that are used by  * 	many Tcl commands.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclObj.c 1.45 97/07/07 18:26:00  */
+comment|/*   * tclObj.c --  *  *	This file contains Tcl object-related procedures that are used by  * 	many Tcl commands.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclObj.c 1.47 97/10/30 13:39:00  */
 end_comment
 
 begin_include
@@ -5199,7 +5199,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"Trying to increment refCount of previously disposed object."
+literal|"Trying to decrement refCount of previously disposed object."
 argument_list|)
 expr_stmt|;
 block|}
@@ -5289,7 +5289,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"Trying to increment refCount of previously disposed object."
+literal|"Trying to check whether previously disposed object is shared."
 argument_list|)
 expr_stmt|;
 block|}
