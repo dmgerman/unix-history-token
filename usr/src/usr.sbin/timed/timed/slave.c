@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.18 (Berkeley) %G%"
+literal|"@(#)slave.c	2.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,13 +108,9 @@ name|msaveaddr
 decl_stmt|;
 name|struct
 name|timeval
-name|wait
-decl_stmt|;
-name|struct
-name|timeval
 name|time
 decl_stmt|,
-name|otime
+name|wait
 decl_stmt|;
 name|struct
 name|tsp
@@ -1049,20 +1045,13 @@ name|date
 argument_list|()
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|gettimeofday
+name|logwtmp
 argument_list|(
-operator|&
-name|otime
+literal|"|"
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+literal|"date"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1083,6 +1072,15 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+name|logwtmp
+argument_list|(
+literal|"{"
+argument_list|,
+literal|"date"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -1094,15 +1092,6 @@ operator|->
 name|tsp_name
 argument_list|,
 name|olddate
-argument_list|)
-expr_stmt|;
-name|logwtmp
-argument_list|(
-name|otime
-argument_list|,
-name|msg
-operator|->
-name|tsp_time
 argument_list|)
 expr_stmt|;
 if|if
