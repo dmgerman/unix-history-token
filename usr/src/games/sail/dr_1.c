@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.8 84/02/23"
+literal|"@(#)dr_1.c	2.9 84/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,15 @@ operator|)
 name|srand
 argument_list|(
 name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setruid
+argument_list|(
+name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -2968,6 +2977,23 @@ condition|)
 name|p
 operator|=
 literal|"Driver"
+expr_stmt|;
+if|if
+condition|(
+name|islower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+name|toupper
+argument_list|(
+operator|*
+name|p
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
