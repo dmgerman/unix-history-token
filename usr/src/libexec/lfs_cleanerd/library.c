@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.3 (Berkeley) %G%"
+literal|"@(#)library.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2245,6 +2245,32 @@ name|sp
 operator|->
 name|ss_create
 expr_stmt|;
+if|if
+condition|(
+name|inum
+operator|==
+name|LFS_IFILE_INUM
+condition|)
+block|{
+name|bp
+operator|++
+expr_stmt|;
+operator|++
+operator|(
+operator|*
+name|countp
+operator|)
+expr_stmt|;
+name|PRINT_INODE
+argument_list|(
+literal|1
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ifp
 operator|=
 name|IFILE_ENTRY
@@ -2267,7 +2293,7 @@ operator|==
 operator|*
 name|daddrp
 argument_list|,
-name|ip
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2289,6 +2315,7 @@ operator|*
 name|countp
 operator|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
