@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.9 1998/09/15 08:33:31 gibbs Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.10 1998/12/04 22:54:45 archie Exp $"
 end_empty
 
 begin_include
@@ -584,6 +584,10 @@ operator|(
 name|va
 operator|)
 return|;
+name|size
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
 for|for
 control|(
 name|ndx
@@ -625,7 +629,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release virtual space allocated by physmap We ASSUME that the correct  * srart address and the correct LENGTH are given.  *   * Disaster will follow if these assumptions are false!  */
+comment|/*  * Release virtual space allocated by physmap We ASSUME that the correct  * start address and the correct LENGTH are given.  *   * Disaster will follow if these assumptions are false!  */
 end_comment
 
 begin_function
@@ -1867,6 +1871,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|splx
+argument_list|(
+name|ospl
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
