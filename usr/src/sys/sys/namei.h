@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.3	84/01/04	*/
+comment|/*	namei.h	6.4	84/06/27	*/
 end_comment
 
 begin_struct
@@ -102,17 +102,6 @@ begin_comment
 comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NCHNAMLEN
-value|15
-end_define
-
-begin_comment
-comment|/* maximum name segment length we bother with */
-end_comment
-
 begin_struct
 struct|struct
 name|nch
@@ -154,10 +143,19 @@ name|dev_t
 name|nc_idev
 decl_stmt|;
 comment|/* dev of the name ref'd */
+name|long
+name|nc_id
+decl_stmt|;
+comment|/* referenced inode's id */
 name|char
 name|nc_nlen
 decl_stmt|;
 comment|/* length of name */
+define|#
+directive|define
+name|NCHNAMLEN
+value|15
+comment|/* maximum name segment length we bother with */
 name|char
 name|nc_name
 index|[
@@ -199,6 +197,10 @@ name|long
 name|ncs_badhits
 decl_stmt|;
 comment|/* hits we must drop */
+name|long
+name|ncs_falsehits
+decl_stmt|;
+comment|/* hits with id mismatch */
 name|long
 name|ncs_miss
 decl_stmt|;
