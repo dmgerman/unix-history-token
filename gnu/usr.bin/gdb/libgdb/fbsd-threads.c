@@ -1384,11 +1384,11 @@ argument_list|(
 name|ptid
 argument_list|)
 expr_stmt|;
+block|}
 name|inferior_ptid
 operator|=
 name|ptid
 expr_stmt|;
-block|}
 block|}
 end_function
 
