@@ -700,10 +700,6 @@ begin_comment
 comment|/*  * MPSAFE  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|setpriority
@@ -1088,7 +1084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Set "nice" for a process.  Doesn't really understand threaded processes  * well but does try.  Has the unfortunate side effect of making all the NICE  * values for a process's ksegrps the same.. This suggests that  * NICE valuse should be stored as a process nice and deltas for the ksegrps.  * (but not yet).  */
+comment|/*   * Set "nice" for a process.  Doesn't really understand threaded processes  * well but does try.  Has the unfortunate side effect of making all the NICE  * values for a process's ksegrps the same.  This suggests that  * NICE values should be stored as a process nice and deltas for the ksegrps.  * (but not yet).  */
 end_comment
 
 begin_function
@@ -1171,7 +1167,7 @@ name|n
 operator|=
 name|PRIO_MIN
 expr_stmt|;
-comment|/*  	 * Only allow nicing if to more than the lowest nice. 	 * E.g., for nices of 4,3,2  allow nice to 3 but not 1 	 */
+comment|/*  	 * Only allow nicing if to more than the lowest nice. 	 * E.g., for nices of 4,3,2 allow nice to 3 but not 1 	 */
 name|FOREACH_KSEGRP_IN_PROC
 argument_list|(
 argument|p
@@ -1248,7 +1244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* rtprio system call */
+comment|/*  * Set realtime priority  *  * MPSAFE  */
 end_comment
 
 begin_ifndef
@@ -1280,14 +1276,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Set realtime priority  *  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -1872,10 +1860,6 @@ begin_comment
 comment|/*  * MPSAFE  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|osetrlimit
@@ -2001,10 +1985,6 @@ end_endif
 
 begin_comment
 comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -2181,10 +2161,6 @@ end_endif
 
 begin_comment
 comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -2891,13 +2867,13 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
+name|rlimit
+name|rlim
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
-name|struct
-name|rlimit
-name|rlim
 decl_stmt|;
 name|int
 name|error
@@ -3087,11 +3063,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|p
+operator|==
 name|curthread
 operator|->
 name|td_proc
-operator|==
-name|p
 condition|)
 block|{
 comment|/* 		 * Adjust for the current time slice.  This is actually fairly 		 * important since the error here is on the order of a time 		 * quantum, which is much greater than the sampling error. 		 * XXXKSE use a different test due to threads on other  		 * processors also being 'current'. 		 */
@@ -4780,7 +4756,7 @@ operator|-
 operator|*
 name|hiwat
 expr_stmt|;
-comment|/* don't allow them to exceed max, but allow subtraction */
+comment|/* Don't allow them to exceed max, but allow subtraction */
 if|if
 condition|(
 name|to
