@@ -1224,7 +1224,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|output_datalen
 name|__P
 argument_list|(
@@ -1233,7 +1233,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|size_t
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
