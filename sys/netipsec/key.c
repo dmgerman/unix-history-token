@@ -14086,11 +14086,13 @@ name|spi
 operator|==
 name|spi
 condition|)
-break|break;
+return|return
+name|sav
+return|;
 block|}
 block|}
 return|return
-name|sav
+name|NULL
 return|;
 block|}
 end_function
