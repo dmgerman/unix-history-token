@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -736,10 +736,8 @@ name|hp
 operator|=
 name|NULL
 expr_stmt|;
-name|setreuid
+name|seteuid
 argument_list|(
-literal|0
-argument_list|,
 name|userid
 argument_list|)
 expr_stmt|;

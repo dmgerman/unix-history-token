@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)docmd.c	5.10 (Berkeley) %G%"
+literal|"@(#)docmd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1271,10 +1271,8 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|setreuid
+name|seteuid
 argument_list|(
-name|userid
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
