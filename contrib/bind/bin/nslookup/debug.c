@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: debug.c,v 8.16 2000/07/11 05:59:32 vixie Exp $"
+literal|"$Id: debug.c,v 8.17 2000/11/08 06:47:31 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,12 @@ begin_comment
 comment|/*  *  Imported from res_debug.c  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_DECL_RES_OPCODES
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -136,6 +142,11 @@ name|_res_opcodes
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  Used to highlight the start of a record when printing it.  */
