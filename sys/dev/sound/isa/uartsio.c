@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/sio/sioreg.h>
+file|<dev/ic/ns16550.h>
 end_include
 
 begin_include
