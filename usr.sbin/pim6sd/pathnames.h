@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_PIM6D_CONF
-value|"/usr/local/v6/etc/pim6sd.conf"
+value|"/etc/pim6sd.conf"
 end_define
 
 begin_define
