@@ -627,19 +627,6 @@ begin_comment
 comment|/* ANSI sequence to reset colours */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|colorquit
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

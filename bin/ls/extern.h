@@ -281,6 +281,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|colorquit
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|ansi_fgcol
@@ -288,6 +301,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|ansi_bgcol
@@ -295,6 +309,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|ansi_coloff
