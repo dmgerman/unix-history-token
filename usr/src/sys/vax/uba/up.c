@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.3	%G%	*/
+comment|/*	up.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -708,6 +708,20 @@ end_define
 begin_comment
 comment|/* Controller clear */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MXF
+value|01000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEM
+value|04000
+end_define
 
 begin_comment
 comment|/* Bits of uper1 */
@@ -2194,6 +2208,9 @@ name|TRE
 operator|)
 condition|)
 block|{
+name|int
+name|cs2
+decl_stmt|;
 comment|/* 			 * An error occurred, indeed.  Select this unit 			 * to get at the drive status (a SEARCH may have 			 * intervened to change the selected unit), and 			 * wait for the command which caused the interrupt 			 * to complete (DRY). 			 */
 while|while
 condition|(
@@ -2250,6 +2267,15 @@ name|b_errcnt
 operator|>
 literal|27
 condition|)
+name|cs2
+operator|=
+operator|(
+name|int
+operator|)
+name|upaddr
+operator|->
+name|upcs2
+expr_stmt|;
 name|deverror
 argument_list|(
 name|bp
@@ -2347,6 +2373,33 @@ argument_list|(
 literal|25
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|uptab
+operator|.
+name|b_errcnt
+operator|==
+literal|28
+operator|&&
+name|cs2
+operator|&
+operator|(
+name|NEM
+operator||
+name|MXF
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"FLAKEY UP "
+argument_list|)
+expr_stmt|;
+name|ubareset
+argument_list|()
+expr_stmt|;
+return|return;
 block|}
 block|}
 comment|/* 		 * If we are still noted as active, then no 		 * (further) retries are necessary.   		 * 		 * Make sure the correct unit is selected, 		 * return it to centerline if necessary, and mark 		 * this i/o complete, starting the next transfer 		 * on this drive with the upustart routine (if any). 		 */
@@ -3169,6 +3222,12 @@ argument_list|(
 literal|" up"
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|15000000
+argument_list|)
+expr_stmt|;
+comment|/* give it time to self-test */
 name|uptab
 operator|.
 name|b_active
