@@ -1507,18 +1507,37 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for holding DMA address data */
+comment|/* structure for holding DMA Physical Region Descriptors (PRD) entries */
 end_comment
 
 begin_struct
 struct|struct
-name|ata_dmaentry
+name|ata_dma_prdentry
 block|{
 name|u_int32_t
-name|base
+name|addr
 decl_stmt|;
 name|u_int32_t
 name|count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* structure used by the setprd function */
+end_comment
+
+begin_struct
+struct|struct
+name|ata_dmasetprd_args
+block|{
+name|void
+modifier|*
+name|dmatab
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 block|}
 struct|;
@@ -1552,8 +1571,7 @@ name|bus_dmamap_t
 name|ddmamap
 decl_stmt|;
 comment|/* data DMA map */
-name|struct
-name|ata_dmaentry
+name|void
 modifier|*
 name|dmatab
 decl_stmt|;
@@ -1635,6 +1653,27 @@ name|struct
 name|ata_channel
 modifier|*
 name|ch
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setprd
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|xsc
+parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+name|segs
+parameter_list|,
+name|int
+name|nsegs
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 name|int
