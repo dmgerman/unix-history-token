@@ -17032,7 +17032,7 @@ name|OID_AUTO
 argument_list|,
 name|ctl
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_WR
 argument_list|,
 name|NULL
 argument_list|,
@@ -17042,7 +17042,7 @@ name|sysctl_vfs_ctl
 argument_list|,
 literal|""
 argument_list|,
-literal|"Message queue IDs"
+literal|"Sysctl by fsid"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
