@@ -1052,6 +1052,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|unsigned
