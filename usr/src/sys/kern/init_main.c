@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	6.7	85/03/03	*/
+comment|/*	init_main.c	6.8	85/03/08	*/
 end_comment
 
 begin_include
@@ -272,7 +272,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|vax
-comment|/* 	 * This assumes that the u. area is always mapped  	 * to the same physical address. Otherwise must be 	 * handled when copying the u. area in newproc(). 	 */
+comment|/* 	 * These assume that the u. area is always mapped  	 * to the same virtual address. Otherwise must be 	 * handled when copying the u. area in newproc(). 	 */
 name|u
 operator|.
 name|u_nd
@@ -285,6 +285,14 @@ operator|.
 name|u_nd
 operator|.
 name|ni_iovec
+expr_stmt|;
+name|u
+operator|.
+name|u_ap
+operator|=
+name|u
+operator|.
+name|u_arg
 expr_stmt|;
 endif|#
 directive|endif
@@ -372,57 +380,10 @@ name|rlim_max
 operator|=
 name|RLIM_INFINITY
 expr_stmt|;
-name|u
-operator|.
-name|u_rlimit
-index|[
-name|RLIMIT_STACK
-index|]
-operator|.
-name|rlim_cur
-operator|=
-literal|512
-operator|*
-literal|1024
+comment|/* 	 * Virtual memory limits get set in vminit(). 	 */
+name|vminit
+argument_list|()
 expr_stmt|;
-name|u
-operator|.
-name|u_rlimit
-index|[
-name|RLIMIT_STACK
-index|]
-operator|.
-name|rlim_max
-operator|=
-name|ctob
-argument_list|(
-name|MAXSSIZ
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_rlimit
-index|[
-name|RLIMIT_DATA
-index|]
-operator|.
-name|rlim_max
-operator|=
-name|u
-operator|.
-name|u_rlimit
-index|[
-name|RLIMIT_DATA
-index|]
-operator|.
-name|rlim_cur
-operator|=
-name|ctob
-argument_list|(
-name|MAXDSIZ
-argument_list|)
-expr_stmt|;
-comment|/* p_maxrss is set later, in pageout (process 2) */
 if|#
 directive|if
 name|defined
