@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Machine and OS Independent (well, as best as possible)  * code for the Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  * Feral Software  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Machine and OS Independent (well, as best as possible)  * code for the Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  * Feral Software  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -387,7 +387,7 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4043,11 +4043,13 @@ name|isp
 argument_list|,
 name|ISP_LOGINFO
 argument_list|,
-literal|"Initiator ID is %d"
+literal|"Initiator ID is %d on Channel %d"
 argument_list|,
 name|sdp
 operator|->
 name|isp_initiator_id
+argument_list|,
+name|channel
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set current per-target parameters to a safe minimum. 	 */
@@ -4631,7 +4633,6 @@ name|isp_fwoptions
 operator||=
 name|ICBOPT_PDBCHANGE_AE
 expr_stmt|;
-comment|/* 	 * We don't set ICBOPT_PORTNAME because we want our 	 * Node Name&& Port Names to be distinct. 	 */
 comment|/* 	 * Make sure that target role reflects into fwoptions. 	 */
 if|if
 condition|(
@@ -4902,6 +4903,12 @@ operator|&&
 name|pwwn
 condition|)
 block|{
+name|icbp
+operator|->
+name|icb_fwoptions
+operator||=
+name|ICBOPT_BOTH_WWNS
+expr_stmt|;
 name|MAKE_NODE_NAME_FROM_WWN
 argument_list|(
 name|icbp
@@ -4985,13 +4992,13 @@ argument_list|,
 literal|"Not using any WWNs"
 argument_list|)
 expr_stmt|;
-name|fcp
+name|icbp
 operator|->
-name|isp_fwoptions
+name|icb_fwoptions
 operator|&=
 operator|~
 operator|(
-name|ICBOPT_USE_PORTNAME
+name|ICBOPT_BOTH_WWNS
 operator||
 name|ICBOPT_FULL_LOGIN
 operator|)
@@ -10948,6 +10955,8 @@ name|u_int16_t
 name|iptr
 decl_stmt|,
 name|optr
+decl_stmt|,
+name|handle
 decl_stmt|;
 union|union
 block|{
@@ -11143,6 +11152,116 @@ name|lportdb
 modifier|*
 name|lp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HANDLE_LOOPSTATE_IN_OUTER_LAYERS
+if|if
+condition|(
+name|fcp
+operator|->
+name|isp_fwstate
+operator|!=
+name|FW_READY
+operator|||
+name|fcp
+operator|->
+name|isp_loopstate
+operator|!=
+name|LOOP_READY
+condition|)
+block|{
+return|return
+operator|(
+name|CMD_RQLATER
+operator|)
+return|;
+block|}
+comment|/* 		 * If we're not on a Fabric, we can't have a target 		 * above FL_PORT_ID-1. 		 * 		 * If we're on a fabric and *not* connected as an F-port, 		 * we can't have a target less than FC_SNS_ID+1. This 		 * keeps us from having to sort out the difference between 		 * local public loop devices and those which we might get 		 * from a switch's database. 		 */
+if|if
+condition|(
+name|fcp
+operator|->
+name|isp_onfabric
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|target
+operator|>=
+name|FL_PORT_ID
+condition|)
+block|{
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_SELTIMEOUT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|CMD_COMPLETE
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|target
+operator|>=
+name|FL_PORT_ID
+operator|&&
+name|target
+operator|<=
+name|FC_SNS_ID
+condition|)
+block|{
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_SELTIMEOUT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|CMD_COMPLETE
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|fcp
+operator|->
+name|isp_topo
+operator|!=
+name|TOPO_F_PORT
+operator|&&
+name|target
+operator|<
+name|FL_PORT_ID
+condition|)
+block|{
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_SELTIMEOUT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|CMD_COMPLETE
+operator|)
+return|;
+block|}
+block|}
+else|#
+directive|else
 comment|/* 		 * Check for f/w being in ready state. If the f/w 		 * isn't in ready state, then we don't know our 		 * loop ID and the f/w hasn't completed logging 		 * into all targets on the loop. If this is the 		 * case, then bounce the command. We pretend this is 		 * a SELECTION TIMEOUT error if we've never gone to 		 * FW_READY state at all- in this case we may not 		 * be hooked to a loop at all and we shouldn't hang 		 * the machine for this. Otherwise, defer this command 		 * until later. 		 */
 if|if
 condition|(
@@ -11442,6 +11561,8 @@ return|;
 block|}
 block|}
 comment|/* 		 * XXX: Here's were we would cancel any loop_dead flag 		 * XXX: also cancel in dead_loop timeout that's running 		 */
+endif|#
+directive|endif
 comment|/* 		 * Now check whether we should even think about pursuing this. 		 */
 name|lp
 operator|=
@@ -12088,9 +12209,7 @@ argument_list|,
 name|xs
 argument_list|,
 operator|&
-name|reqp
-operator|->
-name|req_handle
+name|handle
 argument_list|)
 condition|)
 block|{
@@ -12116,6 +12235,12 @@ name|CMD_EAGAIN
 operator|)
 return|;
 block|}
+name|reqp
+operator|->
+name|req_handle
+operator|=
+name|handle
+expr_stmt|;
 comment|/* 	 * Set up DMA and/or do any bus swizzling of the request entry 	 * so that the Qlogic F/W understands what is being asked of it.  	*/
 name|i
 operator|=
@@ -12144,9 +12269,7 @@ name|isp_destroy_handle
 argument_list|(
 name|isp
 argument_list|,
-name|reqp
-operator|->
-name|req_handle
+name|handle
 argument_list|)
 expr_stmt|;
 comment|/* 		 * dmasetup sets actual error in packet, and 		 * return what we were given to return. 		 */
@@ -12277,7 +12400,7 @@ name|bus
 decl_stmt|,
 name|tgt
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|handle
 decl_stmt|;
 switch|switch
@@ -12761,9 +12884,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|handle
-operator|>>
-literal|16
+literal|0
 expr_stmt|;
 name|mbs
 operator|.
@@ -12773,8 +12894,6 @@ literal|2
 index|]
 operator|=
 name|handle
-operator|&
-literal|0xffff
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
@@ -13001,6 +13120,23 @@ operator|)
 return|;
 block|}
 break|break;
+case|case
+name|ISPCTL_RUN_MBOXCMD
+case|:
+name|isp_mboxcmd
+argument_list|(
+name|isp
+argument_list|,
+name|arg
+argument_list|,
+name|MBLOGALL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
@@ -13576,7 +13712,7 @@ block|}
 block|}
 else|else
 block|{
-name|u_int32_t
+name|int
 name|fhandle
 init|=
 name|isp_parse_async
@@ -13611,6 +13747,9 @@ name|isp_fastpost_complete
 argument_list|(
 name|isp
 argument_list|,
+operator|(
+name|u_int16_t
+operator|)
 name|fhandle
 argument_list|)
 expr_stmt|;
@@ -14235,11 +14374,23 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"bad request handle %d"
+literal|"bad request handle %d (type 0x%x, flags 0x%x)"
 argument_list|,
 name|sp
 operator|->
 name|req_handle
+argument_list|,
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_entry_type
+argument_list|,
+name|sp
+operator|->
+name|req_header
+operator|.
+name|rqs_flags
 argument_list|)
 expr_stmt|;
 name|ISP_WRITE
@@ -14759,7 +14910,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"unhandled respose queue type 0x%x"
+literal|"unhandled response queue type 0x%x"
 argument_list|,
 name|sp
 operator|->
@@ -15106,7 +15257,7 @@ block|{
 name|int
 name|bus
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|fast_post_handle
 init|=
 literal|0
@@ -15197,9 +15348,16 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"Internal FW Error @ RISC Addr 0x%x"
+literal|"Internal Firmware Error @ RISC Addr 0x%x"
 argument_list|,
 name|mbox
+argument_list|)
+expr_stmt|;
+name|ISP_DUMPREGS
+argument_list|(
+name|isp
+argument_list|,
+literal|"Firmware Error"
 argument_list|)
 expr_stmt|;
 name|isp_reinit
@@ -15277,7 +15435,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"timeout initiated SCSI bus reset of bus %d\n"
+literal|"timeout initiated SCSI bus reset of bus %d"
 argument_list|,
 name|bus
 argument_list|)
@@ -15570,17 +15728,6 @@ name|ASYNC_CMD_CMPLT
 case|:
 name|fast_post_handle
 operator|=
-operator|(
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|OUTMAILBOX2
-argument_list|)
-operator|<<
-literal|16
-operator|)
-operator||
 name|ISP_READ
 argument_list|(
 name|isp
@@ -16337,6 +16484,24 @@ case|case
 name|RQSTYPE_REQUEST
 case|:
 default|default:
+if|if
+condition|(
+name|isp_async
+argument_list|(
+name|isp
+argument_list|,
+name|ISPASYNC_UNHANDLED_RESPONSE
+argument_list|,
+name|sp
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|isp_prt
 argument_list|(
 name|isp
@@ -18159,7 +18324,7 @@ name|ispsoftc
 modifier|*
 name|isp
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|fph
 decl_stmt|;
 block|{
@@ -18170,8 +18335,8 @@ decl_stmt|;
 if|if
 condition|(
 name|fph
-operator|<
-literal|1
+operator|==
+literal|0
 condition|)
 block|{
 return|return;
@@ -19311,7 +19476,7 @@ block|,
 comment|/* 0x02: MBOX_EXEC_FIRMWARE */
 name|ISPOPMAP
 argument_list|(
-literal|0x1f
+literal|0xdf
 argument_list|,
 literal|0x01
 argument_list|)
@@ -23239,7 +23404,7 @@ name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|handle
 decl_stmt|;
 name|isp_reset
