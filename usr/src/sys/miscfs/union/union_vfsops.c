@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -154,6 +154,11 @@ modifier|*
 name|cred
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|scred
 decl_stmt|;
 name|struct
 name|vattr
@@ -331,7 +336,19 @@ argument_list|(
 name|lowerrootvp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find upper node 	 */
+comment|/* 	 * Find upper node.  Use the real process credentials, 	 * not the effective ones since this will have come 	 * through a setuid process (mount_union).  All this 	 * messing around with permissions is entirely bogus 	 * and should be removed by allowing any user straight 	 * past the mount system call. 	 */
+name|scred
+operator|=
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
+name|p
+operator|->
+name|p_ucred
+operator|=
+name|cred
+expr_stmt|;
 name|NDINIT
 argument_list|(
 name|ndp
@@ -350,6 +367,12 @@ name|target
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_ucred
+operator|=
+name|scred
 expr_stmt|;
 if|if
 condition|(
