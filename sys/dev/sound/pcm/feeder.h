@@ -74,6 +74,9 @@ name|struct
 name|pcm_feeder
 modifier|*
 name|source
+decl_stmt|,
+modifier|*
+name|parent
 decl_stmt|;
 block|}
 struct|;
