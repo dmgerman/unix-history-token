@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.4 1997/08/06 00:22:59 alex Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.5 1997/08/23 14:31:52 alex Exp $  */
 end_comment
 
 begin_comment
@@ -4876,7 +4876,7 @@ parameter_list|)
 block|{
 name|struct
 name|ip_fw
-name|deny
+name|default_rule
 decl_stmt|;
 name|ip_fw_chk_ptr
 operator|=
@@ -4895,19 +4895,19 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|deny
+name|default_rule
 argument_list|,
 sizeof|sizeof
-name|deny
+name|default_rule
 argument_list|)
 expr_stmt|;
-name|deny
+name|default_rule
 operator|.
 name|fw_prot
 operator|=
 name|IPPROTO_IP
 expr_stmt|;
-name|deny
+name|default_rule
 operator|.
 name|fw_number
 operator|=
@@ -4917,13 +4917,26 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|deny
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_DEFAULT_TO_ACCEPT
+name|default_rule
+operator|.
+name|fw_flg
+operator||=
+name|IP_FW_F_ACCEPT
+expr_stmt|;
+else|#
+directive|else
+name|default_rule
 operator|.
 name|fw_flg
 operator||=
 name|IP_FW_F_DENY
 expr_stmt|;
-name|deny
+endif|#
+directive|endif
+name|default_rule
 operator|.
 name|fw_flg
 operator||=
@@ -4936,7 +4949,7 @@ condition|(
 name|check_ipfw_struct
 argument_list|(
 operator|&
-name|deny
+name|default_rule
 argument_list|)
 operator|==
 name|NULL
@@ -4947,7 +4960,7 @@ operator|&
 name|ip_fw_chain
 argument_list|,
 operator|&
-name|deny
+name|default_rule
 argument_list|)
 condition|)
 name|panic
@@ -4970,6 +4983,25 @@ literal|"divert disabled, "
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_DEFAULT_TO_ACCEPT
+end_ifdef
+
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"default to accept, "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
