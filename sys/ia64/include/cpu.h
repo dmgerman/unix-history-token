@@ -72,7 +72,7 @@ name|CLKF_USERMODE
 parameter_list|(
 name|cf
 parameter_list|)
-value|(CLKF_CPL(cf) == IA64_PSR_CPL_USER)
+value|(CLKF_CPL(cf) != IA64_PSR_CPL_KERN)
 end_define
 
 begin_define
@@ -102,7 +102,7 @@ name|TRAPF_USERMODE
 parameter_list|(
 name|tf
 parameter_list|)
-value|(TRAPF_CPL(tf) == IA64_PSR_CPL_USER)
+value|(TRAPF_CPL(tf) != IA64_PSR_CPL_KERN)
 end_define
 
 begin_comment
