@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.7	83/01/07	*/
+comment|/*	lpr.c	4.8	83/02/10	*/
 end_comment
 
 begin_comment
