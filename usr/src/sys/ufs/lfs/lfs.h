@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.24 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -211,7 +211,7 @@ name|u_long
 name|lfs_nfiles
 decl_stmt|;
 comment|/* number of allocated inodes */
-name|u_long
+name|long
 name|lfs_avail
 decl_stmt|;
 comment|/* blocks available for writing */
@@ -916,7 +916,7 @@ parameter_list|,
 name|db
 parameter_list|)
 define|\
-value|((db + ((fs)->lfs_uinodes + INOPB((fs))) / INOPB((fs)) +	\ 	fsbtodb(fs, 1) + LFS_SUMMARY_SIZE / DEV_BSIZE + (fs)->lfs_segtabsz)\< (fs)->lfs_avail)
+value|((long)((db + ((fs)->lfs_uinodes + INOPB((fs))) / INOPB((fs)) +	\ 	fsbtodb(fs, 1) + LFS_SUMMARY_SIZE / DEV_BSIZE + (fs)->lfs_segtabsz))\< (fs)->lfs_avail)
 end_define
 
 begin_comment
