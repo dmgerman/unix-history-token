@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.91 1998/11/28 00:25:32 msmith Exp $ */
+comment|/*	$Id: if_de.c,v 1.92 1998/12/14 05:47:26 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -15042,7 +15042,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 	 * Some folks don't use the standard ethernet rom format 	 * but instead just put the address in the first 6 bytes 	 * of the rom and let the rest be all 0xffs.  (Can we say 	 * ZNYX???) (well sometimes they put in a checksum so we'll 	 * start at 8). 	 */
+comment|/* 	 * Some folks don't use the standard ethernet rom format 	 * but instead just put the address in the first 6 bytes 	 * of the rom and let the rest be all 0xffs.  (Can we say 	 * ZNYX?) (well sometimes they put in a checksum so we'll 	 * start at 8). 	 */
 for|for
 control|(
 name|idx
