@@ -20,93 +20,6 @@ name|TARGET_VERSION
 value|fprintf (stderr, " (i386 FreeBSD/ELF)");
 end_define
 
-begin_comment
-comment|/* The svr4 ABI for the i386 says that records and unions are returned    in memory.  */
-end_comment
-
-begin_comment
-comment|/* On FreeBSD, we do not. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DEFAULT_PCC_STRUCT_RETURN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PCC_STRUCT_RETURN
-value|0
-end_define
-
-begin_comment
-comment|/* This gets defined in tm.h->linux.h->svr4.h, and keeps us from using    libraries compiled with the native cc, so undef it. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NO_DOLLAR_IN_LABEL
-end_undef
-
-begin_comment
-comment|/* Don't assume anything about the header files.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NO_IMPLICIT_EXTERN_C
-end_undef
-
-begin_define
-define|#
-directive|define
-name|NO_IMPLICIT_EXTERN_C
-end_define
-
-begin_comment
-comment|/* This defines which switch letters take arguments.  On FreeBSD, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker) (comming from svr4).    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SWITCH_TAKES_ARG
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SWITCH_TAKES_ARG
-parameter_list|(
-name|CHAR
-parameter_list|)
-define|\
-value|(DEFAULT_SWITCH_TAKES_ARG (CHAR)					\    || (CHAR) == 'h'							\    || (CHAR) == 'z'
-comment|/* ignored by ld */
-value|\    || (CHAR) == 'R')
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|WORD_SWITCH_TAKES_ARG
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WORD_SWITCH_TAKES_ARG
-parameter_list|(
-name|STR
-parameter_list|)
-define|\
-value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)					\    || !strcmp (STR, "rpath") || !strcmp (STR, "rpath-link")		\    || !strcmp (STR, "soname") || !strcmp (STR, "defsym") 		\    || !strcmp (STR, "assert") || !strcmp (STR, "dynamic-linker"))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -597,46 +510,6 @@ define|\
 value|do {									\   static int sym_lineno = 1;						\   if (TARGET_ELF) {							\     fprintf (file, ".stabn 68,0,%d,.LM%d-", line, sym_lineno);		\     assemble_name (file, XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     fprintf (file, "\n.LM%d:\n", sym_lineno);				\     sym_lineno += 1;							\   } else {								\     fprintf (file, "\t%s %d,0,%d\n", ASM_STABD_OP, N_SLINE, lineno);	\   }									\ } while (0)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|DEFAULT_VTABLE_THUNKS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_VTABLE_THUNKS
-value|1
-end_define
-
-begin_comment
-comment|/* This is BSD, so we want the DBX format.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBX_DEBUGGING_INFO
-end_define
-
-begin_comment
-comment|/* Use stabs instead of DWARF debug format.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PREFERRED_DEBUGGING_TYPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DBX_DEBUG
-end_define
-
 begin_comment
 comment|/* in elf, the function stabs come first, before the relative offsets */
 end_comment
@@ -954,7 +827,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Di386 -Dunix -D__FreeBSD__=4 -D__FreeBSD_cc_version=400002 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Di386 -Acpu(i386) -Amachine(i386)" CPP_FBSD_PREDEFINES
 end_define
 
 begin_undef
@@ -1019,23 +892,6 @@ define|#
 directive|define
 name|ASM_SPEC
 value|"%{v*: -v} %{maout: %{fpic:-k} %{fPIC:-k}}"
-end_define
-
-begin_comment
-comment|/* Like the default, except no -lg, and no -p.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LIB_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"%{!shared:%{!pg:%{!pthread:%{!kthread:-lc}%{kthread:-lpthread -lc}}%{pthread:-lc_r}}%{pg:%{!pthread:%{!kthread:-lc_p}%{kthread:-lpthread_p -lc_p}}%{pthread:-lc_r_p}}}"
 end_define
 
 begin_comment
@@ -1133,12 +989,6 @@ define|#
 directive|define
 name|TARGET_DEFAULT
 value|(MASK_NO_FANCY_MATH_387 | 0301)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
 end_define
 
 begin_comment
