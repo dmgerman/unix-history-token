@@ -108,6 +108,11 @@ directive|define
 name|SI_DUMPDEV
 value|0x0080
 comment|/* is kernel dumpdev */
+define|#
+directive|define
+name|SI_CANDELETE
+value|0x0100
+comment|/* can do BIO_DELETE */
 name|struct
 name|timespec
 name|si_atime
