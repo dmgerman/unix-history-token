@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.7 81/11/29 */
+comment|/* mbuf.h 4.8 81/12/09 */
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * Macros for type conversion  *  * CONSTANTS HERE ARE A CROCK  */
+comment|/*  * Macros for type conversion  */
 end_comment
 
 begin_comment
@@ -162,12 +162,60 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* flags to m_get */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_DONTWAIT
+value|0
+end_define
+
 begin_define
 define|#
 directive|define
 name|M_WAIT
 value|1
 end_define
+
+begin_comment
+comment|/* flags to m_pgalloc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPG_MBUFS
+value|0
+end_define
+
+begin_comment
+comment|/* put new mbufs on free list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPG_CLUSTERS
+value|1
+end_define
+
+begin_comment
+comment|/* put new clusters on free list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPG_SPACE
+value|2
+end_define
+
+begin_comment
+comment|/* don't free; caller wants space */
+end_comment
 
 begin_define
 define|#
@@ -225,7 +273,7 @@ name|m_lowat
 decl_stmt|;
 comment|/* min. # free mbufs */
 name|short
-name|m_pages
+name|m_clusters
 decl_stmt|;
 comment|/* # pages owned by network */
 name|short
@@ -331,6 +379,13 @@ name|m_copy
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|caddr_t
+name|m_clalloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
