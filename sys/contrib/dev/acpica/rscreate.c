@@ -119,7 +119,7 @@ expr_stmt|;
 comment|/*      * Pass the ByteStreamBuffer into a module that can calculate      * the buffer size needed for the linked list      */
 name|Status
 operator|=
-name|AcpiRsCalculateListLength
+name|AcpiRsGetListLength
 argument_list|(
 name|ByteStreamStart
 argument_list|,
@@ -138,6 +138,9 @@ literal|"Status=%X ListSizeNeeded=%X\n"
 operator|,
 name|Status
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|ListSizeNeeded
 operator|)
 argument_list|)
@@ -219,6 +222,9 @@ name|OutputBuffer
 operator|->
 name|Pointer
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|OutputBuffer
 operator|->
 name|Length
@@ -314,7 +320,7 @@ comment|/* Params already validated, so we don't re-validate here */
 comment|/*      * Get the required buffer length      */
 name|Status
 operator|=
-name|AcpiRsCalculatePciRoutingTableLength
+name|AcpiRsGetPciRoutingTableLength
 argument_list|(
 name|PackageObject
 argument_list|,
@@ -343,6 +349,9 @@ name|ACPI_DB_INFO
 operator|,
 literal|"BufferSizeNeeded = %X\n"
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|BufferSizeNeeded
 operator|)
 argument_list|)
@@ -396,11 +405,12 @@ name|Pointer
 expr_stmt|;
 name|UserPrt
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_PCI_ROUTING_TABLE
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -425,11 +435,12 @@ name|Length
 expr_stmt|;
 name|UserPrt
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_PCI_ROUTING_TABLE
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 comment|/*          * Fill in the Length field with the information we have at this point.          * The minus four is to subtract the size of the UINT8 Source[4] member          * because it is added below.          */
 name|UserPrt
@@ -463,16 +474,13 @@ expr_stmt|;
 comment|/*          * 1) First subobject:  Dereference the Address          */
 if|if
 condition|(
-name|ACPI_TYPE_INTEGER
-operator|==
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|==
+name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 name|UserPrt
@@ -498,16 +506,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -524,16 +526,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_TYPE_INTEGER
-operator|==
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|==
+name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 name|UserPrt
@@ -562,16 +561,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -588,14 +581,11 @@ operator|++
 expr_stmt|;
 switch|switch
 condition|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -694,7 +684,6 @@ name|AcpiNsHandleToPathname
 argument_list|(
 operator|(
 name|ACPI_HANDLE
-operator|*
 operator|)
 name|Node
 argument_list|,
@@ -773,16 +762,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -811,16 +794,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_TYPE_INTEGER
-operator|==
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|==
+name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 name|UserPrt
@@ -849,16 +829,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Need Integer, found %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -885,6 +859,9 @@ name|OutputBuffer
 operator|->
 name|Pointer
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|OutputBuffer
 operator|->
 name|Length
@@ -943,7 +920,7 @@ expr_stmt|;
 comment|/*      * Params already validated, so we don't re-validate here      *      * Pass the LinkedListBuffer into a module that calculates      * the buffer size needed for the byte stream.      */
 name|Status
 operator|=
-name|AcpiRsCalculateByteStreamLength
+name|AcpiRsGetByteStreamLength
 argument_list|(
 name|LinkedListBuffer
 argument_list|,
@@ -958,6 +935,9 @@ name|ACPI_DB_INFO
 operator|,
 literal|"ByteStreamSizeNeeded=%X, %s\n"
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|ByteStreamSizeNeeded
 operator|,
 name|AcpiFormatException
@@ -1044,6 +1024,9 @@ name|OutputBuffer
 operator|->
 name|Pointer
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|OutputBuffer
 operator|->
 name|Length

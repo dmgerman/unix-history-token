@@ -28,18 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"actables.h"
 end_include
 
@@ -310,6 +298,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiDbLoadTable
 parameter_list|(
@@ -706,8 +695,6 @@ name|Status
 operator|=
 name|AcpiTbInstallTable
 argument_list|(
-name|NULL
-argument_list|,
 operator|&
 name|TableInfo
 argument_list|)
@@ -956,7 +943,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Table %4.4s is already installed\n"
 argument_list|,
-operator|&
 name|AcpiGbl_DbTablePtr
 operator|->
 name|Signature
@@ -986,7 +972,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%4.4s at %p successfully installed and loaded\n"
 argument_list|,
-operator|&
 name|AcpiGbl_DbTablePtr
 operator|->
 name|Signature

@@ -21,19 +21,11 @@ directive|include
 file|<bootstrap.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_INT64
-value|long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_UINT64
-value|unsigned long long
-end_define
+begin_include
+include|#
+directive|include
+file|"acfreebsd.h"
+end_include
 
 begin_include
 include|#

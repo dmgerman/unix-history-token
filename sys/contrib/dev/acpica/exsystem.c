@@ -28,18 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acevents.h"
 end_include
 
@@ -453,12 +441,14 @@ operator|==
 name|AcpiGbl_GlobalLockSemaphore
 condition|)
 block|{
+name|Status
+operator|=
 name|AcpiEvReleaseGlobalLock
 argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -640,6 +630,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiOsDeleteSemaphore
 argument_list|(
 name|ObjDesc

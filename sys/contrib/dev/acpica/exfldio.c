@@ -34,18 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acevents.h"
 end_include
 
@@ -111,13 +99,12 @@ name|RegionObj
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_TYPE_REGION
-operator|!=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|RgnDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|!=
+name|ACPI_TYPE_REGION
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -125,21 +112,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Needed Region, found type %x %s\n"
+literal|"Needed Region, found type %X (%s)\n"
 operator|,
-name|RgnDesc
-operator|->
-name|Common
-operator|.
-name|Type
-operator|,
-name|AcpiUtGetTypeName
+name|ACPI_GET_OBJECT_TYPE
 argument_list|(
 name|RgnDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|RgnDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -236,11 +218,6 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Field [%4.4s] access width (%d bytes) too large for region [%4.4s] (length %X)\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|CommonField
@@ -248,6 +225,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|ObjDesc
 operator|->
@@ -255,11 +234,6 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|RgnDesc
 operator|->
 name|Region
@@ -267,6 +241,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|RgnDesc
 operator|->
@@ -285,11 +261,6 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Field [%4.4s] Base+Offset+Width %X+%X+%X is beyond end of region [%4.4s] (length %X)\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|CommonField
@@ -297,6 +268,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|ObjDesc
 operator|->
@@ -312,11 +285,6 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|RgnDesc
 operator|->
 name|Region
@@ -324,6 +292,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|RgnDesc
 operator|->
@@ -630,10 +600,10 @@ if|if
 condition|(
 name|Value
 operator|>=
-call|(
+operator|(
+operator|(
 name|ACPI_INTEGER
-call|)
-argument_list|(
+operator|)
 literal|1
 operator|<<
 name|ObjDesc
@@ -641,7 +611,7 @@ operator|->
 name|CommonField
 operator|.
 name|BitLength
-argument_list|)
+operator|)
 condition|)
 block|{
 comment|/*          * The Value is larger than the maximum value that can fit into          * the register.          */
@@ -730,11 +700,10 @@ block|}
 comment|/*      * The four types of fields are:      *      * BufferFields - Read/write from/to a Buffer      * RegionFields - Read/write from/to a Operation Region.      * BankFields   - Write to a Bank Register, then read/write from/to an OpRegion      * IndexFields  - Write to an Index Register, then read/write from/to a Data Register      */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -871,6 +840,9 @@ name|BankField
 operator|.
 name|BankObj
 argument_list|,
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|ObjDesc
 operator|->
 name|BankField
@@ -928,7 +900,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Now that the Bank has been selected, fall through to the          * RegionField case and write the datum to the Operation Region          */
-comment|/* No break; ! */
+comment|/*lint -fallthrough */
 case|case
 name|INTERNAL_TYPE_REGION_FIELD
 case|:
@@ -984,6 +956,9 @@ name|IndexField
 operator|.
 name|IndexObj
 argument_list|,
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|ObjDesc
 operator|->
 name|IndexField
@@ -1102,13 +1077,9 @@ literal|"%p, Wrong object type - %s\n"
 operator|,
 name|ObjDesc
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -1239,7 +1210,7 @@ if|if
 condition|(
 name|Mask
 operator|!=
-name|ACPI_UINT32_MAX
+name|ACPI_INTEGER_MAX
 condition|)
 block|{
 comment|/* Decode the update rule */
@@ -1338,7 +1309,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"WriteWithUpdateRule: Unknown UpdateRule setting: %x\n"
+literal|"WriteWithUpdateRule: Unknown UpdateRule setting: %X\n"
 operator|,
 operator|(
 name|ObjDesc
@@ -1541,6 +1512,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+comment|/* Should not get here */
+break|break;
 block|}
 block|}
 end_function
@@ -1667,6 +1641,9 @@ name|MergedDatum
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+comment|/* Should not get here */
+break|break;
 block|}
 block|}
 end_function
@@ -1781,7 +1758,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"ByteLen=%x, DatumLen=%x, ByteGran=%x\n"
+literal|"ByteLen=%X, DatumLen=%X, ByteGran=%X\n"
 operator|,
 name|ByteFieldLength
 operator|,
@@ -2226,7 +2203,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"ByteLen=%x, DatumLen=%x, ByteGran=%x\n"
+literal|"ByteLen=%X, DatumLen=%X, ByteGran=%X\n"
 operator|,
 name|ByteFieldLength
 operator|,
