@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.21	82/01/17	*/
+comment|/*	ht.c	4.22	82/05/12	*/
 end_comment
 
 begin_include
@@ -1675,6 +1675,12 @@ operator|=
 name|bp
 operator|->
 name|b_bcount
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 return|return
 operator|(
