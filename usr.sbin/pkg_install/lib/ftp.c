@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.14 1995/06/11 19:29:55 rgrimes Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.1 1995/07/30 09:33:29 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
 end_comment
 
 begin_include
@@ -109,27 +109,6 @@ name|FtpPort
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STANDALONE_FTP
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"sysinstall.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*STANDALONE_FTP*/
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -162,9 +141,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STANDALONE_FTP
 name|strcpy
 argument_list|(
 name|p
@@ -216,42 +192,6 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|vsnprintf
-argument_list|(
-name|p
-argument_list|,
-sizeof|sizeof
-name|p
-operator|-
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|msgDebug
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -879,12 +819,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STANDALONE_FTP
-end_ifdef
-
 begin_function
 name|void
 name|FtpDebug
@@ -904,11 +838,6 @@ name|i
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
