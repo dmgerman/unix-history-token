@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.27	81/03/09	*/
+comment|/*	tm.c	4.28	81/03/10	*/
 end_comment
 
 begin_include
@@ -789,6 +789,20 @@ name|TMER_TUR
 operator|)
 operator|||
 operator|(
+name|flag
+operator|&
+name|FWRITE
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_erreg
+operator|&
+name|TMER_WRL
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|sc_erreg
@@ -809,43 +823,8 @@ operator|!=
 name|sc
 operator|->
 name|sc_dens
-operator|||
-operator|(
-name|flag
-operator|&
-operator|(
-name|FREAD
-operator||
-name|FWRITE
-operator|)
-operator|)
-operator|==
-name|FWRITE
-operator|&&
-name|sc
-operator|->
-name|sc_erreg
-operator|&
-name|TMER_WRL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"er %o dens %o sc->sc_dens %o flag %o\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_erreg
-argument_list|,
-name|dens
-argument_list|,
-name|sc
-operator|->
-name|sc_dens
-argument_list|,
-name|flag
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Not online or density switch in mid-tape or write locked. 		 */
 name|u
 operator|.
