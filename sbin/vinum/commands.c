@@ -218,14 +218,177 @@ name|int
 name|ioctltype
 decl_stmt|;
 comment|/* for ioctl call */
+name|char
+name|tempfile
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+comment|/* name of temp file for direct editing */
+name|char
+modifier|*
+name|file
+decl_stmt|;
+comment|/* file to read */
+name|FILE
+modifier|*
+name|tf
+decl_stmt|;
+comment|/* temp file */
 if|if
 condition|(
 name|argc
-operator|!=
-literal|1
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* wrong arg count */
+comment|/* no args, */
+name|char
+modifier|*
+name|editor
+decl_stmt|;
+comment|/* editor to start */
+name|int
+name|status
+decl_stmt|;
+name|editor
+operator|=
+name|getenv
+argument_list|(
+literal|"EDITOR"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|editor
+operator|==
+name|NULL
+condition|)
+name|editor
+operator|=
+literal|"/usr/bin/vi"
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|tempfile
+argument_list|,
+literal|"/var/tmp/"
+name|VINUMMOD
+literal|".create.%d"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* create a temp file */
+name|tf
+operator|=
+name|fopen
+argument_list|(
+name|tempfile
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+comment|/* open it */
+if|if
+condition|(
+name|tf
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't open %s: %s\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printconfig
+argument_list|(
+name|tf
+argument_list|,
+literal|"# "
+argument_list|)
+expr_stmt|;
+comment|/* and put the current config it */
+name|fclose
+argument_list|(
+name|tf
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|commandline
+argument_list|,
+literal|"%s %s"
+argument_list|,
+name|editor
+argument_list|,
+name|tempfile
+argument_list|)
+expr_stmt|;
+comment|/* create an edit command */
+name|status
+operator|=
+name|system
+argument_list|(
+name|commandline
+argument_list|)
+expr_stmt|;
+comment|/* do it */
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't edit config: status %d\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|file
+operator|=
+name|tempfile
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+name|file
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -251,10 +414,7 @@ name|dfd
 operator|=
 name|fopen
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|file
 argument_list|,
 literal|"r"
 argument_list|)
@@ -273,10 +433,7 @@ name|stderr
 argument_list|,
 literal|"Can't open %s: %s\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|file
 argument_list|,
 name|strerror
 argument_list|(
@@ -340,6 +497,19 @@ argument_list|,
 name|BUFSIZE
 argument_list|,
 name|dfd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|history
+condition|)
+name|fprintf
+argument_list|(
+name|history
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1736,6 +1906,47 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* create a file name here */
+comment|/* Variables for use by children */
+name|int
+name|failed
+init|=
+literal|0
+decl_stmt|;
+comment|/* set if a child dies badly */
+name|int
+name|sdfh
+decl_stmt|;
+comment|/* and for subdisk */
+name|char
+name|zeros
+index|[
+name|PLEXINITSIZE
+index|]
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+comment|/* write count */
+name|long
+name|long
+name|offset
+decl_stmt|;
+comment|/* offset in subdisk */
+name|long
+name|long
+name|sdsize
+decl_stmt|;
+comment|/* size of subdisk */
+if|if
+condition|(
+name|history
+condition|)
+name|fflush
+argument_list|(
+name|history
+argument_list|)
+expr_stmt|;
+comment|/* don't let all the kids do it. */
 for|for
 control|(
 name|plexindex
@@ -1872,6 +2083,14 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* don't wait for completion */
 name|pid
 operator|=
 name|fork
@@ -1884,37 +2103,24 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* we're the child */
-name|int
-name|failed
-init|=
-literal|0
-decl_stmt|;
-comment|/* set if a child dies badly */
-name|int
-name|sdfh
-decl_stmt|;
-comment|/* and for subdisk */
-name|char
-name|zeros
-index|[
-name|PLEXINITSIZE
-index|]
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-comment|/* write count */
-name|long
-name|long
-name|offset
-decl_stmt|;
-comment|/* offset in subdisk */
-name|long
-name|long
-name|sdsize
-decl_stmt|;
-comment|/* size of subdisk */
+comment|/* non-waiting parent */
+name|close
+argument_list|(
+name|plexfh
+argument_list|)
+expr_stmt|;
+comment|/* we don't need this any more */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* give them a chance to print */
+return|return;
+comment|/* and go on about our business */
+block|}
+block|}
+comment|/* 	     * If we get here, we're either the first-level child 	     * (if we're not waiting) or we're going to wait. 	     */
 name|bzero
 argument_list|(
 name|zeros
@@ -1955,7 +2161,7 @@ operator|++
 control|)
 block|{
 comment|/* initialize each subdisk */
-comment|/* We already have the plex data in global 		     * plex from the call to find_object */
+comment|/* We already have the plex data in global 		 * plex from the call to find_object */
 name|pid
 operator|=
 name|fork
@@ -2205,21 +2411,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Now wait for them to complete */
-for|for
-control|(
-name|sdno
-operator|=
-literal|0
-init|;
-name|sdno
-operator|<
-name|plex
-operator|.
-name|subdisks
-condition|;
-name|sdno
-operator|++
-control|)
+while|while
+condition|(
+literal|1
+condition|)
 block|{
 name|int
 name|status
@@ -2232,6 +2427,26 @@ operator|&
 name|status
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|int
+operator|)
+name|pid
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|==
+name|ECHILD
+operator|)
+condition|)
+comment|/* all gone */
+break|break;
 if|if
 condition|(
 name|WEXITSTATUS
@@ -2297,27 +2512,19 @@ argument_list|,
 name|failed
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
+comment|/* we're the waiting child, */
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|close
-argument_list|(
-name|plexfh
-argument_list|)
-expr_stmt|;
-comment|/* we don't need this any more */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* give them a chance to print */
-block|}
+comment|/* we've done our dash */
 block|}
 block|}
 block|}
@@ -4147,7 +4354,7 @@ name|objno
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|objno
 operator|++
@@ -5946,57 +6153,66 @@ index|[]
 init|=
 block|{
 literal|"COMMANDS\n"
-literal|"     create description-file\n"
-literal|"               Create a volume as described in description-file\n"
-literal|"     attach plex volume [rename]\n"
-literal|"     attach subdisk plex [offset] [rename]\n"
-literal|"               Attach a plex to a volume, or a subdisk to a plex.\n"
-literal|"     debug\n"
-literal|"               Cause the volume manager to enter the kernel debugger.\n"
-literal|"     detach [plex | subdisk]\n"
-literal|"      Detach a plex or subdisk from the volume or plex to which it is at-\n"
-literal|"      tached.\n"
-literal|"     info [-v]\n"
-literal|"               List information about volume manager state.\n"
-literal|"     init [-v]\n"
-literal|"               Initialize a plex by writing zeroes to all its subdisks.\n"
-literal|"     label volume\n"
-literal|"               Create a volume label\n"
-literal|"     list [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
-literal|"               List information about specified objects\n"
-literal|"     l [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
-literal|"               List information about specified objects (alternative to\n"
-literal|"               list command)\n"
-literal|"     ld [-r] [-s] [-v] [-V] [volume]\n"
-literal|"               List information about drives\n"
-literal|"     ls [-r] [-s] [-v] [-V] [subdisk]\n"
-literal|"               List information about subdisks\n"
-literal|"     lp [-r] [-s] [-v] [-V] [plex]\n"
-literal|"               List information about plexes\n"
-literal|"     lv [-r] [-s] [-v] [-V] [volume]\n"
-literal|"               List information about volumes\n"
-literal|"     makedev\n"
-literal|"               Remake the device nodes in /dev/vinum.\n"
-literal|"     read disk-partition\n"
-literal|"               Read the vinum configuration from the specified disk partition.\n"
-literal|"     rename [-r] [drive | subdisk | plex | volume] newname\n"
-literal|"               Change the name of the specified object.\n"
-literal|"     replace [subdisk | plex] newobject\n"
-literal|"               Replace the object with an identical other object.  XXX not im-\n"
-literal|"               plemented yet.\n"
-literal|"     resetconfig\n"
-literal|"               Reset the complete vinum configuration.\n"
-literal|"     resetstats [-r] [volume | plex | subdisk]\n"
-literal|"               Reset statistisc counters for the specified objects, or for all\n"
-literal|"               objects if none are specified.\n"
-literal|"     rm [-f] [-r] volume | plex | subdisk\n"
-literal|"               Remove an object\n"
-literal|"     setdaemon options\n"
-literal|"               set the daemon options\n"
-literal|"     start [volume | plex | subdisk]\n"
-literal|"               Allow the system to access the objects\n"
-literal|"     stop [-f] [volume | plex | subdisk]\n"
-literal|"               Terminate access the objects\n"
+literal|"create [-f description-file]\n"
+literal|"          Create a volume as described in description-file\n"
+literal|"attach plex volume [rename]\n"
+literal|"attach subdisk plex [offset] [rename]\n"
+literal|"          Attach a plex to a volume, or a subdisk to a plex.\n"
+literal|"debug\n"
+literal|"          Cause the volume manager to enter the kernel debugger.\n"
+literal|"debug flags\n"
+literal|"          Set debugging flags.\n"
+literal|"detach [plex | subdisk]\n"
+literal|"          Detach a plex or subdisk from the volume or plex to which it is\n"
+literal|"          attached.\n"
+literal|"info [-v]\n"
+literal|"          List information about volume manager state.\n"
+literal|"init [-v] [-w] plex\n"
+literal|"          Initialize a plex by writing zeroes to all its subdisks.\n"
+literal|"label volume\n"
+literal|"          Create a volume label\n"
+literal|"list [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
+literal|"          List information about specified objects\n"
+literal|"l [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
+literal|"          List information about specified objects (alternative to\n"
+literal|"          list command)\n"
+literal|"ld [-r] [-s] [-v] [-V] [volume]\n"
+literal|"          List information about drives\n"
+literal|"ls [-r] [-s] [-v] [-V] [subdisk]\n"
+literal|"          List information about subdisks\n"
+literal|"lp [-r] [-s] [-v] [-V] [plex]\n"
+literal|"          List information about plexes\n"
+literal|"lv [-r] [-s] [-v] [-V] [volume]\n"
+literal|"          List information about volumes\n"
+literal|"printconfig [file]\n"
+literal|"          Write a copy of the current configuration to file.\n"
+literal|"makedev\n"
+literal|"          Remake the device nodes in /dev/vinum.\n"
+literal|"quit\n"
+literal|"          Exit the vinum program when running in interactive mode.  Nor-\n"
+literal|"          mally this would be done by entering the EOF character.\n"
+literal|"read disk [disk...]\n"
+literal|"          Read the vinum configuration from the specified disks.\n"
+literal|"rename [-r] [drive | subdisk | plex | volume] newname\n"
+literal|"          Change the name of the specified object.\n"
+literal|"resetconfig\n"
+literal|"          Reset the complete vinum configuration.\n"
+literal|"resetstats [-r] [volume | plex | subdisk]\n"
+literal|"          Reset statistisc counters for the specified objects, or for all\n"
+literal|"          objects if none are specified.\n"
+literal|"rm [-f] [-r] volume | plex | subdisk\n"
+literal|"          Remove an object\n"
+literal|"saveconfig\n"
+literal|"          Save vinum configuration to disk.\n"
+literal|"setdaemon [value]\n"
+literal|"          Set daemon configuration.\n"
+literal|"start\n"
+literal|"          Read configuration from all vinum drives.\n"
+literal|"start [volume | plex | subdisk]\n"
+literal|"          Allow the system to access the objects\n"
+literal|"stop [-f] [volume | plex | subdisk]\n"
+literal|"          Terminate access to the objects, or stop vinum if no parameters\n"
+literal|"          are specified.\n"
 block|}
 decl_stmt|;
 name|puts
@@ -6058,7 +6274,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't set daemon options: %s (%d)\n"
+literal|"Can't get daemon options: %s (%d)\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -6193,7 +6409,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't set daemon options: %s (%d)\n"
+literal|"Can't save configuration: %s (%d)\n"
 argument_list|,
 name|strerror
 argument_list|(
