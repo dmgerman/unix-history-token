@@ -154,11 +154,6 @@ name|size_t
 name|u_width
 decl_stmt|;
 comment|/* for 'list_item' in read.c */
-name|char
-modifier|*
-name|user_uname
-decl_stmt|;
-comment|/* User running this program */
 name|uid_t
 name|user_uid
 decl_stmt|;
