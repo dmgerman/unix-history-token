@@ -6118,13 +6118,7 @@ name|al
 operator|=
 name|SSL_AD_DECODE_ERROR
 expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE
-argument_list|,
-name|SSL_R_BAD_RSA_DECRYPT
-argument_list|)
-expr_stmt|;
+comment|/* SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE,SSL_R_BAD_RSA_DECRYPT); */
 block|}
 if|if
 condition|(
@@ -6218,16 +6212,21 @@ name|al
 operator|=
 name|SSL_AD_DECODE_ERROR
 expr_stmt|;
-name|SSLerr
+comment|/* SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE,SSL_R_BAD_PROTOCOL_VERSION_NUMBER); */
+comment|/* The Klima-Pokorny-Rosa extension of Bleichenbacher's attack 				 * (http://eprint.iacr.org/2003/052/) exploits the version 				 * number check as a "bad version oracle" -- an alert would 				 * reveal that the plaintext corresponding to some ciphertext 				 * made up by the adversary is properly formatted except 				 * that the version number is wrong.  To avoid such attacks, 				 * we should treat this just like any other decryption error. */
+name|p
+index|[
+literal|0
+index|]
+operator|=
+call|(
+name|char
+call|)
 argument_list|(
-name|SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE
-argument_list|,
-name|SSL_R_BAD_PROTOCOL_VERSION_NUMBER
+name|int
 argument_list|)
+literal|"CAN-2003-0131 patch 2003-03-19"
 expr_stmt|;
-goto|goto
-name|f_err
-goto|;
 block|}
 block|}
 if|if
@@ -6238,13 +6237,7 @@ operator|-
 literal|1
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|goto f_err;
-else|#
-directive|else
-comment|/* Some decryption failure -- use random value instead as countermeasure 			 * against Bleichenbacher's attack on PKCS #1 v1.5 RSA padding 			 * (see RFC 2246, section 7.4.7.1). 			 * But note that due to length and protocol version checking, the 			 * attack is impractical anyway (see section 5 in D. Bleichenbacher: 			 * "Chosen Ciphertext Attacks Against Protocols Based on the RSA 			 * Encryption Standard PKCS #1", CRYPTO '98, LNCS 1462, pp. 1-12). 			 */
+comment|/* Some decryption failure -- use random value instead as countermeasure 			 * against Bleichenbacher's attack on PKCS #1 v1.5 RSA padding 			 * (see RFC 2246, section 7.4.7.1). */
 name|ERR_clear_error
 argument_list|()
 expr_stmt|;
@@ -6286,8 +6279,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* should be RAND_bytes, but we cannot work around a failure */
-endif|#
-directive|endif
 block|}
 name|s
 operator|->
