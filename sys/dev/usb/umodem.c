@@ -236,7 +236,7 @@ begin_struct
 struct|struct
 name|umodem_softc
 block|{
-name|bdevice
+name|USBBASEDEVICE
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
