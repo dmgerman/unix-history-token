@@ -6063,7 +6063,10 @@ comment|/* 430 = thr_create */
 block|{
 name|SYF_MPSAFE
 operator||
-literal|0
+name|AS
+argument_list|(
+name|thr_exit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
