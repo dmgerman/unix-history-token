@@ -4317,13 +4317,22 @@ return|;
 if|if
 condition|(
 name|len
-operator|<=
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|len
+operator|<
 literal|0
 condition|)
 block|{
 name|debug
 argument_list|(
-literal|"channel %d: read<=0 rfd %d len %d"
+literal|"channel %d: read<0 rfd %d len %d"
 argument_list|,
 name|c
 operator|->
