@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.14	83/04/15	*/
+comment|/*	rx.c	4.15	83/04/15	*/
 end_comment
 
 begin_include
@@ -264,14 +264,14 @@ decl_stmt|;
 comment|/* drive status flags */
 define|#
 directive|define
-name|RXF_DIRECT
+name|RXF_TRKZERO
 value|0x01
-comment|/* use direct sector mapping */
+comment|/* start mapping on track 0 */
 define|#
 directive|define
-name|RXF_TRKZERO
+name|RXF_DIRECT
 value|0x02
-comment|/* start mapping on track 0 */
+comment|/* use direct sector mapping */
 define|#
 directive|define
 name|RXF_DBLDEN
@@ -328,7 +328,7 @@ comment|/* total transfer count */
 name|long
 name|sc_resid
 decl_stmt|;
-comment|/* no of bytes left to transfer */
+comment|/* no. of bytes left to transfer */
 block|}
 name|rx_softc
 index|[
