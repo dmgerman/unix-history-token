@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1373,6 +1373,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__END_DECLS
+comment|/*  * This is a #define because the function is used internally and  * (unlike vfscanf) the name __svfscanf is guaranteed not to collide  * with a user function when _ANSI_SOURCE or _POSIX_SOURCE is defined.  */
+define|#
+directive|define
+name|vfscanf
+value|__svfscanf
 comment|/*  * Stdio function-access interface.  */
 name|__BEGIN_DECLS
 name|FILE
@@ -1479,6 +1484,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|__svfscanf
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|_VA_LIST_
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|__swbuf
 name|__P
 argument_list|(
@@ -1502,11 +1526,19 @@ parameter_list|(
 name|p
 parameter_list|)
 value|(--(p)->_r< 0 ? __srget(p) : (int)(*(p)->_p++))
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|__sputc
 parameter_list|(
