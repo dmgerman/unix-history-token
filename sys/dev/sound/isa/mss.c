@@ -6634,15 +6634,6 @@ literal|"ENSONIQ SoundscapeVIVO"
 expr_stmt|;
 break|break;
 case|case
-literal|0x80719304
-case|:
-comment|/* ADS7180 */
-name|s
-operator|=
-literal|"Terratec Soundsystem BASE 1"
-expr_stmt|;
-break|break;
-case|case
 literal|0x1093143e
 case|:
 comment|/* OPT9310 */
