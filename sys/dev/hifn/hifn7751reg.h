@@ -2713,7 +2713,7 @@ begin_define
 define|#
 directive|define
 name|HIFN_PLL_7956
-value|0x00001d18
+value|0x00001d19
 end_define
 
 begin_comment
