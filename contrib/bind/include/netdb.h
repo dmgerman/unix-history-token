@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1980, 1983, 1988, 1993  * -  * Copyright (c) 1980, 1
 end_comment
 
 begin_comment
-comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 8.8 1997/06/01 20:34:32 vixie Exp $  */
+comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 8.9 1996/11/19 08:39:29 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -60,12 +60,23 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_HEQUIV
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_HEQUIV
 value|"/etc/hosts.equiv"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -736,28 +747,6 @@ end_endif
 begin_comment
 comment|/* sun */
 end_comment
-
-begin_comment
-comment|/*  * The Motorola kernel will only support 64 characters for hostname  * also defined in /usr/ucbinclude/netdb.h  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__m88k__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXHOSTNAMELEN
-value|64
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
