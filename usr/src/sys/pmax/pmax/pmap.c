@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.3 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -42,6 +42,23 @@ include|#
 directive|include
 file|<sys/buf.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/shm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -561,7 +578,7 @@ name|num
 parameter_list|)
 define|\
 value|(name) = (type *)firstaddr; firstaddr = (vm_offset_t)((name)+(num))
-comment|/* 	 * Allocate a PTE table for the kernel. 	 * The first '256' comes from PAGER_MAP_SIZE in vm_pager_init(). 	 * This should be kept in sync. 	 * We also reserve space for kmem_alloc_pageable() for vm_fork(). 	 */
+comment|/* 	 * Allocate a PTE table for the kernel. 	 * The '1024' comes from PAGER_MAP_SIZE in vm_pager_init(). 	 * This should be kept in sync. 	 * We also reserve space for kmem_alloc_pageable() for vm_fork(). 	 */
 name|Sysmapsize
 operator|=
 operator|(
@@ -582,10 +599,21 @@ operator|)
 operator|/
 name|NBPG
 operator|+
-literal|256
+literal|1024
 operator|+
 literal|256
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+name|Sysmapsize
+operator|+=
+name|shminfo
+operator|.
+name|shmall
+expr_stmt|;
+endif|#
+directive|endif
 name|valloc
 argument_list|(
 name|Sysmap
