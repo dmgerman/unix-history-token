@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: warnings.c,v 1.15 1997/02/22 15:46:27 peter Exp $  */
 end_comment
 
 begin_include
@@ -792,6 +792,10 @@ name|entry
 operator|->
 name|text_start_address
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|entry
 operator|->
 name|header
@@ -802,6 +806,10 @@ name|entry
 operator|->
 name|data_start_address
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|entry
 operator|->
 name|header
@@ -812,6 +820,10 @@ name|entry
 operator|->
 name|bss_start_address
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|entry
 operator|->
 name|header

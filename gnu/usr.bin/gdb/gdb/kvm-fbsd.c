@@ -2261,8 +2261,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"IdlePTD %x\n"
+literal|"IdlePTD %lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|sbr
 argument_list|)
 expr_stmt|;
@@ -2330,8 +2334,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"initial pcb at %x\n"
+literal|"initial pcb at %lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|paddr
 argument_list|)
 expr_stmt|;

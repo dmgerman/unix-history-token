@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * $Id$	- library routines  */
+comment|/*  * $Id: lib.c,v 1.21 1997/02/22 15:46:22 peter Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -446,6 +446,9 @@ argument_list|(
 name|library_entry
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|hdr1
@@ -635,6 +638,9 @@ argument_list|(
 name|library_entry
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|hdr1

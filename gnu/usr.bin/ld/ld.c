@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.44 1997/04/25 19:43:19 bde Exp $  */
+comment|/*  *	$Id: ld.c,v 1.45 1997/05/13 10:23:46 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -14007,7 +14007,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: N_INDR has value %#x"
+literal|"%s: N_INDR has value %#lx"
 argument_list|,
 name|demangle
 argument_list|(
@@ -14454,7 +14454,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"internal error: inconsistent symbol table length: %d vs %s"
+literal|"internal error: inconsistent symbol table length: %d vs %d"
 argument_list|,
 name|symtab_offset
 operator|+
