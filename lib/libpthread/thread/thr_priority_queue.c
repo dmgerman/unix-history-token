@@ -253,8 +253,6 @@ name|maxprio
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|ret
 init|=
 literal|0

@@ -286,6 +286,8 @@ block|{
 name|void
 modifier|*
 name|data
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|key

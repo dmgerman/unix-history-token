@@ -40,9 +40,6 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|pthread_t
 name|next_thread
 decl_stmt|;
