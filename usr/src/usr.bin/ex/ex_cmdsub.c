@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	7.3	%G%"
+literal|"@(#)ex_cmdsub.c	7.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2064,6 +2064,10 @@ decl_stmt|,
 modifier|*
 name|fne
 decl_stmt|;
+name|struct
+name|stat
+name|sbuf
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|STDIO
@@ -2101,10 +2105,6 @@ decl_stmt|,
 name|bot
 decl_stmt|;
 comment|/* length of tag file */
-name|struct
-name|stat
-name|sbuf
-decl_stmt|;
 endif|#
 directive|endif
 name|omagic
@@ -2390,6 +2390,41 @@ continue|continue;
 name|tfcount
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|io
+argument_list|,
+operator|&
+name|sbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|bsize
+operator|=
+name|LBSIZE
+expr_stmt|;
+else|else
+block|{
+name|bsize
+operator|=
+name|sbuf
+operator|.
+name|st_blksize
+expr_stmt|;
+if|if
+condition|(
+name|bsize
+operator|<=
+literal|0
+condition|)
+name|bsize
+operator|=
+name|LBSIZE
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|getfile
