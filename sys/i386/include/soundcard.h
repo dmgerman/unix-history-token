@@ -9,7 +9,6 @@ begin_define
 define|#
 directive|define
 name|_SOUNDCARD_H_
-value|1
 end_define
 
 begin_comment
@@ -17,14 +16,14 @@ comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in
 end_comment
 
 begin_comment
-comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hsavolai@cs.helsinki.fi   */
+comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi, Hannu.Savolainen@helsinki.fi   */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SOUND_VERSION
-value|203
+value|205
 end_define
 
 begin_define
@@ -961,6 +960,31 @@ define|#
 directive|define
 name|SEQ_BALANCE
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEQ_VOLMODE
+value|12
+end_define
+
+begin_comment
+comment|/*  * Volume mode decides how volumes are used  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VOL_METHOD_ADAGIO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOL_METHOD_LINEAR
+value|2
 end_define
 
 begin_comment
@@ -2173,7 +2197,15 @@ name|SEQ_DEFINEBUF
 parameter_list|(
 name|len
 parameter_list|)
-value|unsigned char _seqbuf[len]; int _seqbuflen = len, _seqbufptr = 0
+value|unsigned char _seqbuf[len]; int _seqbuflen = len; int _seqbufptr = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEQ_DECLAREBUF
+parameter_list|()
+value|extern unsigned char _seqbuf[]; extern int _seqbuflen;extern int _seqbufptr
 end_define
 
 begin_define
@@ -2236,6 +2268,18 @@ parameter_list|,
 name|pgm
 parameter_list|)
 value|(SEQ_DUMPBUF(), _pm_info.command = _PM_LOAD_PATCH, \ 					_pm_info.device=dev, memcpy(_pm_info.data.data8, pgm, 128), \ 					_pm_info.parm1 = bank, _pm_info.parm2 = 128, \ 					ioctl(seqfd, SNDCTL_PMGR_ACCESS,&_pm_info))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEQ_VOLUME_MODE
+parameter_list|(
+name|dev
+parameter_list|,
+name|mode
+parameter_list|)
+value|{_SEQ_NEEDBUF(8);\ 					_seqbuf[_seqbufptr] = SEQ_EXTENDED;\ 					_seqbuf[_seqbufptr+1] = SEQ_VOLMODE;\ 					_seqbuf[_seqbufptr+2] = (dev);\ 					_seqbuf[_seqbufptr+3] = (mode);\ 					_seqbuf[_seqbufptr+4] = 0;\ 					_seqbuf[_seqbufptr+5] = 0;\ 					_seqbuf[_seqbufptr+6] = 0;\ 					_seqbuf[_seqbufptr+7] = 0;\ 					_SEQ_ADVBUF(8);}
 end_define
 
 begin_define
@@ -2429,11 +2473,11 @@ define|#
 directive|define
 name|SEQ_WRPATCH
 parameter_list|(
-name|patch
+name|patchx
 parameter_list|,
 name|len
 parameter_list|)
-value|{if (_seqbufptr) seqbuf_dump();\ 					if (write(seqfd, (char*)(patch), len)==-1) \ 					   perror("Write patch: /dev/sequencer");}
+value|{if (_seqbufptr) seqbuf_dump();\ 					if (write(seqfd, (char*)(patchx), len)==-1) \ 					   perror("Write patch: /dev/sequencer");}
 end_define
 
 begin_endif
