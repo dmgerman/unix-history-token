@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: process.c,v 1.6 1997/08/11 07:21:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,6 +1175,10 @@ name|u
 operator|.
 name|y
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 index|]
