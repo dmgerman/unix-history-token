@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Sean Eric Fagan  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_coff.c,v 1.10 1995/11/06 12:52:14 davidg Exp $  */
+comment|/*-  * Copyright (c) 1994 Sean Eric Fagan  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_coff.c,v 1.11 1995/12/07 12:45:48 davidg Exp $  */
 end_comment
 
 begin_include
@@ -439,7 +439,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx,0x%x, FALSE)\n"
+literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx,0x%x, FALSE, VM_PROT_ALL, VM_PROT_ALL, 0)\n"
 operator|,
 name|__FILE__
 operator|,
@@ -477,6 +477,12 @@ argument_list|,
 name|map_len
 argument_list|,
 name|FALSE
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2226,7 +2232,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx, PAGE_SIZE, FALSE)\n"
+literal|"%s(%d): vm_map_find(&vmspace->vm_map, NULL, 0,&0x%08lx, PAGE_SIZE, FALSE, VM_PROT_ALL, VM_PROT_ALL, 0)\n"
 operator|,
 name|__FILE__
 operator|,
@@ -2268,6 +2274,12 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|,
 name|FALSE
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|DPRINTF
