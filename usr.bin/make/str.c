@@ -178,6 +178,7 @@ name|s2
 parameter_list|,
 name|flags
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s1
@@ -313,7 +314,13 @@ name|void
 operator|)
 name|free
 argument_list|(
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|s1
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -321,7 +328,13 @@ name|void
 operator|)
 name|free
 argument_list|(
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|s2
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
