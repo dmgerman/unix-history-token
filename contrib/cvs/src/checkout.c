@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Create Version  *   * "checkout" creates a "version" of an RCS repository.  This version is owned  * totally by the user and is actually an independent copy, to be dealt with  * as seen fit.  Once "checkout" has been called in a given directory, it  * never needs to be called again.  The user can keep up-to-date by calling  * "update" when he feels like it; this will supply him with a merge of his  * own modifications and the changes made in the RCS original.  See "update"  * for details.  *   * "checkout" can be given a list of directories or files to be updated and in  * the case of a directory, will recursivley create any sub-directories that  * exist in the repository.  *   * When the user is satisfied with his own modifications, the present version  * can be committed by "commit"; this keeps the present version in tact,  * usually.  *   * The call is cvs checkout [options]<module-name>...  *   * "checkout" creates a directory ./CVS, in which it keeps its administration,  * in two files, Repository and Entries. The first contains the name of the  * repository.  The second contains one line for each registered file,  * consisting of the version number it derives from, its time stamp at  * derivation time and its name.  Both files are normal files and can be  * edited by the user, if necessary (when the repository is moved, e.g.)  */
 end_comment
 
+begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -101,6 +105,8 @@ block|,
 literal|"\t-P\tPrune empty directories.\n"
 block|,
 literal|"\t-R\tProcess directories recursively.\n"
+block|,
+literal|"\t-T\tCreate Template file from local repository for remote commit.\n"
 block|,
 literal|"\t-c\t\"cat\" the module database.\n"
 block|,
@@ -268,6 +274,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|pull_template
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|preload_update_dir
@@ -401,7 +416,7 @@ name|CHECKOUT
 expr_stmt|;
 name|valid_options
 operator|=
-literal|"+ANnk:d:flRpQqcsr:D:j:P"
+literal|"+ANnk:d:flRpTQqcsr:D:j:P"
 expr_stmt|;
 name|valid_usage
 operator|=
@@ -496,6 +511,14 @@ case|:
 name|run_module_prog
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|pull_template
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3422,9 +3445,7 @@ name|join_rev2
 argument_list|,
 name|preload_update_dir
 argument_list|,
-name|m_type
-operator|==
-name|CHECKOUT
+name|pull_template
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3726,9 +3747,7 @@ name|join_rev2
 argument_list|,
 name|preload_update_dir
 argument_list|,
-name|m_type
-operator|==
-name|CHECKOUT
+name|pull_template
 argument_list|)
 expr_stmt|;
 name|out
