@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: igmp.c,v 1.8 1994/08/24 23:53:32 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * igmp.c,v 1.2 1994/09/08 02:51:15 wollman Exp  */
 end_comment
 
 begin_include
@@ -810,7 +810,10 @@ operator|)
 argument_list|,
 name|igmpdatalen
 argument_list|,
+name|ntohl
+argument_list|(
 name|group
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -835,7 +838,10 @@ operator|)
 argument_list|,
 name|igmpdatalen
 argument_list|,
+name|ntohl
+argument_list|(
 name|group
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;

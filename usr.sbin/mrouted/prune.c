@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.4 1994/08/24 23:54:33 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.2 1994/09/08 02:51:23 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2327,6 +2327,11 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 for|for
 control|(
 name|i
@@ -2340,6 +2345,28 @@ condition|;
 name|i
 operator|++
 control|)
+endif|#
+directive|endif
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+for|for
+control|(
+name|i
+operator|=
+literal|3
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+endif|#
+directive|endif
 operator|*
 name|p
 operator|++
@@ -2583,6 +2610,11 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 for|for
 control|(
 name|i
@@ -2596,6 +2628,28 @@ condition|;
 name|i
 operator|++
 control|)
+endif|#
+directive|endif
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+for|for
+control|(
+name|i
+operator|=
+literal|3
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+endif|#
+directive|endif
 operator|(
 operator|(
 name|char
@@ -4603,7 +4657,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"forw again s %x g%x on vif %d"
+literal|"forw again s %x g %x on vif %d"
 argument_list|,
 name|kt
 operator|->
