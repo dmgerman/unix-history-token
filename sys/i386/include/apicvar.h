@@ -44,6 +44,10 @@ name|APIC_NUM_IOINTS
 value|192
 end_define
 
+begin_comment
+comment|/*    ********************* !!! WARNING !!! ******************************  * Each local apic has an interrupt receive fifo that is two entries deep  * for each interrupt priority class (higher 4 bits of interrupt vector).  * Once the fifo is full the APIC can no longer receive interrupts for this  * class and sending IPIs from other CPUs will be blocked.  * To avoid deadlocks there should be no more than two IPI interrupts  * pending at the same time.  * Currently this is guaranteed by dividing the IPIs in two groups that have   * each at most one IPI interrupt pending. The first group is protected by the  * smp_ipi_mtx and waits for the completion of the IPI (Only one IPI user   * at a time) The second group uses a single interrupt and a bitmap to avoid  * redundant IPI interrupts.  *  * Right now IPI_STOP used by kdb shares the interrupt priority class with  * the two IPI groups mentioned above. As such IPI_STOP may cause a deadlock.  * Eventually IPI_STOP should use NMI IPIs - this would eliminate this and  * other deadlocks caused by IPI_STOP.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -51,43 +55,54 @@ name|APIC_LOCAL_INTS
 value|240
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|APIC_TIMER_INT
-value|APIC_LOCAL_INTS
+value|(APIC_LOCAL_INTS  +  X)
 end_define
 
 begin_define
 define|#
 directive|define
 name|APIC_ERROR_INT
-value|(APIC_LOCAL_INTS + 1)
+value|(APIC_LOCAL_INTS  +  X)
 end_define
 
 begin_define
 define|#
 directive|define
 name|APIC_THERMAL_INT
-value|(APIC_LOCAL_INTS + 2)
+value|(APIC_LOCAL_INTS +  X)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|APIC_IPI_INTS
-value|(APIC_LOCAL_INTS + 3)
+value|(APIC_LOCAL_INTS + 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPI_AST
-value|APIC_IPI_INTS
+name|IPI_RENDEZVOUS
+value|(APIC_IPI_INTS)
 end_define
 
 begin_comment
-comment|/* Generate software trap. */
+comment|/* Inter-CPU rendezvous. */
 end_comment
 
 begin_define
@@ -126,11 +141,37 @@ begin_comment
 comment|/* Lazy pmap release. */
 end_comment
 
+begin_comment
+comment|/* Vector to handle bitmap based IPIs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_BITMAP_VECTOR
+value|(APIC_IPI_INTS + 5)
+end_define
+
+begin_comment
+comment|/* IPIs handled by IPI_BITMAPED_VECTOR  (XXX ups is there a better place?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_AST
+value|0
+end_define
+
+begin_comment
+comment|/* Generate software trap. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IPI_HARDCLOCK
-value|(APIC_IPI_INTS + 8)
+value|1
 end_define
 
 begin_comment
@@ -141,29 +182,39 @@ begin_define
 define|#
 directive|define
 name|IPI_STATCLOCK
-value|(APIC_IPI_INTS + 9)
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPI_RENDEZVOUS
-value|(APIC_IPI_INTS + 10)
+name|IPI_BITMAP_LAST
+value|IPI_STATCLOCK
 end_define
 
-begin_comment
-comment|/* Inter-CPU rendezvous. */
-end_comment
+begin_define
+define|#
+directive|define
+name|IPI_IS_BITMAPED
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<= IPI_BITMAP_LAST)
+end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_STOP
-value|(APIC_IPI_INTS + 11)
+value|(APIC_IPI_INTS + 6)
 end_define
 
 begin_comment
 comment|/* Stop CPU until restarted. */
+end_comment
+
+begin_comment
+comment|/* The spurious interrupt can share the priority class with the IPIs since  * it is not a normal interrupt. (Does not use the APIC's interrupt fifo)  */
 end_comment
 
 begin_define
