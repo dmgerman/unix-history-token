@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -164,6 +164,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -189,6 +191,8 @@ argument_list|,
 name|flag
 argument_list|,
 name|NOCRED
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -512,6 +516,8 @@ argument_list|,
 name|flag
 argument_list|,
 name|NOCRED
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -590,6 +596,8 @@ operator||
 name|FWRITE
 argument_list|,
 name|NOCRED
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"malloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -452,6 +458,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -533,6 +541,8 @@ argument_list|,
 name|VEXEC
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -558,6 +568,8 @@ argument_list|,
 name|VREAD
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -652,6 +664,13 @@ name|cred
 argument_list|,
 operator|&
 name|resid
+argument_list|,
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1248,6 +1267,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -2881,6 +2902,8 @@ name|int
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Read in text segment if necessary (0410), 		 * and read-protect it. 		 */
@@ -2929,6 +2952,8 @@ name|int
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|(
