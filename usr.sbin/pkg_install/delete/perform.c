@@ -892,9 +892,15 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"%s -r %s"
+literal|"%s -r%c %s"
 argument_list|,
 name|REMOVE_CMD
+argument_list|,
+name|Force
+condition|?
+literal|'f'
+else|:
+literal|' '
 argument_list|,
 name|LogDir
 argument_list|)
