@@ -156,7 +156,7 @@ define|#
 directive|define
 name|mtx_legal2block
 parameter_list|()
-value|((save_intr()& IA64_PSR_I)
+value|(save_intr()& IA64_PSR_I)
 end_define
 
 begin_endif
