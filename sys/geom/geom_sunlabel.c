@@ -128,84 +128,6 @@ name|BSD_METHOD_NAME
 value|"SUNLABEL-method"
 end_define
 
-begin_function
-specifier|static
-name|u_int
-name|g_u16be
-parameter_list|(
-name|u_char
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|p
-index|[
-literal|0
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-name|p
-index|[
-literal|1
-index|]
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|u_int
-name|g_u32be
-parameter_list|(
-name|u_char
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|p
-index|[
-literal|0
-index|]
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-name|p
-index|[
-literal|1
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|p
-index|[
-literal|2
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-name|p
-index|[
-literal|3
-index|]
-operator|)
-return|;
-block|}
-end_function
-
 begin_struct
 struct|struct
 name|g_sunlabel_softc
@@ -612,7 +534,7 @@ break|break;
 comment|/* The second last short is a magic number */
 if|if
 condition|(
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -643,7 +565,7 @@ literal|2
 control|)
 name|u
 operator|^=
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -689,7 +611,7 @@ literal|"part %d %u %u\n"
 argument_list|,
 name|i
 argument_list|,
-name|g_u32be
+name|g_dec_be4
 argument_list|(
 name|buf
 operator|+
@@ -700,7 +622,7 @@ operator|*
 literal|8
 argument_list|)
 argument_list|,
-name|g_u32be
+name|g_dec_be4
 argument_list|(
 name|buf
 operator|+
@@ -717,7 +639,7 @@ name|printf
 argument_list|(
 literal|"v_version = %d\n"
 argument_list|,
-name|g_u32be
+name|g_dec_be4
 argument_list|(
 name|buf
 operator|+
@@ -729,7 +651,7 @@ name|printf
 argument_list|(
 literal|"v_nparts = %d\n"
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -757,7 +679,7 @@ literal|"v_part[%d] = %d %d\n"
 argument_list|,
 name|i
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -768,7 +690,7 @@ operator|*
 literal|4
 argument_list|)
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -785,7 +707,7 @@ name|printf
 argument_list|(
 literal|"v_sanity %x\n"
 argument_list|,
-name|g_u32be
+name|g_dec_be4
 argument_list|(
 name|buf
 operator|+
@@ -797,7 +719,7 @@ name|printf
 argument_list|(
 literal|"v_version = %d\n"
 argument_list|,
-name|g_u32be
+name|g_dec_be4
 argument_list|(
 name|buf
 operator|+
@@ -809,7 +731,7 @@ name|printf
 argument_list|(
 literal|"v_rpm %d\n"
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -821,7 +743,7 @@ name|printf
 argument_list|(
 literal|"v_totalcyl %d\n"
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -833,7 +755,7 @@ name|printf
 argument_list|(
 literal|"v_cyl %d\n"
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -845,7 +767,7 @@ name|printf
 argument_list|(
 literal|"v_alt %d\n"
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -857,7 +779,7 @@ name|printf
 argument_list|(
 literal|"v_head %d\n"
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -869,7 +791,7 @@ name|printf
 argument_list|(
 literal|"v_sec %d\n"
 argument_list|,
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -880,14 +802,14 @@ expr_stmt|;
 block|}
 name|csize
 operator|=
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
 literal|436
 argument_list|)
 operator|*
-name|g_u16be
+name|g_dec_be2
 argument_list|(
 name|buf
 operator|+
@@ -910,7 +832,7 @@ control|)
 block|{
 name|v
 operator|=
-name|g_u32be
+name|g_dec_be4
 argument_list|(
 name|buf
 operator|+
@@ -923,7 +845,7 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|=
-name|g_u32be
+name|g_dec_be4
 argument_list|(
 name|buf
 operator|+
