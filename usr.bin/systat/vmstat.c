@@ -4277,10 +4277,10 @@ operator|(
 name|long
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|nintr
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|long
