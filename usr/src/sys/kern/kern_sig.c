@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.10	82/10/21	*/
+comment|/*	kern_sig.c	5.11	82/10/31	*/
 end_comment
 
 begin_include
@@ -2610,6 +2610,10 @@ name|ACORE
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* if (u.u_error == 0) */
+end_comment
+
 begin_expr_stmt
 name|u
 operator|.
@@ -2669,9 +2673,14 @@ name|caddr_t
 operator|)
 name|ctob
 argument_list|(
+name|dptov
+argument_list|(
 name|u
 operator|.
-name|u_tsize
+name|u_procp
+argument_list|,
+literal|0
+argument_list|)
 argument_list|)
 argument_list|,
 name|ctob
@@ -2716,17 +2725,22 @@ name|UIO_WRITE
 argument_list|,
 name|ip
 argument_list|,
-call|(
+operator|(
 name|caddr_t
-call|)
-argument_list|(
-name|USRSTACK
-operator|-
+operator|)
 name|ctob
+argument_list|(
+name|sptov
 argument_list|(
 name|u
 operator|.
+name|u_procp
+argument_list|,
+name|u
+operator|.
 name|u_ssize
+operator|-
+literal|1
 argument_list|)
 argument_list|)
 argument_list|,
