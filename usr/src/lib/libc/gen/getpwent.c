@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.21 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -695,13 +695,15 @@ name|_PATH_SMP_DB
 block|;
 name|_pw_db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|p
 argument_list|,
 name|O_RDONLY
 argument_list|,
 literal|0
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
