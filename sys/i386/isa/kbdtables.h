@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@kmd-ac.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!kmd-ac!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	$Id$  */
+comment|/*  *  Copyright (C) 1992, 1993 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@kmd-ac.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!kmd-ac!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	$Id: kbdtables.h,v 1.6 1993/10/28 06:15:09 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -12673,7 +12673,7 @@ block|,
 literal|0x00
 block|,
 comment|/* sc=36 */
-name|ASH
+name|RSH
 block|,
 name|RSH
 block|,
@@ -13689,15 +13689,13 @@ name|SET8
 operator||
 literal|0x7F
 block|,
-name|SET8
-operator||
-literal|0x7F
+name|RBT
 block|,
 name|SET8
 operator||
 literal|0x7F
 block|,
-literal|0x80
+literal|0x82
 block|,
 literal|0x02
 block|,
@@ -13930,21 +13928,21 @@ block|,
 literal|0x00
 block|,
 comment|/* sc=5c */
-name|CLK
+name|NEXT
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|DBG
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
 literal|0xFF
 block|,
@@ -14399,15 +14397,13 @@ name|SET8
 operator||
 literal|0x7F
 block|,
-name|SET8
-operator||
-literal|0x7F
+name|RBT
 block|,
 name|SET8
 operator||
 literal|0x7F
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x00
 block|,
@@ -15221,9 +15217,9 @@ block|,
 literal|0x00
 block|,
 comment|/* sc=0c */
-literal|'_'
-block|,
 literal|'-'
+block|,
+literal|'_'
 block|,
 literal|0x1F
 block|,
@@ -15250,9 +15246,9 @@ block|,
 literal|0x00
 block|,
 comment|/* sc=0d */
-literal|'+'
-block|,
 literal|'='
+block|,
+literal|'+'
 block|,
 name|NOP
 block|,
@@ -16395,7 +16391,7 @@ block|,
 literal|0x00
 block|,
 comment|/* sc=36 */
-name|ASH
+name|RSH
 block|,
 name|RSH
 block|,
@@ -17411,15 +17407,13 @@ name|SET8
 operator||
 literal|0x7F
 block|,
-name|SET8
-operator||
-literal|0x7F
+name|RBT
 block|,
 name|SET8
 operator||
 literal|0x7F
 block|,
-literal|0x80
+literal|0x82
 block|,
 literal|0x02
 block|,
@@ -17652,21 +17646,21 @@ block|,
 literal|0x00
 block|,
 comment|/* sc=5c */
-name|CLK
+name|NEXT
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|DBG
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
-name|ALK
+name|NOP
 block|,
 literal|0xFF
 block|,
@@ -18121,15 +18115,13 @@ name|SET8
 operator||
 literal|0x7F
 block|,
-name|SET8
-operator||
-literal|0x7F
+name|RBT
 block|,
 name|SET8
 operator||
 literal|0x7F
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x00
 block|,
