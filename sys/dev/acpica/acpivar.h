@@ -619,7 +619,6 @@ name|ACPI_DEBUGGER
 end_ifdef
 
 begin_function_decl
-specifier|extern
 name|void
 name|acpi_EnterDebugger
 parameter_list|(
@@ -700,7 +699,6 @@ value|(((x)& 0x9) == 9)
 end_define
 
 begin_function_decl
-specifier|extern
 name|BOOLEAN
 name|acpi_DeviceIsPresent
 parameter_list|(
@@ -711,7 +709,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|BOOLEAN
 name|acpi_BatteryIsPresent
 parameter_list|(
@@ -722,7 +719,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|BOOLEAN
 name|acpi_MatchHid
 parameter_list|(
@@ -737,7 +733,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_GetHandleInScope
 parameter_list|(
@@ -756,7 +751,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|uint32_t
 name|acpi_TimerDelta
 parameter_list|(
@@ -770,7 +764,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_BUFFER
 modifier|*
 name|acpi_AllocBuffer
@@ -782,7 +775,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_ConvertBufferToInteger
 parameter_list|(
@@ -798,7 +790,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_GetInteger
 parameter_list|(
@@ -817,7 +808,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_SetInteger
 parameter_list|(
@@ -835,7 +825,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_ForeachPackageObject
 parameter_list|(
@@ -866,7 +855,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_FindIndexedResource
 parameter_list|(
@@ -886,7 +874,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_AppendBufferResource
 parameter_list|(
@@ -902,7 +889,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_OverrideInterruptLevel
 parameter_list|(
@@ -913,7 +899,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_SetIntrModel
 parameter_list|(
@@ -924,7 +909,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_SetSleepState
 parameter_list|(
@@ -989,7 +973,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_Startup
 parameter_list|(
@@ -999,7 +982,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_Enable
 parameter_list|(
@@ -1012,7 +994,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_Disable
 parameter_list|(
@@ -1025,7 +1006,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|acpi_UserNotify
 parameter_list|(
@@ -1113,10 +1093,10 @@ name|void
 modifier|*
 name|context
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|base
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|length
 parameter_list|)
 function_decl|;
@@ -1133,16 +1113,16 @@ name|void
 modifier|*
 name|context
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|low
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|high
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|length
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|align
 parameter_list|)
 function_decl|;
@@ -1159,10 +1139,10 @@ name|void
 modifier|*
 name|context
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|base
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|length
 parameter_list|)
 function_decl|;
@@ -1179,16 +1159,16 @@ name|void
 modifier|*
 name|context
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|low
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|high
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|length
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|align
 parameter_list|)
 function_decl|;
@@ -1284,7 +1264,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_parse_resources
 parameter_list|(
@@ -1311,7 +1290,6 @@ comment|/* ACPI event handling */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|UINT32
 name|acpi_event_power_button_sleep
 parameter_list|(
@@ -1323,7 +1301,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|UINT32
 name|acpi_event_power_button_wake
 parameter_list|(
@@ -1335,7 +1312,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|UINT32
 name|acpi_event_sleep_button_sleep
 parameter_list|(
@@ -1347,7 +1323,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|UINT32
 name|acpi_event_sleep_button_wake
 parameter_list|(
@@ -1420,7 +1395,6 @@ comment|/* Device power control. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|ACPI_STATUS
 name|acpi_pwr_switch_consumer
 parameter_list|(
@@ -1514,7 +1488,6 @@ block|}
 end_function
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|acpi_name
@@ -1526,7 +1499,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_avoid
 parameter_list|(
@@ -1537,7 +1509,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_disabled
 parameter_list|(
@@ -1549,32 +1520,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|acpi_device_enable_wake_capability
-parameter_list|(
-name|ACPI_HANDLE
-name|h
-parameter_list|,
-name|int
-name|enable
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|acpi_device_enable_wake_event
-parameter_list|(
-name|ACPI_HANDLE
-name|h
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|acpi_machdep_init
 parameter_list|(
@@ -1585,7 +1530,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|acpi_install_wakeup_handler
 parameter_list|(
@@ -1598,7 +1542,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_sleep_machdep
 parameter_list|(
@@ -1630,7 +1573,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_battery_register
 parameter_list|(
@@ -1642,7 +1584,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_battery_get_battinfo
 parameter_list|(
@@ -1656,7 +1597,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_battery_get_units
 parameter_list|(
@@ -1666,7 +1606,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_battery_get_info_expire
 parameter_list|(
@@ -1676,7 +1615,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_battery_get_battdesc
 parameter_list|(
@@ -1690,7 +1628,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_cmbat_get_battinfo
 parameter_list|(
@@ -1708,7 +1645,6 @@ comment|/* Embedded controller. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|acpi_ec_ecdt_probe
 parameter_list|(
@@ -1722,7 +1658,6 @@ comment|/* AC adapter interface. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_acad_get_acline
 parameter_list|(
@@ -1908,7 +1843,6 @@ comment|/* ACPI task kernel thread initialization. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_task_thread_init
 parameter_list|(
