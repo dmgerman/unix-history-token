@@ -88,6 +88,15 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getline
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -140,13 +149,9 @@ parameter_list|()
 function_decl|;
 name|char
 modifier|*
-name|getline
-argument_list|()
-decl_stmt|,
-modifier|*
 name|getlogin
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 name|void
 name|rint
 parameter_list|()
