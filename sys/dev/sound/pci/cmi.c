@@ -4930,7 +4930,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|snd_cmipci
+name|snd_cmi
 argument_list|,
 name|pci
 argument_list|,
@@ -4948,7 +4948,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|snd_cmipci
+name|snd_cmi
 argument_list|,
 name|snd_pcm
 argument_list|,
@@ -4964,7 +4964,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|snd_cmipci
+name|snd_cmi
 argument_list|,
 literal|1
 argument_list|)
