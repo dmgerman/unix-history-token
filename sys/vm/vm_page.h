@@ -966,7 +966,7 @@ name|vm_page_t
 name|m
 parameter_list|,
 name|unsigned
-name|int
+name|short
 name|bits
 parameter_list|)
 block|{
@@ -995,7 +995,7 @@ name|vm_page_t
 name|m
 parameter_list|,
 name|unsigned
-name|int
+name|short
 name|bits
 parameter_list|)
 block|{

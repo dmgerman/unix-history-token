@@ -422,7 +422,7 @@ parameter_list|(
 name|vm_object_t
 name|object
 parameter_list|,
-name|u_int
+name|u_short
 name|bits
 parameter_list|)
 block|{
@@ -448,7 +448,7 @@ parameter_list|(
 name|vm_object_t
 name|object
 parameter_list|,
-name|u_int
+name|u_short
 name|bits
 parameter_list|)
 block|{
@@ -474,7 +474,7 @@ parameter_list|(
 name|vm_object_t
 name|object
 parameter_list|,
-name|int
+name|short
 name|i
 parameter_list|)
 block|{
@@ -500,7 +500,7 @@ parameter_list|(
 name|vm_object_t
 name|object
 parameter_list|,
-name|int
+name|short
 name|i
 parameter_list|)
 block|{
@@ -579,7 +579,7 @@ parameter_list|(
 name|vm_object_t
 name|object
 parameter_list|,
-name|int
+name|short
 name|i
 parameter_list|)
 block|{
