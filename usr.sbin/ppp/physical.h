@@ -371,12 +371,10 @@ decl_stmt|;
 block|}
 name|name
 struct|;
-name|unsigned
+name|time_t
 name|Utmp
-range|:
-literal|1
 decl_stmt|;
-comment|/* Are we in utmp ? (move to ttydevice ?) */
+comment|/* Are we in utmp ? */
 name|pid_t
 name|session_owner
 decl_stmt|;
