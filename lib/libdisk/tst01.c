@@ -2882,6 +2882,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 operator|!
@@ -3002,6 +3005,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
