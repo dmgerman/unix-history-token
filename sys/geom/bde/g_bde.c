@@ -511,7 +511,7 @@ operator|==
 name|GCFG_DISMANTLE
 condition|)
 block|{
-comment|/* 		 * Orderly dettachment. 		 */
+comment|/* 		 * Orderly detachment. 		 */
 if|if
 condition|(
 name|ga
