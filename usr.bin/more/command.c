@@ -826,7 +826,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|" byte %d"
+literal|" byte %ld"
 argument_list|,
 name|pos
 argument_list|)
