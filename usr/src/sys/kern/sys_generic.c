@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	6.2	84/07/08	*/
+comment|/*	sys_generic.c	6.3	84/08/22	*/
 end_comment
 
 begin_include
@@ -866,22 +866,15 @@ name|u
 operator|.
 name|u_ap
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fp
-operator|=
-name|getf
+name|GETF
 argument_list|(
+name|fp
+argument_list|,
 name|uap
 operator|->
 name|fdes
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return;
+expr_stmt|;
 if|if
 condition|(
 operator|(
