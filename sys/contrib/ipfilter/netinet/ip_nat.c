@@ -15379,8 +15379,8 @@ name|u_int
 name|type
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|LARGE_NAT
 name|struct
 name|ipnat
