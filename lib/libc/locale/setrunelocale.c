@@ -39,12 +39,11 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|_PathLocale
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"setlocale.h"
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -199,6 +198,13 @@ if|if
 condition|(
 operator|!
 name|encoding
+operator|||
+name|strlen
+argument_list|(
+name|encoding
+argument_list|)
+operator|>
+name|ENCODING_LEN
 condition|)
 return|return
 operator|(
@@ -245,7 +251,7 @@ name|_PathLocale
 operator|=
 name|_PATH_LOCALE
 expr_stmt|;
-comment|/* Range checking not needed, encoding has fixed size */
+comment|/* Range checking not needed, encoding length already checked above */
 operator|(
 name|void
 operator|)

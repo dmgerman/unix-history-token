@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: setlocale.c,v 1.8.2.3 1997/02/05 23:20:51 joerg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Borman at Krystal Technologies.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: setlocale.c,v 1.8.2.4 1997/02/06 08:32:55 pst Exp $  */
 end_comment
 
 begin_ifdef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: setlocale.c,v 1.8.2.3 1997/02/05 23:20:51 joerg Exp $"
+literal|"$Id: setlocale.c,v 1.8.2.4 1997/02/06 08:32:55 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,12 @@ directive|include
 file|"collate.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"setlocale.h"
+end_include
+
 begin_comment
 comment|/*  * Category names for getenv()  */
 end_comment
@@ -154,7 +160,9 @@ index|[
 name|_LC_LAST
 index|]
 index|[
-literal|32
+name|ENCODING_LEN
+operator|+
+literal|1
 index|]
 init|=
 block|{
@@ -185,7 +193,9 @@ index|[
 name|_LC_LAST
 index|]
 index|[
-literal|32
+name|ENCODING_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -198,7 +208,9 @@ index|[
 name|_LC_LAST
 index|]
 index|[
-literal|32
+name|ENCODING_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -210,15 +222,15 @@ name|current_locale_string
 index|[
 name|_LC_LAST
 operator|*
-literal|33
+operator|(
+name|ENCODING_LEN
+operator|+
+literal|1
+comment|/*"/"*/
+operator|+
+literal|1
+operator|)
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|_PathLocale
 decl_stmt|;
 end_decl_stmt
 
@@ -308,6 +320,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|char
+modifier|*
+name|_PathLocale
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|char
@@ -490,7 +509,7 @@ index|]
 argument_list|,
 name|env
 argument_list|,
-literal|31
+name|ENCODING_LEN
 argument_list|)
 expr_stmt|;
 name|new_categories
@@ -498,10 +517,10 @@ index|[
 name|category
 index|]
 index|[
-literal|31
+name|ENCODING_LEN
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -562,7 +581,7 @@ index|]
 argument_list|,
 name|env
 argument_list|,
-literal|31
+name|ENCODING_LEN
 argument_list|)
 expr_stmt|;
 name|new_categories
@@ -570,10 +589,10 @@ index|[
 name|i
 index|]
 index|[
-literal|31
+name|ENCODING_LEN
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 block|}
@@ -598,7 +617,7 @@ index|]
 argument_list|,
 name|locale
 argument_list|,
-literal|31
+name|ENCODING_LEN
 argument_list|)
 expr_stmt|;
 name|new_categories
@@ -606,10 +625,10 @@ index|[
 name|category
 index|]
 index|[
-literal|31
+name|ENCODING_LEN
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 else|else
@@ -627,7 +646,7 @@ literal|'/'
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 for|for
@@ -656,7 +675,7 @@ index|]
 argument_list|,
 name|locale
 argument_list|,
-literal|31
+name|ENCODING_LEN
 argument_list|)
 expr_stmt|;
 name|new_categories
@@ -664,10 +683,10 @@ index|[
 name|i
 index|]
 index|[
-literal|31
+name|ENCODING_LEN
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 block|}
@@ -712,9 +731,9 @@ name|r
 operator|-
 name|locale
 operator|>
-literal|31
+name|ENCODING_LEN
 condition|?
-literal|31
+name|ENCODING_LEN
 else|:
 name|r
 operator|-
@@ -738,13 +757,15 @@ expr_stmt|;
 name|new_categories
 index|[
 name|i
-operator|++
 index|]
 index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
+expr_stmt|;
+name|i
+operator|++
 expr_stmt|;
 name|locale
 operator|=
@@ -910,45 +931,6 @@ name|currentlocale
 argument_list|()
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/* To be compatible with crt0 hack */
-end_comment
-
-begin_function
-name|void
-name|_startup_setlocale
-parameter_list|(
-name|category
-parameter_list|,
-name|locale
-parameter_list|)
-name|int
-name|category
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|locale
-decl_stmt|;
-block|{
-ifndef|#
-directive|ifndef
-name|XPG4
-operator|(
-name|void
-operator|)
-name|setlocale
-argument_list|(
-name|category
-argument_list|,
-name|locale
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strftime.c,v 1.11.2.2 1996/12/29 11:01:36 joerg Exp $"
+literal|"$Id: strftime.c,v 1.11.2.3 1997/02/05 23:22:13 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"setlocale.h"
 end_include
 
 begin_struct
@@ -1915,14 +1921,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_PathLocale
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|__time_load_locale
@@ -2118,7 +2116,7 @@ condition|)
 goto|goto
 name|no_locale
 goto|;
-comment|/* Range checking not needed, name has fixed size */
+comment|/* Range checking not needed, 'name' size is limited */
 name|strcpy
 argument_list|(
 name|filename
