@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kvm_getswapinfo.c,v 1.4 1999/01/27 11:29:15 bde Exp $"
+literal|"$Id: kvm_getswapinfo.c,v 1.5 1999/02/06 06:31:57 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -755,7 +755,7 @@ argument_list|,
 literal|"swinfo"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * old style: everything in DEV_BSIZE'd chunks, 			 * convert to pages. 			 * 			 * new style: swinfo in DEV_BSIZE'd chunks but dmmax 			 * in pages. 			 */
+comment|/* 			 * old style: everything in DEV_BSIZE'd chunks, 			 * convert to pages. 			 * 			 * new style: swinfo in DEV_BSIZE'd chunks but dmmax 			 * in pages. 			 * 			 * The first dmmax is never allocating to avoid  			 * trashing the disklabels 			 */
 if|if
 condition|(
 name|type
@@ -769,6 +769,8 @@ argument_list|(
 name|swinfo
 operator|.
 name|sw_nblks
+operator|-
+name|dmmax
 argument_list|)
 expr_stmt|;
 else|else
@@ -777,6 +779,8 @@ operator|=
 name|swinfo
 operator|.
 name|sw_nblks
+operator|-
+name|dmmax
 expr_stmt|;
 if|if
 condition|(
