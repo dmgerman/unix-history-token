@@ -1888,6 +1888,13 @@ argument_list|,
 literal|"inet6_opt_finish(0) failed"
 argument_list|)
 expr_stmt|;
+name|ctllen
+operator|+=
+name|CMSG_SPACE
+argument_list|(
+name|hbhlen
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 comment|/* old advanced API */
@@ -1901,15 +1908,12 @@ name|raopt
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ctllen
 operator|+=
-name|CMSG_SPACE
-argument_list|(
 name|hbhlen
-argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* extend ancillary data space (if necessary) */
 if|if
