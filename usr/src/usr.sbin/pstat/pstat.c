@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.28 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,12 +1115,6 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|mp
-decl_stmt|;
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
 decl_stmt|;
 name|int
 name|numvnodes
@@ -2881,8 +2875,6 @@ name|int
 name|ret
 decl_stmt|,
 name|copysize
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|e_vnode
@@ -3562,10 +3554,7 @@ name|loc
 operator|,
 name|np
 expr_stmt|;
-name|struct
-name|pte
-name|apte
-decl_stmt|;
+comment|/* 	struct pte apte; 	*/
 name|nproc
 operator|=
 name|getword
