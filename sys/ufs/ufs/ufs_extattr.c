@@ -1183,13 +1183,6 @@ argument_list|(
 literal|"ufs_extattr_lookup: lockparent but PDIRUNLOCK"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ufs_extattr_lookup: ufs_lookup failed (%d)\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
