@@ -4,7 +4,7 @@ comment|/* $Id: pam_misc.h,v 1.3 1997/01/04 20:15:52 morgan Exp morgan $ */
 end_comment
 
 begin_comment
-comment|/* $Log: pam_misc.h,v $  * Revision 1.3  1997/01/04 20:15:52  morgan  * added timeout to misc_conv  *  * Revision 1.2  1996/12/01 03:27:00  morgan  * add env prototypes  *  * Revision 1.1  1996/07/06 19:31:38  morgan  * Initial revision  *  * Revision 1.1  1996/07/06 19:16:30  morgan  * Initial revision  */
+comment|/* $Log: pam_misc.h,v $  * Revision 1.3  1997/01/04 20:15:52  morgan  * added timeout to misc_conv  *  * Revision 1.2  1996/12/01 03:27:00  morgan  * add env prototypes  *  * Revision 1.1  1996/07/06 19:31:38  morgan  * Initial revision  *  * Revision 1.1  1996/07/06 19:16:30  morgan  * Initial revision  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -143,12 +143,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|send
+name|_send
 parameter_list|,
 name|void
 modifier|*
 modifier|*
-name|receive
+name|_receive
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -175,7 +175,7 @@ name|char
 modifier|*
 specifier|const
 modifier|*
-name|user_env
+name|_user_env
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -198,7 +198,7 @@ parameter_list|(
 name|char
 modifier|*
 modifier|*
-name|env
+name|_env
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -214,20 +214,20 @@ name|pam_misc_setenv
 parameter_list|(
 name|pam_handle_t
 modifier|*
-name|pamh
+name|_pamh
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+name|_name
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|value
+name|_value
 parameter_list|,
 name|int
-name|readonly
+name|_readonly
 parameter_list|)
 function_decl|;
 end_function_decl
