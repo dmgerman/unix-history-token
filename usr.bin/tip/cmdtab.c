@@ -135,7 +135,7 @@ literal|'t'
 block|,
 name|NORM
 block|,
-literal|"take file from remote UNIX"
+literal|"take file from remote UNIX-like system"
 block|,
 name|cu_take
 block|}
@@ -145,7 +145,7 @@ literal|'p'
 block|,
 name|NORM
 block|,
-literal|"put file to remote UNIX"
+literal|"put file to remote UNIX-like system"
 block|,
 name|cu_put
 block|}
