@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-krb.c,v 1.6 96/07/23 14:17:24 leres Exp $"
+literal|"@(#) $Header: print-krb.c,v 1.8 96/12/10 23:17:39 leres Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,7 +500,7 @@ name|vtohlp
 parameter_list|(
 name|x
 parameter_list|)
-value|((( ((char*)(x))[0] )      )  | \ 			     (( ((char*)(x))[1] )<<  8)  | \ 			     (( ((char*)(x))[2] )<< 16)  | \ 			     (( ((char*)(x))[3] )<< 24))
+value|((( ((char *)(x))[0] )      )  | \ 			     (( ((char *)(x))[1] )<<  8)  | \ 			     (( ((char *)(x))[2] )<< 16)  | \ 			     (( ((char *)(x))[3] )<< 24))
 end_define
 
 begin_define
@@ -509,7 +510,7 @@ name|vtohsp
 parameter_list|(
 name|x
 parameter_list|)
-value|((( ((char*)(x))[0] )      )  | \ 			     (( ((char*)(x))[1] )<<  8))
+value|((( ((char *)(x))[0] )      )  | \ 			     (( ((char *)(x))[1] )<<  8))
 end_define
 
 begin_comment
@@ -523,7 +524,7 @@ name|ntohlp
 parameter_list|(
 name|x
 parameter_list|)
-value|((( ((char*)(x))[3] )      )  | \ 			     (( ((char*)(x))[2] )<<  8)  | \ 			     (( ((char*)(x))[1] )<< 16)  | \ 			     (( ((char*)(x))[0] )<< 24))
+value|((( ((char *)(x))[3] )      )  | \ 			     (( ((char *)(x))[2] )<<  8)  | \ 			     (( ((char *)(x))[1] )<< 16)  | \ 			     (( ((char *)(x))[0] )<< 24))
 end_define
 
 begin_define
@@ -533,7 +534,7 @@ name|ntohsp
 parameter_list|(
 name|x
 parameter_list|)
-value|((( ((char*)(x))[1] )      )  | \ 			     (( ((char*)(x))[0] )<<  8))
+value|((( ((char *)(x))[1] )      )  | \ 			     (( ((char *)(x))[0] )<<  8))
 end_define
 
 begin_function

@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-rip.c,v 1.34 96/07/23 14:17:26 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-rip.c,v 1.36 96/11/29 01:22:50 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -490,19 +491,11 @@ operator|-
 name|dat
 argument_list|)
 operator|-
-operator|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|rp
 argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ni
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(

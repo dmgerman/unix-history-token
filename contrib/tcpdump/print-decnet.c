@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-decnet.c,v 1.22 96/07/23 14:17:22 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-decnet.c,v 1.24 96/11/05 13:30:38 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4317,11 +4318,14 @@ decl_stmt|;
 name|int
 name|area
 init|=
-operator|(
+call|(
+name|u_short
+call|)
+argument_list|(
 name|dnaddr
 operator|&
 name|AREAMASK
-operator|)
+argument_list|)
 operator|>>
 name|AREASHIFT
 decl_stmt|;

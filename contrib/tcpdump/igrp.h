@@ -11,37 +11,35 @@ begin_struct
 struct|struct
 name|igrphdr
 block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-name|u_char
-name|ig_op
-range|:
-literal|4
-decl_stmt|;
-comment|/* opcode */
+ifdef|#
+directive|ifdef
+name|WORDS_BIGENDIAN
 name|u_char
 name|ig_v
 range|:
 literal|4
 decl_stmt|;
 comment|/* protocol version number */
+name|u_char
+name|ig_op
+range|:
+literal|4
+decl_stmt|;
+comment|/* opcode */
 else|#
 directive|else
 name|u_char
-name|ig_v
-range|:
-literal|4
-decl_stmt|;
-comment|/* protocol version number */
-name|u_char
 name|ig_op
 range|:
 literal|4
 decl_stmt|;
 comment|/* opcode */
+name|u_char
+name|ig_v
+range|:
+literal|4
+decl_stmt|;
+comment|/* protocol version number */
 endif|#
 directive|endif
 name|u_char
