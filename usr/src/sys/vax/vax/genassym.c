@@ -455,6 +455,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tV_FASTPGREC %d\n"
+argument_list|,
+operator|&
+name|vm
+operator|->
+name|v_fastpgrec
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tUPAGES %d\n"
 argument_list|,
 name|UPAGES
