@@ -1511,6 +1511,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"sn"
+block|,
+literal|"SMC/Megahertz Ethernet adapters"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"ste"
 block|,
 literal|"Sundance ST201 PCI Ethernet adapters"
@@ -2124,6 +2134,16 @@ block|{
 literal|"labpc"
 block|,
 literal|"National Instruments Lab-PC/Lab-PC+"
+block|,
+literal|0
+block|,
+name|CLS_MISC
+block|}
+block|,
+block|{
+literal|"pcic"
+block|,
+literal|"PC-card controller"
 block|,
 literal|0
 block|,
