@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.6	81/11/20	*/
+comment|/*	ip_icmp.c	4.7	81/11/23	*/
 end_comment
 
 begin_include
@@ -683,7 +683,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* what about ttl? */
+name|ip
+operator|->
+name|ip_ttl
+operator|=
+name|MAXTTL
+expr_stmt|;
 name|ip_output
 argument_list|(
 name|dtom
