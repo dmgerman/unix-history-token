@@ -230,20 +230,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|time_t
-name|get_date
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|timeb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -4091,7 +4077,7 @@ name|new
 operator|->
 name|t_data
 operator|=
-name|get_date
+name|parsedate
 argument_list|(
 name|fn_or_tspec
 argument_list|,
