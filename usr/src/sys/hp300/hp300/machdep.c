@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1129,14 +1129,22 @@ begin_comment
 comment|/*  * Clear registers on exec  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|setregs
 argument_list|(
-argument|entry
+name|p
 argument_list|,
-argument|retval
+name|entry
+argument_list|,
+name|retval
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|u_long
@@ -1155,14 +1163,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
 name|p
 operator|->
 name|p_regs
@@ -1179,8 +1179,10 @@ ifdef|#
 directive|ifdef
 name|FPCOPROC
 comment|/* restore a null state frame */
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_fpregs
@@ -1192,8 +1194,10 @@ expr_stmt|;
 name|m68881_restore
 argument_list|(
 operator|&
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_fpregs
@@ -1282,8 +1286,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -1294,8 +1300,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -1308,8 +1316,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -1667,6 +1677,14 @@ name|sigtrap
 init|=
 name|NULL
 decl_stmt|;
+specifier|extern
+name|short
+name|sigcode
+index|[]
+decl_stmt|,
+name|esigcode
+index|[]
+decl_stmt|;
 comment|/* locate trap instruction in pcb_sigc */
 if|if
 condition|(
@@ -1675,45 +1693,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-specifier|register
-name|struct
-name|pcb
-modifier|*
-name|pcp
-init|=
-operator|&
-name|u
-operator|.
-name|u_pcb
-decl_stmt|;
 name|sigtrap
 operator|=
-operator|&
-name|pcp
-operator|->
-name|pcb_sigc
-index|[
-sizeof|sizeof
-argument_list|(
-name|pcp
-operator|->
-name|pcb_sigc
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
-index|]
+name|esigcode
 expr_stmt|;
 while|while
 condition|(
 operator|--
 name|sigtrap
 operator|>=
-name|pcp
-operator|->
-name|pcb_sigc
+name|sigcode
 condition|)
 if|if
 condition|(
@@ -1731,9 +1720,7 @@ if|if
 condition|(
 name|sigtrap
 operator|<
-name|pcp
-operator|->
-name|pcb_sigc
+name|sigcode
 condition|)
 name|panic
 argument_list|(
@@ -2051,6 +2038,14 @@ name|int
 name|oonstack
 decl_stmt|,
 name|fsize
+decl_stmt|;
+specifier|extern
+name|char
+name|sigcode
+index|[]
+decl_stmt|,
+name|esigcode
+index|[]
 decl_stmt|;
 name|frame
 operator|=
@@ -3043,14 +3038,11 @@ name|f_pc
 operator|=
 name|USRSTACK
 operator|-
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_sigc
-argument_list|)
+operator|(
+name|esigcode
+operator|-
+name|sigcode
+operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4055,15 +4047,13 @@ if|if
 condition|(
 name|curproc
 condition|)
-name|resume
-argument_list|(
-operator|(
-name|u_int
-operator|)
-name|pcbb
+name|savectx
 argument_list|(
 name|curproc
-argument_list|)
+operator|->
+name|p_addr
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|boothowto
@@ -6202,11 +6192,19 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|kstack
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|KSADDR
-value|((int *)&(((char *)&u)[(UPAGES-1)*NBPG]))
+value|((int *)&(kstack[(UPAGES-1)*NBPG]))
 end_define
 
 begin_expr_stmt
