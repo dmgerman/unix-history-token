@@ -11399,6 +11399,24 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|error
+operator|=
+name|suser
+argument_list|(
+name|sopt
+operator|->
+name|sopt_td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * Disallow modifications in really-really secure mode, but still allow 	 * the logging counters to be reset. 	 */
 if|if
 condition|(
