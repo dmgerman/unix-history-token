@@ -1773,7 +1773,7 @@ literal|0
 argument|) { 		if (IS_CONSOLE(p)) { 			if ((dc->flags& F_TELNET) !=
 literal|0
 argument|) {
-comment|/* XXX Telent workarounds */
+comment|/* XXX Telnet workarounds */
 argument|if (p->skip_read -->
 literal|0
 argument|) { 					sp ++; 					slen --; 					continue; 				} 				if (*sp == IAC) { 					if (verbose) 						printf(
@@ -1944,7 +1944,7 @@ literal|0
 argument|; 	int port[DCONS_NPORT];  	bzero(&sc, sizeof(sc)); 	dc =&sc; 	dc->flags |= USE_CROM ? F_USE_CROM :
 literal|0
 argument|;
-comment|/* defualt ports */
+comment|/* default ports */
 argument|port[
 literal|0
 argument|] =
@@ -2089,7 +2089,7 @@ literal|"kvm_read: %s"
 argument|, kvm_geterr(dc->kd)); 		dc->paddr = (uintptr_t)dcons_buf; 		if (verbose) 			printf(
 literal|"dcons_buf: 0x%x\n"
 argument|, (uint)dc->paddr); 		break; 	} 	} 	dconschat_fetch_header(dc);
-comment|/* iniit sockets */
+comment|/* init sockets */
 argument|dc->kq = kqueue(); 	if (poll_hz ==
 literal|1
 argument|) { 		dc->to.tv_sec =
