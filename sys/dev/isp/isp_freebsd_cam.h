@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd_cam.h,v 1.13 1999/01/30 07:29:00 mjacob Exp $ */
+comment|/* $Id: isp_freebsd_cam.h,v 1.14 1999/02/09 01:09:03 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_02_05_99 */
+comment|/* release_03_16_99 */
 end_comment
 
 begin_comment
@@ -125,6 +125,48 @@ directive|include
 file|<cam/scsi/scsi_message.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_isp.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCSI_ISP_FABRIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP2100_FABRIC
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCSI_ISP_SCCLUN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP2100_SCCLUN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -202,6 +244,20 @@ end_struct
 begin_define
 define|#
 directive|define
+name|SIMQFRZ_RESOURCE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIMQFRZ_LOOPDOWN
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
 name|isp_sim
 value|isp_osinfo.sim
 end_define
@@ -227,20 +283,6 @@ name|isp_name
 value|isp_osinfo.name
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXISPREQUEST
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|PVS
-value|"Qlogic ISP Driver, FreeBSD CAM"
-end_define
-
 begin_include
 include|#
 directive|include
@@ -262,41 +304,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|PRINTF
-value|printf
-end_define
-
-begin_define
-define|#
-directive|define
-name|IDPRINTF
-parameter_list|(
-name|lev
-parameter_list|,
-name|x
-parameter_list|)
-value|if (isp->isp_dblev>= lev) printf x
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEMZERO
-value|bzero
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEMCPY
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|amt
-parameter_list|)
-value|bcopy((src), (dst), (amt))
+name|PVS
+value|"Qlogic ISP Driver, FreeBSD CAM"
 end_define
 
 begin_ifdef
@@ -737,16 +746,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_DELAY
-parameter_list|(
-name|x
-parameter_list|)
-value|DELAY(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|STOP_WATCHDOG
 parameter_list|(
 name|f
@@ -754,50 +753,6 @@ parameter_list|,
 name|s
 parameter_list|)
 end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_NO_FASTPOST_SCSI
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_NO_FASTPOST_FC
-value|1
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|isp_attach
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|isp_uninit
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

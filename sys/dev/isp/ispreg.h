@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispreg.h,v 1.5 1999/01/30 07:29:00 mjacob Exp $ */
+comment|/* $Id: ispreg.h,v 1.6 1999/02/09 01:09:35 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_02_05_99 */
+comment|/* release_03_16_99 */
 end_comment
 
 begin_comment
@@ -92,19 +92,90 @@ value|0x400
 end_define
 
 begin_comment
-comment|/*  * NB:	The *_BLOCK definitions have no specific hardware meaning.  *	They serve simply to note to the MD layer which block of  *	registers offsets are being accessed.  */
-end_comment
-
-begin_comment
-comment|/*  * Bus Interface Block Register Offsets  */
+comment|/* Bless me! Chip designers have putzed it again! */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BIU_BLOCK
-value|0x0100
+name|ISP1080_DMA_REGS_OFF
+value|0x60
 end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_REGS_OFF
+value|0x00
+end_define
+
+begin_comment
+comment|/* same as BIU block */
+end_comment
+
+begin_comment
+comment|/*  * NB:	The *_BLOCK definitions have no specific hardware meaning.  *	They serve simply to note to the MD layer which block of  *	registers offsets are being accessed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_NREG_BLKS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BLK_REG_SHFT
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BLK_REG_MASK
+value|(7<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU_BLOCK
+value|(0<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_BLOCK
+value|(1<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SXP_BLOCK
+value|(2<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RISC_BLOCK
+value|(3<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_BLOCK
+value|(4<< _BLK_REG_SHFT)
+end_define
+
+begin_comment
+comment|/*  * Bus Interface Block Register Offsets  */
+end_comment
 
 begin_define
 define|#
@@ -218,237 +289,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDMA_CONF
-value|BIU_BLOCK+0x20
-end_define
-
-begin_comment
-comment|/* RW*: DMA Configuration */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA2100_CONTROL
-value|CDMA_CONF
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDMA_CONTROL
-value|BIU_BLOCK+0x22
-end_define
-
-begin_comment
-comment|/* RW*: DMA Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_STATUS
-value|BIU_BLOCK+0x24
-end_define
-
-begin_comment
-comment|/* R  : DMA Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_FIFO_STS
-value|BIU_BLOCK+0x26
-end_define
-
-begin_comment
-comment|/* R  : DMA FIFO Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_COUNT
-value|BIU_BLOCK+0x28
-end_define
-
-begin_comment
-comment|/* RW*: DMA Transfer Count */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR0
-value|BIU_BLOCK+0x2C
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR1
-value|BIU_BLOCK+0x2E
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 1 */
-end_comment
-
-begin_comment
-comment|/* these are for the 1040A cards */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR2
-value|BIU_BLOCK+0x30
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR3
-value|BIU_BLOCK+0x32
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_CONF
-value|BIU_BLOCK+0x40
-end_define
-
-begin_comment
-comment|/* RW*: DMA Configuration */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDMA2100_CONTROL
-value|DDMA_CONF
-end_define
-
-begin_define
-define|#
-directive|define
-name|DDMA_CONTROL
-value|BIU_BLOCK+0x42
-end_define
-
-begin_comment
-comment|/* RW*: DMA Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_STATUS
-value|BIU_BLOCK+0x44
-end_define
-
-begin_comment
-comment|/* R  : DMA Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_FIFO_STS
-value|BIU_BLOCK+0x46
-end_define
-
-begin_comment
-comment|/* R  : DMA FIFO Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_COUNT_LO
-value|BIU_BLOCK+0x48
-end_define
-
-begin_comment
-comment|/* RW*: DMA Xfer Count, Low */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_COUNT_HI
-value|BIU_BLOCK+0x4A
-end_define
-
-begin_comment
-comment|/* RW*: DMA Xfer Count, High */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR0
-value|BIU_BLOCK+0x4C
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR1
-value|BIU_BLOCK+0x4E
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 1 */
-end_comment
-
-begin_comment
-comment|/* these are for the 1040A cards */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR2
-value|BIU_BLOCK+0x50
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR3
-value|BIU_BLOCK+0x52
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DFIFO_COMMAND
 value|BIU_BLOCK+0x60
 end_define
@@ -473,6 +313,237 @@ end_define
 
 begin_comment
 comment|/* RW : Data FIFO Port */
+end_comment
+
+begin_comment
+comment|/*  * Putzed DMA register layouts.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_CONF
+value|DMA_BLOCK+0x20
+end_define
+
+begin_comment
+comment|/* RW*: DMA Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA2100_CONTROL
+value|CDMA_CONF
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDMA_CONTROL
+value|DMA_BLOCK+0x22
+end_define
+
+begin_comment
+comment|/* RW*: DMA Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_STATUS
+value|DMA_BLOCK+0x24
+end_define
+
+begin_comment
+comment|/* R  : DMA Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_FIFO_STS
+value|DMA_BLOCK+0x26
+end_define
+
+begin_comment
+comment|/* R  : DMA FIFO Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_COUNT
+value|DMA_BLOCK+0x28
+end_define
+
+begin_comment
+comment|/* RW*: DMA Transfer Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR0
+value|DMA_BLOCK+0x2C
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR1
+value|DMA_BLOCK+0x2E
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR2
+value|DMA_BLOCK+0x30
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR3
+value|DMA_BLOCK+0x32
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_CONF
+value|DMA_BLOCK+0x40
+end_define
+
+begin_comment
+comment|/* RW*: DMA Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA2100_CONTROL
+value|DDMA_CONF
+end_define
+
+begin_define
+define|#
+directive|define
+name|DDMA_CONTROL
+value|DMA_BLOCK+0x42
+end_define
+
+begin_comment
+comment|/* RW*: DMA Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_STATUS
+value|DMA_BLOCK+0x44
+end_define
+
+begin_comment
+comment|/* R  : DMA Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_FIFO_STS
+value|DMA_BLOCK+0x46
+end_define
+
+begin_comment
+comment|/* R  : DMA FIFO Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_COUNT_LO
+value|DMA_BLOCK+0x48
+end_define
+
+begin_comment
+comment|/* RW*: DMA Xfer Count, Low */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_COUNT_HI
+value|DMA_BLOCK+0x4A
+end_define
+
+begin_comment
+comment|/* RW*: DMA Xfer Count, High */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR0
+value|DMA_BLOCK+0x4C
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR1
+value|DMA_BLOCK+0x4E
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 1 */
+end_comment
+
+begin_comment
+comment|/* these are for the 1040A cards */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR2
+value|DMA_BLOCK+0x50
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR3
+value|DMA_BLOCK+0x52
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 3 */
 end_comment
 
 begin_comment
@@ -639,6 +710,28 @@ end_define
 
 begin_comment
 comment|/* SXP register select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_PCI1080_CONF1_SXP
+value|0x0100
+end_define
+
+begin_comment
+comment|/* SXP bank select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_PCI1080_CONF1_DMA
+value|0x0300
+end_define
+
+begin_comment
+comment|/* DMA bank select */
 end_comment
 
 begin_comment
@@ -867,6 +960,16 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|(isp->isp_type& ISP_HA_SCSI)?  \  ISP_WRITE(isp, BIU_ICR, BIU_ICR_ENABLE_RISC_INT | BIU_ICR_ENABLE_ALL_INTS) : \  ISP_WRITE(isp, BIU_ICR, BIU2100_ICR_ENA_RISC_INT | BIU2100_ICR_ENABLE_ALL_INTS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTS_ENABLED
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp->isp_type& ISP_HA_SCSI)?  \  (ISP_READ(isp, BIU_ICR)& (BIU_ICR_ENABLE_RISC_INT|BIU_ICR_ENABLE_ALL_INTS)) :\  (ISP_READ(isp, BIU_ICR)& \ 	(BIU2100_ICR_ENA_RISC_INT|BIU2100_ICR_ENABLE_ALL_INTS)))
 end_define
 
 begin_define
@@ -1613,13 +1716,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBOX_BLOCK
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
 name|INMAILBOX0
 value|MBOX_BLOCK+0x0
 end_define
@@ -1753,13 +1849,6 @@ end_define
 begin_comment
 comment|/*  * SXP Block Register Offsets  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SXP_BLOCK
-value|0x0400
-end_define
 
 begin_define
 define|#
@@ -3224,13 +3313,6 @@ end_comment
 begin_comment
 comment|/*  * RISC and Host Command and Control Block Register Offsets  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RISC_BLOCK
-value|0x0800
-end_define
 
 begin_define
 define|#

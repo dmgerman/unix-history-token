@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.9 1999/01/30 07:29:00 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.10 1999/02/09 01:11:35 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_02_05_99 */
+comment|/* release_03_16_99 */
 end_comment
 
 begin_comment
@@ -23,11 +23,19 @@ directive|define
 name|_ISPVAR_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -265,12 +273,35 @@ name|MAX_TARGETS
 value|16
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP2100_FABRIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAX_FC_TARG
+value|256
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MAX_FC_TARG
 value|126
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -301,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|RESULT_QUEUE_LEN
-value|(MAXISPREQUEST/4)
+value|(MAXISPREQUEST/2)
 end_define
 
 begin_define
@@ -650,6 +681,13 @@ decl_stmt|;
 name|u_int16_t
 name|isp_fwoptions
 decl_stmt|;
+comment|/* 	 * Port Data Base 	 */
+name|isp_pdb_t
+name|isp_pdb
+index|[
+name|MAX_FC_TARG
+index|]
+decl_stmt|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
 specifier|volatile
 name|caddr_t
@@ -878,7 +916,11 @@ operator|:
 literal|8
 operator|,
 operator|:
-literal|2
+literal|1
+operator|,
+name|isp_used
+operator|:
+literal|1
 operator|,
 name|isp_dblev
 operator|:
@@ -933,7 +975,7 @@ name|isp_update
 operator|:
 literal|1
 operator|,
-comment|/* update paramters */
+comment|/* update parameters */
 name|isp_nactive
 operator|:
 literal|9
@@ -1189,6 +1231,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_SCSI_1080
+value|0xe
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_HA_FC
 value|0xf0
 end_define
@@ -1198,6 +1247,36 @@ define|#
 directive|define
 name|ISP_HA_FC_2100
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_SCSI
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type& ISP_HA_SCSI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_1080
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_1080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_FC
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type& ISP_HA_FC)
 end_define
 
 begin_comment
@@ -1447,7 +1526,9 @@ block|,
 name|ISPCTL_ABORT_CMD
 block|,
 name|ISPCTL_UPDATE_PARAMS
-block|, }
+block|,
+name|ISPCTL_FCLINK_TEST
+block|}
 name|ispctl_t
 typedef|;
 end_typedef
@@ -1481,11 +1562,20 @@ enum|enum
 block|{
 name|ISPASYNC_NEW_TGT_PARAMS
 block|,
+name|ISPASYNC_BUS_RESET
+block|,
+comment|/* Bus Reset */
 name|ISPASYNC_LOOP_DOWN
 block|,
 comment|/* Obvious FC only */
 name|ISPASYNC_LOOP_UP
-comment|/* Obvious FC only */
+block|,
+comment|/* "" */
+name|ISPASYNC_PDB_CHANGE_COMPLETE
+block|,
+comment|/* "" */
+name|ISPASYNC_CHANGE_NOTIFY
+comment|/* "" */
 block|}
 name|ispasync_t
 typedef|;
