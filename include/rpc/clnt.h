@@ -759,6 +759,17 @@ name|CLSET_ASYNC
 value|19
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLSET_CONNECT
+value|20
+end_define
+
+begin_comment
+comment|/* Use connect() for UDP. (int) */
+end_comment
+
 begin_comment
 comment|/*  * void  * CLNT_DESTROY(rh);  * 	CLIENT *rh;  */
 end_comment
