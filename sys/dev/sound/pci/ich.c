@@ -1454,11 +1454,15 @@ name|sc
 operator|->
 name|ac97rate
 expr_stmt|;
+comment|/* 		 * Cast the return value of ac97_setrate() to u_int so that 		 * the math don't overflow into the negative range. 		 */
 name|ch
 operator|->
 name|spd
 operator|=
 operator|(
+operator|(
+name|u_int
+operator|)
 name|ac97_setrate
 argument_list|(
 name|sc
@@ -3480,9 +3484,14 @@ name|sc
 operator|->
 name|hasmic
 operator|=
-name|extcaps
+name|ac97_getcaps
+argument_list|(
+name|sc
+operator|->
+name|codec
+argument_list|)
 operator|&
-literal|1
+name|AC97_CAP_MICCHANNEL
 expr_stmt|;
 name|ac97_setextmode
 argument_list|(
@@ -3497,10 +3506,6 @@ operator||
 name|sc
 operator|->
 name|hasvrm
-operator||
-name|sc
-operator|->
-name|hasmic
 argument_list|)
 expr_stmt|;
 if|if
