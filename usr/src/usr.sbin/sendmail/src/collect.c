@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	1.5	%G%"
+literal|"@(#)collect.c	1.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,20 @@ name|MAXNAME
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* message-id, determined or created */
+end_comment
+
+begin_decl_stmt
+name|long
+name|MsgSize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of message in bytes */
+end_comment
 
 begin_function
 name|char
@@ -417,6 +431,9 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
+name|MsgSize
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -608,6 +625,13 @@ literal|'\0'
 argument_list|)
 expr_stmt|;
 block|}
+name|MsgSize
+operator|+=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|fputs
 argument_list|(
 name|buf

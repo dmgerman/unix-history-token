@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	1.10	%G%"
+literal|"@(#)deliver.c	1.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1022,6 +1022,16 @@ specifier|extern
 name|int
 name|N_SysEx
 decl_stmt|;
+specifier|extern
+name|long
+name|MsgSize
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|30
+index|]
+decl_stmt|;
 name|i
 operator|=
 name|stat
@@ -1159,42 +1169,43 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	**  Final cleanup. 	**	Log a record of the transaction.  Compute the new 	**	ExitStat -- if we already had an error, stick with 	**	that. 	*/
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|statmsg
 operator|==
 name|NULL
 condition|)
-name|logmsg
+block|{
+name|sprintf
 argument_list|(
-name|LOG_INFO
+name|buf
 argument_list|,
-literal|"%s->%s: error %d"
-argument_list|,
-name|From
-operator|.
-name|q_paddr
-argument_list|,
-name|To
+literal|"error %d"
 argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
-else|else
+name|statmsg
+operator|=
+name|buf
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|LOG
 name|logmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s->%s: %s"
+literal|"%s->%s: %ld: %s"
 argument_list|,
 name|From
 operator|.
 name|q_paddr
 argument_list|,
 name|To
+argument_list|,
+name|MsgSize
 argument_list|,
 name|statmsg
 argument_list|)
