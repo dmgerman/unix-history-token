@@ -363,6 +363,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|u_int
+name|build_freelist
+parameter_list|(
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *	Per-slot data table.  */
 end_comment
@@ -943,6 +953,120 @@ unit|if (scratch[i]) { 			printf ("[%02x] ", i); 			for (j = 0; j< 2 * link + 4&
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|static
+name|u_int
+name|build_freelist
+parameter_list|(
+name|u_int
+name|pcic_mask
+parameter_list|)
+block|{
+name|inthand2_t
+modifier|*
+name|nullfunc
+decl_stmt|;
+name|int
+name|irq
+decl_stmt|;
+name|u_int
+name|mask
+decl_stmt|,
+name|freemask
+decl_stmt|;
+comment|/* No free IRQs (yet). */
+name|freemask
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Walk through all of the IRQ's and find any that aren't allocated. */
+for|for
+control|(
+name|irq
+operator|=
+literal|0
+init|;
+name|irq
+operator|<
+name|ICU_LEN
+condition|;
+name|irq
+operator|++
+control|)
+block|{
+comment|/*  		 * If the PCIC controller can't generate it, don't 		 * bother checking to see if it it's free.  		 */
+name|mask
+operator|=
+literal|1
+operator|<<
+name|irq
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|mask
+operator|&
+name|pcic_mask
+operator|)
+condition|)
+continue|continue;
+comment|/* See if the IRQ is free. */
+if|if
+condition|(
+name|register_intr
+argument_list|(
+name|irq
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|nullfunc
+argument_list|,
+name|NULL
+argument_list|,
+name|irq
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Give it back, but add it to the mask */
+name|INTRMASK
+argument_list|(
+name|freemask
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
+name|unregister_intr
+argument_list|(
+name|irq
+argument_list|,
+name|nullfunc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+ifdef|#
+directive|ifdef
+name|PCIC_DEBUG
+name|printf
+argument_list|(
+literal|"Freelist of IRQ's<0x%x>\n"
+argument_list|,
+name|freemask
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|freemask
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  *	entry point from main code to map/unmap memory context.  */
@@ -1959,6 +2083,9 @@ name|validslots
 init|=
 literal|0
 decl_stmt|;
+name|u_int
+name|free_irqs
+decl_stmt|;
 name|struct
 name|slot
 modifier|*
@@ -1979,6 +2106,14 @@ name|is_vlsi
 init|=
 literal|0
 decl_stmt|;
+comment|/* Determine the list of free interrupts */
+name|free_irqs
+operator|=
+name|build_freelist
+argument_list|(
+name|PCIC_INT_MASK_ALLOWED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *	Initialise controller information structure. 	 */
 name|cinfo
 operator|.
@@ -2044,7 +2179,7 @@ name|cinfo
 operator|.
 name|irqs
 operator|=
-name|PCIC_INT_MASK_ALLOWED
+name|free_irqs
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2641,11 +2776,13 @@ name|pcic_irq
 operator|=
 name|pccard_alloc_intr
 argument_list|(
-name|PCIC_INT_MASK_ALLOWED
+name|free_irqs
 argument_list|,
 name|pcicintr
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|pcic_imask
