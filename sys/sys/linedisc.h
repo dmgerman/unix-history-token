@@ -270,12 +270,6 @@ comment|/* Loadable line discipline */
 end_comment
 
 begin_decl_stmt
-name|l_ioctl_t
-name|l_nullioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|l_read_t
 name|l_noread
 decl_stmt|;
@@ -284,6 +278,12 @@ end_decl_stmt
 begin_decl_stmt
 name|l_write_t
 name|l_nowrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|l_ioctl_t
+name|l_nullioctl
 decl_stmt|;
 end_decl_stmt
 
