@@ -1527,6 +1527,10 @@ name|name
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|Buf_GetAll
 argument_list|(
 name|v
@@ -6846,6 +6850,10 @@ name|v
 operator|->
 name|name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|Buf_GetAll
 argument_list|(
 name|v
