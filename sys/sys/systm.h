@@ -554,8 +554,15 @@ name|char
 modifier|*
 name|msg
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1155,8 +1162,19 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -1172,8 +1190,19 @@ modifier|*
 parameter_list|,
 name|__va_list
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|long
@@ -1189,25 +1218,45 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
 
-begin_function_decl
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|u_long
 name|strtoul
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|char
-modifier|*
-modifier|*
-parameter_list|,
+operator|*
+operator|*
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__nonnull
+argument_list|(
+literal|1
+argument_list|)
+decl_stmt|,
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|quad_t
@@ -1223,8 +1272,15 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|u_quad_t
@@ -1240,8 +1296,15 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1303,8 +1366,19 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -1317,8 +1391,15 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1337,8 +1418,19 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -1360,8 +1452,19 @@ name|size_t
 modifier|*
 name|lencopied
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -1383,8 +1486,19 @@ name|size_t
 modifier|*
 name|lencopied
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -1402,8 +1516,19 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -1421,8 +1546,19 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__nonnull
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -2410,8 +2546,15 @@ name|void
 modifier|*
 name|chan
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -2421,8 +2564,15 @@ name|void
 modifier|*
 name|chan
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/*  * Common `dev_t' stuff are declared here to avoid #include poisoning  */
