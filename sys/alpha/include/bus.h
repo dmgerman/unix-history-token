@@ -1001,7 +1001,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|bus_space_read_multi_1(busspace_isa_io, o, 0, \ 					       (void*)a, c)
+value|bus_space_read_multi_1(busspace_isa_io, o, 0, \ 					       (void*)(a), c)
 end_define
 
 begin_define
@@ -1015,7 +1015,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|bus_space_read_multi_2(busspace_isa_io, o, 0, \ 					       (void*)a, c)
+value|bus_space_read_multi_2(busspace_isa_io, o, 0, \ 					       (void*)(a), c)
 end_define
 
 begin_define
@@ -1029,7 +1029,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|bus_space_read_multi_4(busspace_isa_io, o, 0, \ 					       (void*)a, c)
+value|bus_space_read_multi_4(busspace_isa_io, o, 0, \ 					       (void*)(a), c)
 end_define
 
 begin_define
@@ -1043,7 +1043,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|bus_space_write_multi_1(busspace_isa_io, o, 0, \ 						(void*)a, c)
+value|bus_space_write_multi_1(busspace_isa_io, o, 0, \ 						(void*)(a), c)
 end_define
 
 begin_define
@@ -1057,7 +1057,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|bus_space_write_multi_2(busspace_isa_io, o, 0, \ 						(void*)a, c)
+value|bus_space_write_multi_2(busspace_isa_io, o, 0, \ 						(void*)(a), c)
 end_define
 
 begin_define
@@ -1071,7 +1071,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|bus_space_write_multi_4(busspace_isa_io, o, 0, \ 						(void*)a, c)
+value|bus_space_write_multi_4(busspace_isa_io, o, 0, \ 						(void*)(a), c)
 end_define
 
 begin_define
