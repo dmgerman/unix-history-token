@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	3.7 83/08/23"
+literal|"@(#)wwwrite.c	3.8 83/08/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,14 +175,6 @@ name|char
 modifier|*
 name|touched
 decl_stmt|;
-name|c
-operator||=
-name|w
-operator|->
-name|ww_modes
-operator|<<
-name|WWC_MSHIFT
-expr_stmt|;
 if|if
 condition|(
 name|w
@@ -211,6 +203,12 @@ operator|.
 name|c
 argument_list|,
 name|c
+operator||
+name|w
+operator|->
+name|ww_modes
+operator|<<
+name|WWC_MSHIFT
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -266,6 +264,12 @@ operator|->
 name|c_w
 operator|=
 name|c
+operator||
+name|w
+operator|->
+name|ww_modes
+operator|<<
+name|WWC_MSHIFT
 expr_stmt|;
 while|while
 condition|(
