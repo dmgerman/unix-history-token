@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983,1988 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1988 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.21 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximimum line length that can be handled.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  * more extensive changes by Eric Allman (again)  */
@@ -4932,24 +4938,62 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* check for end-of-section */
+comment|/* 		 * check for end-of-section, comments, strip off trailing 		 * spaces and newline character. 		 */
+for|for
+control|(
+name|p
+operator|=
+name|cline
+init|;
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|;
+operator|++
+name|p
+control|)
+empty_stmt|;
 if|if
 condition|(
-name|cline
-index|[
-literal|0
-index|]
+operator|*
+name|p
 operator|==
-literal|'\n'
+name|NULL
 operator|||
-name|cline
-index|[
-literal|0
-index|]
+operator|*
+name|p
 operator|==
 literal|'#'
 condition|)
 continue|continue;
+for|for
+control|(
+name|p
+operator|=
+name|index
+argument_list|(
+name|cline
+argument_list|,
+literal|'\0'
+argument_list|)
+init|;
+name|isspace
+argument_list|(
+operator|*
+operator|--
+name|p
+argument_list|)
+condition|;
+control|)
+empty_stmt|;
+operator|*
+operator|++
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 name|f
 operator|=
 operator|(
@@ -4979,25 +5023,6 @@ operator|&
 name|f
 operator|->
 name|f_next
-expr_stmt|;
-comment|/* strip off newline character */
-name|p
-operator|=
-name|index
-argument_list|(
-name|cline
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-condition|)
-operator|*
-name|p
-operator|=
-literal|'\0'
 expr_stmt|;
 name|cfline
 argument_list|(
@@ -5975,6 +6000,12 @@ operator|<
 literal|0
 condition|)
 block|{
+name|f
+operator|->
+name|f_file
+operator|=
+name|F_UNUSED
+expr_stmt|;
 name|logerror
 argument_list|(
 name|p
