@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.14 (Berkeley) %G%"
+literal|"@(#)init.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -169,15 +175,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|utmpf
-index|[]
-init|=
-name|_PATH_UTMP
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|ctty
 index|[]
 init|=
@@ -270,20 +267,6 @@ name|shutpass
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|reset
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|idle
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -302,6 +285,19 @@ name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|idle
+argument_list|()
+decl_stmt|,
+name|merge
+argument_list|()
+decl_stmt|,
+name|reset
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -377,6 +373,8 @@ name|int
 name|howto
 decl_stmt|,
 name|oldhowto
+decl_stmt|,
+name|started
 decl_stmt|;
 if|#
 directive|if
@@ -395,6 +393,10 @@ name|r11
 expr_stmt|;
 else|#
 directive|else
+name|howto
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -416,10 +418,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|howto
-operator|=
-literal|0
-expr_stmt|;
 name|cp
 operator|=
 operator|&
@@ -470,6 +468,18 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|openlog
 argument_list|(
 literal|"init"
@@ -479,6 +489,20 @@ operator||
 name|LOG_ODELAY
 argument_list|,
 name|LOG_AUTH
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsid failed (initial) %m"
 argument_list|)
 expr_stmt|;
 name|sigvec
@@ -534,7 +558,11 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|EVER
+name|started
+operator|=
+literal|0
+init|;
+condition|;
 control|)
 block|{
 name|oldhowto
@@ -547,6 +575,8 @@ name|RB_SINGLE
 expr_stmt|;
 if|if
 condition|(
+name|started
+operator|&&
 name|setjmp
 argument_list|(
 name|shutpass
@@ -556,6 +586,10 @@ literal|0
 condition|)
 name|shutdown
 argument_list|()
+expr_stmt|;
+name|started
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -584,7 +618,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|int
+name|void
 name|shutreset
 parameter_list|()
 function_decl|;
@@ -603,16 +637,6 @@ decl_stmt|,
 modifier|*
 name|p1
 decl_stmt|;
-name|close
-argument_list|(
-name|creat
-argument_list|(
-name|utmpf
-argument_list|,
-literal|0644
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
@@ -738,10 +762,11 @@ name|char
 name|shutfailm
 index|[]
 init|=
-literal|"WARNING: Something is hung (won't die); ps axl advised\n"
+literal|"init: WARNING: something is hung (won't die); ps axl advised\n"
 decl_stmt|;
+name|void
 name|shutreset
-argument_list|()
+parameter_list|()
 block|{
 name|int
 name|status
@@ -906,6 +931,20 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsid failed (single): %m"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -914,6 +953,26 @@ argument_list|(
 name|ctty
 argument_list|,
 name|O_RDWR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"TIOCSCTTY failed: %m"
 argument_list|)
 expr_stmt|;
 name|dup2
@@ -1026,7 +1085,7 @@ name|void
 operator|)
 name|open
 argument_list|(
-literal|"/"
+name|ctty
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -1043,6 +1102,40 @@ argument_list|(
 literal|0
 argument_list|,
 literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsid failed (runcom) %m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"TIOCSCTTY failed (runcom) %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1125,10 +1218,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|int
-name|merge
-parameter_list|()
-function_decl|;
 name|struct
 name|sigvec
 name|mvec
@@ -1148,6 +1237,10 @@ comment|/*  * Multi-user.  Listen for users leaving, SIGHUP's  * which indicate 
 name|multiple
 argument_list|()
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 specifier|register
 name|struct
 name|tab
@@ -1191,12 +1284,17 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* SHOULD FIX THIS IN THE KERNEL */
 if|if
 condition|(
 name|pid
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|EINTR
 condition|)
 return|return;
 name|omask
@@ -1299,8 +1397,9 @@ define|#
 directive|define
 name|WCHANGE
 value|4
+name|void
 name|merge
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1933,6 +2032,20 @@ literal|30
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsid failed(dfork) %m"
+argument_list|)
+expr_stmt|;
 name|execit
 argument_list|(
 name|p
@@ -1983,6 +2096,10 @@ argument_list|(
 name|p
 operator|->
 name|line
+argument_list|,
+literal|""
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 		 * After a proper login force reset 		 * of error detection code in dfork. 		 */
@@ -2000,8 +2117,9 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|void
 name|reset
-argument_list|()
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -2014,8 +2132,9 @@ block|}
 name|jmp_buf
 name|idlebuf
 decl_stmt|;
+name|void
 name|idlehup
-argument_list|()
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -2025,8 +2144,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|void
 name|idle
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2313,6 +2433,20 @@ literal|30
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsid failed (window) %m"
+argument_list|)
+expr_stmt|;
 name|execit
 argument_list|(
 name|p
