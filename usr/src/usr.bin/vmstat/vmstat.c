@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.5 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2241,10 +2241,6 @@ name|n_value
 expr_stmt|;
 if|if
 condition|(
-name|mp
-operator|==
-literal|0
-operator|||
 name|up
 operator|==
 literal|0
@@ -2263,10 +2259,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-while|while
+if|if
 condition|(
-literal|1
+name|mp
 condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|steal
 argument_list|(
@@ -2352,10 +2353,11 @@ operator|.
 name|mi_unit
 expr_stmt|;
 block|}
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|steal
 argument_list|(
