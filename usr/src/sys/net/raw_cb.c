@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.6	82/03/28	*/
+comment|/*	raw_cb.c	4.7	82/04/10	*/
 end_comment
 
 begin_include
@@ -221,6 +221,12 @@ argument_list|)
 expr_stmt|;
 name|inpup
 operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|inpup
+operator|.
 name|sin_addr
 operator|.
 name|s_net
@@ -383,9 +389,9 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|so
+name|rp
 operator|->
-name|so_addr
+name|rcb_laddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -393,6 +399,12 @@ operator|*
 name|addr
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|rp
+operator|->
+name|rcb_flags
+operator||=
+name|RAW_LADDR
 expr_stmt|;
 return|return
 operator|(
@@ -521,7 +533,7 @@ operator|->
 name|rcb_flags
 operator|&=
 operator|~
-name|RAW_ADDR
+name|RAW_FADDR
 expr_stmt|;
 if|if
 condition|(
@@ -590,7 +602,7 @@ operator|)
 operator|&
 name|rp
 operator|->
-name|rcb_addr
+name|rcb_faddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -603,7 +615,7 @@ name|rp
 operator|->
 name|rcb_flags
 operator||=
-name|RAW_ADDR
+name|RAW_FADDR
 expr_stmt|;
 block|}
 end_block

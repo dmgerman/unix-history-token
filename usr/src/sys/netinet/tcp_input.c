@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.66	82/04/01	*/
+comment|/*	tcp_input.c	1.67	82/04/10	*/
 end_comment
 
 begin_include
@@ -1055,11 +1055,6 @@ goto|goto
 name|drop
 goto|;
 block|}
-name|in_setsockaddr
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|iss

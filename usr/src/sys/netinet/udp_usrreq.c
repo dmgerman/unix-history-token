@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.25	82/04/10	*/
+comment|/*	udp_usrreq.c	4.26	82/04/10	*/
 end_comment
 
 begin_include
@@ -1222,11 +1222,6 @@ name|inp_laddr
 operator|=
 name|laddr
 expr_stmt|;
-name|in_setsockaddr
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 break|break;
@@ -1257,6 +1252,22 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+case|case
+name|PRU_SOCKADDR
+case|:
+name|in_setsockaddr
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|addr
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|panic
 argument_list|(

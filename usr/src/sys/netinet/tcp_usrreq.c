@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.55	82/04/10	*/
+comment|/*	tcp_usrreq.c	1.56	82/04/10	*/
 end_comment
 
 begin_include
@@ -900,6 +900,22 @@ operator|->
 name|t_force
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+name|PRU_SOCKADDR
+case|:
+name|in_setsockaddr
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|addr
+argument_list|,
+name|inp
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* 	 * TCP slow timer went off; going through this 	 * routine for tracing's sake. 	 */

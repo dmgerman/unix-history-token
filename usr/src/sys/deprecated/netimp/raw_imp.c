@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.9	82/03/28	*/
+comment|/*	raw_imp.c	4.10	82/04/10	*/
 end_comment
 
 begin_include
@@ -66,23 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../errno.h"
+file|<errno.h>
 end_include
 
 begin_comment
 comment|/*  * Raw interface to IMP.  */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|rawimpaddr
-init|=
-block|{
-name|AF_IMPLINK
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Generate IMP leader and pass packet to impoutput.  * The user must create a skeletal leader in order to  * communicate message type, message subtype, etc.  * We fill in holes where needed and verify parameters  * supplied by user.  */
@@ -120,6 +109,10 @@ name|n
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|struct
@@ -197,11 +190,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|{
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+comment|/* XXX */
+goto|goto
+name|bad
+goto|;
+block|}
 name|cp
 operator|=
 name|mtod
@@ -250,11 +248,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|{
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+comment|/* XXX */
+goto|goto
+name|bad
+goto|;
+block|}
 name|ip
 operator|=
 name|mtod
@@ -274,9 +277,16 @@ name|il_format
 operator|!=
 name|IMP_NFF
 condition|)
+block|{
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+comment|/* XXX */
 goto|goto
 name|bad
 goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|notdef
@@ -302,9 +312,15 @@ operator|>
 name|IMPLINK_HIGHEXPER
 operator|)
 condition|)
+block|{
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Fill in IMP leader -- impoutput refrains from rebuilding 	 * the leader when it sees the protocol family PF_IMPLINK. 	 * (message size calculated by walking through mbuf's) 	 */
@@ -358,7 +374,7 @@ operator|)
 operator|&
 name|rp
 operator|->
-name|rcb_addr
+name|rcb_faddr
 expr_stmt|;
 name|ip
 operator|->
@@ -403,12 +419,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ifp
-operator|==
-literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
 return|return
 operator|(
 name|impoutput
@@ -422,11 +433,14 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
-name|rawimpaddr
+name|sin
 argument_list|)
 operator|)
 return|;
+name|error
+operator|=
+name|ENETUNREACH
+expr_stmt|;
 name|bad
 label|:
 name|m_freem
@@ -436,7 +450,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

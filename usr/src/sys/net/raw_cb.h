@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.h	4.3	82/02/02	*/
+comment|/*	raw_cb.h	4.4	82/04/10	*/
 end_comment
 
 begin_comment
@@ -30,9 +30,14 @@ decl_stmt|;
 comment|/* back pointer to socket */
 name|struct
 name|sockaddr
-name|rcb_addr
+name|rcb_faddr
 decl_stmt|;
 comment|/* destination address */
+name|struct
+name|sockaddr
+name|rcb_laddr
+decl_stmt|;
+comment|/* socket's address */
 name|caddr_t
 name|rcb_pcb
 decl_stmt|;
@@ -51,13 +56,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAW_ADDR
+name|RAW_LADDR
 value|01
 end_define
 
-begin_comment
-comment|/* got an address */
-end_comment
+begin_define
+define|#
+directive|define
+name|RAW_FADDR
+value|02
+end_define
 
 begin_define
 define|#
@@ -97,7 +105,7 @@ name|raw_header
 block|{
 name|struct
 name|sockproto
-name|raw_protocol
+name|raw_proto
 decl_stmt|;
 comment|/* format of packet */
 name|struct
