@@ -131,7 +131,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*static char *linker_search_path(const char *name, struct mod_depend *verinfo);*/
+comment|/*  * static char *linker_search_path(const char *name, struct mod_depend  * *verinfo);  */
 end_comment
 
 begin_function_decl
@@ -258,7 +258,7 @@ name|LINKER_GET_NEXT_FILE_ID
 parameter_list|(
 name|a
 parameter_list|)
-value|do {					\     linker_file_t	lftmp;						\ 									\ retry:									\     TAILQ_FOREACH(lftmp,&linker_files, link) {				\         if (next_file_id == lftmp->id) {				\             next_file_id++;						\             goto retry;							\         }								\     }									\     (a) = next_file_id;							\ } while(0)
+value|do {					\ 	linker_file_t lftmp;						\ 									\ retry:									\ 	TAILQ_FOREACH(lftmp,&linker_files, link) {			\ 		if (next_file_id == lftmp->id) {			\ 			next_file_id++;					\ 			goto retry;					\ 		}							\ 	}								\ 	(a) = next_file_id;						\ } while(0)
 end_define
 
 begin_comment
@@ -412,21 +412,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|linker
+argument|linker
 argument_list|,
-name|SI_SUB_KLD
+argument|SI_SUB_KLD
 argument_list|,
-name|SI_ORDER_FIRST
+argument|SI_ORDER_FIRST
 argument_list|,
-name|linker_init
+argument|linker_init
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|int
@@ -455,7 +454,9 @@ name|link
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -478,21 +479,15 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|stop
-decl_stmt|;
-name|struct
-name|sysinit
+decl_stmt|,
 modifier|*
 modifier|*
 name|sipp
-decl_stmt|;
-name|struct
-name|sysinit
+decl_stmt|,
 modifier|*
 modifier|*
 name|xipp
-decl_stmt|;
-name|struct
-name|sysinit
+decl_stmt|,
 modifier|*
 name|save
 decl_stmt|;
@@ -529,7 +524,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/*      * Perform a bubble sort of the system initialization objects by      * their subsystem (primary key) and order (secondary key).      *      * Since some things care about execution order, this is the      * operation which ensures continued function.      */
+comment|/* 	 * Perform a bubble sort of the system initialization objects by 	 * their subsystem (primary key) and order (secondary key). 	 *  	 * Since some things care about execution order, this is the operation 	 * which ensures continued function. 	 */
 for|for
 control|(
 name|sipp
@@ -607,7 +602,7 @@ name|order
 operator|)
 condition|)
 continue|continue;
-comment|/* skip*/
+comment|/* skip */
 name|save
 operator|=
 operator|*
@@ -626,7 +621,7 @@ name|save
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Traverse the (now) ordered list of system initialization tasks.      * Perform each task, and continue on to the next task.      */
+comment|/* 	 * Traverse the (now) ordered list of system initialization tasks. 	 * Perform each task, and continue on to the next task. 	 */
 for|for
 control|(
 name|sipp
@@ -653,7 +648,7 @@ operator|==
 name|SI_SUB_DUMMY
 condition|)
 continue|continue;
-comment|/* skip dummy task(s)*/
+comment|/* skip dummy task(s) */
 comment|/* Call function */
 operator|(
 operator|*
@@ -697,21 +692,15 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|stop
-decl_stmt|;
-name|struct
-name|sysinit
+decl_stmt|,
 modifier|*
 modifier|*
 name|sipp
-decl_stmt|;
-name|struct
-name|sysinit
+decl_stmt|,
 modifier|*
 modifier|*
 name|xipp
-decl_stmt|;
-name|struct
-name|sysinit
+decl_stmt|,
 modifier|*
 name|save
 decl_stmt|;
@@ -748,7 +737,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/*      * Perform a reverse bubble sort of the system initialization objects      * by their subsystem (primary key) and order (secondary key).      *      * Since some things care about execution order, this is the      * operation which ensures continued function.      */
+comment|/* 	 * Perform a reverse bubble sort of the system initialization objects 	 * by their subsystem (primary key) and order (secondary key). 	 *  	 * Since some things care about execution order, this is the operation 	 * which ensures continued function. 	 */
 for|for
 control|(
 name|sipp
@@ -826,7 +815,7 @@ name|order
 operator|)
 condition|)
 continue|continue;
-comment|/* skip*/
+comment|/* skip */
 name|save
 operator|=
 operator|*
@@ -845,7 +834,7 @@ name|save
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Traverse the (now) ordered list of system initialization tasks.      * Perform each task, and continue on to the next task.      */
+comment|/* 	 * Traverse the (now) ordered list of system initialization tasks. 	 * Perform each task, and continue on to the next task. 	 */
 for|for
 control|(
 name|sipp
@@ -872,7 +861,7 @@ operator|==
 name|SI_SUB_DUMMY
 condition|)
 continue|continue;
-comment|/* skip dummy task(s)*/
+comment|/* skip dummy task(s) */
 comment|/* Call function */
 operator|(
 operator|*
@@ -1004,7 +993,8 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_unregister_sysctls: registering SYSCTLs for %s\n"
+literal|"linker_file_unregister_sysctls: registering SYSCTLs"
+literal|" for %s\n"
 operator|,
 name|lf
 operator|->
@@ -1063,9 +1053,6 @@ name|linker_file_t
 name|lf
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|mod_metadata
 modifier|*
@@ -1075,9 +1062,7 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|stop
-decl_stmt|;
-name|struct
-name|mod_metadata
+decl_stmt|,
 modifier|*
 modifier|*
 name|mdp
@@ -1087,12 +1072,16 @@ name|moduledata_t
 modifier|*
 name|moddata
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|KLD_DPF
 argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_register_modules: registering modules in %s\n"
+literal|"linker_file_register_modules: registering modules"
+literal|" in %s\n"
 operator|,
 name|lf
 operator|->
@@ -1120,7 +1109,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 	 * This fallback should be unnecessary, but if we get booted from 	 * boot2 instead of loader and we are missing our metadata then 	 * we have to try the best we can. 	 */
+comment|/* 		 * This fallback should be unnecessary, but if we get booted 		 * from boot2 instead of loader and we are missing our 		 * metadata then we have to try the best we can. 		 */
 if|if
 condition|(
 name|lf
@@ -1144,11 +1133,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-block|}
 block|}
 for|for
 control|(
@@ -1252,7 +1241,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1273,21 +1264,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|linker_kernel
+argument|linker_kernel
 argument_list|,
-name|SI_SUB_KLD
+argument|SI_SUB_KLD
 argument_list|,
-name|SI_ORDER_ANY
+argument|SI_ORDER_ANY
 argument_list|,
-name|linker_init_kernel_modules
+argument|linker_init_kernel_modules
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 name|int
@@ -1324,7 +1314,9 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 name|lf
 operator|=
@@ -1343,7 +1335,8 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_load_file: file %s is already loaded, incrementing refs\n"
+literal|"linker_load_file: file %s is already loaded,"
+literal|" incrementing refs\n"
 operator|,
 name|filename
 operator|)
@@ -1403,7 +1396,7 @@ operator|&
 name|lf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we got something other than ENOENT, then it exists but we cannot 	 * load it for some other reason. 	 */
+comment|/* 		 * If we got something other than ENOENT, then it exists but 		 * we cannot load it for some other reason. 		 */
 if|if
 condition|(
 name|error
@@ -1454,7 +1447,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/*      * Less than ideal, but tells the user whether it failed to load or      * the module was not found.      */
+comment|/* 	 * Less than ideal, but tells the user whether it failed to load or 	 * the module was not found. 	 */
 if|if
 condition|(
 name|foundfile
@@ -1473,7 +1466,9 @@ comment|/* Nothing found */
 name|out
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1497,6 +1492,7 @@ name|result
 parameter_list|)
 block|{
 return|return
+operator|(
 name|linker_load_module
 argument_list|(
 name|NULL
@@ -1509,6 +1505,7 @@ name|NULL
 argument_list|,
 name|result
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1531,6 +1528,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|koname
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|koname
 operator|=
@@ -1587,9 +1587,8 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
+name|err
+operator|=
 name|strcmp
 argument_list|(
 name|lf
@@ -1598,11 +1597,16 @@ name|filename
 argument_list|,
 name|koname
 argument_list|)
-condition|)
-break|break;
+expr_stmt|;
 if|if
 condition|(
-operator|!
+name|err
+operator|==
+literal|0
+condition|)
+break|break;
+name|err
+operator|=
 name|strcmp
 argument_list|(
 name|lf
@@ -1611,6 +1615,12 @@ name|filename
 argument_list|,
 name|filename
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
 condition|)
 break|break;
 block|}
@@ -1640,7 +1650,9 @@ name|M_LINKER
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|lf
+operator|)
 return|;
 block|}
 end_function
@@ -1700,7 +1712,9 @@ name|curthread
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|lf
+operator|)
 return|;
 block|}
 end_function
@@ -1720,14 +1734,16 @@ parameter_list|)
 block|{
 name|linker_file_t
 name|lf
-init|=
-literal|0
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|filename
 decl_stmt|;
+name|lf
+operator|=
+name|NULL
+expr_stmt|;
 name|filename
 operator|=
 name|linker_basename
@@ -1777,8 +1793,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|lf
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|out
@@ -1870,7 +1887,9 @@ name|curthread
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|lf
+operator|)
 return|;
 block|}
 end_function
@@ -1900,13 +1919,14 @@ name|cp
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* Refuse to unload modules if securelevel raised */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Refuse to unload modules if securelevel raised. */
 if|if
 condition|(
 name|securelevel
@@ -1914,7 +1934,9 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 name|KLD_DPF
 argument_list|(
@@ -1955,11 +1977,12 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_unload: file is unloading, informing modules\n"
+literal|"linker_file_unload: file is unloading,"
+literal|" informing modules\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Inform any modules associated with this file. 	 */
+comment|/* 		 * Inform any modules associated with this file. 		 */
 for|for
 control|(
 name|mod
@@ -1986,7 +2009,7 @@ argument_list|(
 name|mod
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Give the module a chance to veto the unload. 	     */
+comment|/* 			 * Give the module a chance to veto the unload. 			 */
 if|if
 condition|(
 operator|(
@@ -2006,7 +2029,8 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_unload: module %x vetoes unload\n"
+literal|"linker_file_unload: module %x"
+literal|" vetoes unload\n"
 operator|,
 name|mod
 operator|)
@@ -2099,7 +2123,6 @@ name|container
 operator|==
 name|file
 condition|)
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2111,8 +2134,7 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* Don't try to run SYSUNINITs if we are unloaded due to a link error */
+comment|/*  	 * Don't try to run SYSUNINITs if we are unloaded due to a  	 * link error. 	 */
 if|if
 condition|(
 name|file
@@ -2291,7 +2313,9 @@ expr_stmt|;
 name|out
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2343,7 +2367,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 if|if
 condition|(
@@ -2404,13 +2430,15 @@ name|ndeps
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Locate a linker set and its contents.  * This is a helper function to avoid linker_if.h exposure elsewhere.  * Note: firstp and lastp are really void ***  */
+comment|/*  * Locate a linker set and its contents.  This is a helper function to avoid  * linker_if.h exposure elsewhere.  Note: firstp and lastp are really void ***  */
 end_comment
 
 begin_function
@@ -2439,6 +2467,7 @@ name|countp
 parameter_list|)
 block|{
 return|return
+operator|(
 name|LINKER_LOOKUP_SET
 argument_list|(
 name|file
@@ -2451,6 +2480,7 @@ name|lastp
 argument_list|,
 name|countp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2486,6 +2516,8 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|err
+decl_stmt|,
 name|i
 decl_stmt|;
 name|KLD_DPF
@@ -2536,7 +2568,7 @@ name|value
 operator|==
 literal|0
 condition|)
-comment|/* 	     * For commons, first look them up in the dependencies and 	     * only allocate space if not found there. 	     */
+comment|/* 			 * For commons, first look them up in the 			 * dependencies and only allocate space if not found 			 * there. 			 */
 name|common_size
 operator|=
 name|symval
@@ -2550,7 +2582,8 @@ argument_list|(
 name|SYM
 argument_list|,
 operator|(
-literal|"linker_file_lookup_symbol: symbol.value=%x\n"
+literal|"linker_file_lookup_symbol: symbol"
+literal|".value=%x\n"
 operator|,
 name|symval
 operator|.
@@ -2559,9 +2592,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|symval
 operator|.
 name|value
+operator|)
 return|;
 block|}
 block|}
@@ -2612,14 +2647,17 @@ argument_list|(
 name|SYM
 argument_list|,
 operator|(
-literal|"linker_file_lookup_symbol: deps value=%x\n"
+literal|"linker_file_lookup_symbol:"
+literal|" deps value=%x\n"
 operator|,
 name|address
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|address
+operator|)
 return|;
 block|}
 block|}
@@ -2631,7 +2669,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 	 * This is a common symbol which was not found in the 	 * dependencies.  We maintain a simple common symbol table in 	 * the file object. 	 */
+comment|/* 		 * This is a common symbol which was not found in the 		 * dependencies.  We maintain a simple common symbol table in 		 * the file object. 		 */
 name|struct
 name|common_symbol
 modifier|*
@@ -2645,9 +2683,9 @@ argument|&file->common
 argument_list|,
 argument|link
 argument_list|)
-if|if
-condition|(
-operator|!
+block|{
+name|err
+operator|=
 name|strcmp
 argument_list|(
 name|cp
@@ -2656,6 +2694,12 @@ name|name
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
 condition|)
 block|{
 name|KLD_DPF
@@ -2663,7 +2707,8 @@ argument_list|(
 name|SYM
 argument_list|,
 operator|(
-literal|"linker_file_lookup_symbol: old common value=%x\n"
+literal|"linker_file_lookup_symbol:"
+literal|" old common value=%x\n"
 operator|,
 name|cp
 operator|->
@@ -2672,12 +2717,15 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cp
 operator|->
 name|address
+operator|)
 return|;
 block|}
-comment|/* 	 * Round the symbol size up to align. 	 */
+block|}
+comment|/* 		 * Round the symbol size up to align. 		 */
 name|common_size
 operator|=
 operator|(
@@ -2725,8 +2773,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|cp
+operator|==
+name|NULL
 condition|)
 block|{
 name|KLD_DPF
@@ -2739,7 +2788,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|cp
@@ -2800,7 +2851,8 @@ argument_list|(
 name|SYM
 argument_list|,
 operator|(
-literal|"linker_file_lookup_symbol: new common value=%x\n"
+literal|"linker_file_lookup_symbol: new common"
+literal|" value=%x\n"
 operator|,
 name|cp
 operator|->
@@ -2809,9 +2861,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cp
 operator|->
 name|address
+operator|)
 return|;
 block|}
 name|KLD_DPF
@@ -2824,7 +2878,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2836,7 +2892,7 @@ name|DDB
 end_ifdef
 
 begin_comment
-comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own  * symbol tables and string tables.  *  * Note that we do not obey list locking protocols here.  We really don't  * need DDB to hang because somebody's got the lock held.  We'll take the  * chance that the files list is inconsistant instead.  */
+comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own symbol  * tables and string tables.  *   * Note that we do not obey list locking protocols here.  We really don't need  * DDB to hang because somebody's got the lock held.  We'll take the chance  * that the files list is inconsistant instead.  */
 end_comment
 
 begin_function
@@ -2879,11 +2935,15 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -2907,28 +2967,28 @@ block|{
 name|linker_file_t
 name|lf
 decl_stmt|;
-name|u_long
-name|off
-init|=
-operator|(
-name|uintptr_t
-operator|)
-name|value
+name|c_linker_sym_t
+name|best
+decl_stmt|,
+name|es
 decl_stmt|;
 name|u_long
 name|diff
 decl_stmt|,
 name|bestdiff
-decl_stmt|;
-name|c_linker_sym_t
-name|best
-decl_stmt|;
-name|c_linker_sym_t
-name|es
+decl_stmt|,
+name|off
 decl_stmt|;
 name|best
 operator|=
 literal|0
+expr_stmt|;
+name|off
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|value
 expr_stmt|;
 name|bestdiff
 operator|=
@@ -3005,7 +3065,9 @@ operator|=
 name|bestdiff
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 else|else
@@ -3021,7 +3083,9 @@ operator|=
 name|off
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 block|}
@@ -3065,11 +3129,15 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -3141,7 +3209,9 @@ literal|0
 condition|)
 comment|/* redundant, but that's OK */
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 name|mtx_lock
 argument_list|(
@@ -3211,7 +3281,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/*      * If path do not contain qualified name or any dot in it (kldname.ko, or      * kldname.ver.ko) treat it as interface name.      */
+comment|/* 	 * If path do not contain qualified name or any dot in it 	 * (kldname.ko, or kldname.ver.ko) treat it as interface 	 * name. 	 */
 if|if
 condition|(
 name|index
@@ -3350,7 +3420,9 @@ literal|0
 condition|)
 comment|/* redundant, but that's OK */
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 name|mtx_lock
 argument_list|(
@@ -3423,7 +3495,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kldunload: attempt to unload file that was loaded by the kernel\n"
+literal|"kldunload: attempt to unload file that was"
+literal|" loaded by the kernel\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3457,12 +3530,10 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-block|}
 name|out
 label|:
 name|mtx_unlock
@@ -3766,12 +3837,10 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-block|}
 name|out
 label|:
 name|mtx_unlock
@@ -3816,15 +3885,14 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|namelen
+decl_stmt|,
 name|version
 decl_stmt|;
 name|struct
 name|kld_file_stat
 modifier|*
 name|stat
-decl_stmt|;
-name|int
-name|namelen
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -3846,8 +3914,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|lf
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
@@ -3867,7 +3936,7 @@ argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
-comment|/*      * Check the version of the user's structure.      */
+comment|/* 	 * Check the version of the user's structure. 	 */
 if|if
 condition|(
 operator|(
@@ -4126,6 +4195,9 @@ block|{
 name|linker_file_t
 name|lf
 decl_stmt|;
+name|module_t
+name|mp
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -4154,8 +4226,8 @@ condition|(
 name|lf
 condition|)
 block|{
-if|if
-condition|(
+name|mp
+operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
@@ -4163,6 +4235,12 @@ name|lf
 operator|->
 name|modules
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
 condition|)
 name|td
 operator|->
@@ -4173,13 +4251,7 @@ index|]
 operator|=
 name|module_getid
 argument_list|(
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|lf
-operator|->
-name|modules
-argument_list|)
+name|mp
 argument_list|)
 expr_stmt|;
 else|else
@@ -4194,12 +4266,10 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -4550,8 +4620,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
 name|lf
+operator|==
+name|NULL
 condition|)
 name|error
 operator|=
@@ -4606,6 +4677,9 @@ block|{
 name|modlist_t
 name|mod
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|mod
@@ -4615,8 +4689,8 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-if|if
-condition|(
+name|err
+operator|=
 name|strcmp
 argument_list|(
 name|mod
@@ -4625,6 +4699,10 @@ name|name
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
 operator|&&
@@ -4641,11 +4719,15 @@ name|ver
 operator|)
 condition|)
 return|return
+operator|(
 name|mod
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -4672,6 +4754,8 @@ decl_stmt|,
 name|bestmod
 decl_stmt|;
 name|int
+name|err
+decl_stmt|,
 name|ver
 decl_stmt|;
 if|if
@@ -4681,12 +4765,14 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|modlist_lookup
 argument_list|(
 name|name
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 name|bestmod
 operator|=
@@ -4714,8 +4800,8 @@ name|link
 argument_list|)
 control|)
 block|{
-if|if
-condition|(
+name|err
+operator|=
 name|strcmp
 argument_list|(
 name|mod
@@ -4724,6 +4810,10 @@ name|name
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|!=
 literal|0
 condition|)
@@ -4743,7 +4833,9 @@ operator|->
 name|md_ver_preferred
 condition|)
 return|return
+operator|(
 name|mod
+operator|)
 return|;
 if|if
 condition|(
@@ -4771,7 +4863,9 @@ name|mod
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|bestmod
+operator|)
 return|;
 block|}
 end_function
@@ -4862,7 +4956,9 @@ name|link
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mod
+operator|)
 return|;
 block|}
 end_function
@@ -4887,6 +4983,7 @@ name|offset
 parameter_list|)
 block|{
 return|return
+operator|(
 name|lf
 operator|->
 name|address
@@ -4895,6 +4992,7 @@ operator|(
 name|uintptr_t
 operator|)
 name|offset
+operator|)
 return|;
 block|}
 end_function
@@ -5365,7 +5463,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Preloaded module at %p does not have a name!\n"
+literal|"Preloaded module at %p does not have a"
+literal|" name!\n"
 argument_list|,
 name|modptr
 argument_list|)
@@ -5451,7 +5550,7 @@ name|loaded
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * First get a list of stuff in the kernel.      */
+comment|/* 	 * First get a list of stuff in the kernel. 	 */
 if|if
 condition|(
 name|linker_file_lookup_set
@@ -5482,7 +5581,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*      * this is a once-off kinky bubble sort      * resolve relocation dependency requirements      */
+comment|/* 	 * this is a once-off kinky bubble sort resolve relocation dependency 	 * requirements 	 */
 name|restart
 label|:
 name|TAILQ_FOREACH
@@ -5511,7 +5610,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First, look to see if we would successfully link with this stuff. 	 */
+comment|/* 		 * First, look to see if we would successfully link with this 		 * stuff. 		 */
 name|resolves
 operator|=
 literal|1
@@ -5625,14 +5724,18 @@ operator|->
 name|md_cval
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|strcmp
 argument_list|(
 name|modname
 argument_list|,
 name|nmodname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|==
 literal|0
 condition|)
@@ -5646,6 +5749,7 @@ name|stop
 condition|)
 comment|/* it's a self reference */
 continue|continue;
+comment|/* 				 * ok, the module isn't here yet, we 				 * are not finished 				 */
 if|if
 condition|(
 name|modlist_lookup2
@@ -5657,16 +5761,13 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* ok, the module isn't here yet, we are not finished */
 name|resolves
 operator|=
 literal|0
 expr_stmt|;
 block|}
 block|}
-block|}
-comment|/* 	 * OK, if we found our modules, we can link.  So, "provide" the 	 * modules inside and add it to the end of the link order list. 	 */
+comment|/* 		 * OK, if we found our modules, we can link.  So, "provide" 		 * the modules inside and add it to the end of the link order 		 * list. 		 */
 if|if
 condition|(
 name|resolves
@@ -5738,7 +5839,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"module %s already present!\n"
+literal|"module %s already"
+literal|" present!\n"
 argument_list|,
 name|modname
 argument_list|)
@@ -5758,10 +5860,10 @@ argument_list|,
 name|loaded
 argument_list|)
 expr_stmt|;
+comment|/* we changed tailq next ptr */
 goto|goto
 name|restart
 goto|;
-comment|/* we changed the tailq next ptr */
 block|}
 name|modlist_newmodule
 argument_list|(
@@ -5794,13 +5896,13 @@ argument_list|,
 name|loaded
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Since we provided modules, we need to restart the sort so 	     * that the previous files that depend on us have a chance. 	     * Also, we've busted the tailq next pointer with the REMOVE. 	     */
+comment|/* 			 * Since we provided modules, we need to restart the 			 * sort so that the previous files that depend on us 			 * have a chance. Also, we've busted the tailq next 			 * pointer with the REMOVE. 			 */
 goto|goto
 name|restart
 goto|;
 block|}
 block|}
-comment|/*      * At this point, we check to see what could not be resolved..      */
+comment|/* 	 * At this point, we check to see what could not be resolved.. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|lf
@@ -5835,7 +5937,7 @@ name|loaded
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * We made it. Finish off the linking in the order we determined.      */
+comment|/* 	 * We made it. Finish off the linking in the order we determined. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|lf
@@ -5987,7 +6089,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Now do relocation etc using the symbol search paths established by 	 * the dependencies 	 */
+comment|/* 		 * Now do relocation etc using the symbol search paths 		 * established by the dependencies 		 */
 name|error
 operator|=
 name|LINKER_LINK_PRELOAD_FINISH
@@ -6063,24 +6165,23 @@ comment|/* woohoo! we made it! */
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|preload
+argument|preload
 argument_list|,
-name|SI_SUB_KLD
+argument|SI_SUB_KLD
 argument_list|,
-name|SI_ORDER_MIDDLE
+argument|SI_ORDER_MIDDLE
 argument_list|,
-name|linker_preload
+argument|linker_preload
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_comment
-comment|/*  * Search for a not-loaded module by name.  *  * Modules may be found in the following locations:  *  * - preloaded (result is just the module name)  * - on disk (result is full path to module)  *  * If the module name is qualified in any way (contains path, etc.)  * the we simply return a copy of it.  *  * The search path can be manipulated via sysctl.  Note that we use the ';'  * character as a separator to be consistent with the bootloader.  */
+comment|/*  * Search for a not-loaded module by name.  *   * Modules may be found in the following locations:  *   * - preloaded (result is just the module name) - on disk (result is full path  * to module)  *   * If the module name is qualified in any way (contains path, etc.) the we  * simply return a copy of it.  *   * The search path can be manipulated via sysctl.  Note that we use the ';'  * character as a separator to be consistent with the bootloader.  */
 end_comment
 
 begin_decl_stmt
@@ -6161,7 +6262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Check if file actually exists either with or without extension listed  * in the linker_ext_list.  * (probably should be generic for the rest of the kernel)  */
+comment|/*  * Check if file actually exists either with or without extension listed in  * the linker_ext_list. (probably should be generic for the rest of the  * kernel)  */
 end_comment
 
 begin_function
@@ -6348,7 +6449,7 @@ operator|*
 name|cpp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attempt to open the file, and return the path if we succeed 	 * and it's a regular file. 	 */
+comment|/* 		 * Attempt to open the file, and return the path if 		 * we succeed and it's a regular file. 		 */
 name|NDINIT
 argument_list|(
 operator|&
@@ -6491,11 +6592,11 @@ name|base
 parameter_list|,
 name|ptr
 parameter_list|)
-value|ptr = \ 	(base) + (((ptr) - (base) + sizeof(int) - 1)& ~(sizeof(int) - 1))
+value|ptr =					\ 	(base) + (((ptr) - (base) + sizeof(int) - 1)& ~(sizeof(int) - 1))
 end_define
 
 begin_comment
-comment|/*  * Lookup KLD which contains requested module in the "linker.hints" file.  * If version specification is available, then try to find the best KLD.  * Otherwise just find the latest one.  *  * XXX: Vnode locking here is hosed; lock should be held for calls to  * VOP_GETATTR() and vn_rdwr().  */
+comment|/*  * Lookup KLD which contains requested module in the "linker.hints" file. If  * version specification is available, then try to find the best KLD.  * Otherwise just find the latest one.  *   * XXX: Vnode locking here is hosed; lock should be held for calls to  * VOP_GETATTR() and vn_rdwr().  */
 end_comment
 
 begin_function
@@ -6784,7 +6885,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/*       * XXX: we need to limit this number to some reasonable value      */
+comment|/* 	 * XXX: we need to limit this number to some reasonable value 	 */
 if|if
 condition|(
 name|vattr
@@ -7133,7 +7234,7 @@ name|int
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Finally check if KLD is in the place      */
+comment|/* 	 * Finally check if KLD is in the place 	 */
 if|if
 condition|(
 name|found
@@ -7175,6 +7276,7 @@ operator|&
 name|mattr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * KLD is newer than hints file. What we should do now? 	 */
 if|if
 condition|(
 name|result
@@ -7194,16 +7296,14 @@ argument_list|,
 operator|>
 argument_list|)
 condition|)
-block|{
-comment|/* 	 * KLD is newer than hints file. What we should do now ? 	 */
 name|printf
 argument_list|(
-literal|"warning: KLD '%s' is newer than the linker.hints file\n"
+literal|"warning: KLD '%s' is newer than the linker.hints"
+literal|" file\n"
 argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
-block|}
 name|bad
 label|:
 if|if
@@ -7238,7 +7338,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/*      * If nothing found or hints is absent - fallback to the old way      * by using "kldname[.ko]" as module name.      */
+comment|/* 	 * If nothing found or hints is absent - fallback to the old 	 * way by using "kldname[.ko]" as module name. 	 */
 if|if
 condition|(
 operator|!
@@ -7267,7 +7367,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 end_function
@@ -7306,7 +7408,7 @@ decl_stmt|,
 modifier|*
 name|result
 decl_stmt|;
-comment|/*      * traverse the linker path      */
+comment|/* 	 * traverse the linker path 	 */
 for|for
 control|(
 name|cp
@@ -7613,13 +7715,15 @@ name|filename
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|filename
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Find a file which contains given module and load it,  * if "parent" is not NULL, register a reference to it.  */
+comment|/*  * Find a file which contains given module and load it, if "parent" is not  * NULL, register a reference to it.  */
 end_comment
 
 begin_function
@@ -7676,7 +7780,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * We have to load KLD 	 */
+comment|/*  		 * We have to load KLD  		 */
 name|KASSERT
 argument_list|(
 name|verinfo
@@ -7720,8 +7824,7 @@ name|kldname
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* 	     * Need to find a KLD with required module 	     */
+comment|/* 			 * Need to find a KLD with required module 			 */
 name|pathname
 operator|=
 name|linker_search_module
@@ -7736,7 +7839,6 @@ argument_list|,
 name|verinfo
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|pathname
 operator|=
@@ -7757,7 +7859,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-comment|/*      * Can't load more than one file with the same basename      * XXX: Actually it should be possible to have multiple KLDs      * with the same basename but different path because they can provide      * different versions of the same modules.      */
+comment|/* 	 * Can't load more than one file with the same basename XXX: 	 * Actually it should be possible to have multiple KLDs with 	 * the same basename but different path because they can 	 * provide different versions of the same modules. 	 */
 name|filename
 operator|=
 name|linker_basename
@@ -7874,13 +7976,15 @@ name|M_LINKER
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is responsible for finding dependencies of userland  * initiated kldload(2)'s of files.  */
+comment|/*  * This routine is responsible for finding dependencies of userland initiated  * kldload(2)'s of files.  */
 end_comment
 
 begin_function
@@ -7945,7 +8049,7 @@ literal|0
 decl_stmt|,
 name|count
 decl_stmt|;
-comment|/*      * All files are dependant on /kernel.      */
+comment|/* 	 * All files are dependant on /kernel. 	 */
 if|if
 condition|(
 name|linker_kernel_file
@@ -7970,7 +8074,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -7994,7 +8100,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 for|for
 control|(
@@ -8060,7 +8168,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"interface %s.%d already present in the KLD '%s'!\n"
+literal|"interface %s.%d already present in the KLD"
+literal|" '%s'!\n"
 argument_list|,
 name|modname
 argument_list|,
@@ -8074,7 +8183,9 @@ name|filename
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
 block|}
 block|}
@@ -8172,14 +8283,18 @@ operator|->
 name|md_cval
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|strcmp
 argument_list|(
 name|modname
 argument_list|,
 name|nmodname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|==
 literal|0
 condition|)
@@ -8274,7 +8389,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|linker_addmodules
 argument_list|(
@@ -8288,7 +8405,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
