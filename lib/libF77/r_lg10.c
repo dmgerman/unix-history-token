@@ -12,8 +12,8 @@ name|KR_headers
 end_ifdef
 
 begin_function_decl
-name|double
-name|log
+name|float
+name|log10f
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -60,7 +60,7 @@ directive|endif
 block|{
 return|return
 operator|(
-name|log10
+name|log10f
 argument_list|(
 operator|*
 name|x
