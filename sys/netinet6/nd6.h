@@ -203,9 +203,6 @@ name|chlim
 decl_stmt|;
 comment|/* CurHopLimit */
 name|u_int8_t
-name|receivedra
-decl_stmt|;
-name|u_int8_t
 name|initialized
 decl_stmt|;
 comment|/* Flag to see the entry is initialized */

@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/nd6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/ip6_mroute.h>
 end_include
 
@@ -5905,6 +5911,9 @@ name|sockaddr_in6
 modifier|*
 name|dst6
 decl_stmt|;
+name|u_long
+name|linkmtu
+decl_stmt|;
 comment|/* 	 * Make a new reference to the packet; make sure that 	 * the IPv6 header is actually copied, not just referenced, 	 * so that ip6_output() only scribbles on the copy. 	 */
 name|mb_copy
 operator|=
@@ -6135,6 +6144,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Put the packet into the sending queue of the outgoing interface 	 * if it would fit in the MTU of the interface. 	 */
+name|linkmtu
+operator|=
+name|IN6_LINKMTU
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mb_copy
@@ -6143,13 +6159,9 @@ name|m_pkthdr
 operator|.
 name|len
 operator|<=
-name|ifp
-operator|->
-name|if_mtu
+name|linkmtu
 operator|||
-name|ifp
-operator|->
-name|if_mtu
+name|linkmtu
 operator|<
 name|IPV6_MMTU
 condition|)
@@ -6243,9 +6255,7 @@ name|ICMP6_PACKET_TOO_BIG
 argument_list|,
 literal|0
 argument_list|,
-name|ifp
-operator|->
-name|if_mtu
+name|linkmtu
 argument_list|)
 expr_stmt|;
 else|#

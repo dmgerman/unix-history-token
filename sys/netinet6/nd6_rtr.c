@@ -1662,11 +1662,17 @@ operator|==
 literal|1
 condition|)
 block|{
-name|u_int32_t
+name|u_long
 name|mtu
+decl_stmt|;
+name|u_long
+name|maxmtu
 decl_stmt|;
 name|mtu
 operator|=
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ndopts
@@ -1690,7 +1696,7 @@ operator|(
 name|LOG_INFO
 operator|,
 literal|"nd6_ra_input: bogus mtu option "
-literal|"mtu=%d sent from %s, ignoring\n"
+literal|"mtu=%lu sent from %s, ignoring\n"
 operator|,
 name|mtu
 operator|,
@@ -1709,19 +1715,34 @@ name|skip
 goto|;
 block|}
 comment|/* upper bound */
-if|if
-condition|(
+name|maxmtu
+operator|=
+operator|(
 name|ndi
 operator|->
 name|maxmtu
-condition|)
-block|{
+operator|&&
+name|ndi
+operator|->
+name|maxmtu
+operator|<
+name|ifp
+operator|->
+name|if_mtu
+operator|)
+condition|?
+name|ndi
+operator|->
+name|maxmtu
+else|:
+name|ifp
+operator|->
+name|if_mtu
+expr_stmt|;
 if|if
 condition|(
 name|mtu
 operator|<=
-name|ndi
-operator|->
 name|maxmtu
 condition|)
 block|{
@@ -1759,8 +1780,8 @@ operator|(
 name|LOG_INFO
 operator|,
 literal|"nd6_ra_input: bogus mtu "
-literal|"mtu=%d sent from %s; "
-literal|"exceeds maxmtu %d, ignoring\n"
+literal|"mtu=%lu sent from %s; "
+literal|"exceeds maxmtu %lu, ignoring\n"
 operator|,
 name|mtu
 operator|,
@@ -1772,34 +1793,7 @@ operator|->
 name|ip6_src
 argument_list|)
 operator|,
-name|ndi
-operator|->
 name|maxmtu
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|nd6log
-argument_list|(
-operator|(
-name|LOG_INFO
-operator|,
-literal|"nd6_ra_input: mtu option "
-literal|"mtu=%d sent from %s; maxmtu unknown, "
-literal|"ignoring\n"
-operator|,
-name|mtu
-operator|,
-name|ip6_sprintf
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_src
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

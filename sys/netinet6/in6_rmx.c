@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/nd6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/tcp.h>
 end_include
 
@@ -356,11 +362,12 @@ name|rt_rmx
 operator|.
 name|rmx_mtu
 operator|=
+name|IN6_LINKMTU
+argument_list|(
 name|rt
 operator|->
 name|rt_ifp
-operator|->
-name|if_mtu
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
