@@ -262,6 +262,7 @@ goto|;
 case|case
 name|_CS_POSIX_V6_WIDTH_RESTRICTED_ENVS
 case|:
+comment|/* XXX - should have more complete coverage */
 if|if
 condition|(
 sizeof|sizeof
@@ -275,7 +276,7 @@ literal|64
 condition|)
 name|p
 operator|=
-literal|"_POSIX_V6_LPBIG_OFFBIG"
+literal|"_POSIX_V6_LP64_OFF64"
 expr_stmt|;
 else|else
 name|p
