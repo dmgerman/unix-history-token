@@ -688,18 +688,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|acpi_shutdown_poweroff
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|acpi_enable_fixed_events
 parameter_list|(
 name|struct
@@ -5762,7 +5750,7 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-comment|/*      * If powering off, run the actual shutdown code on each processor.      * It will only perform the shutdown on the BSP.  Some chipsets do      * not power off the system correctly if called from an AP.      */
+comment|/*      * XXX Shutdown code should only run on the BSP (cpuid 0).      * Some chipsets do not power off the system correctly if called from      * an AP.      */
 if|if
 condition|(
 operator|(
@@ -5806,60 +5794,6 @@ argument_list|(
 literal|"Powering system off using ACPI\n"
 argument_list|)
 expr_stmt|;
-name|smp_rendezvous
-argument_list|(
-name|NULL
-argument_list|,
-name|acpi_shutdown_poweroff
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Shutting down ACPI\n"
-argument_list|)
-expr_stmt|;
-name|AcpiTerminate
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Since this function may be called with locks held or in an unknown  * context, it cannot allocate memory, acquire locks, sleep, etc.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|acpi_shutdown_poweroff
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|status
-decl_stmt|;
-comment|/* Only attempt to power off if this is the BSP (cpuid 0). */
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return;
 name|ACPI_DISABLE_IRQS
 argument_list|()
 expr_stmt|;
@@ -5900,6 +5834,18 @@ name|printf
 argument_list|(
 literal|"ACPI power-off failed - timeout\n"
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Shutting down ACPI\n"
+argument_list|)
+expr_stmt|;
+name|AcpiTerminate
+argument_list|()
 expr_stmt|;
 block|}
 block|}
