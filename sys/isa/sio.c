@@ -3319,6 +3319,13 @@ block|}
 block|,
 comment|/* NECE761 - 33.6Modem */
 block|{
+literal|0x08804f3f
+block|,
+name|NULL
+block|}
+block|,
+comment|/* OZO8008 - Zoom  (33.6k Modem) */
+block|{
 literal|0x0f804f3f
 block|,
 name|NULL
