@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.19 1999/03/23 02:48:20 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.20 1999/07/02 07:56:47 grog Exp $  */
 end_comment
 
 begin_include
@@ -249,31 +249,31 @@ name|VINUMDEBUG
 define|#
 directive|define
 name|VINUM_SUPERDEV
-value|VINUMBDEV (1, 0, 0, VINUM_SUPERDEV_TYPE)
+value|VINUMMINOR (1, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* superdevice number */
 define|#
 directive|define
 name|VINUM_WRONGSUPERDEV
-value|VINUMBDEV (2, 0, 0, VINUM_SUPERDEV_TYPE)
+value|VINUMMINOR (2, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* non-debug superdevice number */
 else|#
 directive|else
 define|#
 directive|define
 name|VINUM_SUPERDEV
-value|VINUMBDEV (2, 0, 0, VINUM_SUPERDEV_TYPE)
+value|VINUMMINOR (2, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* superdevice number */
 define|#
 directive|define
 name|VINUM_WRONGSUPERDEV
-value|VINUMBDEV (1, 0, 0, VINUM_SUPERDEV_TYPE)
+value|VINUMMINOR (1, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* debug superdevice number */
 endif|#
 directive|endif
 define|#
 directive|define
 name|VINUM_DAEMON_DEV
-value|VINUMBDEV (0, 0, 0, VINUM_SUPERDEV_TYPE)
+value|VINUMMINOR (0, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* daemon superdevice number */
 comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
 name|INITIAL_DRIVES

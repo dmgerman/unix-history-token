@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: v.c,v 1.25 1999/03/21 01:18:23 grog Exp grog $ */
+comment|/* $Id: v.c,v 1.16 1999/07/02 07:59:45 grog Exp $ */
 end_comment
 
 begin_include
@@ -2241,7 +2241,12 @@ operator||
 name|S_IFBLK
 argument_list|,
 comment|/* block device, user only */
+name|makedev
+argument_list|(
+name|BDEV_MAJOR
+argument_list|,
 name|VINUM_SUPERDEV
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -2271,7 +2276,12 @@ operator||
 name|S_IFBLK
 argument_list|,
 comment|/* block device, user only */
+name|makedev
+argument_list|(
+name|BDEV_MAJOR
+argument_list|,
 name|VINUM_WRONGSUPERDEV
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -2312,7 +2322,12 @@ operator||
 name|S_IFBLK
 argument_list|,
 comment|/* block device, user only */
+name|makedev
+argument_list|(
+name|BDEV_MAJOR
+argument_list|,
 name|VINUM_DAEMON_DEV
+argument_list|)
 argument_list|)
 operator|<
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.24 1999/03/19 05:35:25 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.25 1999/06/29 04:07:55 grog Exp $  */
 end_comment
 
 begin_define
@@ -1152,6 +1152,16 @@ name|sd
 modifier|*
 name|sd
 decl_stmt|;
+name|int
+name|devminor
+decl_stmt|;
+name|devminor
+operator|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -1443,7 +1453,7 @@ block|{
 comment|/* yes, can do */
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_DAEMON_DEV
 condition|)
@@ -1458,7 +1468,7 @@ comment|/* we're open */
 elseif|else
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_SUPERDEV
 condition|)
@@ -1515,6 +1525,16 @@ name|volume
 modifier|*
 name|vol
 decl_stmt|;
+name|int
+name|devminor
+decl_stmt|;
+name|devminor
+operator|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|index
 operator|=
 name|Volno
@@ -1719,7 +1739,7 @@ case|:
 comment|/* 	 * don't worry about whether we're root: 	 * nobody else would get this far. 	 */
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_SUPERDEV
 condition|)
@@ -1735,7 +1755,7 @@ comment|/* no longer open */
 elseif|else
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_DAEMON_DEV
 condition|)
