@@ -14,7 +14,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00149  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  * 20 Apr 93	Julian Elishcer		Fixed error reporting  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * HISTORY  * $Log: scsi_disk.h,v $  * Revision 1.2  1992/10/13  03:14:21  julian  * added the load-eject field in 'start/stop' for removable devices.  *  * Revision 1.1  1992/09/26  22:11:29  julian  * Initial revision  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *   */
+comment|/*  * HISTORY  * $Log:	scsi_disk.h,v $  * Revision 1.1.1.1  1993/06/12  14:57:27  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.2  1992/10/13  03:14:21  julian  * added the load-eject field in 'start/stop' for removable devices.  *  * Revision 1.1  1992/09/26  22:11:29  julian  * Initial revision  *  */
 end_comment
 
 begin_comment
