@@ -374,6 +374,13 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Device flags */
+name|u_char
+name|misc
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* For any random info */
 block|}
 struct|;
 end_struct
