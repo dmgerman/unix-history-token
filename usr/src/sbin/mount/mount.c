@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.12 (Berkeley) %G%"
+literal|"@(#)mount.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,8 +368,6 @@ decl_stmt|,
 name|ch
 decl_stmt|,
 name|i
-decl_stmt|,
-name|pid
 decl_stmt|,
 name|ret
 decl_stmt|,
@@ -1101,6 +1099,23 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If the mount succeeded, and we're running as root, 	 * then tell mountd the good news. 	 */
+if|if
+condition|(
+operator|(
+name|ret
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|getuid
+argument_list|()
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1117,10 +1132,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|pid_t
 name|pid
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1162,6 +1178,7 @@ argument_list|,
 literal|"signal mountd"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|exit
 argument_list|(
