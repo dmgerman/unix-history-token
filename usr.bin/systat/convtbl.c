@@ -115,7 +115,7 @@ end_decl_stmt
 
 begin_expr_stmt
 specifier|static
-name|__inline__
+name|__inline
 expr|struct
 name|convtbl
 operator|*

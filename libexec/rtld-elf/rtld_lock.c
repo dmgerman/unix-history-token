@@ -531,7 +531,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|thread_mask_set
 parameter_list|(
@@ -552,7 +552,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|thread_mask_clear
 parameter_list|(

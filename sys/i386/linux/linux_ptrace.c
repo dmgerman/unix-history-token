@@ -305,7 +305,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|map_signum
 parameter_list|(

@@ -448,7 +448,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|iffam_p
 name|get_iffam_from_af
 parameter_list|(
@@ -512,7 +512,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|iffam_p
 name|get_iffam_from_hook
 parameter_list|(
@@ -573,7 +573,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|hook_p
 modifier|*
 name|get_hook_from_iffam
@@ -607,7 +607,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|iffam_p
 name|get_iffam_from_name
 parameter_list|(

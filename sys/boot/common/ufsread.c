@@ -263,7 +263,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|fsfind
 parameter_list|(

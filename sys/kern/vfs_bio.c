@@ -1744,7 +1744,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|vfs_buf_test_cache
 parameter_list|(
@@ -1827,7 +1827,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|bd_wakeup
 parameter_list|(
@@ -1878,7 +1878,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|bd_speedup
 parameter_list|(

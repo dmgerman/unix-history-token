@@ -7079,7 +7079,7 @@ block|}
 end_function
 
 begin_function
-name|__inline__
+name|__inline
 specifier|static
 name|void
 name|tulip_21140_mediainit

@@ -3315,7 +3315,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|tulip_cycle_t
 name|TULIP_PERFREAD
 parameter_list|(
@@ -3365,7 +3365,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|tulip_cycle_t
 name|TULIP_PERFREAD
 parameter_list|(

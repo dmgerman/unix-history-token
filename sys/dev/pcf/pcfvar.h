@@ -291,7 +291,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|pcf_set_S0
 parameter_list|(
@@ -331,7 +331,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|pcf_set_S1
 parameter_list|(
@@ -371,7 +371,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|char
 name|pcf_get_S0
 parameter_list|(
@@ -416,7 +416,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|char
 name|pcf_get_S1
 parameter_list|(

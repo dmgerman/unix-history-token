@@ -168,7 +168,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|pci_i386_map_intline
 parameter_list|(

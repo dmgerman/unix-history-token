@@ -2546,7 +2546,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|malloc_make_chunks
 parameter_list|(
@@ -3659,7 +3659,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|free_pages
 parameter_list|(
@@ -4283,7 +4283,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|free_bytes
 parameter_list|(

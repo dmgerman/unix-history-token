@@ -1621,7 +1621,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|nga_async_add
 parameter_list|(

@@ -489,7 +489,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|ng_sppp_get_unit
 parameter_list|(
@@ -723,7 +723,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|ng_sppp_free_unit
 parameter_list|(

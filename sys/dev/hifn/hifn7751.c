@@ -851,7 +851,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|u_int32_t
 name|READ_REG_0
 parameter_list|(
@@ -914,7 +914,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|u_int32_t
 name|READ_REG_1
 parameter_list|(
