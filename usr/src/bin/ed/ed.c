@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.8 (Berkeley) %G%"
+literal|"@(#)ed.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,9 +426,14 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|tfname
-index|[]
-init|=
+index|[
+sizeof|sizeof
+argument_list|(
 name|_PATH_TMP
+argument_list|)
+operator|+
+literal|20
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -838,6 +843,29 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|tfname
+argument_list|,
+name|_PATH_TMP
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|tfname
+argument_list|,
+literal|"_edXXXXXX"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mktemp
 argument_list|(
 name|tfname
