@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imphost.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imphost.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A host structure is kept around (even when there are no  * references to it) for a spell to avoid constant reallocation  * and also to reflect IMP status back to sites which aren't  * directly connected to the IMP.  When structures are marked  * free, a timer is started; when the timer expires the structure  * is deallocated.  A structure may be reused before the timer expires.  * A structure holds a reference on the containing mbuf when it is marked  * HF_INUSE or its timer is running.  */
+comment|/*  * A host structure is kept around (even when there are no  * references to it) for a spell to avoid constant reallocation  * and also to reflect IMP status back to sites which aren't  * directly connected to the IMP.  When structures are marked  * idle, a timer is started; when the timer expires the structure  * is deallocated.  A structure may be reused before the timer expires.  * A structure holds a reference on the containing mbuf when it is marked  * HF_INUSE.  */
 end_comment
 
 begin_define
@@ -82,7 +82,7 @@ comment|/* keep structure around awhile */
 end_comment
 
 begin_comment
-comment|/*  * Mark a host structure free  */
+comment|/*  * Mark a host structure free; used if host entry returned by hostlookup   * isn't needed.  h_rfnm must be zero.  */
 end_comment
 
 begin_define
@@ -92,7 +92,21 @@ name|hostfree
 parameter_list|(
 name|hp
 parameter_list|)
-value|{ \ 	(hp)->h_flags&= ~HF_INUSE; \ 	(hp)->h_timer = HOSTTIMER; \ }
+value|{ \ 	if ((hp)->h_timer == 0&& (hp)->h_qcnt == 0&& \ 	    (hp)->h_flags& HF_INUSE) \ 		hostrelease(hp); \ }
+end_define
+
+begin_comment
+comment|/*  * Release a host entry when last rfnm is received.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|hostidle
+parameter_list|(
+name|hp
+parameter_list|)
+value|{ (hp)->h_timer = HOSTTIMER; }
 end_define
 
 begin_comment
@@ -105,6 +119,10 @@ directive|define
 name|HPMBUF
 value|((MLEN - sizeof(int)) / sizeof(struct host))
 end_define
+
+begin_comment
+comment|/* don't need to swab as long as HPMBUF is odd */
+end_comment
 
 begin_if
 if|#
@@ -128,7 +146,7 @@ name|imp
 parameter_list|,
 name|host
 parameter_list|)
-value|(((imp)+(host)) % HPMBUF)
+value|((unsigned)(ntohs(imp)+(host)) % HPMBUF)
 end_define
 
 begin_else
@@ -145,7 +163,7 @@ name|imp
 parameter_list|,
 name|host
 parameter_list|)
-value|((ntohs(imp)+(host)) % HPMBUF)
+value|((unsigned)((imp)+(host)) % HPMBUF)
 end_define
 
 begin_endif
