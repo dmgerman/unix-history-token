@@ -612,6 +612,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|if_clone
 name|vlan_cloner
