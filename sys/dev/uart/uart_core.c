@@ -1396,6 +1396,8 @@ operator|->
 name|sc_ires
 argument_list|,
 name|INTR_TYPE_TTY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|uart_intr
 argument_list|,
