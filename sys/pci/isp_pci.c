@@ -4,10 +4,6 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.4 1998/09/15 10:06:22 gibbs Exp $ */
-end_comment
-
-begin_comment
 comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  *---------------------------------------  * Copyright (c) 1997, 1998 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -2212,11 +2208,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: cannot allocate CCB memory\n"
+literal|"%s: cannot allocate %d bytes of CCB memory\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -2393,7 +2391,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: error %d creating data DMA maps\n"
+literal|"%s: error %d creating mailbox DMA maps\n"
 argument_list|,
 name|isp
 operator|->
@@ -2469,6 +2467,13 @@ block|}
 name|mush_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|MUSHERR_NOQENTRIES
+value|-2
+end_define
 
 begin_function
 specifier|static
@@ -2880,13 +2885,6 @@ name|dm_segs
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|datalen
-operator|==
-literal|0
-condition|)
-return|return;
 while|while
 condition|(
 name|datalen
@@ -2917,18 +2915,13 @@ expr_stmt|;
 operator|*
 name|iptrp
 operator|=
-operator|(
+name|ISP_NXT_QENTRY
+argument_list|(
 operator|*
 name|iptrp
-operator|+
-literal|1
-operator|)
-operator|&
-operator|(
+argument_list|,
 name|RQUEST_QUEUE_LEN
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2938,20 +2931,17 @@ operator|==
 name|optr
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Request Queue Overflow+\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s: Request Queue Overflow++\n", isp->isp_name);
+endif|#
+directive|endif
 name|mp
 operator|->
 name|error
 operator|=
-name|EFBIG
+name|MUSHERR_NOQENTRIES
 expr_stmt|;
 return|return;
 block|}
@@ -3171,7 +3161,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|CMD_QUEUED
 operator|)
 return|;
 block|}
@@ -3189,7 +3179,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Do a virtual grapevine step to collect info for 	 * a callback method we really didn't want. 	 */
+comment|/* 	 * Do a virtual grapevine step to collect info for 	 * the callback dma allocation that we have to use... 	 */
 name|mp
 operator|=
 operator|&
@@ -3259,14 +3249,14 @@ condition|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|s
 decl_stmt|;
-comment|/* 			 * spls are spls, locks are locks. 			 * it isn't clear whether splsoftvm, if s spl, 			 * is a RAISE over splcam, or not. 			 */
-if|#
-directive|if
-literal|0
-block|int s; 			s = splsoftvm();
-endif|#
-directive|endif
+name|s
+operator|=
+name|splsoftvm
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load
@@ -3293,12 +3283,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|splx(s);
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -3306,16 +3290,6 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
-comment|/* 				 * We simply aren't going to support 				 * this at this time. This mechanism 				 * is too rigid for my taste. 				 */
-name|printf
-argument_list|(
-literal|"%s: sorry, we're not doing bounceio\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
 name|pci
@@ -3331,6 +3305,16 @@ operator|->
 name|error
 operator|=
 name|EINVAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: deferred dma allocation not "
+literal|"supported\n"
+argument_list|,
+name|isp
+operator|->
+name|isp_name
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -3352,6 +3336,11 @@ operator|=
 name|error
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3495,29 +3484,41 @@ operator|->
 name|error
 condition|)
 block|{
+name|int
+name|retval
+init|=
+name|CMD_COMPLETE
+decl_stmt|;
 if|if
 condition|(
 name|mp
 operator|->
 name|error
-operator|!=
-name|EFBIG
+operator|==
+name|MUSHERR_NOQENTRIES
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Unexepected error 0x%x returned from "
-literal|"bus_dmamap_load\n"
-argument_list|,
-name|isp
+name|retval
+operator|=
+name|CMD_EAGAIN
+expr_stmt|;
+name|ccb_h
 operator|->
-name|isp_name
-argument_list|,
+name|status
+operator|=
+name|CAM_UNREC_HBA_ERROR
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|mp
 operator|->
 name|error
-argument_list|)
-expr_stmt|;
+operator|==
+name|EFBIG
+condition|)
+block|{
 name|ccb_h
 operator|->
 name|status
@@ -3551,38 +3552,20 @@ operator|=
 name|CAM_UNREC_HBA_ERROR
 expr_stmt|;
 block|}
-name|ccb_h
-operator|->
-name|status
-operator||=
-name|CAM_DEV_QFRZN
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s:isp_pci_dmasetup->xpt_freeze_devq\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-name|xpt_freeze_devq
-argument_list|(
-name|ccb_h
-operator|->
-name|path
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
-name|mp
-operator|->
-name|error
+name|retval
 operator|)
 return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|CMD_QUEUED
+operator|)
+return|;
+block|}
 block|}
 end_function
 
@@ -4011,7 +3994,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|CMD_QUEUED
 operator|)
 return|;
 block|}
@@ -4303,7 +4286,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|CMD_QUEUED
 operator|)
 return|;
 name|paddr
@@ -4339,18 +4322,13 @@ expr_stmt|;
 operator|*
 name|iptrp
 operator|=
-operator|(
+name|ISP_NXT_QENTRY
+argument_list|(
 operator|*
 name|iptrp
-operator|+
-literal|1
-operator|)
-operator|&
-operator|(
+argument_list|,
 name|RQUEST_QUEUE_LEN
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4378,7 +4356,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EFBIG
+name|CMD_EAGAIN
 operator|)
 return|;
 block|}
@@ -4556,7 +4534,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|0
+name|CMD_QUEUED
 operator|)
 return|;
 block|}
