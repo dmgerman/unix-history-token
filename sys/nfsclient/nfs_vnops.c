@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.122 1999/02/13 09:47:30 dillon Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.123 1999/02/16 10:49:54 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -14973,6 +14973,41 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DONE
+operator|)
+argument_list|,
+operator|(
+literal|"nfs_strategy: buffer %p unexpectedly marked B_DONE"
+operator|,
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_BUSY
+operator|)
+argument_list|,
+operator|(
+literal|"nfs_strategy: buffer %p not B_BUSY"
+operator|,
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -15557,7 +15592,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Work out if all buffers are using the same cred 			 * so we can deal with them all with one commit. 			 */
+comment|/* 			 * Work out if all buffers are using the same cred 			 * so we can deal with them all with one commit. 			 * 			 * NOTE: we are not clearing B_DONE here, so we have 			 * to do it later on in this routine if we intend to  			 * initiate I/O on the bp. 			 */
 if|if
 condition|(
 name|wcred
@@ -15598,6 +15633,16 @@ argument_list|(
 name|bp
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 			 * bp is protected by being B_BUSY, but nbp is not 			 * and vfs_busy_pages() may sleep.  We have to 			 * recalculate nbp. 			 */
+name|nbp
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|bp
+argument_list|,
+name|b_vnbufs
 argument_list|)
 expr_stmt|;
 comment|/* 			 * A list of these buffers is kept so that the 			 * second loop knows which buffers have actually 			 * been committed. This is necessary, since there 			 * may be a race between the commit rpc and new 			 * uncommitted writes on the file. 			 */
@@ -15846,6 +15891,7 @@ condition|(
 name|retv
 condition|)
 block|{
+comment|/* 				 * Error, leave B_DELWRI intact 				 */
 name|vfs_unbusy_pages
 argument_list|(
 name|bp
@@ -15859,12 +15905,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 				 * Success, remove B_DELWRI ( bundirty() ). 				 * 				 * b_dirtyoff/b_dirtyend seem to be NFS  				 * specific.  We should probably move that 				 * into bundirty(). XXX 				 */
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* XXX check this positionning */
 name|vp
 operator|->
 name|v_numoutput
@@ -15876,28 +15922,11 @@ name|b_flags
 operator||=
 name|B_ASYNC
 expr_stmt|;
-if|if
-condition|(
+name|bundirty
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_DELWRI
-condition|)
-block|{
-operator|--
-name|numdirtybuffers
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|needsbuffer
-condition|)
-block|{
-name|vfs_bio_need_satisfy
-argument_list|()
-expr_stmt|;
-block|}
-block|}
 name|bp
 operator|->
 name|b_flags
@@ -15909,8 +15938,6 @@ operator||
 name|B_DONE
 operator||
 name|B_ERROR
-operator||
-name|B_DELWRI
 operator|)
 expr_stmt|;
 name|bp
@@ -15922,13 +15949,6 @@ operator|->
 name|b_dirtyend
 operator|=
 literal|0
-expr_stmt|;
-name|reassignbuf
-argument_list|(
-name|bp
-argument_list|,
-name|vp
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -16488,7 +16508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Just call nfs_writebp() with the force argument set to 1.  */
+comment|/*  * Just call nfs_writebp() with the force argument set to 1.  *  * NOTE: B_DONE may or may not be set in a_bp on call.  */
 end_comment
 
 begin_function
@@ -16545,14 +16565,14 @@ block|{
 name|int
 name|s
 decl_stmt|;
-specifier|register
 name|int
 name|oldflags
 init|=
 name|bp
 operator|->
 name|b_flags
-decl_stmt|,
+decl_stmt|;
+name|int
 name|retv
 init|=
 literal|1
@@ -16588,36 +16608,19 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_INVAL
-operator||
 name|B_NOCACHE
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_DELWRI
-condition|)
-block|{
-operator|--
-name|numdirtybuffers
-expr_stmt|;
-if|if
-condition|(
-name|needsbuffer
-condition|)
-name|vfs_bio_need_satisfy
-argument_list|()
-expr_stmt|;
-block|}
+comment|/* 	 * XXX we bundirty() the bp here.  Shouldn't we do it later after 	 * the I/O has completed?? 	 */
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* XXX check if needed */
+name|bundirty
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -16629,39 +16632,8 @@ operator||
 name|B_DONE
 operator||
 name|B_ERROR
-operator||
-name|B_DELWRI
 operator|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|oldflags
-operator|&
-operator|(
-name|B_ASYNC
-operator||
-name|B_DELWRI
-operator|)
-operator|)
-operator|==
-operator|(
-name|B_ASYNC
-operator||
-name|B_DELWRI
-operator|)
-condition|)
-block|{
-name|reassignbuf
-argument_list|(
-name|bp
-argument_list|,
-name|bp
-operator|->
-name|b_vp
-argument_list|)
-expr_stmt|;
-block|}
 name|bp
 operator|->
 name|b_vp
@@ -16799,6 +16771,7 @@ name|retv
 operator|==
 name|NFSERR_STALEWRITEVERF
 condition|)
+block|{
 name|nfs_clearcommit
 argument_list|(
 name|bp
@@ -16808,6 +16781,7 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)buf.h	8.9 (Berkeley) 3/30/95  * $Id: buf.h,v 1.63 1999/01/21 13:41:12 peter Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)buf.h	8.9 (Berkeley) 3/30/95  * $Id: buf.h,v 1.64 1999/03/02 04:04:28 mckusick Exp $  */
 end_comment
 
 begin_ifndef
@@ -409,6 +409,21 @@ name|workhead
 name|b_dep
 decl_stmt|;
 comment|/* List of filesystem dependencies. */
+struct|struct
+name|chain_info
+block|{
+comment|/* buffer chaining */
+name|struct
+name|buf
+modifier|*
+name|parent
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+block|}
+name|b_chain
+struct|;
 block|}
 struct|;
 end_struct
@@ -779,7 +794,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_AVAIL1
+name|B_AUTOCHAINDONE
 value|0x80000000
 end_define
 
@@ -791,7 +806,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_FLAGS
-value|"\20\40avail1\37cluster\36vmio\35ram\34ordered" \ 	"\33paging\32xxx\31writeinprog\30wanted\27relbuf\26dirty" \ 	"\25read\24raw\23phys\22clusterok\21malloc\20nocache" \ 	"\17locked\16inval\15avail2\14error\13eintr\12done\11freebuf" \ 	"\10delwri\7call\6cache\5busy\4bad\3async\2needcommit\1age"
+value|"\20\40autochain\37cluster\36vmio\35ram\34ordered" \ 	"\33paging\32xxx\31writeinprog\30wanted\27relbuf\26dirty" \ 	"\25read\24raw\23phys\22clusterok\21malloc\20nocache" \ 	"\17locked\16inval\15scanned\14error\13eintr\12done\11freebuf" \ 	"\10delwri\7call\6cache\5busy\4bad\3async\2needcommit\1age"
 end_define
 
 begin_comment
@@ -1455,15 +1470,6 @@ begin_comment
 comment|/* Number of swap I/O buffer headers. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|needsbuffer
-decl_stmt|,
-name|numdirtybuffers
-decl_stmt|;
-end_decl_stmt
-
 begin_extern
 extern|extern TAILQ_HEAD(swqueue
 operator|,
@@ -1630,6 +1636,20 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|bdirty
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|bundirty
 name|__P
 argument_list|(
 operator|(
@@ -2201,18 +2221,6 @@ argument_list|(
 operator|(
 name|int
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|vfs_bio_need_satisfy
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.9 (Berkeley) 3/30/95  * $Id: nfs_bio.c,v 1.65 1998/12/14 17:51:30 dt Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.9 (Berkeley) 3/30/95  * $Id: nfs_bio.c,v 1.66 1999/01/21 08:29:07 dillon Exp $  */
 end_comment
 
 begin_include
@@ -1973,6 +1973,13 @@ operator||
 name|B_ASYNC
 operator|)
 expr_stmt|;
+name|rabp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_DONE
+expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
 name|rabp
@@ -2509,6 +2516,13 @@ name|b_flags
 operator||=
 name|B_READ
 expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_DONE
+expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
 name|bp
@@ -2664,6 +2678,13 @@ name|b_flags
 operator||=
 name|B_READ
 expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_DONE
+expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
 name|bp
@@ -2800,6 +2821,13 @@ operator|->
 name|b_flags
 operator||=
 name|B_READ
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_DONE
 expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
@@ -2981,6 +3009,13 @@ name|B_READ
 operator||
 name|B_ASYNC
 operator|)
+expr_stmt|;
+name|rabp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_DONE
 expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
@@ -4350,6 +4385,7 @@ operator|+
 name|n
 expr_stmt|;
 block|}
+comment|/* 		 * To avoid code complexity, we may have to throw away 		 * previously valid ranges when merging the new dirty range 		 * into the valid range.  As long as we do not *ADD* an 		 * invalid valid range, we are ok. 		 */
 if|if
 condition|(
 name|bp
@@ -5596,7 +5632,6 @@ name|cr
 parameter_list|,
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -5613,13 +5648,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|uio
 modifier|*
 name|uiop
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -5709,6 +5742,24 @@ operator|->
 name|uio_procp
 operator|=
 name|p
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DONE
+operator|)
+argument_list|,
+operator|(
+literal|"nfs_doio: bp %p already marked done"
+operator|,
+name|bp
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Historically, paging was done with physio, but no more. 	 */
 if|if
@@ -6482,6 +6533,7 @@ name|B_CLUSTEROK
 expr_stmt|;
 block|}
 else|else
+block|{
 name|bp
 operator|->
 name|b_flags
@@ -6489,6 +6541,7 @@ operator|&=
 operator|~
 name|B_NEEDCOMMIT
 expr_stmt|;
+block|}
 name|bp
 operator|->
 name|b_flags
@@ -6496,7 +6549,7 @@ operator|&=
 operator|~
 name|B_WRITEINPROG
 expr_stmt|;
-comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set B_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we do not ( and cannot ) reassign 		 * it.  XXX numdirtybuffers should be integrated into  		 * reassignbuf() call. 		 */
+comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set B_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 */
 if|if
 condition|(
 name|error
@@ -6520,6 +6573,11 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -6544,31 +6602,17 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|++
-name|numdirtybuffers
+name|bdirty
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
 name|b_flags
-operator||=
-name|B_DELWRI
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|reassignbuf
-argument_list|(
-name|bp
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+operator|&=
+operator|~
+name|B_DONE
 expr_stmt|;
 block|}
 if|if
@@ -6588,6 +6632,11 @@ operator|->
 name|b_flags
 operator||=
 name|B_EINTR
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 else|else
