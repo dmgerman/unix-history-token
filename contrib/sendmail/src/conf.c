@@ -16725,6 +16725,9 @@ name|ip_addr
 argument_list|,
 literal|"[%.*s]"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|ip_addr
 operator|-

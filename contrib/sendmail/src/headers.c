@@ -5478,6 +5478,10 @@ argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 name|obuf
 operator|-
@@ -5488,6 +5492,7 @@ name|obuf
 operator|)
 operator|-
 literal|1
+argument_list|)
 argument_list|,
 name|v
 argument_list|)

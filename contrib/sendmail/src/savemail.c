@@ -2063,6 +2063,9 @@ name|ee
 operator|->
 name|e_id
 argument_list|,
+operator|(
+name|long
+operator|)
 name|curtime
 argument_list|()
 argument_list|,
@@ -2297,6 +2300,9 @@ name|buf
 argument_list|,
 literal|"Postmaster notify: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|buf
 operator|-
@@ -2333,6 +2339,9 @@ name|buf
 argument_list|,
 literal|"Returned mail: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|buf
 operator|-

@@ -701,6 +701,9 @@ name|buf
 argument_list|,
 literal|"Postmaster warning: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|buf
 operator|-
