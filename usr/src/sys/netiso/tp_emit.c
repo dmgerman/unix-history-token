@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -348,23 +348,29 @@ name|MNULL
 expr_stmt|;
 name|m
 operator|->
+name|m_nextpkt
+operator|=
+name|MNULL
+expr_stmt|;
+name|m
+operator|->
 name|m_data
 operator|=
 name|m
 operator|->
-name|m_dat
+name|m_pktdat
 expr_stmt|;
 name|m
 operator|->
 name|m_flags
 operator|=
-literal|0
+name|M_PKTHDR
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
-name|MGET
+name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
@@ -374,6 +380,12 @@ name|TPMT_TPHDR
 argument_list|)
 expr_stmt|;
 block|}
+name|m
+operator|->
+name|m_data
+operator|+=
+name|max_hdr
+expr_stmt|;
 if|if
 condition|(
 name|m
