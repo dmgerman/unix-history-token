@@ -801,6 +801,11 @@ block|,
 literal|"kE"
 block|,
 comment|/* Delete to eol. */
+literal|"kend"
+block|,
+literal|"@7"
+block|,
+comment|/* Go to eol. */
 literal|"khome"
 block|,
 literal|"kh"

@@ -249,6 +249,14 @@ literal|"go to eol"
 block|}
 block|,
 block|{
+literal|"kend"
+block|,
+literal|"$"
+block|,
+literal|"go to eol"
+block|}
+block|,
+block|{
 literal|"khome"
 block|,
 literal|"^"
