@@ -4064,6 +4064,7 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 	 * We add a child for each CPU since settings must be performed 	 * on each CPU in the SMP case. 	 */
 if|if
 condition|(
 name|BUS_ADD_CHILD

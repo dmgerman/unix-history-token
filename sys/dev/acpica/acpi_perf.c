@@ -681,6 +681,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * Add a child to every CPU that has the right methods.  In future 	 * versions of the ACPI spec, CPUs can have different settings. 	 */
 if|if
 condition|(
 name|BUS_ADD_CHILD

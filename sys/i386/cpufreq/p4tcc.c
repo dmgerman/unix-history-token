@@ -374,6 +374,23 @@ name|CPUID_TM
 operator|)
 condition|)
 return|return;
+comment|/* Make sure we're not being doubly invoked. */
+if|if
+condition|(
+name|device_find_child
+argument_list|(
+name|parent
+argument_list|,
+literal|"p4tcc"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return;
+comment|/* 	 * We attach a p4tcc child for every CPU since settings need to 	 * be performed on every CPU in the SMP case.  See section 13.15.3 	 * of the IA32 Intel Architecture Software Developer's Manual, 	 * Volume 3, for more info. 	 */
 if|if
 condition|(
 name|BUS_ADD_CHILD

@@ -718,7 +718,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* Add a child under the CPU parent. */
+comment|/* 	 * Add a child under the CPU parent.  It appears that ICH SpeedStep 	 * only requires a single CPU to set the value (since the chipset 	 * is shared by all CPUs.)  Thus, we only add a child to cpu 0. 	 */
 name|parent
 operator|=
 name|devclass_get_device
