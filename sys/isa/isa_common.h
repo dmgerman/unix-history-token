@@ -120,7 +120,8 @@ specifier|extern
 name|void
 name|isa_init
 parameter_list|(
-name|void
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

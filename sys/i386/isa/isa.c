@@ -59,7 +59,8 @@ begin_function
 name|void
 name|isa_init
 parameter_list|(
-name|void
+name|device_t
+name|dev
 parameter_list|)
 block|{ }
 end_function
