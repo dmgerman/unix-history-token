@@ -92,9 +92,9 @@ name|getsockopt
 argument_list|(
 name|s
 argument_list|,
-name|LOCAL_PEERCRED
+literal|0
 argument_list|,
-literal|1
+name|LOCAL_PEERCRED
 argument_list|,
 operator|&
 name|xuc
