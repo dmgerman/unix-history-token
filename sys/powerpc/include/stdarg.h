@@ -21,42 +21,6 @@ directive|include
 file|<machine/ansi.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|typedef struct { 	char __gpr;
-comment|/* GPR offset */
-end_comment
-
-begin_comment
-unit|char __fpr;
-comment|/* FPR offset */
-end_comment
-
-begin_comment
-comment|/*	char __pad[2]; */
-end_comment
-
-begin_comment
-unit|char *__stack;
-comment|/* args passed on stack */
-end_comment
-
-begin_comment
-unit|char *__base;
-comment|/* args passed by registers (r3-r10, f1-f8) */
-end_comment
-
-begin_endif
-unit|} va_list;
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|_BSD_VA_LIST_
@@ -103,7 +67,9 @@ begin_if
 if|#
 directive|if
 name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
 operator|&&
 operator|(
 name|__GNUC__
@@ -115,7 +81,7 @@ operator|==
 literal|2
 operator|&&
 name|__GNUC_MINOR__
-operator|==
+operator|>=
 literal|95
 operator|)
 end_if
@@ -130,7 +96,7 @@ parameter_list|,
 name|last
 parameter_list|)
 define|\
-value|(__builtin_next_arg(last),					\ 	 __builtin_memcpy ((ap), __builtin_saveregs (), sizeof(__gnuc_va_list)))
+value|(__builtin_next_arg(last),					\ 	 __builtin_memcpy((void *)&(ap), __builtin_saveregs (),		\ 	 sizeof(__gnuc_va_list)))
 end_define
 
 begin_else
@@ -251,97 +217,6 @@ define|\
 value|((sizeof(type) + sizeof(int) - 1) / sizeof(int) * sizeof(int))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-name|__GNUC__
-operator|&&
-operator|(
-name|__GNUC__
-operator|>
-literal|2
-operator|||
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|==
-literal|95
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__va_savedgpr
-parameter_list|(
-name|ap
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|((ap)->__base + (ap)->__gpr * sizeof(int) - sizeof(type))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_savedfpr
-parameter_list|(
-name|ap
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|((ap)->__base + 8 * sizeof(int) + (ap)->__fpr * sizeof(double) -	\ 	 sizeof(type))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_stack
-parameter_list|(
-name|ap
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|((ap)->__stack += __va_size(type) +				\ 			(__va_longlong(type) ? (int)(ap)->__stack& 4 : 0), \ 	 (ap)->__stack - sizeof(type))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_gpr
-parameter_list|(
-name|ap
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|((ap)->__gpr += __va_size(type) / sizeof(int) +			\ 		      (__va_longlong(type) ? (ap)->__gpr& 1 : 0),	\ 	 (ap)->__gpr<= 8 ? __va_savedgpr(ap, type) : __va_stack(ap, type))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_fpr
-parameter_list|(
-name|ap
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|((ap)->__fpr++,							\ 	 (ap)->__fpr<= 8 ? __va_savedfpr(ap, type) : __va_stack(ap, type))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -406,11 +281,6 @@ parameter_list|)
 define|\
 value|((ap).__fpr++,							\ 	 (ap).__fpr<= 8 ? __va_savedfpr(ap, type) : __va_stack(ap, type))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

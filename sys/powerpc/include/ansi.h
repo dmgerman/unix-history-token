@@ -210,7 +210,9 @@ begin_if
 if|#
 directive|if
 name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
 operator|&&
 operator|(
 name|__GNUC__
@@ -243,75 +245,6 @@ else|#
 directive|else
 end_else
 
-begin_if
-if|#
-directive|if
-name|defined
-name|__GNUC__
-operator|&&
-operator|(
-name|__GNUC__
-operator|>
-literal|2
-operator|||
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|==
-literal|95
-operator|)
-end_if
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-name|__gpr
-decl_stmt|;
-name|char
-name|__fpr
-decl_stmt|;
-name|char
-name|__pad
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|__stack
-decl_stmt|;
-name|char
-modifier|*
-name|__base
-decl_stmt|;
-block|}
-name|__va_list
-index|[
-literal|1
-index|]
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_BSD_VA_LIST_
-value|__va_list
-end_define
-
-begin_comment
-comment|/* va_list */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -351,11 +284,6 @@ end_define
 begin_comment
 comment|/* va_list */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -366,12 +294,11 @@ begin_comment
 comment|/* post GCC 2.95 */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__GNUC__
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
