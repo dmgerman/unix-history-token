@@ -1024,6 +1024,8 @@ literal|0
 expr_stmt|;
 name|last_invisible
 operator|=
+name|visible_length
+operator|=
 literal|0
 expr_stmt|;
 if|if
@@ -1412,6 +1414,56 @@ operator|>
 literal|0
 condition|)
 block|{
+name|temp
+operator|=
+name|local_len
+operator|+
+name|out
+operator|+
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|>=
+name|line_size
+condition|)
+block|{
+name|line_size
+operator|=
+operator|(
+name|temp
+operator|+
+literal|1024
+operator|)
+operator|-
+operator|(
+name|temp
+operator|%
+literal|1024
+operator|)
+expr_stmt|;
+name|visible_line
+operator|=
+name|xrealloc
+argument_list|(
+name|visible_line
+argument_list|,
+name|line_size
+argument_list|)
+expr_stmt|;
+name|line
+operator|=
+name|invisible_line
+operator|=
+name|xrealloc
+argument_list|(
+name|invisible_line
+argument_list|,
+name|line_size
+argument_list|)
+expr_stmt|;
+block|}
 name|strncpy
 argument_list|(
 name|line
@@ -1507,6 +1559,56 @@ argument_list|(
 name|prompt_this_line
 argument_list|)
 expr_stmt|;
+name|temp
+operator|=
+name|pmtlen
+operator|+
+name|out
+operator|+
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|>=
+name|line_size
+condition|)
+block|{
+name|line_size
+operator|=
+operator|(
+name|temp
+operator|+
+literal|1024
+operator|)
+operator|-
+operator|(
+name|temp
+operator|%
+literal|1024
+operator|)
+expr_stmt|;
+name|visible_line
+operator|=
+name|xrealloc
+argument_list|(
+name|visible_line
+argument_list|,
+name|line_size
+argument_list|)
+expr_stmt|;
+name|line
+operator|=
+name|invisible_line
+operator|=
+name|xrealloc
+argument_list|(
+name|invisible_line
+argument_list|,
+name|line_size
+argument_list|)
+expr_stmt|;
+block|}
 name|strncpy
 argument_list|(
 name|line
@@ -1539,7 +1641,7 @@ directive|define
 name|CHECK_LPOS
 parameter_list|()
 define|\
-value|do { \         lpos++; \         if (lpos>= screenwidth) \           { \             inv_lbreaks[++newlines] = out; \             lpos = 0; \           } \       } while (0)
+value|do { \ 	lpos++; \ 	if (lpos>= screenwidth) \ 	  { \ 	    inv_lbreaks[++newlines] = out; \ 	    lpos = 0; \ 	  } \       } while (0)
 comment|/* inv_lbreaks[i] is where line i starts in the buffer. */
 name|inv_lbreaks
 index|[
@@ -1570,7 +1672,7 @@ literal|0
 block|temp = ((newlines + 1) * screenwidth) - ((newlines == 0) ? wrap_offset : 0);
 else|#
 directive|else
-comment|/* XXX - possible fix from Darin Johnson<darin@acuson.com> for prompt        string with invisible characters that is longer than the screen        width. */
+comment|/* XXX - possible fix from Darin Johnson<darin@acuson.com> for prompt 	 string with invisible characters that is longer than the screen 	 width. */
 name|temp
 operator|=
 operator|(
@@ -1795,19 +1897,24 @@ name|temp
 decl_stmt|,
 name|newout
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|newout = (out | (int)7) + 1;
+else|#
+directive|else
 name|newout
 operator|=
-operator|(
 name|out
-operator||
-operator|(
-name|int
-operator|)
-literal|7
-operator|)
 operator|+
-literal|1
+literal|8
+operator|-
+name|lpos
+operator|%
+literal|8
 expr_stmt|;
+endif|#
+directive|endif
 name|temp
 operator|=
 name|newout
@@ -2316,7 +2423,7 @@ argument_list|(
 name|cursor_linenum
 argument_list|)
 expr_stmt|;
-comment|/* If we moved up to the line with the prompt using term_up, 	         the physical cursor position on the screen stays the same, 	         but the buffer position needs to be adjusted to account 	         for invisible characters. */
+comment|/* If we moved up to the line with the prompt using term_up, 		 the physical cursor position on the screen stays the same, 		 but the buffer position needs to be adjusted to account 		 for invisible characters. */
 if|if
 condition|(
 name|cursor_linenum
@@ -2485,7 +2592,7 @@ name|visible_length
 operator|+
 name|wrap_offset
 expr_stmt|;
-comment|/* Where the new cursor position will be on the screen.  This can be          longer than SCREENWIDTH; if it is, lmargin will be adjusted. */
+comment|/* Where the new cursor position will be on the screen.  This can be 	 longer than SCREENWIDTH; if it is, lmargin will be adjusted. */
 name|phys_c_pos
 operator|=
 name|c_pos
@@ -2504,8 +2611,8 @@ name|screenwidth
 operator|/
 literal|3
 expr_stmt|;
-comment|/* If the number of characters had already exceeded the screenwidth,          last_lmargin will be> 0. */
-comment|/* If the number of characters to be displayed is more than the screen          width, compute the starting offset so that the cursor is about          two-thirds of the way across the screen. */
+comment|/* If the number of characters had already exceeded the screenwidth, 	 last_lmargin will be> 0. */
+comment|/* If the number of characters to be displayed is more than the screen 	 width, compute the starting offset so that the cursor is about 	 two-thirds of the way across the screen. */
 if|if
 condition|(
 name|phys_c_pos
@@ -2627,7 +2734,7 @@ index|]
 operator|=
 literal|'<'
 expr_stmt|;
-comment|/* If SCREENWIDTH characters starting at LMARGIN do not encompass          the whole line, indicate that with a special characters at the          right edge of the screen.  If LMARGIN is 0, we need to take the          wrap offset into account. */
+comment|/* If SCREENWIDTH characters starting at LMARGIN do not encompass 	 the whole line, indicate that with a special character at the 	 right edge of the screen.  If LMARGIN is 0, we need to take the 	 wrap offset into account. */
 name|t
 operator|=
 name|lmargin
@@ -2855,7 +2962,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* PWP: update_line() is based on finding the middle difference of each    line on the screen; vis:  			     /old first difference 	/beginning of line   |	      /old last same       /old EOL 	v		     v	      v		    v old:	eddie> Oh, my little gruntle-buggy is to me, as lurgid as new:	eddie> Oh, my little buggy says to me, as lurgid as 	^		     ^	^			   ^ 	\beginning of line   |	\new last same	   \new end of line 			     \new first difference     All are character pointers for the sake of speed.  Special cases for    no differences, as well as for end of line additions must be handeled.     Could be made even smarter, but this works well enough */
+comment|/* PWP: update_line() is based on finding the middle difference of each    line on the screen; vis:  			     /old first difference 	/beginning of line   |	      /old last same       /old EOL 	v		     v	      v		    v old:	eddie> Oh, my little gruntle-buggy is to me, as lurgid as new:	eddie> Oh, my little buggy says to me, as lurgid as 	^		     ^	^			   ^ 	\beginning of line   |	\new last same	   \new end of line 			     \new first difference     All are character pointers for the sake of speed.  Special cases for    no differences, as well as for end of line additions must be handled.     Could be made even smarter, but this works well enough */
 end_comment
 
 begin_function
@@ -3361,18 +3468,12 @@ name|current_invis_chars
 operator|!=
 name|visible_wrap_offset
 condition|)
-block|{
-name|temp
-operator|=
+name|lendiff
+operator|+=
 name|visible_wrap_offset
 operator|-
 name|current_invis_chars
 expr_stmt|;
-name|lendiff
-operator|+=
-name|temp
-expr_stmt|;
-block|}
 comment|/* Insert (diff (len (old), len (new)) ch. */
 name|temp
 operator|=
@@ -3470,7 +3571,7 @@ literal|0
 condition|)
 block|{
 comment|/* At the end of a line the characters do not have to 		 be "inserted".  They can just be placed on the screen. */
-comment|/* However, this screws up the rest of this block, which 	         assumes you've done the insert because you can. */
+comment|/* However, this screws up the rest of this block, which 		 assumes you've done the insert because you can. */
 name|_rl_output_some_chars
 argument_list|(
 name|nfd
@@ -3664,6 +3765,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|lendiff
+condition|)
+block|{
+if|if
+condition|(
 name|_rl_term_autowrap
 operator|&&
 name|current_line
@@ -3681,6 +3787,7 @@ argument_list|(
 name|lendiff
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -3997,7 +4104,7 @@ elseif|else
 if|if
 condition|(
 name|_rl_last_c_pos
-operator|!=
+operator|>
 name|new
 condition|)
 name|_rl_backspace
@@ -4690,7 +4797,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|_rl_save_prompt
+name|rl_save_prompt
 parameter_list|()
 block|{
 name|saved_local_prompt
@@ -4730,7 +4837,7 @@ end_function
 
 begin_function
 name|void
-name|_rl_restore_prompt
+name|rl_restore_prompt
 parameter_list|()
 block|{
 if|if
@@ -4788,7 +4895,7 @@ name|char
 modifier|*
 name|pmt
 decl_stmt|;
-name|_rl_save_prompt
+name|rl_save_prompt
 argument_list|()
 expr_stmt|;
 if|if
@@ -5840,9 +5947,37 @@ name|rl_outstream
 argument_list|)
 expr_stmt|;
 name|rl_restart_output
-argument_list|()
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|_rl_erase_entire_line
+parameter_list|()
+block|{
+name|cr
+argument_list|()
+expr_stmt|;
+name|_rl_clear_to_eol
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|cr
+argument_list|()
+expr_stmt|;
+name|fflush
+argument_list|(
+name|rl_outstream
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
