@@ -573,7 +573,7 @@ begin_define
 define|#
 directive|define
 name|PS_ARGS
-value|"aCcefghjLlM:mN:O:o:p:rSTt:U:uvwxZ"
+value|"aCcefgHhjLlM:mN:O:o:p:rSTt:U:uvwxZ"
 end_define
 
 begin_else
@@ -585,7 +585,7 @@ begin_define
 define|#
 directive|define
 name|PS_ARGS
-value|"aCceghjLlM:mN:O:o:p:rSTt:U:uvwxZ"
+value|"aCcegHhjLlM:mN:O:o:p:rSTt:U:uvwxZ"
 end_define
 
 begin_endif
@@ -661,6 +661,8 @@ decl_stmt|,
 name|uid
 decl_stmt|,
 name|nuids
+decl_stmt|,
+name|showthreads
 decl_stmt|;
 name|char
 modifier|*
@@ -933,6 +935,10 @@ name|nlistf
 operator|=
 name|_PATH_DEVNULL
 expr_stmt|;
+name|showthreads
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -997,6 +1003,14 @@ literal|'g'
 case|:
 break|break;
 comment|/* no-op */
+case|case
+literal|'H'
+case|:
+name|showthreads
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'h'
 case|:
@@ -1702,11 +1716,28 @@ operator|=
 name|pid
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|showthreads
+operator|==
+literal|1
+condition|)
 block|{
 name|what
 operator|=
 name|KERN_PROC_ALL
+expr_stmt|;
+name|flag
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|what
+operator|=
+name|KERN_PROC_PROC
 expr_stmt|;
 name|flag
 operator|=
@@ -3319,7 +3350,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ps [-aChjlmrSTuvwxZ] [-O|o fmt] [-p pid] [-t tty] [-U user]"
+literal|"usage: ps [-aCHhjlmrSTuvwxZ] [-O|o fmt] [-p pid] [-t tty] [-U user]"
 argument_list|,
 literal|"          [-M core] [-N system]"
 argument_list|,
