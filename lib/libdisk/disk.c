@@ -1657,14 +1657,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|o
-operator|=
-name|d
-operator|->
-name|chunks
-operator|->
-name|size
-expr_stmt|;
 if|if
 condition|(
 name|Add_Chunk
