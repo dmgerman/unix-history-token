@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_errno.h	7.3 (Berkeley) %G% */
+comment|/*	@(#)iso_errno.h	7.4 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -68,6 +68,17 @@ end_define
 
 begin_comment
 comment|/* cl network layer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_ERROR_SNDC
+value|0x10000
+end_define
+
+begin_comment
+comment|/* kludge to force DC's on certain errors */
 end_comment
 
 begin_define
