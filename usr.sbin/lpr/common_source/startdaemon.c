@@ -141,6 +141,9 @@ name|s
 decl_stmt|,
 name|n
 decl_stmt|;
+name|int
+name|connectres
+decl_stmt|;
 name|char
 name|c
 decl_stmt|;
@@ -218,8 +221,8 @@ argument_list|(
 name|euid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|connectres
+operator|=
 name|connect
 argument_list|(
 name|s
@@ -238,18 +241,29 @@ operator|&
 name|un
 argument_list|)
 argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|seteuid
 argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|connectres
+operator|<
+literal|0
+condition|)
+block|{
 name|warn
 argument_list|(
-literal|"connect"
+literal|"Unable to connect to %s"
+argument_list|,
+name|_PATH_SOCKETNAME
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"Check to see if the master 'lpd' process is running."
 argument_list|)
 expr_stmt|;
 operator|(
@@ -266,11 +280,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|seteuid
-argument_list|(
-name|uid
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Avoid overruns without putting artificial limitations on  	 * the length. 	 */
 if|if
 condition|(
