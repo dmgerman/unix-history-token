@@ -22,6 +22,12 @@ name|__bool_true_false_are_defined
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -62,6 +68,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__cplusplus */
+end_comment
 
 begin_endif
 endif|#
