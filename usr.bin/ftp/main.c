@@ -274,6 +274,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|getenv
+argument_list|(
+literal|"FTP_PASSIVE_MODE"
+argument_list|)
+operator|||
 name|strcmp
 argument_list|(
 name|cp
