@@ -452,7 +452,10 @@ name|pa
 expr_stmt|;
 name|cpu_ipi_selected
 argument_list|(
-name|all_cpus
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -524,7 +527,10 @@ name|pa
 expr_stmt|;
 name|cpu_ipi_selected
 argument_list|(
-name|all_cpus
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
