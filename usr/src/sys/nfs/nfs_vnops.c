@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2108,6 +2108,13 @@ condition|(
 name|flag
 operator|!=
 name|LOOKUP
+operator|&&
+operator|*
+name|ndp
+operator|->
+name|ni_next
+operator|==
+literal|0
 condition|)
 name|ndp
 operator|->
@@ -2275,6 +2282,13 @@ condition|(
 name|flag
 operator|!=
 name|LOOKUP
+operator|&&
+operator|*
+name|ndp
+operator|->
+name|ni_next
+operator|==
+literal|0
 condition|)
 name|ndp
 operator|->
@@ -2888,6 +2902,13 @@ condition|(
 name|flag
 operator|!=
 name|LOOKUP
+operator|&&
+operator|*
+name|ndp
+operator|->
+name|ni_next
+operator|==
+literal|0
 condition|)
 name|ndp
 operator|->
