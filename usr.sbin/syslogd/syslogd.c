@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.29 1998/04/22 06:28:18 phk Exp $"
+literal|"$Id: syslogd.c,v 1.30 1998/04/24 17:32:23 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -984,7 +984,7 @@ comment|/* when true, receive only unix domain socks */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|Vogons
 init|=
 literal|0
@@ -2025,6 +2025,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
 name|inetm
 operator|=
 name|FDMASK
@@ -2032,7 +2034,6 @@ argument_list|(
 name|finet
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2460,12 +2461,15 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|Vogons
 operator|&
 operator|(
 name|Vogons
-operator|+
+operator|-
 literal|1
+operator|)
 operator|)
 condition|)
 block|{
