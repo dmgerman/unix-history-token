@@ -569,6 +569,12 @@ begin_comment
 comment|/* return status */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
 begin_decl_stmt
 name|u_int
 name|modulus
@@ -580,6 +586,11 @@ end_decl_stmt
 begin_comment
 comment|/* prime modulus size (bits) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -898,12 +909,17 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* MV parameters */
+endif|#
+directive|endif
 name|int
 name|md5key
 init|=
 literal|0
 decl_stmt|;
 comment|/* generate MD5 keys */
+ifdef|#
+directive|ifdef
+name|OPENSSL
 name|int
 name|hostkey
 init|=
@@ -961,14 +977,6 @@ name|ectx
 decl_stmt|;
 comment|/* EVP digest */
 name|char
-name|hostbuf
-index|[
-name|MAXHOSTNAME
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|char
 name|pathbuf
 index|[
 name|MAXFILENAME
@@ -1018,6 +1026,14 @@ comment|/* IFF key switch */
 endif|#
 directive|endif
 comment|/* OPENSSL */
+name|char
+name|hostbuf
+index|[
+name|MAXHOSTNAME
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|u_int
 name|temp
 decl_stmt|;
@@ -1101,6 +1117,9 @@ name|hostname
 operator|=
 name|hostbuf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL
 name|trustname
 operator|=
 name|hostbuf
@@ -1109,6 +1128,8 @@ name|passwd1
 operator|=
 name|hostbuf
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
@@ -1151,7 +1172,15 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
+ifdef|#
+directive|ifdef
+name|OPENSSL
 literal|"c:deGgHIi:Mm:nPp:q:S:s:TV:v:"
+else|#
+directive|else
+literal|"dM"
+endif|#
+directive|endif
 argument_list|)
 operator|)
 operator|!=
@@ -1164,6 +1193,9 @@ condition|(
 name|temp
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -c select public certificate type 		 */
 case|case
 literal|'c'
@@ -1173,6 +1205,8 @@ operator|=
 name|optarg
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
 comment|/* 		 * -d debug 		 */
 case|case
 literal|'d'
@@ -1181,6 +1215,9 @@ name|debug
 operator|++
 expr_stmt|;
 continue|continue;
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -e write identity keys 		 */
 case|case
 literal|'e'
@@ -1189,6 +1226,11 @@ name|iffsw
 operator|++
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -G generate GQ parameters and keys 		 */
 case|case
 literal|'G'
@@ -1197,6 +1239,11 @@ name|gqpar
 operator|++
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -g update GQ keys 		 */
 case|case
 literal|'g'
@@ -1205,6 +1252,11 @@ name|gqkey
 operator|++
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -H generate host key (RSA) 		 */
 case|case
 literal|'H'
@@ -1213,6 +1265,11 @@ name|hostkey
 operator|++
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -I generate IFF parameters 		 */
 case|case
 literal|'I'
@@ -1221,6 +1278,11 @@ name|iffkey
 operator|++
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -i set issuer name 		 */
 case|case
 literal|'i'
@@ -1230,6 +1292,8 @@ operator|=
 name|optarg
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
 comment|/* 		 * -M generate MD5 keys 		 */
 case|case
 literal|'M'
@@ -1238,6 +1302,9 @@ name|md5key
 operator|++
 expr_stmt|;
 continue|continue;
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -m select modulus (256-2048) 		 */
 case|case
 literal|'m'
@@ -1266,6 +1333,11 @@ name|optarg
 argument_list|)
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -P generate PC private certificate 		 */
 case|case
 literal|'P'
@@ -1275,6 +1347,11 @@ operator|=
 name|EXT_KEY_PRIVATE
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -p output private key password 		 */
 case|case
 literal|'p'
@@ -1284,6 +1361,11 @@ operator|=
 name|optarg
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -q input private key password 		 */
 case|case
 literal|'q'
@@ -1293,6 +1375,11 @@ operator|=
 name|optarg
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -S generate sign key (RSA or DSA) 		 */
 case|case
 literal|'S'
@@ -1302,6 +1389,11 @@ operator|=
 name|optarg
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -s set subject name 		 */
 case|case
 literal|'s'
@@ -1311,6 +1403,11 @@ operator|=
 name|optarg
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -T trusted certificate (TC scheme) 		 */
 case|case
 literal|'T'
@@ -1320,6 +1417,11 @@ operator|=
 name|EXT_KEY_TRUST
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -V<keys> generate MV parameters 		 */
 case|case
 literal|'V'
@@ -1351,6 +1453,11 @@ name|optarg
 argument_list|)
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL
 comment|/* 		 * -v<key> update MV keys 		 */
 case|case
 literal|'v'
@@ -1382,6 +1489,8 @@ name|optarg
 argument_list|)
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
 comment|/* 		 * None of the above. 		 */
 default|default:
 name|fprintf
@@ -1509,6 +1618,8 @@ argument_list|,
 literal|4.0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Generate new parameters and keys as requested. These replace 	 * any values already generated. 	 */
 if|if
 condition|(
@@ -1519,6 +1630,9 @@ argument_list|(
 literal|"MD5"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL
 if|if
 condition|(
 name|hostkey
@@ -2666,7 +2780,7 @@ expr_stmt|;
 block|}
 name|md5key
 index|[
-literal|16
+literal|15
 index|]
 operator|=
 literal|'\0'
@@ -4840,6 +4954,9 @@ block|{
 name|EVP_PKEY
 modifier|*
 name|pkey
+decl_stmt|,
+modifier|*
+name|pkey1
 decl_stmt|;
 comment|/* private key */
 name|DSA
@@ -5009,13 +5126,8 @@ argument_list|()
 expr_stmt|;
 name|dsa
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|DSA
-argument_list|)
-argument_list|)
+name|DSA_new
+argument_list|()
 expr_stmt|;
 name|dsa
 operator|->
@@ -6662,13 +6774,8 @@ expr_stmt|;
 comment|/* 	 * Write the parameters and private key (xbar[j], xhat[j]) for 	 * all j as a DSA private key encoded in PEM. It is used only by 	 * the designated recipient(s) who pay a suitably outrageous fee 	 * for its use. 	 */
 name|sdsa
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|DSA
-argument_list|)
-argument_list|)
+name|DSA_new
+argument_list|()
 expr_stmt|;
 name|sdsa
 operator|->
@@ -6902,14 +7009,14 @@ argument_list|,
 name|trustname
 argument_list|)
 expr_stmt|;
-name|pkey
+name|pkey1
 operator|=
 name|EVP_PKEY_new
 argument_list|()
 expr_stmt|;
-name|EVP_PKEY_assign_DSA
+name|EVP_PKEY_set1_DSA
 argument_list|(
-name|pkey
+name|pkey1
 argument_list|,
 name|sdsa
 argument_list|)
@@ -6918,7 +7025,7 @@ name|PEM_write_PrivateKey
 argument_list|(
 name|str
 argument_list|,
-name|pkey
+name|pkey1
 argument_list|,
 name|passwd2
 condition|?
@@ -6967,6 +7074,11 @@ argument_list|,
 name|sdsa
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|EVP_PKEY_free
+argument_list|(
+name|pkey1
 argument_list|)
 expr_stmt|;
 block|}
@@ -7055,11 +7167,6 @@ expr_stmt|;
 name|BN_free
 argument_list|(
 name|ghat
-argument_list|)
-expr_stmt|;
-name|DSA_free
-argument_list|(
-name|dsa
 argument_list|)
 expr_stmt|;
 name|DSA_free
@@ -7950,15 +8057,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OPENSSL */
-end_comment
-
 begin_comment
 comment|/*  * Generate key  */
 end_comment
@@ -8053,6 +8151,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPENSSL */
+end_comment
 
 begin_comment
 comment|/*  * Generate file header  */
