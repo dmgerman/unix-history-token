@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.8 %G%"
+literal|"@(#)asjxxx.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1227,7 +1227,7 @@ condition|(
 name|intdest
 operator|->
 name|s_value
-operator|>=
+operator|>
 name|dest
 operator|->
 name|s_value
