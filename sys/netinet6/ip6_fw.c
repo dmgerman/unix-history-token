@@ -4819,6 +4819,9 @@ name|m
 operator|->
 name|m_len
 operator|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6146,6 +6149,9 @@ name|m
 operator|->
 name|m_len
 operator|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
