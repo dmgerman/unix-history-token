@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.11 (Berkeley) %G%"
+literal|"@(#)dir.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2050,6 +2050,9 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|int
+name|serrno
+decl_stmt|;
 name|cp
 operator|=
 name|globone
@@ -2123,6 +2126,10 @@ argument_list|(
 name|cp
 argument_list|)
 return|;
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2367,7 +2374,7 @@ name|ebuf
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|serrno
 argument_list|)
 argument_list|)
 expr_stmt|;
