@@ -3434,7 +3434,15 @@ operator|.
 name|sb_cc
 argument_list|,
 operator|(
-literal|"receive 1"
+literal|"receive: m == %p so->so_rcv.sb_cc == %lu"
+operator|,
+name|m
+operator|,
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_cc
 operator|)
 argument_list|)
 expr_stmt|;
