@@ -394,6 +394,7 @@ if|if
 condition|(
 name|inquote
 condition|)
+block|{
 if|if
 condition|(
 name|inquote
@@ -406,7 +407,9 @@ literal|'\0'
 expr_stmt|;
 else|else
 break|break;
+block|}
 else|else
+block|{
 name|inquote
 operator|=
 operator|(
@@ -414,7 +417,13 @@ name|char
 operator|)
 name|ch
 expr_stmt|;
+name|start
+operator|=
+name|t
+expr_stmt|;
 continue|continue;
+block|}
+comment|/* FALLTHROUGH */
 case|case
 literal|' '
 case|:
