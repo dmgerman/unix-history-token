@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.3 (Berkeley) %G%"
+literal|"@(#)main.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8381,6 +8381,12 @@ expr_stmt|;
 name|cgrp
 operator|.
 name|cg_rotor
+operator|=
+literal|0
+expr_stmt|;
+name|cgrp
+operator|.
+name|cg_irotor
 operator|=
 literal|0
 expr_stmt|;
