@@ -311,11 +311,32 @@ name|THREAD_LIST_UNLOCK
 expr_stmt|;
 name|DEAD_LIST_UNLOCK
 expr_stmt|;
+name|ret
+operator|=
 name|_thread_suspend
 argument_list|(
 name|curthread
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+operator|&&
+name|ret
+operator|!=
+name|EAGAIN
+operator|&&
+name|ret
+operator|!=
+name|EINTR
+condition|)
+name|PANIC
+argument_list|(
+literal|"Unable to suspend in join."
 argument_list|)
 expr_stmt|;
 comment|/* 			 * XXX - For correctness reasons. 			 * We must aquire these in the same order and also 			 * importantly, release in the same order, order because 			 * otherwise we might deadlock with the joined thread 			 * when we attempt to release one of these locks. 			 */
