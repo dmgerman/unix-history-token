@@ -544,7 +544,7 @@ begin_define
 define|#
 directive|define
 name|CHN_2NDBUFBLKNUM
-value|(8)
+value|(32)
 end_define
 
 begin_comment
