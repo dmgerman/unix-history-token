@@ -35,6 +35,9 @@ directive|include
 file|"opt_devfs.h"
 include|#
 directive|include
+file|"opt_spigot.h"
+include|#
+directive|include
 file|<sys/param.h>
 include|#
 directive|include
