@@ -748,7 +748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a uid/gid, return a username/groupname for the text form of an ACL  * XXX NOT THREAD SAFE, RELIES ON GETPWUID, GETGRGID  * XXX USES *PW* AND *GR* WHICH ARE STATEFUL AND THEREFORE THIS ROUTINE  * MAY HAVE SIDE-EFFECTS  */
+comment|/*  * Given a uid/gid, return a username/groupname for the text form of an ACL.  * Note that we truncate user and group names, rather than error out, as  * this is consistent with other tools manipulating user and group names.  * XXX NOT THREAD SAFE, RELIES ON GETPWUID, GETGRGID  * XXX USES *PW* AND *GR* WHICH ARE STATEFUL AND THEREFORE THIS ROUTINE  * MAY HAVE SIDE-EFFECTS  */
 end_comment
 
 begin_function
@@ -836,10 +836,6 @@ condition|(
 name|i
 operator|<
 literal|0
-operator|||
-name|i
-operator|>=
-name|buf_len
 condition|)
 block|{
 name|errno
@@ -908,10 +904,6 @@ condition|(
 name|i
 operator|<
 literal|0
-operator|||
-name|i
-operator|>=
-name|buf_len
 condition|)
 block|{
 name|errno
