@@ -172,6 +172,11 @@ name|bind
 argument_list|(
 name|sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|my_addr
 argument_list|,
@@ -201,6 +206,11 @@ name|getsockname
 argument_list|(
 name|sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|my_addr
 argument_list|,
@@ -273,6 +283,11 @@ name|bind
 argument_list|(
 name|ctl_sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ctl_addr
 argument_list|,
@@ -302,6 +317,11 @@ name|getsockname
 argument_list|(
 name|ctl_sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ctl_addr
 argument_list|,

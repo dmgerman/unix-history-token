@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look_up.c	6.2 (Berkeley) %G%"
+literal|"@(#)look_up.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,11 @@ name|connect
 argument_list|(
 name|sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|response
 operator|.

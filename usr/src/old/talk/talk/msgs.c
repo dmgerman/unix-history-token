@@ -118,12 +118,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|disp_msg
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|message
 argument_list|(
@@ -131,7 +129,7 @@ name|current_state
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|start_msgs
@@ -171,7 +169,7 @@ name|itimer
 argument_list|,
 operator|(
 expr|struct
-name|timerval
+name|itimerval
 operator|*
 operator|)
 literal|0
@@ -219,7 +217,7 @@ name|itimer
 argument_list|,
 operator|(
 expr|struct
-name|timerval
+name|itimerval
 operator|*
 operator|)
 literal|0

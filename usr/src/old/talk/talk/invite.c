@@ -501,6 +501,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|daemon_addr
 argument_list|,
@@ -548,6 +553,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|daemon_addr
 argument_list|,
