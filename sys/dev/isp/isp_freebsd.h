@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.12 1999/03/17 05:04:39 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.h,v 1.13 1999/03/25 22:52:45 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_25_99 */
+comment|/* release_4_3_99 */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|99
+value|991
 end_define
 
 begin_include
@@ -93,6 +93,24 @@ directive|define
 name|MAXISPREQUEST
 value|64
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SCSI_ISP_PREFER_MEM_MAP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SCSI_ISP_PREFER_MEM_MAP
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -154,24 +172,6 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/isp/ispreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/isp/ispvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/isp/ispmbox.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -196,20 +196,30 @@ name|struct
 name|scsi_link
 name|_link
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300001
-name|struct
-name|callout_handle
-name|watchid
+name|int8_t
+name|delay_throttle_count
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/ispreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/ispvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/ispmbox.h>
+end_include
 
 begin_define
 define|#
@@ -618,93 +628,6 @@ name|isp_name
 value|isp_osinfo.name
 end_define
 
-begin_define
-define|#
-directive|define
-name|WATCH_INTERVAL
-value|30
-end_define
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300001
-end_if
-
-begin_define
-define|#
-directive|define
-name|START_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|(s)->isp_osinfo.watchid = timeout(f, s, WATCH_INTERVAL * hz), \ 	s->isp_dogactive = 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|STOP_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
-value|untimeout(f, s, (s)->isp_osinfo.watchid),\ 	(s)->isp_dogactive = 0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|START_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|timeout(f, s, WATCH_INTERVAL * hz), s->isp_dogactive = 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|STOP_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
-value|untimeout(f, s), (s)->isp_dogactive = 0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|RESTART_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
-value|START_WATCHDOG(f, s)
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -788,6 +711,26 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DMA_MSW
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_LSW
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xffff))
+end_define
 
 begin_define
 define|#
@@ -1412,24 +1355,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/*  * Disable these for now  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_NO_FASTPOST_SCSI
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_NO_FASTPOST_FC
-value|1
-end_define
 
 begin_endif
 endif|#
