@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.59
+literal|3.60
 operator|%
 name|G
 operator|%
@@ -1992,6 +1992,12 @@ decl_stmt|;
 name|bool
 name|nofullname
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|macvalue
+parameter_list|()
+function_decl|;
 comment|/* 	**  Figure out the real user executing us. 	**	Getlogin can return errno != 0 on non-errors. 	*/
 if|if
 condition|(
@@ -2212,6 +2218,20 @@ argument_list|(
 name|cfbuf
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+comment|/* if the user has given fullname already, don't redefine */
+if|if
+condition|(
+name|FullName
+operator|==
+name|NULL
+condition|)
+name|FullName
+operator|=
+name|macvalue
+argument_list|(
+literal|'x'
 argument_list|)
 expr_stmt|;
 comment|/* extract full name from passwd file */
