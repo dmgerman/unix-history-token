@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	copy.c	4.3	83/02/18	*/
+comment|/*	copy.c	4.4	83/02/20	*/
 end_comment
 
 begin_comment
@@ -121,7 +121,7 @@ block|}
 if|if
 condition|(
 name|rcc
-operator|!=
+operator|<
 sizeof|sizeof
 argument_list|(
 name|buffer
@@ -173,7 +173,7 @@ block|}
 if|if
 condition|(
 name|wcc
-operator|!=
+operator|<
 name|rcc
 condition|)
 block|{
