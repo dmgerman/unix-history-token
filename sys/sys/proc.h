@@ -1873,9 +1873,9 @@ comment|/* (c) Process limits. */
 name|struct
 name|vm_object
 modifier|*
-name|p_upages_obj
+name|p_unused1
 decl_stmt|;
-comment|/* (a) Upages object. */
+comment|/* (a) Former upages object */
 name|struct
 name|sigacts
 modifier|*
@@ -2190,9 +2190,9 @@ comment|/* (h + c) Interval timer callout. */
 name|struct
 name|user
 modifier|*
-name|p_uarea
+name|p_unused2
 decl_stmt|;
-comment|/* (k) Kernel VA of u-area (CPU). */
+comment|/* (k) Formerly U-area. */
 name|u_short
 name|p_acflag
 decl_stmt|;
@@ -4093,6 +4093,46 @@ name|struct
 name|proc
 modifier|*
 name|newparent
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pstats
+modifier|*
+name|pstats_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pstats_fork
+parameter_list|(
+name|struct
+name|pstats
+modifier|*
+name|src
+parameter_list|,
+name|struct
+name|pstats
+modifier|*
+name|dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pstats_free
+parameter_list|(
+name|struct
+name|pstats
+modifier|*
+name|ps
 parameter_list|)
 function_decl|;
 end_function_decl
