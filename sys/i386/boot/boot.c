@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.9 1994/02/22 22:59:38 rgrimes Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.10 1994/04/20 22:06:24 phk Exp $  */
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ argument_list|(
 literal|1
 argument_list|)
 argument_list|,
-literal|"$Revision: 1.9 $"
+literal|"$Revision: 1.10 $"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -804,40 +804,42 @@ operator|=
 name|getchar
 argument_list|()
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|i
-condition|)
-block|{
-case|case
+operator|==
 literal|'0'
-case|:
-case|case
+operator|||
+name|i
+operator|==
 literal|'A'
-case|:
-case|case
+operator|||
+name|i
+operator|==
 literal|'a'
-case|:
+condition|)
 name|unit
 operator|=
 literal|0
 expr_stmt|;
-break|break;
-case|case
+if|if
+condition|(
+name|i
+operator|==
 literal|'1'
-case|:
-case|case
+operator|||
+name|i
+operator|==
 literal|'B'
-case|:
-case|case
+operator|||
+name|i
+operator|==
 literal|'b'
-case|:
+condition|)
 name|unit
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
