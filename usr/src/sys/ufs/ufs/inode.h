@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -46,6 +46,9 @@ name|dev_t
 name|i_dev
 decl_stmt|;
 comment|/* device where inode resides */
+name|short
+name|i_pad
+decl_stmt|;
 name|ino_t
 name|i_number
 decl_stmt|;
@@ -99,12 +102,25 @@ name|off_t
 name|i_endoff
 decl_stmt|;
 comment|/* end of useful stuff in directory */
-name|long
-name|i_spare0
+name|u_quad
+name|i_modrev
 decl_stmt|;
-name|long
-name|i_spare1
+comment|/* revision level for lease */
+name|pid_t
+name|i_lockholder
 decl_stmt|;
+comment|/* DEBUG: holder of inode lock */
+name|pid_t
+name|i_lockwaiter
+decl_stmt|;
+comment|/* DEBUG: latest blocked for inode lock */
+name|long
+name|i_spare
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* spares to round up to 256 bytes */
 name|struct
 name|dinode
 name|i_din
