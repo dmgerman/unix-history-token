@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.44 1999/02/18 18:08:39 ken Exp $  */
+comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.45 1999/02/26 18:38:06 ken Exp $  */
 end_comment
 
 begin_include
@@ -629,6 +629,9 @@ define|#
 directive|define
 name|CAM_EB_RUNQ_SCHEDULED
 value|0x01
+name|u_int32_t
+name|refcount
+decl_stmt|;
 name|u_int
 name|generation
 decl_stmt|;
@@ -2138,6 +2141,19 @@ name|timeout_t
 name|xpt_release_simq_timeout
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|xpt_release_bus
+parameter_list|(
+name|struct
+name|cam_eb
+modifier|*
+name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -4226,7 +4242,7 @@ break|break;
 block|}
 break|break;
 block|}
-comment|/* 	 * This is the getpassthru ioctl. It takes a XPT_GDEVLIST ccb as input, 	 * with the periphal driver name and unit name filled in.  The other 	 * fields don't really matter as input.  The passthrough driver name 	 * ("pass"), and unit number are passed back in the ccb.  The current 	 * device generation number, and the index into the device peripheral 	 * driver list, and the status are also passed back.  Note that 	 * since we do everything in one pass, unlike the XPT_GDEVLIST ccb, 	 * we never return a status of CAM_GDEVLIST_LIST_CHANGED.  It is 	 * (or rather should be) impossible for the device peripheral driver 	 * list to change since we look at the whole thing in one pass, and 	 * we do it with splsoftcam protection. 	 *  	 */
+comment|/* 	 * This is the getpassthru ioctl. It takes a XPT_GDEVLIST ccb as input, 	 * with the periphal driver name and unit name filled in.  The other 	 * fields don't really matter as input.  The passthrough driver name 	 * ("pass"), and unit number are passed back in the ccb.  The current 	 * device generation number, and the index into the device peripheral 	 * driver list, and the status are also passed back.  Note that 	 * since we do everything in one pass, unlike the XPT_GDEVLIST ccb, 	 * we never return a status of CAM_GDEVLIST_LIST_CHANGED.  It is 	 * (or rather should be) impossible for the device peripheral driver 	 * list to change since we look at the whole thing in one pass, and 	 * we do it with splcam protection. 	 *  	 */
 case|case
 name|CAMGETPASSTHRU
 case|:
@@ -4331,7 +4347,7 @@ block|}
 comment|/* Keep the list from changing while we traverse it */
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 name|ptstartover
@@ -4491,7 +4507,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 name|splbreaknum
@@ -11560,6 +11576,15 @@ block|}
 case|case
 name|XPT_GDEV_TYPE
 case|:
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11605,14 +11630,6 @@ name|cam_ed
 modifier|*
 name|dev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 name|cgd
 operator|=
 operator|&
@@ -11781,13 +11798,14 @@ operator|->
 name|serial_num_len
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|XPT_GDEVLIST
 case|:
@@ -11828,7 +11846,7 @@ expr_stmt|;
 comment|/* 		 * Don't want anyone mucking with our data. 		 */
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 name|device
@@ -12060,7 +12078,7 @@ expr_stmt|;
 comment|/* 		 * Prevent EDT changes while we traverse it. 		 */
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 comment|/* 		 * There are two ways of getting at information in the EDT. 		 * The first way is via the primary EDT tree.  It starts 		 * with a list of busses, then a list of targets on a bus, 		 * then devices/luns on a target, and then peripherals on a 		 * device/lun.  The "other" way is by the peripheral driver 		 * lists.  The peripheral driver lists are organized by 		 * peripheral driver.  (obviously)  So it makes sense to 		 * use the peripheral driver list if the user is looking 		 * for something like "da1", or all "da" devices.  If the 		 * user is looking for something on a particular bus/target 		 * or lun, it's generally better to go through the EDT tree. 		 */
@@ -12291,7 +12309,7 @@ expr_stmt|;
 comment|/* 		 * If there is already an entry for us, simply 		 * update it. 		 */
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 name|cur_entry
@@ -15134,9 +15152,10 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Wildcarded */
+comment|/* 	 * We will potentially modify the EDT, so block interrupts 	 * that may attempt to create cam paths. 	 */
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 name|bus
@@ -15273,6 +15292,11 @@ block|}
 block|}
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Only touch the user's data if we are successful. 	 */
 if|if
 condition|(
@@ -15347,12 +15371,18 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-block|}
-name|splx
+if|if
+condition|(
+name|bus
+operator|!=
+name|NULL
+condition|)
+name|xpt_release_bus
 argument_list|(
-name|s
+name|bus
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|status
@@ -16238,9 +16268,16 @@ operator|->
 name|et_entries
 argument_list|)
 expr_stmt|;
+name|new_bus
+operator|->
+name|refcount
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Held until a bus_deregister event */
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -16255,6 +16292,11 @@ argument_list|)
 expr_stmt|;
 name|bus_generation
 operator|++
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* Notify interested parties */
 if|if
@@ -16339,11 +16381,6 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|CAM_SUCCESS
@@ -16674,9 +16711,10 @@ literal|"xpt_async\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Most async events come from a CAM interrupt context.  In 	 * a few cases, the error recovery code at the peripheral layer, 	 * which may run from our SWI or a process context, may signal 	 * deferred events with a call to xpt_async. Ensure async 	 * notifications are serialized by blocking cam interrupts. 	 */
 name|s
 operator|=
-name|splsoftcam
+name|splcam
 argument_list|()
 expr_stmt|;
 name|bus
@@ -17617,6 +17655,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|struct
+name|cam_eb
+modifier|*
+name|bus
+decl_stmt|;
 comment|/* 			 * If there is a timeout scheduled to release this 			 * sim queue, remove it.  The queue frozen count is 			 * already at 0. 			 */
 if|if
 condition|(
@@ -17650,6 +17693,15 @@ operator|~
 name|CAM_SIM_REL_TIMEOUT_PENDING
 expr_stmt|;
 block|}
+name|bus
+operator|=
+name|xpt_find_bus
+argument_list|(
+name|sim
+operator|->
+name|path_id
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -17663,15 +17715,15 @@ block|{
 comment|/* 				 * Now that we are unfrozen run the send queue. 				 */
 name|xpt_run_dev_sendq
 argument_list|(
-name|xpt_find_bus
-argument_list|(
-name|sim
-operator|->
-name|path_id
-argument_list|)
+name|bus
 argument_list|)
 expr_stmt|;
 block|}
+name|xpt_release_bus
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|splx
@@ -17728,7 +17780,6 @@ begin_function
 name|void
 name|xpt_done
 parameter_list|(
-specifier|volatile
 name|union
 name|ccb
 modifier|*
@@ -17781,6 +17832,9 @@ name|XPT_ACCEPT_TARGET_IO
 case|:
 case|case
 name|XPT_CONT_TARGET_IO
+case|:
+case|case
+name|XPT_IMMED_NOTIFY
 case|:
 case|case
 name|XPT_SCAN_BUS
@@ -18083,6 +18137,84 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|xpt_release_bus
+parameter_list|(
+name|struct
+name|cam_eb
+modifier|*
+name|bus
+parameter_list|)
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|--
+name|bus
+operator|->
+name|refcount
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|et_entries
+argument_list|)
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|xpt_busses
+argument_list|,
+name|bus
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
+name|bus_generation
+operator|++
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|bus
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|struct
 name|cam_et
 modifier|*
@@ -18151,6 +18283,12 @@ operator|->
 name|refcount
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 		 * Hold a reference to our parent bus so it 		 * will not go away before we do. 		 */
+name|bus
+operator|->
+name|refcount
+operator|++
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -18223,12 +18361,12 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
+block|}
 name|bus
 operator|->
 name|generation
 operator|++
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -18239,6 +18377,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|xpt_release_target
 parameter_list|(
@@ -18253,6 +18392,14 @@ modifier|*
 name|target
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -18294,6 +18441,11 @@ operator|->
 name|generation
 operator|++
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|target
@@ -18301,7 +18453,18 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|xpt_release_bus
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -18336,17 +18499,9 @@ name|cam_devq
 modifier|*
 name|devq
 decl_stmt|;
-name|int32_t
+name|cam_status
 name|status
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 comment|/* Make space for us in the device queue on our bus */
 name|devq
 operator|=
@@ -18369,11 +18524,6 @@ operator|.
 name|array_size
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -18512,6 +18662,12 @@ name|target
 operator|=
 name|target
 expr_stmt|;
+comment|/* 		 * Hold a reference to our parent target so it 		 * will not go away before we do. 		 */
+name|target
+operator|->
+name|refcount
+operator|++
+expr_stmt|;
 name|device
 operator|->
 name|lun_id
@@ -18587,11 +18743,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
-expr_stmt|;
 comment|/* 		 * XXX should be limited by number of CCBs this bus can 		 * do. 		 */
 name|xpt_max_ccbs
 operator|+=
@@ -18664,16 +18815,11 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
+block|}
 name|target
 operator|->
 name|generation
 operator|++
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -18708,6 +18854,11 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -18737,10 +18888,32 @@ name|cam_devq
 modifier|*
 name|devq
 decl_stmt|;
-name|s
-operator|=
-name|splsoftcam
-argument_list|()
+if|if
+condition|(
+name|device
+operator|->
+name|alloc_ccb_entry
+operator|.
+name|pinfo
+operator|.
+name|index
+operator|!=
+name|CAM_UNQUEUED_INDEX
+operator|||
+name|device
+operator|->
+name|send_ccb_entry
+operator|.
+name|pinfo
+operator|.
+name|index
+operator|!=
+name|CAM_UNQUEUED_INDEX
+condition|)
+name|panic
+argument_list|(
+literal|"Removing device while still queued for ccbs"
+argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -18766,13 +18939,6 @@ operator|->
 name|ccbq
 operator|.
 name|devq_openings
-expr_stmt|;
-name|free
-argument_list|(
-name|device
-argument_list|,
-name|M_DEVBUF
-argument_list|)
 expr_stmt|;
 comment|/* Release our slot in the devq */
 name|devq
@@ -18801,7 +18967,20 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|device
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -18960,7 +19139,14 @@ name|path_id
 operator|==
 name|path_id
 condition|)
+block|{
+name|bus
+operator|->
+name|refcount
+operator|++
+expr_stmt|;
 break|break;
+block|}
 block|}
 return|return
 operator|(
@@ -19640,6 +19826,9 @@ name|cam_et
 modifier|*
 name|target
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* 			 * If we already probed lun 0 successfully, or 			 * we have additional configured luns on this 			 * target that might have "gone away", go onto 			 * the next lun. 			 */
 name|target
 operator|=
@@ -19650,6 +19839,11 @@ operator|.
 name|path
 operator|->
 name|target
+expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
 expr_stmt|;
 name|device
 operator|=
@@ -19674,6 +19868,11 @@ argument_list|(
 name|device
 argument_list|,
 name|links
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -24026,7 +24225,7 @@ comment|/* CAM_DEBUG_BUS */
 endif|#
 directive|endif
 comment|/* CAMDEBUG */
-comment|/* Scan all installed busses */
+comment|/* 	 * Scan all installed busses. 	 */
 name|xpt_for_all_busses
 argument_list|(
 name|xptconfigbuscountfunc
@@ -24788,6 +24987,14 @@ operator|->
 name|func_code
 operator|!=
 name|XPT_ACCEPT_TARGET_IO
+operator|)
+operator|&&
+operator|(
+name|ccb_h
+operator|->
+name|func_code
+operator|!=
+name|XPT_IMMED_NOTIFY
 operator|)
 operator|&&
 operator|(
