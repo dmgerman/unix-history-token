@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.8	85/03/07	*/
+comment|/*	user.h	6.9	85/03/11	*/
 end_comment
 
 begin_ifdef
@@ -477,6 +477,13 @@ define|#
 directive|define
 name|RESTARTSYS
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NORMALRETURN
+value|3
 end_define
 
 begin_comment
