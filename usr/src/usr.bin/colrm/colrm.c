@@ -3,9 +3,9 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|sccsid
+name|Sccsid
 init|=
-literal|"@(#)colrm.c	4.1 (Berkeley) %G%"
+literal|"@(#)colrm.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,41 @@ condition|)
 goto|goto
 name|fin
 goto|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\t'
+condition|)
+name|ct
+operator|=
+operator|(
+name|ct
+operator|+
+literal|8
+operator|)
+operator|&
+operator|~
+literal|7
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'\b'
+condition|)
+name|ct
+operator|=
+name|ct
+condition|?
+name|ct
+operator|-
+literal|1
+else|:
+literal|0
+expr_stmt|;
+else|else
 name|ct
 operator|++
 expr_stmt|;
