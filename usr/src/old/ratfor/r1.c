@@ -8,7 +8,7 @@ end_expr_stmt
 
 begin_for
 for|for 4.2
-comment|/* @(#)r1.c	1.1 (Berkeley) %G% */
+comment|/* @(#)r1.c	1.2 (Berkeley) %G% */
 include|#
 directive|include
 file|"r.h"
@@ -1315,6 +1315,7 @@ if|if
 condition|(
 name|wasnext
 condition|)
+block|{
 name|outnum
 argument_list|(
 name|p1
@@ -1322,6 +1323,11 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|transfer
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|nonblank
