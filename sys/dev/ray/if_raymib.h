@@ -1056,8 +1056,134 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_MAX
+name|RAY_MIB_VERSION
 value|46
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_BSSID
+value|47
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_INITED
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_DEF_TXRATE
+value|49
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_ENCRYPT
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_NET_TYPE
+value|51
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_SSID
+value|52
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_PRIV_START
+value|53
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_CUR_PRIV_JOIN
+value|54
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_BSSID
+value|55
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_INITED
+value|56
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_DEF_TXRATE
+value|57
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_ENCRYPT
+value|58
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_NET_TYPE
+value|59
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_SSID
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_PRIV_START
+value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_PRIV_JOIN
+value|62
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_LASTUSER
+value|45
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_MAX
+value|62
 end_define
 
 begin_comment
@@ -1068,7 +1194,14 @@ begin_define
 define|#
 directive|define
 name|RAY_MIB_STRINGS
-value|{		\ 	"NET_TYPE",			\ 	"AP_STATUS",			\ 	"SSID",				\ 	"SCAN_MODE",			\ 	"APM_MODE",			\ 	"MAC_ADDR",			\ 	"FRAG_THRESH",			\ 	"DWELL_TIME",			\ 	"BEACON_PERIOD",		\ 	"DTIM_INTERVAL",		\ 	"MAX_RETRY",			\ 	"ACK_TIMO",			\ 	"SIFS",				\ 	"DIFS",				\ 	"PIFS",				\ 	"RTS_THRESH",			\ 	"SCAN_DWELL",			\ 	"SCAN_MAX_DWELL",		\ 	"ASSOC_TIMO",			\ 	"ADHOC_SCAN_CYCLE",		\ 	"INFRA_SCAN_CYCLE",		\ 	"INFRA_SUPER_SCAN_CYCLE",	\ 	"PROMISC",			\ 	"UNIQ_WORD",			\ 	"SLOT_TIME",			\ 	"ROAM_LOW_SNR_THRESH",		\ 	"LOW_SNR_COUNT",		\ 	"INFRA_MISSED_BEACON_COUNT",	\ 	"ADHOC_MISSED_BEACON_COUNT",	\ 	"COUNTRY_CODE",			\ 	"HOP_SEQ",			\ 	"HOP_SEQ_LEN",			\ 	"CW_MAX",			\ 	"CW_MIN",			\ 	"NOISE_FILTER_GAIN",		\ 	"NOISE_LIMIT_OFFSET",		\ 	"RSSI_THRESH_OFFSET",		\ 	"BUSY_THRESH_OFFSET",		\ 	"SYNC_THRESH",			\ 	"TEST_MODE",			\ 	"TEST_MIN_CHAN",		\ 	"TEST_MAX_CHAN",		\ 	"ALLOW_PROBE_RESP",		\ 	"PRIVACY_MUST_START",		\ 	"PRIVACY_CAN_JOIN",		\ 	"BASIC_RATE_SET"		\ }
+value|{		\ 	"Network type",			\ 	"AP status",			\ 	"SSID",				\ 	"Scan mode",			\ 	"APM mode",			\ 	"MAC address",			\ 	"FRAG_THRESH",			\ 	"DWELL_TIME",			\ 	"BEACON_PERIOD",		\ 	"DTIM_INTERVAL",		\ 	"MAX_RETRY",			\ 	"ACK_TIMO",			\ 	"SIFS",				\ 	"DIFS",				\ 	"PIFS",				\ 	"RTS_THRESH",			\ 	"SCAN_DWELL",			\ 	"SCAN_MAX_DWELL",		\ 	"ASSOC_TIMO",			\ 	"ADHOC_SCAN_CYCLE",		\ 	"INFRA_SCAN_CYCLE",		\ 	"INFRA_SUPER_SCAN_CYCLE",	\ 	"PROMISC",			\ 	"UNIQ_WORD",			\ 	"SLOT_TIME",			\ 	"ROAM_LOW_SNR_THRESH",		\ 	"LOW_SNR_COUNT",		\ 	"INFRA_MISSED_BEACON_COUNT",	\ 	"ADHOC_MISSED_BEACON_COUNT",	\ 	"COUNTRY_CODE",			\ 	"HOP_SEQ",			\ 	"HOP_SEQ_LEN",			\ 	"CW_MAX",			\ 	"CW_MIN",			\ 	"NOISE_FILTER_GAIN",		\ 	"NOISE_LIMIT_OFFSET",		\ 	"RSSI_THRESH_OFFSET",		\ 	"BUSY_THRESH_OFFSET",		\ 	"SYNC_THRESH",			\ 	"TEST_MODE",			\ 	"TEST_MIN_CHAN",		\ 	"TEST_MAX_CHAN",		\ 	"ALLOW_PROBE_RESP",		\ 	"PRIVACY_MUST_START",		\ 	"PRIVACY_CAN_JOIN",		\ 	"BASIC_RATE_SET",		\ 	"Firmware version",		\ 	"Current BSS Id",		\ 	"Current INITED",		\ 	"Current DEF_TXRATE",		\ 	"Current ENCRYPT",		\ 	"Current NET_TYPE",		\ 	"Current SSID",			\ 	"Current PRIV_START",		\ 	"Current PRIV_JOIN",		\ 	"Desired BSSID",		\ 	"Desired INITED",		\ 	"Desired DEF_TXRATE",		\ 	"Desired ENCRYPT",		\ 	"Desired NET_TYPE",		\ 	"Desired SSID",			\ 	"Desired PRIV_START",		\ 	"Desired PRIV_JOIN"		\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_HELP_STRINGS
+value|{			\ 	"0 Ad hoc, 1 Infrastructure",		\ 	"0 Station, 1 Access Point",		\ 	"",					\ 	"0 Passive, 1 Active",			\ 	"0 Off, 1 On",				\ 	"",					\ 	"FRAG_THRESH",				\ 	"DWELL_TIME",				\ 	"BEACON_PERIOD",			\ 	"DTIM_INTERVAL",			\ 	"MAX_RETRY",				\ 	"ACK_TIMO",				\ 	"SIFS",					\ 	"DIFS",					\ 	"PIFS",					\ 	"RTS_THRESH",				\ 	"SCAN_DWELL",				\ 	"SCAN_MAX_DWELL",			\ 	"ASSOC_TIMO",				\ 	"ADHOC_SCAN_CYCLE",			\ 	"INFRA_SCAN_CYCLE",			\ 	"INFRA_SUPER_SCAN_CYCLE",		\ 	"PROMISC",				\ 	"UNIQ_WORD",				\ 	"SLOT_TIME",				\ 	"ROAM_LOW_SNR_THRESH",			\ 	"LOW_SNR_COUNT",			\ 	"INFRA_MISSED_BEACON_COUNT",		\ 	"ADHOC_MISSED_BEACON_COUNT",		\ 	"COUNTRY_CODE",				\ 	"HOP_SEQ",				\ 	"HOP_SEQ_LEN",				\ 	"CW_MAX",				\ 	"CW_MIN",				\ 	"NOISE_FILTER_GAIN",			\ 	"NOISE_LIMIT_OFFSET",			\ 	"RSSI_THRESH_OFFSET",			\ 	"BUSY_THRESH_OFFSET",			\ 	"SYNC_THRESH",				\ 	"TEST_MODE",				\ 	"TEST_MIN_CHAN",			\ 	"TEST_MAX_CHAN",			\ 	"ALLOW_PROBE_RESP",			\ 	"PRIVACY_MUST_START",			\ 	"PRIVACY_CAN_JOIN",			\ 	"BASIC_RATE_SET",			\ 	"",					\ 	"",					\ 	"0 Joined a net, 1 Created a net",	\ 	"Current DEF_TXRATE",			\ 	"Current ENCRYPT",			\ 	"Current NET_TYPE",			\ 	"",					\ 	"Current PRIV_START",			\ 	"Current PRIV_JOIN",			\ 	"N/A",					\ 	"N/A",					\ 	"Desired DEF_TXRATE",			\ 	"Desired ENCRYPT",			\ 	"Desired NET_TYPE",			\ 	"",					\ 	"Desired PRIV_START",			\ 	"Desired PRIV_JOIN"			\ }
 end_define
 
 begin_comment
@@ -1169,8 +1302,42 @@ value|\ 	1,
 comment|/* RAY_MIB_PRIVACY_MUST_START */
 value|\ 	1,
 comment|/* RAY_MIB_PRIVACY_CAN_JOIN */
-value|\ 	8
+value|\ 	8,
 comment|/* RAY_MIB_BASIC_RATE_SET */
+value|\ 	1,
+comment|/* RAY_MIB_VERSION */
+value|\ 	ETHER_ADDR_LEN,
+comment|/* RAY_MIB_CUR_BSSID */
+value|\ 	1,
+comment|/* RAY_MIB_CUR_INITED */
+value|\ 	1,
+comment|/* RAY_MIB_CUR_DEF_TXRATE */
+value|\ 	1,
+comment|/* RAY_MIB_CUR_ENCRYPT */
+value|\ 	1,
+comment|/* RAY_MIB_CUR_NET_TYPE */
+value|\ 	IEEE80211_NWID_LEN,
+comment|/* RAY_MIB_CUR_SSID */
+value|\ 	1,
+comment|/* RAY_MIB_CUR_PRIV_START */
+value|\ 	1,
+comment|/* RAY_MIB_CUR_PRIV_JOIN */
+value|\ 	ETHER_ADDR_LEN,
+comment|/* RAY_MIB_DES_BSSID */
+value|\ 	1,
+comment|/* RAY_MIB_DES_INITED */
+value|\ 	1,
+comment|/* RAY_MIB_DES_DEF_TXRATE */
+value|\ 	1,
+comment|/* RAY_MIB_DES_ENCRYPT */
+value|\ 	1,
+comment|/* RAY_MIB_DES_NET_TYPE */
+value|\ 	IEEE80211_NWID_LEN,
+comment|/* RAY_MIB_DES_SSID */
+value|\ 	1,
+comment|/* RAY_MIB_DES_PRIV_START */
+value|\ 	1
+comment|/* RAY_MIB_DES_PRIV_JOIN */
 value|\ }
 end_define
 
@@ -1604,7 +1771,7 @@ value|0x05
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0xff  * NetBSD	0xff  * Symb		0xXX	- so what happens in adhoc if the beacon is missed?   *			  do we create our own beacon  */
+comment|/*  * Linux.c	0xff  * NetBSD	0xff  * Symb		0xXX	- so what happens in adhoc if the beacon is missed?  *			  do we create our own beacon  */
 end_comment
 
 begin_define
@@ -1948,8 +2115,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|RAY_MIB_BASIC_RATE_SET_MAX
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAY_MIB_BASIC_RATE_SET_DEFAULT
-value|RAY_MIB_BASIC_RATE_SET_1000K
+value|RAY_MIB_BASIC_RATE_SET_2000K
 end_define
 
 end_unit
