@@ -2723,6 +2723,21 @@ operator|==
 name|SOCK_RAW
 condition|)
 continue|continue;
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|priv
+operator|&&
+name|socktype
+operator|==
+name|SOCK_RAW
+condition|)
+continue|continue;
 comment|/* 		 * XXXRW: On 5.3, this seems not to work for SOCK_RAW. 		 */
 name|sock
 operator|=
@@ -3412,24 +3427,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Running tests with ruid %d euid %d sock uid 0\n"
-argument_list|,
-name|getuid
-argument_list|()
-argument_list|,
-name|geteuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|testsuite
-argument_list|(
-name|PRIV_GETROOT
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"Running tests with ruid %d euid %d sock uid 65534\n"
 argument_list|,
 name|getuid
@@ -3442,6 +3439,24 @@ expr_stmt|;
 name|testsuite
 argument_list|(
 name|PRIV_ASIS
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Running tests with ruid %d euid %d sock uid 0\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|testsuite
+argument_list|(
+name|PRIV_GETROOT
 argument_list|)
 expr_stmt|;
 block|}
