@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      Adaptec 154x.  *  * Derived from code written by:  *  * Copyright (c) 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aha_isa.c,v 1.2 1998/09/24 10:43:42 bde Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      Adaptec 154x.  *  * Derived from code written by:  *  * Copyright (c) 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aha_isa.c,v 1.3 1998/10/10 00:44:12 imp Exp $  */
 end_comment
 
 begin_include
@@ -281,7 +281,7 @@ index|]
 operator|.
 name|addr
 expr_stmt|;
-comment|/* 		 * Ensure this port has not already been claimed already 		 * by a PCI or EISA adapter. 		 */
+comment|/* 		 * Ensure this port has not already been claimed already 		 * by a PCI, EISA or ISA adapter. 		 */
 if|if
 condition|(
 name|aha_check_probed_iop
@@ -292,7 +292,17 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * Make sure that we do not conflict with another device's 		 * I/O address. 		 */
+name|dev
+operator|->
+name|id_iobase
+operator|=
+name|aha_isa_ports
+index|[
+name|port_index
+index|]
+operator|.
+name|addr
+expr_stmt|;
 if|if
 condition|(
 name|haveseen_isadev
@@ -300,6 +310,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|CC_IOADDR
+operator||
+name|CC_QUIET
 argument_list|)
 condition|)
 continue|continue;
@@ -452,17 +464,6 @@ expr_stmt|;
 block|}
 name|dev
 operator|->
-name|id_iobase
-operator|=
-name|aha_isa_ports
-index|[
-name|port_index
-index|]
-operator|.
-name|addr
-expr_stmt|;
-name|dev
-operator|->
 name|id_irq
 operator|=
 operator|(
@@ -479,75 +480,6 @@ name|id_intr
 operator|=
 name|aha_isa_intr
 expr_stmt|;
-comment|/* 		 * OK, check to make sure that we're not stepping on 		 * someone else's IRQ or DRQ 		 */
-if|if
-condition|(
-name|haveseen_isadev
-argument_list|(
-name|dev
-argument_list|,
-name|CC_DRQ
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"aha_isa_probe: Aha card at I/O 0x%x's drq %d "
-literal|"conflicts, ignoring card.\n"
-argument_list|,
-name|dev
-operator|->
-name|id_iobase
-argument_list|,
-name|dev
-operator|->
-name|id_drq
-argument_list|)
-expr_stmt|;
-name|aha_free
-argument_list|(
-name|aha
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-if|if
-condition|(
-name|haveseen_isadev
-argument_list|(
-name|dev
-argument_list|,
-name|CC_IRQ
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"aha_isa_probe: Aha card at I/O 0x%x's irq %d "
-literal|"conflicts, ignoring card.\n"
-argument_list|,
-name|dev
-operator|->
-name|id_iobase
-argument_list|,
-name|config_data
-operator|.
-name|irq
-operator|+
-literal|9
-argument_list|)
-expr_stmt|;
-name|aha_free
-argument_list|(
-name|aha
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 name|aha_unit
 operator|++
 expr_stmt|;
