@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"acpi_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bus_if.h"
 end_include
 
@@ -770,20 +776,6 @@ name|acpi_BatteryIsPresent
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|BOOLEAN
-name|acpi_MatchHid
-parameter_list|(
-name|ACPI_HANDLE
-name|h
-parameter_list|,
-name|char
-modifier|*
-name|hid
 parameter_list|)
 function_decl|;
 end_function_decl
