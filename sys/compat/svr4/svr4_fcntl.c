@@ -2945,7 +2945,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"Setting flags 0x%x\n"
+literal|"Setting flags %p\n"
 operator|,
 name|SCARG
 argument_list|(

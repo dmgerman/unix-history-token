@@ -2975,7 +2975,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"TERM ioctl %x\n"
+literal|"TERM ioctl %lx\n"
 operator|,
 name|cmd
 operator|)

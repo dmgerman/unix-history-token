@@ -267,7 +267,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"imgact: text: %08x, data: %08x, bss: %08x\n"
+literal|"imgact: text: %08lx, data: %08lx, bss: %08lx\n"
 argument_list|,
 name|a_out
 operator|->
@@ -425,7 +425,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"imgact: Non page aligned binary %d\n"
+literal|"imgact: Non page aligned binary %lu\n"
 argument_list|,
 name|file_offset
 argument_list|)
@@ -623,7 +623,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"imgact: Page aligned binary %d\n"
+literal|"imgact: Page aligned binary %lu\n"
 argument_list|,
 name|file_offset
 argument_list|)
@@ -689,8 +689,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"imgact: startaddr=%08x, length=%08x\n"
+literal|"imgact: startaddr=%08lx, length=%08lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|vmaddr
 argument_list|,
 name|a_out
@@ -805,8 +808,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"imgact: bssaddr=%08x, length=%08x\n"
+literal|"imgact: bssaddr=%08lx, length=%08lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|vmaddr
 argument_list|,
 name|bss_size

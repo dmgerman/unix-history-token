@@ -1408,7 +1408,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"\tssa_handler = %lx\n"
+literal|"\tssa_handler = %p\n"
 operator|,
 name|nisa
 operator|->

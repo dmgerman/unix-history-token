@@ -387,7 +387,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"svr4_ioctl[%x](%d, _IO%s(%c, %d, %d), %p);\n"
+literal|"svr4_ioctl[%lx](%d, _IO%s(%c, %d, %d), %p);\n"
 operator|,
 name|SCARG
 argument_list|(
@@ -519,6 +519,11 @@ name|socket
 modifier|*
 name|so
 init|=
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|)
 name|fp
 operator|->
 name|f_data
@@ -661,6 +666,11 @@ name|socket
 modifier|*
 name|so
 init|=
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|)
 name|fp
 operator|->
 name|f_data

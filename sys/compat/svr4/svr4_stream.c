@@ -7700,7 +7700,7 @@ case|:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"I_PUSH %x\n"
+literal|"I_PUSH %p\n"
 operator|,
 name|dat
 operator|)
@@ -7714,6 +7714,11 @@ name|DEBUG_SVR4
 argument_list|)
 name|show_strbuf
 argument_list|(
+operator|(
+expr|struct
+name|svr4_strbuf
+operator|*
+operator|)
 name|dat
 argument_list|)
 expr_stmt|;
@@ -11158,6 +11163,9 @@ argument_list|,
 name|to
 argument_list|)
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|SCARG
 argument_list|(
 name|uap
