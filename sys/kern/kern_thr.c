@@ -1220,14 +1220,14 @@ operator|)
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
-name|tdsleeper
+name|td
 operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
-argument|tdsleeper->td_proc
+argument|td->td_proc
 argument_list|,
 argument|ttd
 argument_list|)
@@ -1249,7 +1249,7 @@ condition|)
 block|{
 name|PROC_UNLOCK
 argument_list|(
-name|tdsleeper
+name|td
 operator|->
 name|td_proc
 argument_list|)
@@ -1289,7 +1289,7 @@ argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|tdsleeper
+name|td
 operator|->
 name|td_proc
 argument_list|)
