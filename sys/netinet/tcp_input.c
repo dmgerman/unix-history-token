@@ -1561,11 +1561,6 @@ name|needoutput
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|iss
-init|=
-literal|0
-decl_stmt|;
 name|u_long
 name|tiwin
 decl_stmt|;
@@ -5777,13 +5772,6 @@ name|rcv_nxt
 argument_list|)
 condition|)
 block|{
-name|iss
-operator|=
-name|tcp_new_isn
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|tp
 operator|=
 name|tcp_close
