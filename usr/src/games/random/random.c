@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guy Harris at Network Appliance Corp.  *  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guy Harris at Network Appliance Corp.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	8.1 (Berkeley) %G%"
+literal|"@(#)random.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
