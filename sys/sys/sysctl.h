@@ -628,7 +628,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 },			 \ 		nbr, kind, a1, a2, #name, handler, fmt };		 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name);
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 },			 \ 		nbr, kind, a1, a2, #name, handler, fmt, 0 };		 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name);
 end_define
 
 begin_define

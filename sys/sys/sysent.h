@@ -381,7 +381,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|static struct syscall_module_data name##_syscall_mod = {       \        evh, arg, offset, new_sysent                            \ };                                                             \                                                                \ static moduledata_t name##_mod = {                             \        #name,                                                  \        syscall_module_handler,                                 \&name##_syscall_mod                                     \ };                                                             \ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|static struct syscall_module_data name##_syscall_mod = {       \        evh, arg, offset, new_sysent, { 0, NULL }               \ };                                                             \                                                                \ static moduledata_t name##_mod = {                             \        #name,                                                  \        syscall_module_handler,                                 \&name##_syscall_mod                                     \ };                                                             \ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_define
