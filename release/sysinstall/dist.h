@@ -261,77 +261,77 @@ begin_define
 define|#
 directive|define
 name|DIST_XF86_LIB
-value|0x0004
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_DOC
-value|0x0008
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_MAN
-value|0x0010
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_PROG
-value|0x0020
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_LINK
-value|0x0040
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_PEX
-value|0x0080
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_LBX
-value|0x0100
+value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_XINIT
-value|0x0200
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_XDMCF
-value|0x0400
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_SRC
-value|0x0800
+value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_SERVER
-value|0x1000
+value|0x0800
 end_define
 
 begin_define
@@ -415,7 +415,7 @@ begin_define
 define|#
 directive|define
 name|DIST_XF86_FONTS
-value|0x2000
+value|0x1000
 end_define
 
 begin_define
