@@ -3703,17 +3703,6 @@ operator||=
 name|IFA_ROUTE
 expr_stmt|;
 block|}
-comment|/* XXX check if the subnet route points to the same interface */
-if|if
-condition|(
-name|error
-operator|==
-name|EEXIST
-condition|)
-name|error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * If the interface supports multicast, join the "all hosts" 	 * multicast group on that interface. 	 */
 if|if
 condition|(
