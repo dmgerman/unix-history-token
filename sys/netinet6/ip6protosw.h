@@ -109,7 +109,7 @@ begin_struct
 struct|struct
 name|ip6protosw
 block|{
-name|int
+name|short
 name|pr_type
 decl_stmt|;
 comment|/* socket type used for */
