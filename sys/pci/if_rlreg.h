@@ -3094,6 +3094,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_RDESC_STAT_ERRS
+value|(RL_RDESC_STAT_GIANT|RL_RDESC_STAT_RUNT| \ 				 RL_RDESC_STAT_CRCERR)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_RDESC_VLANCTL_TAG
 value|0x00010000
 end_define
@@ -3222,8 +3229,36 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * Tx/Rx count must be equal.  Shared code like re_dma_map_desc assumes this.  */
+comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * Tx/Rx count must be equal.  Shared code like re_dma_map_desc assumes this.  * Buffers must be a multiple of 8 bytes.  Currently limit to 64 descriptors  * due to the 8139C+.  We need to put the number of descriptors in the ring  * structure and use that value instead.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|RE_FIXUP_RX
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3309,6 +3344,50 @@ comment|/*>> 3*/
 value|)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RE_FIXUP_RX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RE_ETHER_ALIGN
+value|sizeof(uint64_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RE_RX_DESC_BUFLEN
+value|(MCLBYTES - RE_ETHER_ALIGN)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RE_ETHER_ALIGN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RE_RX_DESC_BUFLEN
+value|MCLBYTES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -3329,11 +3408,15 @@ parameter_list|)
 value|((uint64_t) (y)>> 32)
 end_define
 
+begin_comment
+comment|/* see comment in dev/re/if_re.c */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RL_JUMBO_FRAMELEN
-value|9018
+value|7440
 end_define
 
 begin_define
