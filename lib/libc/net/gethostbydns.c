@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethnamaddr.c,v 4.9.1.19 1994/07/22 08:42:54 vixie Exp $"
+literal|"$Id: gethostbydns.c,v 1.1 1994/09/25 02:12:05 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1492,9 +1492,6 @@ name|hostbuf
 index|]
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1510,8 +1507,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|had_error
 operator|++
 expr_stmt|;
@@ -1894,9 +1889,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1910,8 +1902,6 @@ argument_list|(
 literal|"res_search failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|NULL
@@ -2081,9 +2071,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -2097,8 +2084,6 @@ argument_list|(
 literal|"res_query failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|NULL

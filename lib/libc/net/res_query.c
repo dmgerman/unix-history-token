@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 4.9.1.13 1994/06/11 22:05:04 vixie Exp $"
+literal|"$Id: res_query.c,v 1.2 1994/09/25 02:12:41 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,9 +308,6 @@ operator|-
 literal|1
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -330,8 +327,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|n
 operator|=
 name|res_mkquery
@@ -365,9 +360,6 @@ operator|<=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -381,8 +373,6 @@ argument_list|(
 literal|";; res_query: mkquery failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|h_errno
 operator|=
 name|NO_RECOVERY
@@ -413,9 +403,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -429,8 +416,6 @@ argument_list|(
 literal|";; res_query: send error\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|h_errno
 operator|=
 name|TRY_AGAIN
@@ -459,9 +444,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -486,8 +468,6 @@ name|ancount
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|hp
@@ -1132,9 +1112,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1160,8 +1137,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|domain

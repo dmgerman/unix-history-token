@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getnetbydns.c,v 1.1 1994/09/25 02:12:20 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1111,9 +1111,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1127,8 +1124,6 @@ argument_list|(
 literal|"res_query failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|NULL
@@ -1262,9 +1257,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1278,8 +1270,6 @@ argument_list|(
 literal|"res_query failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;

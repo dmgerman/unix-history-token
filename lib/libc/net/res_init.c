@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 4.9.1.12 1994/06/11 22:05:04 vixie Exp $"
+literal|"$Id: res_init.c,v 1.2 1994/09/25 02:12:36 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1542,9 +1542,6 @@ name|pp
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1589,9 +1586,6 @@ literal|";;\t..END..\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/*DEBUG*/
 endif|#
 directive|endif
 comment|/*!RFC1535*/
@@ -1661,9 +1655,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1683,8 +1674,6 @@ name|source
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 while|while
 condition|(
 operator|*
@@ -1759,9 +1748,6 @@ name|ndots
 operator|=
 name|RES_MAXNDOTS
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1781,8 +1767,6 @@ name|ndots
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
@@ -1803,9 +1787,6 @@ literal|1
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 operator|!
@@ -1839,8 +1820,6 @@ argument_list|(
 literal|";;\tdebug\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{

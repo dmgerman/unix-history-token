@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 4.9.1.7 1994/06/01 21:09:58 vixie Exp $"
+literal|"$Id: res_mkquery.c,v 1.2 1994/09/25 02:12:38 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,9 +192,6 @@ modifier|*
 modifier|*
 name|lastdnptr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -216,8 +213,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize header fields. 	 */
 if|if
 condition|(
