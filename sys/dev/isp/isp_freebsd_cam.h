@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd_cam.h,v 1.15 1999/03/17 05:04:39 mjacob Exp $ */
+comment|/* $Id: isp_freebsd_cam.h,v 1.16 1999/03/25 22:52:45 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_25_99 */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -203,6 +203,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SCSI_QFULL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SCSI_QFULL
+value|SCSI_STATUS_QUEUE_FULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -232,6 +250,16 @@ name|struct
 name|cam_path
 modifier|*
 name|path
+decl_stmt|;
+name|struct
+name|cam_sim
+modifier|*
+name|sim2
+decl_stmt|;
+name|struct
+name|cam_path
+modifier|*
+name|path2
 decl_stmt|;
 specifier|volatile
 name|char
@@ -267,6 +295,20 @@ define|#
 directive|define
 name|isp_path
 value|isp_osinfo.path
+end_define
+
+begin_define
+define|#
+directive|define
+name|isp_sim2
+value|isp_osinfo.sim2
+end_define
+
+begin_define
+define|#
+directive|define
+name|isp_path2
+value|isp_osinfo.path2
 end_define
 
 begin_define
@@ -437,6 +479,16 @@ parameter_list|(
 name|ccb
 parameter_list|)
 value|(ccb)->ccb_h.target_id
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CHANNEL
+parameter_list|(
+name|ccb
+parameter_list|)
+value|cam_sim_bus(xpt_path_sim((ccb)->ccb_h.path))
 end_define
 
 begin_define
