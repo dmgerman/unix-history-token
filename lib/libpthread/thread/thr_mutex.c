@@ -2496,7 +2496,7 @@ name|m_data
 operator|.
 name|m_count
 operator|>
-literal|1
+literal|0
 operator|)
 condition|)
 block|{
@@ -2720,7 +2720,7 @@ name|m_data
 operator|.
 name|m_count
 operator|>
-literal|1
+literal|0
 operator|)
 condition|)
 block|{
@@ -3050,7 +3050,7 @@ name|m_data
 operator|.
 name|m_count
 operator|>
-literal|1
+literal|0
 operator|)
 condition|)
 block|{
