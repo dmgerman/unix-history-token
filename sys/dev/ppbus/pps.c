@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.2 1998/02/13 17:35:33 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.3 1998/02/15 14:54:09 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -454,33 +454,6 @@ literal|0600
 argument_list|,
 name|PPS_NAME
 literal|"%d"
-argument_list|,
-name|dev
-operator|->
-name|id_unit
-argument_list|)
-expr_stmt|;
-name|devfs_add_devswf
-argument_list|(
-operator|&
-name|pps_cdevsw
-argument_list|,
-name|dev
-operator|->
-name|id_unit
-operator||
-name|LP_BYPASS
-argument_list|,
-name|DV_CHR
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-name|PPS_NAME
-literal|"%d.ctl"
 argument_list|,
 name|dev
 operator|->
