@@ -68,18 +68,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* Number of pages allocated for startup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_WORKING_TIME
-value|20
-end_define
-
-begin_comment
-comment|/* Seconds worth of items to keep */
+comment|/* Pages allocated for startup */
 end_comment
 
 begin_comment
@@ -496,14 +485,6 @@ name|u_int32_t
 name|uz_maxpages
 decl_stmt|;
 comment|/* Maximum number of pages to alloc */
-name|u_int64_t
-name|uz_oallocs
-decl_stmt|;
-comment|/* old allocs count */
-name|u_int64_t
-name|uz_wssize
-decl_stmt|;
-comment|/* Working set size */
 name|int
 name|uz_recurse
 decl_stmt|;

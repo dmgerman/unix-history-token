@@ -349,7 +349,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is the handle used to schedule our working set calculator */
+comment|/*  * This is the handle used to schedule events that need to happen  * outside of the allocation fast path.  */
 end_comment
 
 begin_decl_stmt
@@ -359,6 +359,17 @@ name|callout
 name|uma_callout
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|UMA_TIMEOUT
+value|20
+end_define
+
+begin_comment
+comment|/* Seconds for callout interval. */
+end_comment
 
 begin_comment
 comment|/* This is mp_maxid + 1, for use while looping over each cpu */
@@ -579,8 +590,6 @@ name|void
 name|cache_drain
 parameter_list|(
 name|uma_zone_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -593,18 +602,6 @@ parameter_list|(
 name|uma_zone_t
 parameter_list|,
 name|uma_bucket_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|zone_drain_common
-parameter_list|(
-name|uma_zone_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -897,7 +894,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|zone_drain
 parameter_list|(
@@ -1365,7 +1361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Routine called by timeout which is used to fire off some time interval  * based calculations.  (working set, stats, etc.)  *  * Arguments:  *	arg   Unused  *   * Returns:  *	Nothing  */
+comment|/*  * Routine called by timeout which is used to fire off some time interval  * based calculations.  (stats, hash size, etc.)  *  * Arguments:  *	arg   Unused  *   * Returns:  *	Nothing  */
 end_comment
 
 begin_function
@@ -1392,7 +1388,7 @@ argument_list|(
 operator|&
 name|uma_callout
 argument_list|,
-name|UMA_WORKING_TIME
+name|UMA_TIMEOUT
 operator|*
 name|hz
 argument_list|,
@@ -1405,7 +1401,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Routine to perform timeout driven calculations.  This does the working set  * as well as hash expanding, and per cpu statistics aggregation.  *  *  Arguments:  *	zone  The zone to operate on  *  *  Returns:  *	Nothing  */
+comment|/*  * Routine to perform timeout driven calculations.  This expands the  * hashes and does per cpu statistics aggregation.  *  *  Arguments:  *	zone  The zone to operate on  *  *  Returns:  *	Nothing  */
 end_comment
 
 begin_function
@@ -1627,31 +1623,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Here we compute the working set size as the total number of items  	 * left outstanding since the last time interval.  This is slightly 	 * suboptimal. What we really want is the highest number of outstanding 	 * items during the last time quantum.  This should be close enough. 	 * 	 * The working set size is used to throttle the zone_drain function. 	 * We don't want to return memory that we may need again immediately. 	 */
-name|alloc
-operator|=
-name|zone
-operator|->
-name|uz_allocs
-operator|-
-name|zone
-operator|->
-name|uz_oallocs
-expr_stmt|;
-name|zone
-operator|->
-name|uz_oallocs
-operator|=
-name|zone
-operator|->
-name|uz_allocs
-expr_stmt|;
-name|zone
-operator|->
-name|uz_wssize
-operator|=
-name|alloc
-expr_stmt|;
 name|ZONE_UNLOCK
 argument_list|(
 name|zone
@@ -2160,7 +2131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drains the per cpu caches for a zone.  *  * Arguments:  *	zone     The zone to drain, must be unlocked.  *	destroy  Whether or not to destroy the pcpu buckets (from zone_dtor)  *  * Returns:  *	Nothing  *  * This function returns with the zone locked so that the per cpu queues can  * not be filled until zone_drain is finished.  */
+comment|/*  * Drains the per cpu caches for a zone.  *  * Arguments:  *	zone     The zone to drain, must be unlocked.  *  * Returns:  *	Nothing  */
 end_comment
 
 begin_function
@@ -2170,9 +2141,6 @@ name|cache_drain
 parameter_list|(
 name|uma_zone_t
 name|zone
-parameter_list|,
-name|int
-name|destroy
 parameter_list|)
 block|{
 name|uma_bucket_t
@@ -2184,13 +2152,7 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-comment|/* 	 * Flush out the per cpu queues. 	 * 	 * XXX This causes unnecessary thrashing due to immediately having 	 * empty per cpu queues.  I need to improve this. 	 */
 comment|/* 	 * We have to lock each cpu cache before locking the zone 	 */
-name|ZONE_UNLOCK
-argument_list|(
-name|zone
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|cpu
@@ -2248,11 +2210,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|destroy
-condition|)
-block|{
-if|if
-condition|(
 name|cache
 operator|->
 name|uc_allocbucket
@@ -2291,7 +2248,6 @@ name|uc_freebucket
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Drain the bucket queues and free the buckets, we just keep two per 	 * cpu (alloc/free). 	 */
 name|ZONE_LOCK
@@ -2377,7 +2333,6 @@ name|bucket
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We unlock here, but they will all block until the zone is unlocked */
 for|for
 control|(
 name|cpu
@@ -2406,23 +2361,25 @@ name|cpu
 argument_list|)
 expr_stmt|;
 block|}
+name|ZONE_UNLOCK
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Frees pages from a zone back to the system.  This is done on demand from  * the pageout daemon.  *  * Arguments:  *	zone  The zone to free pages from  *	 all  Should we drain all items?  *   destroy  Whether to destroy the zone and pcpu buckets (from zone_dtor)  *  * Returns:  *	Nothing.  */
+comment|/*  * Frees pages from a zone back to the system.  This is done on demand from  * the pageout daemon.  *  * Arguments:  *	zone  The zone to free pages from  *	 all  Should we drain all items?  *  * Returns:  *	Nothing.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|zone_drain_common
+name|zone_drain
 parameter_list|(
 name|uma_zone_t
 name|zone
-parameter_list|,
-name|int
-name|destroy
 parameter_list|)
 block|{
 name|struct
@@ -2436,9 +2393,6 @@ name|slab
 decl_stmt|;
 name|uma_slab_t
 name|n
-decl_stmt|;
-name|u_int64_t
-name|extra
 decl_stmt|;
 name|u_int8_t
 name|flags
@@ -2471,66 +2425,16 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|zone
-operator|->
-name|uz_flags
-operator|&
-name|UMA_ZFLAG_INTERNAL
-operator|)
-condition|)
-name|cache_drain
-argument_list|(
-name|zone
-argument_list|,
-name|destroy
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|destroy
-condition|)
-name|zone
-operator|->
-name|uz_wssize
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|zone
-operator|->
-name|uz_free
-operator|<
-name|zone
-operator|->
-name|uz_wssize
-condition|)
-goto|goto
-name|finished
-goto|;
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG
 name|printf
 argument_list|(
-literal|"%s working set size: %llu free items: %u\n"
+literal|"%s free items: %u\n"
 argument_list|,
 name|zone
 operator|->
 name|uz_name
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|zone
-operator|->
-name|uz_wssize
 argument_list|,
 name|zone
 operator|->
@@ -2539,26 +2443,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|extra
-operator|=
+if|if
+condition|(
 name|zone
 operator|->
 name|uz_free
-operator|-
-name|zone
-operator|->
-name|uz_wssize
-expr_stmt|;
-name|extra
-operator|/=
-name|zone
-operator|->
-name|uz_ipers
-expr_stmt|;
-comment|/* extra is now the number of extra slabs that we can free */
-if|if
-condition|(
-name|extra
 operator|==
 literal|0
 condition|)
@@ -2578,8 +2467,6 @@ expr_stmt|;
 while|while
 condition|(
 name|slab
-operator|&&
-name|extra
 condition|)
 block|{
 name|n
@@ -2665,9 +2552,6 @@ expr_stmt|;
 name|slab
 operator|=
 name|n
-expr_stmt|;
-name|extra
-operator|--
 expr_stmt|;
 block|}
 name|finished
@@ -2872,26 +2756,6 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|zone_drain
-parameter_list|(
-name|uma_zone_t
-name|zone
-parameter_list|)
-block|{
-name|zone_drain_common
-argument_list|(
-name|zone
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4517,6 +4381,22 @@ name|uma_zone_t
 operator|)
 name|arg
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|zone
+operator|->
+name|uz_flags
+operator|&
+name|UMA_ZFLAG_INTERNAL
+operator|)
+condition|)
+name|cache_drain
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4530,11 +4410,9 @@ argument_list|,
 name|uz_link
 argument_list|)
 expr_stmt|;
-name|zone_drain_common
+name|zone_drain
 argument_list|(
 name|zone
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -5090,7 +4968,7 @@ argument_list|(
 operator|&
 name|uma_callout
 argument_list|,
-name|UMA_WORKING_TIME
+name|UMA_TIMEOUT
 operator|*
 name|hz
 argument_list|,
@@ -7852,11 +7730,9 @@ name|zone_drain
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some slabs may have been freed but this zone will be visited early 	 * we visit again so that we can free pages that are empty once other 	 * zones are drained.  We have to do the same for buckets. 	 */
-name|zone_drain_common
+name|zone_drain
 argument_list|(
 name|slabzone
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|bucket_zone_drain
