@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.25 2000/05/11 05:28:47 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.26 2001/01/09 06:37:42 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<dev/vinum/vinumstate.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_comment
@@ -171,7 +177,7 @@ init|=
 literal|64
 block|,
 comment|/* maximum length of any name */
-comment|/*  * Define a minor device number.  * This is not used directly; instead, it's  * called by the other macros.  */
+comment|/*      * Define a minor device number.      * This is not used directly; instead, it's      * called by the other macros.      */
 define|#
 directive|define
 name|VINUMMINOR
@@ -184,7 +190,7 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|( (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT) 		\ 			      | (t<< VINUM_TYPE_SHIFT) )
+value|( (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT)		\ 			      | (t<< VINUM_TYPE_SHIFT) )
 comment|/* Create device minor numbers */
 define|#
 directive|define
@@ -205,14 +211,14 @@ name|VINUM_PLEX
 parameter_list|(
 name|p
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
+value|makedev (VINUM_CDEV_MAJOR,				\ 				 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 				 | (p& 0xff)				\ 				 | ((p& ~0xff)<< 8) )
 define|#
 directive|define
 name|VINUM_SD
 parameter_list|(
 name|s
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
+value|makedev (VINUM_CDEV_MAJOR,				\ 				 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 				 | (s& 0xff)				\ 				 | ((s& ~0xff)<< 8) )
 comment|/* Create a bit mask for x bits */
 define|#
 directive|define
@@ -230,7 +236,7 @@ name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			  | ((d& ~MASK (VINUM_VOL_WIDTH))			\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH)) 		\ 			  | (t<< VINUM_TYPE_SHIFT) )
+value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			  | ((d& ~MASK (VINUM_VOL_WIDTH))			\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH))		\ 			  | (t<< VINUM_TYPE_SHIFT) )
 define|#
 directive|define
 name|VINUMRBDEV
@@ -248,7 +254,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((minor (x)>> VINUM_TYPE_SHIFT)& 7)
-comment|/*  * This mess is used to catch people who compile  * a debug vinum(8) and non-debug kernel module,  * or the other way round.  */
+comment|/*      * This mess is used to catch people who compile      * a debug vinum(8) and non-debug kernel module,      * or the other way round.      */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -318,7 +324,7 @@ init|=
 literal|8
 block|,
 comment|/* number of entries in plex region tables */
-name|INITIAL_LOCKS
+name|PLEX_LOCKS
 init|=
 literal|256
 block|,
@@ -1260,10 +1266,10 @@ name|volplexno
 decl_stmt|;
 comment|/* number of plex in volume */
 comment|/* Lock information */
-name|int
-name|alloclocks
+name|struct
+name|mtx
+name|lockmtx
 decl_stmt|;
-comment|/* number of locks allocated */
 name|int
 name|usedlocks
 decl_stmt|;
