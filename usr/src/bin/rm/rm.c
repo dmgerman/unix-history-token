@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	8.6 (Berkeley) %G%"
+literal|"@(#)rm.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -768,7 +768,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|unwhiteout
+name|undelete
 argument_list|(
 name|p
 operator|->
@@ -1027,7 +1027,7 @@ argument_list|)
 condition|)
 name|rval
 operator|=
-name|unwhiteout
+name|undelete
 argument_list|(
 name|f
 argument_list|)
