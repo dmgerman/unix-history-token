@@ -347,8 +347,6 @@ parameter_list|)
 block|{
 name|off_t
 name|start
-decl_stmt|,
-name|end
 decl_stmt|;
 name|map_t
 modifier|*
@@ -386,23 +384,12 @@ literal|"  %*s"
 argument_list|,
 name|lbawidth
 argument_list|,
-literal|"end"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  %*s"
-argument_list|,
-name|lbawidth
-argument_list|,
 literal|"size"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %s\n"
-argument_list|,
-literal|"contents"
+literal|"  index  contents\n"
 argument_list|)
 expr_stmt|;
 name|m
@@ -417,18 +404,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|end
-operator|=
-name|m
-operator|->
-name|map_start
-operator|+
-name|m
-operator|->
-name|map_size
-operator|-
-literal|1
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"  %*llu"
@@ -454,22 +429,42 @@ operator|(
 name|long
 name|long
 operator|)
-name|end
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  %*llu"
-argument_list|,
-name|lbawidth
-argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|m
 operator|->
 name|map_size
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|map_index
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%5d"
+argument_list|,
+name|m
+operator|->
+name|map_index
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"     "
 argument_list|)
 expr_stmt|;
 name|putchar

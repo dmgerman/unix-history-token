@@ -119,6 +119,12 @@ name|type
 expr_stmt|;
 name|m
 operator|->
+name|map_index
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
 name|map_data
 operator|=
 name|NULL
