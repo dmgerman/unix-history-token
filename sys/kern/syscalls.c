@@ -565,9 +565,9 @@ comment|/* 162 = nosys */
 literal|"#163"
 block|,
 comment|/* 163 = nosys */
-literal|"#164"
+literal|"uname"
 block|,
-comment|/* 164 = nosys */
+comment|/* 164 = uname */
 literal|"#165"
 block|,
 comment|/* 165 = nosys */

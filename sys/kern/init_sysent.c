@@ -1028,6 +1028,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|uname
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2306,11 +2313,11 @@ block|,
 name|nosys
 block|,
 comment|/* 163 = nosys */
-literal|0
+literal|1
 block|,
-name|nosys
+name|uname
 block|,
-comment|/* 164 = nosys */
+comment|/* 164 = uname */
 literal|0
 block|,
 name|nosys
