@@ -2307,7 +2307,7 @@ end_function
 begin_expr_stmt
 name|PAM_MODULE_ENTRY
 argument_list|(
-name|MODULE_NAME
+literal|"pam_ssh"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
