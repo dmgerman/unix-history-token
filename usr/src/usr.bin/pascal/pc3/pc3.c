@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc3.c 1.7 %G%"
+literal|"@(#)pc3.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,7 +93,15 @@ begin_decl_stmt
 name|int
 name|errors
 init|=
-literal|0
+name|NONE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|BOOL
+name|wflag
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -121,14 +129,73 @@ name|struct
 name|fileinfo
 name|ofile
 decl_stmt|;
-while|while
-condition|(
-operator|++
+for|for
+control|(
 name|argv
-operator|,
-operator|--
-name|argc
+operator|++
+init|;
+operator|*
+name|argv
+operator|!=
+literal|0
+operator|&&
+operator|*
+operator|*
+name|argv
+operator|==
+literal|'-'
+condition|;
+name|argv
+operator|++
+control|)
+block|{
+operator|(
+operator|*
+name|argv
+operator|)
+operator|++
+expr_stmt|;
+switch|switch
+condition|(
+operator|*
+operator|*
+name|argv
 condition|)
+block|{
+default|default:
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"pc3: bad flag -%c\n"
+argument_list|,
+operator|*
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+case|case
+literal|'w'
+case|:
+name|wflag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+for|for
+control|(
+comment|/* void */
+init|;
+operator|*
+name|argv
+operator|!=
+literal|0
+condition|;
+name|argv
+operator|++
+control|)
 block|{
 ifdef|#
 directive|ifdef
@@ -237,7 +304,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-name|WARNING
+name|ERROR
 argument_list|,
 literal|"cannot open: %s"
 argument_list|,
@@ -300,7 +367,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-name|WARNING
+name|ERROR
 argument_list|,
 literal|"cannot read header: %s"
 argument_list|,
@@ -404,7 +471,7 @@ block|{
 comment|/* not a file.o */
 name|error
 argument_list|(
-name|WARNING
+name|ERROR
 argument_list|,
 literal|"bad format: %s"
 argument_list|,
@@ -550,7 +617,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-name|WARNING
+name|ERROR
 argument_list|,
 literal|"error reading struct exec: %s"
 argument_list|,
@@ -1602,10 +1669,23 @@ name|pfilep
 expr_stmt|;
 return|return;
 block|}
-comment|/* 			     *	something is wrong 			     */
+comment|/* 			     *	something is wrong 			     *	if it's not resolved, use the header file 			     *	otherwise, it's just a regular error 			     */
+if|if
+condition|(
+name|symbolp
+operator|->
+name|sym_un
+operator|.
+name|sym_str
+operator|.
+name|rfilep
+operator|==
+name|NIL
+condition|)
+block|{
 name|error
 argument_list|(
-name|WARNING
+name|ERROR
 argument_list|,
 literal|"%s, line %d: %s already defined (%s, line %d)."
 argument_list|,
@@ -1643,6 +1723,8 @@ name|iline
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+break|break;
 case|case
 name|N_PGFUNC
 case|:
@@ -1704,7 +1786,7 @@ block|}
 comment|/* 		 *	this is the breaks 		 */
 name|error
 argument_list|(
-name|WARNING
+name|ERROR
 argument_list|,
 literal|"%s, line %d: %s already defined (%s, line %d)."
 argument_list|,
@@ -2891,7 +2973,7 @@ end_comment
 begin_macro
 name|error
 argument_list|(
-argument|fatal
+argument|type
 argument_list|,
 argument|message
 argument_list|,
@@ -2911,7 +2993,7 @@ end_macro
 
 begin_decl_stmt
 name|int
-name|fatal
+name|type
 decl_stmt|;
 end_decl_stmt
 
@@ -2924,6 +3006,27 @@ end_decl_stmt
 
 begin_block
 block|{
+name|errors
+operator|=
+name|type
+operator|>
+name|errors
+condition|?
+name|type
+else|:
+name|errors
+expr_stmt|;
+if|if
+condition|(
+name|wflag
+operator|&&
+name|type
+operator|==
+name|WARNING
+condition|)
+block|{
+return|return;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -2933,6 +3036,54 @@ argument_list|,
 name|program
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|WARNING
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ERROR
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Error: "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|FATAL
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Fatal: "
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Ooops: "
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -2961,21 +3112,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fatal
+name|type
 operator|==
 name|FATAL
 condition|)
 block|{
 name|exit
 argument_list|(
-literal|2
+name|FATAL
 argument_list|)
 expr_stmt|;
 block|}
-name|errors
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_block
 
@@ -3030,7 +3177,7 @@ name|error
 argument_list|(
 name|WARNING
 argument_list|,
-literal|"%s: cannot open"
+literal|"%s: cannot stat"
 argument_list|,
 name|filename
 argument_list|)

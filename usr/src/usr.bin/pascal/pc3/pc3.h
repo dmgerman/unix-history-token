@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	static	char sccsid[] = "@(#)pc3.h 1.3 %G%"; */
+comment|/*	static	char sccsid[] = "@(#)pc3.h 1.4 %G%"; */
 end_comment
 
 begin_comment
@@ -242,7 +242,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FATAL
+name|NONE
 value|0
 end_define
 
@@ -251,6 +251,20 @@ define|#
 directive|define
 name|WARNING
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERROR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FATAL
+value|3
 end_define
 
 begin_comment
