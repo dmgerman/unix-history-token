@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.53 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.54 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.53 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.54 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -829,7 +829,7 @@ name|printctladdr
 argument_list|(
 name|NULL
 argument_list|,
-name|tfp
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1626,11 +1626,19 @@ condition|(
 name|a
 operator|==
 name|NULL
+operator|||
+name|tfp
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
 condition|(
 name|lastctladdr
+operator|!=
+name|NULL
+operator|&&
+name|tfp
 operator|!=
 name|NULL
 condition|)
@@ -2046,8 +2054,6 @@ expr_stmt|;
 comment|/* 	**  Make sure the alias database is open. 	*/
 name|initaliases
 argument_list|(
-name|AliasFile
-argument_list|,
 name|FALSE
 argument_list|,
 name|e
