@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.14 1995/05/10 08:03:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.15 1995/05/10 09:25:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -718,7 +718,10 @@ block|{
 if|if
 condition|(
 name|c
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|c
 operator|->
 name|flags
@@ -738,14 +741,33 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+operator|(
 name|c
+operator|->
+name|flags
+operator|&
+name|CHUNK_BSD_COMPAT
+operator|)
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"This region cannot be used for your root partition as\nthe FreeBSD boot code cannot deal with a root partition created in\nsuch a region.  Please choose another partition for this."
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+else|else
 name|c
 operator|->
 name|flags
 operator||=
 name|CHUNK_IS_ROOT
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1501,9 +1523,11 @@ index|[
 name|j
 index|]
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|num
+argument_list|,
+literal|10
 argument_list|,
 literal|"%4ldMB"
 argument_list|,
@@ -1557,6 +1581,18 @@ argument_list|(
 name|newfs
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|onestr
+index|[
+name|PART_NEWFS_COL
+operator|+
+name|strlen
+argument_list|(
+name|newfs
+argument_list|)
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|mvaddstr
 argument_list|(
@@ -1635,7 +1671,7 @@ argument_list|)
 expr_stmt|;
 name|addstr
 argument_list|(
-literal|"reverse video"
+literal|"reverse video."
 argument_list|)
 expr_stmt|;
 name|attrset
@@ -1649,7 +1685,7 @@ literal|22
 argument_list|,
 literal|0
 argument_list|,
-literal|"Use F1 or ? to get more help"
+literal|"Use F1 or ? to get more help, arrow keys to move."
 argument_list|)
 expr_stmt|;
 name|move
