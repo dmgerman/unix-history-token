@@ -908,14 +908,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|newbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|newbuf
-argument_list|)
 argument_list|,
 literal|"PORT %d,%d,%d,%d,%d,%d\r\n"
 argument_list|,

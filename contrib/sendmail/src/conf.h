@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)conf.h	8.380 (Berkeley) 11/9/1998  */
+comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)conf.h	8.372 (Berkeley) 6/4/98  */
 end_comment
 
 begin_comment
@@ -348,44 +348,6 @@ end_define
 begin_comment
 comment|/* max short string length */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MAX_MIME_HEADER_LENGTH
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAXMACNAMELEN
-value|25
-end_define
-
-begin_comment
-comment|/* max macro name length */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAXMACNAMELEN
-value|20
-end_define
-
-begin_comment
-comment|/* max macro name length */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/********************************************************************** **  Compilation options. **	#define these to 1 if they are available; **	#define them to 0 otherwise. **  All can be overridden from Makefile. **********************************************************************/
@@ -1852,13 +1814,6 @@ begin_comment
 comment|/* alternate field name */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SYSLOG_BUFSIZE
-value|512
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1900,6 +1855,13 @@ end_define
 begin_comment
 comment|/* pathconf(2) lies on NFS filesystems */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|512
+end_define
 
 begin_else
 else|#
@@ -3883,272 +3845,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* **  Apple Rhapsody **	Contributed by Wilfredo Sanchez<wsanchez@apple.com> */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__APPLE__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASFCHMOD
-value|1
-end_define
-
-begin_comment
-comment|/* has fchmod(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASFLOCK
-value|1
-end_define
-
-begin_comment
-comment|/* has flock(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASUNAME
-value|1
-end_define
-
-begin_comment
-comment|/* has uname(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASUNSETENV
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASSETSID
-value|1
-end_define
-
-begin_comment
-comment|/* has the setsid(2) POSIX syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASINITGROUPS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASSETVBUF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASSETREUID
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|USESETEUID
-value|1
-end_define
-
-begin_comment
-comment|/* has useable seteuid(2) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASLSTAT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASSETRLIMIT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASWAITPID
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASSTRERROR
-value|1
-end_define
-
-begin_comment
-comment|/* has strerror(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASSNPRINTF
-value|1
-end_define
-
-begin_comment
-comment|/* has snprintf(3) and vsnprintf(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USESTRERROR
-value|1
-end_define
-
-begin_comment
-comment|/* has strerror(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASGETDTABLESIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASGETUSERSHELL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NEEDGETOPT
-value|1
-end_define
-
-begin_comment
-comment|/* need a replacement for getopt(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSD4_4_SOCKADDR
-end_define
-
-begin_comment
-comment|/* has sa_len */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETLINK
-value|1
-end_define
-
-begin_comment
-comment|/* supports AF_LINK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAS_ST_GEN
-value|1
-end_define
-
-begin_comment
-comment|/* has st_gen field in stat struct */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GIDSET_T
-value|gid_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|LA_TYPE
-value|LA_SUBR
-end_define
-
-begin_comment
-comment|/* use getloadavg(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFS_TYPE
-value|SFS_MOUNT
-end_define
-
-begin_comment
-comment|/* use<sys/mount.h> statfs() impl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPT_TYPE
-value|SPT_PSSTRINGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPT_PADCHAR
-value|'\0'
-end_define
-
-begin_comment
-comment|/* pad process title with nulls */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ERRLIST_PREDEFINED
-end_define
-
-begin_comment
-comment|/* don't declare sys_errlist */
-end_comment
 
 begin_endif
 endif|#
@@ -7448,7 +7144,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[07/21/98 @ 11:47:34 AM (Tuesday)] **	sendmail 8.9.1		bind-8.1.2		db-2.4.14 **	gcc-2.8.1		glibc-2.0.94		linux-2.1.109 ** **  NOTE: Override HASFLOCK as you will but, as of 1.99.6, mixed-style ** 	file locking is no longer allowed.  In particular, make sure **	your DBM library and sendmail are both using either flock(2) **	*or* fcntl(2) file locking, but not both. */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[06/10/96 @ 09:21:40 PM (Monday)] **	sendmail 8.8-a4		named bind-4.9.4-T4B	db-1.85 **	gcc 2.7.2		libc-5.3.12		linux 2.0.0 ** **  NOTE: Override HASFLOCK as you will but, as of 1.99.6, mixed-style ** 	file locking is no longer allowed.  In particular, make sure **	your DBM library and sendmail are both using either flock(2) **	*or* fcntl(2) file locking, but not both. */
 end_comment
 
 begin_ifdef
@@ -7466,17 +7162,6 @@ end_define
 
 begin_comment
 comment|/* include BSD defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USESETEUID
-value|0
-end_define
-
-begin_comment
-comment|/* Have it due to POSIX, but doesn't work */
 end_comment
 
 begin_define
@@ -7707,7 +7392,7 @@ begin_define
 define|#
 directive|define
 name|TZ_TYPE
-value|TZ_TZNAME
+value|TZ_TNAME
 end_define
 
 begin_include
@@ -8874,169 +8559,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  System V Rel 5.x (a.k.a Unixware7 w/o BSD-Compatiblity Libs ie. native) ** **	Contributed by Paul Gampe<paulg@apnic.net> */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__svr5__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/mkdev.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|__svr4__
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS5SIGNALS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASSETSID
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASSETREUID
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASWAITPID
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASGETDTABLESIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|GIDSET_T
-value|gid_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCKADDR_LEN_T
-value|size_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOCKOPT_LEN_T
-value|size_t
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_UNIX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_UNIX
-value|"/stand/unix"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|SPT_PADCHAR
-value|'\0'
-end_define
-
-begin_comment
-comment|/* pad process title with nulls */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYSLOG_BUFSIZE
-value|1024
-end_define
-
-begin_comment
-comment|/* unsure */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_VENDOR_CF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_VENDOR_CF
-value|"/etc/sendmail.cf"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILPID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILPID
-value|"/etc/sendmail.pid"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ###################################################################### */
-end_comment
-
-begin_comment
 comment|/* **  UnixWare 2.x */
 end_comment
 
@@ -9174,23 +8696,12 @@ directive|undef
 name|WEXITSTATUS
 end_undef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_UNIX
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|_PATH_UNIX
 value|"/unix"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

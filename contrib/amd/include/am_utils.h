@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_utils.h,v 1.2 1998/12/27 06:25:23 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_utils.h,v 1.1 1996/01/13 23:23:39 ezk Exp ezk $  *  */
 end_comment
 
 begin_comment
@@ -687,7 +687,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* Permanent error has occurred */
+comment|/* Permanent error has occured */
 end_comment
 
 begin_define
@@ -1939,7 +1939,7 @@ comment|/* Stale NFS handles */
 name|int
 name|d_mok
 decl_stmt|;
-comment|/* Successful mounts */
+comment|/* Succesful mounts */
 name|int
 name|d_merr
 decl_stmt|;
@@ -2258,7 +2258,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Dummy authorization for remote servers */
+comment|/* Dummy uthorisation for remote servers */
 end_comment
 
 begin_decl_stmt
@@ -2346,115 +2346,29 @@ begin_comment
 comment|/* Name of subsidiary connected network */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|extern char *progname;
-comment|/* "amd" */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|void
-name|am_set_progname
-parameter_list|(
-name|char
-modifier|*
-name|pn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* "amd" */
-end_comment
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|am_get_progname
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* "amd" */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|am_set_hostname
-parameter_list|(
-name|char
-modifier|*
-name|hn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|am_get_hostname
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|pid_t
-name|am_set_mypid
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
-name|pid_t
-name|am_mypid
+name|char
+modifier|*
+name|progname
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_comment
+comment|/* "amd"|"mmd" */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|hostname
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|extern char hostname[];
 comment|/* "kiska" */
 end_comment
-
-begin_comment
-unit|extern pid_t mypid;
-comment|/* Current process id */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2539,6 +2453,17 @@ name|int
 name|xlog_level_init
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|pid_t
+name|mypid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current process id */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -3242,19 +3167,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|mapc_type_exists
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|mkdirs
 parameter_list|(
 name|char
@@ -3419,10 +3331,6 @@ name|switch_to_logfile
 parameter_list|(
 name|char
 modifier|*
-name|logfile
-parameter_list|,
-name|int
-name|orig_umask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5640,7 +5548,7 @@ comment|/* HAVE_AM_FS_LINK */
 end_comment
 
 begin_comment
-comment|/*  * Symbolic-link file system, which also checks that the target of  * the symlink exists.  * A "filesystem" which is just a symbol link.  */
+comment|/*  * Symbolic-link file syste, which also checks that the target of  * the symlink exists.  * A "filesystem" which is just a symbol link.  */
 end_comment
 
 begin_ifdef
@@ -6117,7 +6025,6 @@ name|debug_option
 parameter_list|(
 name|char
 modifier|*
-name|opt
 parameter_list|)
 function_decl|;
 end_function_decl

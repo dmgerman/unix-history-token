@@ -4,7 +4,7 @@ comment|/*	simpleHTTPd (C) 1998 netSTOR Technologies, Inc. ("netSTOR") 	FreeBSD 
 end_comment
 
 begin_comment
-comment|/*  * $Id: simple_httpd.c,v 1.1.1.1 1998/08/27 17:38:45 abial Exp $  */
+comment|/*  * $Id: simple_httpd.c,v 1.1 1998/08/19 16:24:06 abial Exp $  */
 end_comment
 
 begin_include
@@ -96,13 +96,6 @@ include|#
 directive|include
 file|<sys/wait.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|LOGDIR
-value|"/var/log"
-end_define
 
 begin_decl_stmt
 name|int
@@ -631,8 +624,7 @@ name|strcpy
 argument_list|(
 name|logfile
 argument_list|,
-name|LOGDIR
-literal|"/jhttpd.log"
+literal|"/usr/adm/jhttpd.log"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1765,23 +1757,7 @@ name|sprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%4d/%02d/%02d %02d:%02d:%02d"
-argument_list|,
-name|t
-operator|->
-name|tm_year
-operator|+
-literal|1900
-argument_list|,
-name|t
-operator|->
-name|tm_mon
-operator|+
-literal|1
-argument_list|,
-name|t
-operator|->
-name|tm_mday
+literal|"%02d:%02d:%02d %02d/%02d/%02d"
 argument_list|,
 name|t
 operator|->
@@ -1794,6 +1770,20 @@ argument_list|,
 name|t
 operator|->
 name|tm_sec
+argument_list|,
+name|t
+operator|->
+name|tm_mday
+argument_list|,
+name|t
+operator|->
+name|tm_mon
+operator|+
+literal|1
+argument_list|,
+name|t
+operator|->
+name|tm_year
 argument_list|)
 expr_stmt|;
 return|return

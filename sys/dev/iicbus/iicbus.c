@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iicbus.c,v 1.6 1998/12/07 21:58:16 archie Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iicbus.c,v 1.1.2.7 1998/08/29 16:54:16 son Exp $  *  */
 end_comment
 
 begin_comment
@@ -100,10 +100,6 @@ name|iicd_addr
 decl_stmt|;
 comment|/* address of the device */
 name|int
-name|iicd_waitack
-decl_stmt|;
-comment|/* wait for ack timeout or delay */
-name|int
 name|iicd_alive
 decl_stmt|;
 comment|/* 1 if device found */
@@ -125,22 +121,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCF_MASTER_ADDRESS
+name|I2C_MASTER_ADDRESS
 value|0xaa
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIRST_SLAVE_ADDR
-value|0x2
+name|I2C_INET_ADDRESS
+value|0xaa
 end_define
 
 begin_define
 define|#
 directive|define
-name|LAST_SLAVE_ADDR
-value|255
+name|MAXSLAVE
+value|256
 end_define
 
 begin_define
@@ -165,7 +161,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * list of known devices  *  * XXX only one smb driver should exist for each I2C interface  */
+comment|/*  * list of known devices  */
 end_comment
 
 begin_decl_stmt
@@ -175,6 +171,16 @@ name|iicbus_children
 index|[]
 init|=
 block|{
+block|{
+literal|"iic"
+block|,
+name|IICBUS_DRIVER_CLASS
+block|,
+literal|"General Call"
+block|,
+name|I2C_GENERAL_CALL
+block|}
+block|,
 block|{
 literal|"iicsmb"
 block|,
@@ -186,17 +192,33 @@ block|,
 block|{
 literal|"iic"
 block|,
-name|IICBUS_DRIVER_CLASS
+name|IICBUS_DEVICE_CLASS
 block|,
-literal|"I2C general purpose I/O"
+literal|"PCF8574 I2C to 8 bits parallel i/o"
+block|,
+literal|64
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ "ic", IICBUS_DEVICE_CLASS, "network interface", PCF_MASTER_ADDRESS },
-endif|#
-directive|endif
+block|{
+literal|"iic"
+block|,
+name|IICBUS_DEVICE_CLASS
+block|,
+literal|"PCF8584 as slave"
+block|,
+name|I2C_MASTER_ADDRESS
+block|}
+block|,
+block|{
+literal|"ic"
+block|,
+name|IICBUS_DEVICE_CLASS
+block|,
+literal|"network interface"
+block|,
+name|I2C_INET_ADDRESS
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -266,22 +288,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|iicbus_write_ivar
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -337,7 +343,21 @@ name|DEVMETHOD
 argument_list|(
 name|bus_write_ivar
 argument_list|,
-name|iicbus_write_ivar
+name|bus_generic_write_ivar
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_create_intr
+argument_list|,
+name|bus_generic_create_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_connect_intr
+argument_list|,
+name|bus_generic_connect_intr
 argument_list|)
 block|,
 block|{
@@ -370,6 +390,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * At 'probe' time, we add all the devices which we know about to the  * bus.  The generic attach routine will probe and attach them if they  * are alive.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -379,56 +403,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|device_set_desc
+name|struct
+name|iicbus_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
 argument_list|(
 name|dev
-argument_list|,
-literal|"Philips I2C bus"
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static int  iic_probe_device(device_t dev, u_char addr) { 	int count; 	char byte;  	if ((addr& 1) == 0) {
-comment|/* is device writable? */
-end_comment
-
-begin_comment
-unit|if (!iicbus_start(dev, (u_char)addr, 0)) { 			iicbus_stop(dev); 			return (1); 		} 	} else {
-comment|/* is device readable? */
-end_comment
-
-begin_endif
-unit|if (!iicbus_block_read(dev, (u_char)addr,&byte, 1,&count)) 			return (1); 	}  	return (0); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * We add all the devices which we know about.  * The generic attach routine will attach them if they are alive.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|iicbus_attach
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
+decl_stmt|;
 name|struct
 name|iicbus_device
 modifier|*
@@ -437,27 +421,20 @@ decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
+comment|/* XXX should query parent */
+name|sc
+operator|->
+name|ownaddr
+operator|=
+name|I2C_MASTER_ADDRESS
+expr_stmt|;
 name|iicbus_reset
 argument_list|(
 name|dev
 argument_list|,
 name|IIC_FASTEST
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* device probing is meaningless since the bus is supposed to be 	 * hot-plug. Moreover, some I2C chips do not appreciate random 	 * accesses like stop after start to fast, reads for less than 	 * x bytes... 	 */
-if|#
-directive|if
-literal|0
-block|printf("Probing for devices on iicbus%d:", device_get_unit(dev));
-comment|/* probe any devices */
-block|for (addr = FIRST_SLAVE_ADDR; addr<= LAST_SLAVE_ADDR; addr++) { 		if (iic_probe_device(dev, (u_char)addr)) { 			printf("<%x>", addr); 		} 	} 	printf("\n");
-endif|#
-directive|endif
-comment|/* attach known devices */
 for|for
 control|(
 name|iicdev
@@ -472,6 +449,7 @@ name|iicdev
 operator|++
 control|)
 block|{
+comment|/* probe devices, not drivers */
 switch|switch
 condition|(
 name|iicdev
@@ -482,69 +460,42 @@ block|{
 case|case
 name|IICBUS_DEVICE_CLASS
 case|:
-comment|/* check if the devclass exists */
 if|if
 condition|(
-name|devclass_find
+operator|!
+name|iicbus_start
 argument_list|(
+name|dev
+argument_list|,
 name|iicdev
 operator|->
-name|iicd_name
+name|iicd_addr
 argument_list|)
 condition|)
+block|{
+name|iicbus_stop
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|iicdev
 operator|->
 name|iicd_alive
 operator|=
 literal|1
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"iicbus: %s devclass not found\n"
-argument_list|,
-name|iicdev
-operator|->
-name|iicd_name
-argument_list|)
-expr_stmt|;
+block|}
 break|break;
 case|case
 name|IICBUS_DRIVER_CLASS
 case|:
-comment|/* check if the devclass exists */
-if|if
-condition|(
-name|devclass_find
-argument_list|(
 name|iicdev
 operator|->
-name|iicd_name
-argument_list|)
-condition|)
-name|iicdev
-operator|->
-name|iicd_alive
+name|iicd_addr
 operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"iicbus: %s devclass not found\n"
-argument_list|,
-name|iicdev
+name|sc
 operator|->
-name|iicd_name
-argument_list|)
+name|ownaddr
 expr_stmt|;
 break|break;
 default|default:
@@ -556,13 +507,6 @@ name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|iicdev
-operator|->
-name|iicd_alive
-condition|)
-block|{
 name|child
 operator|=
 name|device_add_child
@@ -589,7 +533,23 @@ name|iicd_desc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|iicbus_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|bus_generic_attach
 argument_list|(
 name|dev
@@ -621,47 +581,6 @@ block|{
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|iicbus_null_callback
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|index
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|iicbus_null_repeated_start
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|u_char
-name|addr
-parameter_list|)
-block|{
-return|return
-operator|(
-name|IIC_ENOTSUPP
 operator|)
 return|;
 block|}
@@ -701,7 +620,7 @@ name|IICBUS_DEVICE_CLASS
 case|:
 name|printf
 argument_list|(
-literal|" on %s%d addr 0x%x"
+literal|" on %s%d addr %d %s"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -716,6 +635,16 @@ argument_list|,
 name|iicdev
 operator|->
 name|iicd_addr
+argument_list|,
+operator|(
+name|iicdev
+operator|->
+name|iicd_alive
+operator|)
+condition|?
+literal|"found"
+else|:
+literal|"not found"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -814,86 +743,12 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|iicbus_write_ivar
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|index
-parameter_list|,
-name|u_long
-name|val
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|index
-condition|)
-block|{
-default|default:
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|iicbus
 argument_list|,
 name|pcf
-argument_list|,
-name|iicbus_driver
-argument_list|,
-name|iicbus_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|iicbus
-argument_list|,
-name|iicbb
-argument_list|,
-name|iicbus_driver
-argument_list|,
-name|iicbus_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|iicbus
-argument_list|,
-name|bti2c
 argument_list|,
 name|iicbus_driver
 argument_list|,

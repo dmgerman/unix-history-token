@@ -460,6 +460,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|key_freetables
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|key_gethashval
 name|__P
 argument_list|(
@@ -2439,12 +2452,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -2474,11 +2481,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * key_gethashval():  *      Determine keytable hash value.  ----------------------------------------------------------------------*/
@@ -11089,6 +11091,20 @@ modifier|*
 name|sa
 decl_stmt|;
 block|{
+name|struct
+name|in6_ifaddr
+modifier|*
+name|i6a
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|in_ifaddr
+modifier|*
+name|ia
+init|=
+literal|0
+decl_stmt|;
 switch|switch
 condition|(
 name|sa
@@ -11102,14 +11118,6 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-block|{
-name|struct
-name|in6_ifaddr
-modifier|*
-name|i6a
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 name|i6a
@@ -11156,7 +11164,6 @@ literal|1
 operator|)
 return|;
 block|}
-block|}
 break|break;
 endif|#
 directive|endif
@@ -11164,14 +11171,6 @@ comment|/* INET6 */
 case|case
 name|AF_INET
 case|:
-block|{
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 name|ia
@@ -11220,7 +11219,6 @@ literal|1
 operator|)
 return|;
 block|}
-block|}
 break|break;
 block|}
 return|return
@@ -11261,6 +11259,11 @@ modifier|*
 name|km
 init|=
 literal|0
+decl_stmt|;
+name|caddr_t
+name|cp
+decl_stmt|,
+name|cplimit
 decl_stmt|;
 name|int
 name|len

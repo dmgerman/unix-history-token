@@ -4,7 +4,7 @@ comment|/* zutil.c -- target dependent utility functions for the compression lib
 end_comment
 
 begin_comment
-comment|/* @(#) $Id: zutil.c,v 1.1.1.3 1999/01/10 09:46:59 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -219,7 +219,6 @@ name|Bytef
 modifier|*
 name|dest
 decl_stmt|;
-specifier|const
 name|Bytef
 modifier|*
 name|source
@@ -268,12 +267,10 @@ name|s2
 parameter_list|,
 name|len
 parameter_list|)
-specifier|const
 name|Bytef
 modifier|*
 name|s1
 decl_stmt|;
-specifier|const
 name|Bytef
 modifier|*
 name|s2
@@ -794,7 +791,7 @@ argument_list|)
 operator|||
 operator|(
 name|_MSC_VER
-operator|<=
+operator|<
 literal|600
 operator|)
 operator|)

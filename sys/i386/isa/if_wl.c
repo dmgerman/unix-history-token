@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.19 1998/12/09 03:30:51 eivind Exp $ */
+comment|/* $Id: if_wl.c,v 1.14 1998/08/20 05:49:59 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*   * Redistribution and use in source and binary forms, with or withou
 end_comment
 
 begin_comment
-comment|/*  * if_wl.c - original MACH, then BSDI ISA wavelan driver  *	ported to mach by Anders Klemets  *	to BSDI by Robert Morris  *	to FreeBSD by Jim Binkley  *      to FreeBSD 2.2+ by Michael Smith  *  * 2.2 update:  * Changed interface to match 2.1-2.2 differences.  * Implement IRQ selection logic in wlprobe()  * Implement PSA updating.  * Pruned heading comments for relevance.  * Ripped out all the 'interface counters' cruft.  * Cut the missing-interrupt timer back to 100ms.  * 2.2.1 update:  * now supports all multicast mode (mrouted will work),  *	but unfortunately must do that by going into promiscuous mode  * NWID sysctl added so that normally promiscuous mode is NWID-specific  *	but can be made NWID-inspecific  *			7/14/97 jrb  *  * Work done:  * Ported to FreeBSD, got promiscuous mode working with bpfs,  * and rewired timer routine.  The i82586 will hang occasionally on output   * and the watchdog timer will kick it if so and log an entry.  * 2 second timeout there.  Apparently the chip loses an interrupt.  * Code borrowed from if_ie.c for watchdog timer.  *  * The wavelan card is a 2mbit radio modem that emulates ethernet;  * i.e., it uses MAC addresses.  This should not be a surprise since  * it uses an ethernet controller as a major hw item.  * It can broadcast, unicast or apparently multicast in a base cell   * using a omni-directional antennae that is   * about 800 feet around the base cell barring walls and metal.    * With directional antennae, it can be used point to point over a mile  * or so apparently (haven't tried that).  *  * There are ISA and pcmcia versions (not supported by this code).  * The ISA card has an Intel 82586 lan controller on it.  It consists  * of 2 pieces of hw, the lan controller (intel) and a radio-modem.  * The latter has an extra set of controller registers that has nothing  * to do with the i82586 and allows setting and monitoring of radio  * signal strength, etc.  There is a nvram area called the PSA that  * contains a number of setup variables including the IRQ and so-called  * NWID or Network ID.  The NWID must be set the same for all radio  * cards to communicate (unless you are using the ATT/NCR roaming feature  * with their access points.  There is no support for that here. Roaming  * involves a link-layer beacon sent out from the access points.  End  * stations monitor the signal strength and only use the strongest  * access point).  This driver assumes that the base ISA port, IRQ,   * and NWID are first set in nvram via the dos-side "instconf.exe" utility   * supplied with the card. This driver takes the ISA port from   * the kernel configuration setup, and then determines the IRQ either   * from the kernel config (if an explicit IRQ is set) or from the   * PSA on the card if not.  * The hw also magically just uses the IRQ set in the nvram.  * The NWID is used magically as well by the radio-modem  * to determine which packets to keep or throw out.    *  * sample config:  *  * device wl0 at isa? port 0x300 net irq ?  *  * Ifdefs:  * 1. WLDEBUG. (off) - if turned on enables IFF_DEBUG set via ifconfig debug  * 2. MULTICAST (on) - turned on and works up to and including mrouted  * 3. WLCACHE (off) -  define to turn on a signal strength   * (and other metric) cache that is indexed by sender MAC address.    * Apps can read this out to learn the remote signal strength of a   * sender.  Note that it has a switch so that it only stores   * broadcast/multicast senders but it could be set to store unicast   * too only.  Size is hardwired in if_wl_wavelan.h  *  * one further note: promiscuous mode is a curious thing.  In this driver,  * promiscuous mode apparently CAN catch ALL packets and ignore the NWID  * setting.  This is probably more useful in a sense (for snoopers) if  * you are interested in all traffic as opposed to if you are interested  * in just your own.  There is a driver specific sysctl to turn promiscuous  * from just promiscuous to wildly promiscuous...  *  * This driver also knows how to load the synthesizers in the 2.4 Gz  * ISA Half-card, Product number 847647476 (USA/FCC IEEE Channel set).  * This product consists of a "mothercard" that contains the 82586,  * NVRAM that holds the PSA, and the ISA-buss interface custom ASIC.   * The radio transceiver is a "daughtercard" called the WaveMODEM which  * connects to the mothercard through two single-inline connectors: a  * 20-pin connector provides DC-power and modem signals, and a 3-pin  * connector which exports the antenna connection. The code herein  * loads the receive and transmit synthesizers and the corresponding  * transmitter output power value from an EEPROM controlled through  * additional registers via the MMC. The EEPROM address selected  * are those whose values are preset by the DOS utility programs  * provided with the product, and this provides compatible operation  * with the DOS Packet Driver software. A future modification will  * add the necessary functionality to this driver and to the wlconfig  * utility to completely replace the DOS Configuration Utilities.  * The 2.4 Gz WaveMODEM is described in document number 407-024692/E,  * and is available through Lucent Technologies OEM supply channels.  * --RAB 1997/06/08.  */
+comment|/*  * if_wl.c - original MACH, then BSDI ISA wavelan driver  *	ported to mach by Anders Klemets  *	to BSDI by Robert Morris  *	to FreeBSD by Jim Binkley  *      to FreeBSD 2.2+ by Michael Smith  *  * 2.2 update:  * Changed interface to match 2.1-2.2 differences.  * Implement IRQ selection logic in wlprobe()  * Implement PSA updating.  * Pruned heading comments for relevance.  * Ripped out all the 'interface counters' cruft.  * Cut the missing-interrupt timer back to 100ms.  * 2.2.1 update:  * now supports all multicast mode (mrouted will work),  *	but unfortunately must do that by going into promiscuous mode  * NWID sysctl added so that normally promiscuous mode is NWID-specific  *	but can be made NWID-inspecific  *			7/14/97 jrb  *  * Work done:  * Ported to FreeBSD, got promiscuous mode working with bpfs,  * and rewired timer routine.  The i82586 will hang occasionally on output   * and the watchdog timer will kick it if so and log an entry.  * 2 second timeout there.  Apparently the chip loses an interrupt.  * Code borrowed from if_ie.c for watchdog timer.  *  * The wavelan card is a 2mbit radio modem that emulates ethernet;  * i.e., it uses MAC addresses.  This should not be a surprise since  * it uses an ethernet controller as a major hw item.  * It can broadcast, unicast or apparently multicast in a base cell   * using a omni-directional antennae that is   * about 800 feet around the base cell barring walls and metal.    * With directional antennae, it can be used point to point over a mile  * or so apparently (haven't tried that).  *  * There are ISA and pcmcia versions (not supported by this code).  * The ISA card has an Intel 82586 lan controller on it.  It consists  * of 2 pieces of hw, the lan controller (intel) and a radio-modem.  * The latter has an extra set of controller registers that has nothing  * to do with the i82586 and allows setting and monitoring of radio  * signal strength, etc.  There is a nvram area called the PSA that  * contains a number of setup variables including the IRQ and so-called  * NWID or Network ID.  The NWID must be set the same for all radio  * cards to communicate (unless you are using the ATT/NCR roaming feature  * with their access points.  There is no support for that here. Roaming  * involves a link-layer beacon sent out from the access points.  End  * stations monitor the signal strength and only use the strongest  * access point).  This driver assumes that the base ISA port, IRQ,   * and NWID are first set in nvram via the dos-side "instconf.exe" utility   * supplied with the card. This driver takes the ISA port from   * the kernel configuration setup, and then determines the IRQ either   * from the kernel config (if an explicit IRQ is set) or from the   * PSA on the card if not.  * The hw also magically just uses the IRQ set in the nvram.  * The NWID is used magically as well by the radio-modem  * to determine which packets to keep or throw out.    *  * sample config:  *  * device wl0 at isa? port 0x300 net irq ? vector wlintr  *  * Ifdefs:  * 1. WLDEBUG. (off) - if turned on enables IFF_DEBUG set via ifconfig debug  * 2. MULTICAST (on) - turned on and works up to and including mrouted  * 3. WLCACHE (off) -  define to turn on a signal strength   * (and other metric) cache that is indexed by sender MAC address.    * Apps can read this out to learn the remote signal strength of a   * sender.  Note that it has a switch so that it only stores   * broadcast/multicast senders but it could be set to store unicast   * too only.  Size is hardwired in if_wl_wavelan.h  *  * one further note: promiscuous mode is a curious thing.  In this driver,  * promiscuous mode apparently CAN catch ALL packets and ignore the NWID  * setting.  This is probably more useful in a sense (for snoopers) if  * you are interested in all traffic as opposed to if you are interested  * in just your own.  There is a driver specific sysctl to turn promiscuous  * from just promiscuous to wildly promiscuous...  *  * This driver also knows how to load the synthesizers in the 2.4 Gz  * ISA Half-card, Product number 847647476 (USA/FCC IEEE Channel set).  * This product consists of a "mothercard" that contains the 82586,  * NVRAM that holds the PSA, and the ISA-buss interface custom ASIC.   * The radio transceiver is a "daughtercard" called the WaveMODEM which  * connects to the mothercard through two single-inline connectors: a  * 20-pin connector provides DC-power and modem signals, and a 3-pin  * connector which exports the antenna connection. The code herein  * loads the receive and transmit synthesizers and the corresponding  * transmitter output power value from an EEPROM controlled through  * additional registers via the MMC. The EEPROM address selected  * are those whose values are preset by the DOS utility programs  * provided with the product, and this provides compatible operation  * with the DOS Packet Driver software. A future modification will  * add the necessary functionality to this driver and to the wlconfig  * utility to completely replace the DOS Configuration Utilities.  * The 2.4 Gz WaveMODEM is described in document number 407-024692/E,  * and is available through Lucent Technologies OEM supply channels.  * --RAB 1997/06/08.  */
 end_comment
 
 begin_define
@@ -595,13 +595,6 @@ name|wlwatchdog
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|wlintr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -698,6 +691,20 @@ name|wlinitmmc
 parameter_list|(
 name|int
 name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|wlsetirq
+parameter_list|(
+name|int
+name|base
+parameter_list|,
+name|int
+name|irq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -959,14 +966,9 @@ end_ifdef
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
+name|__FreeBSD
 operator|<
-literal|300000
+literal|3
 end_if
 
 begin_function_decl
@@ -1084,6 +1086,13 @@ init|=
 name|id
 operator|->
 name|id_iobase
+decl_stmt|;
+name|int
+name|unit
+init|=
+name|id
+operator|->
+name|id_unit
 decl_stmt|;
 name|char
 modifier|*
@@ -1433,12 +1442,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|id
-operator|->
-name|id_ointr
-operator|=
-name|wlintr
-expr_stmt|;
 name|sc
 operator|->
 name|base
@@ -1737,7 +1740,7 @@ name|IFF_MULTICAST
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MULTICAST */
+endif|MULTICAST
 name|ifp
 operator|->
 name|if_name
@@ -2746,14 +2749,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
 operator|>=
-literal|300000
+literal|3
 if|if
 condition|(
 name|ifp
@@ -2898,6 +2896,16 @@ argument_list|(
 name|unit
 argument_list|)
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|short
+name|base
+init|=
+name|sc
+operator|->
+name|base
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -2965,7 +2973,7 @@ expr_stmt|;
 comment|/* Display MMC registers */
 endif|#
 directive|endif
-comment|/* WLDEBUG */
+endif|WLDEBUG
 name|wlbldcu
 argument_list|(
 name|unit
@@ -4957,6 +4965,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|u_short
+name|tmp
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -5322,14 +5333,9 @@ name|SIOCDELMULTI
 case|:
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
 operator|<
-literal|300000
+literal|3
 if|if
 condition|(
 name|cmd
@@ -5443,7 +5449,7 @@ directive|endif
 break|break;
 endif|#
 directive|endif
-comment|/* MULTICAST */
+endif|MULTICAST
 comment|/* DEVICE SPECIFIC */
 comment|/* copy the PSA out to the caller */
 case|case
@@ -6209,7 +6215,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*  * wlintr:  *  *	This function is the interrupt handler for the WaveLAN  *	board.  This routine will be called whenever either a packet  *	is received, or a packet has successfully been transfered and  *	the unit is ready to transmit another packet.  *  * input	: board number that interrupted  * output	: either a packet is received, or a packet is transfered  *  */
-specifier|static
 name|void
 name|wlintr
 parameter_list|(
@@ -6231,6 +6236,12 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|scb_t
+name|scb
+decl_stmt|;
+name|ac_t
+name|cb
+decl_stmt|;
 name|short
 name|base
 init|=
@@ -6239,6 +6250,15 @@ operator|->
 name|base
 decl_stmt|;
 name|int
+name|next
+decl_stmt|,
+name|x
+decl_stmt|,
+name|opri
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
 name|ac_status
 decl_stmt|;
 name|u_short
@@ -6578,7 +6598,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* notdef */
+endif|notdef
 if|if
 condition|(
 name|ac_status
@@ -7485,7 +7505,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* WLDEBUG */
+endif|WLDEBUG
 comment|/*  * wlxmt:  *  *	This routine fills in the appropriate registers and memory  *	locations on the WaveLAN board and starts the board off on  *	the transmit.  *  * input	: board number of interest, and a pointer to the mbuf  * output	: board memory and registers are set for xfer and attention  *  */
 specifier|static
 name|void
@@ -7754,7 +7774,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* WLDEBUG */
+endif|WLDEBUG
 name|outw
 argument_list|(
 name|PIOR0
@@ -8169,7 +8189,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WLDEBUG */
+endif|WLDEBUG
 block|}
 ifdef|#
 directive|ifdef
@@ -8197,7 +8217,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* WLDEBUG */
+endif|WLDEBUG
 name|outw
 argument_list|(
 name|PIOR0
@@ -8343,7 +8363,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* WLDEBUG */
+endif|WLDEBUG
 name|outw
 argument_list|(
 name|PIOR0
@@ -9132,14 +9152,9 @@ directive|if
 name|MULTICAST
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
 operator|>=
-literal|300000
+literal|3
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -9169,7 +9184,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* MULTICAST */
+endif|MULTICAST
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -9460,14 +9475,9 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
 operator|>=
-literal|300000
+literal|3
 for|for
 control|(
 name|ifma
@@ -9899,7 +9909,7 @@ literal|0
 return|;
 endif|#
 directive|endif
-comment|/* MULTICAST */
+endif|MULTICAST
 name|outw
 argument_list|(
 name|PIOR1
@@ -10860,6 +10870,13 @@ init|=
 operator|*
 name|tm_pp
 decl_stmt|;
+name|u_char
+modifier|*
+name|mb_p
+init|=
+operator|*
+name|mb_pp
+decl_stmt|;
 name|u_short
 name|count
 init|=
@@ -11190,6 +11207,28 @@ name|int
 name|unit
 parameter_list|)
 block|{
+specifier|register
+name|struct
+name|wl_softc
+modifier|*
+name|sc
+init|=
+name|WLSOFTC
+argument_list|(
+name|unit
+argument_list|)
+decl_stmt|;
+name|short
+name|base
+init|=
+name|sc
+operator|->
+name|base
+decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 name|MMC_WRITE
 argument_list|(
 name|MMC_FREEZE
@@ -11818,10 +11857,7 @@ name|struct
 name|ip
 modifier|*
 name|ip
-init|=
-name|NULL
 decl_stmt|;
-comment|/* Avoid GCC warning */
 name|int
 name|i
 decl_stmt|;
@@ -12200,14 +12236,9 @@ directive|ifdef
 name|MULTICAST
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
 operator|<
-literal|300000
+literal|3
 comment|/* not required */
 specifier|static
 name|int

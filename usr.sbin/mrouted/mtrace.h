@@ -1,45 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Multicast traceroute related definitions  *  * mtrace.h,v 5.2 1998/12/04 04:48:21 fenner Exp  */
+comment|/*  * Multicast traceroute related definitions  *  * mtrace.h,v 5.1 1996/12/19 21:31:26 fenner Exp  */
 end_comment
-
-begin_comment
-comment|/*  * NetBSD renamed the mtrace packet types.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|IGMP_MTRACE_RESP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|IGMP_MTRACE_REPLY
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|IGMP_MTRACE_RESP
-value|IGMP_MTRACE_REPLY
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMP_MTRACE
-value|IGMP_MTRACE_QUERY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * The packet format for a traceroute request.  */
@@ -61,10 +23,57 @@ name|u_int32
 name|tr_raddr
 decl_stmt|;
 comment|/* traceroute response address */
-name|u_int32
-name|tr_rttlqid
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BYTE_ORDER
+argument_list|)
+operator|&&
+operator|(
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+operator|)
+struct|struct
+block|{
+name|u_int
+name|qid
+range|:
+literal|24
 decl_stmt|;
-comment|/* response ttl and qid */
+comment|/* traceroute query id */
+name|u_int
+name|ttl
+range|:
+literal|8
+decl_stmt|;
+comment|/* traceroute response ttl */
+block|}
+name|q
+struct|;
+else|#
+directive|else
+struct|struct
+block|{
+name|u_int
+name|ttl
+range|:
+literal|8
+decl_stmt|;
+comment|/* traceroute response ttl */
+name|u_int
+name|qid
+range|:
+literal|24
+decl_stmt|;
+comment|/* traceroute query id */
+block|}
+name|q
+struct|;
+endif|#
+directive|endif
+comment|/* BYTE_ORDER */
 block|}
 struct|;
 end_struct
@@ -72,45 +81,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|TR_SETTTL
-parameter_list|(
-name|x
-parameter_list|,
-name|ttl
-parameter_list|)
-value|(x = (x& 0x00ffffff) | ((ttl)<< 24))
+name|tr_rttl
+value|q.ttl
 end_define
 
 begin_define
 define|#
 directive|define
-name|TR_GETTTL
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> 24)& 0xff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TR_SETQID
-parameter_list|(
-name|x
-parameter_list|,
-name|qid
-parameter_list|)
-value|(x = (x& 0xff000000) | ((qid)& 0x00ffffff))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TR_GETQID
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x00ffffff)
+name|tr_qid
+value|q.qid
 end_define
 
 begin_comment
@@ -172,6 +151,20 @@ end_struct
 begin_comment
 comment|/* defs within mtrace */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|QUERY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESP
+value|2
+end_define
 
 begin_define
 define|#
@@ -333,34 +326,6 @@ define|#
 directive|define
 name|PROTO_DVMRP_STATIC
 value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|PROTO_PIM_BGP4PLUS
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PROTO_CBT_SPECIAL
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|PROTO_CBT_STATIC
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|PROTO_PIM_ASSERT
-value|11
 end_define
 
 begin_define

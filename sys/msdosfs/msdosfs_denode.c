@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.43 1998/12/07 21:58:34 archie Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.38 1998/05/17 18:09:28 bde Exp $ */
 end_comment
 
 begin_comment
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -153,12 +147,6 @@ parameter_list|)
 value|(dehashtbl[((dev) + (dcl) + (doff) / 	\ 				sizeof(struct direntry))& dehash])
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL_SIMPLELOCKS
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -166,11 +154,6 @@ name|simplelock
 name|dehash_slock
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_union
 union|union
@@ -1006,12 +989,6 @@ name|de_Attributes
 operator|=
 name|ATTR_DIRECTORY
 expr_stmt|;
-name|ldep
-operator|->
-name|de_LowerCase
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|FAT32
@@ -1543,6 +1520,9 @@ decl_stmt|;
 name|int
 name|allerror
 decl_stmt|;
+name|int
+name|vflags
+decl_stmt|;
 name|u_long
 name|eofentry
 decl_stmt|;
@@ -1577,6 +1557,10 @@ init|=
 name|dep
 operator|->
 name|de_pmp
+decl_stmt|;
+name|struct
+name|timespec
+name|ts
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1919,43 +1903,49 @@ name|DE_UPDATE
 operator||
 name|DE_MODIFIED
 expr_stmt|;
-name|allerror
+name|vflags
 operator|=
-name|vtruncbuf
+operator|(
+name|length
+operator|>
+literal|0
+condition|?
+name|V_SAVE
+else|:
+literal|0
+operator|)
+operator||
+name|V_SAVEMETA
+expr_stmt|;
+name|vinvalbuf
 argument_list|(
 name|DETOV
 argument_list|(
 name|dep
 argument_list|)
 argument_list|,
+name|vflags
+argument_list|,
 name|cred
 argument_list|,
 name|p
 argument_list|,
-name|length
+literal|0
 argument_list|,
-name|pmp
-operator|->
-name|pm_bpcluster
+literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MSDOSFS_DEBUG
-if|if
-condition|(
-name|allerror
-condition|)
-name|printf
+name|vnode_pager_setsize
 argument_list|(
-literal|"detrunc(): vtruncbuf error %d\n"
+name|DETOV
+argument_list|(
+name|dep
+argument_list|)
 argument_list|,
-name|allerror
+name|length
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|error
+name|allerror
 operator|=
 name|deupdat
 argument_list|(
@@ -1963,20 +1953,6 @@ name|dep
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|&&
-operator|(
-name|allerror
-operator|==
-literal|0
-operator|)
-condition|)
-name|allerror
-operator|=
-name|error
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2131,6 +2107,10 @@ name|count
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|struct
+name|timespec
+name|ts
 decl_stmt|;
 comment|/* 	 * The root of a DOS filesystem cannot be extended. 	 */
 if|if
@@ -2510,6 +2490,10 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|timespec
+name|ts
 decl_stmt|;
 ifdef|#
 directive|ifdef

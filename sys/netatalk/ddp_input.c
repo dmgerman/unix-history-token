@@ -183,6 +183,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|struct
+name|at_ifaddr
+modifier|*
+name|aa
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;

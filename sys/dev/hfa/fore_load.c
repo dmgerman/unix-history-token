@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.4 1998/12/04 22:54:45 archie Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.1 1998/09/15 08:22:55 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * FORE Systems 200-Series Adapter Support  * ---------------------------------------  *  * Loadable kernel module and device identification support  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<dev/hfa/fore_include.h>
-end_include
 
 begin_ifndef
 ifndef|#
@@ -19,18 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"@(#) $Id: fore_load.c,v 1.4 1998/12/04 22:54:45 archie Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|RCSid
+init|=
+literal|"@(#) $Id: fore_load.c,v 1.1 1998/09/15 08:22:55 phk Exp $"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<dev/hfa/fore_include.h>
+end_include
 
 begin_comment
 comment|/*  * Local functions  */
@@ -48,12 +50,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -93,6 +89,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -136,7 +138,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|fore_pci_probe
@@ -468,12 +469,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
 begin_comment
 comment|/*  * Halt driver processing   *   * This will be called just prior to unloading the module from memory.  * Everything we've setup since we've been loaded must be undone here.  *  * Arguments:  *	none  *  * Returns:  *	0 	shutdown was successful   *	errno	shutdown failed - reason indicated  *  */
 end_comment
@@ -635,6 +630,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
 
 begin_comment
 comment|/*  * Device identify routine  *   * Determine if this driver will support the named device.  If we claim to  * support the device, our attach routine will (later) be called for the  * device.  *  * Arguments:  *	name	pointer to identifier string from device  *  * Returns:  *	1 	driver claims support for this device  *	0	device not claimed by this driver  *  */
@@ -2313,18 +2314,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|snprintf
+name|sprintf
 argument_list|(
 name|fcp
 operator|->
 name|ac_hard_vers
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fcp
-operator|->
-name|ac_hard_vers
-argument_list|)
 argument_list|,
 literal|"%d.%d.%d"
 argument_list|,
@@ -2351,18 +2345,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|snprintf
+name|sprintf
 argument_list|(
 name|fcp
 operator|->
 name|ac_hard_vers
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fcp
-operator|->
-name|ac_hard_vers
-argument_list|)
 argument_list|,
 literal|"Unknown"
 argument_list|)
@@ -2703,7 +2690,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|fore_pci_probe
@@ -3606,11 +3592,11 @@ name|dev_intr
 modifier|*
 name|dev_intr_p
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Reset the board and return it to cold_start state. 	 * Hopefully, this will prevent use of resources as 	 * we're trying to free things up. 	 */
 name|fore_reset
 argument_list|(
@@ -4104,12 +4090,6 @@ begin_comment
 comment|/*  *******************************************************************  *  * Loadable Module Support  *  *******************************************************************  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
 begin_comment
 comment|/*  * Generic module load processing  *   * This function is called by an OS-specific function when this  * module is being loaded.  *  * Arguments:  *	none  *  * Returns:  *	0 	load was successful   *	errno	load failed - reason indicated  *  */
 end_comment
@@ -4178,6 +4158,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
 
 begin_comment
 comment|/*  * Loadable driver description  */

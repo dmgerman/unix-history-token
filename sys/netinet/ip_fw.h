@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.35 1998/09/02 19:14:01 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.34 1998/08/23 03:07:14 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -40,8 +40,7 @@ comment|/* Specified by interface name */
 define|#
 directive|define
 name|FW_IFNLEN
-value|10
-comment|/* need room ! was IFNAMSIZ */
+value|IFNAMSIZ
 name|char
 name|name
 index|[
@@ -157,10 +156,6 @@ name|fu_divert_port
 decl_stmt|;
 comment|/* Divert/tee port (options IPDIVERT) */
 name|u_short
-name|fu_pipe_nr
-decl_stmt|;
-comment|/* pipe number (option DUMMYNET) */
-name|u_short
 name|fu_skipto_rule
 decl_stmt|;
 comment|/* SKIPTO command rule number */
@@ -186,16 +181,6 @@ comment|/* N'of src ports and # of dst ports */
 comment|/* in ports array (dst ports follow */
 comment|/* src ports; max of 10 ports in all; */
 comment|/* count of 0 means match all ports) */
-name|void
-modifier|*
-name|pipe_ptr
-decl_stmt|;
-comment|/* Pipe ptr in case of dummynet pipe */
-name|void
-modifier|*
-name|next_rule_ptr
-decl_stmt|;
-comment|/* next rule in case of match */
 block|}
 struct|;
 end_struct
@@ -263,13 +248,6 @@ define|#
 directive|define
 name|fw_reject_code
 value|fw_un.fu_reject_code
-end_define
-
-begin_define
-define|#
-directive|define
-name|fw_pipe_nr
-value|fw_un.fu_pipe_nr
 end_define
 
 begin_define
@@ -399,17 +377,6 @@ end_define
 
 begin_comment
 comment|/* This is a "change forwarding address" rule */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_PIPE
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* This is a dummynet rule */
 end_comment
 
 begin_define
@@ -736,12 +703,8 @@ modifier|*
 typedef|,
 name|u_int16_t
 modifier|*
-typedef|, 	     struct
+typedef|, 			     struct
 name|mbuf
-modifier|*
-modifier|*
-typedef|, struct
-name|ip_fw_chain
 modifier|*
 modifier|*
 typedef|, struct

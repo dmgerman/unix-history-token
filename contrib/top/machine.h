@@ -85,10 +85,6 @@ name|int
 modifier|*
 name|swap
 decl_stmt|;
-name|struct
-name|timeval
-name|boottime
-decl_stmt|;
 block|}
 struct|;
 end_struct

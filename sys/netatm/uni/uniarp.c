@@ -1,11 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: uniarp.c,v 1.4 1998/12/04 22:54:53 archie Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: uniarp.c,v 1.1 1998/09/15 08:23:09 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * ATM Forum UNI Support  * ---------------------  *  * UNI ATMARP support (RFC1577)  *  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|RCSid
+init|=
+literal|"@(#) $Id: uniarp.c,v 1.1 1998/09/15 08:23:09 phk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -36,25 +57,6 @@ include|#
 directive|include
 file|<netatm/uni/uniip_var.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"@(#) $Id: uniarp.c,v 1.4 1998/12/04 22:54:53 archie Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Global variables  */
@@ -475,6 +477,15 @@ modifier|*
 name|uip
 decl_stmt|;
 block|{
+name|struct
+name|ip_nif
+modifier|*
+name|inp
+init|=
+name|uip
+operator|->
+name|uip_ipnif
+decl_stmt|;
 name|struct
 name|uniarp
 modifier|*
@@ -3089,18 +3100,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|aar
 operator|.
 name|aap_intf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|aar
-operator|.
-name|aap_intf
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -3327,18 +3331,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|aar
 operator|.
 name|aap_intf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|aar
-operator|.
-name|aap_intf
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -3567,15 +3564,6 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-name|nip
-operator|=
-operator|(
-expr|struct
-name|atm_nif
-operator|*
-operator|)
-name|arg1
-expr_stmt|;
 name|buf_addr
 operator|=
 name|aip
@@ -3605,13 +3593,26 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|arg1
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|uip
 operator|->
 name|uip_ipnif
 operator|->
 name|inf_nif
 operator|!=
-name|nip
+operator|(
+expr|struct
+name|atm_nif
+operator|*
+operator|)
+name|arg1
+operator|)
 condition|)
 continue|continue;
 comment|/* 			 * Make sure there's room in the user's buffer 			 */
@@ -3632,21 +3633,22 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 			 * Fill in info to be returned 			 */
+name|nip
+operator|=
+name|uip
+operator|->
+name|uip_ipnif
+operator|->
+name|inf_nif
+expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|asr
 operator|.
 name|asp_intf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|asr
-operator|.
-name|asp_intf
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,

@@ -42,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tcpslice.c,v 1.7 1999/01/15 07:37:00 imp Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,36 +1415,13 @@ case|:
 if|if
 condition|(
 name|val
-operator|>=
+operator|>
 literal|1900
 condition|)
 name|val
 operator|-=
 literal|1900
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|val
-operator|<
-literal|100
-operator|&&
-operator|!
-name|is_delta
-condition|)
-block|{
-if|if
-condition|(
-name|val
-operator|<
-literal|69
-condition|)
-comment|/* Same hack as date */
-name|val
-operator|+=
-literal|100
-expr_stmt|;
-block|}
 name|SET_VAL
 argument_list|(
 name|t
@@ -2154,7 +2131,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%lu.%06lu"
+literal|"%ld.%ld"
 argument_list|,
 name|timestamp
 operator|->
@@ -2218,20 +2195,6 @@ name|timestamp
 operator|->
 name|tv_sec
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|t
-operator|->
-name|tm_year
-operator|>=
-literal|100
-condition|)
-name|t
-operator|->
-name|tm_year
-operator|+=
-literal|1900
 expr_stmt|;
 name|sprintf
 argument_list|(

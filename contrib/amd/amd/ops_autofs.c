@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: ops_autofs.c,v 1.2 1998/12/27 06:24:47 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: ops_autofs.c,v 5.2.2.3 1992/08/02 10:42:21 jsp Exp $  *  */
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ file|<amd.h>
 end_include
 
 begin_comment
-comment|/*  * KLUDGE: wrap whole file in HAVE_FS_AUTOFS, because  * not all systems with an automounter file system are supported  * by am-utils yet...  */
+comment|/*  * CLUDGE: wrap whole file in HAVE_FS_AUTOFS, becasue  * not all systems with an automounter file system are supported  * by am-utils yet...  */
 end_comment
 
 begin_ifdef
@@ -147,7 +147,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* external declarations */
+comment|/* externam declarations */
 end_comment
 
 begin_function_decl
@@ -949,20 +949,14 @@ name|fs_hostname
 argument_list|,
 literal|"pid%ld@%s:%s"
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|foreground
 condition|?
-name|am_mypid
+name|mypid
 else|:
 name|getppid
 argument_list|()
-argument_list|)
 argument_list|,
-name|am_get_hostname
-argument_list|()
+name|hostname
 argument_list|,
 name|dir
 argument_list|)
@@ -1604,7 +1598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pick a file system to try mounting and  * do that in the background if necessary  *  For each location:  if it is new -defaults then  extract and process  continue;  fi  if it is a cut then  if a location has been tried then  break;  fi  continue;  fi  parse mount location  discard previous mount location if required  find matching mounted filesystem  if not applicable then  this_error = No such file or directory  continue  fi  if the filesystem failed to be mounted then  this_error = error from filesystem  elif the filesystem is mounting or unmounting then  this_error = -1  elif the fileserver is down then  this_error = -1  elif the filesystem is already mounted  this_error = 0  break  fi  if no error on this mount then  this_error = initialize mount point  fi  if no error on this mount and mount is delayed then  this_error = -1  fi  if this_error< 0 then  retry = true  fi  if no error on this mount then  make mount point if required  fi  if no error on this mount then  if mount in background then  run mount in background  return -1  else  this_error = mount in foreground  fi  fi  if an error occurred on this mount then  update stats  save error in mount point  fi  endfor  */
+comment|/*  * Pick a file system to try mounting and  * do that in the background if necessary  *  For each location:  if it is new -defaults then  extract and process  continue;  fi  if it is a cut then  if a location has been tried then  break;  fi  continue;  fi  parse mount location  discard previous mount location if required  find matching mounted filesystem  if not applicable then  this_error = No such file or directory  continue  fi  if the filesystem failed to be mounted then  this_error = error from filesystem  elif the filesystem is mounting or unmounting then  this_error = -1  elif the fileserver is down then  this_error = -1  elif the filesystem is already mounted  this_error = 0  break  fi  if no error on this mount then  this_error = initialise mount point  fi  if no error on this mount and mount is delayed then  this_error = -1  fi  if this_error< 0 then  retry = true  fi  if no error on this mount then  make mount point if required  fi  if no error on this mount then  if mount in background then  run mount in background  return -1  else  this_error = mount in foreground  fi  fi  if an error occured on this mount then  update stats  save error in mount point  fi  endfor  */
 end_comment
 
 begin_function
@@ -2283,7 +2277,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Will usually need to play around with the mount nodes      * file attribute structure.  This must be done here.      * Try and get things initialized, even if the fileserver      * is not known to be up.  In the common case this will      * progress things faster.      */
+comment|/*      * Will usually need to play around with the mount nodes      * file attribute structure.  This must be done here.      * Try and get things initialised, even if the fileserver      * is not known to be up.  In the common case this will      * progress things faster.      */
 if|if
 condition|(
 operator|!
@@ -2488,7 +2482,6 @@ condition|(
 operator|!
 name|this_error
 condition|)
-block|{
 if|if
 condition|(
 name|p
@@ -2631,7 +2624,6 @@ name|retry
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -3045,7 +3037,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-comment|/* autofs path (added space) */
+comment|/* authofs path (added space) */
 name|char
 modifier|*
 name|pfname
@@ -3112,7 +3104,6 @@ operator|==
 operator|&
 name|amfs_direct_ops
 condition|)
-block|{
 name|dlog
 argument_list|(
 literal|"%s mount ignored - going down"
@@ -3120,9 +3111,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|dlog
 argument_list|(
 literal|"%s/%s mount ignored - going down"
@@ -3134,7 +3123,6 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* DEBUG */
@@ -3486,7 +3474,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * If an error occurred then return it.    */
+comment|/*    * If an error occured then return it.    */
 if|if
 condition|(
 name|error
@@ -3970,13 +3958,6 @@ operator|->
 name|mf_info
 argument_list|)
 expr_stmt|;
-name|free_opts
-argument_list|(
-operator|&
-name|ap
-argument_list|)
-expr_stmt|;
-comment|/* don't leak */
 if|if
 condition|(
 name|pt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: hlfsd.c,v 1.3 1998/11/14 03:13:31 obrien Exp $  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: hlfsd.c,v 1.1.1.1 1998/08/23 22:07:20 obrien Exp $  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
 end_comment
 
 begin_ifdef
@@ -225,21 +225,12 @@ begin_comment
 comment|/* alternate passwd file to use */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|char *progname; int foreground = 1;
-comment|/* This is the top-level server */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -272,6 +263,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|foreground
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This is the top-level server */
+end_comment
+
+begin_decl_stmt
 name|gid_t
 name|hlfs_gid
 init|=
@@ -301,8 +304,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|orig_umask
-init|=
-literal|022
 decl_stmt|;
 end_decl_stmt
 
@@ -320,21 +321,15 @@ name|startup
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+name|pid_t
+name|mypid
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|pid_t mypid;
 comment|/* Current process id */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|serv_state
@@ -394,20 +389,21 @@ begin_comment
 comment|/* not MOUNT_TABLE_ON_FILE */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
 end_ifdef
 
+begin_decl_stmt
+name|int
+name|debug_flags
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
-unit|int debug_flags = 0;
 endif|#
 directive|endif
 end_endif
@@ -415,11 +411,6 @@ end_endif
 begin_comment
 comment|/* DEBUG */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* forward declarations */
@@ -449,8 +440,7 @@ name|stderr
 argument_list|,
 literal|"Usage: %s [-Cfhnpv] [-a altdir] [-c cache-interval] [-g group]\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -549,10 +539,6 @@ name|preopts
 index|[
 literal|128
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|progname
 decl_stmt|;
 name|int
 name|forcecache
@@ -694,11 +680,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|am_set_progname
-argument_list|(
-name|progname
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -714,8 +695,7 @@ literal|"a:c:CD:fg:hi:l:no:pP:x:v"
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1
+name|EOF
 condition|)
 switch|switch
 condition|(
@@ -742,8 +722,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid directory for -a: %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|optarg
 argument_list|)
@@ -775,8 +754,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid interval for -c: %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|optarg
 argument_list|)
@@ -833,8 +811,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid interval for -i: %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|optarg
 argument_list|)
@@ -956,8 +933,7 @@ name|stderr
 argument_list|,
 literal|"%s: not compiled with DEBUG -- sorry.\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -988,7 +964,9 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* need my pid before any dlog/plog */
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -1034,8 +1012,7 @@ name|stderr
 argument_list|,
 literal|"%s: will not be able to turn off attribute caches.\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1154,8 +1131,7 @@ name|stderr
 argument_list|,
 literal|"%s: cannot get gid for group \"%s\".\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|hlfs_group
 argument_list|)
@@ -1176,9 +1152,7 @@ argument_list|(
 name|hostname
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|hostname
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|hostname
@@ -1213,13 +1187,6 @@ name|dot
 operator|=
 literal|'\0'
 expr_stmt|;
-name|orig_umask
-operator|=
-name|umask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|logfile
@@ -1227,8 +1194,13 @@ condition|)
 name|switch_to_logfile
 argument_list|(
 name|logfile
-argument_list|,
+argument_list|)
+expr_stmt|;
 name|orig_umask
+operator|=
+name|umask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 if|#
@@ -1344,8 +1316,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid mount directory/link %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|dir_name
 argument_list|)
@@ -1429,8 +1400,7 @@ name|stderr
 argument_list|,
 literal|"%s: directory %s not read/executable\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|dir_name
 argument_list|)
@@ -1540,8 +1510,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s/%s will be hidden by mount\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|dir_name
 argument_list|,
@@ -1590,8 +1559,7 @@ name|stderr
 argument_list|,
 literal|"%s: cannot create alternate dir "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1655,8 +1623,7 @@ name|stderr
 argument_list|,
 literal|"%s: failsafe %s not a symlink\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|dir_name
 argument_list|)
@@ -1696,8 +1663,7 @@ name|stderr
 argument_list|,
 literal|"%s: cannot create failsafe symlink %s -> "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|dir_name
 argument_list|)
@@ -2153,8 +2119,7 @@ name|progpid_fs
 argument_list|,
 literal|"%s:%d"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|masterpid
 argument_list|)
@@ -2393,7 +2358,9 @@ literal|0
 condition|)
 block|{
 comment|/* child runs mount */
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 name|foreground
@@ -2652,7 +2619,9 @@ name|masterpid
 operator|=
 name|child
 expr_stmt|;
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 comment|/* for logging routines */
@@ -2681,7 +2650,9 @@ name|masterpid
 operator|=
 name|serverpid
 operator|=
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 comment|/* for logging routines */
@@ -2836,7 +2807,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* not HAVE_SIGACTION */
-comment|/*    * SIGCHLD: interlock synchronization and testing    */
+comment|/*    * SIGCHLD: interlock sycronization and testing    */
 ifdef|#
 directive|ifdef
 name|HAVE_SIGACTION
@@ -3164,8 +3135,6 @@ condition|)
 name|switch_to_logfile
 argument_list|(
 name|logfile
-argument_list|,
-name|orig_umask
 argument_list|)
 expr_stmt|;
 comment|/*    * parent performs the reload, while the child continues to serve    * clients accessing the home dir link.    */
@@ -3186,7 +3155,9 @@ operator|=
 name|child
 expr_stmt|;
 comment|/* parent runs here */
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 name|plt_init
@@ -3259,7 +3230,9 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 block|}
@@ -3326,12 +3299,16 @@ name|masterpid
 operator|=
 literal|0
 expr_stmt|;
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 return|return;
 block|}
-name|am_set_mypid
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 for|for
@@ -3410,7 +3387,7 @@ argument_list|)
 expr_stmt|;
 name|kill
 argument_list|(
-name|am_mypid
+name|mypid
 argument_list|,
 name|SIGSTOP
 argument_list|)
@@ -3520,7 +3497,6 @@ init|=
 name|getpid
 argument_list|()
 decl_stmt|;
-comment|/* XXX: should this be the global am_mypid */
 if|if
 condition|(
 name|mypid
@@ -3619,8 +3595,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|mess
 argument_list|)
@@ -3655,8 +3630,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s: %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|lessmess
 argument_list|,
@@ -3673,8 +3647,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s: Error %d\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|lessmess
 argument_list|,

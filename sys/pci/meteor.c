@@ -260,7 +260,6 @@ end_define
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|met_probe
@@ -1123,7 +1122,6 @@ end_undef
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|met_probe
@@ -9151,7 +9149,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|vm_offset_t
+name|int
 name|offset
 parameter_list|,
 name|int

@@ -103,7 +103,7 @@ condition|)
 comment|/* Default to a fast mutex: */
 name|type
 operator|=
-name|PTHREAD_MUTEX_DEFAULT
+name|MUTEX_TYPE_FAST
 expr_stmt|;
 elseif|else
 if|if
@@ -182,19 +182,13 @@ condition|)
 block|{
 comment|/* Fast mutex: */
 case|case
-name|PTHREAD_MUTEX_DEFAULT
-case|:
-case|case
-name|PTHREAD_MUTEX_NORMAL
-case|:
-case|case
-name|PTHREAD_MUTEX_ERRORCHECK
+name|MUTEX_TYPE_FAST
 case|:
 comment|/* Nothing to do here. */
 break|break;
 comment|/* Counting mutex: */
 case|case
-name|PTHREAD_MUTEX_RECURSIVE
+name|MUTEX_TYPE_COUNTING_FAST
 case|:
 comment|/* Reset the mutex count: */
 name|pmutex
@@ -487,13 +481,7 @@ condition|)
 block|{
 comment|/* Fast mutex: */
 case|case
-name|PTHREAD_MUTEX_NORMAL
-case|:
-case|case
-name|PTHREAD_MUTEX_DEFAULT
-case|:
-case|case
-name|PTHREAD_MUTEX_ERRORCHECK
+name|MUTEX_TYPE_FAST
 case|:
 comment|/* Check if this mutex is not locked: */
 if|if
@@ -530,7 +518,7 @@ block|}
 break|break;
 comment|/* Counting mutex: */
 case|case
-name|PTHREAD_MUTEX_RECURSIVE
+name|MUTEX_TYPE_COUNTING_FAST
 case|:
 comment|/* Check if this mutex is locked: */
 if|if
@@ -692,69 +680,10 @@ operator|->
 name|m_type
 condition|)
 block|{
-comment|/* What SS2 define as a 'normal' mutex.  This has to deadlock 		   on attempts to get a lock you already own. */
-case|case
-name|PTHREAD_MUTEX_NORMAL
-case|:
-if|if
-condition|(
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|==
-name|_thread_run
-condition|)
-block|{
-comment|/* Intetionally deadlock */
-for|for
-control|(
-init|;
-condition|;
-control|)
-name|_thread_kern_sched_state
-argument_list|(
-name|PS_MUTEX_WAIT
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-block|}
-goto|goto
-name|COMMON_LOCK
-goto|;
-comment|/* Return error (not OK) on attempting to re-lock */
-case|case
-name|PTHREAD_MUTEX_ERRORCHECK
-case|:
-if|if
-condition|(
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-operator|==
-name|_thread_run
-condition|)
-block|{
-name|ret
-operator|=
-name|EDEADLK
-expr_stmt|;
-break|break;
-block|}
 comment|/* Fast mutexes do not check for any error conditions: */
 case|case
-name|PTHREAD_MUTEX_DEFAULT
+name|MUTEX_TYPE_FAST
 case|:
-name|COMMON_LOCK
-label|:
 comment|/* 			 * Enter a loop to wait for the mutex to be locked by the 			 * current thread:  			 */
 while|while
 condition|(
@@ -808,11 +737,9 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* Wait for the mutex: */
-name|_thread_kern_sched_state_unlock
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|PS_MUTEX_WAIT
-argument_list|,
 operator|&
 operator|(
 operator|*
@@ -820,6 +747,12 @@ name|mutex
 operator|)
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Block signals: */
+name|_thread_kern_sched_state
+argument_list|(
+name|PS_MUTEX_WAIT
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -843,7 +776,7 @@ block|}
 break|break;
 comment|/* Counting mutex: */
 case|case
-name|PTHREAD_MUTEX_RECURSIVE
+name|MUTEX_TYPE_COUNTING_FAST
 case|:
 comment|/* 			 * Enter a loop to wait for the mutex to be locked by the 			 * current thread:  			 */
 while|while
@@ -910,11 +843,9 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-comment|/* Wait for the mutex: */
-name|_thread_kern_sched_state_unlock
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|PS_MUTEX_WAIT
-argument_list|,
 operator|&
 operator|(
 operator|*
@@ -922,6 +853,12 @@ name|mutex
 operator|)
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Block signals: */
+name|_thread_kern_sched_state
+argument_list|(
+name|PS_MUTEX_WAIT
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -1041,15 +978,9 @@ operator|->
 name|m_type
 condition|)
 block|{
-comment|/* Default& normal mutexes do not really need to check for 		   any error conditions: */
+comment|/* Fast mutexes do not check for any error conditions: */
 case|case
-name|PTHREAD_MUTEX_NORMAL
-case|:
-case|case
-name|PTHREAD_MUTEX_DEFAULT
-case|:
-case|case
-name|PTHREAD_MUTEX_ERRORCHECK
+name|MUTEX_TYPE_FAST
 case|:
 comment|/* Check if the running thread is not the owner of the mutex: */
 if|if
@@ -1067,15 +998,6 @@ block|{
 comment|/* Return an invalid argument error: */
 name|ret
 operator|=
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_owner
-condition|?
-name|EPERM
-else|:
 name|EINVAL
 expr_stmt|;
 block|}
@@ -1123,7 +1045,7 @@ block|}
 break|break;
 comment|/* Counting mutex: */
 case|case
-name|PTHREAD_MUTEX_RECURSIVE
+name|MUTEX_TYPE_COUNTING_FAST
 case|:
 comment|/* Check if the running thread is not the owner of the mutex: */
 if|if
@@ -1156,8 +1078,6 @@ operator|->
 name|m_data
 operator|.
 name|m_count
-operator|>
-literal|1
 condition|)
 block|{
 comment|/* Decrement the count: */
@@ -1172,20 +1092,8 @@ name|m_count
 operator|--
 expr_stmt|;
 block|}
-else|else
-block|{
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_data
-operator|.
-name|m_count
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 				 * Get the next thread from the queue of threads waiting on 				 * the mutex:  				 */
+comment|/* 			 * Get the next thread from the queue of threads waiting on 			 * the mutex:  			 */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -1224,7 +1132,6 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 break|break;
 comment|/* Trap invalid mutex types: */

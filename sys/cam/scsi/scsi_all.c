@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi_all.c,v 1.8 1998/12/06 00:05:47 mjacob Exp $  */
+comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi_all.c,v 1.5 1998/10/02 21:00:54 ken Exp $  */
 end_comment
 
 begin_include
@@ -8038,6 +8038,12 @@ block|{
 name|u_int8_t
 name|cdb_len
 decl_stmt|;
+name|char
+name|holdstr
+index|[
+literal|8
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -8139,21 +8145,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|snprintf
+block|{
+name|sprintf
 argument_list|(
-name|cdb_string
-operator|+
-name|strlen
-argument_list|(
-name|cdb_string
-argument_list|)
-argument_list|,
-name|len
-operator|-
-name|strlen
-argument_list|(
-name|cdb_string
-argument_list|)
+name|holdstr
 argument_list|,
 literal|"%x "
 argument_list|,
@@ -8163,6 +8158,30 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If we're about to exceed the length of the string, 		 * just return what we've already printed. 		 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|holdstr
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|cdb_string
+argument_list|)
+operator|>
+name|len
+condition|)
+break|break;
+name|strcat
+argument_list|(
+name|cdb_string
+argument_list|,
+name|holdstr
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|cdb_string
@@ -10731,11 +10750,7 @@ name|print_sense
 operator|=
 name|FALSE
 expr_stmt|;
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 case|case
 name|SSD_KEY_NOT_READY
 case|:
@@ -11093,11 +11108,6 @@ name|revision
 index|[
 literal|16
 index|]
-decl_stmt|,
-name|rstr
-index|[
-literal|4
-index|]
 decl_stmt|;
 name|type
 operator|=
@@ -11343,45 +11353,9 @@ name|revision
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|SID_ANSI_REV
-argument_list|(
-name|inq_data
-argument_list|)
-operator|==
-name|SCSI_REV_CCS
-condition|)
-name|bcopy
-argument_list|(
-literal|"CCS"
-argument_list|,
-name|rstr
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-else|else
-name|snprintf
-argument_list|(
-name|rstr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rstr
-argument_list|)
-argument_list|,
-literal|"%d"
-argument_list|,
-name|SID_ANSI_REV
-argument_list|(
-name|inq_data
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"<%s %s %s> %s %s SCSI-%s device %s\n"
+literal|"<%s %s %s> %s %s SCSI%d device %s\n"
 argument_list|,
 name|vendor
 argument_list|,
@@ -11400,7 +11374,10 @@ literal|"Fixed"
 argument_list|,
 name|dtype
 argument_list|,
-name|rstr
+name|SID_ANSI_REV
+argument_list|(
+name|inq_data
+argument_list|)
 argument_list|,
 name|qtype
 argument_list|)

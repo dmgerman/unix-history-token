@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_eb164.c,v 1.5 1998/12/05 22:36:31 mjacob Exp $ */
+comment|/* $Id: dec_eb164.c,v 1.3 1998/07/22 08:18:34 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -281,17 +281,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|comconsole
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -359,11 +348,6 @@ operator|/
 name|comcnrate
 argument_list|)
 expr_stmt|;
-comment|/*                           * force a comconsole on com1 if the SRM has a serial 			 * console                          */
-name|comconsole
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|siocnattach
@@ -426,9 +410,6 @@ name|panic
 argument_list|(
 literal|"consinit: unknown console type %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ctb
 operator|->
 name|ctb_term_type

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.83 (Berkeley) 10/13/1998"
+literal|"@(#)mci.c	8.82 (Berkeley) 6/15/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -1481,38 +1481,8 @@ argument_list|,
 name|p
 argument_list|)
 argument_list|,
-literal|"MCI@%lx: "
+literal|"MCI@%x: "
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
-condition|?
-operator|(
-name|u_long
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-name|mci
-else|:
-operator|(
-name|u_long
-operator|)
-operator|(
-name|u_int
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
 name|mci
 argument_list|)
 expr_stmt|;
@@ -1926,7 +1896,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_LOCK_HOST -- Lock host while sending. ** **	If we are contacting a host, we'll need to **	update the status information in the host status **	file, and if we want to do that, we ought to have **	locked it. This has the (according to some) **	desirable effect of serializing connectivity with **	remote hosts -- i.e.: one connection to a give **	host at a time. ** **	Parameters: **		mci -- containing the host we want to lock. ** **	Returns: **		EX_OK	   -- got the lock. **		EX_TEMPFAIL -- didn't get the lock. */
+comment|/* ** MCI_LOCK_HOST -- Lock host while sending. ** **	If we are contacting a host, we'll need to **	update the status information in the host status **	file, and if we want to do that, we ought to have **	locked it. This has the (according to some) **	desirable effect of serializing connectivity with **	remote hosts -- i.e.: one connection to a give **	host at a time. ** **	Parameters: **		mci -- containing the host we want to lock. ** **	Returns: **		EX_OK	   -- got the lock. **		EX_TEMPFAIL -- didn't get the lock. */
 end_comment
 
 begin_function
@@ -2369,7 +2339,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_LOAD_PERSISTENT -- load persistent host info ** **	Load information about host that is kept **	in common for all running sendmails. ** **	Parameters: **		mci -- the host/connection to load persistent info **			   for. ** **	Returns: **		TRUE -- lock was successful **		FALSE -- lock failed */
+comment|/* ** MCI_LOAD_PERSISTENT -- load persistent host info ** **	Load information about host that is kept **	in common for all running sendmails. ** **	Parameters: **		mci -- the host/connection to load persistent info **			   for. ** **	Returns: **		TRUE -- lock was successful **		FALSE -- lock failed */
 end_comment
 
 begin_function
@@ -3794,7 +3764,7 @@ name|hostptr
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 		**  Do something with the file containing the persistent 		**  information. 		*/
+comment|/* 		** Do something with the file containing the persistent 		** information. 		*/
 name|ret
 operator|=
 call|(
@@ -4384,7 +4354,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_GENERATE_PERSISTENT_PATH -- generate path from hostname ** **	Given `host', convert from a.b.c to $QueueDir/.hoststat/c./b./a, **	putting the result into `path'.  if `createflag' is set, intervening **	directories will be created as needed. ** **	Parameters: **		host -- host name to convert from. **		path -- place to store result. **		pathlen -- length of path buffer. **		createflag -- if set, create intervening directories as **			needed. ** **	Returns: **		0 -- success **		-1 -- failure */
+comment|/* ** MCI_GENERATE_PERSISTENT_PATH -- generate path from hostname ** **	Given `host', convert from a.b.c to $QueueDir/.hoststat/c./b./a, **	putting the result into `path'.  if `createflag' is set, intervening **	directories will be created as needed. ** **	Parameters: **		host -- host name to convert from. **		path -- place to store result. **		pathlen -- length of path buffer. **		createflag -- if set, create intervening directories as **			needed. ** **	Returns: **		0 -- success **		-1 -- failure */
 end_comment
 
 begin_function

@@ -2013,6 +2013,9 @@ name|int
 name|mode
 parameter_list|)
 block|{
+name|int
+name|retval
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4020,18 +4023,11 @@ operator|=
 literal|"SoundBlaster %d.%d"
 expr_stmt|;
 block|}
-name|snprintf
+name|sprintf
 argument_list|(
 name|sb_dsp_operations
 operator|.
 name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|)
 argument_list|,
 name|fmt
 argument_list|,

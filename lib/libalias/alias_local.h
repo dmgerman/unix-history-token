@@ -596,7 +596,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|AliasHandleUdpNbt
 parameter_list|(
 name|struct
@@ -617,7 +617,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|AliasHandleUdpNbtNS
 parameter_list|(
 name|struct

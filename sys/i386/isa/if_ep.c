@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.77 1998/10/22 05:58:39 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.75 1998/06/07 17:10:28 dfr Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -384,13 +384,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ointhand2_t
-name|epintr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|epread
 name|__P
@@ -600,12 +593,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pccard/cardinfo.h>
 end_include
 
@@ -679,20 +666,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|PCCARD_MODULE
-argument_list|(
-name|ep
-argument_list|,
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_device
+name|ep_info
+init|=
+block|{
+literal|"ep"
+block|,
 name|ep_pccard_init
-argument_list|,
+block|,
 name|ep_unload
-argument_list|,
+block|,
 name|card_intr
-argument_list|,
+block|,
 literal|0
-argument_list|,
+block|,
+comment|/* Attributes - presently unused */
+operator|&
 name|net_imask
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|ep_info
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2296,12 +2299,6 @@ decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
-name|is
-operator|->
-name|id_ointr
-operator|=
-name|epintr
-expr_stmt|;
 name|sc
 operator|->
 name|ep_connectors
@@ -3939,7 +3936,6 @@ goto|goto
 name|startagain
 goto|;
 block|}
-specifier|static
 name|void
 name|epintr
 parameter_list|(

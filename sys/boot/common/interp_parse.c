@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * Jordan K. Hubbard  * 29 August 1998  *  *	$Id: interp_parse.c,v 1.5 1999/01/10 05:08:12 msmith Exp $  *   * The meat of the simple parser.  */
+comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * Jordan K. Hubbard  * 29 August 1998  *  *	$Id: interp_parse.c,v 1.3 1998/09/04 02:43:26 msmith Exp $  *   * The meat of the simple parser.  */
 end_comment
 
 begin_include
@@ -312,47 +312,6 @@ block|{
 case|case
 name|STR
 case|:
-if|if
-condition|(
-operator|(
-operator|*
-name|p
-operator|==
-literal|'\\'
-operator|)
-operator|&&
-name|p
-index|[
-literal|1
-index|]
-condition|)
-block|{
-name|p
-operator|++
-expr_stmt|;
-name|PARSE_FAIL
-argument_list|(
-name|i
-operator|==
-operator|(
-name|PARSE_BUFSIZE
-operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-name|buf
-index|[
-name|i
-operator|++
-index|]
-operator|=
-operator|*
-name|p
-operator|++
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|isquote

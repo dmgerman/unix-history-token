@@ -1,11 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_sigmgr_state.c,v 1.3 1998/10/31 20:07:01 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_sigmgr_state.c,v 1.1 1998/09/15 08:23:12 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * ATM Forum UNI 3.0/3.1 Signalling Manager  * ----------------------------------------  *  * Signalling manager finite state machine  *  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|RCSid
+init|=
+literal|"@(#) $Id: unisig_sigmgr_state.c,v 1.1 1998/09/15 08:23:12 phk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -54,25 +75,6 @@ include|#
 directive|include
 file|<netatm/uni/sscf_uni.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"@(#) $Id: unisig_sigmgr_state.c,v 1.3 1998/10/31 20:07:01 phk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Local functions  */
@@ -2144,6 +2146,13 @@ name|T_ATM_CAUSE_NORMAL_CALL_CLEARING
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Set the signalling manager state 	 */
+name|usp
+operator|->
+name|us_state
+operator|=
+name|UNISIG_DETACH
+expr_stmt|;
 comment|/* 	 * Close the signalling channel 	 */
 if|if
 condition|(
@@ -2286,16 +2295,7 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* 		 * Otherwise, set new signalling manager state and 		 * wait for protocol instance to be freed during  		 * unisig_free processing for the last queued VCC 		 */
-name|usp
-operator|->
-name|us_state
-operator|=
-name|UNISIG_DETACH
-expr_stmt|;
-block|}
+comment|/* 	 * Otherwise, wait for protocol instance to be freed 	 * during unisig_free processing for the last queued VCC 	 */
 return|return
 operator|(
 literal|0

@@ -2385,7 +2385,7 @@ name|argv
 argument_list|)
 else|#
 directive|else
-name|int
+name|void
 decl|main
 argument_list|(
 name|int

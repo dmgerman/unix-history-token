@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chmod.c,v 1.11 1998/05/13 07:22:11 charnier Exp $"
+literal|"$Id: chmod.c,v 1.10 1998/05/06 06:50:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -756,11 +756,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"fts_read"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|set
 argument_list|)
 expr_stmt|;
 name|exit

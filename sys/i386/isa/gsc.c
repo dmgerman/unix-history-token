@@ -180,11 +180,7 @@ begin_define
 define|#
 directive|define
 name|lprintf
-parameter_list|(
-name|args
-parameter_list|)
-define|\
-value|do {						\ 			if (scu->flags& FLAG_DEBUG)		\ 				printf args;			\ 		} while (0)
+value|if(scu->flags& FLAG_DEBUG) printf
 end_define
 
 begin_else
@@ -196,9 +192,7 @@ begin_define
 define|#
 directive|define
 name|lprintf
-parameter_list|(
-name|args
-parameter_list|)
+value|(void)
 end_define
 
 begin_endif
@@ -879,18 +873,16 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.lookup_geometry: "
 literal|"geometry lookup found: %ddpi, %ddpl\n"
-operator|,
+argument_list|,
 name|tab
 operator|.
 name|dpi
-operator|,
+argument_list|,
 name|tab
 operator|.
 name|dpl
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -900,26 +892,24 @@ block|}
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.lookup_geometry: "
 literal|"geometry lookup failed on {%d, %d, 0x%02x, 0x%02x}\n"
-operator|,
+argument_list|,
 name|geom
 operator|.
 name|dpi
-operator|,
+argument_list|,
 name|geom
 operator|.
 name|dpl
-operator|,
+argument_list|,
 name|geom
 operator|.
 name|g_res
-operator|,
+argument_list|,
 name|geom
 operator|.
 name|s_res
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -952,13 +942,11 @@ name|NEW_GEOM
 decl_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.get_geometry: get geometry at 0x%03x\n"
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|stat
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1035,11 +1023,9 @@ literal|8
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_allocate: need 0x%x bytes\n"
-operator|,
+argument_list|,
 name|size
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1051,11 +1037,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_allocate: 0x%x bytes are too much\n"
-operator|,
+argument_list|,
 name|size
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1080,9 +1064,7 @@ name|size
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_allocate: ok\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1129,9 +1111,7 @@ name|delay
 decl_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_read: begin\n"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1145,9 +1125,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_read: invalid ctrl_byte\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1260,9 +1238,7 @@ argument_list|)
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_read: timeout\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|res
@@ -1354,11 +1330,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_read: aborted with %d\n"
-operator|,
+argument_list|,
 name|res
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1367,9 +1341,7 @@ return|;
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_read: invert buffer\n"
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1418,9 +1390,7 @@ literal|0
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc.buffer_read: ok\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1481,32 +1451,30 @@ name|FLAG_DEBUG
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe "
-literal|"on iobase 0x%03x, irq %d, drq %d, addr %p, size %d\n"
-operator|,
+literal|"on iobase 0x%03x, irq %d, drq %d, addr %d, size %d\n"
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_iobase
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_irq
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_drq
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_maddr
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_msize
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1520,11 +1488,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: no iobase given\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1552,11 +1518,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: get status byte failed\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1637,11 +1601,9 @@ name|GSC_CNF_DMA1
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: DMA 1\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|scu
@@ -1656,11 +1618,9 @@ name|GSC_CNF_DMA3
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: DMA 3\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|scu
@@ -1675,11 +1635,9 @@ name|GSC_CNF_IRQ3
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: IRQ 3\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1690,22 +1648,18 @@ name|GSC_CNF_IRQ5
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: IRQ 5\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|probe_noirq
 label|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: sorry, can't use IRQ yet\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1714,16 +1668,11 @@ return|;
 default|default:
 name|lprintf
 argument_list|(
-operator|(
-literal|"gsc%d.probe: invalid status byte 0x%02x\n"
-operator|,
+literal|"gsc%d.probe: invalid status byte\n"
+argument_list|,
 name|unit
-operator|,
-operator|(
-name|u_char
-operator|)
+argument_list|,
 name|stb
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1759,19 +1708,17 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: drq mismatch: config: %d; hardware: %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_drq
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|channel
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1808,11 +1755,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: geometry lookup failed\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1849,13 +1794,12 @@ argument_list|)
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: status 0x%02x, %ddpi\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|stb
-operator|,
+argument_list|,
 name|geomtab
 index|[
 name|scu
@@ -1864,7 +1808,6 @@ name|geometry
 index|]
 operator|.
 name|dpi
-operator|)
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1884,11 +1827,9 @@ expr_stmt|;
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.probe: ok\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|scu
@@ -1943,32 +1884,30 @@ name|FLAG_DEBUG
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.attach: "
-literal|"iobase 0x%03x, irq %d, drq %d, addr %p, size %d\n"
-operator|,
+literal|"iobase 0x%03x, irq %d, drq %d, addr %d, size %d\n"
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_iobase
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_irq
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_drq
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_maddr
-operator|,
+argument_list|,
 name|isdp
 operator|->
 name|id_msize
-operator|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2028,11 +1967,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.attach: buffer allocation failed\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2076,11 +2013,9 @@ name|ATTACHED
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.attach: ok\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|scu
@@ -2324,15 +2259,13 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
-literal|"gsc%d.open: unit was not attached successfully 0x%04x\n"
-operator|,
+literal|"gsc%d.open: unit was not attached successfully 0x04x\n"
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|flags
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2383,11 +2316,9 @@ name|PBM_MODE
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.open: pbm mode\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2396,11 +2327,9 @@ name|FRMT_RAW
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.open: raw mode\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|scu
@@ -2414,11 +2343,9 @@ break|break;
 default|default:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.open: gray maps are not yet supported"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2427,16 +2354,14 @@ return|;
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.open: minor %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2450,11 +2375,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.open: already open"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2533,16 +2456,14 @@ name|unit
 decl_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.close: minor %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2563,15 +2484,13 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
-literal|"gsc%d.read: unit was not attached successfully 0x%04x\n"
-operator|,
+literal|"gsc%d.read: unit was not attached successfully 0x04x\n"
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|flags
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2683,16 +2602,14 @@ name|res
 decl_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.read: minor %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2713,15 +2630,13 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
-literal|"gsc%d.read: unit was not attached successfully 0x%04x\n"
-operator|,
+literal|"gsc%d.read: unit was not attached successfully 0x04x\n"
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|flags
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2833,21 +2748,19 @@ literal|8
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.read: initializing pbm mode: `%s', bcount: 0x%x\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|sbuf
 operator|.
 name|base
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|bcount
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* move header to end of sbuf */
@@ -2913,28 +2826,26 @@ block|}
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.read(before buffer_read): "
 literal|"size 0x%x, pointer 0x%x, bcount 0x%x, ok\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|sbuf
 operator|.
 name|size
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|sbuf
 operator|.
 name|poi
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|bcount
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2969,28 +2880,26 @@ name|res
 return|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.read(after buffer_read): "
 literal|"size 0x%x, pointer 0x%x, bcount 0x%x, ok\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|sbuf
 operator|.
 name|size
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|sbuf
 operator|.
 name|poi
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|bcount
-operator|)
 argument_list|)
 expr_stmt|;
 name|nbytes
@@ -3037,13 +2946,9 @@ argument_list|)
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.read: transferring 0x%x bytes"
-operator|,
-name|unit
-operator|,
+argument_list|,
 name|nbytes
-operator|)
 argument_list|)
 expr_stmt|;
 name|res
@@ -3076,13 +2981,11 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.read: uiomove failed %d"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|res
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3113,27 +3016,25 @@ name|nbytes
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.read: size 0x%x, pointer 0x%x, bcount 0x%x, ok\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|sbuf
 operator|.
 name|size
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|sbuf
 operator|.
 name|poi
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|bcount
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3191,16 +3092,14 @@ name|unit
 decl_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl: minor %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3221,15 +3120,13 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
-literal|"gsc%d.ioctl: unit was not attached successfully 0x%04x\n"
-operator|,
+literal|"gsc%d.ioctl: unit was not attached successfully 0x04x\n"
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 name|scu
 operator|->
 name|flags
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3246,11 +3143,9 @@ name|GSC_SRESSW
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_SRESSW\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3264,11 +3159,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d:ioctl on already reading unit\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3308,18 +3201,16 @@ name|dpi
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_GRES %ddpi\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3346,18 +3237,16 @@ name|dpl
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_GWIDTH %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3371,18 +3260,16 @@ name|GSC_SWIDTH
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_SRES or GSC_SWIDTH %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -3468,18 +3355,16 @@ name|height
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_GHEIGHT %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3490,18 +3375,16 @@ name|GSC_SHEIGHT
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_SHEIGHT %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3515,11 +3398,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d:ioctl on already reading unit\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3556,18 +3437,16 @@ name|blen
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_GBLEN %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3578,18 +3457,16 @@ name|GSC_SBLEN
 case|:
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_SBLEN %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3617,11 +3494,9 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d:ioctl buffer size too high\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3660,18 +3535,16 @@ name|hz
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_GBTIME %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3695,18 +3568,16 @@ name|hz
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"gsc%d.ioctl:GSC_SBTIME %d\n"
-operator|,
+argument_list|,
 name|unit
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 return|return

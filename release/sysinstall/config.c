@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.114 1998/10/14 01:04:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.113 1998/09/30 12:33:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -713,9 +713,7 @@ begin_function
 name|int
 name|configFstab
 parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
+name|void
 parameter_list|)
 block|{
 name|Device
@@ -1075,6 +1073,18 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|Mkdir
+argument_list|(
+literal|"/proc"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"proc\t\t\t/proc\t\tprocfs\trw\t\t0\t0\n"
+argument_list|)
+expr_stmt|;
 comment|/* Now look for the CDROMs */
 name|devs
 operator|=
@@ -1092,12 +1102,48 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
-comment|/* Write out the CDROM entries */
+comment|/* Write the first one out as /cdrom */
+if|if
+condition|(
+name|cnt
+condition|)
+block|{
+if|if
+condition|(
+name|Mkdir
+argument_list|(
+literal|"/cdrom"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to make mount point for: /cdrom"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"/dev/%s\t\t/cdrom\t\tcd9660\tro,noauto\t0\t0\n"
+argument_list|,
+name|devs
+index|[
+literal|0
+index|]
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Write the others out as /cdrom<n> */
 for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -1117,16 +1163,9 @@ name|sprintf
 argument_list|(
 name|cdname
 argument_list|,
-literal|"/cdrom%s"
+literal|"/cdrom%d"
 argument_list|,
 name|i
-condition|?
-name|itoa
-argument_list|(
-name|i
-argument_list|)
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1136,6 +1175,7 @@ argument_list|(
 name|cdname
 argument_list|)
 condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to make mount point for: %s"
@@ -1143,6 +1183,7 @@ argument_list|,
 name|cdname
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|fprintf
 argument_list|(
@@ -1161,19 +1202,6 @@ name|cdname
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* And finally, a /proc. */
-name|fprintf
-argument_list|(
-name|fstab
-argument_list|,
-literal|"proc\t\t\t/proc\t\tprocfs\trw\t\t0\t0\n"
-argument_list|)
-expr_stmt|;
-name|Mkdir
-argument_list|(
-literal|"/proc"
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|fstab
@@ -1196,7 +1224,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Do the work of sucking in a config file.  * config is the filename to read in.  * lines is a fixed (max) sized array of char*  * returns number of lines read.  line contents  * are malloc'd and must be freed by the caller.  */
+comment|/* Do the work of sucking in a config file.  * config is the filename to read in.  * lines is a fixed (max) sized array of char *.  * returns number of lines read.  line contents  * are malloc'd and must be freed by the caller.  */
 end_comment
 
 begin_function
@@ -2578,8 +2606,6 @@ name|char
 modifier|*
 name|moused
 decl_stmt|;
-name|tryagain
-label|:
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2733,23 +2759,6 @@ argument_list|(
 name|execfile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|file_readable
-argument_list|(
-literal|"/etc/XF86Config"
-argument_list|)
-operator|&&
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"The XFree86 configuration process seems to have\nfailed.  Would you like to try again?"
-argument_list|)
-condition|)
-goto|goto
-name|tryagain
-goto|;
 return|return
 name|DITEM_SUCCESS
 operator||
@@ -2777,12 +2786,10 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|configResolv
 parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|ditem
+name|void
 parameter_list|)
 block|{
 name|FILE
@@ -2837,9 +2844,7 @@ condition|(
 operator|!
 name|fp
 condition|)
-return|return
-name|DITEM_FAILURE
-return|;
+return|return;
 if|if
 condition|(
 name|variable_get
@@ -2921,9 +2926,7 @@ condition|(
 operator|!
 name|fp
 condition|)
-return|return
-name|DITEM_FAILURE
-return|;
+return|return;
 comment|/* Add an entry for localhost */
 if|if
 condition|(
@@ -3046,9 +3049,6 @@ argument_list|(
 literal|"Wrote out /etc/hosts\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-return|;
 block|}
 end_function
 

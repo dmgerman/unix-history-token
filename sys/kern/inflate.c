@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Most parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.c,v 1.11 1997/10/12 20:23:40 phk Exp $  *  *  */
+comment|/*  * Most parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.c,v 1.10 1997/10/11 18:31:20 phk Exp $  *  *  */
 end_comment
 
 begin_include
@@ -27,12 +27,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -43,12 +37,6 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_expr_stmt
 specifier|static
@@ -62,11 +50,6 @@ literal|"Gzip trees"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* needed to make inflate() work */
@@ -204,8 +187,12 @@ specifier|extern
 name|unsigned
 name|char
 modifier|*
-name|kzipmalloc
+name|malloc
 parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -214,39 +201,15 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|kzipfree
+name|free
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|malloc
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
-parameter_list|)
-value|kzipmalloc((x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|free
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|kzipfree((x))
-end_define
 
 begin_endif
 endif|#

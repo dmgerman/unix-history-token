@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.22 1998/08/08 08:13:04 phk Exp $"
+literal|"$Id: main.c,v 1.21 1998/08/05 13:54:07 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,8 +336,16 @@ block|}
 block|,
 define|#
 directive|define
-name|N_MRTSTAT
+name|N_MRTPROTO
 value|19
+block|{
+literal|"_ip_mrtproto"
+block|}
+block|,
+define|#
+directive|define
+name|N_MRTSTAT
+value|20
 block|{
 literal|"_mrtstat"
 block|}
@@ -345,7 +353,7 @@ block|,
 define|#
 directive|define
 name|N_MFCTABLE
-value|20
+value|21
 block|{
 literal|"_mfctable"
 block|}
@@ -353,7 +361,7 @@ block|,
 define|#
 directive|define
 name|N_VIFTABLE
-value|21
+value|22
 block|{
 literal|"_viftable"
 block|}
@@ -361,7 +369,7 @@ block|,
 define|#
 directive|define
 name|N_IPX
-value|22
+value|23
 block|{
 literal|"_ipxpcb"
 block|}
@@ -369,7 +377,7 @@ block|,
 define|#
 directive|define
 name|N_IPXSTAT
-value|23
+value|24
 block|{
 literal|"_ipxstat"
 block|}
@@ -377,7 +385,7 @@ block|,
 define|#
 directive|define
 name|N_SPXSTAT
-value|24
+value|25
 block|{
 literal|"_spx_istat"
 block|}
@@ -385,7 +393,7 @@ block|,
 define|#
 directive|define
 name|N_DDPSTAT
-value|25
+value|26
 block|{
 literal|"_ddpstat"
 block|}
@@ -393,7 +401,7 @@ block|,
 define|#
 directive|define
 name|N_DDPCB
-value|26
+value|27
 block|{
 literal|"_ddpcb"
 block|}
@@ -1663,6 +1671,13 @@ name|mrt_stats
 argument_list|(
 name|nl
 index|[
+name|N_MRTPROTO
+index|]
+operator|.
+name|n_value
+argument_list|,
+name|nl
+index|[
 name|N_MRTSTAT
 index|]
 operator|.
@@ -1672,6 +1687,13 @@ expr_stmt|;
 else|else
 name|mroutepr
 argument_list|(
+name|nl
+index|[
+name|N_MRTPROTO
+index|]
+operator|.
+name|n_value
+argument_list|,
 name|nl
 index|[
 name|N_MFCTABLE

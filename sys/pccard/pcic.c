@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Intel PCIC or compatible Controller driver  *  May be built to make a loadable module.  *-------------------------------------------------------------------------  *  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  *  Intel PCIC or compatible Controller driver  *  May be built using LKM to make a loadable module.  *-------------------------------------------------------------------------  *  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
 end_include
 
 begin_include
@@ -219,36 +213,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LKM
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
-name|pcic_modevent
+name|pcic_handle
 name|__P
 argument_list|(
 operator|(
-name|module_t
+expr|struct
+name|lkm_table
+operator|*
+name|lkmtp
 operator|,
 name|int
-operator|,
-name|void
-operator|*
+name|cmd
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|pcic_unload
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -701,6 +694,24 @@ begin_comment
 comment|/*  *	Loadable kernel module interface.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LKM
+end_ifdef
+
+begin_comment
+comment|/*  *	This defines the lkm_misc module use by modload  *	to define the module name.  */
+end_comment
+
+begin_expr_stmt
+name|MOD_MISC
+argument_list|(
+name|pcic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *	Module handler that processes loads and unloads.  *	Once the module is loaded, the probe routine  *	is called to install the slots (if any).  */
 end_comment
@@ -708,17 +719,15 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcic_modevent
+name|pcic_handle
 parameter_list|(
-name|module_t
-name|mod
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
 parameter_list|,
 name|int
-name|what
-parameter_list|,
-name|void
-modifier|*
-name|arg
+name|cmd
 parameter_list|)
 block|{
 name|int
@@ -727,40 +736,46 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* default = success*/
-specifier|static
-name|int
-name|pcic_started
-init|=
-literal|0
-decl_stmt|;
 switch|switch
 condition|(
-name|what
+name|cmd
 condition|)
 block|{
 case|case
-name|MOD_LOAD
+name|LKM_E_LOAD
 case|:
-comment|/* 		 *	Call the probe routine to find the slots. If 		 *	no slots exist, then don't bother loading the module. 		 *	XXX but this is not appropriate as a static module. 		 */
+comment|/* 		 * Don't load twice! (lkmexists() is exported by kern_lkm.c) 		 */
+if|if
+condition|(
+name|lkmexists
+argument_list|(
+name|lkmtp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EEXIST
+operator|)
+return|;
+comment|/* 		 *	Call the probe routine to find the slots. If 		 *	no slots exist, then don't bother loading the module. 		 */
 if|if
 condition|(
 name|pcic_probe
 argument_list|()
+operator|==
+literal|0
 condition|)
-name|pcic_started
-operator|=
-literal|1
-expr_stmt|;
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 break|break;
+comment|/* Success*/
+comment|/* 	 *	Attempt to unload the slot driver. 	 */
 case|case
-name|MOD_UNLOAD
+name|LKM_E_UNLOAD
 case|:
-comment|/* 		 *	Attempt to unload the slot driver. 		 */
-if|if
-condition|(
-name|pcic_started
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"Unloading PCIC driver\n"
@@ -769,17 +784,20 @@ expr_stmt|;
 name|err
 operator|=
 name|pcic_unload
-argument_list|()
+argument_list|(
+name|lkmtp
+argument_list|,
+name|cmd
+argument_list|)
 expr_stmt|;
-name|pcic_started
-operator|=
-literal|0
-expr_stmt|;
-block|}
 break|break;
 comment|/* Success*/
 default|default:
-comment|/* we only care about load/unload; ignore shutdown */
+comment|/* we only understand load/unload*/
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
 block|}
 return|return
@@ -790,38 +808,45 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|moduledata_t
-name|pcic_mod
-init|=
-block|{
-literal|"pcic"
-block|,
-name|pcic_modevent
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* After configure() has run..  bring on the new bus system! */
+comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "lkm_nullcmd".  * If called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
 end_comment
 
-begin_expr_stmt
-name|DECLARE_MODULE
+begin_function
+name|int
+name|pcic_mod
+parameter_list|(
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|int
+name|ver
+parameter_list|)
+block|{
+name|MOD_DISPATCH
 argument_list|(
 name|pcic
 argument_list|,
-name|pcic_mod
+name|lkmtp
 argument_list|,
-name|SI_SUB_CONFIGURE
+name|cmd
 argument_list|,
-name|SI_ORDER_MIDDLE
+name|ver
+argument_list|,
+name|pcic_handle
+argument_list|,
+name|pcic_handle
+argument_list|,
+name|lkm_nullcmd
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
 comment|/*  *	pcic_unload - Called when unloading a LKM.  *	Disables interrupts and resets PCIC.  */
@@ -831,7 +856,15 @@ begin_function
 specifier|static
 name|int
 name|pcic_unload
-parameter_list|()
+parameter_list|(
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|)
 block|{
 name|int
 name|slot
@@ -913,6 +946,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LKM */
+end_comment
 
 begin_if
 if|#
@@ -2073,6 +2115,8 @@ block|{
 name|int
 name|slotnum
 decl_stmt|,
+name|i
+decl_stmt|,
 name|validslots
 init|=
 literal|0
@@ -2182,6 +2226,21 @@ operator|=
 operator|&
 name|pcic_imask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LKM
+name|bzero
+argument_list|(
+name|pcic_slots
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pcic_slots
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sp
 operator|=
 name|pcic_slots

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  * $Id: kern_malloc.c,v 1.50 1999/01/08 17:31:09 eivind Exp $  */
+comment|/*  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  * $Id: kern_malloc.c,v 1.46 1998/07/29 17:38:14 bde Exp $  */
 end_comment
 
 begin_include
@@ -107,6 +107,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|malloc_init
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|malloc_type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|SYSINIT
 argument_list|(
@@ -141,6 +156,8 @@ name|struct
 name|malloc_type
 modifier|*
 name|kmemstatistics
+init|=
+name|M_FREE
 decl_stmt|;
 end_decl_stmt
 
@@ -192,7 +209,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 end_ifdef
 
 begin_comment
@@ -293,7 +310,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !INVARIANTS */
+comment|/* !DIAGNOSTIC */
 end_comment
 
 begin_struct
@@ -313,7 +330,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* INVARIANTS */
+comment|/* DIAGNOSTIC */
 end_comment
 
 begin_comment
@@ -381,7 +398,7 @@ name|savedlist
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 name|long
 modifier|*
 name|end
@@ -513,7 +530,7 @@ name|indx
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 name|copysize
 operator|=
 literal|1
@@ -727,7 +744,7 @@ name|cp
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 comment|/* 			 * Copy in known text to detect modification 			 * after freeing. 			 */
 name|end
 operator|=
@@ -771,7 +788,7 @@ name|M_FREE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* INVARIANTS */
+comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|cp
@@ -837,7 +854,7 @@ name|next
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 name|freep
 operator|=
 operator|(
@@ -1030,7 +1047,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* INVARIANTS */
+comment|/* DIAGNOSTIC */
 name|kup
 operator|=
 name|btokup
@@ -1182,7 +1199,7 @@ name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 name|struct
 name|freelist
 modifier|*
@@ -1225,35 +1242,42 @@ operator|->
 name|ks_shortdesc
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|kmembase
-operator|<=
-operator|(
-name|char
-operator|*
-operator|)
-name|addr
-operator|&&
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
 operator|(
 name|char
 operator|*
 operator|)
 name|addr
 operator|<
-name|kmemlimit
-argument_list|,
+name|kmembase
+operator|||
 operator|(
+name|char
+operator|*
+operator|)
+name|addr
+operator|>=
+name|kmemlimit
+condition|)
+block|{
+name|panic
+argument_list|(
 literal|"free: address %p out of range"
-operator|,
+argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
 name|addr
-operator|)
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|kup
 operator|=
 name|btokup
@@ -1286,7 +1310,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 comment|/* 	 * Check for returns of data that do not point to the 	 * beginning of the allocation. 	 */
 if|if
 condition|(
@@ -1352,7 +1376,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* INVARIANTS */
+comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|size
@@ -1460,7 +1484,7 @@ name|addr
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 comment|/* 	 * Check for multiple frees. Use a quick check to see if 	 * it looks free before laboriously searching the freelist. 	 */
 if|if
 condition|(
@@ -1495,13 +1519,20 @@ name|spare0
 operator|!=
 name|WEIRD_ADDR
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"free: free item %p modified"
+literal|"trashed free item %p\n"
 argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"free: free item modified"
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1512,13 +1543,20 @@ name|caddr_t
 operator|)
 name|fp
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"free: multiple freed item %p"
+literal|"multiple freed item %p\n"
 argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"free: multiple free"
+argument_list|)
+expr_stmt|;
+block|}
 name|fp
 operator|=
 operator|(
@@ -1590,7 +1628,7 @@ name|type
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* INVARIANTS */
+comment|/* DIAGNOSTIC */
 name|kup
 operator|->
 name|ku_freecnt
@@ -2088,27 +2126,23 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|malloc_init
 parameter_list|(
-name|data
+name|type
 parameter_list|)
-name|void
-modifier|*
-name|data
-decl_stmt|;
-block|{
 name|struct
 name|malloc_type
 modifier|*
 name|type
-init|=
-operator|(
-expr|struct
-name|malloc_type
-operator|*
-operator|)
-name|data
+decl_stmt|;
+block|{
+name|int
+name|npg
+decl_stmt|;
+name|int
+name|mem_size
 decl_stmt|;
 if|if
 condition|(
@@ -2123,13 +2157,6 @@ argument_list|(
 literal|"malloc type lacks magic"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|->
-name|ks_next
-condition|)
-return|return;
 if|if
 condition|(
 name|cnt
@@ -2162,117 +2189,6 @@ name|kmemstatistics
 operator|=
 name|type
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|malloc_uninit
-parameter_list|(
-name|data
-parameter_list|)
-name|void
-modifier|*
-name|data
-decl_stmt|;
-block|{
-name|struct
-name|malloc_type
-modifier|*
-name|type
-init|=
-operator|(
-expr|struct
-name|malloc_type
-operator|*
-operator|)
-name|data
-decl_stmt|;
-name|struct
-name|malloc_type
-modifier|*
-name|t
-decl_stmt|;
-if|if
-condition|(
-name|type
-operator|->
-name|ks_magic
-operator|!=
-name|M_MAGIC
-condition|)
-name|panic
-argument_list|(
-literal|"malloc type lacks magic"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cnt
-operator|.
-name|v_page_count
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"malloc_uninit not allowed before vm init"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|kmemstatistics
-condition|)
-name|kmemstatistics
-operator|=
-name|type
-operator|->
-name|ks_next
-expr_stmt|;
-else|else
-block|{
-for|for
-control|(
-name|t
-operator|=
-name|kmemstatistics
-init|;
-name|t
-operator|->
-name|ks_next
-operator|!=
-name|NULL
-condition|;
-name|t
-operator|=
-name|t
-operator|->
-name|ks_next
-control|)
-block|{
-if|if
-condition|(
-name|t
-operator|->
-name|ks_next
-operator|==
-name|type
-condition|)
-block|{
-name|t
-operator|->
-name|ks_next
-operator|=
-name|type
-operator|->
-name|ks_next
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
 block|}
 end_function
 

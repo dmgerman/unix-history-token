@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: signal.h,v 1.1 1998/01/10 10:13:16 jb Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -102,34 +102,12 @@ index|]
 decl_stmt|;
 comment|/* XXX */
 name|long
-name|sc_xxx1
+name|sc_xxx
 index|[
-literal|2
+literal|8
 index|]
 decl_stmt|;
-comment|/* sc_ssize, sc_sbase on DUX */
-name|unsigned
-name|long
-name|sc_traparg_a0
-decl_stmt|;
-comment|/* a0 argument to trap at exception */
-name|unsigned
-name|long
-name|sc_traparg_a1
-decl_stmt|;
-comment|/* a1 argument to trap at exception */
-name|unsigned
-name|long
-name|sc_traparg_a2
-decl_stmt|;
-comment|/* a2 argument to trap at exception */
-name|long
-name|sc_xxx2
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* sc_fp_trap_pc, sc_fp_trigger_sum, sc_fp_trigger_inst */
+comment|/* XXX */
 block|}
 struct|;
 end_struct

@@ -1215,12 +1215,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_SYSCTL
-end_define
-
-begin_define
-define|#
-directive|define
 name|NTP_POSIX_SOURCE
 end_define
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.6 1998/03/23 07:41:49 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,18 +480,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* Allow two digit years 1969-2068 */
-if|if
-condition|(
-name|year
-operator|<
-literal|69
-condition|)
-name|year
-operator|+=
-literal|2000
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|year
@@ -505,8 +493,8 @@ expr_stmt|;
 if|if
 condition|(
 name|year
-operator|<
-literal|1969
+operator|<=
+literal|1970
 condition|)
 name|bad
 label|:

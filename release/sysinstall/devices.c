@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.87 1998/12/04 18:01:10 wpaul Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.83 1998/09/26 17:05:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -350,42 +350,6 @@ block|,
 block|{
 name|DEVICE_TYPE_DISK
 block|,
-literal|"fla%d"
-block|,
-literal|"DiskOnChip2000 Flash device"
-block|,
-literal|28
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|16
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"rfla%d"
-block|,
-literal|"DiskOnChip2000 Flash devicee"
-block|,
-literal|101
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|16
-block|,
-literal|'c'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
 literal|"wfd%d"
 block|,
 literal|"ATAPI floppy device"
@@ -471,14 +435,6 @@ block|,
 literal|4
 block|,
 literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"ax"
-block|,
-literal|"ASIX AX88140A PCI ethernet card"
 block|}
 block|,
 block|{
@@ -604,30 +560,6 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"mx"
-block|,
-literal|"Macronix 98713/98715/98725 PCI ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"pn"
-block|,
-literal|"Lite-On 82168/82169 PNIC PCI ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"rl"
-block|,
-literal|"RealTek 8129/8139 PCI ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
 literal|"tx"
 block|,
 literal|"SMC 9432TX ethernet card"
@@ -644,25 +576,9 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"vr"
-block|,
-literal|"VIA VT3043/VT86C100A Rhine PCI ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
 literal|"vx"
 block|,
 literal|"3COM 3c590 / 3c595 ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"wb"
-block|,
-literal|"Winbond W89C840F PCI ethernet card"
 block|}
 block|,
 block|{

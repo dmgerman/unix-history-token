@@ -24,15 +24,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*              Pretending That We Have POSIX Signals               */
+comment|/*		Pretending That We Have POSIX Signals		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -150,15 +150,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                  Signal Handling for Info                        */
+comment|/*		    Signal Handling for Info			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -167,15 +167,22 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|RETSIGTYPE
-name|signal_handler
+name|void
+name|SigHandlerType
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|SigHandlerType
+name|SigHandler
 parameter_list|()
 function_decl|;
 end_typedef
 
 begin_function_decl
 specifier|static
-name|RETSIGTYPE
+name|SigHandlerType
 name|info_signal_handler
 parameter_list|()
 function_decl|;
@@ -183,7 +190,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|signal_handler
+name|SigHandler
 modifier|*
 name|old_TSTP
 decl_stmt|,
@@ -197,12 +204,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|signal_handler
+name|SigHandler
 modifier|*
 name|old_WINCH
 decl_stmt|,
 modifier|*
 name|old_INT
+decl_stmt|,
+modifier|*
+name|old_CONT
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +230,7 @@ argument_list|)
 name|old_TSTP
 operator|=
 operator|(
-name|signal_handler
+name|SigHandler
 operator|*
 operator|)
 name|signal
@@ -233,7 +243,7 @@ expr_stmt|;
 name|old_TTOU
 operator|=
 operator|(
-name|signal_handler
+name|SigHandler
 operator|*
 operator|)
 name|signal
@@ -246,7 +256,7 @@ expr_stmt|;
 name|old_TTIN
 operator|=
 operator|(
-name|signal_handler
+name|SigHandler
 operator|*
 operator|)
 name|signal
@@ -268,7 +278,7 @@ argument_list|)
 name|old_WINCH
 operator|=
 operator|(
-name|signal_handler
+name|SigHandler
 operator|*
 operator|)
 name|signal
@@ -278,8 +288,31 @@ argument_list|,
 name|info_signal_handler
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGCONT
+argument_list|)
+name|old_CONT
+operator|=
+operator|(
+name|SigHandler
+operator|*
+operator|)
+name|signal
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|info_signal_handler
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* SIGCONT */
+endif|#
+directive|endif
+comment|/* SIGWINCH */
 if|#
 directive|if
 name|defined
@@ -289,7 +322,7 @@ argument_list|)
 name|old_INT
 operator|=
 operator|(
-name|signal_handler
+name|SigHandler
 operator|*
 operator|)
 name|signal
@@ -345,7 +378,7 @@ end_function
 
 begin_function
 specifier|static
-name|RETSIGTYPE
+name|SigHandlerType
 name|info_signal_handler
 parameter_list|(
 name|sig
@@ -354,7 +387,7 @@ name|int
 name|sig
 decl_stmt|;
 block|{
-name|signal_handler
+name|SigHandler
 modifier|*
 modifier|*
 name|old_signal_handler
@@ -446,7 +479,7 @@ operator|=
 operator|&
 name|old_INT
 expr_stmt|;
-comment|/* For stop signals, restore the terminal IO, leave the cursor            at the bottom of the window, and stop us. */
+comment|/* For stop signals, restore the terminal IO, leave the cursor 	   at the bottom of the window, and stop us. */
 name|terminal_goto_xy
 argument_list|(
 literal|0
@@ -488,7 +521,7 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-comment|/* The program is returning now.  Restore our signal handler,            turn on terminal handling, redraw the screen, and place the            cursor where it belongs. */
+comment|/* The program is returning now.  Restore our signal handler, 	   turn on terminal handling, redraw the screen, and place the 	   cursor where it belongs. */
 name|terminal_prep_terminal
 argument_list|()
 expr_stmt|;
@@ -496,7 +529,7 @@ operator|*
 name|old_signal_handler
 operator|=
 operator|(
-name|signal_handler
+name|SigHandler
 operator|*
 operator|)
 name|signal
@@ -522,11 +555,44 @@ name|defined
 argument_list|(
 name|SIGWINCH
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SIGCONT
+argument_list|)
+case|case
+name|SIGCONT
+case|:
+if|if
+condition|(
+name|old_CONT
+condition|)
+call|(
+name|void
+call|)
+argument_list|(
+name|old_CONT
+argument_list|)
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
+comment|/* pretend a SIGWINCH in case the terminal window size has changed 	 while we've been asleep */
+comment|/* FALLTROUGH */
+endif|#
+directive|endif
+comment|/* defined (SIGWINCH)&& defined(SIGCONT) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGWINCH
+argument_list|)
 case|case
 name|SIGWINCH
 case|:
 block|{
-comment|/* Turn off terminal IO, tell our parent that the window has changed,            then reinitialize the terminal and rebuild our windows. */
+comment|/* Turn off terminal IO, tell our parent that the window has changed, 	   then reinitialize the terminal and rebuild our windows. */
 name|old_signal_handler
 operator|=
 operator|&
@@ -599,7 +665,7 @@ operator|*
 name|old_signal_handler
 operator|=
 operator|(
-name|signal_handler
+name|SigHandler
 operator|*
 operator|)
 name|signal

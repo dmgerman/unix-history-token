@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.121 (Berkeley) 12/18/1998"
+literal|"@(#)envelope.c	8.117 (Berkeley) 6/4/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -3699,11 +3699,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|(
-name|TRUE
-argument_list|,
-name|ExitStat
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 operator|(

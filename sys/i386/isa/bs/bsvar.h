@@ -335,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|RETRIES
-value|0
+value|4
 end_define
 
 begin_comment
@@ -740,7 +740,7 @@ value|"\020\014busy\013abnormal\012retry\011msgerr\010fatal\007seltimeout\006sen
 end_define
 
 begin_comment
-comment|/* bsccb bsccb_flags& targ_info flags& cmd flags*/
+comment|/* ccb& targ_info flags& cmd flags*/
 end_comment
 
 begin_define
@@ -843,18 +843,18 @@ end_define
 
 begin_struct
 struct|struct
-name|bsccb
+name|ccb
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|bsccb
+argument|ccb
 argument_list|)
 name|ccb_chain
 expr_stmt|;
-name|union
-name|ccb
+name|struct
+name|scsi_xfer
 modifier|*
-name|ccb
+name|xs
 decl_stmt|;
 comment|/* upper drivers info */
 name|u_int
@@ -862,7 +862,7 @@ name|lun
 decl_stmt|;
 comment|/* lun */
 name|u_int
-name|bsccb_flags
+name|flags
 decl_stmt|;
 comment|/* control flags */
 name|int
@@ -916,7 +916,7 @@ name|GENERIC_CCB_ASSERT
 argument_list|(
 argument|bs
 argument_list|,
-argument|bsccb
+argument|ccb
 argument_list|)
 end_macro
 
@@ -928,7 +928,6 @@ begin_struct
 struct|struct
 name|targ_info
 block|{
-comment|/*0*/
 name|TAILQ_ENTRY
 argument_list|(
 argument|targ_info
@@ -936,7 +935,6 @@ argument_list|)
 name|ti_tchain
 expr_stmt|;
 comment|/* targ_info link */
-comment|/*4*/
 name|TAILQ_ENTRY
 argument_list|(
 argument|targ_info
@@ -944,26 +942,22 @@ argument_list|)
 name|ti_wchain
 expr_stmt|;
 comment|/* wait link */
-comment|/*8*/
 name|struct
 name|bs_softc
 modifier|*
 name|ti_bsc
 decl_stmt|;
 comment|/* our controller */
-comment|/*c*/
 name|u_int
 name|ti_id
 decl_stmt|;
 comment|/* scsi id */
-comment|/*10*/
 name|u_int
 name|ti_lun
 decl_stmt|;
 comment|/* current lun */
-comment|/*14*/
 name|struct
-name|bsccbtab
+name|ccbtab
 name|ti_ctab
 decl_stmt|,
 name|ti_bctab
@@ -989,61 +983,50 @@ define|#
 directive|define
 name|BS_TARG_RDY
 value|4
-comment|/*24*/
 name|int
 name|ti_state
 decl_stmt|;
 comment|/* target state */
-comment|/*28*/
 name|u_int
 name|ti_cfgflags
 decl_stmt|;
 comment|/* target cfg flags */
-comment|/*2c*/
 name|u_int
 name|ti_flags
 decl_stmt|;
 comment|/* flags */
-comment|/*30*/
 name|u_int
 name|ti_mflags
 decl_stmt|;
 comment|/* flags masks */
-comment|/*34*/
 name|u_int
 name|ti_error
 decl_stmt|;
 comment|/* error flags */
-comment|/*38*/
 name|u_int
 name|ti_herrcnt
 decl_stmt|;
 comment|/* hardware err retry counter */
 comment|/***************************************** 	 * scsi phase data 	 *****************************************/
-comment|/*3c*/
 name|struct
 name|sc_p
 name|ti_scsp
 decl_stmt|;
 comment|/* saved scsi data pointer */
-comment|/*50*/
 name|enum
 name|scsi_phase
 name|ti_phase
 decl_stmt|;
 comment|/* scsi phase */
-comment|/*54*/
 name|enum
 name|scsi_phase
 name|ti_ophase
 decl_stmt|;
 comment|/* previous scsi phase */
-comment|/*58*/
 name|u_int8_t
 name|ti_status
 decl_stmt|;
 comment|/* status in */
-comment|/*59*/
 name|u_int8_t
 name|ti_msgin
 index|[
@@ -1051,71 +1034,57 @@ name|MAXMSGLEN
 index|]
 decl_stmt|;
 comment|/* msgin buffer */
-comment|/*64*/
 name|int
 name|ti_msginptr
 decl_stmt|;
-comment|/*68*/
 name|u_int8_t
 name|ti_msgout
 decl_stmt|;
 comment|/* last msgout byte */
-comment|/*69*/
 name|u_int8_t
 name|ti_emsgout
 decl_stmt|;
 comment|/* last msgout byte */
-comment|/*6c*/
 name|u_int
 name|ti_omsgoutlen
 decl_stmt|;
 comment|/* for retry msgout */
-comment|/*70*/
 name|struct
 name|syncdata
 name|ti_syncmax
 decl_stmt|;
 comment|/* synch data (scsi) */
-comment|/*72*/
 name|struct
 name|syncdata
 name|ti_syncnow
 decl_stmt|;
-comment|/*74*/
 name|u_int8_t
 name|ti_sync
 decl_stmt|;
 comment|/* synch val (chip) */
 comment|/***************************************** 	 * bounce buffer& smit data pointer 	 *****************************************/
-comment|/*75*/
 name|u_int8_t
 modifier|*
 name|bounce_phys
 decl_stmt|;
-comment|/*76*/
 name|u_int8_t
 modifier|*
 name|bounce_addr
 decl_stmt|;
-comment|/*78*/
 name|u_int
 name|bounce_size
 decl_stmt|;
-comment|/*7c*/
 name|u_long
 name|sm_offset
 decl_stmt|;
 comment|/***************************************** 	 * target inq data 	 *****************************************/
-comment|/*79*/
 name|u_int8_t
 name|targ_type
 decl_stmt|;
-comment|/*7a*/
 name|u_int8_t
 name|targ_support
 decl_stmt|;
 comment|/***************************************** 	 * generic scsi cmd buffer for this target 	 *****************************************/
-comment|/*7b*/
 name|u_int8_t
 name|scsi_cmd
 index|[
@@ -1152,6 +1121,7 @@ name|bs_softc
 block|{
 comment|/***************************************** 	 * OS depend header 	 *****************************************/
 name|OS_DEPEND_DEVICE_HEADER
+name|OS_DEPEND_SCSI_HEADER
 name|OS_DEPEND_MISC_HEADER
 comment|/***************************************** 	 * target link 	 *****************************************/
 expr|struct
@@ -1288,7 +1258,7 @@ name|int
 name|sc_poll
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|sc_outccb
 decl_stmt|;
@@ -1352,17 +1322,6 @@ name|sc_dvname
 index|[
 name|BS_DVNAME_LEN
 index|]
-decl_stmt|;
-comment|/***************************************** 	 * CAM support 	 *****************************************/
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-decl_stmt|;
-name|struct
-name|cam_path
-modifier|*
-name|path
 decl_stmt|;
 block|}
 struct|;
@@ -1517,7 +1476,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|bsccb
+name|ccb
 operator|*
 operator|,
 name|u_int
@@ -1528,7 +1487,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|bscmddone
 name|__P
@@ -1569,7 +1528,7 @@ name|targ_info
 operator|*
 operator|,
 expr|struct
-name|bsccb
+name|ccb
 operator|*
 operator|)
 argument_list|)
@@ -1618,22 +1577,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|COMPLETE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|NOTARGET
-value|(-2)
+value|-2
 end_define
 
 begin_define
 define|#
 directive|define
 name|HASERROR
-value|(-1)
+value|-1
 end_define
 
 begin_comment

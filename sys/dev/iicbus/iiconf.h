@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iiconf.h,v 1.2 1998/10/31 11:31:07 nsouch Exp $  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iiconf.h,v 1.1.1.10 1998/08/13 17:10:43 son Exp $  */
 end_comment
 
 begin_ifndef
@@ -136,31 +136,6 @@ define|#
 directive|define
 name|IIC_FASTEST
 value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IIC_LAST_READ
-value|0x1
-end_define
-
-begin_comment
-comment|/*  * callback index  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IIC_REQUEST_BUS
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IIC_RELEASE_BUS
-value|0x2
 end_define
 
 begin_comment
@@ -336,28 +311,6 @@ begin_comment
 comment|/* too much data */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IIC_ENOTSUPP
-value|0x8
-end_define
-
-begin_comment
-comment|/* request not supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IIC_ENOADDR
-value|0x9
-end_define
-
-begin_comment
-comment|/* no address assigned to the interface */
-end_comment
-
 begin_comment
 comment|/*  * ivars codes  */
 end_comment
@@ -424,32 +377,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|iicbus_null_repeated_start
-parameter_list|(
-name|device_t
-parameter_list|,
-name|u_char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|iicbus_null_callback
-parameter_list|(
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|caddr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -458,11 +385,33 @@ parameter_list|(
 name|bus
 parameter_list|,
 name|slave
-parameter_list|,
-name|timeout
 parameter_list|)
 define|\
-value|(IICBUS_REPEATED_START(device_get_parent(bus), slave, timeout))
+value|(IICBUS_REPEATED_START(device_get_parent(bus), slave))
+end_define
+
+begin_define
+define|#
+directive|define
+name|iicbus_start
+parameter_list|(
+name|bus
+parameter_list|,
+name|slave
+parameter_list|)
+define|\
+value|(IICBUS_START(device_get_parent(bus), slave))
+end_define
+
+begin_define
+define|#
+directive|define
+name|iicbus_stop
+parameter_list|(
+name|bus
+parameter_list|)
+define|\
+value|(IICBUS_STOP(device_get_parent(bus)))
 end_define
 
 begin_define
@@ -473,98 +422,44 @@ parameter_list|(
 name|bus
 parameter_list|,
 name|speed
-parameter_list|,
-name|addr
-parameter_list|,
-name|oldaddr
 parameter_list|)
 define|\
-value|(IICBUS_RESET(device_get_parent(bus), speed, addr, oldaddr))
+value|(IICBUS_RESET(device_get_parent(bus), speed))
 end_define
 
-begin_comment
-comment|/* basic I2C operations */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|iicbus_started
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|iicbus_start
-parameter_list|(
-name|device_t
-parameter_list|,
-name|u_char
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|iicbus_stop
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
+begin_define
+define|#
+directive|define
 name|iicbus_write
 parameter_list|(
-name|device_t
+name|bus
 parameter_list|,
-name|char
-modifier|*
+name|buf
 parameter_list|,
-name|int
+name|len
 parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
+name|sent
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|(IICBUS_WRITE(device_get_parent(bus), buf, len, sent))
+end_define
 
-begin_function_decl
-specifier|extern
-name|int
+begin_define
+define|#
+directive|define
 name|iicbus_read
 parameter_list|(
-name|device_t
+name|bus
 parameter_list|,
-name|char
-modifier|*
+name|buf
 parameter_list|,
-name|int
+name|len
 parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|sent
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Read/write operations with start/stop conditions managed */
-end_comment
+define|\
+value|(IICBUS_READ(device_get_parent(bus), buf, len, sent))
+end_define
 
 begin_function_decl
 specifier|extern
@@ -610,6 +505,16 @@ begin_function_decl
 specifier|extern
 name|u_char
 name|iicbus_get_addr
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u_char
+name|iicbus_get_own_address
 parameter_list|(
 name|device_t
 parameter_list|)

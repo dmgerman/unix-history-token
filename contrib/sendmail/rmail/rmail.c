@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	8.18 (Berkeley) 10/23/1998"
+literal|"@(#)rmail.c	8.17 (Berkeley) 5/19/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -645,12 +645,8 @@ name|sb
 decl_stmt|;
 name|size_t
 name|fplen
-init|=
-literal|0
 decl_stmt|,
 name|fptlen
-init|=
-literal|0
 decl_stmt|,
 name|len
 decl_stmt|;
@@ -676,8 +672,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|addrp
-init|=
-name|NULL
 decl_stmt|,
 modifier|*
 name|domain

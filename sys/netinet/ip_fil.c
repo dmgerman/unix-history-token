@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 1.6 1998/08/15 21:51:53 bde Exp $"
+literal|"@(#)$Id: ip_fil.c,v 1.5 1998/06/20 18:37:50 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6568,14 +6568,9 @@ operator|>=
 literal|199603
 operator|)
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|fname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fname
-argument_list|)
 argument_list|,
 literal|"/tmp/%s"
 argument_list|,
@@ -6606,14 +6601,9 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-name|snprintf
+name|sprintf
 argument_list|(
 name|fname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fname
-argument_list|)
 argument_list|,
 literal|"/tmp/%s%d"
 argument_list|,
@@ -6795,14 +6785,9 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|ifname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ifname
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -7204,14 +7189,9 @@ name|if_output
 operator|=
 name|write_output
 expr_stmt|;
-name|snprintf
+name|sprintf
 argument_list|(
 name|fname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fname
-argument_list|)
 argument_list|,
 literal|"/tmp/%s"
 argument_list|,
@@ -7266,14 +7246,9 @@ name|if_output
 operator|=
 name|write_output
 expr_stmt|;
-name|snprintf
+name|sprintf
 argument_list|(
 name|fname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fname
-argument_list|)
 argument_list|,
 literal|"/tmp/%s%d"
 argument_list|,

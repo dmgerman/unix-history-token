@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: utils.c,v 1.20 1998/06/10 06:29:23 peter Exp $"
+literal|"$Id: utils.c,v 1.19 1998/06/09 03:38:26 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,13 +434,6 @@ directive|ifdef
 name|VM_AND_BUFFER_CACHE_SYNCHRONIZED
 if|if
 condition|(
-name|S_ISREG
-argument_list|(
-name|fs
-operator|->
-name|st_mode
-argument_list|)
-operator|&&
 name|fs
 operator|->
 name|st_size

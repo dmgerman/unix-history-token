@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) KATO Takenori, 1996.  All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * PC-9801 specific definitions for DP8390/SMC8216 NICs.  */
+comment|/*  * PC-9801 specific definitions for National Semiconductor DP8390 NIC.  */
 end_comment
 
 begin_ifndef
@@ -100,11 +100,22 @@ begin_comment
 comment|/*  * Register offsets/total  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_NOVELL_NIC_OFFSET
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
 name|ED_NOVELL_NIC_OFFSET
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -113,11 +124,22 @@ name|ED_NOVELL_NIC_OFFSET
 value|sc->edreg.nic_offset
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_NOVELL_ASIC_OFFSET
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
 name|ED_NOVELL_ASIC_OFFSET
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -130,11 +152,22 @@ begin_comment
 comment|/*  * Remote DMA data register; for reading or writing to the NIC mem  * via programmed I/O (offset from ASIC base).  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_NOVELL_DATA
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
 name|ED_NOVELL_DATA
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -147,11 +180,22 @@ begin_comment
 comment|/*  * Reset register; reading from this register causes a board reset.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_NOVELL_RESET
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
 name|ED_NOVELL_RESET
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -168,91 +212,91 @@ begin_define
 define|#
 directive|define
 name|ED_TYPE98_BASE
-value|0x80
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_GENERIC
-value|0x80
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_LPC
-value|0x81
+value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_BDN
-value|0x82
+value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_EGY
-value|0x83
+value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_LGY
-value|0x84
+value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_ICM
-value|0x85
+value|0x15
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_SIC
-value|0x86
+value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_108
-value|0x88
+value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_LA98
-value|0x89
+value|0x19
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_CNET98
-value|0x8a
+value|0x1a
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_CNET98EL
-value|0x8b
+value|0x1b
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_UE2212
-value|0x8c
+value|0x1c
 end_define
 
 begin_define
@@ -1064,11 +1108,22 @@ begin_comment
 comment|/* PCCARD */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_PC_MISC
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
 name|ED_PC_MISC
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1077,11 +1132,22 @@ name|ED_PC_MISC
 value|sc->edreg.pc_misc
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ED_PC_RESET
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
 name|ED_PC_RESET
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1884,16 +1950,6 @@ name|type
 operator|=
 name|type
 expr_stmt|;
-name|ED_PC_MISC
-operator|=
-literal|0x18
-expr_stmt|;
-comment|/* dummy for NON-PCCard */
-name|ED_PC_RESET
-operator|=
-literal|0x1f
-expr_stmt|;
-comment|/* same above */
 switch|switch
 condition|(
 name|type
@@ -1925,6 +1981,14 @@ expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
 literal|0x000f
+expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
 expr_stmt|;
 name|nports
 operator|=
@@ -1958,6 +2022,14 @@ name|ED_NOVELL_RESET
 operator|=
 literal|0x0100
 expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
+expr_stmt|;
 name|nports
 operator|=
 literal|16
@@ -1976,7 +2048,7 @@ name|edp_egy98
 expr_stmt|;
 name|ED_NOVELL_NIC_OFFSET
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -1989,6 +2061,14 @@ expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
 literal|0x0100
+expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
 expr_stmt|;
 name|nports
 operator|=
@@ -2008,7 +2088,7 @@ name|edp_generic
 expr_stmt|;
 name|ED_NOVELL_NIC_OFFSET
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -2021,6 +2101,14 @@ expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
 literal|0x000f
+expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
 expr_stmt|;
 name|nports
 operator|=
@@ -2048,11 +2136,19 @@ literal|0x0100
 expr_stmt|;
 name|ED_NOVELL_DATA
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
 literal|0xc100
+expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
 expr_stmt|;
 name|nports
 operator|=
@@ -2080,12 +2176,21 @@ literal|0x2000
 expr_stmt|;
 name|ED_NOVELL_DATA
 operator|=
-literal|0
+literal|0x00
 expr_stmt|;
 comment|/* dummy */
 name|ED_NOVELL_RESET
 operator|=
-literal|0
+literal|0x00
+expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+comment|/* dummy */
+name|ED_PC_RESET
+operator|=
+literal|0x1f
 expr_stmt|;
 comment|/* dummy */
 name|nports
@@ -2156,12 +2261,12 @@ literal|2
 expr_stmt|;
 name|ED_NOVELL_NIC_OFFSET
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
 operator|(
-literal|0x0888
+literal|0x888
 operator||
 name|adj
 operator|)
@@ -2170,11 +2275,19 @@ name|iobase
 expr_stmt|;
 name|ED_NOVELL_DATA
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
-literal|0x0002
+literal|2
+expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
 expr_stmt|;
 name|nports
 operator|=
@@ -2194,11 +2307,11 @@ name|edp_la98
 expr_stmt|;
 name|ED_NOVELL_NIC_OFFSET
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
-literal|0x0100
+literal|0x100
 expr_stmt|;
 name|ED_NOVELL_DATA
 operator|=
@@ -2207,6 +2320,14 @@ expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
 literal|0xf000
+expr_stmt|;
+name|ED_PC_MISC
+operator|=
+literal|0x18
+expr_stmt|;
+name|ED_PC_RESET
+operator|=
+literal|0x1f
 expr_stmt|;
 name|nports
 operator|=
@@ -2226,7 +2347,7 @@ name|edp_generic
 expr_stmt|;
 name|ED_NOVELL_NIC_OFFSET
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -2238,9 +2359,13 @@ literal|0x000e
 expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
-literal|0
+literal|0x0000
 expr_stmt|;
 comment|/* dummy */
+name|ED_PC_RESET
+operator|=
+literal|0x1f
+expr_stmt|;
 name|nports
 operator|=
 literal|16
@@ -2259,7 +2384,7 @@ name|edp_cnet98
 expr_stmt|;
 name|ED_NOVELL_NIC_OFFSET
 operator|=
-literal|0x0000
+literal|0
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -2267,14 +2392,17 @@ literal|0x0400
 expr_stmt|;
 name|ED_NOVELL_DATA
 operator|=
-literal|0
+literal|0x0000
 expr_stmt|;
-comment|/* dummy */
 name|ED_NOVELL_RESET
 operator|=
-literal|0
+literal|0x0000
 expr_stmt|;
 comment|/* dummy */
+name|ED_PC_RESET
+operator|=
+literal|0x1f
+expr_stmt|;
 name|nports
 operator|=
 literal|16
@@ -2286,65 +2414,6 @@ name|nports
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * SMC EtherEZ98(SMC8498BTA)  *  * A sample of kernel conf is as follows.  * #device ed0 at isa? port 0x10d0 net irq 6 iomem 0xc8000 vector edintr  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ED_WD_NIC_OFFSET
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ED_WD_NIC_OFFSET
-value|0x100
-end_define
-
-begin_comment
-comment|/* I/O base offset to NIC */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ED_WD_ASIC_OFFSET
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ED_WD_ASIC_OFFSET
-value|0
-end_define
-
-begin_comment
-comment|/* I/O base offset to ASIC */
-end_comment
-
-begin_comment
-comment|/*  * XXX - The I/O address range is fragmented in the EtherEZ98;  *	it occupies 16*2 I/O addresses, by the way.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ED_WD_IO_PORTS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ED_WD_IO_PORTS
-value|16
-end_define
-
-begin_comment
-comment|/* # of i/o addresses used */
-end_comment
 
 begin_endif
 endif|#

@@ -839,13 +839,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|ointhand2_t
-name|rcintr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|rc_hwreset
 name|__P
@@ -1291,12 +1284,6 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|dvp
-operator|->
-name|id_ointr
-operator|=
-name|rcintr
-expr_stmt|;
 comment|/* Thorooughly test the device */
 if|if
 condition|(
@@ -1617,7 +1604,6 @@ comment|/* RC interrupt handling */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|rcintr
 parameter_list|(

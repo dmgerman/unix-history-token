@@ -523,7 +523,7 @@ name|handlehup
 name|__P
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -832,12 +832,7 @@ begin_function
 specifier|static
 name|void
 name|handlehup
-parameter_list|(
-name|sig
-parameter_list|)
-name|int
-name|sig
-decl_stmt|;
+parameter_list|()
 block|{
 name|FILE
 modifier|*

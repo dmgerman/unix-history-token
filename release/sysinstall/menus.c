@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.179 1999/01/06 13:55:12 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.170 1998/09/30 11:49:35 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -867,7 +867,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"README"
+literal|"readme"
 block|}
 block|,
 block|{
@@ -881,7 +881,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"HARDWARE"
+literal|"hardware"
 block|}
 block|,
 block|{
@@ -895,7 +895,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"INSTALL"
+literal|"install"
 block|}
 block|,
 block|{
@@ -923,7 +923,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"RELNOTES"
+literal|"relnotes"
 block|}
 block|,
 block|{
@@ -1525,10 +1525,12 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"/stand/sysinstall Main Menu"
+literal|"Welcome to FreeBSD! ["
+name|RELEASE_NAME
+literal|"]"
 block|,
 comment|/* title */
-literal|"Welcome to the FreeBSD installation and configuration tool.  Please\n"
+literal|"This is the main menu of the FreeBSD installation system.  Please\n"
 comment|/* prompt */
 literal|"select one of the options below by using the arrow keys or typing the\n"
 literal|"first character of the option name you're interested in.  Invoke an\n"
@@ -1610,22 +1612,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"5 Configure"
-block|,
-literal|"Do post-install configuration of FreeBSD"
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuConfigure
-block|}
-block|,
-block|{
-literal|"6 Novice"
+literal|"5 Novice"
 block|,
 literal|"Begin a novice installation (for beginners)"
 block|,
@@ -1635,7 +1622,7 @@ name|installNovice
 block|}
 block|,
 block|{
-literal|"7 Express"
+literal|"6 Express"
 block|,
 literal|"Begin a quick installation (for the impatient)"
 block|,
@@ -1645,7 +1632,7 @@ name|installExpress
 block|}
 block|,
 block|{
-literal|"8 Custom"
+literal|"7 Custom"
 block|,
 literal|"Begin a custom installation (for experts)"
 block|,
@@ -1660,7 +1647,7 @@ name|MenuInstallCustom
 block|}
 block|,
 block|{
-literal|"9 Fixit"
+literal|"8 Fixit"
 block|,
 literal|"Enter repair mode with CDROM/floppy or start shell"
 block|,
@@ -1675,7 +1662,7 @@ name|MenuFixit
 block|}
 block|,
 block|{
-literal|"U Upgrade"
+literal|"9 Upgrade"
 block|,
 literal|"Upgrade an existing system"
 block|,
@@ -1685,7 +1672,22 @@ name|installUpgrade
 block|}
 block|,
 block|{
-literal|"L Load Config"
+literal|"c Configure"
+block|,
+literal|"Do post-install configuration of FreeBSD"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuConfigure
+block|}
+block|,
+block|{
+literal|"l Load Config"
 block|,
 literal|"Load default install configuration"
 block|,
@@ -1728,7 +1730,8 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"FreeBSD Documentation Menu"
+literal|"Documentation for FreeBSD "
+name|RELEASE_NAME
 block|,
 literal|"If you are at all unsure about the configuration of your hardware\n"
 literal|"or are looking to build a system specifically for FreeBSD, read the\n"
@@ -1752,7 +1755,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"README"
+literal|"readme"
 block|}
 block|,
 block|{
@@ -1766,7 +1769,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"HARDWARE"
+literal|"hardware"
 block|}
 block|,
 block|{
@@ -1780,7 +1783,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"INSTALL"
+literal|"install"
 block|}
 block|,
 block|{
@@ -1808,7 +1811,7 @@ name|dmenuDisplayFile
 block|,
 name|NULL
 block|,
-literal|"RELNOTES"
+literal|"relnotes"
 block|}
 block|,
 block|{
@@ -2498,6 +2501,21 @@ literal|"=ftp://releng22.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
+literal|"2.1 SNAP Server"
+block|,
+literal|"releng210.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://releng210.freebsd.org/pub/FreeBSD/"
+block|}
+block|,
+block|{
 literal|"Argentina"
 block|,
 literal|"ftp.ar.freebsd.org"
@@ -3125,51 +3143,6 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp2.kr.freebsd.org/pub/FreeBSD/"
-block|}
-block|,
-block|{
-literal|"Korea #3"
-block|,
-literal|"ftp3.kr.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://ftp3.kr.freebsd.org/pub/FreeBSD/"
-block|}
-block|,
-block|{
-literal|"Korea #4"
-block|,
-literal|"ftp4.kr.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://ftp4.kr.freebsd.org/pub/FreeBSD/"
-block|}
-block|,
-block|{
-literal|"Korea #5"
-block|,
-literal|"ftp5.kr.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://ftp5.kr.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
@@ -4274,7 +4247,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.3.3 distribution"
+literal|"The XFree86 3.3.2.3 distribution"
 block|,
 name|x11FlagCheck
 block|,
@@ -4717,6 +4690,29 @@ name|DIST_SRC_LIBEXEC
 block|}
 block|,
 block|{
+literal|"lkm"
+block|,
+literal|"/usr/src/lkm (Loadable Kernel Modules)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|SrcDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_SRC_LKM
+block|}
+block|,
+block|{
 literal|"release"
 block|,
 literal|"/usr/src/release (release-generation tools)"
@@ -4975,9 +4971,9 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 3.3.3 Distribution"
+literal|"XFree86 3.3.2.3 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.3.3\n"
+literal|"Please select the components you need from the XFree86 3.3.2.3\n"
 literal|"distribution sets."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
@@ -5087,7 +5083,7 @@ name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 3.3.3 base distribution types"
+literal|"XFree86 3.3.2.3 base distribution types"
 block|,
 literal|"Please check off the basic XFree86 components you wish to install.\n"
 literal|"Bin, lib, and set are recommended for a minimum installaion."
@@ -5353,7 +5349,7 @@ block|,
 block|{
 literal|"sources"
 block|,
-literal|"XFree86 3.3.3 standard sources"
+literal|"XFree86 3.3.2.3 standard sources"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5376,7 +5372,7 @@ block|,
 block|{
 literal|"csources"
 block|,
-literal|"XFree86 3.3.3 contrib sources"
+literal|"XFree86 3.3.2.3 contrib sources"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -6620,61 +6616,6 @@ block|,
 name|optionsEditor
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|__alpha__
-block|{
-literal|"2 Label"
-block|,
-literal|"Label disk partitions"
-block|,
-name|NULL
-block|,
-name|diskLabelEditor
-block|}
-block|,
-block|{
-literal|"3 Distributions"
-block|,
-literal|"Select distribution(s) to extract"
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuDistributions
-block|}
-block|,
-block|{
-literal|"4 Media"
-block|,
-literal|"Choose the installation media type"
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuMedia
-block|}
-block|,
-block|{
-literal|"5 Commit"
-block|,
-literal|"Perform any pending Partition/Label/Extract actions"
-block|,
-name|NULL
-block|,
-name|installCustomCommit
-block|}
-block|,
-else|#
-directive|else
 block|{
 literal|"2 Partition"
 block|,
@@ -6735,8 +6676,6 @@ block|,
 name|installCustomCommit
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"0 Exit"
 block|,
@@ -6789,7 +6728,7 @@ block|{
 block|{
 literal|"BootMgr"
 block|,
-literal|"Install the FreeBSD Boot Manager"
+literal|"Install the FreeBSD Boot Manager (\"Booteasy\")"
 block|,
 name|dmenuRadioCheck
 block|,

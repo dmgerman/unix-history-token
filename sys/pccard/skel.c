@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pccard/cardinfo.h>
 end_include
 
@@ -92,6 +86,18 @@ include|#
 directive|include
 file|<pccard/slot.h>
 end_include
+
+begin_comment
+comment|/*  *	This defines the lkm_misc module use by modload  *	to define the module name.  */
+end_comment
+
+begin_expr_stmt
+name|MOD_MISC
+argument_list|(
+name|skel
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -141,20 +147,37 @@ begin_comment
 comment|/* Interrupt handler */
 end_comment
 
-begin_expr_stmt
-name|PCCARD_MODULE
-argument_list|(
-name|skel
-argument_list|,
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_device
+name|skel_info
+init|=
+block|{
+literal|"skel"
+block|,
 name|skelinit
-argument_list|,
+block|,
 name|skelunload
-argument_list|,
+block|,
 name|skelintr
-argument_list|,
+block|,
 literal|0
-argument_list|,
+block|,
+comment|/* Attributes - presently unused */
+operator|&
 name|net_imask
+comment|/* Interrupt mask for device */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|skel_info
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -169,6 +192,138 @@ end_decl_stmt
 begin_comment
 comment|/* Rather minimal device state... */
 end_comment
+
+begin_comment
+comment|/*  *	Module handler that processes loads and unloads.  *	Once the module is loaded, the add driver routine is called  *	to register the driver.  *	If an unload is requested the remove driver routine is  *	called to deregister the driver before unloading.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|skel_handle
+parameter_list|(
+name|lkmtp
+parameter_list|,
+name|cmd
+parameter_list|)
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|lkm_misc
+modifier|*
+name|args
+init|=
+name|lkmtp
+operator|->
+name|private
+operator|.
+name|lkm_misc
+decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+comment|/* default = success*/
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+case|case
+name|LKM_E_LOAD
+case|:
+comment|/*  *	Now register the driver  */
+name|pccard_add_driver
+argument_list|(
+operator|&
+name|skel_info
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* Success*/
+comment|/*  *	Attempt to deregister the driver.  */
+case|case
+name|LKM_E_UNLOAD
+case|:
+name|pccard_remove_driver
+argument_list|(
+operator|&
+name|skel_info
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* Success*/
+default|default:
+comment|/* we only understand load/unload*/
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "MOD_DISPATCH" will be called under  * their respective circumstances unless their value is "nosys".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
+end_comment
+
+begin_function
+name|int
+name|skel
+parameter_list|(
+name|lkmtp
+parameter_list|,
+name|cmd
+parameter_list|,
+name|ver
+parameter_list|)
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|int
+name|ver
+decl_stmt|;
+block|{
+name|MOD_DISPATCH
+argument_list|(
+argument|skel
+argument_list|,
+argument|lkmtp
+argument_list|,
+argument|cmd
+argument_list|,
+argument|ver
+argument_list|,
+argument|skel_handle
+argument_list|,
+argument|skel_handle
+argument_list|,
+argument|nosys
+argument_list|)
+block|}
+end_function
 
 begin_comment
 comment|/*  *	Skeleton driver entry points for PCCARD configuration.  */

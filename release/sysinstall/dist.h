@@ -253,9 +253,12 @@ name|DIST_SRC_LIBEXEC
 value|0x00080
 end_define
 
-begin_comment
-comment|/*				0x00100 */
-end_comment
+begin_define
+define|#
+directive|define
+name|DIST_SRC_LKM
+value|0x00100
+end_define
 
 begin_define
 define|#

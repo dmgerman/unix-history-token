@@ -288,6 +288,14 @@ expr|struct
 name|vnode
 operator|*
 operator|,
+expr|struct
+name|timeval
+operator|*
+operator|,
+expr|struct
+name|timeval
+operator|*
+operator|,
 name|int
 operator|)
 argument_list|)

@@ -1,22 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* search.h -- Structure used to search large bodies of text, with bounds.    $Id: search.h,v 1.3 1997/07/15 18:43:49 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* search.h -- Structure used to search large bodies of text, with bounds. */
+end_comment
+
+begin_comment
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_comment
 comment|/* The search functions take two arguments:       1) a string to search for, and       2) a pointer to a SEARCH_BINDING which contains the buffer, start,         and end of the search.     They return a long, which is the offset from the start of the buffer    at which the match was found.  An offset of -1 indicates failure. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INFO_SEARCH_H
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_SEARCH_H_
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|INFO_SEARCH_H
+name|_SEARCH_H_
 end_define
 
 begin_typedef
@@ -223,7 +231,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not INFO_SEARCH_H */
+comment|/* !_SEARCH_H_ */
 end_comment
 
 end_unit

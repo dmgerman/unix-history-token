@@ -292,13 +292,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ointhand2_t
-name|cxintr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|cxtinth
 name|__P
@@ -1238,12 +1231,6 @@ name|sppp
 modifier|*
 name|sp
 decl_stmt|;
-name|id
-operator|->
-name|id_ointr
-operator|=
-name|cxintr
-expr_stmt|;
 comment|/* Initialize the board structure. */
 name|cx_init
 argument_list|(
@@ -1586,6 +1573,7 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Shortcut the sppp tls/tlf actions to up/down 			 * events since our lower layer is always ready. 			 */
 name|sp
 operator|=
 operator|(
@@ -1596,6 +1584,22 @@ operator|)
 name|c
 operator|->
 name|ifp
+expr_stmt|;
+name|sp
+operator|->
+name|pp_tls
+operator|=
+name|sp
+operator|->
+name|pp_up
+expr_stmt|;
+name|sp
+operator|->
+name|pp_tlf
+operator|=
+name|sp
+operator|->
+name|pp_down
 expr_stmt|;
 if|#
 directive|if
@@ -3750,7 +3754,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|cxintr
 parameter_list|(

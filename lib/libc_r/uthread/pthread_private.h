@@ -985,7 +985,7 @@ name|int
 name|signo
 decl_stmt|;
 comment|/* Miscellaneous data. */
-name|int
+name|char
 name|flags
 decl_stmt|;
 define|#
@@ -1964,28 +1964,6 @@ name|_thread_kern_sched_state
 parameter_list|(
 name|enum
 name|pthread_state
-parameter_list|,
-name|char
-modifier|*
-name|fname
-parameter_list|,
-name|int
-name|lineno
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_thread_kern_sched_state_unlock
-parameter_list|(
-name|enum
-name|pthread_state
-name|state
-parameter_list|,
-name|spinlock_t
-modifier|*
-name|lock
 parameter_list|,
 name|char
 modifier|*

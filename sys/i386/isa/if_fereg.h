@@ -4,7 +4,7 @@ comment|/*  * Hardware specification of various 8696x based Ethernet cards.  * C
 end_comment
 
 begin_comment
-comment|/* $Id: if_fereg.h,v 1.5 1997/02/22 09:36:28 peter Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -542,6 +542,77 @@ define|#
 directive|define
 name|FE_RE1000_IRQCONF
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_IRQCONF_IRQ
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_IRQCONF_IRQSHIFT
+value|4
+end_define
+
+begin_comment
+comment|/* MAC (station) address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_MAC0
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_MAC1
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_MAC2
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_MAC3
+value|0x17
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_MAC4
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_MAC5
+value|0x1B
+end_define
+
+begin_comment
+comment|/* "Check sum" -- an xor of MAC0 through MAC5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FE_RE1000_MACCHK
+value|0x1D
 end_define
 
 end_unit

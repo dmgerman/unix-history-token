@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.92 1999/01/12 01:44:42 eivind Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.88 1998/09/15 22:05:37 gibbs Exp $  *  */
 end_comment
 
 begin_include
@@ -484,10 +484,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|j
-init|=
-literal|0
 decl_stmt|;
 name|pcimap
 modifier|*
@@ -497,11 +493,6 @@ name|int
 name|map64
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|reg
-init|=
-name|PCIR_MAPS
 decl_stmt|;
 for|for
 control|(
@@ -559,39 +550,27 @@ operator|||
 name|ln2range
 operator|==
 literal|0
-operator|||
-name|base
-operator|==
-literal|0xffffffff
 condition|)
-continue|continue;
-comment|/* skip invalid entry */
-else|else
-block|{
-name|j
-operator|++
+name|maxmaps
+operator|=
+name|i
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|ln2range
 operator|>
 literal|32
 condition|)
-block|{
 name|i
 operator|++
 expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-block|}
-block|}
 block|}
 name|map
 operator|=
 name|malloc
 argument_list|(
-name|j
+name|maxmaps
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -619,22 +598,12 @@ argument_list|(
 name|pcimap
 argument_list|)
 operator|*
-name|j
+name|maxmaps
 argument_list|)
-expr_stmt|;
-name|cfg
-operator|->
-name|nummaps
-operator|=
-name|j
 expr_stmt|;
 for|for
 control|(
 name|i
-operator|=
-literal|0
-operator|,
-name|j
 operator|=
 literal|0
 init|;
@@ -644,12 +613,17 @@ name|maxmaps
 condition|;
 name|i
 operator|++
-operator|,
-name|reg
-operator|+=
-literal|4
 control|)
 block|{
+name|int
+name|reg
+init|=
+name|PCIR_MAPS
+operator|+
+name|i
+operator|*
+literal|4
+decl_stmt|;
 name|u_int32_t
 name|base
 decl_stmt|;
@@ -674,18 +648,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|base
-operator|==
-literal|0
-operator|||
-name|base
-operator|==
-literal|0xffffffff
-condition|)
-continue|continue;
-comment|/* skip invalid entry */
 name|pci_cfgwrite
 argument_list|(
 name|cfg
@@ -721,16 +683,7 @@ argument_list|)
 expr_stmt|;
 name|map
 index|[
-name|j
-index|]
-operator|.
-name|reg
-operator|=
-name|reg
-expr_stmt|;
-name|map
-index|[
-name|j
+name|i
 index|]
 operator|.
 name|base
@@ -742,7 +695,7 @@ argument_list|)
 expr_stmt|;
 name|map
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|type
@@ -754,7 +707,7 @@ argument_list|)
 expr_stmt|;
 name|map
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|ln2size
@@ -766,7 +719,7 @@ argument_list|)
 expr_stmt|;
 name|map
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|ln2range
@@ -780,7 +733,7 @@ name|map64
 operator|=
 name|map
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|ln2range
@@ -793,7 +746,7 @@ block|{
 comment|/* only fill in base, other fields are 0 */
 name|map
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|base
@@ -805,10 +758,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|j
-operator|++
-expr_stmt|;
 block|}
+name|cfg
+operator|->
+name|nummaps
+operator|=
+name|maxmaps
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2421,6 +2377,29 @@ block|}
 end_function
 
 begin_comment
+comment|/* return pointer to device that is a bridge to this bus */
+end_comment
+
+begin_function
+specifier|static
+name|pcicfgregs
+modifier|*
+name|pci_bridgeto
+parameter_list|(
+name|int
+name|bus
+parameter_list|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* XXX not yet implemented */
+block|}
+end_function
+
+begin_comment
 comment|/* scan one PCI bus for devices */
 end_comment
 
@@ -3468,7 +3447,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pci_ioctl: pattern buffer %p, "
+literal|"pci_ioctl: pattern buffer %#p, "
 literal|"length %u isn't user accessible for"
 literal|" READ\n"
 argument_list|,
@@ -3607,7 +3586,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pci_ioctl: match buffer %p, length %u "
+literal|"pci_ioctl: match buffer %#p, length %u "
 literal|"isn't user accessible for WRITE\n"
 argument_list|,
 name|cio

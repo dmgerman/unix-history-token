@@ -156,7 +156,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|bsccb
+name|ccb
 operator|*
 name|cb
 operator|)
@@ -203,7 +203,7 @@ name|GENERIC_CCB_STATIC_ALLOC
 argument_list|(
 argument|bs
 argument_list|,
-argument|bsccb
+argument|ccb
 argument_list|)
 end_macro
 
@@ -212,7 +212,7 @@ name|GENERIC_CCB
 argument_list|(
 argument|bs
 argument_list|,
-argument|bsccb
+argument|ccb
 argument_list|,
 argument|ccb_chain
 argument_list|)
@@ -322,7 +322,7 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -505,7 +505,7 @@ end_decl_stmt
 
 begin_function
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|bs_make_internal_ccb
 parameter_list|(
@@ -555,7 +555,7 @@ name|timeout
 decl_stmt|;
 block|{
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -565,7 +565,9 @@ operator|(
 name|cb
 operator|=
 name|bs_get_ccb
-argument_list|()
+argument_list|(
+name|XSBS_SCSI_NOSLEEP
+argument_list|)
 operator|)
 operator|==
 name|NULL
@@ -581,7 +583,7 @@ argument_list|)
 expr_stmt|;
 name|cb
 operator|->
-name|ccb
+name|xs
 operator|=
 name|NULL
 expr_stmt|;
@@ -644,7 +646,7 @@ literal|0
 expr_stmt|;
 name|cb
 operator|->
-name|bsccb_flags
+name|flags
 operator|=
 name|flags
 operator|&
@@ -697,7 +699,7 @@ end_function
 
 begin_function
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|bs_make_msg_ccb
 parameter_list|(
@@ -720,7 +722,7 @@ name|u_int
 name|lun
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -774,7 +776,7 @@ expr_stmt|;
 else|else
 name|cb
 operator|->
-name|bsccb_flags
+name|flags
 operator||=
 name|flags
 operator|&
@@ -839,7 +841,7 @@ name|timex
 decl_stmt|;
 block|{
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -884,7 +886,7 @@ parameter_list|(
 name|cb
 parameter_list|)
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -904,7 +906,7 @@ end_comment
 
 begin_function
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|bs_request_sense
 parameter_list|(
@@ -917,7 +919,7 @@ name|ti
 decl_stmt|;
 block|{
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -1027,7 +1029,7 @@ argument_list|)
 expr_stmt|;
 name|cb
 operator|->
-name|bsccb_flags
+name|flags
 operator||=
 name|BSSENSECCB
 expr_stmt|;
@@ -1061,7 +1063,7 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -1456,7 +1458,7 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -1863,7 +1865,7 @@ end_comment
 
 begin_function
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|bs_force_abort
 parameter_list|(
@@ -1889,7 +1891,7 @@ name|msgbase
 name|msg
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 init|=
@@ -2285,7 +2287,7 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -2518,7 +2520,7 @@ argument_list|)
 expr_stmt|;
 name|cb
 operator|->
-name|bsccb_flags
+name|flags
 operator|&=
 operator|~
 operator|(
@@ -2601,12 +2603,12 @@ name|ti
 decl_stmt|;
 block|{
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
 name|struct
-name|scsi_start_stop_unit
+name|scsi_start_stop
 name|cmd
 decl_stmt|;
 name|bzero
@@ -2617,16 +2619,29 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|scsi_start_stop_unit
+name|scsi_start_stop
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|cmd
 operator|.
 name|opcode
 operator|=
 name|START_STOP
 expr_stmt|;
+else|#
+directive|else
+name|cmd
+operator|.
+name|op_code
+operator|=
+name|START_STOP
+expr_stmt|;
+endif|#
+directive|endif
 name|cmd
 operator|.
 name|how
@@ -2657,7 +2672,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|scsi_start_stop_unit
+name|scsi_start_stop
 argument_list|)
 argument_list|,
 name|NULL
@@ -2722,7 +2737,7 @@ name|scsi_inquiry_data
 name|scsi_inquiry_data
 decl_stmt|;
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -2771,12 +2786,25 @@ name|scsi_cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|scsi_cmd
 operator|.
 name|opcode
 operator|=
 name|INQUIRY
 expr_stmt|;
+else|#
+directive|else
+name|scsi_cmd
+operator|.
+name|op_code
+operator|=
+name|INQUIRY
+expr_stmt|;
+endif|#
+directive|endif
 name|scsi_cmd
 operator|.
 name|length
@@ -2947,7 +2975,7 @@ if|if
 condition|(
 name|cb
 operator|->
-name|bsccb_flags
+name|flags
 operator|&
 name|BSCASTAT
 condition|)
@@ -4014,7 +4042,7 @@ name|ti
 decl_stmt|;
 block|{
 name|struct
-name|bsccb
+name|ccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -4201,7 +4229,7 @@ name|datalen
 argument_list|,
 name|cb
 operator|->
-name|bsccb_flags
+name|flags
 argument_list|)
 expr_stmt|;
 else|else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amd.c,v 1.3 1998/11/14 03:13:19 obrien Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amd.c,v 1.1.1.1 1998/08/23 22:07:20 obrien Exp $  *  */
 end_comment
 
 begin_comment
@@ -66,21 +66,16 @@ begin_comment
 comment|/* "kiska.southseas.nz:(pid%d)" */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|char *progname;
 comment|/* "amd" */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -91,21 +86,22 @@ literal|"unknown.domain"
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+name|char
+name|hostname
+index|[
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
+index|]
+init|=
+literal|"localhost"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|char hostname[MAXHOSTNAMELEN + 1] = "localhost";
 comment|/* Hostname */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -174,6 +170,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|foreground
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This is the top-level server */
+end_comment
+
+begin_decl_stmt
+name|int
 name|immediate_abort
 decl_stmt|;
 end_decl_stmt
@@ -185,8 +193,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|orig_umask
-init|=
-literal|022
 decl_stmt|;
 end_decl_stmt
 
@@ -202,26 +208,21 @@ name|select_intr
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+name|pid_t
+name|mypid
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|pid_t mypid;
 comment|/* Current process id */
 end_comment
 
-begin_comment
-unit|serv_state amd_state; int foreground = 1;
-comment|/* This is the top-level server */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|serv_state
+name|amd_state
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -525,7 +526,7 @@ control|)
 name|pause
 argument_list|()
 expr_stmt|;
-comment|/* should never reach here */
+comment|/* should never reache here */
 block|}
 ifdef|#
 directive|ifdef
@@ -582,7 +583,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|am_mypid
+name|mypid
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -632,7 +633,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|am_mypid
+name|mypid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -952,24 +953,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|char
-modifier|*
-name|progname
-init|=
-name|NULL
-decl_stmt|;
-comment|/* "amd" */
-name|char
-name|hostname
-index|[
-name|MAXHOSTNAMELEN
-operator|+
-literal|1
-index|]
-init|=
-literal|"localhost"
-decl_stmt|;
-comment|/* Hostname */
 ifdef|#
 directive|ifdef
 name|HAVE_SIGACTION
@@ -1060,13 +1043,10 @@ name|progname
 operator|=
 literal|"amd"
 expr_stmt|;
-name|am_set_progname
-argument_list|(
-name|progname
-argument_list|)
-expr_stmt|;
-comment|/*    * Initialize process id.  This is kept    * cached since it is used for generating    * and using file handles.    */
-name|am_set_mypid
+comment|/*    * Initialise process id.  This is kept    * cached since it is used for generating    * and using file handles.    */
+name|mypid
+operator|=
+name|getpid
 argument_list|()
 expr_stmt|;
 comment|/*    * Get local machine name    */
@@ -1131,24 +1111,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/* initialize debugging flags (Register AMQ, Enter daemon mode) */
-name|debug_flags
-operator|=
-name|D_AMQ
-operator||
-name|D_DAEMON
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*    * Initialize global options structure.    */
 name|init_global_options
 argument_list|()
 expr_stmt|;
-comment|/*    * Partially initialize hostd[].  This    * is completed in get_args().    */
+comment|/*    * Partially initialise hostd[].  This    * is completed in get_args().    */
 if|if
 condition|(
 operator|(
@@ -1179,11 +1146,6 @@ name|strcpy
 argument_list|(
 name|hostd
 argument_list|,
-name|hostname
-argument_list|)
-expr_stmt|;
-name|am_set_hostname
-argument_list|(
 name|hostname
 argument_list|)
 expr_stmt|;
@@ -1737,13 +1699,12 @@ name|pid_fsname
 argument_list|,
 literal|"%s:(pid%ld)"
 argument_list|,
-name|am_get_hostname
-argument_list|()
+name|hostname
 argument_list|,
 operator|(
 name|long
 operator|)
-name|am_mypid
+name|mypid
 argument_list|)
 expr_stmt|;
 name|do_mapc_reload
@@ -1769,9 +1730,9 @@ name|ppid
 condition|)
 name|kill
 argument_list|(
-name|ppid
-argument_list|,
 name|SIGALRM
+argument_list|,
+name|ppid
 argument_list|)
 expr_stmt|;
 name|going_down

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: preen.c,v 1.9 1998/06/15 07:07:20 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -407,11 +407,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't open checklist file: %s\n"
+literal|"can't open checklist file: %s"
 argument_list|,
 name|_PATH_FSTAB
 argument_list|)
@@ -1262,20 +1260,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 name|dk
 operator|=
 operator|*
@@ -1298,20 +1289,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1486,20 +1470,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 name|pt
 operator|=
 operator|*
@@ -1525,20 +1502,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1571,20 +1541,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1676,7 +1639,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -1766,7 +1729,7 @@ name|retried
 init|=
 literal|0
 decl_stmt|,
-name|len
+name|l
 decl_stmt|;
 name|hotroot
 operator|=
@@ -1785,14 +1748,14 @@ operator|<
 literal|0
 condition|)
 block|{
+name|warn
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"Can't stat /: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Can't stat root\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1820,16 +1783,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|warn
 argument_list|(
-literal|"Can't stat %s: %s\n"
+literal|"%s"
 argument_list|,
 name|newname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Can't stat %s\n"
+argument_list|,
+name|newname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1884,16 +1849,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|warn
 argument_list|(
-literal|"Can't stat %s: %s\n"
+literal|"%s"
 argument_list|,
 name|raw
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Can't stat %s\n"
+argument_list|,
+name|raw
 argument_list|)
 expr_stmt|;
 return|return
@@ -1958,7 +1925,7 @@ name|newname
 operator|=
 name|unrawname
 argument_list|(
-name|newname
+name|origname
 argument_list|)
 expr_stmt|;
 name|retried
@@ -1985,7 +1952,7 @@ operator|!
 name|retried
 condition|)
 block|{
-name|len
+name|l
 operator|=
 name|strlen
 argument_list|(
@@ -1996,13 +1963,13 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|len
+name|l
 operator|>
 literal|0
 operator|&&
 name|origname
 index|[
-name|len
+name|l
 index|]
 operator|==
 literal|'/'
@@ -2010,13 +1977,14 @@ condition|)
 comment|/* remove trailing slash */
 name|origname
 index|[
-name|len
+name|l
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|fsinfo
 operator|=
@@ -2025,8 +1993,6 @@ argument_list|(
 name|origname
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
 block|{
 name|printf

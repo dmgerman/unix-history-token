@@ -1347,7 +1347,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|dmy
+name|wcd
 struct_decl|;
 end_struct_decl
 
@@ -1357,7 +1357,7 @@ name|void
 name|atapi_callback_t
 parameter_list|(
 name|struct
-name|dmy
+name|wcd
 modifier|*
 parameter_list|,
 name|struct

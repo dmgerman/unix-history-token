@@ -1,54 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tilde.c -- Tilde expansion code (~/foo := $HOME/foo).    $Id: tilde.c,v 1.9 1998/02/22 23:03:21 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1988, 89, 90, 91, 92, 93, 96, 98    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* tilde.c -- Tilde expansion code (~/foo := $HOME/foo).    $Id: tilde.c,v 1.3 1996/09/29 23:12:30 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1988, 89, 90, 91, 92, 93, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
-begin_comment
-comment|/* Indent #pragma so that older Cpp's don't try to parse it. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX
-end_ifdef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|alloca
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _AIX */
-end_comment
-
-begin_comment
-comment|/* Include config.h before doing alloca.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"info.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|alloca
-end_undef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -62,11 +24,42 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_if
+
+begin_pragma
+pragma|#
+directive|pragma
+name|alloca
+end_pragma
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_AIX */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_ALLOCA_H
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -74,34 +67,107 @@ directive|include
 file|<alloca.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_AIX
-end_ifndef
-
-begin_function_decl
-name|char
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* HAVE_ALLOCA_H */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !AIX */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STDLIB_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"tilde.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRING_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"clib.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NULL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0x0
+end_define
 
 begin_endif
 endif|#
@@ -124,6 +190,24 @@ end_if
 
 begin_decl_stmt
 specifier|static
+name|void
+modifier|*
+name|xmalloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|xrealloc
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
 name|void
 modifier|*
 name|xmalloc
@@ -654,7 +738,7 @@ name|string
 operator|+=
 name|start
 expr_stmt|;
-comment|/* Make END be the index of one after the last character of the          username. */
+comment|/* Make END be the index of one after the last character of the 	 username. */
 name|end
 operator|=
 name|tilde_find_suffix
@@ -818,7 +902,7 @@ name|dirname
 operator|=
 name|filename
 condition|?
-name|xstrdup
+name|strdup
 argument_list|(
 name|filename
 argument_list|)
@@ -860,6 +944,12 @@ literal|'/'
 condition|)
 block|{
 comment|/* Prepend $HOME to the rest of the string. */
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|temp_home
@@ -869,7 +959,7 @@ argument_list|(
 literal|"HOME"
 argument_list|)
 decl_stmt|;
-comment|/* If there is no HOME variable, look up the directory in              the password database. */
+comment|/* If there is no HOME variable, look up the directory in 	     the password database. */
 if|if
 condition|(
 operator|!
@@ -972,7 +1062,7 @@ argument_list|)
 expr_stmt|;
 name|dirname
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|temp_name
 argument_list|)
@@ -1009,14 +1099,12 @@ name|i
 operator|=
 literal|1
 init|;
-operator|(
 name|c
 operator|=
 name|dirname
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++
@@ -1067,7 +1155,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* If the calling program has a special syntax for                  expanding tildes, and we couldn't find a standard                  expansion, then let them try. */
+comment|/* If the calling program has a special syntax for 		 expanding tildes, and we couldn't find a standard 		 expansion, then let them try. */
 if|if
 condition|(
 name|tilde_expansion_failure_hook
@@ -1205,7 +1293,7 @@ argument_list|)
 expr_stmt|;
 name|dirname
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|temp_name
 argument_list|)
@@ -1506,10 +1594,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
 literal|"readline: Out of virtual memory!\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|abort

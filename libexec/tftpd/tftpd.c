@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tftpd.c,v 1.11 1998/04/12 11:15:54 phk Exp $"
+literal|"$Id: tftpd.c,v 1.10 1997/12/03 07:19:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1086,7 +1086,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|xmitfile
+name|sendfile
 name|__P
 argument_list|(
 operator|(
@@ -1174,7 +1174,7 @@ literal|"netascii"
 block|,
 name|validate_access
 block|,
-name|xmitfile
+name|sendfile
 block|,
 name|recvfile
 block|,
@@ -1186,7 +1186,7 @@ literal|"octet"
 block|,
 name|validate_access
 block|,
-name|xmitfile
+name|sendfile
 block|,
 name|recvfile
 block|,
@@ -2008,7 +2008,7 @@ end_comment
 
 begin_function
 name|void
-name|xmitfile
+name|sendfile
 parameter_list|(
 name|pf
 parameter_list|)

@@ -1584,7 +1584,8 @@ name|vxintr
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vx_softc
 operator|*
 operator|)
 argument_list|)

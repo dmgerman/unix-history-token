@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Modifications to support NetBSD and media selection:  * Copyright (c) 1997 Jason R. Thorpe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.58 1998/10/22 02:00:49 dg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Modifications to support NetBSD and media selection:  * Copyright (c) 1997 Jason R. Thorpe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.56 1998/10/10 19:26:40 dg Exp $  */
 end_comment
 
 begin_comment
@@ -2084,7 +2084,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|fxp_probe
@@ -2167,7 +2166,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|fxp_probe
@@ -4466,11 +4464,6 @@ name|sc
 operator|->
 name|fxp_stats
 decl_stmt|;
-name|struct
-name|fxp_cb_tx
-modifier|*
-name|txp
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -4514,7 +4507,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Receiver's been idle for another second. 		 */
 name|sc
 operator|->
 name|rx_idle_secs
@@ -4572,71 +4564,6 @@ name|s
 operator|=
 name|splimp
 argument_list|()
-expr_stmt|;
-comment|/* 	 * Release any xmit buffers that have completed DMA. This isn't 	 * strictly necessary to do here, but it's advantagous for mbufs 	 * with external storage to be released in a timely manner rather 	 * than being defered for a potentially long time. This limits 	 * the delay to a maximum of one second. 	 */
-for|for
-control|(
-name|txp
-operator|=
-name|sc
-operator|->
-name|cbl_first
-init|;
-name|sc
-operator|->
-name|tx_queued
-operator|&&
-operator|(
-name|txp
-operator|->
-name|cb_status
-operator|&
-name|FXP_CB_STATUS_C
-operator|)
-operator|!=
-literal|0
-condition|;
-name|txp
-operator|=
-name|txp
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-name|txp
-operator|->
-name|mb_head
-operator|!=
-name|NULL
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|txp
-operator|->
-name|mb_head
-argument_list|)
-expr_stmt|;
-name|txp
-operator|->
-name|mb_head
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|sc
-operator|->
-name|tx_queued
-operator|--
-expr_stmt|;
-block|}
-name|sc
-operator|->
-name|cbl_first
-operator|=
-name|txp
 expr_stmt|;
 comment|/* 	 * If we haven't received any packets in FXP_MAC_RX_IDLE seconds, 	 * then assume the receiver has locked up and attempt to clear 	 * the condition by reprogramming the multicast filter. This is 	 * a work-around for a bug in the 82557 where the receiver locks 	 * up if it gets certain types of garbage in the syncronization 	 * bits prior to the packet header. This bug is supposed to only 	 * occur in 10Mbps mode, but has been seen to occur in 100Mbps 	 * mode as well (perhaps due to a 10/100 speed transition). 	 */
 if|if

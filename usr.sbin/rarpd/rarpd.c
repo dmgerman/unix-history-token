@@ -42,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rarpd.c,v 1.19 1998/04/02 13:20:15 roberto Exp $"
+literal|"$Id: rarpd.c,v 1.18 1998/01/16 17:38:54 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2040,7 +2040,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rarpd [-afsv] [interface]\n"
+literal|"usage: rarpd [-afnv] [interface]\n"
 argument_list|)
 expr_stmt|;
 name|exit

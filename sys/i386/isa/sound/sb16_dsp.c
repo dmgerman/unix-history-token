@@ -939,6 +939,9 @@ name|int
 name|mode
 parameter_list|)
 block|{
+name|int
+name|retval
+decl_stmt|;
 name|DEB
 argument_list|(
 name|printf
@@ -1937,18 +1940,11 @@ literal|4
 condition|)
 return|return;
 comment|/* Not a SB16 */
-name|snprintf
+name|sprintf
 argument_list|(
 name|sb16_dsp_operations
 operator|.
 name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sb16_dsp_operations
-operator|.
-name|name
-argument_list|)
 argument_list|,
 literal|"SoundBlaster 16 %d.%d"
 argument_list|,

@@ -186,16 +186,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|issort
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* do hierarchies in lexicographical order */
-end_comment
-
-begin_decl_stmt
-name|int
 name|isxargs
 decl_stmt|;
 end_decl_stmt
@@ -300,7 +290,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPXdf:sx"
+literal|"HLPXdf:x"
 argument_list|)
 operator|)
 operator|!=
@@ -370,14 +360,6 @@ name|p
 operator|++
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-name|issort
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -559,7 +541,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: find [-H | -L | -P] [-Xdsx] [-f file] [file ...] [expression]\n"
+literal|"usage: find [-H | -L | -P] [-Xdx] [-f file] [file ...] [expression]\n"
 argument_list|)
 expr_stmt|;
 name|exit

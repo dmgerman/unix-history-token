@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: floppy.c,v 1.30 1998/10/12 23:45:06 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: floppy.c,v 1.29 1998/07/18 09:42:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -99,16 +99,6 @@ name|distWanted
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-name|mountpoint
-index|[]
-init|=
-literal|"/dist"
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|Boolean
 name|mediaInitFloppy
@@ -126,6 +116,10 @@ name|struct
 name|ufs_args
 name|u_args
 decl_stmt|;
+name|char
+modifier|*
+name|mountpoint
+decl_stmt|;
 if|if
 condition|(
 name|floppyMounted
@@ -133,6 +127,16 @@ condition|)
 return|return
 name|TRUE
 return|;
+name|mountpoint
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|dev
+operator|->
+name|private
+expr_stmt|;
 if|if
 condition|(
 name|Mkdir
@@ -326,6 +330,17 @@ name|FALSE
 return|;
 block|}
 block|}
+name|msgDebug
+argument_list|(
+literal|"initFloppy: mounted floppy %s successfully on %s\n"
+argument_list|,
+name|dev
+operator|->
+name|devname
+argument_list|,
+name|mountpoint
+argument_list|)
+expr_stmt|;
 name|floppyMounted
 operator|=
 name|TRUE
@@ -372,7 +387,6 @@ name|nretries
 init|=
 literal|5
 decl_stmt|;
-comment|/*      * floppies don't use mediaGenericGet() because it's too expensive      * to speculatively open files on a floppy disk.  Make user get it      * right or give up with floppies.      */
 name|snprintf
 argument_list|(
 name|buf
@@ -381,9 +395,37 @@ name|PATH_MAX
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|mountpoint
+operator|(
+name|char
+operator|*
+operator|)
+name|dev
+operator|->
+name|private
 argument_list|,
 name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Request for %s from floppy on %s, probe is %d.\n"
+argument_list|,
+name|buf
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|dev
+operator|->
+name|private
+argument_list|,
+name|probe
 argument_list|)
 expr_stmt|;
 if|if
@@ -478,6 +520,18 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|mountpoint
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|dev
+operator|->
+name|private
+decl_stmt|;
 if|if
 condition|(
 name|floppyMounted
@@ -513,6 +567,11 @@ block|{
 name|floppyMounted
 operator|=
 name|FALSE
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Floppy unmounted successfully.\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

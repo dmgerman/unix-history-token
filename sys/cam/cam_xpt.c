@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998, 1999 Justin T. Gibbs.  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.41 1999/01/20 19:08:45 mjacob Exp $  */
+comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.23 1998/10/15 17:46:18 ken Exp $  */
 end_comment
 
 begin_include
@@ -61,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/devicestat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/interrupt.h>
 end_include
 
 begin_ifdef
@@ -274,14 +268,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|STAILQ_HEAD
 argument_list|(
 argument|highpowerlist
 argument_list|,
 argument|ccb_hdr
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|highpowerq
 expr_stmt|;
 end_expr_stmt
@@ -614,6 +610,11 @@ argument|cam_eb
 argument_list|)
 name|links
 expr_stmt|;
+name|struct
+name|async_list
+name|asyncs
+decl_stmt|;
+comment|/* Async callback info for this B/T/L */
 name|path_id_t
 name|path_id
 decl_stmt|;
@@ -767,17 +768,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
-name|char
-name|samsung
-index|[]
-init|=
-literal|"SAMSUNG"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|xpt_quirk_entry
 name|xpt_quirk_table
@@ -905,31 +895,6 @@ literal|0
 block|}
 block|,
 block|{
-comment|/* 		 * Unfortunately, the Quantum Atlas III has the same 		 * problem as the Atlas II drives above. 		 * Reported by: "Johan Granlund"<johan@granlund.nu> 		 * 		 * For future reference, the drive with the problem was: 		 * QUANTUM QM39100TD-SW N1B0 		 *  		 * It's possible that Quantum will fix the problem in later 		 * firmware revisions.  If that happens, the quirk entry 		 * will need to be made specific to the firmware revisions 		 * with the problem. 		 *  		 * XXX need to add a quirk for the 18G version of this 		 * drive, once inquiry information is known. 		 */
-comment|/* Reports QUEUE FULL for temporary resource shortages */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-name|quantum
-block|,
-literal|"QM39100*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-literal|0
-block|,
-comment|/*mintags*/
-literal|24
-block|,
-comment|/*maxtags*/
-literal|32
-block|}
-block|,
-block|{
 comment|/* 		 * Broken tagged queuing drive 		 * Reported by: Bret Ford<bford@uop.cs.uop.edu> 		 *         and: Martin Renters<martin@tdc.on.ca> 		 */
 block|{
 name|T_DIRECT
@@ -982,35 +947,11 @@ comment|/* Broken tagged queuing drive */
 block|{
 name|T_DIRECT
 block|,
-name|SIP_MEDIA_FIXED
+name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"CONNER"
 block|,
 literal|"CFP2107*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-literal|0
-block|,
-comment|/*mintags*/
-literal|0
-block|,
-comment|/*maxtags*/
-literal|0
-block|}
-block|,
-block|{
-comment|/* 		 * Broken tagged queuing drive. 		 * Submitted by: 		 * NAKAJI Hiroyuki<nakaji@zeisei.dpri.kyoto-u.ac.jp> 		 * in PR kern/9535 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-name|samsung
-block|,
-literal|"WN34324U*"
 block|,
 literal|"*"
 block|}
@@ -1080,7 +1021,7 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_FIXED
 block|,
-name|samsung
+literal|"SAMSUNG"
 block|,
 literal|"WN321010S*"
 block|,
@@ -1095,6 +1036,31 @@ literal|2
 block|,
 comment|/*maxtags*/
 literal|32
+block|}
+block|,
+block|{
+comment|/* 		 * Hack until multiple-luns are supported by 		 * the target mode code. 		 */
+block|{
+name|T_PROCESSOR
+block|,
+name|SIP_MEDIA_REMOVABLE
+operator||
+name|SIP_MEDIA_FIXED
+block|,
+literal|"FreeBSD"
+block|,
+literal|"TM-PT"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_NOLUNS
+block|,
+comment|/*mintags*/
+literal|0
+block|,
+comment|/*maxtags*/
+literal|0
 block|}
 block|,
 block|{
@@ -1148,7 +1114,7 @@ literal|255
 block|}
 block|,
 block|{
-comment|/* 		 * Many Sony CDROM drives don't like multi-LUN probing. 		 */
+comment|/* 		 * This drive doesn't like multiple LUN probing. 		 * Verified by: Jean-Marc Zucconi<jmz@FreeBSD.ORG> 		 */
 block|{
 name|T_CDROM
 block|,
@@ -1156,7 +1122,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 name|sony
 block|,
-literal|"CD-ROM CDU*"
+literal|"CD-ROM CDU-80*"
 block|,
 literal|"*"
 block|}
@@ -1210,29 +1176,6 @@ block|,
 name|CAM_QUIRK_NOSERIAL
 operator||
 name|CAM_QUIRK_NOLUNS
-block|,
-comment|/*mintags*/
-literal|0
-block|,
-comment|/*maxtags*/
-literal|0
-block|}
-block|,
-block|{
-comment|/* 		 * This old revision of the TDC3600 is also SCSI-1, and 		 * hangs upon serial number probing. 		 */
-block|{
-name|T_SEQUENTIAL
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"TANDBERG"
-block|,
-literal|" TDC 3600"
-block|,
-literal|"U07:"
-block|}
-block|,
-name|CAM_QUIRK_NOSERIAL
 block|,
 comment|/*mintags*/
 literal|0
@@ -1476,13 +1419,15 @@ begin_comment
 comment|/* "Pool" of inactive ccbs managed by xpt_alloc_ccb and xpt_free_ccb */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
 argument|ccb_hdr
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|ccb_freeq
 expr_stmt|;
 end_expr_stmt
@@ -1700,13 +1645,15 @@ begin_comment
 comment|/* Registered busses */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|cam_eb
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|xpt_busses
 expr_stmt|;
 end_expr_stmt
@@ -1875,35 +1822,17 @@ comment|/* CAM_DEBUG_BUS || CAM_DEBUG_TARGET || CAM_DEBUG_LUN */
 end_comment
 
 begin_comment
-comment|/* Our boot-time initialization hook */
+comment|/* Forward declarations for private functions */
 end_comment
 
 begin_function_decl
-specifier|static
 name|void
 name|xpt_init
 parameter_list|(
 name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|cam
-argument_list|,
-name|SI_SUB_CONFIGURE
-argument_list|,
-name|SI_ORDER_SECOND
-argument_list|,
-name|xpt_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -2317,6 +2246,13 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|xpt_devicefunc_t
+name|xptfinishconfigfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|xpt_devicefunc_t
 name|xptpassannouncefunc
 decl_stmt|;
 end_decl_stmt
@@ -2357,19 +2293,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|swihand_t
+begin_function_decl
+name|void
 name|swi_camnet
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|swihand_t
+begin_function_decl
+name|void
 name|swi_cambio
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -2718,12 +2658,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notusedyet
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -2739,11 +2673,6 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -2761,12 +2690,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notusedyet
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -2782,11 +2705,6 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3927,7 +3845,7 @@ name|union
 name|ccb
 name|ccb
 decl_stmt|;
-comment|/* 			 * This is an immediate CCB, so it's okay to 			 * allocate it on the stack. 			 */
+comment|/* 			 * This is an immedaite CCB, so it's okay to 			 * allocate it on the stack. 			 */
 comment|/* 			 * Create a path using the bus, target, and lun the 			 * user passed in. 			 */
 if|if
 condition|(
@@ -4048,11 +3966,6 @@ name|struct
 name|cam_periph_map_info
 name|mapinfo
 decl_stmt|;
-name|struct
-name|cam_path
-modifier|*
-name|old_path
-decl_stmt|;
 comment|/* 			 * We can't deal with physical addresses for this 			 * type of transaction. 			 */
 if|if
 condition|(
@@ -4071,26 +3984,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * Save this in case the caller had it set to 			 * something in particular. 			 */
-name|old_path
-operator|=
-name|inccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-expr_stmt|;
-comment|/* 			 * We really don't need a path for the matching 			 * code.  The path is needed because of the 			 * debugging statements in xpt_action().  They 			 * assume that the CCB has a valid path. 			 */
-name|inccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-operator|=
-name|xpt_periph
-operator|->
-name|path
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -4117,17 +4010,7 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|inccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-operator|=
-name|old_path
-expr_stmt|;
 break|break;
-block|}
 comment|/* 			 * This is an immediate CCB, we can send it on directly. 			 */
 name|xpt_action
 argument_list|(
@@ -4142,14 +4025,6 @@ argument_list|,
 operator|&
 name|mapinfo
 argument_list|)
-expr_stmt|;
-name|inccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-operator|=
-name|old_path
 expr_stmt|;
 name|error
 operator|=
@@ -4740,16 +4615,9 @@ comment|/* Functions accessed by the peripheral drivers */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|xpt_init
-parameter_list|(
-name|dummy
-parameter_list|)
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
+parameter_list|()
 block|{
 name|struct
 name|cam_sim
@@ -4916,8 +4784,6 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 literal|"xpt"
 argument_list|,
 name|CAM_PERIPH_BIO
@@ -5020,20 +4886,26 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Install our software interrupt handlers */
-name|register_swi
-argument_list|(
+comment|/* XXX Should call some MI function to do this */
+ifdef|#
+directive|ifdef
+name|__i386__
+name|ihandlers
+index|[
 name|SWI_CAMNET
-argument_list|,
+index|]
+operator|=
 name|swi_camnet
-argument_list|)
 expr_stmt|;
-name|register_swi
-argument_list|(
+name|ihandlers
+index|[
 name|SWI_CAMBIO
-argument_list|,
+index|]
+operator|=
 name|swi_cambio
-argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -10555,12 +10427,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notusedyet
-end_ifdef
-
 begin_comment
 comment|/*  * Execute the given function for every target in the EDT.  */
 end_comment
@@ -10616,15 +10482,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notusedyet */
-end_comment
 
 begin_comment
 comment|/*  * Execute the given function for every device in the EDT.  */
@@ -10682,12 +10539,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notusedyet
-end_ifdef
-
 begin_comment
 comment|/*  * Execute the given function for every peripheral in the EDT.  */
 end_comment
@@ -10744,15 +10595,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notusedyet */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -10790,24 +10632,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-comment|/* 	 * Don't report unconfigured devices (Wildcard devs, 	 * devices only for target mode, device instances 	 * that have been invalidated but are waiting for 	 * their last reference count to be released). 	 */
-if|if
-condition|(
-operator|(
-name|device
-operator|->
-name|flags
-operator|&
-name|CAM_DEV_UNCONFIGURED
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 name|xpt_compile_path
 argument_list|(
 operator|&
@@ -11436,12 +11260,6 @@ block|}
 comment|/* FALLTHROUGH */
 endif|#
 directive|endif
-case|case
-name|XPT_ABORT
-case|:
-case|case
-name|XPT_RESET_DEV
-case|:
 case|case
 name|XPT_ACCEPT_TARGET_IO
 case|:
@@ -12181,6 +11999,7 @@ case|case
 name|XPT_SASYNC_CB
 case|:
 block|{
+comment|/* 		 * First off, determine the list we want to 		 * be insterted into. 		 */
 name|struct
 name|ccb_setasync
 modifier|*
@@ -12215,6 +12034,19 @@ name|csa
 operator|->
 name|event_enable
 expr_stmt|;
+if|if
+condition|(
+name|csa
+operator|->
+name|ccb_h
+operator|.
+name|path
+operator|->
+name|device
+operator|!=
+name|NULL
+condition|)
+block|{
 name|async_head
 operator|=
 operator|&
@@ -12228,6 +12060,23 @@ name|device
 operator|->
 name|asyncs
 expr_stmt|;
+block|}
+else|else
+block|{
+name|async_head
+operator|=
+operator|&
+name|csa
+operator|->
+name|ccb_h
+operator|.
+name|path
+operator|->
+name|bus
+operator|->
+name|asyncs
+expr_stmt|;
+block|}
 comment|/* 		 * If there is already an entry for us, simply 		 * update it. 		 */
 name|s
 operator|=
@@ -12315,17 +12164,6 @@ name|async_node
 argument_list|,
 name|links
 argument_list|)
-expr_stmt|;
-name|csa
-operator|->
-name|ccb_h
-operator|.
-name|path
-operator|->
-name|device
-operator|->
-name|refcount
-operator|--
 expr_stmt|;
 name|free
 argument_list|(
@@ -12418,17 +12256,6 @@ name|cur_entry
 argument_list|,
 name|links
 argument_list|)
-expr_stmt|;
-name|csa
-operator|->
-name|ccb_h
-operator|.
-name|path
-operator|->
-name|device
-operator|->
-name|refcount
-operator|++
 expr_stmt|;
 block|}
 if|if
@@ -13022,7 +12849,6 @@ name|CAM_DEBUG_NONE
 expr_stmt|;
 block|}
 else|else
-block|{
 name|start_ccb
 operator|->
 name|ccb_h
@@ -13031,19 +12857,6 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|xpt_print_path
-argument_list|(
-name|cam_dpath
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"debugging flags now %x\n"
-argument_list|,
-name|cam_dflags
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -13096,6 +12909,12 @@ break|break;
 default|default:
 case|case
 name|XPT_SDEV_TYPE
+case|:
+case|case
+name|XPT_ABORT
+case|:
+case|case
+name|XPT_RESET_DEV
 case|:
 case|case
 name|XPT_TERM_IO
@@ -13628,7 +13447,7 @@ name|old_priority
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
 literal|"xpt_schedule_dev\n"
@@ -13672,7 +13491,7 @@ argument_list|)
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_SUBTRACE
 argument_list|,
 operator|(
 literal|"changed priority to %d\n"
@@ -13704,7 +13523,7 @@ name|new_priority
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_SUBTRACE
 argument_list|,
 operator|(
 literal|"Inserting onto queue\n"
@@ -13777,7 +13596,7 @@ name|s
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
 literal|"xpt_run_dev_allocq\n"
@@ -13794,7 +13613,7 @@ name|devq
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_SUBTRACE
 argument_list|,
 operator|(
 literal|"   qfrozen_cnt == 0x%x, entries == %d, "
@@ -13916,7 +13735,7 @@ name|device
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_SUBTRACE
 argument_list|,
 operator|(
 literal|"running device %p\n"
@@ -14054,7 +13873,7 @@ argument_list|)
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_SUBTRACE
 argument_list|,
 operator|(
 literal|"calling periph start\n"
@@ -14138,7 +13957,7 @@ name|s
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
 literal|"xpt_run_dev_sendq\n"
@@ -14285,7 +14104,7 @@ continue|continue;
 block|}
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_SUBTRACE
 argument_list|,
 operator|(
 literal|"running device %p\n"
@@ -15098,7 +14917,13 @@ operator|=
 name|CAM_PATH_INVALID
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|target_id
+operator|!=
+name|CAM_TARGET_WILDCARD
+condition|)
 block|{
 name|target
 operator|=
@@ -15115,6 +14940,20 @@ name|target
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|path_id
+operator|==
+name|CAM_XPT_PATH_ID
+condition|)
+block|{
+name|status
+operator|=
+name|CAM_TID_INVALID
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* Create one */
 name|struct
@@ -15151,11 +14990,16 @@ name|new_target
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 name|target
 operator|!=
 name|NULL
+operator|&&
+name|lun_id
+operator|!=
+name|CAM_LUN_WILDCARD
 condition|)
 block|{
 name|device
@@ -15173,6 +15017,20 @@ name|device
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|path_id
+operator|==
+name|CAM_XPT_PATH_ID
+condition|)
+block|{
+name|status
+operator|=
+name|CAM_LUN_INVALID
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* Create one */
 name|struct
@@ -15212,6 +15070,21 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|lun_id
+operator|!=
+name|CAM_LUN_WILDCARD
+condition|)
+block|{
+comment|/* 		 * Specific luns are not allowed if the 		 * target is wildcarded 		 */
+name|status
+operator|=
+name|CAM_LUN_INVALID
+expr_stmt|;
 block|}
 comment|/* 	 * Only touch the user's data if we are successful. 	 */
 if|if
@@ -15884,7 +15757,7 @@ name|bus
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_XPT
+name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
 literal|"xpt_release_ccb\n"
@@ -16169,6 +16042,14 @@ operator|->
 name|sim
 operator|=
 name|sim
+expr_stmt|;
+name|SLIST_INIT
+argument_list|(
+operator|&
+name|new_bus
+operator|->
+name|asyncs
+argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -17004,25 +16885,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If this wasn't a fully wildcarded async, tell all 	 * clients that want all async events. 	 */
-if|if
-condition|(
-name|bus
-operator|!=
-name|xpt_periph
-operator|->
-name|path
-operator|->
-name|bus
-condition|)
 name|xpt_async_bcast
 argument_list|(
 operator|&
-name|xpt_periph
-operator|->
-name|path
-operator|->
-name|device
+name|bus
 operator|->
 name|asyncs
 argument_list|,
@@ -17181,7 +17047,7 @@ name|ccbq
 operator|.
 name|active_ccbs
 argument_list|,
-name|ccb_hdr_tailq
+name|ccb_hdr_list
 argument_list|)
 expr_stmt|;
 if|if
@@ -17271,7 +17137,7 @@ name|ccbq
 operator|.
 name|active_ccbs
 argument_list|,
-name|ccb_hdr_tailq
+name|ccb_hdr_list
 argument_list|)
 expr_stmt|;
 if|if
@@ -19222,42 +19088,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-operator|(
-name|work_ccb
-operator|->
-name|cpi
-operator|.
-name|hba_misc
-operator|&
-name|PIM_NOINITIATOR
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * Can't scan the bus on an adapter that 			 * cannot perform the initiator role. 			 */
-name|request_ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_CMP
-expr_stmt|;
-name|xpt_free_ccb
-argument_list|(
-name|work_ccb
-argument_list|)
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|request_ccb
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* Save some state for use while we probe for devices */
 name|scan_info
 operator|=
@@ -20048,10 +19878,6 @@ modifier|*
 name|request_ccb
 parameter_list|)
 block|{
-name|struct
-name|ccb_pathinq
-name|cpi
-decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
@@ -20083,113 +19909,6 @@ literal|"xpt_scan_lun\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|xpt_setup_ccb
-argument_list|(
-operator|&
-name|cpi
-operator|.
-name|ccb_h
-argument_list|,
-name|path
-argument_list|,
-comment|/*priority*/
-literal|1
-argument_list|)
-expr_stmt|;
-name|cpi
-operator|.
-name|ccb_h
-operator|.
-name|func_code
-operator|=
-name|XPT_PATH_INQ
-expr_stmt|;
-name|xpt_action
-argument_list|(
-operator|(
-expr|union
-name|ccb
-operator|*
-operator|)
-operator|&
-name|cpi
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cpi
-operator|.
-name|ccb_h
-operator|.
-name|status
-operator|!=
-name|CAM_REQ_CMP
-condition|)
-block|{
-if|if
-condition|(
-name|request_ccb
-operator|!=
-name|NULL
-condition|)
-block|{
-name|request_ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|cpi
-operator|.
-name|ccb_h
-operator|.
-name|status
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|request_ccb
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
-block|}
-if|if
-condition|(
-operator|(
-name|cpi
-operator|.
-name|hba_misc
-operator|&
-name|PIM_NOINITIATOR
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 		 * Can't scan the bus on an adapter that 		 * cannot perform the initiator role. 		 */
-if|if
-condition|(
-name|request_ccb
-operator|!=
-name|NULL
-condition|)
-block|{
-name|request_ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_CMP
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|request_ccb
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
-block|}
 if|if
 condition|(
 name|request_ccb
@@ -20433,8 +20152,6 @@ operator|=
 name|cam_periph_alloc
 argument_list|(
 name|proberegister
-argument_list|,
-name|NULL
 argument_list|,
 name|probecleanup
 argument_list|,
@@ -23690,103 +23407,12 @@ argument_list|(
 name|work_ccb
 argument_list|)
 expr_stmt|;
-name|busses_to_config
-operator|--
-expr_stmt|;
-name|xpt_finishconfig
-argument_list|(
-name|xpt_periph
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-name|xpt_setup_ccb
-argument_list|(
-operator|&
-name|work_ccb
-operator|->
-name|ccb_h
-argument_list|,
-name|path
-argument_list|,
-comment|/*priority*/
-literal|1
-argument_list|)
-expr_stmt|;
-name|work_ccb
-operator|->
-name|ccb_h
-operator|.
-name|func_code
-operator|=
-name|XPT_PATH_INQ
-expr_stmt|;
-name|xpt_action
-argument_list|(
-name|work_ccb
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|work_ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|!=
-name|CAM_REQ_CMP
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"xptconfigfunc: CPI failed on bus %d "
-literal|"with status %d\n"
-argument_list|,
-name|bus
-operator|->
-name|path_id
-argument_list|,
-name|work_ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-argument_list|)
-expr_stmt|;
-name|xpt_finishconfig
-argument_list|(
-name|xpt_periph
-argument_list|,
-name|work_ccb
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
-operator|(
-name|work_ccb
-operator|->
-name|cpi
-operator|.
-name|hba_misc
-operator|&
-name|PIM_NOBUSRESET
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -23839,26 +23465,6 @@ argument_list|,
 name|work_ccb
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Act as though we performed a successful BUS RESET */
-name|work_ccb
-operator|->
-name|ccb_h
-operator|.
-name|func_code
-operator|=
-name|XPT_RESET_BUS
-expr_stmt|;
-name|xpt_finishconfig
-argument_list|(
-name|xpt_periph
-argument_list|,
-name|work_ccb
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -24017,6 +23623,134 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|xptfinishconfigfunc
+parameter_list|(
+name|struct
+name|cam_ed
+modifier|*
+name|device
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|union
+name|ccb
+name|work_ccb
+decl_stmt|;
+name|struct
+name|cam_path
+name|path
+decl_stmt|;
+name|cam_status
+name|status
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|status
+operator|=
+name|xpt_compile_path
+argument_list|(
+operator|&
+name|path
+argument_list|,
+name|xpt_periph
+argument_list|,
+name|device
+operator|->
+name|target
+operator|->
+name|bus
+operator|->
+name|path_id
+argument_list|,
+name|device
+operator|->
+name|target
+operator|->
+name|target_id
+argument_list|,
+name|device
+operator|->
+name|lun_id
+argument_list|)
+operator|)
+operator|!=
+name|CAM_REQ_CMP
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"xptfinishconfig: xpt_compile_path failed with status"
+literal|" %#x, halting device registration\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|xpt_setup_ccb
+argument_list|(
+operator|&
+name|work_ccb
+operator|.
+name|ccb_h
+argument_list|,
+operator|&
+name|path
+argument_list|,
+comment|/*priority*/
+literal|1
+argument_list|)
+expr_stmt|;
+name|work_ccb
+operator|.
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_GDEV_TYPE
+expr_stmt|;
+name|xpt_action
+argument_list|(
+operator|&
+name|work_ccb
+argument_list|)
+expr_stmt|;
+name|xpt_async
+argument_list|(
+name|AC_FOUND_DEVICE
+argument_list|,
+operator|&
+name|path
+argument_list|,
+operator|&
+name|work_ccb
+argument_list|)
+expr_stmt|;
+name|xpt_release_path
+argument_list|(
+operator|&
+name|path
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -24225,7 +23959,6 @@ comment|/* FALLTHROUGH */
 case|case
 name|XPT_SCAN_BUS
 case|:
-default|default:
 name|xpt_free_path
 argument_list|(
 name|done_ccb
@@ -24238,6 +23971,8 @@ expr_stmt|;
 name|busses_to_config
 operator|--
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 block|}
@@ -24292,6 +24027,14 @@ operator|(
 operator|)
 expr_stmt|;
 block|}
+comment|/* 		 * Itterate through our devices announcing 		 * them in probed bus order. 		 */
+name|xpt_for_all_devices
+argument_list|(
+name|xptfinishconfigfunc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Check for devices with no "standard" peripheral driver 		 * attached.  For any devices like that, announce the 		 * passthrough driver so the user will see something. 		 */
 name|xpt_for_all_devices
 argument_list|(
@@ -24514,16 +24257,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Should only be called by the machine interrupt dispatch routines,  * so put these prototypes here instead of in the header.  */
+comment|/*  * Should only be called by the machine interrupt dispatch routines,  * so put these prototypes here instead of in the header.  *  * XXX we should really have a way to dynamically register SWI handlers.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|swi_camnet
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|camisr
 argument_list|(
@@ -24535,12 +24275,9 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|swi_cambio
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|camisr
 argument_list|(

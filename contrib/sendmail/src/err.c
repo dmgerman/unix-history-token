@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.74 (Berkeley) 6/4/1998"
+literal|"@(#)err.c	8.74 (Berkeley) 6/4/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -701,9 +701,6 @@ name|buf
 argument_list|,
 literal|"Postmaster warning: %.*s"
 argument_list|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 name|buf
 operator|-

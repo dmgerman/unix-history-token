@@ -111,17 +111,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|net_print
-parameter_list|(
-name|int
-name|verbose
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|devsw
@@ -141,32 +130,9 @@ block|,
 name|net_close
 block|,
 name|noioctl
-name|net_print
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Print stuff about our net 'device'.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|net_print
-parameter_list|(
-name|int
-name|verbose
-parameter_list|)
-block|{
-name|pager_output
-argument_list|(
-literal|"    net:  network interface"
-argument_list|)
-expr_stmt|;
-comment|/* XXX much more verbose stuff here */
-block|}
-end_function
 
 begin_comment
 comment|/*  * Called by devopen after it sets f->f_dev to our devsw entry.  * This opens the low-level device and sets f->f_devdata.  * This is declared with variable arguments...  */

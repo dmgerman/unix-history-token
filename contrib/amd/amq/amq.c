@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amq.c,v 1.2 1998/08/23 22:52:08 obrien Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amq.c,v 1.1.1.1 1998/08/23 22:07:20 obrien Exp $  *  */
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: amq.c,v 1.2 1998/08/23 22:52:08 obrien Exp $"
+literal|"$Id: amq.c,v 1.1.1.1 1998/08/23 22:07:20 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,17 +105,12 @@ begin_comment
 comment|/* locals */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|char *progname;
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -249,7 +244,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* forward declarations */
+comment|/* forward decalrations */
 end_comment
 
 begin_ifdef
@@ -328,17 +323,36 @@ begin_comment
 comment|/* dummy variables */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+name|char
+name|hostname
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+end_decl_stmt
 
-begin_endif
-unit|char hostname[MAXHOSTNAMELEN]; pid_t mypid; serv_state amd_state; int foreground, orig_umask; int debug_flags;
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|int
+name|orig_umask
+decl_stmt|,
+name|foreground
+decl_stmt|,
+name|debug_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|pid_t
+name|mypid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|serv_state
+name|amd_state
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* structures */
@@ -1325,12 +1339,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|char
-modifier|*
-name|progname
-init|=
-name|NULL
-decl_stmt|;
 ifndef|#
 directive|ifndef
 name|HAVE_TRANSPORT_TYPE_TLI
@@ -1391,11 +1399,6 @@ condition|)
 name|progname
 operator|=
 literal|"amq"
-expr_stmt|;
-name|am_set_progname
-argument_list|(
-name|progname
-argument_list|)
 expr_stmt|;
 comment|/*    * Parse arguments    */
 while|while
@@ -1612,8 +1615,7 @@ name|stderr
 argument_list|,
 literal|"\ Usage: %s [-h host] [[-f] [-m] [-p] [-v] [-s]] | [[-u] directory ...]]\n\ \t[-l logfile|\"syslog\"] [-x log_flags] [-D dbg_opts] [-M mapent]\n\ \t[-P prognum] [-T] [-U]\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1702,8 +1704,7 @@ name|stderr
 argument_list|,
 literal|"%s: Can't get address of %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|server
 argument_list|)
@@ -1895,8 +1896,7 @@ name|stderr
 argument_list|,
 literal|"%s: failed to contact portmapper on host \"%s\". %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|server
 argument_list|,
@@ -1996,8 +1996,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|clnt_pcreateerror
@@ -2062,8 +2061,7 @@ name|stderr
 argument_list|,
 literal|"%s: daemon not compiled for debug\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|errs
@@ -2089,8 +2087,7 @@ name|stderr
 argument_list|,
 literal|"%s: debug setting for \"%s\" failed\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|debug_opts
 argument_list|)
@@ -2151,8 +2148,7 @@ name|stderr
 argument_list|,
 literal|"%s: setting log level to \"%s\" failed\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|xlog_optstr
 argument_list|)
@@ -2213,8 +2209,7 @@ name|stderr
 argument_list|,
 literal|"%s: setting logfile to \"%s\" failed\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|amq_logfile
 argument_list|)
@@ -2275,8 +2270,7 @@ name|stderr
 argument_list|,
 literal|"%s: amd on %s cannot flush the map cache\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|server
 argument_list|)
@@ -2376,8 +2370,7 @@ name|stderr
 argument_list|,
 literal|"%s: amd on %s cannot provide mount info\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|server
 argument_list|)
@@ -2448,13 +2441,12 @@ name|stderr
 argument_list|,
 literal|"%s: could not start new "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"automount point"
+literal|"autmount point"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2510,8 +2502,7 @@ name|stderr
 argument_list|,
 literal|"%s: failed to get version information\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|errs
@@ -2565,8 +2556,7 @@ name|stderr
 argument_list|,
 literal|"%s: failed to get PID of amd\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|errs
@@ -2716,8 +2706,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s not automounted\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|fs
 argument_list|)
@@ -2745,8 +2734,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|clnt_perror
@@ -2820,8 +2808,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|clnt_perror
@@ -2970,8 +2957,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|)
 expr_stmt|;
 name|clnt_perror
@@ -2995,7 +2981,7 @@ expr_stmt|;
 return|return
 name|errs
 return|;
-comment|/* should never reach here */
+comment|/* should never reache here */
 block|}
 end_function
 
@@ -3465,8 +3451,7 @@ name|stderr
 argument_list|,
 literal|"%s: failed to contact portmapper on host \"%s\". %s\n"
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|host
 argument_list|,
@@ -3535,12 +3520,12 @@ name|host
 argument_list|)
 condition|)
 block|{
-comment|/*        * don't print error messages here, since amd might legitimately        * serve udp only        */
+comment|/*        * don't pring error messages here, since amd might legitimately        * serve udp only        */
 goto|goto
 name|tryudp
 goto|;
 block|}
-comment|/* Create privileged TCP socket */
+comment|/* Create priviledged TCP socket */
 operator|*
 name|sock
 operator|=
@@ -3714,7 +3699,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* create privileged UDP socket */
+comment|/* create priviledged UDP socket */
 operator|*
 name|sock
 operator|=

@@ -160,6 +160,24 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|dec_2100_a50_device_register
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|dec_2100_a50_intr_map
 name|__P
 argument_list|(
@@ -541,7 +559,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"consinit: unknown console type %ld\n"
+literal|"consinit: unknown console type %d\n"
 argument_list|,
 name|ctb
 operator|->
@@ -593,6 +611,12 @@ name|pcicfgregs
 operator|*
 operator|)
 name|arg
+decl_stmt|;
+specifier|static
+name|int
+name|intr_setup_done
+init|=
+literal|0
 decl_stmt|;
 comment|/*          * Slot->interrupt translation.  Taken from NetBSD           */
 if|if

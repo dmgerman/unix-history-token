@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: indent.c,v 1.2 1997/07/15 09:50:59 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -866,9 +866,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|input
-operator|=
-name|stdin
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -880,10 +879,6 @@ condition|)
 if|if
 condition|(
 name|troff
-operator|||
-name|input
-operator|==
-name|stdin
 condition|)
 name|output
 operator|=
@@ -5261,7 +5256,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: indent [ file [ outfile ] ] [ options ]\n"
+literal|"usage: indent file [ outfile ] [ options ]\n"
 argument_list|)
 expr_stmt|;
 name|exit

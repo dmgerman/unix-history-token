@@ -278,16 +278,16 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_setup_intr
+name|bus_create_intr
 argument_list|,
-name|bus_generic_setup_intr
+name|bus_generic_create_intr
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_teardown_intr
+name|bus_connect_intr
 argument_list|,
-name|bus_generic_teardown_intr
+name|bus_generic_connect_intr
 argument_list|)
 block|,
 block|{
@@ -408,7 +408,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" at %s%d offset 0x%x"
+literal|" at %s%d offset 0x%lx"
 argument_list|,
 name|device_get_name
 argument_list|(

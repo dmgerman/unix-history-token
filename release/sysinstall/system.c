@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.86 1999/01/08 00:14:22 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.83 1998/09/30 11:44:29 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/wait.h>
 end_include
 
 begin_comment
@@ -53,14 +53,14 @@ begin_define
 define|#
 directive|define
 name|DOC_TMP_DIR
-value|"/tmp/.doc"
+value|"/tmp"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DOC_TMP_FILE
-value|"/tmp/.doc/doc.tmp"
+value|"/tmp/doc.tmp"
 end_define
 
 begin_decl_stmt
@@ -138,52 +138,11 @@ literal|"/stand/gunzip"
 else|:
 literal|"/usr/bin/gunzip"
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|directory_exists
-argument_list|(
-name|DOC_TMP_DIR
-argument_list|)
-condition|)
-block|{
 name|Mkdir
 argument_list|(
 name|DOC_TMP_DIR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|chown
-argument_list|(
-name|DOC_TMP_DIR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-name|NULL
-return|;
-if|if
-condition|(
-name|chmod
-argument_list|(
-name|DOC_TMP_DIR
-argument_list|,
-name|S_IRWXU
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-name|NULL
-return|;
-block|}
-else|else
 name|unlink
 argument_list|(
 name|DOC_TMP_FILE
@@ -544,16 +503,6 @@ argument_list|,
 name|handle_intr
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vsystem
-argument_list|(
-literal|"rm -rf %s"
-argument_list|,
-name|DOC_TMP_DIR
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -609,15 +558,10 @@ comment|/* Shut down curses */
 name|endwin
 argument_list|()
 expr_stmt|;
-comment|/* If we have a temporary doc dir lying around, nuke it */
-operator|(
-name|void
-operator|)
-name|vsystem
+comment|/* If we have a temporary doc file lying around, nuke it */
+name|unlink
 argument_list|(
-literal|"rm -rf %s"
-argument_list|,
-name|DOC_TMP_DIR
+name|DOC_TMP_FILE
 argument_list|)
 expr_stmt|;
 comment|/* REALLY exit! */
@@ -636,23 +580,11 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-name|reboot
-argument_list|(
-name|RB_HALT
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|reboot
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|exit
@@ -929,52 +861,7 @@ name|buf
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"/stand/help/%s.TXT.gz"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file_readable
-argument_list|(
-name|buf
-argument_list|)
-condition|)
-return|return
-name|expand
-argument_list|(
-name|buf
-argument_list|)
-return|;
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-name|FILENAME_MAX
-argument_list|,
 literal|"/usr/src/release/sysinstall/help/%s.hlp"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file_readable
-argument_list|(
-name|buf
-argument_list|)
-condition|)
-return|return
-name|buf
-return|;
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-name|FILENAME_MAX
-argument_list|,
-literal|"/usr/src/release/sysinstall/help/%s.TXT"
 argument_list|,
 name|file
 argument_list|)

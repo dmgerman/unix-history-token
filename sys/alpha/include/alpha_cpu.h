@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: alpha_cpu.h,v 1.4 1998/12/23 11:50:50 dfr Exp $ */
+comment|/* $Id: alpha_cpu.h,v 1.2 1998/06/10 10:54:21 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1056,19 +1056,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALPHA_AMASK_FIX
-value|0x0002
-end_define
-
-begin_comment
-comment|/* sqrt and f<-> i conversion extension */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ALPHA_AMASK_CIX
-value|0x0004
+value|0x0002
 end_define
 
 begin_comment
@@ -1078,23 +1067,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALPHA_AMASK_MVI
+name|ALPHA_AMASK_MAX
 value|0x0100
 end_define
 
 begin_comment
 comment|/* multimedia extension */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ALPHA_AMASK_PRECISE
-value|0x0200
-end_define
-
-begin_comment
-comment|/* Precise arithmetic traps */
 end_comment
 
 begin_comment
@@ -1558,23 +1536,6 @@ name|alpha_pal_wrval
 name|__P
 argument_list|(
 operator|(
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|long
-name|alpha_pal_wrperfmon
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|,
 name|unsigned
 name|long
 operator|)

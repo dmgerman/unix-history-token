@@ -1023,12 +1023,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|ointhand2_t
-name|sbintr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|sb_reset_dsp
@@ -1329,12 +1323,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|ointhand2_t
-name|pasintr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|pas_set_intr
@@ -1480,11 +1468,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|ointhand2_t
-name|gusintr
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*void gusintr(int irq); */
+end_comment
 
 begin_function_decl
 name|void
@@ -1691,12 +1677,6 @@ name|hw_config
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|ointhand2_t
-name|m6850intr
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -1907,12 +1887,6 @@ name|osp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|ointhand2_t
-name|adintr
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -2139,12 +2113,6 @@ name|hw_config
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|ointhand2_t
-name|sscapeintr
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int

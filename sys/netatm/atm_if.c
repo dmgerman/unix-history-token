@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_if.c,v 1.2 1998/10/31 20:06:54 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_if.c,v 1.13 1998/07/23 21:43:55 root Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * Core ATM Services  * -----------------  *  * ATM interface management  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netatm/kern_include.h>
-end_include
 
 begin_ifndef
 ifndef|#
@@ -19,18 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"@(#) $Id: atm_if.c,v 1.2 1998/10/31 20:06:54 phk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|RCSid
+init|=
+literal|"@(#) $Id: atm_if.c,v 1.13 1998/07/23 21:43:55 root Exp $"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<netatm/kern_include.h>
+end_include
 
 begin_if
 if|#
@@ -923,18 +925,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|apr
 operator|.
 name|anp_intf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|apr
-operator|.
-name|anp_intf
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -1159,18 +1154,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|anr
 operator|.
 name|anp_intf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|anr
-operator|.
-name|anp_intf
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -1210,18 +1198,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|anr
 operator|.
 name|anp_phy_intf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|anr
-operator|.
-name|anp_phy_intf
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -1304,14 +1285,9 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|snprintf
+name|sprintf
 argument_list|(
 name|ifname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ifname
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -1851,18 +1827,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|acr
 operator|.
 name|acp_intf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|acr
-operator|.
-name|acp_intf
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,

@@ -770,11 +770,9 @@ expr_stmt|;
 comment|/*<16>Release bus*/
 if|if
 condition|(
-operator|(
 name|z
 operator|&
 name|MATCD_ST_AUDIOBSY
-operator|)
 operator|==
 literal|0
 operator|&&

@@ -709,13 +709,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|twintr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -1259,12 +1252,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-name|idp
-operator|->
-name|id_ointr
-operator|=
-name|twintr
-expr_stmt|;
 name|sc
 operator|=
 operator|&
@@ -1386,6 +1373,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|port
+decl_stmt|;
 name|s
 operator|=
 name|spltty
@@ -1490,6 +1480,13 @@ index|]
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+name|int
+name|port
+init|=
+name|sc
+operator|->
+name|sc_port
 decl_stmt|;
 name|s
 operator|=
@@ -4357,7 +4354,6 @@ literal|0
 return|;
 block|}
 comment|/*  * This routine handles interrupts that occur when there is a falling  * transition on the RX input.  There isn't going to be a transition  * on every bit (some are zero), but if we are smart and keep track of  * how long it's been since the last interrupt (via the zero crossing  * detect line and/or high-resolution time-of-day routine), we can  * reconstruct the transmission without having to poll.  */
-specifier|static
 name|void
 name|twintr
 parameter_list|(

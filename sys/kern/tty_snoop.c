@@ -668,8 +668,12 @@ name|char
 modifier|*
 name|nbuf
 decl_stmt|;
-name|KASSERT
-argument_list|(
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+operator|(
 name|snp
 operator|->
 name|snp_len
@@ -677,16 +681,19 @@ operator|+
 name|snp
 operator|->
 name|snp_base
-operator|<=
+operator|)
+operator|>
 name|snp
 operator|->
 name|snp_blen
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"snoop buffer error"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|snp
@@ -1097,17 +1104,6 @@ name|char
 modifier|*
 name|nbuf
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|n
-operator|>=
-literal|0
-argument_list|,
-operator|(
-literal|"negative snoop char count"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|n
@@ -1120,6 +1116,17 @@ return|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"bad snoop char count"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -11,7 +11,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|copyright
 index|[]
@@ -37,7 +36,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sccsid
 index|[]
@@ -307,10 +305,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|cat
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -369,27 +363,6 @@ name|style
 operator|=
 name|COMPRESS
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|p
-argument_list|,
-literal|"zcat"
-argument_list|)
-condition|)
-block|{
-name|cat
-operator|=
-literal|1
-expr_stmt|;
-name|style
-operator|=
-name|DECOMPRESS
-expr_stmt|;
-block|}
 else|else
 name|errx
 argument_list|(
@@ -399,6 +372,8 @@ literal|"unknown program name"
 argument_list|)
 expr_stmt|;
 name|bits
+operator|=
+name|cat
 operator|=
 literal|0
 expr_stmt|;

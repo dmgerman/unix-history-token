@@ -1,13 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.h,v 1.11 1999/01/08 17:31:30 eivind Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.20 1998/04/15 17:47:40 bde Exp $  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_SYS_ZONE_H
-end_ifndef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -361,9 +365,12 @@ name|void
 modifier|*
 name|item
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
 if|if
 condition|(
 name|z
@@ -415,9 +422,12 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -505,9 +515,12 @@ name|z
 operator|->
 name|zitems
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -617,9 +630,12 @@ modifier|*
 name|item
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SMP
+argument_list|)
 name|zfreei
 argument_list|(
 name|z

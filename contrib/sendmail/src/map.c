@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.256 (Berkeley) 11/15/1998"
+literal|"@(#)map.c	8.239 (Berkeley) 6/5/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -1597,7 +1597,7 @@ argument_list|,
 name|pass
 argument_list|)
 expr_stmt|;
-comment|/* 	**  Pass 0 opens all non-rebuildable maps. 	**  Pass 1 opens all rebuildable maps for read. 	**  Pass 2 rebuilds all rebuildable maps. 	*/
+comment|/* 	** Pass 0 opens all non-rebuildable maps. 	** Pass 1 opens all rebuildable maps for read. 	** Pass 2 rebuilds all rebuildable maps. 	*/
 name|rebuildable
 operator|=
 operator|(
@@ -1795,13 +1795,6 @@ name|map_mflags
 operator||=
 name|MF_OPEN
 expr_stmt|;
-name|map
-operator|->
-name|map_pid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1894,182 +1887,8 @@ name|map_mflags
 operator||=
 name|MF_OPEN
 expr_stmt|;
-name|map
-operator|->
-name|map_pid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  CLOSEMAPS -- close all open maps opened by the current pid. ** **	Parameters: **		none ** **	Returns: **		none. */
-end_comment
-
-begin_function
-name|void
-name|closemaps
-parameter_list|()
-block|{
-specifier|extern
-name|void
-name|map_close
-name|__P
-argument_list|(
-operator|(
-name|STAB
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-name|stabapply
-argument_list|(
-name|map_close
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* ARGSUSED1 */
-end_comment
-
-begin_function
-name|void
-name|map_close
-parameter_list|(
-name|s
-parameter_list|,
-name|unused
-parameter_list|)
-specifier|register
-name|STAB
-modifier|*
-name|s
-decl_stmt|;
-name|int
-name|unused
-decl_stmt|;
-block|{
-name|MAP
-modifier|*
-name|map
-decl_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|s_type
-operator|!=
-name|ST_MAP
-condition|)
-return|return;
-name|map
-operator|=
-operator|&
-name|s
-operator|->
-name|s_map
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|MF_VALID
-argument_list|,
-name|map
-operator|->
-name|map_mflags
-argument_list|)
-operator|||
-operator|!
-name|bitset
-argument_list|(
-name|MF_OPEN
-argument_list|,
-name|map
-operator|->
-name|map_mflags
-argument_list|)
-operator|||
-name|map
-operator|->
-name|map_pid
-operator|!=
-name|getpid
-argument_list|()
-condition|)
-return|return;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|38
-argument_list|,
-literal|5
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"closemaps: closing %s (%s)\n"
-argument_list|,
-name|map
-operator|->
-name|map_mname
-operator|==
-name|NULL
-condition|?
-literal|"NULL"
-else|:
-name|map
-operator|->
-name|map_mname
-argument_list|,
-name|map
-operator|->
-name|map_file
-operator|==
-name|NULL
-condition|?
-literal|"NULL"
-else|:
-name|map
-operator|->
-name|map_file
-argument_list|)
-expr_stmt|;
-name|map
-operator|->
-name|map_class
-operator|->
-name|map_close
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
-name|map
-operator|->
-name|map_mflags
-operator|&=
-operator|~
-operator|(
-name|MF_OPEN
-operator||
-name|MF_WRITABLE
-operator|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4104,9 +3923,6 @@ name|map_mflags
 operator||=
 name|MF_LOCKED
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_TRUSTED_USER
 if|if
 condition|(
 name|geteuid
@@ -4114,7 +3930,7 @@ argument_list|()
 operator|==
 literal|0
 operator|&&
-name|TrustedUid
+name|TrustedFileUid
 operator|!=
 literal|0
 condition|)
@@ -4125,7 +3941,7 @@ name|fchown
 argument_list|(
 name|dfd
 argument_list|,
-name|TrustedUid
+name|TrustedFileUid
 argument_list|,
 operator|-
 literal|1
@@ -4137,7 +3953,7 @@ name|fchown
 argument_list|(
 name|pfd
 argument_list|,
-name|TrustedUid
+name|TrustedFileUid
 argument_list|,
 operator|-
 literal|1
@@ -4185,8 +4001,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -4500,13 +4314,6 @@ name|map_mflags
 operator||=
 name|MF_OPEN
 expr_stmt|;
-name|map
-operator|->
-name|map_pid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4563,13 +4370,6 @@ operator|->
 name|map_mflags
 operator||=
 name|MF_OPEN
-expr_stmt|;
-name|map
-operator|->
-name|map_pid
-operator|=
-name|getpid
-argument_list|()
 expr_stmt|;
 name|syserr
 argument_list|(
@@ -5291,7 +5091,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXHOSTNAMELEN
+literal|200
 index|]
 decl_stmt|;
 name|inclnull
@@ -6870,9 +6670,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_TRUSTED_USER
 if|if
 condition|(
 name|geteuid
@@ -6880,7 +6677,7 @@ argument_list|()
 operator|==
 literal|0
 operator|&&
-name|TrustedUid
+name|TrustedFileUid
 operator|!=
 literal|0
 condition|)
@@ -6891,7 +6688,7 @@ name|fchown
 argument_list|(
 name|fd
 argument_list|,
-name|TrustedUid
+name|TrustedFileUid
 argument_list|,
 operator|-
 literal|1
@@ -6935,8 +6732,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -7416,13 +7211,6 @@ name|map_mflags
 operator||=
 name|MF_OPEN
 expr_stmt|;
-name|map
-operator|->
-name|map_pid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7489,13 +7277,6 @@ operator|->
 name|map_mflags
 operator||=
 name|MF_OPEN
-expr_stmt|;
-name|map
-operator|->
-name|map_pid
-operator|=
-name|getpid
-argument_list|()
 expr_stmt|;
 name|syserr
 argument_list|(
@@ -8532,51 +8313,6 @@ literal|0
 condition|)
 else|#
 directive|else
-comment|/* 	**  Berkeley DB can use internal shared memory 	**  locking for its memory pool.  Closing a map 	**  opened by another process will interfere 	**  with the shared memory and locks of the parent 	**  process leaving things in a bad state. 	** 	**  If this map was not opened by the current 	**  process, do not close it here but recover 	**  the file descriptor. 	*/
-if|if
-condition|(
-name|map
-operator|->
-name|map_pid
-operator|!=
-name|getpid
-argument_list|()
-condition|)
-block|{
-name|int
-name|fd
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|errno
-operator|=
-name|db
-operator|->
-name|fd
-argument_list|(
-name|db
-argument_list|,
-operator|&
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|>=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 operator|(
@@ -8598,19 +8334,7 @@ endif|#
 directive|endif
 name|syserr
 argument_list|(
-literal|"db_map_close(%s, %s, %lx): db close failure"
-argument_list|,
-name|map
-operator|->
-name|map_mname
-argument_list|,
-name|map
-operator|->
-name|map_file
-argument_list|,
-name|map
-operator|->
-name|map_mflags
+literal|"readaliases: db close failure"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10438,21 +10162,12 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 condition|)
-block|{
 name|map
 operator|->
 name|map_mflags
 operator||=
 name|MF_OPEN
 expr_stmt|;
-name|map
-operator|->
-name|map_pid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
-block|}
 else|else
 block|{
 operator|*
@@ -11814,24 +11529,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LDAP_VERSION3
-name|ld
-operator|=
-name|ldap_init
-argument_list|(
-name|lmap
-operator|->
-name|ldaphost
-argument_list|,
-name|lmap
-operator|->
-name|ldapport
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+if|if
+condition|(
+operator|(
 name|ld
 operator|=
 name|ldap_open
@@ -11844,28 +11544,7 @@ name|lmap
 operator|->
 name|ldapport
 argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* clear the event if it has not sprung */
-if|if
-condition|(
-name|lmap
-operator|->
-name|timeout
-operator|.
-name|tv_sec
-operator|!=
-literal|0
-condition|)
-name|clrevent
-argument_list|(
-name|ev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ld
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -11885,20 +11564,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"%sldapopen failed to %s in map %s"
-argument_list|,
-name|bitset
-argument_list|(
-name|MF_NODEFER
-argument_list|,
-name|map
-operator|->
-name|map_mflags
-argument_list|)
-condition|?
-literal|""
-else|:
-literal|"421 "
+literal|"ldapopen failed to %s in map %s"
 argument_list|,
 name|lmap
 operator|->
@@ -11914,69 +11580,12 @@ return|return
 name|FALSE
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|LDAP_VERSION3
-name|ldap_set_option
+comment|/* clear the event if it has not sprung */
+name|clrevent
 argument_list|(
-name|ld
-argument_list|,
-name|LDAP_OPT_DEREF
-argument_list|,
-operator|&
-name|lmap
-operator|->
-name|deref
+name|ev
 argument_list|)
 expr_stmt|;
-name|ldap_set_option
-argument_list|(
-name|ld
-argument_list|,
-name|LDAP_OPT_TIMELIMIT
-argument_list|,
-operator|&
-name|lmap
-operator|->
-name|timelimit
-argument_list|)
-expr_stmt|;
-name|ldap_set_option
-argument_list|(
-name|ld
-argument_list|,
-name|LDAP_OPT_SIZELIMIT
-argument_list|,
-operator|&
-name|lmap
-operator|->
-name|sizelimit
-argument_list|)
-expr_stmt|;
-name|ldap_set_option
-argument_list|(
-name|ld
-argument_list|,
-name|LDAP_OPT_REFERRALS
-argument_list|,
-operator|&
-name|lmap
-operator|->
-name|ldap_options
-argument_list|)
-expr_stmt|;
-comment|/* ld needs to be cast into the map struct */
-name|lmap
-operator|->
-name|ld
-operator|=
-name|ld
-expr_stmt|;
-return|return
-name|TRUE
-return|;
-else|#
-directive|else
 comment|/* From here on in we can use ldap internal timelimits */
 name|ld
 operator|->
@@ -12076,13 +11685,11 @@ block|}
 return|return
 name|FALSE
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/* **  LDAP_MAP_CLOSE -- close ldap map */
+comment|/* ** LDAP_MAP_CLOSE -- close ldap map */
 end_comment
 
 begin_function
@@ -12135,7 +11742,7 @@ name|SUNET_ID
 end_ifdef
 
 begin_comment
-comment|/* **  SUNET_ID_HASH -- Convert a string to it's Sunet_id canonical form **  This only makes sense at Stanford University. */
+comment|/* ** SUNET_ID_HASH -- Convert a string to it's Sunet_id canonical form ** This only makes sense at Stanford University. */
 end_comment
 
 begin_function
@@ -12255,7 +11862,7 @@ comment|/* SUNET_ID */
 end_comment
 
 begin_comment
-comment|/* **  LDAP_MAP_LOOKUP -- look up a datum in a LDAP map */
+comment|/* ** LDAP_MAP_LOOKUP -- look up a datum in a LDAP map */
 end_comment
 
 begin_function
@@ -12336,16 +11943,6 @@ name|result
 decl_stmt|;
 name|int
 name|name_len
-decl_stmt|;
-name|char
-modifier|*
-name|fp
-decl_stmt|,
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
 decl_stmt|;
 if|if
 condition|(
@@ -12464,152 +12061,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*SUNET_ID */
-comment|/* substitute keybuf into filter, perhaps multiple times */
-name|fp
-operator|=
+comment|/* sprintf keybuf into filter */
+name|snprintf
+argument_list|(
 name|filter
-expr_stmt|;
-name|p
-operator|=
+argument_list|,
+sizeof|sizeof
+name|filter
+argument_list|,
 name|lmap
 operator|->
 name|filter
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|q
-operator|=
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|'%'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|q
-index|[
-literal|1
-index|]
-operator|==
-literal|'s'
-condition|)
-block|{
-name|snprintf
-argument_list|(
-name|fp
-argument_list|,
-name|SPACELEFT
-argument_list|(
-name|filter
-argument_list|,
-name|fp
-argument_list|)
-argument_list|,
-literal|"%.*s%s"
-argument_list|,
-name|q
-operator|-
-name|p
-argument_list|,
-name|p
 argument_list|,
 name|keybuf
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|q
-operator|+
-literal|2
-expr_stmt|;
-block|}
-else|else
-block|{
-name|snprintf
-argument_list|(
-name|fp
-argument_list|,
-name|SPACELEFT
-argument_list|(
-name|filter
-argument_list|,
-name|fp
-argument_list|)
-argument_list|,
-literal|"%.*s"
-argument_list|,
-name|q
-operator|-
-name|p
-operator|+
-literal|1
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|q
-operator|+
-operator|(
-name|q
-index|[
-literal|1
-index|]
-operator|==
-literal|'%'
-condition|?
-literal|2
-else|:
-literal|1
-operator|)
-expr_stmt|;
-block|}
-name|fp
-operator|+=
-name|strlen
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-block|}
-name|snprintf
-argument_list|(
-name|fp
-argument_list|,
-name|SPACELEFT
-argument_list|(
-name|filter
-argument_list|,
-name|fp
-argument_list|)
-argument_list|,
-literal|"%s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|38
-argument_list|,
-literal|20
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"ldap search filter=%s\n"
-argument_list|,
-name|filter
 argument_list|)
 expr_stmt|;
 if|if
@@ -12743,20 +12207,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"%sError in ldap_search_st using %s in map %s"
-argument_list|,
-name|bitset
-argument_list|(
-name|MF_NODEFER
-argument_list|,
-name|map
-operator|->
-name|map_mflags
-argument_list|)
-condition|?
-literal|""
-else|:
-literal|"421 "
+literal|"Error in ldap_search_st using %s in map %s"
 argument_list|,
 name|filter
 argument_list|,
@@ -12973,7 +12424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  LDAP_MAP_DEQUOTE - helper routine for ldap_map_parseargs */
+comment|/* ** LDAP_MAP_DEQUOTE - helper routine for ldap_map_parseargs */
 end_comment
 
 begin_function
@@ -13059,7 +12510,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  LDAP_MAP_PARSEARGS -- parse ldap map definition args. */
+comment|/* ** LDAP_MAP_PARSEARGS -- parse ldap map definition args. */
 end_comment
 
 begin_function
@@ -13906,7 +13357,7 @@ name|map_domain
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	**  We need to swallow up all the stuff into a struct 	**  and dump it into map->map_dbptr1 	*/
+comment|/* 	** We need to swallow up all the stuff into a struct 	** and dump it into map->map_dbptr1 	*/
 if|if
 condition|(
 name|lmap
@@ -14174,7 +13625,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  syslog map */
+comment|/* ** syslog map */
 end_comment
 
 begin_if
@@ -14195,7 +13646,7 @@ comment|/* overload field */
 end_comment
 
 begin_comment
-comment|/* **  SYSLOG_MAP_PARSEARGS -- check for priority level to syslog messages. */
+comment|/* ** SYSLOG_MAP_PARSEARGS -- check for priority level to syslog messages. */
 end_comment
 
 begin_function
@@ -14545,7 +13996,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SYSLOG_MAP_LOOKUP -- rewrite and syslog message.  Always return empty string */
+comment|/* ** SYSLOG_MAP_LOOKUP -- rewrite and syslog message.  Always return empty string */
 end_comment
 
 begin_function
@@ -15329,6 +14780,10 @@ name|int
 name|mode
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -16335,10 +15790,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* NETINFO */
-end_comment
-
 begin_escape
 end_escape
 
@@ -17152,22 +16603,6 @@ sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|==
-name|NULL
-condition|)
-block|{
-operator|*
-name|statp
-operator|=
-name|EX_NOTFOUND
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|vsize
 operator|=
 name|strlen

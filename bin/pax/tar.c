@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tar.c,v 1.10 1998/05/15 06:27:47 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -3841,7 +3841,7 @@ operator|(
 name|arcn
 operator|->
 name|ln_nlen
-operator|>=
+operator|>
 sizeof|sizeof
 argument_list|(
 name|hd
@@ -4919,6 +4919,8 @@ operator|(
 name|TPFSZ
 operator|+
 name|TNMSZ
+operator|+
+literal|1
 operator|)
 condition|)
 return|return
@@ -4926,7 +4928,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * we start looking at the biggest sized piece that fits in the name 	 * field. We walk foward looking for a slash to split at. The idea is 	 * to find the biggest piece to fit in the name field (or the smallest 	 * prefix we can find) 	 */
+comment|/* 	 * we start looking at the biggest sized piece that fits in the name 	 * field. We walk foward looking for a slash to split at. The idea is 	 * to find the biggest piece to fit in the name field (or the smallest 	 * prefix we can find) (the -1 is correct the biggest piece would 	 * include the slash between the two parts that gets thrown away) 	 */
 name|start
 operator|=
 name|name
@@ -4934,6 +4936,8 @@ operator|+
 name|len
 operator|-
 name|TNMSZ
+operator|-
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -4978,7 +4982,7 @@ if|if
 condition|(
 operator|(
 name|len
-operator|>=
+operator|>
 name|TPFSZ
 operator|)
 operator|||

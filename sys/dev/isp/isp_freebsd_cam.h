@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd_cam.h,v 1.11 1999/01/10 02:51:06 mjacob Exp $ */
-end_comment
-
-begin_comment
-comment|/* release_12_28_98_A+ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -191,6 +187,10 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
+name|struct
+name|callout_handle
+name|watchid
+decl_stmt|;
 specifier|volatile
 name|char
 name|simqfrozen
@@ -278,27 +278,6 @@ parameter_list|)
 value|if (isp->isp_dblev>= lev) printf x
 end_define
 
-begin_define
-define|#
-directive|define
-name|MEMZERO
-value|bzero
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEMCPY
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|amt
-parameter_list|)
-value|bcopy((src), (dst), (amt))
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -334,13 +313,6 @@ define|#
 directive|define
 name|ISP_LOCKVAL_DECL
 value|int isp_spl_save
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_ILOCKVAL_DECL
-value|ISP_LOCKVAL_DECL
 end_define
 
 begin_define
@@ -507,7 +479,7 @@ name|XS_SNSLEN
 parameter_list|(
 name|ccb
 parameter_list|)
-value|imin((sizeof((ccb)->sense_data)), ccb->sense_len)
+value|imin((sizeof (ccb)->sense_data), ccb->sense_len)
 end_define
 
 begin_define
@@ -651,18 +623,6 @@ define|\
 value|((ccb)->ccb_h.spriv_field0 == CAM_REQ_INPROG)
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|isp_done
-parameter_list|(
-name|struct
-name|ccb_scsiio
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -670,7 +630,8 @@ name|XS_CMD_DONE
 parameter_list|(
 name|sccb
 parameter_list|)
-value|isp_done(sccb)
+define|\
+value|if (XS_NOERR((sccb))) \ 		XS_SETERR((sccb), CAM_REQ_CMP); \ 	(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 	(sccb)->ccb_h.status |= (sccb)->ccb_h.spriv_field0; \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) == CAM_REQ_CMP&& \ 	    (sccb)->scsi_status != SCSI_STATUS_OK) { \ 		(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 		(sccb)->ccb_h.status |= CAM_SCSI_STATUS_ERROR; \ 	} \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { \ 		if (((sccb)->ccb_h.status& CAM_DEV_QFRZN) == 0) { \ 			struct ispsoftc *isp = XS_ISP((sccb)); \ 			IDPRINTF(3, ("%s: freeze devq %d.%d ccbstat 0x%x\n",\ 			    isp->isp_name, (sccb)->ccb_h.target_id, \ 			    (sccb)->ccb_h.target_lun, (sccb)->ccb_h.status)); \ 			xpt_freeze_devq((sccb)->ccb_h.path, 1); \ 			(sccb)->ccb_h.status |= CAM_DEV_QFRZN; \ 		} \ 	} \ 	if ((XS_ISP((sccb)))->isp_osinfo.simqfrozen) { \ 		(sccb)->ccb_h.status |= CAM_RELEASE_SIMQ; \ 		(XS_ISP((sccb)))->isp_osinfo.simqfrozen = 0; \ 	} \ 	(sccb)->ccb_h.status&= ~CAM_SIM_QUEUED; \ 	xpt_done((union ccb *)(sccb))
 end_define
 
 begin_define
@@ -747,33 +708,51 @@ end_define
 begin_define
 define|#
 directive|define
+name|WATCH_INTERVAL
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|START_WATCHDOG
+parameter_list|(
+name|f
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|(s)->isp_osinfo.watchid = timeout(f, s, WATCH_INTERVAL * hz), \ 	s->isp_dogactive = 1
+end_define
+
+begin_define
+define|#
+directive|define
 name|STOP_WATCHDOG
 parameter_list|(
 name|f
 parameter_list|,
 name|s
 parameter_list|)
+value|untimeout(f, s, (s)->isp_osinfo.watchid),\ 	(s)->isp_dogactive = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESTART_WATCHDOG
+parameter_list|(
+name|f
+parameter_list|,
+name|s
+parameter_list|)
+value|START_WATCHDOG(f, s)
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|void
 name|isp_attach
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|isp_uninit
 name|__P
 argument_list|(
 operator|(

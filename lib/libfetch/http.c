@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: http.c,v 1.10 1998/12/18 14:32:48 des Exp $  */
+comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: http.c,v 1.4 1998/07/12 22:34:40 des Exp $  */
 end_comment
 
 begin_comment
@@ -16,6 +16,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -23,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -64,14 +94,44 @@ end_include
 begin_include
 include|#
 directive|include
-file|"common.h"
+file|"httperr.c"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"httperr.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+parameter_list|(
+name|x
+parameter_list|)
+value|do x; while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -137,6 +197,58 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Look up error code  */
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|_http_errstring
+parameter_list|(
+name|int
+name|e
+parameter_list|)
+block|{
+name|struct
+name|httperr
+modifier|*
+name|p
+init|=
+name|_http_errlist
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|p
+operator|->
+name|num
+operator|!=
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|p
+operator|->
+name|num
+operator|!=
+name|e
+operator|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+return|return
+name|p
+operator|->
+name|string
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Send a formatted line; optionally echo to terminal  */
@@ -1197,7 +1309,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieve a file by HTTP  */
+comment|/*  * retrieve a file by HTTP  */
 end_comment
 
 begin_function
@@ -1205,8 +1317,7 @@ name|FILE
 modifier|*
 name|fetchGetHTTP
 parameter_list|(
-name|struct
-name|url
+name|url_t
 modifier|*
 name|URL
 parameter_list|,
@@ -1221,15 +1332,13 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
-name|e
+name|err
 decl_stmt|,
 name|i
 decl_stmt|,
 name|enc
 init|=
 name|ENC_NONE
-decl_stmt|,
-name|verbose
 decl_stmt|;
 name|struct
 name|cookie
@@ -1244,9 +1353,6 @@ modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|px
-decl_stmt|,
-modifier|*
 name|q
 decl_stmt|;
 name|FILE
@@ -1259,19 +1365,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|verbose
-operator|=
-operator|(
-name|strchr
-argument_list|(
-name|flags
-argument_list|,
-literal|'v'
-argument_list|)
-operator|!=
-name|NULL
-operator|)
-expr_stmt|;
 comment|/* allocate cookie */
 if|if
 condition|(
@@ -1313,19 +1406,16 @@ comment|/* default HTTP port */
 comment|/* attempt to connect to proxy server */
 if|if
 condition|(
-operator|(
-name|px
-operator|=
 name|getenv
 argument_list|(
 literal|"HTTP_PROXY"
 argument_list|)
-operator|)
-operator|!=
-name|NULL
 condition|)
 block|{
 name|char
+modifier|*
+name|px
+decl_stmt|,
 name|host
 index|[
 name|MAXHOSTNAMELEN
@@ -1337,7 +1427,17 @@ init|=
 literal|3128
 decl_stmt|;
 comment|/* XXX I think 3128 is default... check? */
+name|size_t
+name|len
+decl_stmt|;
 comment|/* measure length */
+name|px
+operator|=
+name|getenv
+argument_list|(
+literal|"HTTP_PROXY"
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|strcspn
@@ -1400,13 +1500,11 @@ expr_stmt|;
 comment|/* connect */
 name|sd
 operator|=
-name|_fetch_connect
+name|fetchConnect
 argument_list|(
 name|host
 argument_list|,
 name|port
-argument_list|,
-name|verbose
 argument_list|)
 expr_stmt|;
 block|}
@@ -1424,7 +1522,7 @@ condition|(
 operator|(
 name|sd
 operator|=
-name|_fetch_connect
+name|fetchConnect
 argument_list|(
 name|URL
 operator|->
@@ -1433,8 +1531,6 @@ argument_list|,
 name|URL
 operator|->
 name|port
-argument_list|,
-name|verbose
 argument_list|)
 operator|)
 operator|==
@@ -1471,27 +1567,6 @@ operator|=
 name|f
 expr_stmt|;
 comment|/* send request (proxies require absolute form, so use that) */
-if|if
-condition|(
-name|verbose
-condition|)
-name|_fetch_info
-argument_list|(
-literal|"requesting http://%s:%d%s"
-argument_list|,
-name|URL
-operator|->
-name|host
-argument_list|,
-name|URL
-operator|->
-name|port
-argument_list|,
-name|URL
-operator|->
-name|doc
-argument_list|)
-expr_stmt|;
 name|_http_cmd
 argument_list|(
 name|f
@@ -1706,7 +1781,7 @@ condition|)
 goto|goto
 name|fouch
 goto|;
-name|e
+name|err
 operator|=
 name|atoi
 argument_list|(
@@ -1721,21 +1796,27 @@ name|stderr
 argument_list|,
 literal|"code:     [\033[1m%d\033[m]\n"
 argument_list|,
-name|e
+name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* add code to handle redirects later */
 if|if
 condition|(
-name|e
+name|err
 operator|!=
 literal|200
 condition|)
 block|{
-name|_http_seterr
+name|fetchLastErrCode
+operator|=
+name|err
+expr_stmt|;
+name|fetchLastErrText
+operator|=
+name|_http_errstring
 argument_list|(
-name|e
+name|err
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2165,12 +2246,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|_http_seterr
-argument_list|(
-literal|999
-argument_list|)
-expr_stmt|;
-comment|/* XXX do this properly RSN */
 return|return
 name|NULL
 return|;
@@ -2186,12 +2261,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|_http_seterr
-argument_list|(
-literal|999
-argument_list|)
-expr_stmt|;
-comment|/* XXX do this properly RSN */
 return|return
 name|NULL
 return|;
@@ -2203,8 +2272,7 @@ name|FILE
 modifier|*
 name|fetchPutHTTP
 parameter_list|(
-name|struct
-name|url
+name|url_t
 modifier|*
 name|URL
 parameter_list|,
@@ -2216,72 +2284,6 @@ block|{
 name|warnx
 argument_list|(
 literal|"fetchPutHTTP(): not implemented"
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Get an HTTP document's metadata  */
-end_comment
-
-begin_function
-name|int
-name|fetchStatHTTP
-parameter_list|(
-name|struct
-name|url
-modifier|*
-name|url
-parameter_list|,
-name|struct
-name|url_stat
-modifier|*
-name|us
-parameter_list|,
-name|char
-modifier|*
-name|flags
-parameter_list|)
-block|{
-name|warnx
-argument_list|(
-literal|"fetchStatHTTP(): not implemented"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * List a directory  */
-end_comment
-
-begin_function
-name|struct
-name|url_ent
-modifier|*
-name|fetchListHTTP
-parameter_list|(
-name|struct
-name|url
-modifier|*
-name|url
-parameter_list|,
-name|char
-modifier|*
-name|flags
-parameter_list|)
-block|{
-name|warnx
-argument_list|(
-literal|"fetchListHTTP(): not implemented"
 argument_list|)
 expr_stmt|;
 return|return

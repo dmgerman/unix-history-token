@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.9 1998/12/16 15:21:50 bde Exp $ */
+comment|/* $Id: trap.c,v 1.4 1998/07/05 12:24:17 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -175,12 +175,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fpu.h>
 end_include
 
 begin_ifdef
@@ -640,14 +634,9 @@ literal|"system call"
 expr_stmt|;
 break|break;
 default|default:
-name|snprintf
+name|sprintf
 argument_list|(
 name|ubuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ubuf
-argument_list|)
 argument_list|,
 literal|"type %lx"
 argument_list|,
@@ -951,30 +940,12 @@ goto|;
 case|case
 name|ALPHA_KENTRY_ARITH
 case|:
-comment|/*  		 * If user-land, give a SIGFPE if software completion 		 * is not requested or if the completion fails. 		 */
+comment|/*  		 * If user-land, just give a SIGFPE.  Should do 		 * software completion and IEEE handling, if the 		 * user has requested that. 		 */
 if|if
 condition|(
 name|user
 condition|)
 block|{
-if|if
-condition|(
-name|a0
-operator|&
-name|EXCSUM_SWC
-condition|)
-if|if
-condition|(
-name|fp_software_completion
-argument_list|(
-name|a1
-argument_list|,
-name|p
-argument_list|)
-condition|)
-goto|goto
-name|out
-goto|;
 name|i
 operator|=
 name|SIGFPE
@@ -1499,8 +1470,14 @@ name|vm
 operator|->
 name|vm_maxsaddr
 operator|&&
+operator|(
+name|caddr_t
+operator|)
 name|va
 operator|<
+operator|(
+name|caddr_t
+operator|)
 name|USRSTACK
 condition|)
 block|{
@@ -1592,16 +1569,6 @@ operator|>=
 name|vm
 operator|->
 name|vm_maxsaddr
-operator|&&
-operator|(
-name|caddr_t
-operator|)
-name|va
-operator|<
-operator|(
-name|caddr_t
-operator|)
-name|USRSTACK
 condition|)
 block|{
 if|if
@@ -1793,33 +1760,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|framep
-operator|->
-name|tf_regs
-index|[
-name|FRAME_TRAPARG_A0
-index|]
-operator|=
-name|a0
-expr_stmt|;
-name|framep
-operator|->
-name|tf_regs
-index|[
-name|FRAME_TRAPARG_A1
-index|]
-operator|=
-name|a1
-expr_stmt|;
-name|framep
-operator|->
-name|tf_regs
-index|[
-name|FRAME_TRAPARG_A2
-index|]
-operator|=
-name|a2
-expr_stmt|;
 name|trapsignal
 argument_list|(
 name|p
@@ -1966,33 +1906,6 @@ literal|0
 decl_stmt|,
 name|nargs
 decl_stmt|;
-name|framep
-operator|->
-name|tf_regs
-index|[
-name|FRAME_TRAPARG_A0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|framep
-operator|->
-name|tf_regs
-index|[
-name|FRAME_TRAPARG_A1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|framep
-operator|->
-name|tf_regs
-index|[
-name|FRAME_TRAPARG_A2
-index|]
-operator|=
-literal|0
-expr_stmt|;
 if|#
 directive|if
 name|notdef
@@ -2012,6 +1925,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"syscall"
@@ -2567,13 +2481,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Process the tail end of a fork() for the child.  */
-end_comment
-
-begin_function
 name|void
 name|child_return
 parameter_list|(
@@ -2632,13 +2540,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  * Process an asynchronous software trap.  * This is relatively easy.  */
-end_comment
-
-begin_function
 name|void
 name|ast
 parameter_list|(
@@ -2759,13 +2661,7 @@ name|sticks
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Unaligned access handler.  It's not clear that this can get much slower...  *  */
-end_comment
-
-begin_decl_stmt
 specifier|const
 specifier|static
 name|int
@@ -2841,9 +2737,6 @@ operator|-
 literal|1
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|irp
@@ -2854,9 +2747,6 @@ name|reg
 parameter_list|)
 define|\
 value|((reg_to_framereg[(reg)] == -1) ? NULL :			\&(p)->p_md.md_tf->tf_regs[reg_to_framereg[(reg)]])
-end_define
-
-begin_define
 define|#
 directive|define
 name|frp
@@ -2867,18 +2757,12 @@ name|reg
 parameter_list|)
 define|\
 value|(&(p)->p_addr->u_pcb.pcb_fp.fpr_regs[(reg)])
-end_define
-
-begin_define
 define|#
 directive|define
 name|dump_fp_regs
 parameter_list|()
 define|\
 value|if (p == fpcurproc) {						\ 		alpha_pal_wrfen(1);					\ 		savefpstate(&fpcurproc->p_addr->u_pcb.pcb_fp);		\ 		alpha_pal_wrfen(0);					\ 		fpcurproc = NULL;					\ 	}
-end_define
-
-begin_define
 define|#
 directive|define
 name|unaligned_load
@@ -2891,9 +2775,6 @@ name|mod
 parameter_list|)
 define|\
 value|if (copyin((caddr_t)va,&(storage), sizeof (storage)) == 0&&	\ 	    (regptr = ptrf(p, reg)) != NULL)				\ 		signal = 0;						\ 	else								\ 		break;							\ 	*regptr = mod (storage);
-end_define
-
-begin_define
 define|#
 directive|define
 name|unaligned_store
@@ -2906,9 +2787,6 @@ name|mod
 parameter_list|)
 define|\
 value|if ((regptr = ptrf(p, reg)) == NULL)				\ 		break;							\ 	(storage) = mod (*regptr);					\ 	if (copyout(&(storage), (caddr_t)va, sizeof (storage)) == 0)	\ 		signal = 0;						\ 	else								\ 		break;
-end_define
-
-begin_define
 define|#
 directive|define
 name|unaligned_load_integer
@@ -2917,9 +2795,6 @@ name|storage
 parameter_list|)
 define|\
 value|unaligned_load(storage, irp, )
-end_define
-
-begin_define
 define|#
 directive|define
 name|unaligned_store_integer
@@ -2928,9 +2803,6 @@ name|storage
 parameter_list|)
 define|\
 value|unaligned_store(storage, irp, )
-end_define
-
-begin_define
 define|#
 directive|define
 name|unaligned_load_floating
@@ -2941,9 +2813,6 @@ name|mod
 parameter_list|)
 define|\
 value|dump_fp_regs();							\ 	unaligned_load(storage, frp, mod)
-end_define
-
-begin_define
 define|#
 directive|define
 name|unaligned_store_floating
@@ -2954,9 +2823,6 @@ name|mod
 parameter_list|)
 define|\
 value|dump_fp_regs();							\ 	unaligned_store(storage, frp, mod)
-end_define
-
-begin_function
 name|unsigned
 name|long
 name|Sfloat_to_reg
@@ -3099,9 +2965,6 @@ name|result
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|unsigned
 name|int
 name|reg_to_Sfloat
@@ -3204,13 +3067,7 @@ name|result
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Conversion of T floating datums to and from register format  * requires no bit reordering whatsoever.  */
-end_comment
-
-begin_function
 name|unsigned
 name|long
 name|Tfloat_reg_cvt
@@ -3228,15 +3085,9 @@ name|input
 operator|)
 return|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|FIX_UNALIGNED_VAX_FP
-end_ifdef
-
-begin_function
 name|unsigned
 name|long
 name|Ffloat_to_reg
@@ -3386,9 +3237,6 @@ name|result
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|unsigned
 name|int
 name|reg_to_Ffloat
@@ -3509,13 +3357,7 @@ name|result
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Conversion of G floating datums to and from register format is  * symmetrical.  Just swap shorts in the quad...  */
-end_comment
-
-begin_function
 name|unsigned
 name|long
 name|Gfloat_reg_cvt
@@ -3613,34 +3455,19 @@ name|result
 operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* FIX_UNALIGNED_VAX_FP */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|alpha_unaligned_print
 decl_stmt|,
 name|alpha_unaligned_fix
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|alpha_unaligned_sigbus
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|int
 name|unaligned_fixup
 parameter_list|(

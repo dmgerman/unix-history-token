@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.h,v 1.19 1998/10/29 02:12:54 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.h,v 1.12 1998/08/07 18:42:47 brian Exp $  */
 end_comment
 
 begin_define
@@ -66,63 +66,49 @@ begin_define
 define|#
 directive|define
 name|OPT_IDCHECK
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPT_IFACEALIAS
-value|0x0002
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_LOOPBACK
-value|0x0004
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_PASSWDAUTH
-value|0x0008
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_PROXY
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPT_PROXYALL
-value|0x0020
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_SROUTES
-value|0x0040
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_THROUGHPUT
-value|0x0080
+value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_UTMP
-value|0x0100
+value|0x40
 end_define
 
 begin_define
@@ -180,12 +166,6 @@ name|prompt
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|iface
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|bundle
@@ -206,18 +186,6 @@ modifier|*
 name|argv
 decl_stmt|;
 comment|/* From main() */
-specifier|const
-name|char
-modifier|*
-name|argv0
-decl_stmt|;
-comment|/* Original */
-specifier|const
-name|char
-modifier|*
-name|argv1
-decl_stmt|;
-comment|/* Original */
 struct|struct
 block|{
 name|char
@@ -234,16 +202,24 @@ comment|/* The /dev/XXXX descriptor */
 block|}
 name|dev
 struct|;
+struct|struct
+block|{
 name|u_long
-name|ifSpeed
+name|Speed
 decl_stmt|;
 comment|/* struct tuninfo speed */
-name|struct
-name|iface
-modifier|*
-name|iface
+name|int
+name|Index
 decl_stmt|;
-comment|/* Interface information */
+comment|/* The interface index */
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+comment|/* The interface name */
+block|}
+name|ifp
+struct|;
 name|int
 name|routing_seq
 decl_stmt|;
@@ -990,32 +966,6 @@ parameter_list|(
 name|struct
 name|bundle
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bundle_HighestState
-parameter_list|(
-name|struct
-name|bundle
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bundle_Exception
-parameter_list|(
-name|struct
-name|bundle
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

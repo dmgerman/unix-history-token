@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the Advanced Systems Inc. SCSI controllers  * Product specific probe and attach routines can be found in:  *   * i386/isa/adv_isa.c	ABP5140, ABP542, ABP5150, ABP842, ABP852  * i386/eisa/adv_eisa.c	ABP742, ABP752  * pci/adv_pci.c	ABP920, ABP930, ABP930U, ABP930UA, ABP940, ABP940U,  *			ABP940UA, ABP950, ABP960, ABP960U, ABP960UA,  *			ABP970, ABP970U  *  * Copyright (c) 1996-1998 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: advansys.c,v 1.6 1998/12/04 22:54:44 archie Exp $  */
+comment|/*  * Generic driver for the Advanced Systems Inc. SCSI controllers  * Product specific probe and attach routines can be found in:  *   * i386/isa/adv_isa.c	ABP5140, ABP542, ABP5150, ABP842, ABP852  * i386/eisa/adv_eisa.c	ABP742, ABP752  * pci/adv_pci.c	ABP920, ABP930, ABP930U, ABP930UA, ABP940, ABP940U,  *			ABP940UA, ABP950, ABP960, ABP960U, ABP960UA,  *			ABP970, ABP970U  *  * Copyright (c) 1996-1998 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: advansys.c,v 1.3 1998/10/07 03:32:56 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -474,14 +474,9 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-name|snprintf
+name|sprintf
 argument_list|(
 name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
 argument_list|,
 literal|"adv%d"
 argument_list|,
@@ -2628,7 +2623,6 @@ name|cinfo
 operator|==
 name|NULL
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s: Can't malloc CCB info\n"
@@ -2639,12 +2633,6 @@ name|adv
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|cinfo
 operator|->
 name|state
@@ -4951,23 +4939,7 @@ name|CAM_SEL_TIMEOUT
 expr_stmt|;
 break|break;
 default|default:
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"adv_done - queue done without error, "
-literal|"unknown host status %x\n"
-argument_list|,
-name|host_stat
-argument_list|)
-expr_stmt|;
+comment|/* QHSTA error occurred */
 comment|/* XXX Can I get more explicit information here? */
 name|ccb
 operator|->
@@ -5089,23 +5061,6 @@ name|CAM_SEL_TIMEOUT
 expr_stmt|;
 break|break;
 default|default:
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"adv_done - queue done with error, "
-literal|"unknown host status %x\n"
-argument_list|,
-name|host_stat
-argument_list|)
-expr_stmt|;
 comment|/* XXX Can I get more explicit information here? */
 name|ccb
 operator|->
@@ -5146,22 +5101,11 @@ name|CAM_REQ_ABORTED
 expr_stmt|;
 break|break;
 default|default:
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"adv_done - queue done with unknown status %x:%x\n"
+literal|"adv_done: Unknown done status 0x%x\n"
 argument_list|,
 name|done_stat
-argument_list|,
-name|host_stat
 argument_list|)
 expr_stmt|;
 name|ccb

@@ -239,7 +239,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|AWE_DEBUG
+name|DEBUG
 parameter_list|(
 name|LVL
 parameter_list|,
@@ -276,7 +276,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|AWE_DEBUG
+name|DEBUG
 parameter_list|(
 name|LVL
 parameter_list|,
@@ -3430,18 +3430,11 @@ comment|/* intialize AWE32 hardware */
 name|awe_initialize
 argument_list|()
 expr_stmt|;
-name|snprintf
+name|sprintf
 argument_list|(
 name|awe_info
 operator|.
 name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|awe_info
-operator|.
-name|name
-argument_list|)
 argument_list|,
 literal|"AWE32-%s (RAM%dk)"
 argument_list|,
@@ -4383,7 +4376,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -7412,7 +7405,7 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -7495,7 +7488,7 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -7975,7 +7968,7 @@ operator|==
 name|exclass
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -8050,7 +8043,7 @@ operator|.
 name|apitch
 argument_list|)
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -8589,7 +8582,7 @@ name|apan
 operator|=
 name|temp
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -9223,7 +9216,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -9258,7 +9251,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -9295,7 +9288,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -9333,7 +9326,7 @@ literal|4096
 operator|/
 literal|12
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -9358,7 +9351,7 @@ operator|)
 operator|/
 literal|100
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -9380,7 +9373,7 @@ literal|4096
 operator|/
 literal|1200
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -9401,7 +9394,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -9502,7 +9495,7 @@ name|rate_offset
 operator|+
 name|offset
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
@@ -9667,7 +9660,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -10160,7 +10153,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -10275,7 +10268,7 @@ name|avol
 operator|=
 name|vol
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -11458,7 +11451,7 @@ name|v2
 decl_stmt|,
 name|key
 decl_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -11743,7 +11736,7 @@ name|state
 decl_stmt|,
 name|volonly
 decl_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -12398,7 +12391,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -13122,7 +13115,7 @@ break|break;
 case|case
 name|_AWE_REMOVE_LAST_SAMPLES
 case|:
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13237,7 +13230,7 @@ operator|<
 name|AWE_FX_END
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13306,7 +13299,7 @@ operator|.
 name|realtime
 condition|)
 block|{
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13386,7 +13379,7 @@ break|break;
 case|case
 name|_AWE_INITIAL_VOLUME
 case|:
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13519,7 +13512,7 @@ break|break;
 case|case
 name|_AWE_CHANNEL_MODE
 case|:
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13544,7 +13537,7 @@ break|break;
 case|case
 name|_AWE_DRUM_CHANNELS
 case|:
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13574,7 +13567,7 @@ break|break;
 case|case
 name|_AWE_MISC_MODE
 case|:
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13624,7 +13617,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -13665,7 +13658,7 @@ block|{
 name|int
 name|note
 decl_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -13832,7 +13825,7 @@ case|case
 name|CTL_BANK_SELECT
 case|:
 comment|/* MIDI control #0 */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -13908,7 +13901,7 @@ case|case
 name|CTL_MODWHEEL
 case|:
 comment|/* MIDI control #1 */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -13976,7 +13969,7 @@ case|case
 name|CTRL_PITCH_BENDER
 case|:
 comment|/* SEQ1 V2 contorl */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14009,7 +14002,7 @@ case|case
 name|CTRL_PITCH_BENDER_RANGE
 case|:
 comment|/* SEQ1 V2 control */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14049,7 +14042,7 @@ case|case
 name|CTRL_EXPRESSION
 case|:
 comment|/* SEQ1 V2 control */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14082,7 +14075,7 @@ case|case
 name|CTL_PAN
 case|:
 comment|/* MIDI control #10 */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14145,7 +14138,7 @@ case|case
 name|CTRL_MAIN_VOLUME
 case|:
 comment|/* SEQ1 V2 control */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14178,7 +14171,7 @@ case|case
 name|CTL_EXT_EFF_DEPTH
 case|:
 comment|/* reverb effects: 0-127 */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14211,7 +14204,7 @@ case|case
 name|CTL_CHORUS_DEPTH
 case|:
 comment|/* chorus effects: 0-127 */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14316,7 +14309,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -14413,7 +14406,7 @@ name|panning
 operator|=
 name|value
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -14463,7 +14456,7 @@ name|mode
 parameter_list|)
 block|{
 comment|/* not impremented */
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -14597,7 +14590,7 @@ name|value
 operator|-
 literal|8192
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -18021,7 +18014,7 @@ name|mode_flags
 operator||=
 name|AWE_SAMPLE_REVERSE_LOOP
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -18213,7 +18206,7 @@ argument_list|)
 operator|/
 literal|100
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|1
 argument_list|,
@@ -18489,7 +18482,7 @@ argument_list|(
 name|release
 argument_list|)
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -18567,7 +18560,7 @@ operator|)
 operator||
 name|rate
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -18637,7 +18630,7 @@ operator|)
 operator||
 name|rate
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -20811,7 +20804,7 @@ operator|>=
 name|awe_max_voices
 condition|)
 return|return;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
@@ -21071,7 +21064,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -23162,7 +23155,7 @@ condition|)
 return|return;
 endif|#
 directive|endif
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|3
 argument_list|,
@@ -24107,7 +24100,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -24167,7 +24160,7 @@ condition|)
 return|return
 literal|1
 return|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,
@@ -24376,7 +24369,7 @@ block|}
 name|awe_close_dram
 argument_list|()
 expr_stmt|;
-name|AWE_DEBUG
+name|DEBUG
 argument_list|(
 literal|0
 argument_list|,

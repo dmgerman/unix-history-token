@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	8.12 (Berkeley) 5/19/1998"
+literal|"@(#)arpadate.c	8.12 (Berkeley) 5/19/98"
 decl_stmt|;
 end_decl_stmt
 

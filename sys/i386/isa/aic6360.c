@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.42 1998/10/22 05:58:38 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.40 1998/04/15 17:45:12 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3592,13 +3592,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ointhand2_t
-name|aicintr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int32_t
 name|aic_scsi_cmd
 name|__P
@@ -3948,12 +3941,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pccard/cardinfo.h>
 end_include
 
@@ -4008,20 +3995,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|PCCARD_MODULE
-argument_list|(
-name|aic
-argument_list|,
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_device
+name|aic_info
+init|=
+block|{
+literal|"aic"
+block|,
 name|aicinit
-argument_list|,
+block|,
 name|aicunload
-argument_list|,
+block|,
 name|aic_card_intr
-argument_list|,
+block|,
 literal|0
-argument_list|,
+block|,
+comment|/* Attributes - presently unused */
+operator|&
 name|bio_imask
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|aic_info
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4941,12 +4944,6 @@ operator|(
 literal|"aicattach\n"
 operator|)
 argument_list|)
-expr_stmt|;
-name|dev
-operator|->
-name|id_ointr
-operator|=
-name|aicintr
 expr_stmt|;
 name|aic
 operator|->
@@ -10144,7 +10141,6 @@ comment|/*  * This is the workhorse routine of the driver.  * Deficiencies (for 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|aicintr
 parameter_list|(

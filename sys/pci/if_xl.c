@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.21 1998/12/14 06:32:57 dillon Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.54 1998/09/25 17:43:57 wpaul Exp wpaul $  */
 end_comment
 
 begin_comment
@@ -174,24 +174,19 @@ directive|include
 file|<pci/if_xlreg.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.21 1998/12/14 06:32:57 dillon Exp $"
+literal|"$Id: if_xl.c,v 1.54 1998/09/25 17:43:57 wpaul Exp wpaul $"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,7 +381,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|xl_probe
@@ -797,9 +791,9 @@ expr|struct
 name|xl_softc
 operator|*
 operator|,
-name|int
+name|u_int16_t
 operator|,
-name|int
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -895,7 +889,8 @@ name|xl_calchash
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|u_int8_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1917,10 +1912,10 @@ name|xl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int16_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int16_t
 name|data
 decl_stmt|;
 block|{
@@ -2235,7 +2230,8 @@ name|xl_calchash
 parameter_list|(
 name|addr
 parameter_list|)
-name|caddr_t
+name|u_int8_t
+modifier|*
 name|addr
 decl_stmt|;
 block|{
@@ -4055,10 +4051,9 @@ operator||
 name|IFM_AUTO
 argument_list|,
 literal|0
-argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+operator|:
 name|sc
 operator|->
 name|ifmedia
@@ -4994,7 +4989,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|xl_probe
@@ -6001,7 +5995,6 @@ name|roundptr
 operator|++
 expr_stmt|;
 block|}
-else|else
 break|break;
 block|}
 name|sc
@@ -8234,6 +8227,17 @@ name|xl_tx_free
 operator|=
 name|cur_tx
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cur_tx
+operator|->
+name|xl_ptr
+operator|->
+name|xl_next
+condition|)
+empty_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -8446,31 +8450,6 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|xl_type
-operator|==
-name|XL_TYPE_905B
-condition|)
-block|{
-name|CSR_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|XL_COMMAND
-argument_list|,
-name|XL_CMD_SET_TX_RECLAIM
-operator||
-operator|(
-name|XL_PACKET_SIZE
-operator|>>
-literal|4
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -9576,14 +9555,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * If there are no packets queued, bail. 	 */
-if|if
-condition|(
-name|cur_tx
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* 	 * Place the request for the upload interrupt 	 * in the last descriptor in the chain. This way, if 	 * we're chaining several packets at once, we'll only 	 * get an interupt once for the whole chain rather than 	 * once for each packet. 	 */
 name|cur_tx
 operator|->
@@ -9657,14 +9628,6 @@ name|xl_status
 operator|&=
 operator|~
 name|XL_TXSTAT_DL_INTR
-expr_stmt|;
-name|sc
-operator|->
-name|xl_cdata
-operator|.
-name|xl_tx_tail
-operator|=
-name|cur_tx
 expr_stmt|;
 block|}
 else|else
@@ -9961,32 +9924,6 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this is a 3c905B, also set the tx reclaim threshold. 	 * This helps cut down on the number of tx reclaim errors 	 * that could happen on a busy network. The chip multiplies 	 * the register value by 16 to obtain the actual threshold 	 * in bytes, so we divide by 16 when setting the value here. 	 * The existing threshold value can be examined by reading 	 * the register at offset 9 in window 5. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|xl_type
-operator|==
-name|XL_TYPE_905B
-condition|)
-block|{
-name|CSR_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|XL_COMMAND
-argument_list|,
-name|XL_CMD_SET_TX_RECLAIM
-operator||
-operator|(
-name|XL_PACKET_SIZE
-operator|>>
-literal|4
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Set RX filter bits. */
 name|XL_SEL_WIN
 argument_list|(

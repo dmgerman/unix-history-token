@@ -374,9 +374,12 @@ begin_comment
 comment|/* define if the system is missing a prototype for strtok_r() */
 end_comment
 
-begin_comment
-comment|/* #undef NEED_STRTOK_R_PROTO */
-end_comment
+begin_define
+define|#
+directive|define
+name|NEED_STRTOK_R_PROTO
+value|1
+end_define
 
 begin_comment
 comment|/* define if /bin/ls takes -A */
@@ -1376,12 +1379,9 @@ begin_comment
 comment|/* Define if you have the strtok_r function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_STRTOK_R
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_STRTOK_R */
+end_comment
 
 begin_comment
 comment|/* Define if you have the strupr function.  */

@@ -8,7 +8,7 @@ comment|/*  *  ALGORITHM  *  *      The "deflation" process depends on being abl
 end_comment
 
 begin_comment
-comment|/* @(#) $Id: deflate.c,v 1.1.1.3 1999/01/10 09:46:53 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|char
 name|deflate_copyright
 index|[]
 init|=
-literal|" deflate 1.1.3 Copyright 1995-1998 Jean-loup Gailly "
+literal|" deflate 1.1.1 Copyright 1995-1998 Jean-loup Gailly "
 decl_stmt|;
 end_decl_stmt
 
@@ -2898,6 +2898,12 @@ name|ushf
 modifier|*
 name|overlay
 decl_stmt|;
+name|ss
+operator|=
+name|source
+operator|->
+name|state
+expr_stmt|;
 if|if
 condition|(
 name|source
@@ -2908,9 +2914,7 @@ name|dest
 operator|==
 name|Z_NULL
 operator|||
-name|source
-operator|->
-name|state
+name|ss
 operator|==
 name|Z_NULL
 condition|)
@@ -2919,12 +2923,6 @@ return|return
 name|Z_STREAM_ERROR
 return|;
 block|}
-name|ss
-operator|=
-name|source
-operator|->
-name|state
-expr_stmt|;
 operator|*
 name|dest
 operator|=

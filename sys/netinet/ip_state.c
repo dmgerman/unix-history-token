@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_state.c,v 1.3 1998/06/20 18:37:51 peter Exp $"
+literal|"@(#)$Id: ip_state.c,v 1.2 1998/03/21 11:34:27 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -518,7 +518,6 @@ value|(TH_FIN|TH_RST)
 end_define
 
 begin_decl_stmt
-specifier|static
 name|ipstate_t
 modifier|*
 name|ips_table
@@ -529,7 +528,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ips_num
 init|=
@@ -538,7 +536,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|ips_stat_t
 name|ips_stats
 decl_stmt|;

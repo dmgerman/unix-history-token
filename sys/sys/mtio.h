@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mtio.h	8.1 (Berkeley) 6/2/93  * $Id: mtio.h,v 1.14 1998/12/21 22:14:02 mjacob Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mtio.h	8.1 (Berkeley) 6/2/93  * $Id: mtio.h,v 1.10 1997/02/22 09:45:37 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -213,7 +213,11 @@ value|10
 end_define
 
 begin_comment
-comment|/* Set density values for device. Sets the value for the opened mode only. */
+comment|/* Set density values for device. They are defined in the SCSI II spec	*/
+end_comment
+
+begin_comment
+comment|/* and range from 0 to 0x17. Sets the value for the opened mode only	*/
 end_comment
 
 begin_define
@@ -270,39 +274,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MTWSS
-value|16
-end_define
-
-begin_comment
-comment|/* write setmark(s) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTFSS
-value|17
-end_define
-
-begin_comment
-comment|/* forward space setmark */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTBSS
-value|18
-end_define
-
-begin_comment
-comment|/* backward space setmark */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MT_COMP_ENABLE
 value|0xffffffff
 end_define
@@ -325,10 +296,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_comment
 comment|/* structure for MTIOCGET - mag tape get status command */
@@ -437,105 +404,6 @@ comment|/* end not yet implemented */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* structure for MTIOCERRSTAT - tape get error status command */
-end_comment
-
-begin_comment
-comment|/* really only supported for SCSI tapes right now */
-end_comment
-
-begin_struct
-struct|struct
-name|scsi_tape_errors
-block|{
-comment|/* 	 * These are latched from the last command that had a SCSI 	 * Check Condition noted for these operations. The act 	 * of issuing an MTIOCERRSTAT unlatches and clears them. 	 */
-name|u_int8_t
-name|io_sense
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* Last Sense Data For Data I/O */
-name|u_int32_t
-name|io_resid
-decl_stmt|;
-comment|/* residual count from last Data I/O */
-name|u_int8_t
-name|io_cdb
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* Command that Caused the Last Data Sense */
-name|u_int8_t
-name|ctl_sense
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* Last Sense Data For Control I/O */
-name|u_int32_t
-name|ctl_resid
-decl_stmt|;
-comment|/* residual count from last Control I/O */
-name|u_int8_t
-name|ctl_cdb
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* Command that Caused the Last Control Sense */
-comment|/* 	 * These are the read and write cumulative error counters. 	 * (how to reset cumulative error counters is not yet defined). 	 * (not implemented as yet but space is being reserved for them) 	 */
-struct|struct
-block|{
-name|u_int32_t
-name|retries
-decl_stmt|;
-comment|/* total # retries performed */
-name|u_int32_t
-name|corrected
-decl_stmt|;
-comment|/* total # corrections performed */
-name|u_int32_t
-name|processed
-decl_stmt|;
-comment|/* total # corrections succssful */
-name|u_int32_t
-name|failures
-decl_stmt|;
-comment|/* total # corrections/retries failed */
-name|u_int64_t
-name|nbytes
-decl_stmt|;
-comment|/* total # bytes processed */
-block|}
-name|werr
-struct|,
-name|rderr
-struct|;
-block|}
-struct|;
-end_struct
-
-begin_union
-union|union
-name|mterrstat
-block|{
-name|struct
-name|scsi_tape_errors
-name|scsi_errstat
-decl_stmt|;
-name|char
-name|_reserved_padding
-index|[
-literal|256
-index|]
-decl_stmt|;
-block|}
-union|;
-end_union
 
 begin_comment
 comment|/*  * Constants for mt_type byte.  These are the same  * for controllers compatible with the types listed.  */
@@ -787,10 +655,6 @@ begin_comment
 comment|/* get tape status */
 end_comment
 
-begin_comment
-comment|/* these two do not appear to be used anywhere */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -811,65 +675,6 @@ end_define
 
 begin_comment
 comment|/* enable EOT error */
-end_comment
-
-begin_comment
-comment|/*  * When more SCSI-3 SSC (streaming device) devices are out there  * that support the full 32 byte type 2 structure, we'll have to  * rethink these ioctls to support all the entities they haul into  * the picture (64 bit blocks, logical file record numbers, etc..).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCRDSPOS
-value|_IOR('m', 5, u_int32_t)
-end_define
-
-begin_comment
-comment|/* get logical blk addr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCRDHPOS
-value|_IOR('m', 6, u_int32_t)
-end_define
-
-begin_comment
-comment|/* get hardware blk addr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCSLOCATE
-value|_IOW('m', 5, u_int32_t)
-end_define
-
-begin_comment
-comment|/* seek to logical blk addr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCHLOCATE
-value|_IOW('m', 6, u_int32_t)
-end_define
-
-begin_comment
-comment|/* seek to hardware blk addr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCERRSTAT
-value|_IOR('m', 7, union mterrstat)
-end_define
-
-begin_comment
-comment|/* get tape errors */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.17 1998/11/21 00:20:24 dt Exp $ */
+comment|/*	$Id: denode.h,v 1.15 1998/02/18 09:28:26 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -203,10 +203,6 @@ name|de_Attributes
 decl_stmt|;
 comment|/* attributes, from directory entry */
 name|u_char
-name|de_LowerCase
-decl_stmt|;
-comment|/* NT VFAT lower case flags */
-name|u_char
 name|de_CHun
 decl_stmt|;
 comment|/* Hundredth of second of CTime*/
@@ -340,7 +336,20 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|(bcopy((dp)->deName, (dep)->de_Name, 11),	\ 	 (dep)->de_Attributes = (dp)->deAttributes,	\ 	 (dep)->de_LowerCase = (dp)->deLowerCase,	\ 	 (dep)->de_CHun = (dp)->deCHundredth,		\ 	 (dep)->de_CTime = getushort((dp)->deCTime),	\ 	 (dep)->de_CDate = getushort((dp)->deCDate),	\ 	 (dep)->de_ADate = getushort((dp)->deADate),	\ 	 (dep)->de_MTime = getushort((dp)->deMTime),	\ 	 (dep)->de_MDate = getushort((dp)->deMDate),	\ 	 (dep)->de_StartCluster = getushort((dp)->deStartCluster), \ 	 (dep)->de_FileSize = getulong((dp)->deFileSize), \ 	 (FAT32((dep)->de_pmp) ? DE_INTERNALIZE32((dep), (dp)) : 0))
+value|(bcopy((dp)->deName, (dep)->de_Name, 11),	\ 	 (dep)->de_Attributes = (dp)->deAttributes,	\ 	 (dep)->de_CHun = (dp)->deCHundredth,		\ 	 (dep)->de_CTime = getushort((dp)->deCTime),	\ 	 (dep)->de_CDate = getushort((dp)->deCDate),	\ 	 (dep)->de_ADate = getushort((dp)->deADate),	\ 	 (dep)->de_MTime = getushort((dp)->deMTime),	\ 	 (dep)->de_MDate = getushort((dp)->deMDate),	\ 	 (dep)->de_StartCluster = getushort((dp)->deStartCluster), \ 	 (dep)->de_FileSize = getulong((dp)->deFileSize), \ 	 (FAT32((dep)->de_pmp) ? DE_INTERNALIZE32((dep), (dp)) : 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DE_EXTERNALIZE32
+parameter_list|(
+name|dp
+parameter_list|,
+name|dep
+parameter_list|)
+define|\
+value|putushort((dp)->deHighClust, (dep)->de_StartCluster>> 16)
 end_define
 
 begin_define
@@ -353,7 +362,7 @@ parameter_list|,
 name|dep
 parameter_list|)
 define|\
-value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 (dp)->deLowerCase = (dep)->de_LowerCase,	\ 	 (dp)->deCHundredth = (dep)->de_CHun,		\ 	 putushort((dp)->deCTime, (dep)->de_CTime),	\ 	 putushort((dp)->deCDate, (dep)->de_CDate),	\ 	 putushort((dp)->deADate, (dep)->de_ADate),	\ 	 putushort((dp)->deMTime, (dep)->de_MTime),	\ 	 putushort((dp)->deMDate, (dep)->de_MDate),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize,			\ 	     ((dep)->de_Attributes& ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \ 	 putushort((dp)->deHighClust, (dep)->de_StartCluster>> 16))
+value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 bzero((dp)->deReserved, 10),                   \ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 (dp)->deCHundredth = (dep)->de_CHun,		\ 	 putushort((dp)->deCTime, (dep)->de_CTime),	\ 	 putushort((dp)->deCDate, (dep)->de_CDate),	\ 	 putushort((dp)->deADate, (dep)->de_ADate),	\ 	 putushort((dp)->deMTime, (dep)->de_MTime),	\ 	 putushort((dp)->deMDate, (dep)->de_MDate),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize,			\ 	     ((dep)->de_Attributes& ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \ 	 (FAT32((dep)->de_pmp) ? DE_EXTERNALIZE32((dp), (dep)) : 0))
 end_define
 
 begin_define
@@ -409,7 +418,8 @@ name|mod
 parameter_list|,
 name|cre
 parameter_list|)
-value|do {				\ 	if ((dep)->de_flag& DE_UPDATE) { 				\ 		(dep)->de_flag |= DE_MODIFIED;				\ 		unix2dostime((mod),&(dep)->de_MDate,&(dep)->de_MTime,	\ 		    NULL);						\ 		(dep)->de_Attributes |= ATTR_ARCHIVE; 			\ 	}								\ 	if ((dep)->de_pmp->pm_flags& MSDOSFSMNT_NOWIN95) {		\ 		(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS);	\ 		break;							\ 	}								\ 	if ((dep)->de_flag& DE_ACCESS) {				\ 	    	u_int16_t adate;					\ 									\ 		unix2dostime((acc),&adate, NULL, NULL);		\ 		if (adate != (dep)->de_ADate) {				\ 			(dep)->de_flag |= DE_MODIFIED;			\ 			(dep)->de_ADate = adate;			\ 		}							\ 	}								\ 	if ((dep)->de_flag& DE_CREATE) {				\ 		unix2dostime((cre),&(dep)->de_CDate,&(dep)->de_CTime,	\&(dep)->de_CHun);					\ 		    (dep)->de_flag |= DE_MODIFIED;			\ 	}								\ 	(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS);		\ } while (0);
+define|\
+value|if ((dep)->de_flag& (DE_UPDATE | DE_CREATE | DE_ACCESS)) { \ 		(dep)->de_flag |= DE_MODIFIED; \ 		if ((dep)->de_flag& DE_UPDATE) { \ 			unix2dostime((mod),&(dep)->de_MDate,&(dep)->de_MTime, NULL); \ 			(dep)->de_Attributes |= ATTR_ARCHIVE; \ 		} \ 		if (!((dep)->de_pmp->pm_flags& MSDOSFSMNT_NOWIN95)) { \ 			if ((dep)->de_flag& DE_ACCESS) \ 				unix2dostime((acc),&(dep)->de_ADate, NULL, NULL); \ 			if ((dep)->de_flag& DE_CREATE) \ 				unix2dostime((cre),&(dep)->de_CDate,&(dep)->de_CTime,&(dep)->de_CHun); \ 		} \ 		(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS); \ 	}
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_proc.c	8.7 (Berkeley) 2/14/95  * $Id: kern_proc.c,v 1.42 1999/01/10 01:58:24 eivind Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_proc.c	8.7 (Berkeley) 2/14/95  * $Id: kern_proc.c,v 1.36 1998/02/20 13:52:14 bde Exp $  */
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/filedesc.h>
 end_include
 
 begin_include
@@ -832,33 +826,37 @@ argument_list|(
 name|pgid
 argument_list|)
 decl_stmt|;
-name|KASSERT
-argument_list|(
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
 name|pgrp
-operator|==
+operator|!=
 name|NULL
-operator|||
-operator|!
+operator|&&
 name|mksess
-argument_list|,
-operator|(
+condition|)
+comment|/* firewalls */
+name|panic
+argument_list|(
 literal|"enterpgrp: setsid into non-empty pgrp"
-operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
+if|if
+condition|(
 name|SESS_LEADER
 argument_list|(
 name|p
 argument_list|)
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"enterpgrp: session leader attempted setpgrp"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pgrp
@@ -879,19 +877,24 @@ modifier|*
 name|np
 decl_stmt|;
 comment|/* 		 * new process group 		 */
-name|KASSERT
-argument_list|(
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
 name|p
 operator|->
 name|p_pid
-operator|==
+operator|!=
 name|pgid
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"enterpgrp: new pgrp and pid != pgid"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|MALLOC
 argument_list|(
 name|pgrp
@@ -972,14 +975,6 @@ name|p
 expr_stmt|;
 name|sess
 operator|->
-name|s_sid
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-name|sess
-operator|->
 name|s_count
 operator|=
 literal|1
@@ -1029,17 +1024,22 @@ name|pg_session
 operator|=
 name|sess
 expr_stmt|;
-name|KASSERT
-argument_list|(
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
 name|p
-operator|==
+operator|!=
 name|curproc
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"enterpgrp: mksession and p != curproc"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1090,14 +1090,6 @@ operator|->
 name|pg_jobc
 operator|=
 literal|0
-expr_stmt|;
-name|SLIST_INIT
-argument_list|(
-operator|&
-name|pgrp
-operator|->
-name|pg_sigiolst
-argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1262,15 +1254,6 @@ modifier|*
 name|pgrp
 decl_stmt|;
 block|{
-comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pgid. 	 */
-name|funsetownlst
-argument_list|(
-operator|&
-name|pgrp
-operator|->
-name|pg_sigiolst
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pgrp
@@ -1883,28 +1866,6 @@ operator|->
 name|p_ucred
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
-if|if
-condition|(
-name|p
-operator|->
-name|p_procsig
-condition|)
-block|{
-name|ep
-operator|->
-name|e_procsig
-operator|=
-operator|*
-name|p
-operator|->
-name|p_procsig
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|p

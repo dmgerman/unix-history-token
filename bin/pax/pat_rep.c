@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pat_rep.c,v 1.13 1998/12/05 10:29:10 obrien Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -3345,13 +3345,6 @@ literal|0
 index|]
 operator|.
 name|rm_eo
-operator|-
-name|pm
-index|[
-literal|0
-index|]
-operator|.
-name|rm_so
 expr_stmt|;
 endif|#
 directive|endif

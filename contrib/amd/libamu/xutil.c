@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.2 1998/12/27 06:25:24 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.1 1997-1998/01/11 21:06:22 ezk Exp ezk $  *  */
 end_comment
 
 begin_ifdef
@@ -47,96 +47,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Log errors to stderr initially */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|am_progname
-init|=
-literal|"unknown"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* "amd" */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|am_hostname
-index|[
-name|MAXHOSTNAMELEN
-operator|+
-literal|1
-index|]
-init|=
-literal|"unknown"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Hostname */
-end_comment
-
-begin_decl_stmt
-name|pid_t
-name|am_mypid
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* process ID */
-end_comment
-
-begin_decl_stmt
-name|serv_state
-name|amd_state
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* amd's state */
-end_comment
-
-begin_decl_stmt
-name|int
-name|foreground
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 == this is the top-level server */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|debug_flags
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
 end_comment
 
 begin_ifdef
@@ -473,98 +383,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|void
-name|am_set_progname
-parameter_list|(
-name|char
-modifier|*
-name|pn
-parameter_list|)
-block|{
-name|am_progname
-operator|=
-name|pn
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|am_get_progname
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|am_progname
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|am_set_hostname
-parameter_list|(
-name|char
-modifier|*
-name|hn
-parameter_list|)
-block|{
-name|strncpy
-argument_list|(
-name|am_hostname
-argument_list|,
-name|hn
-argument_list|,
-name|MAXHOSTNAMELEN
-argument_list|)
-expr_stmt|;
-name|am_hostname
-index|[
-name|MAXHOSTNAMELEN
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|am_get_hostname
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|am_hostname
-return|;
-block|}
-end_function
-
-begin_function
-name|pid_t
-name|am_set_mypid
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|am_mypid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
-return|return
-name|am_mypid
-return|;
-block|}
-end_function
 
 begin_function
 name|voidp
@@ -970,13 +788,12 @@ name|logfp
 argument_list|,
 literal|"%s[%ld]: "
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 operator|(
 name|long
 operator|)
-name|am_mypid
+name|mypid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1045,7 +862,7 @@ comment|/* DEBUG_MEM */
 end_comment
 
 begin_comment
-comment|/*  * Take a log format string and expand occurrences of %m  * with the current error code taken from errno.  */
+comment|/*  * Take a log format string and expand occurences of %m  * with the current error code taken from errno.  */
 end_comment
 
 begin_function
@@ -1320,16 +1137,14 @@ name|last_ctime
 operator|+
 literal|4
 argument_list|,
-name|am_get_hostname
-argument_list|()
+name|hostname
 argument_list|,
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 operator|(
 name|long
 operator|)
-name|am_mypid
+name|mypid
 argument_list|,
 name|sev
 argument_list|)
@@ -2230,7 +2045,7 @@ name|plog
 argument_list|(
 name|XLOG_USER
 argument_list|,
-literal|"option \"%s\" not recognized"
+literal|"option \"%s\" not recognised"
 argument_list|,
 name|s
 argument_list|)
@@ -2745,9 +2560,6 @@ parameter_list|(
 name|char
 modifier|*
 name|logfile
-parameter_list|,
-name|int
-name|old_umask
 parameter_list|)
 block|{
 name|FILE
@@ -2813,8 +2625,7 @@ name|stderr
 expr_stmt|;
 name|openlog
 argument_list|(
-name|am_get_progname
-argument_list|()
+name|progname
 argument_list|,
 name|LOG_PID
 ifdef|#
@@ -2867,7 +2678,7 @@ name|void
 operator|)
 name|umask
 argument_list|(
-name|old_umask
+name|orig_umask
 argument_list|)
 expr_stmt|;
 name|new_logfp
@@ -3094,7 +2905,6 @@ comment|/* TIOCNOTTY */
 ifdef|#
 directive|ifdef
 name|HAVE_SETSID
-comment|/* XXX: one day maybe use vhangup(2) */
 if|if
 condition|(
 name|setsid

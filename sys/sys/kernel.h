@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.48 1998/12/20 16:54:27 bde Exp $  */
+comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.42 1998/10/09 23:03:27 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,12 +14,6 @@ define|#
 directive|define
 name|_SYS_KERNEL_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/linker_set.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -216,6 +210,190 @@ end_endif
 begin_comment
 comment|/* KERNEL */
 end_comment
+
+begin_comment
+comment|/*  * The following macros are used to declare global sets of objects, which  * are collected by the linker into a `struct linker_set' as defined below.  * For ELF, this is done by constructing a separate segment for each set.  * For a.out, it is done automatically by the linker.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ELF__
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Alpha GAS needs an align before the section change.  It seems to assume  * that after the .previous, it is aligned, so the following .align 3 is  * ignored.  Since the previous instructions often contain strings, this is  * a problem.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAKE_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|__asm(".align 3");			\ 	__asm(".section .set." #set ",\"aw\"");	\ 	__asm(".quad " #sym);			\ 	__asm(".previous")
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAKE_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|__asm(".section .set." #set ",\"aw\"");	\ 	__asm(".long " #sym);			\ 	__asm(".previous")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TEXT_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ABS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * NB: the constants defined below must match those defined in  * ld/ld.h.  Since their calculation requires arithmetic, we  * can't name them symbolically (e.g., 23 is N_SETT | N_EXT).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|static void const * const __set_##set##_sym_##sym =&sym; \ 	__asm(".stabs \"_" #set "\", " #type ", 0, 0, _" #sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEXT_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ABS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 21)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Enumerated types for known system startup interfaces.  *  * Startup occurs in ascending numeric order; the list entries are  * sorted prior to attempting startup to guarantee order.  Items  * of the same level are arbitrated for order based on the 'order'  * element.  *  * These numbers are arbitrary and are chosen ONLY for ordering; the  * enumeration values are explicit rather than implicit to provide  * for binary compatibility with inserted elements.  *  * The SI_SUB_RUN_SCHEDULER value must have the highest lexical value.  *  * The SI_SUB_CONSOLE and SI_SUB_SWAP values represent values used by  * the BSD 4.4Lite but not by FreeBSD; they are maintained in dependent  * order to support porting.  *  * The SI_SUB_PROTO_BEGIN and SI_SUB_PROTO_END bracket a range of  * initializations to take place at splimp().  This is a historical  * wart that should be removed -- probably running everything at  * splimp() until the first init that doesn't want it is the correct  * fix.  They are currently present to ensure historical behavior.  */
@@ -580,29 +758,6 @@ value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		o
 end_define
 
 begin_comment
-comment|/*  * Called on module unload: no special processing  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYSUNINIT
-parameter_list|(
-name|uniquifier
-parameter_list|,
-name|subsystem
-parameter_list|,
-name|order
-parameter_list|,
-name|func
-parameter_list|,
-name|ident
-parameter_list|)
-define|\
-value|static struct sysinit uniquifier ## _sys_uninit = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_DEFAULT					\ 	};							\ 	DATA_SET(sysuninit_set,uniquifier ## _sys_uninit)
-end_define
-
-begin_comment
 comment|/*  * Call 'fork()' before calling '(*func)(ident)';  * for making a kernel 'thread' (or builtin process.)  */
 end_comment
 
@@ -784,7 +939,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		void (*initfunc)(void *) = (void (*)(void *))data; \ 		switch (type) { \ 		case MOD_LOAD: \
+value|static int name ## _modevent(module_t mod, modeventtype_t type, \ 		void *data) \ 	{ \ 		void (*initfunc)(void *) = (void (*)(void *))data; \ 		switch (type) { \ 		case MOD_LOAD: \
 comment|/* printf(#name " module load\n"); */
 value|\ 			initfunc(NULL); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)sym \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_PSEUDO, SI_ORDER_ANY)
 end_define
@@ -797,6 +952,26 @@ end_endif
 begin_comment
 comment|/* PSEUDO_LKM */
 end_comment
+
+begin_struct
+struct|struct
+name|linker_set
+block|{
+name|int
+name|ls_length
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|ls_items
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* really ls_length of them, 						 * trailing NULL */
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern

@@ -11,7 +11,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|copyright
 index|[]
@@ -37,7 +36,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sccsid
 index|[]
@@ -366,7 +364,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Invalid argument to option d: %s\n"
+literal|"Invalid argument to option d: %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -386,6 +384,9 @@ expr_stmt|;
 break|break;
 case|case
 literal|'?'
+case|:
+case|case
+literal|'h'
 case|:
 default|default:
 name|usage
@@ -984,7 +985,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-k] [-x] [file ...]\n"
+literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-k] [-x] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

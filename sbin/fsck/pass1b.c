@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pass1b.c,v 1.4 1998/06/15 07:07:17 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,12 +217,10 @@ name|inumber
 expr_stmt|;
 if|if
 condition|(
-name|inoinfo
-argument_list|(
+name|statemap
+index|[
 name|inumber
-argument_list|)
-operator|->
-name|ino_state
+index|]
 operator|!=
 name|USTATE
 operator|&&

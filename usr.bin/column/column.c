@@ -11,7 +11,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|copyright
 index|[]
@@ -37,7 +36,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sccsid
 index|[]
@@ -321,14 +319,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|p
 operator|=
 name|getenv
 argument_list|(
 literal|"COLUMNS"
 argument_list|)
-operator|)
 condition|)
 name|termwidth
 operator|=
@@ -448,7 +444,6 @@ name|argv
 control|)
 if|if
 condition|(
-operator|(
 name|fp
 operator|=
 name|fopen
@@ -458,7 +453,6 @@ name|argv
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
 condition|)
 block|{
 name|input
@@ -656,11 +650,9 @@ operator|(
 name|cnt
 operator|=
 operator|(
-operator|(
 name|chcnt
 operator|+
 name|TAB
-operator|)
 operator|&
 operator|~
 operator|(
@@ -830,11 +822,9 @@ operator|(
 name|cnt
 operator|=
 operator|(
-operator|(
 name|chcnt
 operator|+
 name|TAB
-operator|)
 operator|&
 operator|~
 operator|(
@@ -1061,7 +1051,6 @@ operator|=
 operator|*
 name|lp
 init|;
-operator|(
 name|cols
 index|[
 name|coloff
@@ -1073,7 +1062,6 @@ name|p
 argument_list|,
 name|separator
 argument_list|)
-operator|)
 condition|;
 name|p
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.64 1998/10/23 13:13:43 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.62 1998/10/13 02:33:21 kato Exp $  */
 end_comment
 
 begin_comment
@@ -413,7 +413,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* local offset from GMT in seconds */
+comment|/* local offset	from GMT in seconds */
 end_comment
 
 begin_decl_stmt
@@ -522,7 +522,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* wall CMOS clock assumed if != 0 */
+comment|/* wall	CMOS clock assumed if != 0 */
 end_comment
 
 begin_decl_stmt
@@ -882,6 +882,9 @@ specifier|static
 name|struct
 name|timecounter
 name|tsc_timecounter
+index|[
+literal|3
+index|]
 init|=
 block|{
 name|tsc_get_timecount
@@ -914,7 +917,6 @@ name|tsc_timecounter
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|tsc_timecounter
 argument_list|,
 sizeof|sizeof
@@ -934,6 +936,9 @@ specifier|static
 name|struct
 name|timecounter
 name|i8254_timecounter
+index|[
+literal|3
+index|]
 init|=
 block|{
 name|i8254_get_timecount
@@ -966,7 +971,6 @@ name|i8254_timecounter
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|i8254_timecounter
 argument_list|,
 sizeof|sizeof
@@ -3584,6 +3588,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 name|i8254_timecounter
+index|[
+literal|0
+index|]
 operator|.
 name|tc_frequency
 operator|=
@@ -3591,7 +3598,6 @@ name|timer_freq
 expr_stmt|;
 name|init_timecounter
 argument_list|(
-operator|&
 name|i8254_timecounter
 argument_list|)
 expr_stmt|;
@@ -3700,6 +3706,9 @@ literal|0
 condition|)
 block|{
 name|tsc_timecounter
+index|[
+literal|0
+index|]
 operator|.
 name|tc_frequency
 operator|=
@@ -3707,7 +3716,6 @@ name|tsc_freq
 expr_stmt|;
 name|init_timecounter
 argument_list|(
-operator|&
 name|tsc_timecounter
 argument_list|)
 expr_stmt|;
@@ -4067,7 +4075,7 @@ comment|/* PC-98 */
 end_comment
 
 begin_comment
-comment|/*  * Initialize the time of day register, based on the time base which is, e.g.  * from a filesystem.  */
+comment|/*  * Initialize the time of day register,	based on the time base which is, e.g.  * from	a filesystem.  */
 end_comment
 
 begin_function
@@ -4346,7 +4354,7 @@ comment|/* sec now contains the	number of seconds, since Jan 1 1970, 	   in the 
 else|#
 directive|else
 comment|/* IBM-PC */
-comment|/* Look if we have a RTC present and the time is valid */
+comment|/* Look	if we have a RTC present and the time is valid */
 if|if
 condition|(
 operator|!
@@ -4362,8 +4370,8 @@ condition|)
 goto|goto
 name|wrong_time
 goto|;
-comment|/* wait for time update to complete */
-comment|/* If RTCSA_TUP is zero, we have at least 244us before next update */
+comment|/* wait	for time update	to complete */
+comment|/* If RTCSA_TUP	is zero, we have at least 244us	before next update */
 while|while
 condition|(
 name|rtcin
@@ -4538,7 +4546,7 @@ name|RTC_SEC
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* sec now contains the number of seconds, since Jan 1 1970, 	   in the local time zone */
+comment|/* sec now contains the	number of seconds, since Jan 1 1970, 	   in the local	time zone */
 endif|#
 directive|endif
 name|sec
@@ -4610,19 +4618,19 @@ name|wrong_time
 label|:
 name|printf
 argument_list|(
-literal|"Invalid time in real time clock.\n"
+literal|"Invalid	time in	real time clock.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Check and reset the date immediately!\n"
+literal|"Check and reset	the date immediately!\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Write system time back to RTC  */
+comment|/*  * Write system	time back to RTC  */
 end_comment
 
 begin_function
@@ -4894,7 +4902,7 @@ operator||
 name|RTCSB_24HR
 argument_list|)
 expr_stmt|;
-comment|/* Calculate local time to put in RTC */
+comment|/* Calculate local time	to put in RTC */
 name|tm
 operator|-=
 name|tz
@@ -4962,7 +4970,7 @@ operator|/=
 literal|24
 expr_stmt|;
 comment|/* Write back Hours   */
-comment|/* We have now the days since 01-01-1970 in tm */
+comment|/* We have now the days	since 01-01-1970 in tm */
 name|writertc
 argument_list|(
 name|RTC_WDAY
@@ -5838,6 +5846,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 name|i8254_timecounter
+index|[
+literal|0
+index|]
 operator|.
 name|tc_frequency
 operator|=
@@ -5940,6 +5951,9 @@ operator|=
 name|freq
 expr_stmt|;
 name|tsc_timecounter
+index|[
+literal|0
+index|]
 operator|.
 name|tc_frequency
 operator|=

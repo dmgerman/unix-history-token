@@ -146,14 +146,12 @@ name|i
 operator|=
 literal|0
 init|;
-operator|(
 name|iw
 operator|=
 name|info_windows
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.8 1999/01/10 02:51:06 mjacob Exp $ */
-end_comment
-
-begin_comment
-comment|/* release_12_28_98_A+ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -34,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|98
+value|97
 end_define
 
 begin_include
@@ -233,36 +229,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MEMZERO
-value|BZERO
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEMCPY
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|amt
-parameter_list|)
-value|bcopy((src), (dst), (amt))
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISP_LOCKVAL_DECL
 value|int isp_spl_save
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_ILOCKVAL_DECL
-value|ISP_LOCKVAL_DECL
 end_define
 
 begin_define
@@ -430,7 +398,7 @@ name|XS_SNSLEN
 parameter_list|(
 name|xs
 parameter_list|)
-value|(sizeof((xs)->sense))
+value|(sizeof (xs)->sense)
 end_define
 
 begin_define
@@ -613,7 +581,7 @@ name|XS_KINDOF_TAG
 parameter_list|(
 name|xs
 parameter_list|)
-value|REQFLAG_STAG
+value|REQFLAG_OTAG
 end_define
 
 begin_define
@@ -745,21 +713,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|isp_attach
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|isp_uninit
 name|__P
 argument_list|(
 operator|(

@@ -177,7 +177,7 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|fixpt_t
+name|long
 name|load_avg
 typedef|;
 end_typedef

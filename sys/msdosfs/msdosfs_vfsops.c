@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.38 1998/10/31 15:31:24 peter Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.35 1998/05/06 05:29:38 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -1601,18 +1595,6 @@ name|v_rdev
 argument_list|)
 operator|>=
 name|nblkdev
-operator|||
-name|bdevsw
-index|[
-name|major
-argument_list|(
-name|devvp
-operator|->
-name|v_rdev
-argument_list|)
-index|]
-operator|==
-name|NULL
 condition|)
 block|{
 name|vrele
@@ -1990,17 +1972,6 @@ name|struct
 name|partinfo
 name|dpart
 decl_stmt|;
-name|int
-name|bsize
-init|=
-literal|0
-decl_stmt|,
-name|dtype
-init|=
-literal|0
-decl_stmt|,
-name|tmp
-decl_stmt|;
 endif|#
 directive|endif
 name|union
@@ -2030,6 +2001,17 @@ name|int
 name|ronly
 decl_stmt|,
 name|error
+decl_stmt|;
+name|int
+name|bsize
+init|=
+literal|0
+decl_stmt|,
+name|dtype
+init|=
+literal|0
+decl_stmt|,
+name|tmp
 decl_stmt|;
 comment|/* 	 * Disallow multiple mounts of the same device. 	 * Disallow mounting of a device that is currently in use 	 * (except for root, which might share swap device for miniroot). 	 * Flush out any old buffers remaining from a previous use. 	 */
 name|error
@@ -4094,21 +4076,17 @@ name|printf
 argument_list|(
 literal|"cleanblkhd %p, dirtyblkhd %p, numoutput %ld, type %d\n"
 argument_list|,
-name|TAILQ_FIRST
-argument_list|(
-operator|&
 name|vp
 operator|->
 name|v_cleanblkhd
-argument_list|)
+operator|.
+name|lh_first
 argument_list|,
-name|TAILQ_FIRST
-argument_list|(
-operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-argument_list|)
+operator|.
+name|lh_first
 argument_list|,
 name|vp
 operator|->
@@ -4703,13 +4681,13 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-argument_list|)
+operator|.
+name|lh_first
+operator|==
+name|NULL
 operator|||
 name|waitfor
 operator|==

@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.20 1998/06/09 18:24:04 ache Exp $"
+literal|"$Id: newsyslog.c,v 1.19 1998/05/10 21:13:29 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,11 +427,11 @@ begin_define
 define|#
 directive|define
 name|MAX_PID
-value|99999
+value|30000
 end_define
 
 begin_comment
-comment|/* was lower, see /usr/include/sys/proc.h */
+comment|/* was 65534, see /usr/include/sys/proc.h */
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.57 1998/12/31 03:23:39 kato Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.53 1998/10/08 17:04:58 kato Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD(98) supports:  *    Allied Telesis CenterCom LA-98-T, SIC-98  *    D-Link DE-298P, DE-298  *    ELECOM LANEED LD-BDN  *    ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF_2711ET  *    IO-DATA PCLA/T, LA/T-98  *    MACNICA NE2098  *    NEC PC-9801-108  *    MELCO LPC-TJ, LPC-TS, LGY-98, LGH-98, IND-SP, IND-SS, EGY-98  *    PLANET SMART COM CREDITCARD/2000 PCMCIA, EN-2298  *    Contec C-NET(98), C-NET(98)E, C-NET(98)L, C-NET(98)E-A, C-NET(98)L-A  *    SMC EtherEZ98  *  * Modified for FreeBSD(98) 2.2 by KATO T. of Nagoya University.  *  * LPC-T support routine was contributed by Chikun.  *  * SIC-98 spport routine was derived from the code by A. Kojima of  * Kyoto University Microcomputer Club (KMC).  */
+comment|/*  * FreeBSD(98) supports:  *    Allied Telesis CenterCom LA-98-T, SIC-98  *    D-Link DE-298P, DE-298  *    ELECOM LANEED LD-BDN  *    ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF_2711ET  *    IO-DATA PCLA/T, LA/T-98  *    MACNICA NE2098  *    NEC PC-9801-108  *    MELCO LPC-TJ, LPC-TS, LGY-98, LGH-98, IND-SP, IND-SS, EGY-98  *    PLANET SMART COM CREDITCARD/2000 PCMCIA, EN-2298  *    Contec C-NET(98), C-NET(98)E, C-NET(98)L, C-NET(98)E-A, C-NET(98)L-A  *  * Modified for FreeBSD(98) 2.2 by KATO T. of Nagoya University.  *  * LPC-T support routine was contributed by Chikun.  *  * SIC-98 spport routine was derived from the code by A. Kojima of  * Kyoto University Microcomputer Club (KMC).  */
 end_comment
 
 begin_include
@@ -485,13 +485,6 @@ name|void
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|edintr
 decl_stmt|;
 end_decl_stmt
 
@@ -1128,12 +1121,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pccard/cardinfo.h>
 end_include
 
@@ -1192,20 +1179,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|PCCARD_MODULE
-argument_list|(
-name|ed
-argument_list|,
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_device
+name|ed_info
+init|=
+block|{
+literal|"ed"
+block|,
 name|edinit
-argument_list|,
+block|,
 name|edunload
-argument_list|,
+block|,
 name|card_intr
-argument_list|,
+block|,
 literal|0
-argument_list|,
+block|,
+comment|/* Attributes - presently unused */
+operator|&
 name|net_imask
+comment|/* Interrupt mask for device */
+comment|/* XXX - Should this also include net_imask? */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|ed_info
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1574,26 +1579,6 @@ name|ed_790_intr_mask
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
-literal|0
-block|,
-name|IRQ3
-block|,
-name|IRQ5
-block|,
-name|IRQ6
-block|,
-literal|0
-block|,
-name|IRQ9
-block|,
-name|IRQ12
-block|,
-name|IRQ13
-else|#
-directive|else
 literal|0
 block|,
 name|IRQ9
@@ -1609,8 +1594,6 @@ block|,
 name|IRQ11
 block|,
 name|IRQ15
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -10245,12 +10228,6 @@ name|isa_dev
 operator|->
 name|id_flags
 decl_stmt|;
-name|isa_dev
-operator|->
-name|id_ointr
-operator|=
-name|edintr
-expr_stmt|;
 return|return
 name|ed_attach
 argument_list|(
@@ -12895,7 +12872,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|edintr
 parameter_list|(
@@ -16894,7 +16870,7 @@ operator|)
 expr_stmt|;
 name|dev
 operator|->
-name|id_ointr
+name|id_intr
 operator|=
 name|edintr
 expr_stmt|;

@@ -182,12 +182,6 @@ comment|/* length of pattern array */
 end_comment
 
 begin_decl_stmt
-name|int
-name|hflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|primes
 name|__P
@@ -268,7 +262,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"h"
+literal|""
 argument_list|)
 operator|)
 operator|!=
@@ -280,13 +274,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'h'
-case|:
-name|hflag
-operator|++
-expr_stmt|;
-break|break;
 case|case
 literal|'?'
 case|:
@@ -366,7 +353,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -420,7 +407,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -498,7 +485,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -700,7 +687,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -922,10 +909,6 @@ condition|)
 block|{
 name|printf
 argument_list|(
-name|hflag
-condition|?
-literal|"0x%lx\n"
-else|:
 literal|"%lu\n"
 argument_list|,
 name|factor
@@ -1279,10 +1262,6 @@ condition|)
 block|{
 name|printf
 argument_list|(
-name|hflag
-condition|?
-literal|"0x%lx\n"
-else|:
 literal|"%lu\n"
 argument_list|,
 name|start
@@ -1306,7 +1285,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: primes [-h] [start [stop]]\n"
+literal|"usage: primes [start [stop]]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -318,6 +318,9 @@ name|void
 name|st550_init
 parameter_list|()
 block|{
+name|int
+name|i
+decl_stmt|;
 name|platform
 operator|.
 name|family
@@ -524,7 +527,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"consinit: unknown console type %ld\n"
+literal|"consinit: unknown console type %d\n"
 argument_list|,
 name|ctb
 operator|->

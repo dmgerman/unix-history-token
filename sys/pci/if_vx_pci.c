@@ -94,7 +94,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|vx_pci_probe
@@ -147,7 +146,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|vx_pci_probe
@@ -266,22 +264,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-operator|(
 name|sc
 operator|=
 name|vxalloc
 argument_list|(
 name|unit
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-return|return;
-block|}
+expr_stmt|;
 name|sc
 operator|->
 name|vx_io_addr

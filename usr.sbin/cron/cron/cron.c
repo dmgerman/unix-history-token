@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cron.c,v 1.7 1998/07/06 20:28:04 bde Exp $"
+literal|"$Id: cron.c,v 1.6 1997/09/15 06:39:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -893,17 +893,11 @@ name|void
 name|cron_sleep
 parameter_list|()
 block|{
+specifier|register
 name|int
 name|seconds_to_wait
-init|=
-literal|0
 decl_stmt|;
-comment|/* 	 * Loop until we reach the top of the next minute, sleep when possible. 	 */
-for|for
-control|(
-init|;
-condition|;
-control|)
+do|do
 block|{
 name|seconds_to_wait
 operator|=
@@ -923,24 +917,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the seconds_to_wait value is insane, jump the cron 		 */
-if|if
-condition|(
-name|seconds_to_wait
-operator|<
-operator|-
-literal|600
-operator|||
-name|seconds_to_wait
-operator|>
-literal|600
-condition|)
-block|{
-name|cron_sync
-argument_list|()
-expr_stmt|;
-continue|continue;
-block|}
 name|Debug
 argument_list|(
 argument|DSCH
@@ -949,19 +925,22 @@ argument|(
 literal|"[%d] TargetTime=%ld, sec-to-wait=%d\n"
 argument|, 			getpid(), (long)TargetTime, seconds_to_wait)
 argument_list|)
-comment|/* 		 * If we've run out of wait time or there are no jobs left 		 * to run, break 		 */
-if|if
+comment|/* if we intend to sleep, this means that it's finally 		 * time to empty the job queue (execute it). 		 * 		 * if we run any jobs, we'll probably screw up our timing, 		 * so go recompute. 		 * 		 * note that we depend here on the left-to-right nature 		 * of&&, and the short-circuiting. 		 */
+block|}
+do|while
 condition|(
 name|seconds_to_wait
-operator|<=
+operator|>
 literal|0
-condition|)
-break|break;
-if|if
-condition|(
+operator|&&
 name|job_runqueue
 argument_list|()
-operator|==
+condition|)
+do|;
+while|while
+condition|(
+name|seconds_to_wait
+operator|>
 literal|0
 condition|)
 block|{
@@ -971,14 +950,22 @@ argument|DSCH
 argument_list|,
 argument|(
 literal|"[%d] sleeping for %d seconds\n"
-argument|, 				getpid(), seconds_to_wait)
+argument|, 			getpid(), seconds_to_wait)
 argument_list|)
+name|seconds_to_wait
+operator|=
+operator|(
+name|int
+operator|)
 name|sleep
 argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|seconds_to_wait
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 ifdef|#

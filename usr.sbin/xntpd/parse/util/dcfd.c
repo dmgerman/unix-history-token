@@ -228,7 +228,7 @@ name|dysize
 parameter_list|(
 name|_x_
 parameter_list|)
-value|(((_x_) % 4) ? 365 : (((_x_) % 100) ? 366 : ((_x_) % 400 ? 365 : 366 )))
+value|(((_x_) % 4) ? 365 : (((_x_) % 400) ? 365 : 366))
 endif|#
 directive|endif
 define|#
@@ -2520,18 +2520,6 @@ operator|)
 expr_stmt|;
 name|t
 operator|-=
-name|clock
-operator|->
-name|year
-operator|/
-literal|100
-operator|-
-literal|1970
-operator|/
-literal|100
-expr_stmt|;
-name|t
-operator|+=
 name|clock
 operator|->
 name|year
@@ -5846,12 +5834,12 @@ name|tt
 operator|.
 name|tv_usec
 expr_stmt|;
-comment|/* 		   * output interpreted DCF77 data.  DCF77 gives us a YY year 		   * but dcf_to_unixtime() adds the century, so print YYYY. 		   */
+comment|/* 		   * output interpreted DCF77 data 		   */
 name|PRINTF
 argument_list|(
 name|offsets
 condition|?
-literal|"%s, %2d:%02d:%02d, %d.%02d.%4d,<%s%s%s%s> (%c%d.%06ds)"
+literal|"%s, %2d:%02d:%02d, %d.%02d.%02d,<%s%s%s%s> (%c%d.%06ds)"
 else|:
 literal|"%s, %2d:%02d:%02d, %d.%02d.%02d,<%s%s%s%s>"
 argument_list|,

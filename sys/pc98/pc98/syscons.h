@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.27 1999/01/17 15:42:27 kato Exp $  */
+comment|/*-  * Copyright (c) 1995 S
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.24 1998/08/03 10:50:57 kato Exp $  */
 end_comment
 
 begin_ifndef
@@ -51,27 +51,6 @@ begin_comment
 comment|/* printable chars */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PRINTABLE
-parameter_list|(
-name|ch
-parameter_list|)
-value|((ch)> 0x1b || ((ch)> 0x0f&& (ch)< 0x1b) \ 			 || (ch)< 0x07)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -81,11 +60,6 @@ name|ch
 parameter_list|)
 value|((ch)> 0x1b || ((ch)> 0x0d&& (ch)< 0x1b) \ 			 || (ch)< 0x07)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* macros for "intelligent" screen update */
@@ -120,8 +94,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOCK_KEY_MASK
+value|0x0000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|LED_MASK
+value|0x00007
+end_define
+
+begin_define
+define|#
+directive|define
 name|UNKNOWN_MODE
 value|0x00010
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBD_RAW_MODE
+value|0x00020
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBD_CODE_MODE
+value|0x00040
 end_define
 
 begin_define
@@ -180,27 +182,6 @@ name|MOUSE_VISIBLE
 value|0x04000
 end_define
 
-begin_define
-define|#
-directive|define
-name|GRAPHICS_MODE
-value|0x08000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIXEL_MODE
-value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAVER_RUNNING
-value|0x20000
-end_define
-
 begin_comment
 comment|/* configuration flags */
 end_comment
@@ -226,16 +207,6 @@ name|CHAR_CURSOR
 value|0x00004
 end_define
 
-begin_comment
-comment|/* these options are now obsolete; use corresponding options for kbd driver */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -257,23 +228,11 @@ name|KBD_NORESET
 value|0x00020
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|QUIET_BELL
 value|0x00040
-end_define
-
-begin_define
-define|#
-directive|define
-name|VESA800X600
-value|0x00080
 end_define
 
 begin_comment
@@ -327,6 +286,17 @@ define|#
 directive|define
 name|BACKGROUND_CHANGED
 value|0x20
+end_define
+
+begin_comment
+comment|/* video hardware memory addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIDEOMEM
+value|0x000A0000
 end_define
 
 begin_comment
@@ -482,15 +452,15 @@ name|FONT_16
 value|8
 end_define
 
+begin_comment
+comment|/* defines related to hardware addresses */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|PC98
 end_ifdef
-
-begin_comment
-comment|/* defines related to hardware addresses */
-end_comment
 
 begin_define
 define|#
@@ -516,6 +486,147 @@ directive|define
 name|ATTR_OFFSET
 value|0x1000
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* IBM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MONO_BASE
+value|0x3B4
+end_define
+
+begin_comment
+comment|/* crt controller base mono */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COLOR_BASE
+value|0x3D4
+end_define
+
+begin_comment
+comment|/* crt controller base color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MISC
+value|0x3C2
+end_define
+
+begin_comment
+comment|/* misc output register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATC
+value|IO_VGA+0x00
+end_define
+
+begin_comment
+comment|/* attribute controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSIDX
+value|IO_VGA+0x04
+end_define
+
+begin_comment
+comment|/* timing sequencer idx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSREG
+value|IO_VGA+0x05
+end_define
+
+begin_comment
+comment|/* timing sequencer data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIXMASK
+value|IO_VGA+0x06
+end_define
+
+begin_comment
+comment|/* pixel write mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PALRADR
+value|IO_VGA+0x07
+end_define
+
+begin_comment
+comment|/* palette read address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PALWADR
+value|IO_VGA+0x08
+end_define
+
+begin_comment
+comment|/* palette write address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PALDATA
+value|IO_VGA+0x09
+end_define
+
+begin_comment
+comment|/* palette data register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GDCIDX
+value|IO_VGA+0x0E
+end_define
+
+begin_comment
+comment|/* graph data controller idx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GDCREG
+value|IO_VGA+0x0F
+end_define
+
+begin_comment
+comment|/* graph data controller data */
+end_comment
 
 begin_endif
 endif|#
@@ -633,15 +744,6 @@ typedef|typedef
 struct|struct
 name|scr_stat
 block|{
-name|int
-name|ad
-decl_stmt|;
-comment|/* video adapter index */
-name|video_adapter_t
-modifier|*
-name|adp
-decl_stmt|;
-comment|/* video adapter structure */
 name|u_short
 modifier|*
 name|scr_buf
@@ -695,14 +797,6 @@ name|ypixel
 decl_stmt|;
 comment|/* Y graphics size */
 name|int
-name|xoff
-decl_stmt|;
-comment|/* X offset in pixel mode */
-name|int
-name|yoff
-decl_stmt|;
-comment|/* Y offset in pixel mode */
-name|int
 name|font_size
 decl_stmt|;
 comment|/* fontsize in Y direction */
@@ -722,10 +816,6 @@ name|int
 name|status
 decl_stmt|;
 comment|/* status (bitfield) */
-name|int
-name|kbd_mode
-decl_stmt|;
-comment|/* keyboard I/O mode */
 name|u_short
 modifier|*
 name|cursor_pos
@@ -822,6 +912,10 @@ name|border
 decl_stmt|;
 comment|/* border color */
 name|int
+name|initial_mode
+decl_stmt|;
+comment|/* initial mode */
+name|int
 name|mode
 decl_stmt|;
 comment|/* mode */
@@ -894,91 +988,27 @@ name|apmhook
 name|r_hook
 decl_stmt|;
 comment|/* reconfiguration support */
-name|int
+ifdef|#
+directive|ifdef
+name|SC_SPLASH_SCREEN
+name|u_char
 name|splash_save_mode
 decl_stmt|;
 comment|/* saved mode for splash screen */
-name|int
-name|splash_save_status
-decl_stmt|;
-comment|/* saved status for splash screen */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|KANJI
 name|u_char
 name|kanji_1st_char
 decl_stmt|;
-define|#
-directive|define
-name|KTYPE_ASCII
-value|0
-define|#
-directive|define
-name|KTYPE_KANA
-value|1
-define|#
-directive|define
-name|KTYPE_JKANA
-value|0x10
-define|#
-directive|define
-name|KTYPE_7JIS
-value|0x20
-define|#
-directive|define
-name|KTYPE_SJIS
-value|2
-define|#
-directive|define
-name|KTYPE_UJIS
-value|4
-define|#
-directive|define
-name|KTYPE_SUKANA
-value|3
-define|#
-directive|define
-name|KTYPE_SUJIS
-value|6
-define|#
-directive|define
-name|KTYPE_KANIN
-value|0x80
-define|#
-directive|define
-name|KTYPE_ASCIN
-value|0x40
 name|u_char
 name|kanji_type
 decl_stmt|;
-comment|/* 0: Ascii code	1: HANKAKU	*/
-comment|/* 2: Shift JIS 	4: UJIS		*/
-comment|/* 3: Shift JIS or UJIS HANKAKU		*/
-comment|/* 6: Shift JIS or UJIS			*/
+comment|/* 0: ASCII CODE	1: HANKAKU ?	*/
+comment|/* 2: SHIFT JIS 	4: EUC		*/
 comment|/* 0x10: JIS HANKAKU	0x20: JIS	*/
-comment|/* 0x80: Kanji Invoke sequence		*/
-comment|/* 0x40: Ascii Invoke sequence		*/
-define|#
-directive|define
-name|IS_KTYPE_ASCII_or_HANKAKU
-parameter_list|(
-name|A
-parameter_list|)
-value|(!((A)& 0xee))
-define|#
-directive|define
-name|IS_KTYPE_KANA
-parameter_list|(
-name|A
-parameter_list|)
-value|((A)& 0x11)
-define|#
-directive|define
-name|KTYPE_MASK_CTRL
-parameter_list|(
-name|A
-parameter_list|)
-value|((A)&= 0xF0)
 endif|#
 directive|endif
 block|}
@@ -1004,114 +1034,22 @@ name|default_attr
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|ISTEXTSC
-parameter_list|(
-name|scp
-parameter_list|)
-value|(!((scp)->status 				\& (UNKNOWN_MODE | GRAPHICS_MODE | PIXEL_MODE)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISGRAPHSC
-parameter_list|(
-name|scp
-parameter_list|)
-value|(((scp)->status 				\& (UNKNOWN_MODE | GRAPHICS_MODE)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISPIXELSC
-parameter_list|(
-name|scp
-parameter_list|)
-value|(((scp)->status 				\& (UNKNOWN_MODE | GRAPHICS_MODE | PIXEL_MODE))\ 			  == PIXEL_MODE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISUNKNOWNSC
-parameter_list|(
-name|scp
-parameter_list|)
-value|((scp)->status& UNKNOWN_MODE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISFONTAVAIL
-parameter_list|(
-name|af
-parameter_list|)
-value|((af)& V_ADP_FONT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISMOUSEAVAIL
-parameter_list|(
-name|af
-parameter_list|)
-value|((af)& V_ADP_FONT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISPALAVAIL
-parameter_list|(
-name|af
-parameter_list|)
-value|((af)& V_ADP_PALETTE)
-end_define
-
 begin_comment
 comment|/* misc prototypes used by different syscons related LKM's */
 end_comment
 
-begin_comment
-comment|/* syscons.c */
-end_comment
-
 begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|sc_user_ioctl
-function_decl|)
+name|void
+name|set_border
 parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
+name|u_char
+name|color
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|set_mode
 parameter_list|(
 name|scr_stat
@@ -1122,31 +1060,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|scr_stat
-modifier|*
-name|sc_get_scr_stat
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|copy_font
 parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
 name|int
 name|operation
 parameter_list|,
 name|int
-name|font_size
+name|font_type
 parameter_list|,
-name|u_char
+name|char
 modifier|*
 name|font_image
 parameter_list|)
@@ -1155,47 +1078,65 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|set_border
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|int
-name|color
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|save_palette
-parameter_list|(
-name|adp
-parameter_list|,
-name|pal
-parameter_list|)
-define|\
-value|(*vidsw[(adp)->va_index]->save_palette)((adp), (pal))
-end_define
-
-begin_define
-define|#
-directive|define
 name|load_palette
 parameter_list|(
-name|adp
-parameter_list|,
-name|pal
+name|char
+modifier|*
+name|palette
 parameter_list|)
-define|\
-value|(*vidsw[(adp)->va_index]->load_palette)((adp), (pal))
-end_define
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|add_scrn_saver
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|this
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|remove_scrn_saver
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|this
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SC_SPLASH_SCREEN
+end_ifdef
 
 begin_function_decl
 name|void
-name|sc_touch_scrn_saver
+name|splash
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|splash_load
 parameter_list|(
 name|void
 parameter_list|)
@@ -1203,208 +1144,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|splash_unload
+parameter_list|(
 name|void
-name|sc_clear_screen
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|sc_move_mouse
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|int
-name|x
-parameter_list|,
-name|int
-name|y
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sc_clean_up
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sc_alloc_scr_buffer
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|int
-name|wait
-parameter_list|,
-name|int
-name|clear
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sc_alloc_cut_buffer
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|int
-name|wait
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sc_alloc_history_buffer
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|int
-name|lines
-parameter_list|,
-name|int
-name|extra
-parameter_list|,
-name|int
-name|wait
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|tty
-modifier|*
-name|scdevtotty
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* scvidctl.c */
-end_comment
-
-begin_function_decl
-name|int
-name|sc_set_text_mode
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|,
-name|int
-name|mode
-parameter_list|,
-name|int
-name|xsize
-parameter_list|,
-name|int
-name|ysize
-parameter_list|,
-name|int
-name|fontsize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sc_set_graphics_mode
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|,
-name|int
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sc_set_pixel_mode
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|,
-name|int
-name|xsize
-parameter_list|,
-name|int
-name|ysize
-parameter_list|,
-name|int
-name|fontsize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sc_vid_ioctl
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|,
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1435,7 +1186,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_PC98_PC98_SYSCONS_H_ */
+comment|/* !_I386_ISA_SYSCONS_H_ */
 end_comment
 
 end_unit

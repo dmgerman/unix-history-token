@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"skey.h"
 end_include
 
@@ -38,7 +32,6 @@ comment|/* skey_crypt - return encrypted UNIX passwd if s/key or regular passwor
 end_comment
 
 begin_function
-specifier|const
 name|char
 modifier|*
 name|skey_crypt
@@ -76,6 +69,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|crypt
+parameter_list|()
+function_decl|;
 comment|/* Try s/key authentication even when the UNIX password is permitted. */
 if|if
 condition|(

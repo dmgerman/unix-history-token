@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* m-x.c -- Meta-X minibuffer reader.    $Id: m-x.c,v 1.5 1997/07/24 21:28:00 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* m-x.c -- Meta-X minibuffer reader. */
+end_comment
+
+begin_comment
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -14,15 +18,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                     Reading Named Commands                       */
+comment|/*		       Reading Named Commands			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -120,7 +124,7 @@ name|entry
 operator|->
 name|label
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|function_doc_array
 index|[
@@ -204,9 +208,7 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|describe_command
 argument_list|,
-argument|_(
 literal|"Read the name of an Info command and describe it"
-argument|)
 argument_list|)
 end_macro
 
@@ -220,10 +222,7 @@ name|line
 operator|=
 name|read_function_name
 argument_list|(
-name|_
-argument_list|(
 literal|"Describe command: "
-argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -252,15 +251,21 @@ operator|*
 name|line
 condition|)
 block|{
+name|char
+modifier|*
+name|fundoc
+decl_stmt|;
 name|VFunction
 modifier|*
 name|fun
-init|=
+decl_stmt|;
+name|fun
+operator|=
 name|named_function
 argument_list|(
 name|line
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -293,9 +298,7 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|info_execute_command
 argument_list|,
-argument|_(
 literal|"Read a command name in the echo area and execute it"
-argument|)
 argument_list|)
 end_macro
 
@@ -427,10 +430,7 @@ argument_list|)
 expr_stmt|;
 name|info_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Cannot execute an `echo-area' command here."
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -478,9 +478,7 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|set_screen_height
 argument_list|,
-argument|_(
 literal|"Set the height of the displayed window"
-argument|)
 argument_list|)
 end_macro
 
@@ -521,10 +519,7 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
-name|_
-argument_list|(
 literal|"Set screen height to (%d): "
-argument_list|)
 argument_list|,
 name|new_height
 argument_list|)

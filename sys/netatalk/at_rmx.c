@@ -31,21 +31,6 @@ directive|include
 file|<net/route.h>
 end_include
 
-begin_function_decl
-name|int
-name|at_inithead
-parameter_list|(
-name|void
-modifier|*
-modifier|*
-name|head
-parameter_list|,
-name|int
-name|off
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -57,7 +42,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|prsockaddr

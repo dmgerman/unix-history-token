@@ -19,12 +19,6 @@ directive|include
 file|<ieeefp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/fpu.h>
-end_include
-
 begin_function
 name|fp_rnd
 name|fpgetround
@@ -36,11 +30,9 @@ decl_stmt|;
 name|u_int64_t
 name|old
 decl_stmt|;
-name|GET_FPCR
-argument_list|(
-name|fpcrval
-argument_list|)
-expr_stmt|;
+asm|__asm__("trapb");
+asm|__asm__("mf_fpcr %0" : "=f" (fpcrval));
+asm|__asm__("trapb");
 name|old
 operator|=
 operator|*
@@ -55,11 +47,11 @@ return|return
 operator|(
 operator|(
 name|old
-operator|&
-name|FPCR_DYN_MASK
-operator|)
 operator|>>
-name|FPCR_DYN_SHIFT
+literal|58
+operator|)
+operator|&
+literal|0x3
 operator|)
 return|;
 block|}

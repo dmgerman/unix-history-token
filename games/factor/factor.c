@@ -130,12 +130,6 @@ comment|/* largest prime in the prime array */
 end_comment
 
 begin_decl_stmt
-name|int
-name|hflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|pr_fact
 name|__P
@@ -207,7 +201,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"h"
+literal|""
 argument_list|)
 operator|)
 operator|!=
@@ -219,13 +213,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'h'
-case|:
-name|hflag
-operator|++
-expr_stmt|;
-break|break;
 case|case
 literal|'?'
 case|:
@@ -348,7 +335,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -435,7 +422,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -543,10 +530,6 @@ name|void
 operator|)
 name|printf
 argument_list|(
-name|hflag
-condition|?
-literal|"0x%lx:"
-else|:
 literal|"%lu:"
 argument_list|,
 name|val
@@ -608,10 +591,6 @@ name|void
 operator|)
 name|printf
 argument_list|(
-name|hflag
-condition|?
-literal|" 0x%lx"
-else|:
 literal|" %lu"
 argument_list|,
 name|val
@@ -627,10 +606,6 @@ name|void
 operator|)
 name|printf
 argument_list|(
-name|hflag
-condition|?
-literal|" 0x%lx"
-else|:
 literal|" %lu"
 argument_list|,
 operator|*
@@ -639,6 +614,9 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|/=
+operator|(
+name|long
+operator|)
 operator|*
 name|fact
 expr_stmt|;
@@ -648,6 +626,9 @@ condition|(
 operator|(
 name|val
 operator|%
+operator|(
+name|long
+operator|)
 operator|*
 name|fact
 operator|)
@@ -688,7 +669,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: factor -h [value ...]\n"
+literal|"usage: factor [value ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

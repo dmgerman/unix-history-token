@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.7 1998/12/28 19:22:27 mjacob Exp $ */
-end_comment
-
-begin_comment
-comment|/* release_12_28_98_A+ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -66,7 +62,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"ispmbox.h"
+file|<ispmbox.h>
 end_include
 
 begin_endif
@@ -85,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|5
+value|3
 end_define
 
 begin_comment
@@ -272,13 +268,6 @@ name|MAX_FC_TARG
 value|126
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_LOOPID
-value|113
-end_define
-
 begin_comment
 comment|/* queue length must be a power of two */
 end_comment
@@ -380,7 +369,7 @@ literal|1
 decl_stmt|,
 name|isp_fifo_threshold
 range|:
-literal|3
+literal|2
 decl_stmt|,
 name|isp_diffmode
 range|:
@@ -714,129 +703,6 @@ name|FW_NON_PART
 value|0x0007
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_comment
-comment|/*  * Some temporary Target Mode definitions  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|tmd_cmd
-block|{
-name|u_int8_t
-name|cd_iid
-decl_stmt|;
-comment|/* initiator */
-name|u_int8_t
-name|cd_tgt
-decl_stmt|;
-comment|/* target */
-name|u_int8_t
-name|cd_lun
-decl_stmt|;
-comment|/* LUN for this command */
-name|u_int8_t
-name|cd_state
-decl_stmt|;
-name|u_int8_t
-name|cd_cdb
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* command bytes */
-name|u_int8_t
-name|cd_sensedata
-index|[
-literal|20
-index|]
-decl_stmt|;
-name|u_int16_t
-name|cd_rxid
-decl_stmt|;
-name|u_int32_t
-name|cd_datalen
-decl_stmt|;
-name|u_int32_t
-name|cd_totbytes
-decl_stmt|;
-name|void
-modifier|*
-name|cd_hba
-decl_stmt|;
-block|}
-name|tmd_cmd_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Async Target Mode Event Definitions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMD_BUS_RESET
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMD_BDR
-value|1
-end_define
-
-begin_comment
-comment|/*  * Immediate Notify data structure.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOTIFY_MSGLEN
-value|5
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int8_t
-name|nt_iid
-decl_stmt|;
-comment|/* initiator */
-name|u_int8_t
-name|nt_tgt
-decl_stmt|;
-comment|/* target */
-name|u_int8_t
-name|nt_lun
-decl_stmt|;
-comment|/* LUN for this command */
-name|u_int8_t
-name|nt_msg
-index|[
-name|NOTIFY_MSGLEN
-index|]
-decl_stmt|;
-comment|/* SCSI message byte(s) */
-block|}
-name|tmd_notify_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Soft Structure per host adapter  */
 end_comment
@@ -856,7 +722,7 @@ name|ispmdvec
 modifier|*
 name|isp_mdvec
 decl_stmt|;
-comment|/* 	 * Mostly nonvolatile state, debugging, etc.. 	 */
+comment|/* 	 * State, debugging, etc.. 	 */
 name|u_int
 label|:
 literal|8
@@ -972,56 +838,6 @@ decl_stmt|;
 name|u_int32_t
 name|isp_result_dma
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-comment|/* 	 * Vectors for handling target mode support. 	 * 	 * isp_tmd_newcmd is for feeding a newly arrived command to some 	 * upper layer. 	 * 	 * isp_tmd_event is for notifying some upper layer that an event has 	 * occurred that is not necessarily tied to any target (e.g., a SCSI 	 * Bus Reset). 	 * 	 * isp_tmd_notify is for notifying some upper layer that some 	 * event is now occurring that is either pertinent for a specific 	 * device or for a specific command (e.g., BDR or ABORT TAG). 	 * 	 * It is left undefined (for now) how pools of commands are managed. 	 */
-name|void
-argument_list|(
-argument|*isp_tmd_newcmd
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|tmd_cmd_t
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-name|void
-argument_list|(
-argument|*isp_tmd_event
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-name|void
-argument_list|(
-argument|*isp_tmd_notify
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|tmd_notify_t
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1359,6 +1175,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Free any associated resources prior to decommissioning.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|isp_uninit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Reset the ISP and call completion for any orphaned commands.  */
 end_comment
 
@@ -1383,6 +1217,23 @@ end_comment
 begin_decl_stmt
 name|int
 name|isp_intr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Watchdog Routine  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|isp_watch
 name|__P
 argument_list|(
 operator|(

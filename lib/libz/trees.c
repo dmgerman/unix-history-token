@@ -8,7 +8,7 @@ comment|/*  *  ALGORITHM  *  *      The "deflation" process uses several Huffman
 end_comment
 
 begin_comment
-comment|/* @(#) $Id: trees.c,v 1.1.1.3 1999/01/10 09:46:57 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -1284,37 +1284,6 @@ condition|(
 name|static_init_done
 condition|)
 return|return;
-comment|/* For some embedded targets, global variables are not initialized: */
-name|static_l_desc
-operator|.
-name|static_tree
-operator|=
-name|static_ltree
-expr_stmt|;
-name|static_l_desc
-operator|.
-name|extra_bits
-operator|=
-name|extra_lbits
-expr_stmt|;
-name|static_d_desc
-operator|.
-name|static_tree
-operator|=
-name|static_dtree
-expr_stmt|;
-name|static_d_desc
-operator|.
-name|extra_bits
-operator|=
-name|extra_dbits
-expr_stmt|;
-name|static_bl_desc
-operator|.
-name|extra_bits
-operator|=
-name|extra_blbits
-expr_stmt|;
 comment|/* Initialize the mapping length (0..255) -> length code (0..28) */
 name|length
 operator|=
@@ -2139,6 +2108,12 @@ argument_list|()
 expr_stmt|;
 name|s
 operator|->
+name|compressed_len
+operator|=
+literal|0L
+expr_stmt|;
+name|s
+operator|->
 name|l_desc
 operator|.
 name|dyn_tree
@@ -2216,12 +2191,6 @@ comment|/* enough lookahead for inflate */
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|s
-operator|->
-name|compressed_len
-operator|=
-literal|0L
-expr_stmt|;
 name|s
 operator|->
 name|bits_sent
@@ -4891,9 +4860,6 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|/* send block type */
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -4926,8 +4892,6 @@ operator|)
 operator|<<
 literal|3
 expr_stmt|;
-endif|#
-directive|endif
 name|copy_block
 argument_list|(
 name|s
@@ -4981,9 +4945,6 @@ argument_list|,
 name|static_ltree
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -4991,8 +4952,6 @@ operator|+=
 literal|10L
 expr_stmt|;
 comment|/* 3 for block type, 7 for EOB */
-endif|#
-directive|endif
 name|bi_flush
 argument_list|(
 name|s
@@ -5036,17 +4995,12 @@ argument_list|,
 name|static_ltree
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|s
 operator|->
 name|compressed_len
 operator|+=
 literal|10L
 expr_stmt|;
-endif|#
-directive|endif
 name|bi_flush
 argument_list|(
 name|s
@@ -5063,11 +5017,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* ===========================================================================  * Determine the best encoding for the current block: dynamic trees, static  * trees or store, and output the encoded block to the zip file.  */
+comment|/* ===========================================================================  * Determine the best encoding for the current block: dynamic trees, static  * trees or store, and output the encoded block to the zip file. This function  * returns the total compressed length for the file so far.  */
 end_comment
 
 begin_function
-name|void
+name|ulg
 name|_tr_flush_block
 parameter_list|(
 name|s
@@ -5304,6 +5258,95 @@ literal|5
 expr_stmt|;
 comment|/* force a stored block */
 block|}
+comment|/* If compression failed and this is the first and last block,      * and if the .zip file can be seeked (to rewrite the local header),      * the whole file is transformed into a stored file:      */
+ifdef|#
+directive|ifdef
+name|STORED_FILE_OK
+ifdef|#
+directive|ifdef
+name|FORCE_STORED_FILE
+if|if
+condition|(
+name|eof
+operator|&&
+name|s
+operator|->
+name|compressed_len
+operator|==
+literal|0L
+condition|)
+block|{
+comment|/* force stored file */
+else|#
+directive|else
+if|if
+condition|(
+name|stored_len
+operator|<=
+name|opt_lenb
+operator|&&
+name|eof
+operator|&&
+name|s
+operator|->
+name|compressed_len
+operator|==
+literal|0L
+operator|&&
+name|seekable
+argument_list|()
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* Since LIT_BUFSIZE<= 2*WSIZE, the input data must be there: */
+if|if
+condition|(
+name|buf
+operator|==
+operator|(
+name|charf
+operator|*
+operator|)
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"block vanished"
+argument_list|)
+expr_stmt|;
+name|copy_block
+argument_list|(
+name|buf
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|stored_len
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* without header */
+name|s
+operator|->
+name|compressed_len
+operator|=
+name|stored_len
+operator|<<
+literal|3
+expr_stmt|;
+name|s
+operator|->
+name|method
+operator|=
+name|STORED
+expr_stmt|;
+block|}
+elseif|else
+endif|#
+directive|endif
+comment|/* STORED_FILE_OK */
 ifdef|#
 directive|ifdef
 name|FORCE_STORED
@@ -5411,9 +5454,6 @@ operator|)
 name|static_dtree
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -5424,8 +5464,6 @@ name|s
 operator|->
 name|static_len
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -5490,9 +5528,6 @@ operator|->
 name|dyn_dtree
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -5503,8 +5538,6 @@ name|s
 operator|->
 name|opt_len
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|Assert
 argument_list|(
@@ -5519,7 +5552,6 @@ argument_list|,
 literal|"bad compressed size"
 argument_list|)
 expr_stmt|;
-comment|/* The above check is made mod 2^32, for files larger than 512 MB      * and uLong implemented on 32 bits.      */
 name|init_block
 argument_list|(
 name|s
@@ -5535,9 +5567,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -5545,8 +5574,6 @@ operator|+=
 literal|7
 expr_stmt|;
 comment|/* align on byte boundary */
-endif|#
-directive|endif
 block|}
 name|Tracev
 argument_list|(
@@ -5571,6 +5598,13 @@ name|eof
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+name|s
+operator|->
+name|compressed_len
+operator|>>
+literal|3
+return|;
 block|}
 comment|/* ===========================================================================  * Save the match info and tally the frequency counts. Return true if  * the current block must be flushed.  */
 name|int

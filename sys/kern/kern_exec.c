@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.92 1998/12/30 10:38:59 dfr Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.86 1998/09/04 08:06:55 dfr Exp $  */
 end_comment
 
 begin_include
@@ -231,7 +231,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
+name|struct
+name|ps_strings
+modifier|*
 name|ps_strings
 init|=
 name|PS_STRINGS
@@ -239,7 +241,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_INTPTR
 argument_list|(
 name|_kern
 argument_list|,
@@ -247,10 +249,12 @@ name|KERN_PS_STRINGS
 argument_list|,
 name|ps_strings
 argument_list|,
-name|CTLFLAG_RD
+literal|0
 argument_list|,
 operator|&
 name|ps_strings
+argument_list|,
+literal|0
 argument_list|,
 literal|""
 argument_list|)
@@ -259,15 +263,18 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
+name|caddr_t
 name|usrstack
 init|=
+operator|(
+name|caddr_t
+operator|)
 name|USRSTACK
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_INTPTR
 argument_list|(
 name|_kern
 argument_list|,
@@ -275,10 +282,12 @@ name|KERN_USRSTACK
 argument_list|,
 name|usrstack
 argument_list|,
-name|CTLFLAG_RD
+literal|0
 argument_list|,
 operator|&
 name|usrstack
+argument_list|,
+literal|0
 argument_list|,
 literal|""
 argument_list|)
@@ -599,14 +608,6 @@ operator|=
 name|ndp
 operator|->
 name|ni_vp
-expr_stmt|;
-name|imgp
-operator|->
-name|fname
-operator|=
-name|uap
-operator|->
-name|fname
 expr_stmt|;
 comment|/* 	 * Check file permissions (also 'opens' file) 	 */
 name|error
@@ -1313,16 +1314,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|imgp
+name|ndp
 operator|->
-name|vp
+name|ni_vp
 condition|)
 block|{
 name|vrele
 argument_list|(
-name|imgp
+name|ndp
 operator|->
-name|vp
+name|ni_vp
 argument_list|)
 expr_stmt|;
 name|zfree
@@ -1775,8 +1776,6 @@ argument_list|(
 name|imgp
 operator|->
 name|firstpage
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|imgp
@@ -1819,23 +1818,6 @@ name|proc
 operator|->
 name|p_vmspace
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VM_STACK
-name|caddr_t
-name|stack_addr
-init|=
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|USRSTACK
-operator|-
-name|MAXSSIZ
-argument_list|)
-decl_stmt|;
-else|#
-directive|else
 name|caddr_t
 name|stack_addr
 init|=
@@ -1848,8 +1830,6 @@ operator|-
 name|SGROWSIZ
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 name|vm_map_t
 name|map
 init|=
@@ -1896,7 +1876,7 @@ name|vm_pmap
 argument_list|,
 literal|0
 argument_list|,
-name|VM_MAXUSER_ADDRESS
+name|USRSTACK
 argument_list|)
 expr_stmt|;
 name|vm_map_remove
@@ -1905,7 +1885,7 @@ name|map
 argument_list|,
 literal|0
 argument_list|,
-name|VM_MAXUSER_ADDRESS
+name|USRSTACK
 argument_list|)
 expr_stmt|;
 block|}
@@ -1935,67 +1915,6 @@ name|vm_map
 expr_stmt|;
 block|}
 comment|/* Allocate a new stack */
-ifdef|#
-directive|ifdef
-name|VM_STACK
-name|error
-operator|=
-name|vm_map_stack
-argument_list|(
-operator|&
-name|vmspace
-operator|->
-name|vm_map
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|stack_addr
-argument_list|,
-operator|(
-name|vm_size_t
-operator|)
-name|MAXSSIZ
-argument_list|,
-name|VM_PROT_ALL
-argument_list|,
-name|VM_PROT_ALL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-comment|/* vm_ssize and vm_maxsaddr are somewhat antiquated concepts in the 	 * VM_STACK case, but they are still used to monitor the size of the 	 * process stack so we can check the stack rlimit. 	 */
-name|vmspace
-operator|->
-name|vm_ssize
-operator|=
-name|SGROWSIZ
-operator|>>
-name|PAGE_SHIFT
-expr_stmt|;
-name|vmspace
-operator|->
-name|vm_maxsaddr
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|USRSTACK
-operator|-
-name|MAXSSIZ
-expr_stmt|;
-else|#
-directive|else
 name|error
 operator|=
 name|vm_map_insert
@@ -2056,8 +1975,6 @@ name|USRSTACK
 operator|-
 name|MAXSSIZ
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2430,11 +2347,6 @@ decl_stmt|;
 comment|/* 	 * Calculate string base and vector table pointers. 	 * Also deal with signal trampoline code for this exec type. 	 */
 name|arginfo
 operator|=
-operator|(
-expr|struct
-name|ps_strings
-operator|*
-operator|)
 name|PS_STRINGS
 expr_stmt|;
 name|szsigcode

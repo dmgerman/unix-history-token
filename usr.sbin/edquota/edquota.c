@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: edquota.c,v 1.7 1997/09/17 06:29:23 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -2555,9 +2555,6 @@ name|dqb_curblocks
 operator|=
 name|btodb
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|dqblk
 operator|.
 name|dqb_curblocks
@@ -2571,9 +2568,6 @@ name|dqb_bsoftlimit
 operator|=
 name|btodb
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|dqblk
 operator|.
 name|dqb_bsoftlimit
@@ -2587,9 +2581,6 @@ name|dqb_bhardlimit
 operator|=
 name|btodb
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|dqblk
 operator|.
 name|dqb_bhardlimit

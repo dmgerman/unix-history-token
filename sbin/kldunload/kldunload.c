@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kldunload.c,v 1.6 1998/07/06 06:59:52 charnier Exp $"
+literal|"$Id: kldunload.c,v 1.5 1998/01/05 07:10:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,14 +77,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldunload [-v] -i id\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       kldunload [-v] -n name\n"
+literal|"usage: kldunload [-v] [-i id] [-n name]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -192,37 +185,9 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|fileid
-operator|&&
-operator|!
-name|filename
-operator|&&
-operator|(
-name|argc
-operator|==
-literal|1
-operator|)
-condition|)
-block|{
-name|filename
-operator|=
-operator|*
-name|argv
-expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|argc
 operator|!=
 literal|0
-operator|||
-name|fileid
-operator|&&
-name|filename
 condition|)
 name|usage
 argument_list|()

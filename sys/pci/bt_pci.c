@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT946, BT948, BT956, BT958 SCSI controllers  *  * Copyright (c) 1995, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bt_pci.c,v 1.3 1998/11/10 06:45:14 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT946, BT948, BT956, BT958 SCSI controllers  *  * Copyright (c) 1995, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
 end_comment
 
 begin_include
@@ -127,7 +127,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|bt_pci_probe
@@ -313,7 +312,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|bt_pci_probe
@@ -354,6 +352,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|u_int8_t
+name|new_addr
+decl_stmt|;
 if|if
 condition|(
 name|btpcideterminebusspace
@@ -388,7 +389,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 			 * Determine if an ISA compatible I/O port has been 			 * enabled.  If so, record the port so it will not 			 * be probed by our ISA probe.  If the PCI I/O port 			 * was not set to the compatibility port, disable it. 			 */
+comment|/* 			 * Determine if an ISA compatible I/O port has been 			 * enabled.  If so, record the port so it will not 			 * be probed by our ISA probe, and disable the port. 			 */
 name|error
 operator|=
 name|bt_cmd
@@ -438,21 +439,7 @@ operator|.
 name|io_port
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bsh
-operator|!=
-name|bt_iop_from_bio
-argument_list|(
-name|pci_info
-operator|.
-name|io_port
-argument_list|)
-condition|)
-block|{
-name|u_int8_t
-name|new_addr
-decl_stmt|;
+block|}
 name|new_addr
 operator|=
 name|BIO_DISABLED
@@ -479,8 +466,6 @@ argument_list|,
 name|DEFAULT_CMD_TIMEOUT
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|bt_free
 argument_list|(
 name|bt
@@ -488,7 +473,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|"Buslogic Multi-Master SCSI Host Adapter"
+literal|"Buslogic Multimaster SCSI host adapter"
 operator|)
 return|;
 break|break;

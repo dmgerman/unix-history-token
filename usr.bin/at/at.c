@@ -329,12 +329,11 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.14 1998/10/15 13:30:48 mckay Exp $"
+literal|"$Id: at.c,v 1.13 1997/03/29 04:27:56 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

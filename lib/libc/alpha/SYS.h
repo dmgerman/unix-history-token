@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: SYS.h,v 1.4 1998/12/23 11:50:51 dfr Exp $ */
+comment|/* $Id: SYS.h,v 1.2 1998/06/09 22:43:34 jb Exp $ */
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|CALLSYS_NOERROR(name);					\ 	br	gp, LLABEL(name,0);				\ LLABEL(name,0):							\ 	LDGP(gp);						\ 	beq	a3, LLABEL(name,1);				\ 	jmp	zero, .cerror;					\ LLABEL(name,1):
+value|CALLSYS_NOERROR(name);					\ 	br	gp, LLABEL(name,0);				\ LLABEL(name,0):							\ 	LDGP(gp);						\ 	beq	a3, LLABEL(name,1);				\ 	jmp	zero, cerror;					\ LLABEL(name,1):
 end_define
 
 begin_define

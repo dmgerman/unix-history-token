@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.87 1999/01/12 00:19:31 eivind Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.82 1998/10/10 09:38:02 kato Exp $  */
 end_comment
 
 begin_include
@@ -4221,16 +4221,10 @@ name|id
 decl_stmt|;
 name|int
 name|bus_0
-init|=
-literal|0
 decl_stmt|;
-comment|/* Stop GCC warning */
 name|int
 name|bus_pci
-init|=
-literal|0
 decl_stmt|;
-comment|/* Stop GCC warning */
 name|int
 name|num_pci_bus
 decl_stmt|;
@@ -5076,9 +5070,6 @@ name|int
 name|intr
 parameter_list|)
 block|{
-name|int
-name|apic
-decl_stmt|;
 name|io_apic_ints
 index|[
 name|intr
@@ -5123,83 +5114,6 @@ name|entry
 operator|->
 name|src_bus_irq
 expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|->
-name|dst_apic_id
-operator|==
-literal|255
-condition|)
-block|{
-comment|/* This signal goes to all IO APICS.  Select an IO APIC 		   with sufficient number of interrupt pins */
-for|for
-control|(
-name|apic
-operator|=
-literal|0
-init|;
-name|apic
-operator|<
-name|mp_napics
-condition|;
-name|apic
-operator|++
-control|)
-if|if
-condition|(
-operator|(
-operator|(
-name|io_apic_read
-argument_list|(
-name|apic
-argument_list|,
-name|IOAPIC_VER
-argument_list|)
-operator|&
-name|IOART_VER_MAXREDIR
-operator|)
-operator|>>
-name|MAXREDIRSHIFT
-operator|)
-operator|>=
-name|entry
-operator|->
-name|dst_apic_int
-condition|)
-break|break;
-if|if
-condition|(
-name|apic
-operator|<
-name|mp_napics
-condition|)
-name|io_apic_ints
-index|[
-name|intr
-index|]
-operator|.
-name|dst_apic_id
-operator|=
-name|IO_TO_ID
-argument_list|(
-name|apic
-argument_list|)
-expr_stmt|;
-else|else
-name|io_apic_ints
-index|[
-name|intr
-index|]
-operator|.
-name|dst_apic_id
-operator|=
-name|entry
-operator|->
-name|dst_apic_id
-expr_stmt|;
-block|}
-else|else
 name|io_apic_ints
 index|[
 name|intr
@@ -5960,10 +5874,6 @@ name|defined
 argument_list|(
 name|READY
 argument_list|)
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|printf
 argument_list|(
 literal|"Freeing redirected ISA irq %d.\n"
@@ -5977,10 +5887,6 @@ operator|???
 return|;
 else|#
 directive|else
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|printf
 argument_list|(
 literal|"Freeing (NOT implemented) redirected ISA irq %d.\n"
@@ -8988,7 +8894,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* Enable forwarding of a signal to a process running on a different CPU */
-specifier|static
 name|int
 name|forward_signal_enabled
 init|=
@@ -9013,7 +8918,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* Enable forwarding of roundrobin to all other cpus */
-specifier|static
 name|int
 name|forward_roundrobin_enabled
 init|=
@@ -9048,6 +8952,9 @@ name|void
 name|ap_init
 parameter_list|()
 block|{
+name|u_int
+name|temp
+decl_stmt|;
 name|u_int
 name|apic_id
 decl_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	8.14 (Berkeley) 5/19/1998"
+literal|"@(#)convtime.c	8.14 (Berkeley) 5/19/98"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.27 1998/12/07 21:58:35 archie Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.25 1998/05/18 10:24:26 dt Exp $ */
 end_comment
 
 begin_comment
@@ -80,6 +80,28 @@ include|#
 directive|include
 file|<msdosfs/fat.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|markdeleted
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|msdosfsmount
+operator|*
+name|pmp
+operator|,
+name|u_long
+name|dirclust
+operator|,
+name|u_long
+name|diroffset
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * When we search a directory the blocks containing directory entries are  * read and examined.  The directory entries contain information that would  * normally be in the inode of a unix filesystem.  This means that some of  * a directory's contents may also be in memory resident denodes (sort of  * an inode).  This can cause problems if we are searching while some other  * process is modifying a directory.  To prevent one process from accessing  * incompletely modified directory information we depend upon being the  * sole owner of a directory block.  bread/brelse provide this service.  * This being the case, when a process modifies a directory it must first  * acquire the disk block that contains the directory entry to be modified.  * Then update the disk block and the denode, and then write the disk block  * out to disk.  This way disk blocks containing directory entries and in  * memory denode's will be in synch.  */
@@ -202,6 +224,15 @@ modifier|*
 name|dep
 init|=
 name|NULL
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+init|=
+name|cnp
+operator|->
+name|cn_cred
 decl_stmt|;
 name|u_char
 name|dosfilename
@@ -3947,8 +3978,6 @@ name|dentp
 decl_stmt|;
 name|int
 name|blsize
-decl_stmt|,
-name|win95
 decl_stmt|;
 name|u_long
 name|cn
@@ -3961,10 +3990,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|win95
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 	 * Read through the directory looking for Win'95 entries 	 * Note: Error currently handled just as EOF			XXX 	 */
 for|for
 control|(
@@ -3995,9 +4020,7 @@ name|blsize
 argument_list|)
 condition|)
 return|return
-operator|(
-name|win95
-operator|)
+literal|0
 return|;
 if|if
 condition|(
@@ -4024,9 +4047,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|win95
-operator|)
+literal|0
 return|;
 block|}
 for|for
@@ -4077,9 +4098,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|win95
-operator|)
+literal|0
 return|;
 block|}
 if|if
@@ -4115,10 +4134,6 @@ return|return
 literal|1
 return|;
 block|}
-name|win95
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|brelse
 argument_list|(

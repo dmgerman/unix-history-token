@@ -4354,6 +4354,9 @@ name|int
 name|bcount
 parameter_list|)
 block|{
+name|int
+name|timeout
+decl_stmt|;
 name|u_char
 name|fs
 decl_stmt|,
@@ -6565,7 +6568,7 @@ index|]
 operator|!=
 literal|0
 condition|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|ad1848_pcm_operations
 index|[
@@ -6573,16 +6576,6 @@ name|nr_ad1848_devs
 index|]
 operator|.
 name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ad1848_pcm_operations
-index|[
-name|nr_ad1848_devs
-index|]
-operator|.
-name|name
-argument_list|)
 argument_list|,
 literal|"%s (%s)"
 argument_list|,
@@ -6594,7 +6587,7 @@ name|chip_name
 argument_list|)
 expr_stmt|;
 else|else
-name|snprintf
+name|sprintf
 argument_list|(
 name|ad1848_pcm_operations
 index|[
@@ -6602,16 +6595,6 @@ name|nr_ad1848_devs
 index|]
 operator|.
 name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ad1848_pcm_operations
-index|[
-name|nr_ad1848_devs
-index|]
-operator|.
-name|name
-argument_list|)
 argument_list|,
 literal|"Generic audio codec (%s)"
 argument_list|,

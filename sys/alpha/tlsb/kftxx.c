@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: kftxx.c,v 1.3 1998/07/12 16:23:17 dfr Exp $ */
+comment|/* $Id: kftxx.c,v 1.2 1998/06/14 13:45:24 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -257,16 +257,16 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_setup_intr
+name|bus_create_intr
 argument_list|,
-name|bus_generic_setup_intr
+name|bus_generic_create_intr
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_teardown_intr
+name|bus_connect_intr
 argument_list|,
-name|bus_generic_teardown_intr
+name|bus_generic_connect_intr
 argument_list|)
 block|,
 block|{

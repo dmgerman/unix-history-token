@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.36 1998/07/15 10:11:21 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.35 1998/07/04 22:30:20 julian Exp $ */
 end_comment
 
 begin_comment
@@ -473,7 +473,7 @@ name|lc_devfs_token
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* DEVFS */
+endif|DEVFS
 block|}
 name|matcd_data
 index|[
@@ -10042,7 +10042,7 @@ name|unsigned
 name|char
 name|data
 index|[
-literal|8
+literal|5
 index|]
 decl_stmt|;
 name|cd

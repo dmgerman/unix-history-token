@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tftp.c,v 1.3 1998/02/20 04:30:34 jb Exp $"
+literal|"$Id: tftp.c,v 1.2 1997/08/14 06:47:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,7 +340,7 @@ end_comment
 
 begin_function
 name|void
-name|xmitfile
+name|sendfile
 parameter_list|(
 name|fd
 parameter_list|,

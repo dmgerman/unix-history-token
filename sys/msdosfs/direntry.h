@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: direntry.h,v 1.12 1998/02/26 06:45:42 msmith Exp $ */
+comment|/*	$Id: direntry.h,v 1.11 1998/02/24 14:13:08 ache Exp $ */
 end_comment
 
 begin_comment
@@ -92,19 +92,12 @@ name|ATTR_ARCHIVE
 value|0x20
 comment|/* file is new or modified */
 name|u_int8_t
-name|deLowerCase
+name|deReserved
+index|[
+literal|1
+index|]
 decl_stmt|;
-comment|/* NT VFAT lower case flags */
-define|#
-directive|define
-name|LCASE_BASE
-value|0x08
-comment|/* filename base in lower case */
-define|#
-directive|define
-name|LCASE_EXT
-value|0x10
-comment|/* filename extension in lower case */
+comment|/* reserved */
 name|u_int8_t
 name|deCHundredth
 decl_stmt|;

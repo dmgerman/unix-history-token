@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pr_time.c,v 1.11 1997/12/28 17:50:10 alex Exp $"
+literal|"$Id: pr_time.c,v 1.10 1997/08/26 06:59:34 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * pr_idle --  *	Display the idle time.  *	Returns number of excess characters that were used for long idle time.  */
+comment|/*  * pr_idle --  *	Display the idle time.  */
 end_comment
 
 begin_function
@@ -292,17 +292,6 @@ else|:
 literal|" "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|days
-operator|>=
-literal|100
-condition|)
-return|return
-operator|(
-literal|2
-operator|)
-return|;
 if|if
 condition|(
 name|days

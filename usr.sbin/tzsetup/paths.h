@@ -27,12 +27,5 @@ name|_PATH_LOCALTIME
 value|"/etc/localtime"
 end_define
 
-begin_define
-define|#
-directive|define
-name|_PATH_WALL_CMOS_CLOCK
-value|"/etc/wall_cmos_clock"
-end_define
-
 end_unit
 

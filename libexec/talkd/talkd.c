@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: talkd.c,v 1.8 1997/12/02 12:33:42 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,10 +263,6 @@ decl_stmt|;
 name|int
 name|cc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NOTDEF
-comment|/* 	 * removed so ntalkd can run in tty sandbox 	 */
 if|if
 condition|(
 name|getuid
@@ -279,8 +275,6 @@ argument_list|,
 literal|"getuid: not super-user"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|openlog
 argument_list|(
 literal|"talkd"

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mktemp.c,v 1.11 1998/10/20 12:36:36 peter Exp $"
+literal|"$Id: mktemp.c,v 1.9 1998/03/03 14:38:36 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 

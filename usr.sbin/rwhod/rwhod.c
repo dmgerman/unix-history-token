@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwhod.c,v 1.8 1998/12/17 11:05:57 des Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,18 +285,6 @@ end_comment
 begin_comment
 comment|/* (belongs in protocols/rwhod.h) */
 end_comment
-
-begin_decl_stmt
-name|int
-name|insecure_mode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|quiet_mode
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -757,40 +745,6 @@ operator|=
 name|PER_INTERFACE_MULTICAST
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-i"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|insecure_mode
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-l"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|quiet_mode
-operator|=
-literal|1
-expr_stmt|;
 else|else
 name|usage
 argument_list|()
@@ -1191,12 +1145,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|quiet_mode
-condition|)
-block|{
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1209,7 +1157,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 init|;
@@ -1300,9 +1247,6 @@ operator|!=
 name|sp
 operator|->
 name|s_port
-operator|&&
-operator|!
-name|insecure_mode
 condition|)
 block|{
 name|syslog
@@ -1630,7 +1574,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rwhod [-i] [-m [ttl]]\n"
+literal|"usage: rwhod [-m [ttl]]\n"
 argument_list|)
 expr_stmt|;
 name|exit

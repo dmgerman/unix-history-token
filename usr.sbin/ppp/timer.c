@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.31 1998/06/27 14:18:11 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.30 1998/06/20 01:36:38 brian Exp $  *  *  TODO:  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
 
 begin_include
 include|#
@@ -373,16 +367,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|timer_InitService
+argument_list|()
+expr_stmt|;
 name|TimerList
 operator|=
 name|tp
 expr_stmt|;
-name|timer_InitService
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Start the Timer Service */
 block|}
 if|if
 condition|(
@@ -575,7 +566,7 @@ modifier|*
 name|exp
 decl_stmt|,
 modifier|*
-name|next
+name|wt
 decl_stmt|;
 if|if
 condition|(
@@ -628,10 +619,18 @@ block|{
 name|tp
 operator|->
 name|rest
-operator|=
-literal|0
+operator|--
 expr_stmt|;
-comment|/* Multiple timers might expire at once. Create a list of expired timers */
+if|if
+condition|(
+name|tp
+operator|->
+name|rest
+operator|==
+literal|0
+condition|)
+block|{
+comment|/*        * Multiple timers may expires at once. Create list of expired timers.        */
 name|exp
 operator|=
 name|NULL
@@ -644,7 +643,7 @@ name|state
 operator|=
 name|TIMER_EXPIRED
 expr_stmt|;
-name|next
+name|wt
 operator|=
 name|tp
 operator|->
@@ -662,18 +661,20 @@ name|tp
 expr_stmt|;
 name|tp
 operator|=
-name|next
+name|wt
 expr_stmt|;
 block|}
 do|while
 condition|(
 name|tp
 operator|&&
+operator|(
 name|tp
 operator|->
 name|rest
 operator|==
 literal|0
+operator|)
 condition|)
 do|;
 name|TimerList
@@ -683,39 +684,30 @@ expr_stmt|;
 if|if
 condition|(
 name|TimerList
-operator|!=
+operator|==
 name|NULL
 condition|)
-comment|/* Any timers remaining ? */
-name|timer_InitService
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Restart the Timer Service */
-else|else
+comment|/* No timers ? */
 name|timer_TermService
 argument_list|()
 expr_stmt|;
-comment|/* Stop the Timer Service */
-comment|/* Process all expired timers */
+comment|/* Terminate Timer Service */
+comment|/*        * Process all expired timers.        */
 while|while
 condition|(
 name|exp
 condition|)
 block|{
-name|next
-operator|=
+ifdef|#
+directive|ifdef
+name|notdef
+name|timer_Stop
+argument_list|(
 name|exp
-operator|->
-name|enext
+argument_list|)
 expr_stmt|;
-name|exp
-operator|->
-name|enext
-operator|=
-name|NULL
-expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|exp
@@ -734,10 +726,14 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Just Removing each item from expired list And exp->enext will be 	 * intialized at next expire in this funtion. 	 */
 name|exp
 operator|=
-name|next
+name|exp
+operator|->
+name|enext
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -856,25 +852,12 @@ end_function
 begin_function
 name|void
 name|timer_InitService
-parameter_list|(
-name|int
-name|restart
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|itimerval
 name|itimer
 decl_stmt|;
-if|if
-condition|(
-name|TimerList
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|restart
-condition|)
 name|sig_signal
 argument_list|(
 name|SIGALRM
@@ -897,6 +880,12 @@ name|it_interval
 operator|.
 name|tv_sec
 operator|=
+name|itimer
+operator|.
+name|it_value
+operator|.
+name|tv_sec
+operator|=
 literal|0
 expr_stmt|;
 name|itimer
@@ -905,34 +894,12 @@ name|it_interval
 operator|.
 name|tv_usec
 operator|=
-literal|0
-expr_stmt|;
-name|itimer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
-operator|=
-name|TimerList
-operator|->
-name|rest
-operator|/
-name|SECTICKS
-expr_stmt|;
 name|itimer
 operator|.
 name|it_value
 operator|.
 name|tv_usec
 operator|=
-operator|(
-name|TimerList
-operator|->
-name|rest
-operator|%
-name|SECTICKS
-operator|)
-operator|*
 name|TICKUNIT
 expr_stmt|;
 if|if
@@ -954,15 +921,9 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Unable to set itimer (%s)\n"
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
+literal|"Unable to set itimer.\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1024,12 +985,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Unable to set itimer (%s)\n"
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
+literal|"Unable to set itimer.\n"
 argument_list|)
 expr_stmt|;
 name|sig_signal

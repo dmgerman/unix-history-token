@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tzsetup.c,v 1.10 1998/01/10 15:55:11 steve Exp $"
+literal|"$Id: tzsetup.c,v 1.9 1997/11/07 00:07:27 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3303,8 +3303,6 @@ parameter_list|)
 block|{
 name|int
 name|c
-decl_stmt|,
-name|fd
 decl_stmt|;
 while|while
 condition|(
@@ -3388,9 +3386,9 @@ if|if
 condition|(
 name|reallydoit
 condition|)
-name|unlink
+name|system
 argument_list|(
-name|_PATH_WALL_CMOS_CLOCK
+literal|"rm -f /etc/wall_cmos_clock"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3400,43 +3398,11 @@ if|if
 condition|(
 name|reallydoit
 condition|)
-block|{
-name|fd
-operator|=
-name|open
+name|system
 argument_list|(
-name|_PATH_WALL_CMOS_CLOCK
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
-argument_list|,
-literal|0666
+literal|"touch /etc/wall_cmos_clock"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"create %s"
-argument_list|,
-name|_PATH_WALL_CMOS_CLOCK
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|dialog_clear_norefresh
 argument_list|()

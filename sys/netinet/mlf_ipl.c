@@ -441,6 +441,74 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|ipf_devfiles
+index|[]
+init|=
+block|{
+name|IPL_NAME
+block|,
+name|IPL_NAT
+block|,
+name|IPL_STATE
+block|,
+name|IPL_AUTH
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|if_ipl_unload
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lkm_table
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|if_ipl_load
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lkm_table
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|if_ipl_remove
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|xxxinit
 name|__P
@@ -455,6 +523,72 @@ operator|,
 name|int
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|ipldevsw
+init|=
+block|{
+name|iplopen
+block|,
+comment|/* open */
+name|iplclose
+block|,
+comment|/* close */
+name|iplread
+block|,
+comment|/* read */
+operator|(
+name|void
+operator|*
+operator|)
+name|nullop
+block|,
+comment|/* write */
+name|iplioctl
+block|,
+comment|/* ioctl */
+operator|(
+name|void
+operator|*
+operator|)
+name|nullop
+block|,
+comment|/* stop */
+operator|(
+name|void
+operator|*
+operator|)
+name|nullop
+block|,
+comment|/* reset */
+operator|(
+name|void
+operator|*
+operator|)
+name|NULL
+block|,
+comment|/* tty */
+operator|(
+name|void
+operator|*
+operator|)
+name|nullop
+block|,
+comment|/* select */
+operator|(
+name|void
+operator|*
+operator|)
+name|nullop
+block|,
+comment|/* mmap */
+name|NULL
+comment|/* strategy */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -851,7 +985,6 @@ name|DEVFS
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|void
 modifier|*
 name|ipf_devfs
@@ -889,73 +1022,6 @@ name|int
 name|ipl_major
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|ipldevsw
-init|=
-block|{
-name|iplopen
-block|,
-comment|/* open */
-name|iplclose
-block|,
-comment|/* close */
-name|iplread
-block|,
-comment|/* read */
-operator|(
-name|void
-operator|*
-operator|)
-name|nullop
-block|,
-comment|/* write */
-name|iplioctl
-block|,
-comment|/* ioctl */
-operator|(
-name|void
-operator|*
-operator|)
-name|nullop
-block|,
-comment|/* stop */
-operator|(
-name|void
-operator|*
-operator|)
-name|nullop
-block|,
-comment|/* reset */
-operator|(
-name|void
-operator|*
-operator|)
-name|NULL
-block|,
-comment|/* tty */
-operator|(
-name|void
-operator|*
-operator|)
-name|nullop
-block|,
-comment|/* select */
-operator|(
-name|void
-operator|*
-operator|)
-name|nullop
-block|,
-comment|/* mmap */
-name|NULL
-comment|/* strategy */
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1008,6 +1074,14 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+name|int
+name|ipl_major
+init|=
+name|CDEV_MAJOR
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1077,62 +1151,6 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
-name|if_ipl_unload
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|lkm_table
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|if_ipl_load
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|lkm_table
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|if_ipl_remove
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ipl_major
-init|=
-name|CDEV_MAJOR
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|iplaction
 name|__P
 argument_list|(
@@ -1144,27 +1162,6 @@ operator|,
 name|int
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|ipf_devfiles
-index|[]
-init|=
-block|{
-name|IPL_NAME
-block|,
-name|IPL_NAT
-block|,
-name|IPL_STATE
-block|,
-name|IPL_AUTH
-block|,
-name|NULL
-block|}
 decl_stmt|;
 end_decl_stmt
 

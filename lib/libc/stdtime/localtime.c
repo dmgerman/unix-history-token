@@ -5535,6 +5535,12 @@ comment|/* defined TM_ZONE */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
 begin_function
 name|struct
 name|tm
@@ -5557,17 +5563,12 @@ modifier|*
 name|p_tm
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|lcl_mutex
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|tzset
 argument_list|()
 expr_stmt|;
@@ -5580,17 +5581,12 @@ argument_list|,
 name|p_tm
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|lcl_mutex
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|p_tm
@@ -5598,6 +5594,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|struct
@@ -6137,6 +6138,12 @@ directive|endif
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
 begin_function
 name|struct
 name|tm
@@ -6170,6 +6177,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -6851,6 +6863,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
 begin_function
 name|char
 modifier|*
@@ -6891,6 +6909,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ** Adapted from code provided by Robert Elz, who writes: **	The "best" way to do mktime I think is based on an idea of Bob **	Kridle's (so its said...) from a long time ago. **	[kridle@xinet.com as of 1996-01-16.] **	It does a binary search of the time_t space.  Since time_t's are **	just 32 bits, its a max of 32 iterations (even at 64 bits it **	would still be very reasonable). */

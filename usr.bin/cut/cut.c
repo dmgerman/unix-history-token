@@ -11,7 +11,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|copyright
 index|[]
@@ -37,7 +36,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sccsid
 index|[]
@@ -226,8 +224,6 @@ name|char
 operator|*
 operator|)
 argument_list|)
-operator|=
-name|NULL
 expr_stmt|;
 name|int
 name|ch
@@ -483,7 +479,6 @@ comment|/* 	 * set a byte in the positions array to indicate if a field or 	 * c
 for|for
 control|(
 init|;
-operator|(
 name|p
 operator|=
 name|strtok
@@ -492,7 +487,6 @@ name|list
 argument_list|,
 literal|", \t"
 argument_list|)
-operator|)
 condition|;
 name|list
 operator|=
@@ -748,8 +742,6 @@ block|{
 specifier|register
 name|int
 name|ch
-init|=
-literal|0
 decl_stmt|,
 name|col
 decl_stmt|;

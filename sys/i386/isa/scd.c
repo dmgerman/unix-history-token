@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.40 1998/07/13 09:53:02 bde Exp $ */
+comment|/* $Id: scd.c,v 1.39 1998/07/04 22:30:17 julian Exp $ */
 end_comment
 
 begin_comment
@@ -1052,7 +1052,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|int
 name|scd_attach
 parameter_list|(
@@ -3675,32 +3674,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
-name|void
-name|write_control
-parameter_list|(
-name|unsigned
-name|port
-parameter_list|,
-name|unsigned
-name|data
-parameter_list|)
-block|{
-name|outb
-argument_list|(
-name|port
-operator|+
-name|OREG_CONTROL
-argument_list|,
-name|data
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|scd_probe
 parameter_list|(
@@ -6890,6 +6863,31 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|write_control
+parameter_list|(
+name|unsigned
+name|port
+parameter_list|,
+name|unsigned
+name|data
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+name|port
+operator|+
+name|OREG_CONTROL
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

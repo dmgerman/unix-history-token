@@ -4751,9 +4751,6 @@ name|b
 argument_list|,
 name|v
 argument_list|,
-operator|(
-name|int
-operator|)
 name|p
 argument_list|,
 literal|11

@@ -357,7 +357,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"8EKLNS:X:acde:fFk:l:n:rt:x"
+literal|"8EKLS:X:acde:fFk:l:n:rt:x"
 argument_list|)
 operator|)
 operator|!=
@@ -410,14 +410,6 @@ operator||=
 literal|2
 expr_stmt|;
 comment|/* binary output only */
-break|break;
-case|case
-literal|'N'
-case|:
-name|doaddrlookup
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|'S'

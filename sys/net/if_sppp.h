@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.0, Fri Oct  6 20:39:21 MSK 1995  *  * $Id: if_sppp.h,v 1.12 1998/12/20 19:06:22 phk Exp $  */
+comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.0, Fri Oct  6 20:39:21 MSK 1995  *  * $Id: if_sppp.h,v 1.8 1997/10/11 11:25:20 joerg Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NET_IF_SPPP_H_
+name|_NET_IF_HDLC_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NET_IF_SPPP_H_
+name|_NET_IF_HDLC_H_
 value|1
 end_define
 
@@ -104,11 +104,6 @@ directive|define
 name|IPCP_MYADDR_DYN
 value|2
 comment|/* my address is dynamically assigned */
-define|#
-directive|define
-name|IPCP_MYADDR_SEEN
-value|4
-comment|/* have seen his address already */
 block|}
 struct|;
 end_struct
@@ -382,42 +377,6 @@ modifier|*
 name|sp
 parameter_list|)
 function_decl|;
-comment|/* 	 * These (optional) functions may be filled by the hardware 	 * driver if any notification of established connections 	 * (currently: IPCP up) is desired (pp_con) or any internal 	 * state change of the interface state machine should be 	 * signaled for monitoring purposes (pp_chg). 	 */
-name|void
-function_decl|(
-modifier|*
-name|pp_con
-function_decl|)
-parameter_list|(
-name|struct
-name|sppp
-modifier|*
-name|sp
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|pp_chg
-function_decl|)
-parameter_list|(
-name|struct
-name|sppp
-modifier|*
-name|sp
-parameter_list|,
-name|int
-name|new_state
-parameter_list|)
-function_decl|;
-comment|/* These two fields are for use by the lower layer */
-name|void
-modifier|*
-name|pp_lowerp
-decl_stmt|;
-name|int
-name|pp_loweri
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -654,7 +613,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NET_IF_SPPP_H_ */
+comment|/* _NET_IF_HDLC_H_ */
 end_comment
 
 end_unit

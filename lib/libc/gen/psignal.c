@@ -83,6 +83,10 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
+specifier|register
+name|int
+name|n
+decl_stmt|;
 if|if
 condition|(
 name|sig
@@ -101,16 +105,16 @@ name|c
 operator|=
 literal|"Unknown signal"
 expr_stmt|;
+name|n
+operator|=
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|s
-operator|!=
-name|NULL
-operator|&&
-operator|*
-name|s
-operator|!=
-literal|'\0'
+name|n
 condition|)
 block|{
 operator|(
@@ -122,10 +126,7 @@ name|STDERR_FILENO
 argument_list|,
 name|s
 argument_list|,
-name|strlen
-argument_list|(
-name|s
-argument_list|)
+name|n
 argument_list|)
 expr_stmt|;
 operator|(

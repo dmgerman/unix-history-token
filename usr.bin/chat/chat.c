@@ -11,12 +11,11 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.12 1998/06/23 21:58:41 peter Exp $"
+literal|"$Id: chat.c,v 1.11 1998/03/21 20:47:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

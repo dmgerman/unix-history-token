@@ -560,9 +560,6 @@ comment|/* defined(unix) */
 name|debug
 decl_stmt|,
 comment|/* Debug level */
-name|doaddrlookup
-decl_stmt|,
-comment|/* do a reverse lookup? */
 name|clienteof
 decl_stmt|;
 end_decl_stmt

@@ -1,11 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_aal5.c,v 1.3 1998/10/31 20:06:54 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_aal5.c,v 1.1 1998/09/15 08:22:57 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * Core ATM Services  * -----------------  *  * ATM AAL5 socket protocol processing  *  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|RCSid
+init|=
+literal|"@(#) $Id: atm_aal5.c,v 1.1 1998/09/15 08:22:57 phk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -18,25 +39,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"@(#) $Id: atm_aal5.c,v 1.3 1998/10/31 20:06:54 phk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Global variables  */
@@ -673,10 +675,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !DIAGNOSTIC */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -693,19 +691,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* DIAGNOSTIC */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ATM_OUTRO
 parameter_list|()
 define|\
+value|out:								\
 comment|/*							\ 	 * Drain any deferred calls				\ 	 */
-define|\
-value|STACK_DRAIN();						\ 	(void) splx(s);						\ 	return (err);						\ 	;
+value|\ 	STACK_DRAIN();						\ 	(void) splx(s);						\ 	return (err);						\ 	;
 end_define
 
 begin_define
@@ -772,11 +766,9 @@ if|if
 condition|(
 name|err
 condition|)
-name|ATM_RETERR
-argument_list|(
-name|err
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 comment|/* 	 * Finish up any protocol specific stuff 	 */
 name|atp
 operator|=
@@ -809,8 +801,6 @@ argument_list|,
 name|T_ATM_APP_NAME_LEN
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 name|ATM_OUTRO
 argument_list|()
 expr_stmt|;
@@ -1334,8 +1324,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 name|ATM_OUTRO
 argument_list|()
 expr_stmt|;
@@ -1619,12 +1607,9 @@ decl_stmt|;
 block|{
 name|Atm_pcb
 modifier|*
-name|atp0
+name|atp
 init|=
 name|tok
-decl_stmt|,
-modifier|*
-name|atp
 decl_stmt|;
 name|struct
 name|socket
@@ -1641,7 +1626,7 @@ name|atm_sock_stat
 operator|.
 name|as_inconn
 index|[
-name|atp0
+name|atp
 operator|->
 name|atp_type
 index|]
@@ -1665,7 +1650,7 @@ name|so
 operator|=
 name|sonewconn
 argument_list|(
-name|atp0
+name|atp
 operator|->
 name|atp_socket
 argument_list|,
@@ -1678,7 +1663,7 @@ name|so
 operator|=
 name|sonewconn
 argument_list|(
-name|atp0
+name|atp
 operator|->
 name|atp_socket
 argument_list|)
@@ -1704,30 +1689,6 @@ name|atp_conn
 operator|=
 name|cop
 expr_stmt|;
-name|atp
-operator|->
-name|atp_attr
-operator|=
-operator|*
-name|atp0
-operator|->
-name|atp_conn
-operator|->
-name|co_lattr
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|atp
-operator|->
-name|atp_name
-argument_list|,
-name|atp0
-operator|->
-name|atp_name
-argument_list|,
-name|T_ATM_APP_NAME_LEN
-argument_list|)
-expr_stmt|;
 operator|*
 name|tokp
 operator|=
@@ -1744,7 +1705,7 @@ name|atm_sock_stat
 operator|.
 name|as_connfail
 index|[
-name|atp0
+name|atp
 operator|->
 name|atp_type
 index|]
@@ -1997,9 +1958,6 @@ break|break;
 case|case
 name|T_ATM_CAUSE
 case|:
-case|case
-name|T_ATM_APP_NAME
-case|:
 break|break;
 default|default:
 if|if
@@ -2050,8 +2008,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|out
-label|:
 name|ATM_OUTRO
 argument_list|()
 expr_stmt|;

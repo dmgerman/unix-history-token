@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Joerg Wunsch  *  * All rights reserved.  *  * T
 end_comment
 
 begin_comment
-comment|/*  * $Header  * The author may be reached unter<joerg_wunsch@uriah.sax.de>  *  * $Log: vgaio.h,v $  * Revision 1.2  1995/03/05 22:46:27  joerg  * Upgrade to beta 3.20/b22  *  * Revision 1.1  1994/03/29  02:47:25  mycroft  * pcvt 3.0, with some performance enhancements by Joerg Wunsch and me.  *  * Revision 1.2  1994/01/08  17:42:58  j  * cleanup  * made multiple commands per line work  * wrote man page  *  *  */
+comment|/*  * $Header  * The author may be reached unter<joerg_wunsch@uriah.sax.de>  *  * $Log: vgaio.h,v $  * Revision 1.1  1994/03/29  02:47:25  mycroft  * pcvt 3.0, with some performance enhancements by Joerg Wunsch and me.  *  * Revision 1.2  1994/01/08  17:42:58  j  * cleanup  * made multiple commands per line work  * wrote man page  *  *  */
 end_comment
 
 begin_comment

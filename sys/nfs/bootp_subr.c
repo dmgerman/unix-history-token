@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.17 1998/12/04 22:54:54 archie Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.14 1998/08/18 00:32:47 bde Exp $	*/
 end_comment
 
 begin_comment
@@ -1321,6 +1321,11 @@ decl_stmt|,
 name|sa
 decl_stmt|;
 name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|struct
 name|uio
 name|auio
 decl_stmt|;
@@ -1348,6 +1353,9 @@ decl_stmt|,
 name|secs
 decl_stmt|,
 name|timo
+decl_stmt|;
+name|u_int
+name|tport
 decl_stmt|;
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 if|if
@@ -1711,16 +1719,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bootpc_call: sosend: %d state %08x\n"
+literal|"bootpc_call: sosend: %d\n"
 argument_list|,
 name|error
-argument_list|,
-operator|(
-name|int
-operator|)
-name|so
-operator|->
-name|so_state
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3901,6 +3902,8 @@ decl_stmt|,
 name|len
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|j
 decl_stmt|;
 name|char
@@ -3953,6 +3956,13 @@ define|#
 directive|define
 name|EALEN
 value|6
+name|unsigned
+name|char
+name|ea
+index|[
+name|EALEN
+index|]
+decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -4062,18 +4072,11 @@ name|if_link
 argument_list|)
 control|)
 block|{
-name|snprintf
+name|sprintf
 argument_list|(
 name|ireq
 operator|.
 name|ifr_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ireq
-operator|.
-name|ifr_name
-argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -4725,14 +4728,9 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|snprintf
+name|sprintf
 argument_list|(
 name|lookup_path
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|lookup_path
-argument_list|)
 argument_list|,
 literal|"swap.%d.%d.%d.%d"
 argument_list|,

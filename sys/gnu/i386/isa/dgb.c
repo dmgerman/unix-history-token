@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.40 1998/08/23 08:26:39 bde Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.39 1998/08/16 01:21:49 bde Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
 end_comment
 
 begin_include
@@ -2055,11 +2055,20 @@ name|int
 name|i
 decl_stmt|,
 name|v
+decl_stmt|,
+name|t
 decl_stmt|;
 name|u_long
 name|win_size
 decl_stmt|;
 comment|/* size of vizible memory window */
+name|u_char
+modifier|*
+name|mem
+decl_stmt|;
+name|int
+name|addr
+decl_stmt|;
 name|int
 name|unit
 init|=
@@ -2635,6 +2644,11 @@ name|struct
 name|board_chan
 modifier|*
 name|bc
+decl_stmt|;
+name|struct
+name|global_data
+modifier|*
+name|gd
 decl_stmt|;
 name|int
 name|shrinkmem
@@ -7029,6 +7043,11 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
+name|int
+name|c
+init|=
+literal|0
+decl_stmt|;
 name|u_char
 modifier|*
 name|ptr
@@ -8281,6 +8300,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|end_of_buffer
+label|:
+empty_stmt|;
 block|}
 name|bc
 operator|->
@@ -10711,6 +10733,14 @@ operator|->
 name|t_dev
 decl_stmt|;
 name|int
+name|mynor
+init|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|int
 name|unit
 init|=
 name|MINOR_TO_UNIT
@@ -10776,6 +10806,8 @@ name|int
 name|hflow
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
 name|cs
 decl_stmt|;
 name|BoardMemWinState
@@ -11967,6 +11999,9 @@ name|struct
 name|board_chan
 modifier|*
 name|bc
+decl_stmt|;
+name|int
+name|head
 decl_stmt|;
 name|int
 name|s

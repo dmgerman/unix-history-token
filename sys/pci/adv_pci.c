@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device probe and attach routines for the following  * Advanced Systems Inc. SCSI controllers:  *  *   Connectivity Products:  *	ABP920   - Bus-Master PCI (16 CDB)  *	ABP930   - Bus-Master PCI (16 CDB) *  *	ABP930U  - Bus-Master PCI Ultra (16 CDB)  *	ABP930UA - Bus-Master PCI Ultra (16 CDB)  *	ABP960   - Bus-Master PCI MAC/PC (16 CDB) **  *	ABP960U  - Bus-Master PCI MAC/PC Ultra (16 CDB)  *  *   Single Channel Products:  *	ABP940 - Bus-Master PCI (240 CDB)  *	ABP940U - Bus-Master PCI Ultra (240 CDB)  *	ABP970 - Bus-Master PCI MAC/PC (240 CDB)  *	ABP970U - Bus-Master PCI MAC/PC Ultra (240 CDB)  *  *   Dual Channel Products:    *	ABP950 - Dual Channel Bus-Master PCI (240 CDB Per Channel)  *  *   Footnotes:  *	 * This board has been sold by SIIG as the Fast SCSI Pro PCI.  *	** This board has been sold by Iomega as a Jaz Jet PCI adapter.   *  * Copyright (c) 1997 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: adv_pci.c,v 1.3 1998/12/14 06:32:54 dillon Exp $  */
+comment|/*  * Device probe and attach routines for the following  * Advanced Systems Inc. SCSI controllers:  *  *   Connectivity Products:  *	ABP920   - Bus-Master PCI (16 CDB)  *	ABP930   - Bus-Master PCI (16 CDB) *  *	ABP930U  - Bus-Master PCI Ultra (16 CDB)  *	ABP930UA - Bus-Master PCI Ultra (16 CDB)  *	ABP960   - Bus-Master PCI MAC/PC (16 CDB) **  *	ABP960U  - Bus-Master PCI MAC/PC Ultra (16 CDB)  *  *   Single Channel Products:  *	ABP940 - Bus-Master PCI (240 CDB)  *	ABP940U - Bus-Master PCI Ultra (240 CDB)  *	ABP970 - Bus-Master PCI MAC/PC (240 CDB)  *	ABP970U - Bus-Master PCI MAC/PC Ultra (240 CDB)  *  *   Dual Channel Products:    *	ABP950 - Dual Channel Bus-Master PCI (240 CDB Per Channel)  *  *   Footnotes:  *	 * This board has been sold by SIIG as the Fast SCSI Pro PCI.  *	** This board has been sold by Iomega as a Jaz Jet PCI adapter.   *  * Copyright (c) 1997 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
 end_comment
 
 begin_include
@@ -138,7 +138,6 @@ end_define
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|advpciprobe
@@ -179,21 +178,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|bus_dma_tag_t
 name|overrun_dmat
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|bus_dmamap_t
 name|overrun_dmamap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|bus_addr_t
 name|overrun_physbase
 decl_stmt|;
@@ -232,7 +228,6 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|advpciprobe
@@ -323,6 +318,9 @@ parameter_list|)
 block|{
 name|u_int16_t
 name|io_port
+decl_stmt|;
+name|u_int16_t
+name|config_msw
 decl_stmt|;
 name|struct
 name|adv_softc
@@ -814,10 +812,6 @@ expr_stmt|;
 if|#
 directive|if
 name|CC_DISABLE_PCI_PARITY_INT
-block|{
-name|u_int16_t
-name|config_msw
-decl_stmt|;
 name|config_msw
 operator|=
 name|ADV_INW
@@ -840,7 +834,6 @@ argument_list|,
 name|config_msw
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if

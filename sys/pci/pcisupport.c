@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.85 1998/12/23 14:28:37 foxfair Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.71 1998/07/07 05:00:09 bde Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"opt_pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_smp.h"
 end_include
 
 begin_include
@@ -75,7 +69,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|chipset_probe
@@ -295,14 +288,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|snprintf
+name|sprintf
 argument_list|(
 name|tmpbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmpbuf
-argument_list|)
 argument_list|,
 literal|"PCI to 0x%x"
 argument_list|,
@@ -315,20 +303,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|snprintf
+name|sprintf
 argument_list|(
 name|tmpbuf
 operator|+
-name|strlen
-argument_list|(
-name|tmpbuf
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmpbuf
-argument_list|)
-operator|-
 name|strlen
 argument_list|(
 name|tmpbuf
@@ -383,7 +361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX Both fixbushigh_orion() and fixbushigh_i1225() are bogus in that way,  * that they store the highest bus number to scan in this device's config   * data, though it is about PCI buses attached to the CPU independently!  * The same goes for fixbushigh_450nx.  */
+comment|/*  * XXX Both fixbushigh_orion() and fixbushigh_i1225() are bogus in that way,  * that they store the highest bus number to scan in this device's config   * data, though it is about PCI buses attached to the CPU independently!  */
 end_comment
 
 begin_function
@@ -464,192 +442,6 @@ operator|=
 name|sublementarybus
 operator|+
 literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * This reads the PCI config space for the 82451NX MIOC in the 450NX  * chipset to determine the PCI bus configuration.  *  * Assuming the BIOS has set up the MIOC properly, this will correctly  * report the number of PCI busses in the system.  *  * A small problem is that the Host to PCI bridge control is in the MIOC,  * while the host-pci bridges are separate PCI devices.  So it really  * isn't easily possible to set up the subordinatebus mappings as the  * 82454NX PCI expander bridges are probed, although that makes the  * most sense.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|fixbushigh_450nx
-parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|)
-block|{
-name|int
-name|subordinatebus
-decl_stmt|;
-name|unsigned
-name|long
-name|devmap
-decl_stmt|;
-comment|/* 	 * Read the DEVMAP field, so we know which fields to check. 	 * If the Host-PCI bridge isn't marked as present by the BIOS, 	 * we have to assume it doesn't exist. 	 * If this doesn't find all the PCI busses, complain to the 	 * BIOS vendor.  There is nothing more we can do. 	 */
-name|devmap
-operator|=
-name|pci_cfgread
-argument_list|(
-name|tag
-argument_list|,
-literal|0xd6
-argument_list|,
-literal|2
-argument_list|)
-operator|&
-literal|0x3c
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|devmap
-condition|)
-name|panic
-argument_list|(
-literal|"450NX MIOC: No host to PCI bridges marked present.\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Since the buses are configured in order, we just have to 	 * find the highest bus, and use those numbers. 	 */
-if|if
-condition|(
-name|devmap
-operator|&
-literal|0x20
-condition|)
-block|{
-comment|/* B1 */
-name|subordinatebus
-operator|=
-name|pci_cfgread
-argument_list|(
-name|tag
-argument_list|,
-literal|0xd5
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|devmap
-operator|&
-literal|0x10
-condition|)
-block|{
-comment|/* A1 */
-name|subordinatebus
-operator|=
-name|pci_cfgread
-argument_list|(
-name|tag
-argument_list|,
-literal|0xd4
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|devmap
-operator|&
-literal|0x8
-condition|)
-block|{
-comment|/* B0 */
-name|subordinatebus
-operator|=
-name|pci_cfgread
-argument_list|(
-name|tag
-argument_list|,
-literal|0xd2
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* if (devmap& 0x4) */
-block|{
-comment|/* A0 */
-name|subordinatebus
-operator|=
-name|pci_cfgread
-argument_list|(
-name|tag
-argument_list|,
-literal|0xd1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|subordinatebus
-operator|==
-literal|255
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"fixbushigh_450nx: bogus highest PCI bus %d"
-argument_list|,
-name|subordinatebus
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NBUS
-name|subordinatebus
-operator|=
-name|NBUS
-operator|-
-literal|2
-expr_stmt|;
-else|#
-directive|else
-name|subordinatebus
-operator|=
-literal|10
-expr_stmt|;
-endif|#
-directive|endif
-name|printf
-argument_list|(
-literal|", reduced to %d\n"
-argument_list|,
-name|subordinatebus
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"fixbushigh_450nx: subordinatebus is %d\n"
-argument_list|,
-name|subordinatebus
-argument_list|)
-expr_stmt|;
-name|tag
-operator|->
-name|secondarybus
-operator|=
-name|tag
-operator|->
-name|subordinatebus
-operator|=
-name|subordinatebus
 expr_stmt|;
 block|}
 end_function
@@ -753,7 +545,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|chipset_probe
@@ -841,6 +632,14 @@ case|:
 return|return
 operator|(
 literal|"Intel 82375EB PCI-EISA bridge"
+operator|)
+return|;
+case|case
+literal|0x04961039
+case|:
+return|return
+operator|(
+literal|"SiS 85c496"
 operator|)
 return|;
 case|case
@@ -934,11 +733,43 @@ literal|"Intel 82439"
 operator|)
 return|;
 case|case
+literal|0x04061039
+case|:
+return|return
+operator|(
+literal|"SiS 85c501"
+operator|)
+return|;
+case|case
+literal|0x00081039
+case|:
+return|return
+operator|(
+literal|"SiS 85c503"
+operator|)
+return|;
+case|case
+literal|0x06011039
+case|:
+return|return
+operator|(
+literal|"SiS 85c601"
+operator|)
+return|;
+case|case
 literal|0x70008086
 case|:
 return|return
 operator|(
 literal|"Intel 82371SB PCI to ISA bridge"
+operator|)
+return|;
+case|case
+literal|0x70208086
+case|:
+return|return
+operator|(
+literal|"Intel 82371SB USB host controller"
 operator|)
 return|;
 case|case
@@ -963,6 +794,14 @@ case|:
 return|return
 operator|(
 literal|"Intel 82371AB PCI to ISA bridge"
+operator|)
+return|;
+case|case
+literal|0x71128086
+case|:
+return|return
+operator|(
+literal|"Intel 82371AB USB host controller"
 operator|)
 return|;
 case|case
@@ -1034,11 +873,6 @@ return|;
 case|case
 literal|0x84ca8086
 case|:
-name|fixbushigh_450nx
-argument_list|(
-name|tag
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|"Intel 82451NX Memory and I/O Controller"
@@ -1074,39 +908,6 @@ case|:
 return|return
 operator|(
 literal|"Intel 82380FB mobile PCI to PCI bridge"
-operator|)
-return|;
-comment|/* SiS -- vendor 0x1039 */
-case|case
-literal|0x04961039
-case|:
-return|return
-operator|(
-literal|"SiS 85c496"
-operator|)
-return|;
-case|case
-literal|0x04061039
-case|:
-return|return
-operator|(
-literal|"SiS 85c501"
-operator|)
-return|;
-case|case
-literal|0x00081039
-case|:
-return|return
-operator|(
-literal|"SiS 85c503"
-operator|)
-return|;
-case|case
-literal|0x06011039
-case|:
-return|return
-operator|(
-literal|"SiS 85c601"
 operator|)
 return|;
 comment|/* VLSI -- vendor 0x1004 */
@@ -1205,73 +1006,19 @@ operator|)
 return|;
 comment|/* XXX need info on the MVP3 -- any takers? */
 case|case
+literal|0x30381106
+case|:
+return|return
+operator|(
+literal|"VIA 82C586B USB host controller"
+operator|)
+return|;
+case|case
 literal|0x30401106
 case|:
 return|return
 operator|(
 literal|"VIA 82C586B ACPI interface"
-operator|)
-return|;
-comment|/* XXX Here is MVP3, I got the datasheet but NO M/B to test it  */
-comment|/* totally. Please let me know if anything wrong.            -F */
-case|case
-literal|0x05981106
-case|:
-return|return
-operator|(
-literal|"VIA 82C598MVP (Apollo MVP3) host bridge"
-operator|)
-return|;
-case|case
-literal|0x85981106
-case|:
-return|return
-operator|(
-literal|"VIA 82C598MVP (Apollo MVP3) PCI-PCI bridge"
-operator|)
-return|;
-comment|/* AcerLabs -- vendor 0x10b9 */
-comment|/* Funny : The datasheet told me vendor id is "10b8",sub-vendor */
-comment|/* id is '10b9" but the register always shows "10b9". -Foxfair  */
-case|case
-literal|0x154110b9
-case|:
-return|return
-operator|(
-literal|"AcerLabs M1541 (Aladdin-V) PCI host bridge"
-operator|)
-return|;
-case|case
-literal|0x153310b9
-case|:
-return|return
-operator|(
-literal|"AcerLabs M1533 portable PCI-ISA bridge"
-operator|)
-return|;
-case|case
-literal|0x154310b9
-case|:
-return|return
-operator|(
-literal|"AcerLabs M1543 desktop PCI-ISA bridge"
-operator|)
-return|;
-case|case
-literal|0x524710b9
-case|:
-return|return
-operator|(
-literal|"AcerLabs M5247 PCI-PCI(AGP Supported) bridge"
-operator|)
-return|;
-case|case
-literal|0x524310b9
-case|:
-comment|/* 5243 seems like 5247, need more info to divide*/
-return|return
-operator|(
-literal|"AcerLabs M5243 PCI-PCI bridge"
 operator|)
 return|;
 comment|/* NEC -- vendor 0x1033 */
@@ -5731,7 +5478,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|vga_probe
@@ -5799,7 +5545,6 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|vga_probe
@@ -5876,7 +5621,7 @@ literal|0x0004
 case|:
 name|chip
 operator|=
-literal|"NM2160 laptop"
+literal|"NM3160 laptop"
 expr_stmt|;
 break|break;
 block|}
@@ -5920,7 +5665,7 @@ literal|0x051a
 case|:
 name|chip
 operator|=
-literal|"MGA 1024SG/1064SG/1164SG"
+literal|"MGA 1024SG"
 expr_stmt|;
 break|break;
 case|case
@@ -6649,12 +6394,12 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int i; 		int reqmapmem;
-endif|#
-directive|endif
+name|int
+name|i
+decl_stmt|;
+name|int
+name|reqmapmem
+decl_stmt|;
 if|if
 condition|(
 name|type
@@ -6714,10 +6459,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|buf
-condition|)
 name|sprintf
 argument_list|(
 name|buf
@@ -6794,16 +6535,10 @@ operator|=
 literal|"VGA-compatible display device"
 expr_stmt|;
 else|else
-block|{
-comment|/* 				 * If it isn't a vga display device, 				 * don't pretend we found one. 				 */
 name|type
 operator|=
 literal|"Display device"
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 block|}
 break|break;
 default|default:
@@ -6859,10 +6594,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|buf
-condition|)
 name|sprintf
 argument_list|(
 name|buf
@@ -6916,7 +6647,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|lkm_probe
@@ -6984,7 +6714,6 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|lkm_probe
@@ -7029,7 +6758,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|ign_probe
@@ -7097,7 +6825,6 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|ign_probe

@@ -1,12 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* display.c -- How to display Info windows.    $Id: display.c,v 1.6 1997/07/24 21:13:27 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* display.c -- How to display Info windows. */
+end_comment
+
+begin_comment
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"info.h"
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -147,14 +169,12 @@ name|i
 operator|=
 literal|0
 init|;
-operator|(
 name|display_line
 operator|=
 name|display
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++
@@ -560,7 +580,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* If this character can be printed without passing the width of          the line, then stuff it into the line. */
+comment|/* If this character can be printed without passing the width of 	 the line, then stuff it into the line. */
 if|if
 condition|(
 name|replen
@@ -624,7 +644,7 @@ name|DISPLAY_LINE
 modifier|*
 name|entry
 decl_stmt|;
-comment|/* If this character cannot be printed in this line, we have              found the end of this line as it would appear on the screen.              Carefully print the end of the line, and then compare. */
+comment|/* If this character cannot be printed in this line, we have 	     found the end of this line as it would appear on the screen. 	     Carefully print the end of the line, and then compare. */
 if|if
 condition|(
 operator|*
@@ -661,7 +681,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The printed representation of this character extends into                  the next line.  Remember the offset of the last character                  printed out of REP so that we can carry the character over                  to the next line. */
+comment|/* The printed representation of this character extends into 		 the next line.  Remember the offset of the last character 		 printed out of REP so that we can carry the character over 		 to the next line. */
 for|for
 control|(
 name|i
@@ -697,7 +717,7 @@ name|rep
 operator|+
 name|i
 expr_stmt|;
-comment|/* If printing the last character in this window couldn't                  possibly cause the screen to scroll, place a backslash                  in the rightmost column. */
+comment|/* If printing the last character in this window couldn't 		 possibly cause the screen to scroll, place a backslash 		 in the rightmost column. */
 if|if
 condition|(
 literal|1
@@ -747,7 +767,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* We have the exact line as it should appear on the screen.              Check to see if this line matches the one already appearing              on the screen. */
+comment|/* We have the exact line as it should appear on the screen. 	     Check to see if this line matches the one already appearing 	     on the screen. */
 name|entry
 operator|=
 name|display
@@ -759,7 +779,7 @@ operator|->
 name|first_row
 index|]
 expr_stmt|;
-comment|/* If the screen line is inversed, then we have to clear              the line from the screen first.  Why, I don't know. */
+comment|/* If the screen line is inversed, then we have to clear 	     the line from the screen first.  Why, I don't know. */
 if|if
 condition|(
 name|entry
@@ -832,7 +852,7 @@ name|i
 index|]
 condition|)
 break|break;
-comment|/* If the lines are not the same length, or if they differed              at all, we must do some redrawing. */
+comment|/* If the lines are not the same length, or if they differed 	     at all, we must do some redrawing. */
 if|if
 condition|(
 operator|(
@@ -876,7 +896,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* If the printed text didn't extend all the way to the edge                  of the window, and text was appearing between here and the                  edge of the window, clear from here to the end of the line. */
+comment|/* If the printed text didn't extend all the way to the edge 		 of the window, and text was appearing between here and the 		 edge of the window, clear from here to the end of the line. */
 if|if
 condition|(
 operator|(
@@ -927,7 +947,7 @@ name|textlen
 operator|=
 name|pl_index
 expr_stmt|;
-comment|/* Lines showing node text are not in inverse.  Only modelines                  have that distinction. */
+comment|/* Lines showing node text are not in inverse.  Only modelines 		 have that distinction. */
 name|entry
 operator|->
 name|inverse
@@ -935,7 +955,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* We have done at least one line.  Increment our screen line              index, and check against the bottom of the window. */
+comment|/* We have done at least one line.  Increment our screen line 	     index, and check against the bottom of the window. */
 if|if
 condition|(
 operator|++
@@ -946,7 +966,7 @@ operator|->
 name|height
 condition|)
 break|break;
-comment|/* A line has been displayed, and the screen reflects that state.              If there is typeahead pending, then let that typeahead be read              now, instead of continuing with the display. */
+comment|/* A line has been displayed, and the screen reflects that state. 	     If there is typeahead pending, then let that typeahead be read 	     now, instead of continuing with the display. */
 if|if
 condition|(
 name|info_any_buffered_input_p
@@ -969,7 +989,7 @@ name|pl_index
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If there are characters from REP left to print, stuff them              into the buffer now. */
+comment|/* If there are characters from REP left to print, stuff them 	     into the buffer now. */
 if|if
 condition|(
 name|rep_carried_over
@@ -995,7 +1015,7 @@ index|[
 name|pl_index
 index|]
 expr_stmt|;
-comment|/* If this window has chosen not to wrap lines, skip to the end              of the physical line in the buffer, and start a new line here. */
+comment|/* If this window has chosen not to wrap lines, skip to the end 	     of the physical line in the buffer, and start a new line here. */
 if|if
 condition|(
 name|pl_index
@@ -1148,7 +1168,7 @@ name|win
 operator|->
 name|height
 expr_stmt|;
-comment|/* This display line must both be in inverse, and have the same          contents. */
+comment|/* This display line must both be in inverse, and have the same 	 contents. */
 if|if
 condition|(
 operator|(
@@ -1397,7 +1417,7 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
-comment|/* The lines have been shifted down in the buffer.  Clear all of the          lines that were vacated. */
+comment|/* The lines have been shifted down in the buffer.  Clear all of the 	 lines that were vacated. */
 for|for
 control|(
 name|i
@@ -1512,7 +1532,7 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
-comment|/* The lines have been shifted up in the buffer.  Clear all of the          lines that are left over. */
+comment|/* The lines have been shifted up in the buffer.  Clear all of the 	 lines that are left over. */
 for|for
 control|(
 name|i
@@ -1865,7 +1885,7 @@ name|window
 operator|->
 name|height
 expr_stmt|;
-comment|/* If we are shifting the block of lines down, then the last                  AMOUNT lines will become invisible.  Thus, don't bother                  scrolling them. */
+comment|/* If we are shifting the block of lines down, then the last 		 AMOUNT lines will become invisible.  Thus, don't bother 		 scrolling them. */
 if|if
 condition|(
 name|amount
@@ -1896,7 +1916,7 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
-comment|/* Some lines have been scrolled.  Simulate the scrolling                      by offsetting the value of the old index. */
+comment|/* Some lines have been scrolled.  Simulate the scrolling 		     by offsetting the value of the old index. */
 name|old
 operator|+=
 name|i
@@ -1961,11 +1981,6 @@ argument_list|,
 name|vpos
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1977,15 +1992,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                   Functions Static to this File                  */
+comment|/*		     Functions Static to this File		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -2169,14 +2184,12 @@ name|i
 operator|=
 literal|0
 init|;
-operator|(
 name|display_line
 operator|=
 name|display
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++

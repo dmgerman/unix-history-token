@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.17 1997/10/08 07:46:23 charnier Exp $"
+literal|"$Id: main.c,v 1.16 1997/06/06 12:19:11 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:"
+literal|"YNOhvf:p:P:c:d:i:k:r:t:X:D:m:s:"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,25 +110,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|PostInstall
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
 name|DeInstall
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|PostDeInstall
 init|=
 name|NULL
 decl_stmt|;
@@ -352,25 +334,9 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'I'
-case|:
-name|PostInstall
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
 literal|'k'
 case|:
 name|DeInstall
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'K'
-case|:
-name|PostDeInstall
 operator|=
 name|optarg
 expr_stmt|;
@@ -544,17 +510,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: pkg_create [-YNOhv] [-P pkgs] [-p prefix] [-f contents] [-i iscript]"
 argument_list|,
-literal|"                  [-I piscript] [-k dscript] [-K pdscript] [-r rscript] "
+literal|"                  [-k dscript] [-r rscript] [-t template] [-X excludefile]"
 argument_list|,
-literal|"                  [-t template] [-X excludefile] [-D displayfile] "
+literal|"                  [-D displayfile] [-m mtreefile] -c comment -d description"
 argument_list|,
-literal|"                  [-m mtreefile] -c comment -d description -f packlist "
-argument_list|,
-literal|"                  pkg-name"
+literal|"                  -f packlist pkg-name"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -353,11 +353,6 @@ name|vm_offset_t
 operator|)
 name|round_page
 argument_list|(
-call|(
-name|unsigned
-name|long
-call|)
-argument_list|(
 name|sp
 operator|->
 name|data
@@ -365,7 +360,6 @@ operator|+
 name|sp
 operator|->
 name|datalen
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: process.c,v 1.7 1998/04/29 21:58:36 ache Exp $"
+literal|"$Id: process.c,v 1.6 1997/08/11 07:21:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,8 +393,6 @@ name|size_t
 name|len
 decl_stmt|,
 name|oldpsl
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*

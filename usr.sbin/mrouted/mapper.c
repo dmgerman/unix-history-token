@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * mapper.c,v 3.8.4.3 1998/01/06 01:57:47 fenner Exp  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mapper.c,v 1.13 1998/06/09 05:01:30 imp Exp $"
+literal|"$Id: mapper.c,v 1.12 1998/01/16 07:17:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4739,9 +4739,20 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_SA_LEN
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199103
+operator|)
+operator|)
 name|addr
 operator|.
 name|sin_len

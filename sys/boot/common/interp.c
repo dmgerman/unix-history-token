@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp.c,v 1.11 1999/01/13 21:59:58 abial Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp.c,v 1.5 1998/10/07 02:38:26 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -24,56 +24,6 @@ include|#
 directive|include
 file|"bootstrap.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BOOT_FORTH
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ficl.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|RETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|stackPushINT32(bf_vm->pStack,!x); return(x)
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|FICL_VM
-modifier|*
-name|bf_vm
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RETURN
-parameter_list|(
-name|x
-parameter_list|)
-value|return(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -101,6 +51,7 @@ comment|/*  * Perform the command  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|perform
 parameter_list|(
@@ -114,6 +65,8 @@ index|[]
 parameter_list|)
 block|{
 name|int
+name|i
+decl_stmt|,
 name|result
 decl_stmt|;
 name|struct
@@ -157,21 +110,41 @@ name|result
 operator|=
 name|CMD_ERROR
 expr_stmt|;
-comment|/* search the command set for the command */
-name|SET_FOREACH
-argument_list|(
-argument|cmdp
-argument_list|,
-argument|Xcommand_set
-argument_list|)
+name|cmdp
+operator|=
+operator|(
+expr|struct
+name|bootblk_command
+operator|*
+operator|*
+operator|)
+name|Xcommand_set
+operator|.
+name|ls_items
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|Xcommand_set
+operator|.
+name|ls_length
+condition|;
+name|i
+operator|++
+control|)
 block|{
 if|if
 condition|(
 operator|(
-operator|(
-operator|*
 name|cmdp
-operator|)
+index|[
+name|i
+index|]
 operator|->
 name|c_name
 operator|!=
@@ -186,20 +159,20 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-operator|*
 name|cmdp
-operator|)
+index|[
+name|i
+index|]
 operator|->
 name|c_name
 argument_list|)
 condition|)
 name|cmd
 operator|=
-operator|(
-operator|*
 name|cmdp
-operator|)
+index|[
+name|i
+index|]
 operator|->
 name|c_fn
 expr_stmt|;
@@ -230,11 +203,11 @@ operator|=
 literal|"unknown command"
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|result
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -256,9 +229,6 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* big enough? */
-ifndef|#
-directive|ifndef
-name|BOOT_FORTH
 name|int
 name|argc
 decl_stmt|;
@@ -267,26 +237,7 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|BOOT_FORTH
-name|bf_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/*      * Read our default configuration      */
-if|if
-condition|(
-name|source
-argument_list|(
-literal|"/boot/loader.rc"
-argument_list|)
-operator|!=
-name|CMD_OK
-condition|)
 name|source
 argument_list|(
 literal|"/boot/boot.conf"
@@ -342,16 +293,6 @@ name|input
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BOOT_FORTH
-name|bf_run
-argument_list|(
-name|input
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 operator|!
@@ -402,8 +343,6 @@ literal|"parse error\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -443,36 +382,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-name|res
-operator|=
-name|CMD_OK
-expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
 literal|1
 init|;
-operator|(
 name|i
 operator|<
 name|argc
-operator|)
-operator|&&
-operator|(
-name|res
-operator|==
-name|CMD_OK
-operator|)
 condition|;
 name|i
 operator|++
 control|)
-name|res
-operator|=
 name|source
 argument_list|(
 name|argv
@@ -483,7 +405,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|res
+name|CMD_OK
 operator|)
 return|;
 block|}
@@ -521,7 +443,7 @@ struct|;
 end_struct
 
 begin_function
-name|int
+name|void
 name|source
 parameter_list|(
 name|char
@@ -549,8 +471,6 @@ decl_stmt|;
 comment|/* big enough? */
 name|int
 name|argc
-decl_stmt|,
-name|res
 decl_stmt|;
 name|char
 modifier|*
@@ -586,10 +506,8 @@ literal|1
 operator|)
 condition|)
 block|{
-name|sprintf
+name|printf
 argument_list|(
-name|command_errbuf
-argument_list|,
 literal|"can't open '%s': %s\n"
 argument_list|,
 name|filename
@@ -600,11 +518,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|CMD_ERROR
-operator|)
-return|;
+return|return;
 block|}
 comment|/*      * Read the script into memory.      */
 name|script
@@ -792,10 +706,6 @@ name|argv
 operator|=
 name|NULL
 expr_stmt|;
-name|res
-operator|=
-name|CMD_OK
-expr_stmt|;
 for|for
 control|(
 name|sp
@@ -901,13 +811,7 @@ operator|&
 name|SL_IGNOREERR
 operator|)
 condition|)
-block|{
-name|res
-operator|=
-name|CMD_ERROR
-expr_stmt|;
 break|break;
-block|}
 block|}
 name|free
 argument_list|(
@@ -931,10 +835,6 @@ name|sp
 operator|->
 name|line
 argument_list|)
-expr_stmt|;
-name|res
-operator|=
-name|CMD_ERROR
 expr_stmt|;
 break|break;
 block|}
@@ -973,11 +873,6 @@ name|se
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|res
-operator|)
-return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.27 1998/05/17 21:18:08 dt Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.26 1998/04/15 17:46:37 bde Exp $ */
 end_comment
 
 begin_comment
@@ -3178,11 +3178,7 @@ operator|*
 name|un
 operator|++
 operator|=
-operator|(
 name|lower
-operator|&
-name|LCASE_BASE
-operator|)
 condition|?
 operator|(
 name|ul_loaded
@@ -3263,11 +3259,7 @@ operator|*
 name|un
 operator|++
 operator|=
-operator|(
 name|lower
-operator|&
-name|LCASE_BASE
-operator|)
 condition|?
 operator|(
 name|ul_loaded
@@ -3372,11 +3364,7 @@ operator|*
 name|un
 operator|++
 operator|=
-operator|(
 name|lower
-operator|&
-name|LCASE_EXT
-operator|)
 condition|?
 operator|(
 name|ul_loaded

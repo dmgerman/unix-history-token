@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 1.5 1998/11/26 18:54:52 eivind Exp $  */
+comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 1.3 1998/03/21 14:42:45 peter Exp $  */
 end_comment
 
 begin_include
@@ -750,7 +750,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|iplcrc
 index|[
@@ -762,7 +761,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|iplcrcinit
 decl_stmt|;
@@ -802,6 +800,10 @@ name|void
 name|ipflog_init
 parameter_list|()
 block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -866,11 +868,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-block|{
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 if|#
 directive|if
 name|BSD
@@ -920,7 +917,6 @@ name|tv
 operator|.
 name|tv_usec
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}

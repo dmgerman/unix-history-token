@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.45 1998/12/29 20:36:22 cwt Exp $"
+literal|"$Id: syslogd.c,v 1.40 1998/07/27 13:04:14 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2614,16 +2614,9 @@ argument_list|,
 sizeof|sizeof
 name|line
 argument_list|,
-literal|"syslogd: discarded %d unwanted packets in secure mode, last from %s"
+literal|"syslogd: discarded %d unwanted packets in secure mode"
 argument_list|,
 name|Vogons
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|frominet
-operator|.
-name|sin_addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|logmsg
@@ -3978,25 +3971,7 @@ name|f
 operator|->
 name|f_prevhost
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|f
-operator|->
-name|f_prevhost
-index|[
-sizeof|sizeof
-argument_list|(
-name|f
-operator|->
-name|f_prevhost
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -5774,11 +5749,6 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|sigset_t
-name|omask
-decl_stmt|,
-name|nmask
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -5815,31 +5785,6 @@ literal|"???"
 operator|)
 return|;
 block|}
-name|sigemptyset
-argument_list|(
-operator|&
-name|nmask
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|nmask
-argument_list|,
-name|SIGHUP
-argument_list|)
-expr_stmt|;
-name|sigprocmask
-argument_list|(
-name|SIG_BLOCK
-argument_list|,
-operator|&
-name|nmask
-argument_list|,
-operator|&
-name|omask
-argument_list|)
-expr_stmt|;
 name|hp
 operator|=
 name|gethostbyaddr
@@ -5862,16 +5807,6 @@ argument_list|,
 name|f
 operator|->
 name|sin_family
-argument_list|)
-expr_stmt|;
-name|sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|omask
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6824,18 +6759,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|!
 operator|*
 name|p
-operator|)
-operator|||
-operator|(
-operator|*
-name|p
-operator|==
-literal|'*'
-operator|)
 condition|)
 block|{
 name|strcpy
@@ -7385,11 +7311,6 @@ operator|*
 name|p
 operator|!=
 literal|'\t'
-operator|&&
-operator|*
-name|p
-operator|!=
-literal|' '
 condition|;
 control|)
 block|{
@@ -7413,11 +7334,6 @@ operator|*
 name|q
 operator|!=
 literal|'\t'
-operator|&&
-operator|*
-name|q
-operator|!=
-literal|' '
 operator|&&
 operator|*
 name|q
@@ -7522,7 +7438,7 @@ operator|&&
 operator|!
 name|strchr
 argument_list|(
-literal|"\t,; "
+literal|"\t,;"
 argument_list|,
 operator|*
 name|q
@@ -7547,7 +7463,7 @@ while|while
 condition|(
 name|strchr
 argument_list|(
-literal|",;"
+literal|", ;"
 argument_list|,
 operator|*
 name|q
@@ -7620,7 +7536,7 @@ operator|&&
 operator|!
 name|strchr
 argument_list|(
-literal|"\t.; "
+literal|"\t.;"
 argument_list|,
 operator|*
 name|p
@@ -7639,7 +7555,7 @@ operator|&&
 operator|!
 name|strchr
 argument_list|(
-literal|"\t,;. "
+literal|"\t,;."
 argument_list|,
 operator|*
 name|p
@@ -7790,11 +7706,6 @@ operator|*
 name|p
 operator|==
 literal|'\t'
-operator|||
-operator|*
-name|p
-operator|==
-literal|' '
 condition|)
 name|p
 operator|++
@@ -7811,7 +7722,7 @@ case|:
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strcpy
 argument_list|(
 name|f
 operator|->
@@ -7823,56 +7734,13 @@ name|f_hname
 argument_list|,
 operator|++
 name|p
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|f
-operator|->
-name|f_un
-operator|.
-name|f_forw
-operator|.
-name|f_hname
 argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|f
-operator|->
-name|f_un
-operator|.
-name|f_forw
-operator|.
-name|f_hname
-index|[
-sizeof|sizeof
-argument_list|(
-name|f
-operator|->
-name|f_un
-operator|.
-name|f_forw
-operator|.
-name|f_hname
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|hp
 operator|=
 name|gethostbyname
 argument_list|(
-name|f
-operator|->
-name|f_un
-operator|.
-name|f_forw
-operator|.
-name|f_hname
+name|p
 argument_list|)
 expr_stmt|;
 if|if

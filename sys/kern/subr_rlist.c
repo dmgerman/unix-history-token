@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.28 1999/01/08 17:31:12 eivind Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.26 1998/04/15 17:46:25 bde Exp $  */
 end_comment
 
 begin_include
@@ -373,59 +373,64 @@ operator|->
 name|rl_start
 condition|)
 break|break;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|prev_rlp
 condition|)
 block|{
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|prev_rlp
 operator|->
 name|rl_end
 operator|+
 literal|1
-operator|!=
+operator|==
 name|cur_rlp
 operator|->
 name|rl_start
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"rlist_free: missed coalesce opportunity"
-operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|prev_rlp
 operator|->
 name|rl_end
-operator|!=
+operator|==
 name|cur_rlp
 operator|->
 name|rl_start
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"rlist_free: entries overlap"
-operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|prev_rlp
 operator|->
 name|rl_end
-operator|<=
+operator|>
 name|cur_rlp
 operator|->
 name|rl_start
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"entries out of order"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|prev_rlp
 operator|=
 name|cur_rlp

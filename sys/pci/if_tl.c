@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.23 1998/12/14 06:32:56 dillon Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.17 1998/10/04 18:47:38 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -174,24 +174,19 @@ directive|include
 file|<pci/if_tlreg.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_tl.c,v 1.23 1998/12/14 06:32:56 dillon Exp $"
+literal|"$Id: if_tl.c,v 1.17 1998/10/04 18:47:38 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -633,7 +628,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|tl_probe
@@ -983,7 +977,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1000,7 +994,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
 name|u_int8_t
 operator|*
@@ -1130,9 +1124,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int16_t
 operator|,
-name|int
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1181,7 +1175,9 @@ name|tl_calchash
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|unsigned
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1213,7 +1209,8 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|caddr_t
+name|u_int8_t
+operator|*
 operator|,
 name|int
 operator|)
@@ -1294,7 +1291,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1311,7 +1308,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1328,7 +1325,7 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1345,9 +1342,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
-name|int
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1364,9 +1361,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
-name|int
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1383,9 +1380,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
-name|int
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1402,9 +1399,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
-name|int
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1421,9 +1418,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
-name|int
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1440,9 +1437,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
-name|int
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1459,9 +1456,9 @@ expr|struct
 name|tl_softc
 operator|*
 operator|,
-name|int
+name|u_int8_t
 operator|,
-name|int
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1481,7 +1478,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
 block|{
@@ -1527,7 +1524,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
 block|{
@@ -1573,7 +1570,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
 block|{
@@ -1621,10 +1618,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int8_t
 name|val
 decl_stmt|;
 block|{
@@ -1672,10 +1669,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int16_t
 name|val
 decl_stmt|;
 block|{
@@ -1723,10 +1720,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int32_t
 name|val
 decl_stmt|;
 block|{
@@ -1774,10 +1771,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int8_t
 name|bit
 decl_stmt|;
 block|{
@@ -1847,10 +1844,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int8_t
 name|bit
 decl_stmt|;
 block|{
@@ -1921,10 +1918,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int16_t
 name|bit
 decl_stmt|;
 block|{
@@ -1994,10 +1991,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int16_t
 name|bit
 decl_stmt|;
 block|{
@@ -2070,7 +2067,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|byte
 decl_stmt|;
 block|{
@@ -2232,7 +2229,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int8_t
 name|addr
 decl_stmt|;
 name|u_int8_t
@@ -3380,10 +3377,10 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_int16_t
 name|reg
 decl_stmt|;
-name|int
+name|u_int16_t
 name|data
 decl_stmt|;
 block|{
@@ -4481,7 +4478,9 @@ name|tl_calchash
 parameter_list|(
 name|addr
 parameter_list|)
-name|caddr_t
+name|unsigned
+name|char
+modifier|*
 name|addr
 decl_stmt|;
 block|{
@@ -4578,7 +4577,8 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|caddr_t
+name|u_int8_t
+modifier|*
 name|addr
 decl_stmt|;
 name|int
@@ -4723,10 +4723,6 @@ name|tl_setfilt
 argument_list|(
 name|sc
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|dummy
 argument_list|,
 name|i
@@ -5410,7 +5406,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|tl_probe
@@ -7371,7 +7366,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|TL_RX_LIST_CNT
+name|TL_TX_LIST_CNT
 condition|;
 name|i
 operator|++
@@ -7426,7 +7421,7 @@ condition|(
 name|i
 operator|==
 operator|(
-name|TL_RX_LIST_CNT
+name|TL_TX_LIST_CNT
 operator|-
 literal|1
 operator|)
@@ -8583,10 +8578,6 @@ name|sc
 operator|->
 name|tl_unit
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|CSR_READ_4
 argument_list|(
 name|sc
@@ -9976,14 +9967,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * If there are no packets queued, bail. 	 */
-if|if
-condition|(
-name|cur_tx
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* 	 * That's all we can stands, we can't stands no more. 	 * If there are no other transfers pending, then issue the 	 * TX GO command to the adapter to start things moving. 	 * Otherwise, just leave the data in the queue and let 	 * the EOF/EOC interrupt handler send. 	 */
 if|if
 condition|(
@@ -10122,7 +10105,7 @@ name|tl_cdata
 operator|.
 name|tl_tx_tail
 operator|=
-name|cur_tx
+name|start_tx
 expr_stmt|;
 block|}
 comment|/* 	 * Set a timeout in case the chip goes out to lunch. 	 */
@@ -10273,10 +10256,6 @@ name|tl_setfilt
 argument_list|(
 name|sc
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|sc
 operator|->
 name|arpcom

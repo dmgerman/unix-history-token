@@ -315,7 +315,7 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 end_ifndef
 
 begin_function_decl
@@ -329,13 +329,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|static
+name|int
+name|set_keyboard_param
+parameter_list|(
+name|int
+name|command
+parameter_list|,
+name|int
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_function_decl
@@ -678,7 +697,7 @@ name|PCVT_UPDLED_LOSES_INTR
 operator|||
 name|defined
 argument_list|(
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 argument_list|)
 end_if
 
@@ -725,7 +744,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 name|lost_intr_timeout_queued
 operator|=
 literal|0
@@ -766,22 +785,12 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|lock
-operator|)
-operator|(
-name|kbd
-operator|,
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
 name|TRUE
-operator|)
+argument_list|)
 condition|)
 block|{
 name|opri
@@ -789,39 +798,19 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|lock
-operator|)
-operator|(
-name|kbd
-operator|,
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
 name|FALSE
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|check
-operator|)
-operator|(
-name|kbd
-operator|)
+name|kbdc_data_ready
+argument_list|(
+name|kbdc
+argument_list|)
 condition|)
 name|pcrint
 argument_list|(
@@ -855,7 +844,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 block|}
 end_function
 
@@ -865,7 +854,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PCVT_UPDLED_LOSES_INTR || defined(_DEV_KBD_KBDREG_H_) */
+comment|/* PCVT_UPDLED_LOSES_INTR || defined(_I386_ISA_KBDIO_H_) */
 end_comment
 
 begin_comment
@@ -888,15 +877,16 @@ name|int
 name|opri
 decl_stmt|,
 name|new_ledstate
+decl_stmt|,
+name|response1
+decl_stmt|,
+name|response2
 decl_stmt|;
 name|opri
 operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
 name|new_ledstate
 operator|=
 operator|(
@@ -921,49 +911,6 @@ operator|*
 literal|4
 operator|)
 expr_stmt|;
-else|#
-directive|else
-name|new_ledstate
-operator|=
-operator|(
-operator|(
-name|vsp
-operator|->
-name|scroll_lock
-operator|)
-condition|?
-name|LED_SCR
-else|:
-literal|0
-operator|)
-operator||
-operator|(
-operator|(
-name|vsp
-operator|->
-name|num_lock
-operator|)
-condition|?
-name|LED_NUM
-else|:
-literal|0
-operator|)
-operator||
-operator|(
-operator|(
-name|vsp
-operator|->
-name|caps_lock
-operator|)
-condition|?
-name|LED_CAP
-else|:
-literal|0
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _DEV_KBD_KBDREG_H_ */
 if|if
 condition|(
 name|new_ledstate
@@ -973,12 +920,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|int
-name|response1
-decl_stmt|,
-name|response2
-decl_stmt|;
+name|_I386_ISA_KBDIO_H_
 name|ledstate
 operator|=
 name|LEDSTATE_UPDATE_PENDING
@@ -1064,10 +1006,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 if|if
 condition|(
-name|kbd
+name|kbdc
 operator|==
 name|NULL
 condition|)
@@ -1095,28 +1037,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|ioctl
-operator|)
-operator|(
-name|kbd
-operator|,
-name|KDSETLED
-operator|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
+name|set_keyboard_param
+argument_list|(
+name|KBDC_SET_LEDS
+argument_list|,
 name|new_ledstate
-operator|)
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -1127,7 +1053,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 if|#
 directive|if
 name|PCVT_UPDLED_LOSES_INTR
@@ -1165,7 +1091,7 @@ comment|/* PCVT_UPDLED_LOSES_INTR */
 block|}
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 name|splx
 argument_list|(
 name|opri
@@ -1194,7 +1120,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 name|tpmrate
 operator|=
 name|rate
@@ -1232,13 +1158,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-name|kbd
-operator|==
-name|NULL
-condition|)
-return|return;
 name|tpmrate
 operator|=
 name|rate
@@ -1247,28 +1166,14 @@ literal|0x7f
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|ioctl
-operator|)
-operator|(
-name|kbd
-operator|,
-name|KDSETRAD
-operator|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
+name|set_keyboard_param
+argument_list|(
+name|KBDC_SET_TYPEMATIC
+argument_list|,
 name|tpmrate
-operator|)
+argument_list|)
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
@@ -1277,14 +1182,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 block|}
 end_function
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 end_ifndef
 
 begin_comment
@@ -1492,13 +1397,124 @@ return|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|int
+name|set_keyboard_param
+parameter_list|(
+name|int
+name|command
+parameter_list|,
+name|int
+name|data
+parameter_list|)
+block|{
+name|int
+name|s
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+if|if
+condition|(
+name|kbdc
+operator|==
+name|NULL
+condition|)
+return|return
+literal|1
+return|;
+comment|/* prevent the timeout routine from polling the keyboard */
+if|if
+condition|(
+operator|!
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|TRUE
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+comment|/* disable the keyboard and mouse interrupt */
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|c = get_controller_command_byte(kbdc);     if ((c == -1)  	|| !set_controller_command_byte(kbdc,              kbdc_get_device_mask(kbdc),             KBD_DISABLE_KBD_PORT | KBD_DISABLE_KBD_INT                 | KBD_DISABLE_AUX_PORT | KBD_DISABLE_AUX_INT)) {
+comment|/* CONTROLLER ERROR */
+block|kbdc_lock(kbdc, FALSE); 	splx(s); 	return 1;     }
+comment|/*       * Now that the keyboard controller is told not to generate       * the keyboard and mouse interrupts, call `splx()' to allow       * the other tty interrupts. The clock interrupt may also occur,       * but the timeout routine (`scrn_timer()') will be blocked       * by the lock flag set via `kbdc_lock()'      */
+block|splx(s);
+endif|#
+directive|endif
+if|if
+condition|(
+name|send_kbd_command_and_data
+argument_list|(
+name|kbdc
+argument_list|,
+name|command
+argument_list|,
+name|data
+argument_list|)
+operator|!=
+name|KBD_ACK
+condition|)
+name|send_kbd_command
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBDC_ENABLE_KBD
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* restore the interrupts */
+block|if (!set_controller_command_byte(kbdc,             kbdc_get_device_mask(kbdc), 	    c& (KBD_KBD_CONTROL_BITS | KBD_AUX_CONTROL_BITS))) {
+comment|/* CONTROLLER ERROR */
+block|}
+else|#
+directive|else
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_if
@@ -1523,7 +1539,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 name|int
 name|cmd
 decl_stmt|,
@@ -1589,14 +1605,7 @@ else|#
 directive|else
 name|set_controller_command_byte
 argument_list|(
-operator|*
-operator|(
-name|KBDC
-operator|*
-operator|)
-name|kbd
-operator|->
-name|kb_data
+name|kbdc
 argument_list|,
 name|KBD_TRANSLATION
 argument_list|,
@@ -1611,7 +1620,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 block|}
 end_function
 
@@ -1664,7 +1673,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 name|int
 name|again
 init|=
@@ -2131,9 +2140,15 @@ directive|endif
 comment|/* PCVT_KEYBDID */
 else|#
 directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 name|int
-name|type
+name|c
+decl_stmt|;
+name|int
+name|m
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -2167,31 +2182,99 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|kbd
+name|kbdc
 operator|==
 name|NULL
 condition|)
-return|return;
-comment|/* shouldn't happen */
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|init
-operator|)
-operator|(
-name|kbd
-operator|)
-expr_stmt|;
-name|ledstate
+name|kbdc
 operator|=
-name|LEDSTATE_UPDATE_PENDING
+name|kbdc_open
+argument_list|(
+name|IO_KBD
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|TRUE
+argument_list|)
+condition|)
+comment|/* strange, somebody got there first */
+return|return;
+comment|/* remove any noise */
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* save the current controller command byte */
+name|m
+operator|=
+name|kbdc_get_device_mask
+argument_list|(
+name|kbdc
+argument_list|)
+operator|&
+operator|~
+name|KBD_KBD_CONTROL_BITS
+expr_stmt|;
+name|c
+operator|=
+name|get_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* CONTROLLER ERROR */
+name|kbdc_set_device_mask
+argument_list|(
+name|kbdc
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|kbdc
+operator|=
+name|NULL
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"pcvt: unable to get the command byte.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|#
 directive|if
 name|PCVT_USEKBDSEC
@@ -2241,90 +2324,307 @@ comment|/* PCVT_SCANSET == 2 */
 endif|#
 directive|endif
 comment|/* PCVT_USEKBDSEC */
+comment|/* disable the keyboard interrupt and the aux port and interrupt */
+if|if
+condition|(
+operator|!
 name|set_controller_command_byte
 argument_list|(
-operator|*
-operator|(
-name|KBDC
-operator|*
-operator|)
-name|kbd
-operator|->
-name|kb_data
+name|kbdc
 argument_list|,
-name|KBD_OVERRIDE_KBD_LOCK
+name|KBD_KBD_CONTROL_BITS
 operator||
 name|KBD_TRANSLATION
+operator||
+name|KBD_OVERRIDE_KBD_LOCK
 argument_list|,
+name|KBD_ENABLE_KBD_PORT
+operator||
+name|KBD_DISABLE_KBD_INT
+operator||
 name|KBDINITCMD
 argument_list|)
+condition|)
+block|{
+comment|/* CONTROLLER ERROR: there is very little we can do... */
+name|kbdc_set_device_mask
+argument_list|(
+name|kbdc
+argument_list|,
+name|m
+argument_list|)
 expr_stmt|;
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|kbdc
+operator|=
+name|NULL
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"pcvt: unable to set the command byte.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* reset keyboard hardware */
+name|ledstate
+operator|=
+name|LEDSTATE_UPDATE_PENDING
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|reset_kbd
+argument_list|(
+name|kbdc
+argument_list|)
+condition|)
+block|{
+comment|/* KEYBOARD ERROR */
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|test_controller
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+name|test_kbd_port
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+comment|/*  		 * We could disable the keyboard port and interrupt now...  		 * but, the keyboard may still exist.      		 */
+name|printf
+argument_list|(
+literal|"pcvt: failed to reset the keyboard.\n"
+argument_list|)
+expr_stmt|;
+comment|/* try to restore the original command byte */
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+literal|0xff
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|kbdc_set_device_mask
+argument_list|(
+name|kbdc
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|kbdc
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
+if|#
+directive|if
+name|PCVT_KEYBDID
+name|keyboard_type
+operator|=
+name|KB_UNKNOWN
+expr_stmt|;
+if|if
+condition|(
+name|send_kbd_command
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBDC_SEND_DEV_ID
+argument_list|)
+operator|==
+name|KBD_ACK
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+comment|/* 10msec delay */
+switch|switch
+condition|(
+name|read_kbd_data
+argument_list|(
+name|kbdc
+argument_list|)
+condition|)
+block|{
+case|case
+name|KEYB_R_MF2ID1
+case|:
+switch|switch
+condition|(
+name|read_kbd_data
+argument_list|(
+name|kbdc
+argument_list|)
+condition|)
+block|{
+case|case
+name|KEYB_R_MF2ID2
+case|:
+case|case
+name|KEYB_R_MF2ID2HP
+case|:
 name|keyboard_type
 operator|=
 name|KB_MFII
 expr_stmt|;
-comment|/* force it .. */
-if|#
-directive|if
-name|PCVT_KEYBDID
-name|type
-operator|=
-name|KB_101
-expr_stmt|;
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|ioctl
-operator|)
-operator|(
-name|kbd
-operator|,
-name|KDGKBTYPE
-operator|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|type
-operator|)
-expr_stmt|;
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
+break|break;
 case|case
-name|KB_84
+operator|-
+literal|1
+case|:
+default|default:
+break|break;
+block|}
+break|break;
+case|case
+operator|-
+literal|1
 case|:
 name|keyboard_type
 operator|=
 name|KB_AT
 expr_stmt|;
+comment|/* fall through */
+default|default:
+comment|/* XXX: should we read the second byte? */
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 break|break;
-case|case
-name|KB_101
-case|:
+block|}
+block|}
+else|else
+block|{
+comment|/*  		 * The send ID command failed. This error is considered 		 * benign, but may need recovery.  		 */
+name|empty_both_buffers
+argument_list|(
+name|kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|test_controller
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+name|test_kbd_port
+argument_list|(
+name|kbdc
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* PCVT_KEYBDID */
 name|keyboard_type
 operator|=
 name|KB_MFII
 expr_stmt|;
-break|break;
-default|default:
-name|keyboard_type
-operator|=
-name|KB_UNKNOWN
-expr_stmt|;
-break|break;
-block|}
+comment|/* force it .. */
 endif|#
 directive|endif
 comment|/* PCVT_KEYBDID */
+comment|/* enable the keyboard port and intr. */
+if|if
+condition|(
+operator|!
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBD_KBD_CONTROL_BITS
+argument_list|,
+name|KBD_ENABLE_KBD_PORT
+operator||
+name|KBD_ENABLE_KBD_INT
+argument_list|)
+condition|)
+block|{
+comment|/* CONTROLLER ERROR      		 * This is serious; we are left with the disabled  		 * keyboard intr.      		 */
+name|printf
+argument_list|(
+literal|"pcvt: failed to enable the keyboard port and intr.\n"
+argument_list|)
+expr_stmt|;
+name|kbdc_set_device_mask
+argument_list|(
+name|kbdc
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|kbdc
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
+name|kbdc_set_device_mask
+argument_list|(
+name|kbdc
+argument_list|,
+name|m
+operator||
+name|KBD_KBD_CONTROL_BITS
+argument_list|)
+expr_stmt|;
+name|kbdc_lock
+argument_list|(
+name|kbdc
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 name|update_led
 argument_list|()
 expr_stmt|;
@@ -2349,7 +2649,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 block|}
 end_function
 
@@ -4112,13 +4412,13 @@ directive|endif
 comment|/* XSERVER */
 ifdef|#
 directive|ifdef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 name|int
 name|c
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 name|loop
 label|:
 ifdef|#
@@ -4126,7 +4426,7 @@ directive|ifdef
 name|XSERVER
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 if|#
 directive|if
 name|PCVT_KBD_FIFO
@@ -4228,7 +4528,7 @@ directive|endif
 comment|/* !PCVT_KBD_FIFO */
 else|#
 directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 if|#
 directive|if
 name|PCVT_KBD_FIFO
@@ -4280,22 +4580,10 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|read
-operator|)
-operator|(
-name|kbd
-operator|,
-name|TRUE
-operator|)
+name|read_kbd_data
+argument_list|(
+name|kbdc
+argument_list|)
 operator|)
 operator|==
 operator|-
@@ -4314,22 +4602,10 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|read
-operator|)
-operator|(
-name|kbd
-operator|,
-name|FALSE
-operator|)
+name|read_kbd_data_no_wait
+argument_list|(
+name|kbdc
+argument_list|)
 operator|)
 operator|==
 operator|-
@@ -4346,7 +4622,7 @@ block|}
 block|{
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 comment|/* 		 * If x mode is active, only care for locking keys, then 		 * return the scan code instead of any key translation. 		 * Additionally, this prevents us from any attempts to 		 * execute pcvt internal functions caused by keys (such 		 * as screen flipping). 		 * XXX For now, only the default locking key definitions 		 * are recognized (i.e. if you have overloaded you "A" key 		 * as NUMLOCK, that wont effect X mode:-) 		 * Changing this would be nice, but would require modifi- 		 * cations to the X server. After having this, X will 		 * deal with the LEDs itself, so we are committed. 		 */
 comment|/* 		 * Iff PCVT_USL_VT_COMPAT is defined, the behaviour has 		 * been fixed. We need not care about any keys here, since 		 * there are ioctls that deal with the lock key / LED stuff. 		 */
 if|if
@@ -5300,7 +5576,7 @@ directive|else
 comment|/* !XSERVER */
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 if|#
 directive|if
 name|PCVT_KBD_FIFO
@@ -5406,7 +5682,7 @@ directive|endif
 comment|/* !PCVT_KBD_FIFO */
 else|#
 directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 if|#
 directive|if
 name|PCVT_KBD_FIFO
@@ -5458,22 +5734,10 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|read
-operator|)
-operator|(
-name|kbd
-operator|,
-name|TRUE
-operator|)
+name|read_kbd_data
+argument_list|(
+name|kbdc
+argument_list|)
 operator|)
 operator|==
 operator|-
@@ -5492,22 +5756,10 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
-operator|*
-name|kbdsw
-index|[
-name|kbd
-operator|->
-name|kb_index
-index|]
-operator|->
-name|read
-operator|)
-operator|(
-name|kbd
-operator|,
-name|FALSE
-operator|)
+name|read_kbd_data_no_wait
+argument_list|(
+name|kbdc
+argument_list|)
 operator|)
 operator|==
 operator|-
@@ -5523,13 +5775,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 endif|#
 directive|endif
 comment|/* !XSERVER */
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 else|else
 block|{
 if|if
@@ -5546,7 +5798,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
+comment|/* !_I386_ISA_KBDIO_H_ */
 if|#
 directive|if
 name|PCVT_SHOWKEYS

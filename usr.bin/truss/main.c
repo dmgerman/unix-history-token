@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.12 1998/10/03 00:43:05 sef Exp $"
+literal|"$Id: main.c,v 1.11 1998/09/07 05:49:43 sef Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -989,11 +989,6 @@ operator|!=
 name|S_EXIT
 condition|)
 do|;
-name|fflush
-argument_list|(
-name|outfile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sigexit

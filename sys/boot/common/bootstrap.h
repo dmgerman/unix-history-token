@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.17 1999/01/15 00:31:45 abial Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.12 1998/10/09 07:09:22 msmith Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_comment
@@ -143,7 +137,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|source
 parameter_list|(
 name|char
@@ -267,50 +261,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Disk block cache  */
-end_comment
-
-begin_struct
-struct|struct
-name|bcache_devdata
-block|{
-name|int
-function_decl|(
-modifier|*
-name|dv_strategy
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|devdata
-parameter_list|,
-name|int
-name|rw
-parameter_list|,
-name|daddr_t
-name|blk
-parameter_list|,
-name|size_t
-name|size
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-modifier|*
-name|rsize
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
-name|dv_devdata
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Modular console support.  */
 end_comment
 
@@ -430,29 +380,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|pnphandler
-block|{
-name|char
-modifier|*
-name|pp_name
-decl_stmt|;
-comment|/* handler/bus name */
-name|void
-function_decl|(
-modifier|*
-name|pp_enumerate
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* enumerate PnP devices, add to chain */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|pnpident
 block|{
 name|char
@@ -460,25 +387,32 @@ modifier|*
 name|id_ident
 decl_stmt|;
 comment|/* ASCII identifier, actual format varies with bus/handler */
-name|STAILQ_ENTRY
-argument_list|(
-argument|pnpident
-argument_list|)
-name|id_link
-expr_stmt|;
+name|struct
+name|pnpident
+modifier|*
+name|id_next
+decl_stmt|;
+comment|/* the next identifier */
 block|}
 struct|;
 end_struct
+
+begin_struct_decl
+struct_decl|struct
+name|pnphandler
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
 name|pnpinfo
 block|{
-name|char
+name|struct
+name|pnpident
 modifier|*
-name|pi_desc
+name|pi_ident
 decl_stmt|;
-comment|/* ASCII description, optional */
+comment|/* list of identifiers */
 name|int
 name|pi_revision
 decl_stmt|;
@@ -503,20 +437,37 @@ modifier|*
 name|pi_handler
 decl_stmt|;
 comment|/* handler which detected this device */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pnpident
-argument_list|)
-name|pi_ident
-expr_stmt|;
-comment|/* list of identifiers */
-name|STAILQ_ENTRY
-argument_list|(
-argument|pnpinfo
-argument_list|)
-name|pi_link
-expr_stmt|;
+name|struct
+name|pnpinfo
+modifier|*
+name|pi_next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pnphandler
+block|{
+name|char
+modifier|*
+name|pp_name
+decl_stmt|;
+comment|/* handler/bus name */
+name|void
+function_decl|(
+modifier|*
+name|pp_enumerate
+function_decl|)
+parameter_list|(
+name|struct
+name|pnpinfo
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* add detected devices to chain */
 block|}
 struct|;
 end_struct
@@ -551,68 +502,6 @@ name|ident
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|pnpinfo
-modifier|*
-name|pnp_allocinfo
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|pnp_freeinfo
-parameter_list|(
-name|struct
-name|pnpinfo
-modifier|*
-name|pi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|pnp_addinfo
-parameter_list|(
-name|struct
-name|pnpinfo
-modifier|*
-name|pi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|pnp_eisaformat
-parameter_list|(
-name|u_int8_t
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  *< 0	- No ISA in system  * == 0	- Maybe ISA, search for read data port  *> 0	- ISA in system, value is read data port address  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|isapnp_readport
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Module metadata header.  *  * Metadata are allocated on our heap, and copied into kernel space  * before executing the kernel.  */
@@ -943,33 +832,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEW_LINKER_SET
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/linker_set.h>
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ELF__
+argument_list|)
+end_if
 
 begin_comment
-comment|/* XXX just for conversion's sake, until we move to the new linker set code */
+comment|/*  * Alpha GAS needs an align before the section change.  It seems to assume  * that after the .previous, it is aligned, so the following .align 3 is  * ignored.  Since the previous instructions often contain strings, this is  * a problem.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|SET_FOREACH
+name|MAKE_SET
 parameter_list|(
-name|pvar
-parameter_list|,
 name|set
+parameter_list|,
+name|sym
 parameter_list|)
 define|\
-value|for (pvar = set.ls_items;			\ 		 pvar< set.ls_items + set.ls_length;	\ 		 pvar++)
+value|static void const * const __set_##set##_sym_##sym =&sym; \ 	__asm(".align 3");			\ 	__asm(".section .set." #set ",\"aw\"");	\ 	__asm(".quad " #sym);			\ 	__asm(".previous")
 end_define
 
 begin_else
@@ -977,56 +869,23 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* NEW_LINKER_SET */
-end_comment
-
-begin_comment
-comment|/*  * Private macros, not to be used outside this header file.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|__MAKE_SET
+name|MAKE_SET
 parameter_list|(
 name|set
 parameter_list|,
 name|sym
 parameter_list|)
 define|\
-value|static void *__CONCAT(__setentry,__LINE__)			\ 	__attribute__((__section__("set_" #set),__unused__)) =&sym
+value|static void const * const __set_##set##_sym_##sym =&sym; \ 	__asm(".section .set." #set ",\"aw\"");	\ 	__asm(".long " #sym);			\ 	__asm(".previous")
 end_define
 
-begin_define
-define|#
-directive|define
-name|__SET_BEGIN
-parameter_list|(
-name|set
-parameter_list|)
-define|\
-value|({ extern void *__CONCAT(__start_set_,set);			\&__CONCAT(__start_set_,set); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|__SET_END
-parameter_list|(
-name|set
-parameter_list|)
-define|\
-value|({ extern void *__CONCAT(__stop_set_,set);			\&__CONCAT(__stop_set_,set); })
-end_define
-
-begin_comment
-comment|/*  * Public macros.  */
-end_comment
-
-begin_comment
-comment|/* Add an entry to a set. */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1037,7 +896,7 @@ name|set
 parameter_list|,
 name|sym
 parameter_list|)
-value|__MAKE_SET(set, sym)
+value|MAKE_SET(set, sym)
 end_define
 
 begin_define
@@ -1049,7 +908,7 @@ name|set
 parameter_list|,
 name|sym
 parameter_list|)
-value|__MAKE_SET(set, sym)
+value|MAKE_SET(set, sym)
 end_define
 
 begin_define
@@ -1061,7 +920,7 @@ name|set
 parameter_list|,
 name|sym
 parameter_list|)
-value|__MAKE_SET(set, sym)
+value|MAKE_SET(set, sym)
 end_define
 
 begin_define
@@ -1073,30 +932,105 @@ name|set
 parameter_list|,
 name|sym
 parameter_list|)
-value|__MAKE_SET(set, sym)
+value|MAKE_SET(set, sym)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/*  * Iterate over all the elements of a set.  *  * Sets always contain addresses of things, and "pvar" points to words  * containing those addresses.  Thus is must be declared as "type **pvar",  * and the address of each set item is obtained inside the loop by "*pvar".  */
+comment|/*  * Linker set support, directly from<sys/kernel.h>  *   * NB: the constants defined below must match those defined in  * ld/ld.h.  Since their calculation requires arithmetic, we  * can't name them symbolically (e.g., 23 is N_SETT | N_EXT).  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SET_FOREACH
+name|MAKE_SET
 parameter_list|(
-name|pvar
-parameter_list|,
 name|set
+parameter_list|,
+name|sym
+parameter_list|,
+name|type
 parameter_list|)
 define|\
-value|for (pvar = (__typeof__(pvar))__SET_BEGIN(set);			\ 	    pvar< (__typeof__(pvar))__SET_END(set); pvar++)
+value|static void const * const __set_##set##_sym_##sym =&sym; \ 	__asm(".stabs \"_" #set "\", " #type ", 0, 0, _" #sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEXT_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ABS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 21)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct
+struct|struct
+name|linker_set
+block|{
+name|int
+name|ls_length
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|ls_items
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* really ls_length of them, trailing NULL */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Support for commands   */

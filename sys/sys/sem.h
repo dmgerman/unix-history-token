@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.17 1998/12/14 21:01:47 dillon Exp $ */
+comment|/* $Id: sem.h,v 1.14 1998/05/31 04:09:09 steve Exp $ */
 end_comment
 
 begin_comment
@@ -599,20 +599,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Due to the way semaphore memory is allocated, we have to ensure that  * SEMUSZ is properly aligned.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEM_ALIGN
-parameter_list|(
-name|bytes
-parameter_list|)
-value|(((bytes) + (sizeof(long) - 1))& ~(sizeof(long) - 1))
-end_define
-
-begin_comment
 comment|/* actual size of an undo structure */
 end_comment
 
@@ -620,7 +606,7 @@ begin_define
 define|#
 directive|define
 name|SEMUSZ
-value|SEM_ALIGN(offsetof(struct sem_undo, un_ent[SEMUME]))
+value|(sizeof(struct sem_undo)+sizeof(struct undo)*SEMUME)
 end_define
 
 begin_decl_stmt
@@ -672,7 +658,7 @@ name|SEMU
 parameter_list|(
 name|ix
 parameter_list|)
-value|((struct sem_undo *)(((intptr_t)semu)+ix * seminfo.semusz))
+value|((struct sem_undo *)(((intptr_t)semu)+ix * SEMUSZ))
 end_define
 
 begin_comment

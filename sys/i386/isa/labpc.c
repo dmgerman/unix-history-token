@@ -91,22 +91,11 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOUTB
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/clock.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1238,13 +1227,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|labpcintr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -1751,7 +1733,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ctlr
+name|cltr
 operator|*
 argument_list|)
 argument_list|)
@@ -1778,9 +1760,8 @@ name|dev
 parameter_list|)
 block|{
 specifier|static
-name|int
 name|unit
-decl_stmt|;
+expr_stmt|;
 name|struct
 name|ctlr
 name|scratch
@@ -2019,12 +2000,6 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
-name|dev
-operator|->
-name|id_ointr
-operator|=
-name|labpcintr
-expr_stmt|;
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -3105,7 +3080,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|labpcintr
 parameter_list|(
@@ -4750,14 +4724,13 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|int
 name|labpc_devsw_installed
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

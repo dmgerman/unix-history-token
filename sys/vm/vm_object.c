@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.137 1999/01/08 17:31:26 eivind Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.128 1998/09/04 08:06:57 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -145,6 +145,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|vm_object_dispose
+name|__P
+argument_list|(
+operator|(
+name|vm_object_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *	Virtual memory objects maintain the actual data  *	associated with allocated virtual memory.  A given  *	page of memory exists within exactly one object.  *  *	An object is only deallocated when all "references"  *	are given up.  Only one "reference" to a given  *	region of an object should be writeable.  *  *	Associated with each object is a list of all resident  *	memory pages belonging to that object; this list is  *	maintained by the "vm_page" module, and locked by the object's  *	lock.  *  *	Each object also records a "pager" routine which is  *	used to retrieve (and store) pages to the proper backing  *	storage.  In addition, objects may be backed by other  *	objects from which they were virtual-copied.  *  *	The only items within the object structure which are  *	modified after time of creation are:  *		reference count		locked by object's lock  *		pager routine		locked by object's lock  *  */
 end_comment
@@ -156,12 +169,6 @@ name|vm_object_list
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL_SIMPLELOCKS
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -169,11 +176,6 @@ name|simplelock
 name|vm_object_list_lock
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -703,22 +705,27 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|KASSERT
+if|#
+directive|if
+name|defined
 argument_list|(
-operator|!
-operator|(
+name|DIAGNOSTIC
+argument_list|)
+if|if
+condition|(
 name|object
 operator|->
 name|flags
 operator|&
 name|OBJ_DEAD
-operator|)
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"vm_object_reference: attempting to reference dead obj"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|object
 operator|->
 name|ref_count
@@ -797,33 +804,36 @@ name|object
 operator|->
 name|handle
 decl_stmt|;
-name|KASSERT
+if|#
+directive|if
+name|defined
 argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+if|if
+condition|(
 name|object
 operator|->
 name|type
-operator|==
-name|OBJT_VNODE
-argument_list|,
-operator|(
-literal|"vm_object_vndeallocate: not a vnode object"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|vp
 operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"vm_object_vndeallocate: missing vp"
-operator|)
+name|OBJT_VNODE
+condition|)
+name|panic
+argument_list|(
+literal|"vm_object_vndeallocate: not a vnode object"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+if|if
+condition|(
+name|vp
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"vm_object_vndeallocate: missing vp"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -899,6 +909,9 @@ name|vm_object_t
 name|object
 decl_stmt|;
 block|{
+name|int
+name|s
+decl_stmt|;
 name|vm_object_t
 name|temp
 decl_stmt|;
@@ -1058,25 +1071,34 @@ operator|->
 name|shadow_head
 argument_list|)
 expr_stmt|;
-name|KASSERT
+if|#
+directive|if
+name|defined
 argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+if|if
+condition|(
 name|robject
-operator|!=
+operator|==
 name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"vm_object_deallocate: ref_count: %d,"
+literal|" shadow_count: %d"
 argument_list|,
-operator|(
-literal|"vm_object_deallocate: ref_count: %d, shadow_count: %d"
-operator|,
 name|object
 operator|->
 name|ref_count
-operator|,
+argument_list|,
 name|object
 operator|->
 name|shadow_count
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1337,18 +1359,27 @@ argument_list|,
 literal|"objtrm"
 argument_list|)
 expr_stmt|;
-name|KASSERT
+if|#
+directive|if
+name|defined
 argument_list|(
-operator|!
+name|DIAGNOSTIC
+argument_list|)
+if|if
+condition|(
 name|object
 operator|->
 name|paging_in_progress
-argument_list|,
-operator|(
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
 literal|"vm_object_terminate: pageout in progress"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Clean and free the pages, as appropriate. All references to the 	 * object are gone, so we don't need to lock it. 	 */
 if|if
 condition|(
@@ -1414,30 +1445,33 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Let the pager know object is dead. 		 */
+name|vm_pager_deallocate
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|object
 operator|->
-name|ref_count
+name|type
 operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vm_object_terminate: object with references, ref_count=%d"
-argument_list|,
+name|OBJT_VNODE
+operator|)
+operator|&&
+operator|(
 name|object
 operator|->
 name|ref_count
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Now free any remaining pages. For internal objects, this also 	 * removes them from paging queues. Don't free wired pages, just 	 * remove them from the object. 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* 		 * Now free the pages. For internal objects, this also removes them 		 * from paging queues. 		 */
 while|while
 condition|(
 operator|(
@@ -1483,15 +1517,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|p
-operator|->
-name|wire_count
-operator|==
-literal|0
-condition|)
-block|{
 name|vm_page_busy
 argument_list|(
 name|p
@@ -1508,32 +1533,54 @@ name|v_pfree
 operator|++
 expr_stmt|;
 block|}
-else|else
-block|{
-name|vm_page_busy
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|vm_page_remove
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Let the pager know object is dead. 	 */
+comment|/* 		 * Let the pager know object is dead. 		 */
 name|vm_pager_deallocate
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the object from the global object list. 	 */
+block|}
+if|if
+condition|(
+operator|(
+name|object
+operator|->
+name|ref_count
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|object
+operator|->
+name|resident_page_count
+operator|==
+literal|0
+operator|)
+condition|)
+name|vm_object_dispose
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * vm_object_dispose  *  * Dispose the object.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|vm_object_dispose
+parameter_list|(
+name|object
+parameter_list|)
+name|vm_object_t
+name|object
+decl_stmt|;
+block|{
 name|simple_lock
 argument_list|(
 operator|&
@@ -1550,22 +1597,25 @@ argument_list|,
 name|object_list
 argument_list|)
 expr_stmt|;
+name|vm_object_count
+operator|--
+expr_stmt|;
 name|simple_unlock
 argument_list|(
 operator|&
 name|vm_object_list_lock
 argument_list|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Free the space for the object. 	 */
+comment|/*    		* Free the space for the object.    		*/
 name|zfree
 argument_list|(
 name|obj_zone
 argument_list|,
+name|object
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
@@ -1665,6 +1715,14 @@ decl_stmt|;
 name|int
 name|curgeneration
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|pproc
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|object
@@ -2900,6 +2958,9 @@ name|int
 name|advise
 decl_stmt|;
 block|{
+name|int
+name|s
+decl_stmt|;
 name|vm_pindex_t
 name|end
 decl_stmt|,
@@ -4623,6 +4684,8 @@ name|int
 name|size
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
 name|all
 decl_stmt|;
 if|if

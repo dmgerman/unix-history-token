@@ -73,19 +73,8 @@ directive|include
 file|<ufs/ufs/inode.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
 begin_decl_stmt
+specifier|static
 name|void
 name|ext2_checkoverlap
 name|__P
@@ -102,11 +91,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Return buffer with the contents of block "offset" from the beginning of  * directory "ip".  If "res" is non-zero, fill it in with a pointer to the  * remaining space in the directory.  */
@@ -271,6 +255,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -278,6 +268,7 @@ name|DDB
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|ext2_checkoverlap
 parameter_list|(

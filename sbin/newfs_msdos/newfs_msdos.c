@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs_msdos.c,v 1.6 1998/12/07 14:09:17 rnordier Exp $"
+literal|"$Id: newfs_msdos.c,v 1.3 1998/07/16 12:24:51 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1484,9 +1484,6 @@ decl_stmt|;
 name|ssize_t
 name|n
 decl_stmt|;
-name|time_t
-name|now
-decl_stmt|;
 name|u_int
 name|fat
 decl_stmt|,
@@ -2525,7 +2522,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"illegal media descriptor (%#x)"
+literal|"illegal media descriptor (0x%x)"
 argument_list|,
 name|opt_m
 argument_list|)
@@ -2609,7 +2606,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"/boot/%s"
+literal|"/usr/mdec/%s"
 argument_list|,
 name|bname
 argument_list|)
@@ -3716,18 +3713,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|now
-operator|=
-name|tv
-operator|.
-name|tv_sec
-expr_stmt|;
 name|tm
 operator|=
 name|localtime
 argument_list|(
 operator|&
-name|now
+name|tv
+operator|.
+name|tv_sec
 argument_list|)
 expr_stmt|;
 if|if
@@ -5964,7 +5957,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" mid=%#x"
+literal|" mid=0x%x"
 argument_list|,
 name|bpb
 operator|->
@@ -6052,7 +6045,7 @@ name|infs
 operator|==
 name|MAXU16
 condition|?
-literal|"%#x"
+literal|"0x%x"
 else|:
 literal|"%u"
 argument_list|,
@@ -6074,7 +6067,7 @@ name|bkbs
 operator|==
 name|MAXU16
 condition|?
-literal|"%#x"
+literal|"0x%x"
 else|:
 literal|"%u"
 argument_list|,

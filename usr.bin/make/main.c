@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.28 1998/11/14 16:15:04 dg Exp $"
+literal|"$Id: main.c,v 1.25 1998/07/26 17:06:05 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,16 +476,6 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
-name|beVerbose
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -v flag */
-end_comment
-
-begin_decl_stmt
-name|Boolean
 name|oldVars
 decl_stmt|;
 end_decl_stmt
@@ -650,13 +640,13 @@ name|REMOTE
 define|#
 directive|define
 name|OPTFLAGS
-value|"BD:I:L:PSV:d:ef:ij:km:nqrstv"
+value|"BD:I:L:PSV:d:ef:ij:km:nqrst"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTFLAGS
-value|"BD:I:PSV:d:ef:ij:km:nqrstv"
+value|"BD:I:PSV:d:ef:ij:km:nqrst"
 endif|#
 directive|endif
 name|rearg
@@ -1309,23 +1299,6 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'v'
-case|:
-name|beVerbose
-operator|=
-name|TRUE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-v"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 case|case
 literal|'?'
@@ -1656,6 +1629,8 @@ decl_stmt|;
 comment|/* FALSE if all targets up to date */
 name|struct
 name|stat
+name|sb
+decl_stmt|,
 name|sa
 decl_stmt|;
 name|char
@@ -1670,20 +1645,10 @@ name|path
 decl_stmt|,
 modifier|*
 name|pathp
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|WANT_ENV_PWD
-name|struct
-name|stat
-name|sb
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|pwd
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|mdpath
 index|[
@@ -1837,9 +1802,6 @@ argument_list|,
 name|curdir
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WANT_ENV_PWD
 if|if
 condition|(
 operator|(
@@ -1893,8 +1855,6 @@ name|pwd
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -2177,9 +2137,6 @@ operator|=
 name|curdir
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|WANT_ENV_PWD
 name|setenv
 argument_list|(
 literal|"PWD"
@@ -2189,8 +2146,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|create
 operator|=
 name|Lst_Init
@@ -4571,7 +4526,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: make [-Beiknqrstv] [-D variable] [-d flags] [-f makefile]"
+literal|"usage: make [-Beiknqrst] [-D variable] [-d flags] [-f makefile ]"
 argument_list|,
 literal|"            [-I directory] [-j max_jobs] [-m directory] [-V variable]"
 argument_list|,

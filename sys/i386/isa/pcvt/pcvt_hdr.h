@@ -263,13 +263,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/kbd/kbdreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/kbd/atkbdcreg.h>
+file|<i386/isa/kbdio.h>
 end_include
 
 begin_if
@@ -608,38 +602,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * The following values are defined in machine/console.h, but the header  * file is not included here due to conflicts with pcvt_ioctl.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KDGKBTYPE
-value|_IOR('K', 64, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KB_84
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|KB_101
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|KB_OTHER
-value|3
-end_define
 
 begin_else
 else|#
@@ -1138,7 +1100,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 end_ifndef
 
 begin_define
@@ -1493,7 +1455,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_comment
@@ -6017,7 +5979,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 end_ifdef
 
 begin_decl_stmt
@@ -6033,13 +5995,16 @@ comment|/* OK to reset keyboard */
 end_comment
 
 begin_decl_stmt
-name|keyboard_t
-modifier|*
-name|kbd
+name|KBDC
+name|kbdc
 init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* keyboard controller */
+end_comment
 
 begin_endif
 endif|#
@@ -6047,7 +6012,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_if
@@ -6989,7 +6954,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 end_ifdef
 
 begin_decl_stmt
@@ -7001,9 +6966,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|keyboard_t
-modifier|*
-name|kbd
+name|KBDC
+name|kbdc
 decl_stmt|;
 end_decl_stmt
 
@@ -7013,7 +6977,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_if
@@ -7401,12 +7365,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|ointhand2_t
-name|pcrint
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|void
@@ -7801,7 +7759,7 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEV_KBD_KBDREG_H_
+name|_I386_ISA_KBDIO_H_
 end_ifndef
 
 begin_function_decl
@@ -7829,7 +7787,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_KBD_KBDREG_H_ */
+comment|/* _I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_function_decl

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.29 1998/12/13 01:53:50 dillon Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.26 1998/06/09 20:19:59 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -490,11 +490,6 @@ decl_stmt|;
 name|int
 name|Cflag
 decl_stmt|;
-name|int
-name|nblock
-init|=
-literal|0
-decl_stmt|;
 name|Cflag
 operator|=
 literal|0
@@ -525,7 +520,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Cd:ps:u:vN"
+literal|"Cd:ps:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -602,15 +597,6 @@ case|case
 literal|'v'
 case|:
 comment|/* backward compatible */
-break|break;
-case|case
-literal|'N'
-case|:
-comment|/* do not wait for lock	*/
-name|nblock
-operator|=
-name|LOCK_NB
-expr_stmt|;
 break|break;
 default|default:
 name|usage
@@ -728,17 +714,7 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-comment|/* 	 * Open and lock the original password file.  We have to check 	 * the hardlink count after we get the lock to handle any potential 	 * unlink/rename race. 	 * 	 * This lock is necessary when someone runs pwd_mkdb manually, directly 	 * on master.passwd, to handle the case where a user might try to 	 * change his password while pwd_mkdb is running.  	 */
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|struct
-name|stat
-name|st
-decl_stmt|;
+comment|/* Open the original password file */
 if|if
 condition|(
 operator|!
@@ -758,66 +734,6 @@ argument_list|(
 name|pname
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flock
-argument_list|(
-name|fileno
-argument_list|(
-name|fp
-argument_list|)
-argument_list|,
-name|LOCK_EX
-operator||
-name|nblock
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"flock"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fstat
-argument_list|(
-name|fileno
-argument_list|(
-name|fp
-argument_list|)
-argument_list|,
-operator|&
-name|st
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-name|pname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|st
-operator|.
-name|st_nlink
-operator|!=
-literal|0
-condition|)
-break|break;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|fp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* check only if password database is valid */
 if|if
 condition|(
@@ -1508,18 +1424,6 @@ parameter_list|(
 name|e
 parameter_list|)
 value|t = e; while ((*p++ = *t++));
-ifdef|#
-directive|ifdef
-name|PASSWD_IGNORE_COMMENTS
-if|if
-condition|(
-name|is_comment
-condition|)
-operator|--
-name|cnt
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -2675,6 +2579,20 @@ operator||
 name|S_IWUSR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|"close fp"
+argument_list|)
+expr_stmt|;
 comment|/* Install as the real password files. */
 operator|(
 name|void
@@ -2840,21 +2758,6 @@ argument_list|(
 name|pname
 argument_list|,
 name|buf
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Close locked password file after rename() 	 */
-if|if
-condition|(
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-operator|==
-name|EOF
-condition|)
-name|error
-argument_list|(
-literal|"close fp"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3479,7 +3382,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pwd_mkdb [-C] [-N] [-p] [-d<dest dir>] [-s<cachesize>] [-u<local username>] file\n"
+literal|"usage: pwd_mkdb [-C] [-p] [-d<dest dir>] [-s<cachesize>] [-u<local username>] file\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.70 (Berkeley) 11/10/1998"
+literal|"@(#)mime.c	8.66 (Berkeley) 5/19/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,7 +882,6 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-operator|(
 operator|!
 name|bitset
 argument_list|(
@@ -890,14 +889,6 @@ name|M87F_NO8BIT
 argument_list|,
 name|flags
 argument_list|)
-operator|||
-name|bitset
-argument_list|(
-name|M87F_NO8TO7
-argument_list|,
-name|flags
-argument_list|)
-operator|)
 condition|)
 block|{
 name|int
@@ -1679,8 +1670,6 @@ operator|!
 name|bitset
 argument_list|(
 name|M87F_NO8BIT
-operator||
-name|M87F_NO8TO7
 argument_list|,
 name|flags
 argument_list|)
@@ -1916,18 +1905,8 @@ condition|(
 name|cte
 operator|!=
 name|NULL
-operator|&&
-name|bitset
-argument_list|(
-name|MCIF_INMIME
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
 condition|)
 block|{
-comment|/* 			**  Skip _unless_ in MIME mode; see putheader() for the 			**  counterpart where this is skipped _if_ in MIME mode. 			*/
 name|snprintf
 argument_list|(
 name|buf
@@ -3099,32 +3078,6 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* need not be a full line */
-name|int
-name|start
-init|=
-literal|0
-decl_stmt|;
-comment|/* indicates position of - in buffer */
-if|if
-condition|(
-name|buflen
-operator|==
-literal|1
-operator|&&
-operator|*
-name|bp
-operator|==
-literal|'\n'
-condition|)
-block|{
-comment|/* last \n in buffer may be part of next MIME boundary */
-name|c
-operator|=
-operator|*
-name|bp
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|buflen
@@ -3141,14 +3094,6 @@ name|bp
 operator|++
 return|;
 block|}
-else|else
-name|c
-operator|=
-name|getc
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|bp
 operator|=
 name|buf
@@ -3156,6 +3101,13 @@ expr_stmt|;
 name|buflen
 operator|=
 literal|0
+expr_stmt|;
+name|c
+operator|=
+name|getc
+argument_list|(
+name|fp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3200,10 +3152,6 @@ return|return
 name|c
 return|;
 block|}
-name|start
-operator|=
-literal|1
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3340,7 +3288,7 @@ operator|)
 operator|&
 name|buf
 index|[
-name|start
+literal|1
 index|]
 argument_list|,
 name|boundaries

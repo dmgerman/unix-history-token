@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.34 1998/10/14 18:52:04 jkh Exp $"
+literal|"$Id: file.c,v 1.33 1998/10/09 00:01:16 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2294,14 +2294,14 @@ name|strcpy
 argument_list|(
 name|args
 argument_list|,
-literal|"-z"
+literal|"z"
 argument_list|)
 expr_stmt|;
 name|strcat
 argument_list|(
 name|args
 argument_list|,
-literal|" -xpf"
+literal|"xpf"
 argument_list|)
 expr_stmt|;
 if|if

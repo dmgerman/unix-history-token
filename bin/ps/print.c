@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.32 1998/09/14 08:32:20 dfr Exp $"
+literal|"$Id: print.c,v 1.31 1998/06/28 21:05:48 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2609,7 +2609,12 @@ name|rawcpu
 condition|)
 return|return
 operator|(
-literal|100.0
+literal|10000.0
+operator|/
+name|sysconf
+argument_list|(
+name|_SC_CLK_TCK
+argument_list|)
 operator|*
 name|fxtofl
 argument_list|(
@@ -2621,7 +2626,12 @@ operator|)
 return|;
 return|return
 operator|(
-literal|100.0
+literal|10000.0
+operator|/
+name|sysconf
+argument_list|(
+name|_SC_CLK_TCK
+argument_list|)
 operator|*
 name|fxtofl
 argument_list|(

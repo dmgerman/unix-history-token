@@ -42,7 +42,7 @@ comment|/* not used */
 name|u_char
 name|pad
 decl_stmt|;
-name|u_int32_t
+name|u_long
 name|id_num
 decl_stmt|;
 comment|/* message id */
@@ -56,7 +56,7 @@ name|osockaddr
 name|ctl_addr
 decl_stmt|;
 comment|/* old (4.3) style */
-name|int32_t
+name|long
 name|pid
 decl_stmt|;
 comment|/* caller's process id */
@@ -117,7 +117,7 @@ comment|/* respose to request message, see below */
 name|u_char
 name|pad
 decl_stmt|;
-name|u_int32_t
+name|u_long
 name|id_num
 decl_stmt|;
 comment|/* message id */

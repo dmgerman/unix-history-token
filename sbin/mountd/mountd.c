@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.33 1998/08/02 16:06:34 bde Exp $"
+literal|"$Id: mountd.c,v 1.32 1998/07/15 06:21:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,10 +405,10 @@ begin_struct
 struct|struct
 name|netmsk
 block|{
-name|u_int32_t
+name|u_long
 name|nt_net
 decl_stmt|;
-name|u_int32_t
+name|u_long
 name|nt_mask
 decl_stmt|;
 name|char
@@ -647,7 +647,7 @@ expr|struct
 name|dirlist
 operator|*
 operator|,
-name|u_int32_t
+name|u_long
 operator|,
 name|int
 operator|*
@@ -1105,7 +1105,7 @@ expr|struct
 name|dirlist
 operator|*
 operator|,
-name|u_int32_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2170,7 +2170,7 @@ name|struct
 name|in_addr
 name|saddrin
 decl_stmt|;
-name|u_int32_t
+name|u_long
 name|saddr
 decl_stmt|;
 name|u_short
@@ -5323,7 +5323,7 @@ name|h_length
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|u_long
 argument_list|)
 expr_stmt|;
 name|hpe
@@ -6612,7 +6612,7 @@ name|dirlist
 modifier|*
 name|dp
 decl_stmt|;
-name|u_int32_t
+name|u_long
 name|saddr
 decl_stmt|;
 name|int
@@ -6634,7 +6634,7 @@ name|grouplist
 modifier|*
 name|grp
 decl_stmt|;
-name|u_int32_t
+name|u_long
 modifier|*
 modifier|*
 name|addrp
@@ -6689,7 +6689,7 @@ case|:
 name|addrp
 operator|=
 operator|(
-name|u_int32_t
+name|u_long
 operator|*
 operator|*
 operator|)
@@ -6817,7 +6817,7 @@ name|dirlist
 modifier|*
 name|dp
 decl_stmt|;
-name|u_int32_t
+name|u_long
 name|saddr
 decl_stmt|;
 block|{
@@ -7776,7 +7776,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|u_long
 name|saddr
 decl_stmt|;
 name|char
@@ -7900,7 +7900,7 @@ name|h_length
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|u_long
 argument_list|)
 expr_stmt|;
 name|hp
@@ -7999,7 +7999,8 @@ argument_list|)
 operator|||
 operator|*
 operator|(
-name|u_int32_t
+name|unsigned
+name|long
 operator|*
 operator|)
 name|checkgrp
@@ -8012,7 +8013,8 @@ name|h_addr
 operator|==
 operator|*
 operator|(
-name|u_int32_t
+name|unsigned
+name|long
 operator|*
 operator|)
 name|hp
@@ -8773,7 +8775,7 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
-name|u_int32_t
+name|u_long
 modifier|*
 modifier|*
 name|addrp
@@ -8818,7 +8820,7 @@ directive|endif
 block|}
 name|args
 union|;
-name|u_int32_t
+name|u_long
 name|net
 decl_stmt|;
 name|args
@@ -8929,7 +8931,7 @@ condition|)
 name|addrp
 operator|=
 operator|(
-name|u_int32_t
+name|u_long
 operator|*
 operator|*
 operator|)
@@ -8945,7 +8947,7 @@ else|else
 name|addrp
 operator|=
 operator|(
-name|u_int32_t
+name|u_long
 operator|*
 operator|*
 operator|)
@@ -9482,7 +9484,7 @@ operator|*
 name|addrp
 operator|==
 operator|(
-name|u_int32_t
+name|u_long
 operator|*
 operator|)
 name|NULL

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.218 1999/01/09 21:41:22 dt Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.208 1998/09/04 13:10:34 ache Exp $  */
 end_comment
 
 begin_comment
@@ -685,33 +685,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  *  PPro_vmtrr  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|ppro_vmtrr
-name|PPro_vmtrr
-index|[
-name|NPPROVMTRR
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* AIO support */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vmspace
-modifier|*
-name|aiovmspace
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1347,16 +1320,11 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-endif|#
-directive|endif
 name|avail_start
 operator|=
 name|firstaddr
@@ -1952,9 +1920,9 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|cpu_class
+name|cpu
 operator|==
-name|CPUCLASS_686
+name|CPU_686
 condition|)
 block|{
 for|for
@@ -2018,9 +1986,9 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|cpu_class
+name|cpu
 operator|==
-name|CPUCLASS_686
+name|CPU_686
 condition|)
 block|{
 name|wbinvd
@@ -2087,7 +2055,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|if (cpu_class == CPUCLASS_686) { 		wbinvd();
+block|if (cpu == CPU_686) { 		wbinvd();
 comment|/* 		 * Set memory between 0-640K to be WB 		 */
 block|wrmsr(0x250, 0x0606060606060606LL); 		wrmsr(0x258, 0x0606060606060606LL);
 comment|/* 		 * Set normal, PC video memory to be WC 		 */
@@ -2134,9 +2102,9 @@ name|mask
 decl_stmt|;
 if|if
 condition|(
-name|cpu_class
+name|cpu
 operator|!=
-name|CPUCLASS_686
+name|CPU_686
 condition|)
 return|return;
 name|free
@@ -2568,16 +2536,6 @@ decl_stmt|;
 name|int
 name|initial_pvs
 decl_stmt|;
-comment|/* 	 * object for kernel page table pages 	 */
-name|kptobj
-operator|=
-name|vm_object_allocate
-argument_list|(
-name|OBJT_DEFAULT
-argument_list|,
-name|NKPDE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * calculate the number of pv_entries needed 	 */
 name|vm_first_phys
 operator|=
@@ -2778,6 +2736,16 @@ argument_list|,
 name|pvinit
 argument_list|,
 name|pv_npg
+argument_list|)
+expr_stmt|;
+comment|/* 	 * object for kernel page table pages 	 */
+name|kptobj
+operator|=
+name|vm_object_allocate
+argument_list|(
+name|OBJT_DEFAULT
+argument_list|,
+name|NKPDE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
@@ -3039,6 +3007,54 @@ block|{
 name|invlpg
 argument_list|(
 name|va
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|PMAP_INLINE
+name|void
+name|invltlb_2pg
+parameter_list|(
+name|vm_offset_t
+name|va1
+parameter_list|,
+name|vm_offset_t
+name|va2
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I386_CPU
+argument_list|)
+if|if
+condition|(
+name|cpu_class
+operator|==
+name|CPUCLASS_386
+condition|)
+block|{
+name|invltlb
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+block|{
+name|invlpg
+argument_list|(
+name|va1
+argument_list|)
+expr_stmt|;
+name|invlpg
+argument_list|(
+name|va2
 argument_list|)
 expr_stmt|;
 block|}
@@ -4378,8 +4394,6 @@ expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -4475,8 +4489,11 @@ expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
-argument_list|,
-literal|0
+argument_list|)
+expr_stmt|;
+name|vm_page_deactivate
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 name|pmap_kremove
@@ -4683,6 +4700,9 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 while|while
 condition|(
 name|vm_page_sleep
@@ -5192,6 +5212,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * allocate the page directory page 	 */
+name|retry
+label|:
 name|ptdpg
 operator|=
 name|vm_page_grab
@@ -5378,6 +5400,9 @@ name|vm_page_t
 name|p
 decl_stmt|;
 block|{
+name|int
+name|s
+decl_stmt|;
 name|unsigned
 modifier|*
 name|pde
@@ -5524,16 +5549,6 @@ operator|->
 name|pm_ptphint
 operator|=
 name|NULL
-expr_stmt|;
-name|p
-operator|->
-name|wire_count
-operator|--
-expr_stmt|;
-name|cnt
-operator|.
-name|v_wire_count
-operator|--
 expr_stmt|;
 name|vm_page_free_zero
 argument_list|(
@@ -6409,31 +6424,6 @@ operator|=
 name|newpdir
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|aiovmspace
-operator|!=
-name|NULL
-condition|)
-block|{
-name|pmap
-operator|=
-operator|&
-name|aiovmspace
-operator|->
-name|vm_pmap
-expr_stmt|;
-operator|*
-name|pmap_pde
-argument_list|(
-name|pmap
-argument_list|,
-name|kernel_vm_end
-argument_list|)
-operator|=
-name|newpdir
-expr_stmt|;
 block|}
 operator|*
 name|pmap_pde
@@ -9359,6 +9349,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|vm_page_t
 name|m
 index|[
@@ -11098,9 +11091,9 @@ name|I686_CPU
 argument_list|)
 if|if
 condition|(
-name|cpu_class
+name|cpu
 operator|==
-name|CPUCLASS_686
+name|CPU_686
 condition|)
 name|i686_pagezero
 argument_list|(
@@ -11204,9 +11197,9 @@ name|I686_CPU
 argument_list|)
 if|if
 condition|(
-name|cpu_class
+name|cpu
 operator|==
-name|CPUCLASS_686
+name|CPU_686
 condition|)
 name|i686_pagezero
 argument_list|(
@@ -12529,10 +12522,6 @@ block|{
 specifier|register
 name|pv_entry_t
 name|pv
-decl_stmt|,
-name|pvf
-decl_stmt|,
-name|pvn
 decl_stmt|;
 name|pv_table_t
 modifier|*
@@ -12596,10 +12585,6 @@ literal|0
 return|;
 block|}
 comment|/* 	 * Not found, check current mappings returning immediately if found. 	 */
-name|pvf
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|pv
@@ -12613,26 +12598,8 @@ name|pv_list
 argument_list|)
 init|;
 name|pv
-operator|&&
-name|pv
-operator|!=
-name|pvf
 condition|;
 name|pv
-operator|=
-name|pvn
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|pvf
-condition|)
-name|pvf
-operator|=
-name|pv
-expr_stmt|;
-name|pvn
 operator|=
 name|TAILQ_NEXT
 argument_list|(
@@ -12640,7 +12607,8 @@ name|pv
 argument_list|,
 name|pv_list
 argument_list|)
-expr_stmt|;
+control|)
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -13743,6 +13711,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|pmap_pvdump
 name|__P
@@ -13896,6 +13865,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pmap_pvdump
 parameter_list|(

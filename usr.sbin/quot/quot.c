@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: quot.c,v 1.8 1998/01/17 16:45:03 bde Exp $"
+literal|"$Id: quot.c,v 1.7 1997/10/10 06:31:07 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,7 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Original BSD quot doesn't round to number of frags/blocks,  * doesn't account for indirection blocks and gets it totally  * wrong if the	size is a multiple of the blocksize.  * The new code always counts the number of 512 byte blocks  * instead of the number of kilobytes and converts them	to  * kByte when done (on request).  *  * Due to the size of modern disks, we must cast intermediate  * values to 64 bits to prevent potential overflows.  */
+comment|/*  * Original BSD quot doesn't round to number of frags/blocks,  * doesn't account for indirection blocks and gets it totally  * wrong if the	size is a multiple of the blocksize.  * The new code always counts the number of 512 byte blocks  * instead of the number of kilobytes and converts them	to  * kByte when done (on request).  */
 end_comment
 
 begin_ifdef
@@ -203,7 +203,7 @@ name|SIZE
 parameter_list|(
 name|n
 parameter_list|)
-value|((int)(((quad_t)(n) * 512 + blocksize - 1)/blocksize))
+value|(((n) * 512 + blocksize - 1)/blocksize)
 end_define
 
 begin_endif

@@ -1,18 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.c -- Display nodes of Info files in multiple windows.    $Id: info.c,v 1.18 1998/02/27 21:37:27 karl Exp $     Copyright (C) 1993, 96, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.c -- Display nodes of Info files in multiple windows. */
+end_comment
+
+begin_comment
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"info.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"indices.h"
 end_include
 
 begin_include
@@ -67,21 +65,15 @@ begin_decl_stmt
 name|int
 name|info_minor_version
 init|=
-literal|18
+literal|16
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* basename (argv[0]) */
-end_comment
-
 begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|program_name
+name|int
+name|info_patch_level
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -107,37 +99,6 @@ specifier|static
 name|char
 modifier|*
 name|apropos_search_string
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Non-zero means search all indices for INDEX_SEARCH_STRING.  Unlike    apropos, this puts the user at the node, running info. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|index_search_p
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Variable containing the string to search for when index_search_p is    non-zero. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|index_search_string
 init|=
 operator|(
 name|char
@@ -284,13 +245,6 @@ name|RESTORE_OPTION
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|IDXSRCH_OPTION
-value|4
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -403,16 +357,6 @@ name|RESTORE_OPTION
 block|}
 block|,
 block|{
-literal|"index-search"
-block|,
-literal|1
-block|,
-literal|0
-block|,
-name|IDXSRCH_OPTION
-block|}
-block|,
-block|{
 name|NULL
 block|,
 literal|0
@@ -458,6 +402,9 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|void
+name|usage
+argument_list|()
+decl_stmt|,
 name|info_short_help
 argument_list|()
 decl_stmt|,
@@ -474,15 +421,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                Main Entry Point to the Info Program              */
+comment|/*		  Main Entry Point to the Info Program		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -521,32 +468,6 @@ name|argv
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_SETLOCALE
-comment|/* Set locale via LC_ALL.  */
-name|setlocale
-argument_list|(
-name|LC_ALL
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Set the text message domain.  */
-name|bindtextdomain
-argument_list|(
-name|PACKAGE
-argument_list|,
-name|LOCALEDIR
-argument_list|)
-expr_stmt|;
-name|textdomain
-argument_list|(
-name|PACKAGE
 argument_list|)
 expr_stmt|;
 while|while
@@ -664,7 +585,7 @@ argument_list|)
 expr_stmt|;
 name|user_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|optarg
 argument_list|)
@@ -685,13 +606,13 @@ argument_list|)
 expr_stmt|;
 name|user_output_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* User is specifying that she wishes to dump the subnodes of              the node that she is dumping. */
+comment|/* User is specifying that she wishes to dump the subnodes of 	     the node that she is dumping. */
 case|case
 literal|'s'
 case|:
@@ -715,7 +636,7 @@ argument_list|)
 expr_stmt|;
 name|apropos_search_string
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|optarg
 argument_list|)
@@ -744,42 +665,9 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* User has specified a string to search all indices for. */
-case|case
-name|IDXSRCH_OPTION
-case|:
-name|index_search_p
-operator|=
-literal|1
-expr_stmt|;
-name|maybe_free
-argument_list|(
-name|index_search_string
-argument_list|)
-expr_stmt|;
-name|index_search_string
-operator|=
-name|xstrdup
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"Try --help for more information."
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -810,7 +698,7 @@ condition|)
 block|{
 name|user_output_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"-"
 argument_list|)
@@ -828,26 +716,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s (GNU %s %s) %s\n"
-argument_list|,
-name|program_name
-argument_list|,
-name|PACKAGE
-argument_list|,
-name|VERSION
+literal|"GNU Info (Texinfo 3.9) %s\n"
 argument_list|,
 name|version_string
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|printf
+name|puts
 argument_list|(
-name|_
-argument_list|(
-literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
-argument_list|)
-argument_list|,
-literal|"1998"
+literal|"Copyright (C) 1996 Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -871,7 +748,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the user hasn't specified a path for Info files, default it.      Lowest priority is our messy hardwired list in filesys.h.      Then comes the user's INFODIR from the Makefile.      Highest priority is the environment variable, if set.  */
+comment|/* If the user hasn't specified a path for Info files, default that path      now. */
 if|if
 condition|(
 operator|!
@@ -881,70 +758,22 @@ block|{
 name|char
 modifier|*
 name|path_from_env
-init|=
+decl_stmt|,
+modifier|*
+name|getenv
+argument_list|()
+decl_stmt|;
+name|path_from_env
+operator|=
 name|getenv
 argument_list|(
 literal|"INFOPATH"
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|path_from_env
 condition|)
-block|{
-name|unsigned
-name|len
-init|=
-name|strlen
-argument_list|(
-name|path_from_env
-argument_list|)
-decl_stmt|;
-comment|/* Trailing : on INFOPATH means insert the default path.  */
-if|if
-condition|(
-name|len
-operator|&&
-name|path_from_env
-index|[
-name|len
-operator|-
-literal|1
-index|]
-operator|==
-literal|':'
-condition|)
-block|{
-name|path_from_env
-index|[
-name|len
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|info_add_path
-argument_list|(
-name|DEFAULT_INFOPATH
-argument_list|,
-name|INFOPATH_PREPEND
-argument_list|)
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|INFODIR
-comment|/* from the Makefile */
-name|info_add_path
-argument_list|(
-name|INFODIR
-argument_list|,
-name|INFOPATH_PREPEND
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|info_add_path
 argument_list|(
 name|path_from_env
@@ -952,9 +781,7 @@ argument_list|,
 name|INFOPATH_PREPEND
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|info_add_path
 argument_list|(
 name|DEFAULT_INFOPATH
@@ -962,20 +789,6 @@ argument_list|,
 name|INFOPATH_PREPEND
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INFODIR
-comment|/* from the Makefile */
-name|info_add_path
-argument_list|(
-name|INFODIR
-argument_list|,
-name|INFOPATH_PREPEND
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 block|}
 comment|/* If the user specified a particular filename, add the path of that      file to the contents of INFOPATH. */
 if|if
@@ -986,21 +799,24 @@ block|{
 name|char
 modifier|*
 name|directory_name
-init|=
-name|xstrdup
+decl_stmt|,
+modifier|*
+name|temp
+decl_stmt|;
+name|directory_name
+operator|=
+name|strdup
 argument_list|(
 name|user_filename
 argument_list|)
-decl_stmt|;
-name|char
-modifier|*
+expr_stmt|;
 name|temp
-init|=
+operator|=
 name|filename_non_directory
 argument_list|(
 name|directory_name
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|temp
@@ -1045,6 +861,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the initial Info node.  It is either "(dir)Top", or what the user      specifed with values in user_filename and user_nodenames. */
+if|if
+condition|(
+name|user_nodenames
+condition|)
 name|initial_node
 operator|=
 name|info_get_node
@@ -1052,12 +872,22 @@ argument_list|(
 name|user_filename
 argument_list|,
 name|user_nodenames
-condition|?
-name|user_nodenames
 index|[
 literal|0
 index|]
-else|:
+argument_list|)
+expr_stmt|;
+else|else
+name|initial_node
+operator|=
+name|info_get_node
+argument_list|(
+name|user_filename
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1098,7 +928,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Special cases for when the user specifies multiple nodes.  If we      are dumping to an output file, dump all of the nodes specified.      Otherwise, attempt to create enough windows to handle the nodes      that this user wants displayed. */
+comment|/* Special cases for when the user specifies multiple nodes.  If we are      dumping to an output file, dump all of the nodes specified.  Otherwise,      attempt to create enough windows to handle the nodes that this user wants      displayed. */
 if|if
 condition|(
 name|user_nodenames_index
@@ -1137,113 +967,6 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* If the user specified `--index-search=STRING', start the info      session in the node corresponding to the first match. */
-if|if
-condition|(
-name|index_search_p
-condition|)
-block|{
-name|int
-name|status
-init|=
-literal|0
-decl_stmt|;
-name|initialize_info_session
-argument_list|(
-name|initial_node
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|index_entry_exists
-argument_list|(
-name|windows
-argument_list|,
-name|index_search_string
-argument_list|)
-condition|)
-block|{
-name|terminal_clear_screen
-argument_list|()
-expr_stmt|;
-name|terminal_prep_terminal
-argument_list|()
-expr_stmt|;
-name|display_update_display
-argument_list|(
-name|windows
-argument_list|)
-expr_stmt|;
-name|info_last_executed_command
-operator|=
-operator|(
-name|VFunction
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-name|do_info_index_search
-argument_list|(
-name|windows
-argument_list|,
-literal|0
-argument_list|,
-name|index_search_string
-argument_list|)
-expr_stmt|;
-name|info_read_and_dispatch
-argument_list|()
-expr_stmt|;
-name|terminal_unprep_terminal
-argument_list|()
-expr_stmt|;
-comment|/* On program exit, leave the cursor at the bottom of the              window, and restore the terminal IO. */
-name|terminal_goto_xy
-argument_list|(
-literal|0
-argument_list|,
-name|screenheight
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|terminal_clear_to_eol
-argument_list|()
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|fputs
-argument_list|(
-name|_
-argument_list|(
-literal|"no entries found\n"
-argument_list|)
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-literal|2
-expr_stmt|;
-block|}
-name|close_dribble_file
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1294,8 +1017,13 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|first_arg
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 condition|)
 name|first_arg
 operator|=
@@ -1309,7 +1037,7 @@ argument_list|(
 name|initial_node
 argument_list|)
 expr_stmt|;
-comment|/* If there wasn't a menu item in this node, stop here, but let          the user continue to use Info.  Perhaps they wanted this node          and didn't realize it. */
+comment|/* If there wasn't a menu item in this node, stop here, but let 	 the user continue to use Info.  Perhaps they wanted this node 	 and didn't realize it. */
 if|if
 condition|(
 operator|!
@@ -1351,10 +1079,7 @@ name|begin_info_session_with_error
 argument_list|(
 name|initial_node
 argument_list|,
-name|_
-argument_list|(
 literal|"There is no menu in this node."
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1373,7 +1098,7 @@ argument_list|,
 name|menu
 argument_list|)
 expr_stmt|;
-comment|/* If the item wasn't found, search the list sloppily.  Perhaps this          user typed "buffer" when they really meant "Buffers". */
+comment|/* If the item wasn't found, search the list sloppily.  Perhaps this 	 user typed "buffer" when they really meant "Buffers". */
 if|if
 condition|(
 operator|!
@@ -1396,14 +1121,12 @@ name|i
 operator|=
 literal|0
 init|;
-operator|(
 name|entry
 operator|=
 name|menu
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++
@@ -1465,7 +1188,7 @@ name|best_guess
 index|]
 expr_stmt|;
 block|}
-comment|/* If we failed to find the reference, start Info with the current          node anyway.  It is probably a misspelling. */
+comment|/* If we failed to find the reference, start Info with the current 	 node anyway.  It is probably a misspelling. */
 if|if
 condition|(
 operator|!
@@ -1476,10 +1199,7 @@ name|char
 modifier|*
 name|error_message
 init|=
-name|_
-argument_list|(
 literal|"There is no menu item \"%s\" in this node."
-argument_list|)
 decl_stmt|;
 if|#
 directive|if
@@ -1545,7 +1265,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We have found the reference that the user specified.  Clean it          up a little bit. */
+comment|/* We have found the reference that the user specified.  Clean it 	 up a little bit. */
 if|if
 condition|(
 operator|!
@@ -1564,7 +1284,7 @@ name|entry
 operator|->
 name|filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|initial_node
 operator|->
@@ -1576,7 +1296,7 @@ name|entry
 operator|->
 name|filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|initial_node
 operator|->
@@ -1584,7 +1304,7 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Find this node.  If we can find it, then turn the initial_node          into this one.  If we cannot find it, try using the label of the          entry as a file (i.e., "(LABEL)Top").  Otherwise the Info file is          malformed in some way, and we will just use the current value of          initial node. */
+comment|/* Find this node.  If we can find it, then turn the initial_node 	 into this one.  If we cannot find it, try using the label of the 	 entry as a file (i.e., "(LABEL)Top").  Otherwise the Info file is 	 malformed in some way, and we will just use the current value of 	 initial node. */
 name|node
 operator|=
 name|info_get_node
@@ -1697,7 +1417,7 @@ name|char
 modifier|*
 name|temp
 init|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|entry
 operator|->
@@ -1710,17 +1430,14 @@ name|error_message
 decl_stmt|;
 name|error_message
 operator|=
-name|_
-argument_list|(
 literal|"Unable to find the node referenced by \"%s\"."
-argument_list|)
 expr_stmt|;
 name|info_free_references
 argument_list|(
 name|menu
 argument_list|)
 expr_stmt|;
-comment|/* If we were trying to dump the node, then give up.  Otherwise,              start the session with an error message. */
+comment|/* If we were trying to dump the node, then give up.  Otherwise, 	     start the session with an error message. */
 if|if
 condition|(
 name|user_output_filename
@@ -1826,6 +1543,24 @@ argument_list|,
 name|info_minor_version
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info_patch_level
+condition|)
+name|sprintf
+argument_list|(
+name|vstring
+operator|+
+name|strlen
+argument_list|(
+name|vstring
+argument_list|)
+argument_list|,
+literal|"-p%d"
+argument_list|,
+name|info_patch_level
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1839,8 +1574,38 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Error handling.  */
+comment|/* **************************************************************** */
 end_comment
+
+begin_comment
+comment|/*								    */
+end_comment
+
+begin_comment
+comment|/*		   Error Handling for Info			    */
+end_comment
+
+begin_comment
+comment|/*								    */
+end_comment
+
+begin_comment
+comment|/* **************************************************************** */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|program_name
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -1867,7 +1632,7 @@ argument_list|)
 expr_stmt|;
 name|program_name
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|filename
 argument_list|)
@@ -2047,6 +1812,41 @@ block|}
 end_block
 
 begin_comment
+comment|/* Produce a very brief descripton of the available options and exit with    an error. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"Usage: info [-d dir-path] [-f info-file] [-o output-file] [-n node-name]..."
+argument_list|,
+literal|"            [--directory dir-path] [--file info-file] [--node node-name]..."
+argument_list|,
+literal|"            [--help] [--output output-file] [--subnodes] [--version]"
+argument_list|,
+literal|"            [--dribble dribble-file] [--restore from-file]"
+argument_list|,
+literal|"            [menu-selection ...]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Produce a scaled down description of the available options to Info. */
 end_comment
 
@@ -2056,14 +1856,9 @@ name|void
 name|info_short_help
 parameter_list|()
 block|{
-name|printf
+name|puts
 argument_list|(
-name|_
-argument_list|(
-literal|"\ Usage: %s [OPTION]... [INFO-FILE [MENU-ITEM...]]\n\ \n\ Read documentation in Info format.\n\ For more complete documentation on how to use Info, run `info info options'.\n\ \n\ Options:\n\ --directory DIR              add DIR to INFOPATH.\n\ --dribble FILENAME           remember user keystrokes in FILENAME.\n\ --file FILENAME              specify Info file to visit.\n\ --node NODENAME              specify nodes in first visited Info file.\n\ --output FILENAME            output selected nodes to FILENAME.\n\ --restore FILENAME           read initial keystrokes from FILENAME.\n\ --subnodes                   recursively output menu items.\n\ --help                       display this help and exit.\n\ --version                    display version information and exit.\n\ \n\ The first argument, if present, is the name of the Info file to read.\n\ Any remaining arguments are treated as the names of menu\n\ items in the initial node visited.  For example, `info emacs buffers'\n\ moves to the node `buffers' in the info file `emacs'.\n\ \n\ Email bug reports to bug-texinfo@gnu.org."
-argument_list|)
-argument_list|,
-name|program_name
+literal|"\ Here is a quick description of Info's options.  For a more complete\n\ description of how to use Info, type `info info options'.\n\ \n\    --directory DIR		Add DIR to INFOPATH.\n\    --dribble FILENAME		Remember user keystrokes in FILENAME.\n\    --file FILENAME		Specify Info file to visit.\n\    --node NODENAME		Specify nodes in first visited Info file.\n\    --output FILENAME		Output selected nodes to FILENAME.\n\    --restore FILENAME		Read initial keystrokes from FILENAME.\n\    --subnodes			Recursively output menu items.\n\    --help			Get this help message.\n\    --version			Display Info's version information.\n\ \n\ Remaining arguments to Info are treated as the names of menu\n\ items in the initial node visited.  You can easily move to the\n\ node of your choice by specifying the menu names which describe\n\ the path to that node.  For example, `info emacs buffers'.\n\ \n\ Email bug reports to bug-texinfo@prep.ai.mit.edu."
 argument_list|)
 expr_stmt|;
 name|exit

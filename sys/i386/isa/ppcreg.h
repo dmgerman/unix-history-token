@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppcreg.h,v 1.6 1999/01/10 12:04:53 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppcreg.h,v 1.3 1998/08/03 19:14:33 msmith Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -23,42 +23,42 @@ begin_define
 define|#
 directive|define
 name|SMC_LIKE
-value|0
+value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMC_37C665GT
-value|1
+value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMC_37C666GT
-value|2
+value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
 name|NS_PC87332
-value|3
+value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
 name|NS_PC87306
-value|4
+value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTEL_820191AA
-value|5
+value|0x5
 end_define
 
 begin_comment
@@ -69,35 +69,28 @@ begin_define
 define|#
 directive|define
 name|GENERIC
-value|6
+value|0x6
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINB_W83877F
-value|7
+value|0x7
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINB_W83877AF
-value|8
+value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINB_UNKNOWN
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|NS_PC87334
-value|10
+value|0x9
 end_define
 
 begin_comment
@@ -122,102 +115,6 @@ name|int
 name|ppc_avm
 decl_stmt|;
 comment|/* chipset available modes */
-define|#
-directive|define
-name|PPC_IRQ_NONE
-value|0x0
-define|#
-directive|define
-name|PPC_IRQ_nACK
-value|0x1
-define|#
-directive|define
-name|PPC_IRQ_DMA
-value|0x2
-define|#
-directive|define
-name|PPC_IRQ_FIFO
-value|0x4
-define|#
-directive|define
-name|PPC_IRQ_nFAULT
-value|0x8
-name|int
-name|ppc_irqstat
-decl_stmt|;
-comment|/* remind irq settings */
-define|#
-directive|define
-name|PPC_DMA_INIT
-value|0x01
-define|#
-directive|define
-name|PPC_DMA_STARTED
-value|0x02
-define|#
-directive|define
-name|PPC_DMA_COMPLETE
-value|0x03
-define|#
-directive|define
-name|PPC_DMA_INTERRUPTED
-value|0x04
-define|#
-directive|define
-name|PPC_DMA_ERROR
-value|0x05
-name|int
-name|ppc_dmastat
-decl_stmt|;
-comment|/* dma state */
-name|int
-name|ppc_dmachan
-decl_stmt|;
-comment|/* dma channel */
-name|int
-name|ppc_dmaflags
-decl_stmt|;
-comment|/* dma transfer flags */
-name|caddr_t
-name|ppc_dmaddr
-decl_stmt|;
-comment|/* buffer address */
-name|u_int
-name|ppc_dmacnt
-decl_stmt|;
-comment|/* count of bytes sent with dma */
-define|#
-directive|define
-name|PPC_PWORD_MASK
-value|0x30
-define|#
-directive|define
-name|PPC_PWORD_16
-value|0x00
-define|#
-directive|define
-name|PPC_PWORD_8
-value|0x10
-define|#
-directive|define
-name|PPC_PWORD_32
-value|0x20
-name|char
-name|ppc_pword
-decl_stmt|;
-comment|/* PWord size */
-name|short
-name|ppc_fifo
-decl_stmt|;
-comment|/* FIFO threshold */
-name|short
-name|ppc_wthr
-decl_stmt|;
-comment|/* writeIntrThresold */
-name|short
-name|ppc_rthr
-decl_stmt|;
-comment|/* readIntrThresold */
 define|#
 directive|define
 name|ppc_base
@@ -272,17 +169,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPC_ECP_A_FIFO
-value|0
-end_define
-
-begin_comment
-comment|/* ECP Address fifo register */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PPC_SPP_STR
 value|1
 end_define
@@ -316,34 +202,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPC_ECP_D_FIFO
+name|PPC_ECP_FIFO
 value|0x400
 end_define
 
 begin_comment
-comment|/* ECP Data fifo register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPC_ECP_CNFGA
-value|0x400
-end_define
-
-begin_comment
-comment|/* Configuration register A */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPC_ECP_CNFGB
-value|0x401
-end_define
-
-begin_comment
-comment|/* Configuration register B */
+comment|/* ECP fifo register */
 end_comment
 
 begin_define
@@ -360,115 +224,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPC_FIFO_EMPTY
-value|0x1
-end_define
-
-begin_comment
-comment|/* ecr register - bit 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPC_FIFO_FULL
-value|0x2
-end_define
-
-begin_comment
-comment|/* ecr register - bit 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPC_SERVICE_INTR
-value|0x4
-end_define
-
-begin_comment
-comment|/* ecr register - bit 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPC_ENABLE_DMA
-value|0x8
-end_define
-
-begin_comment
-comment|/* ecr register - bit 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPC_nFAULT_INTR
-value|0x10
-end_define
-
-begin_comment
-comment|/* ecr register - bit 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPC_ECR_STD
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPC_ECR_PS2
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPC_ECR_FIFO
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPC_ECR_ECP
-value|0x60
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPC_ECR_EPP
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPC_DISABLE_INTR
-value|(PPC_SERVICE_INTR | PPC_nFAULT_INTR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPC_ECR_RESET
-value|(PPC_ECR_PS2 | PPC_DISABLE_INTR)
-end_define
-
-begin_define
-define|#
-directive|define
 name|r_dtr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_SPP_DTR))
+value|((char)inb((ppc)->ppc_base + PPC_SPP_DTR))
 end_define
 
 begin_define
@@ -478,7 +238,7 @@ name|r_str
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_SPP_STR))
+value|((char)inb((ppc)->ppc_base + PPC_SPP_STR))
 end_define
 
 begin_define
@@ -488,7 +248,7 @@ name|r_ctr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_SPP_CTR))
+value|((char)inb((ppc)->ppc_base + PPC_SPP_CTR))
 end_define
 
 begin_define
@@ -498,27 +258,7 @@ name|r_epp
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_EPP_DATA))
-end_define
-
-begin_define
-define|#
-directive|define
-name|r_cnfgA
-parameter_list|(
-name|ppc
-parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_CNFGA))
-end_define
-
-begin_define
-define|#
-directive|define
-name|r_cnfgB
-parameter_list|(
-name|ppc
-parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_CNFGB))
+value|((char)inb((ppc)->ppc_base + PPC_EPP_DATA))
 end_define
 
 begin_define
@@ -528,7 +268,7 @@ name|r_ecr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_ECR))
+value|((char)inb((ppc)->ppc_base + PPC_ECP_ECR))
 end_define
 
 begin_define
@@ -538,7 +278,7 @@ name|r_fifo
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_D_FIFO))
+value|((char)inb((ppc)->ppc_base + PPC_ECP_FIFO))
 end_define
 
 begin_define
@@ -610,7 +350,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_ECP_D_FIFO, byte)
+value|outb((ppc)->ppc_base + PPC_ECP_FIFO, byte)
 end_define
 
 begin_comment
@@ -657,20 +397,6 @@ define|#
 directive|define
 name|PC873_EPPRDIR
 value|(1<<7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PC873_EXTENDED
-value|(1<<7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PC873_LPTBIRQ7
-value|(1<<3)
 end_define
 
 begin_define
@@ -748,27 +474,6 @@ define|#
 directive|define
 name|PC873_SID
 value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|PC873_PNP0
-value|0x1b
-end_define
-
-begin_define
-define|#
-directive|define
-name|PC873_PNP1
-value|0x1c
-end_define
-
-begin_define
-define|#
-directive|define
-name|PC873_LPTBA
-value|0x19
 end_define
 
 begin_comment

@@ -13,24 +13,81 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|DOC_H
+name|_DOC_H_
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|DOC_H
+name|_DOC_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|"info.h"
-end_include
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NULL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0x0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* for NAMED_FUNCTIONS, VFunction, etc.  */
+comment|/* !NULL */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FUNCTION_DEF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__FUNCTION_DEF
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|Function
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|VFunction
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FUNCTION_DEF */
 end_comment
 
 begin_typedef
@@ -165,7 +222,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !DOC_H */
+comment|/* !_DOC_H_ */
 end_comment
 
 end_unit

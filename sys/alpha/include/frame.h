@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: frame.h,v 1.1 1998/01/10 10:13:14 jb Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -226,36 +226,11 @@ name|FRAME_SP
 value|26
 end_define
 
-begin_comment
-comment|/* The following are set only when a signal is to be delivered to a process. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FRAME_TRAPARG_A0
-value|27
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_TRAPARG_A1
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_TRAPARG_A2
-value|29
-end_define
-
 begin_define
 define|#
 directive|define
 name|FRAME_SW_SIZE
-value|(FRAME_TRAPARG_A2 + 1)
+value|(FRAME_SP + 1)
 end_define
 
 begin_define

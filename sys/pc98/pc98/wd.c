@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.70 1999/01/16 11:43:12 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.63 1998/09/15 14:07:08 kato Exp $  */
 end_comment
 
 begin_comment
@@ -65,13 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ide_delay.h"
+file|"opt_wd.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_wd.h"
+file|"pci.h"
 end_include
 
 begin_include
@@ -304,35 +304,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IDE_DELAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT
-value|IDE_DELAY
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|TIMEOUT
 value|10000
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1462,14 +1439,19 @@ name|dk_interface
 operator|=
 name|interface
 expr_stmt|;
-name|du
-operator|->
-name|dk_port
-operator|=
-name|dvp
-operator|->
-name|id_iobase
-expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|DISABLE_PCI_IDE
+argument_list|)
+operator|&&
+operator|(
+name|NPCI
+operator|>
+literal|0
+operator|)
 if|if
 condition|(
 name|wddma
@@ -1478,8 +1460,6 @@ name|interface
 index|]
 operator|.
 name|wdd_candma
-operator|!=
-name|NULL
 condition|)
 block|{
 name|du
@@ -1500,11 +1480,15 @@ argument_list|,
 name|du
 operator|->
 name|dk_ctrlr
-argument_list|,
+argument_list|)
+expr_stmt|;
 name|du
 operator|->
-name|dk_unit
-argument_list|)
+name|dk_port
+operator|=
+name|dvp
+operator|->
+name|id_iobase
 expr_stmt|;
 name|du
 operator|->
@@ -1523,14 +1507,16 @@ name|dk_dmacookie
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+else|else
+block|{
 name|du
 operator|->
-name|dk_altport
-operator|==
-literal|0
-condition|)
+name|dk_port
+operator|=
+name|dvp
+operator|->
+name|id_iobase
+expr_stmt|;
 name|du
 operator|->
 name|dk_altport
@@ -1541,6 +1527,29 @@ name|dk_port
 operator|+
 name|wd_ctlr
 expr_stmt|;
+block|}
+else|#
+directive|else
+name|du
+operator|->
+name|dk_port
+operator|=
+name|dvp
+operator|->
+name|id_iobase
+expr_stmt|;
+name|du
+operator|->
+name|dk_altport
+operator|=
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_ctlr
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* check if we have registers that work */
 ifdef|#
 directive|ifdef
@@ -1616,12 +1625,24 @@ name|dk_port
 operator|+
 name|wd_ctlr
 expr_stmt|;
-if|#
-directive|if
+if|if
+condition|(
+operator|(
+name|PC98_SYSTEM_PARAMETER
+argument_list|(
+literal|0x55d
+argument_list|)
+operator|&
+literal|3
+operator|)
+operator|==
 literal|0
-block|if ((PC98_SYSTEM_PARAMETER(0x55d)& 3) == 0) { 		goto nodevice; 	}
-endif|#
-directive|endif
+condition|)
+block|{
+goto|goto
+name|nodevice
+goto|;
+block|}
 name|outb
 argument_list|(
 literal|0x432
@@ -1782,145 +1803,11 @@ condition|)
 goto|goto
 name|reset_ok
 goto|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|du
-operator|->
-name|dk_unit
-operator|=
-literal|2
-expr_stmt|;
-else|#
-directive|else
 name|du
 operator|->
 name|dk_unit
 operator|=
 literal|1
-expr_stmt|;
-endif|#
-directive|endif
-name|outb
-argument_list|(
-name|du
-operator|->
-name|dk_port
-operator|+
-name|wd_sdh
-argument_list|,
-name|WDSD_IBM
-operator||
-literal|0x10
-argument_list|)
-expr_stmt|;
-comment|/* slave */
-if|if
-condition|(
-name|inb
-argument_list|(
-name|du
-operator|->
-name|dk_port
-operator|+
-name|wd_cyl_lo
-argument_list|)
-operator|==
-literal|0x14
-operator|&&
-name|inb
-argument_list|(
-name|du
-operator|->
-name|dk_port
-operator|+
-name|wd_cyl_hi
-argument_list|)
-operator|==
-literal|0xeb
-condition|)
-goto|goto
-name|reset_ok
-goto|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|du
-operator|->
-name|dk_unit
-operator|=
-literal|1
-expr_stmt|;
-name|outb
-argument_list|(
-literal|0x432
-argument_list|,
-operator|(
-name|du
-operator|->
-name|dk_unit
-operator|)
-operator|%
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|wdreset
-argument_list|(
-name|du
-argument_list|)
-operator|==
-literal|0
-condition|)
-goto|goto
-name|reset_ok
-goto|;
-comment|/* test for ATAPI signature */
-name|outb
-argument_list|(
-name|du
-operator|->
-name|dk_port
-operator|+
-name|wd_sdh
-argument_list|,
-name|WDSD_IBM
-argument_list|)
-expr_stmt|;
-comment|/* master */
-if|if
-condition|(
-name|inb
-argument_list|(
-name|du
-operator|->
-name|dk_port
-operator|+
-name|wd_cyl_lo
-argument_list|)
-operator|==
-literal|0x14
-operator|&&
-name|inb
-argument_list|(
-name|du
-operator|->
-name|dk_port
-operator|+
-name|wd_cyl_hi
-argument_list|)
-operator|==
-literal|0xeb
-condition|)
-goto|goto
-name|reset_ok
-goto|;
-name|du
-operator|->
-name|dk_unit
-operator|=
-literal|3
 expr_stmt|;
 name|outb
 argument_list|(
@@ -1963,8 +1850,6 @@ condition|)
 goto|goto
 name|reset_ok
 goto|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|DELAY
@@ -2295,12 +2180,6 @@ name|wdparams
 modifier|*
 name|wp
 decl_stmt|;
-name|dvp
-operator|->
-name|id_intr
-operator|=
-name|wdintr
-expr_stmt|;
 if|if
 condition|(
 name|dvp
@@ -3502,6 +3381,34 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|bufqdisksort
+argument_list|(
+operator|&
+name|drive_queue
+index|[
+name|lunit
+index|]
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wdutab
+index|[
+name|lunit
+index|]
+operator|.
+name|b_active
+operator|==
+literal|0
+condition|)
+name|wdustart
+argument_list|(
+name|du
+argument_list|)
+expr_stmt|;
+comment|/* start drive */
 comment|/* Pick up changes made by readdisklabel(). */
 if|if
 condition|(
@@ -3534,34 +3441,6 @@ operator|=
 name|WANTOPEN
 expr_stmt|;
 block|}
-name|bufqdisksort
-argument_list|(
-operator|&
-name|drive_queue
-index|[
-name|lunit
-index|]
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|wdutab
-index|[
-name|lunit
-index|]
-operator|.
-name|b_active
-operator|==
-literal|0
-condition|)
-name|wdustart
-argument_list|(
-name|du
-argument_list|)
-expr_stmt|;
-comment|/* start drive */
 ifdef|#
 directive|ifdef
 name|CMD640
@@ -4248,11 +4127,10 @@ argument|}  	count =
 literal|1
 argument|; 	if( du->dk_flags& DKFL_MULTI) { 		count = howmany(du->dk_bc, DEV_BSIZE); 		if( count> du->dk_multi) 			count = du->dk_multi; 		if( du->dk_currentiosize> count) 			du->dk_currentiosize = count; 	} 	if (!old_epson_note) { 		if (du->dk_flags& DKFL_32BIT) 			outsl(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(long)); 		else 			outsw(du->dk_port + wd_data, 			      (void *)((int)bp->b_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(short)); 		} 	else 		epson_outsw(du->dk_port + wd_data, 		      (void *)((int)bp->b_data + du->dk_skip * DEV_BSIZE), 		      (count * DEV_BSIZE) / sizeof(short)); 		 	du->dk_bc -= DEV_BSIZE * count; }
 comment|/* Interrupt routine for the controller.  Acknowledge the interrupt, check for  * errors on the current operation, mark it done if necessary, and start  * the next request.  Also check for a partially done transfer, and  * continue with the next chunk if so.  */
-argument|void wdintr(void *unitnum) { 	register struct	disk *du; 	register struct buf *bp; 	int dmastat =
+argument|void wdintr(int unit) { 	register struct	disk *du; 	register struct buf *bp; 	int dmastat =
 literal|0
 argument|;
 comment|/* Shut up GCC */
-argument|int unit = (int)unitnum;
 ifdef|#
 directive|ifdef
 name|CMD640
@@ -4312,9 +4190,9 @@ directive|endif
 comment|/* finish off DMA */
 argument|if (du->dk_flags& (DKFL_DMA|DKFL_USEDMA)) {
 comment|/* XXX SMP boxes sometimes generate an early intr.  Why? */
-argument|if ((wddma[du->dk_interface].wdd_dmastatus(du->dk_dmacookie)& WDDS_INTERRUPT) 		    !=
+argument|if ((wddma[du->dk_interface].wdd_dmastatus(du->dk_dmacookie)& WDDS_INTERRUPT) 		    ==
 literal|0
-argument|) 		dmastat = wddma[du->dk_interface].wdd_dmadone(du->dk_dmacookie); 	}  	du->dk_timeout =
+argument|) 			return; 		dmastat = wddma[du->dk_interface].wdd_dmadone(du->dk_dmacookie); 	}  	du->dk_timeout =
 literal|0
 argument|;
 comment|/* check drive status/failure */
@@ -5004,7 +4882,7 @@ argument|du->dk_multi = wp->wdp_nsecperint&
 literal|0xff
 argument|; 	wdsetmulti(du);
 comment|/* 	 * check drive's DMA capability 	 */
-argument|if (wddma[du->dk_interface].wdd_candma) { 		du->dk_dmacookie = wddma[du->dk_interface].wdd_candma( 		    du->dk_port, du->dk_ctrlr, du->dk_unit);
+argument|if (wddma[du->dk_interface].wdd_candma) { 		du->dk_dmacookie = wddma[du->dk_interface].wdd_candma(du->dk_port, du->dk_ctrlr);
 comment|/* does user want this? */
 argument|if ((du->cfg_flags& WDOPT_DMA)&&
 comment|/* have we got a DMA controller? */
@@ -5379,12 +5257,12 @@ argument|);
 endif|#
 directive|endif
 argument|}  static void wderror(struct buf *bp, struct disk *du, char *mesg) { 	if (bp == NULL) 		printf(
-literal|"wd%d: %s"
+literal|"wd%d: %s:\n"
 argument|, du->dk_lunit, mesg); 	else 		diskerr(bp,
 literal|"wd"
 argument|, mesg, LOG_PRINTF, du->dk_skip, 			dsgetlabel(bp->b_dev, du->dk_slices)); 	printf(
-literal|" (status %b error %b)\n"
-argument|, 	       du->dk_status, WDCS_BITS, du->dk_error, WDERR_BITS); }
+literal|"wd%d: status %b error %b\n"
+argument|, du->dk_lunit, 	       du->dk_status, WDCS_BITS, du->dk_error, WDERR_BITS); }
 comment|/*  * Discard any interrupts that were latched by the interrupt system while  * we were doing polled i/o.  */
 argument|static void wdflushirq(struct disk *du, int old_ipl) {
 ifdef|#

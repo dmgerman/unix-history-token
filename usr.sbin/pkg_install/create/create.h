@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: create.h,v 1.13 1997/10/08 07:46:19 charnier Exp $ */
+comment|/* $Id: create.h,v 1.12 1997/06/06 12:19:11 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -63,23 +63,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|PostInstall
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
 name|DeInstall
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|PostDeInstall
 decl_stmt|;
 end_decl_stmt
 

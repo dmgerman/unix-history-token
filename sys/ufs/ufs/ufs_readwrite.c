@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_readwrite.c	8.11 (Berkeley) 5/8/95  * $Id: ufs_readwrite.c,v 1.54 1998/12/15 03:29:52 julian Exp $  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_readwrite.c	8.11 (Berkeley) 5/8/95  * $Id: ufs_readwrite.c,v 1.52 1998/09/07 11:50:19 bde Exp $  */
 end_comment
 
 begin_define
@@ -354,7 +354,6 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/* 	 * If IO optimisation is turned on, 	 * and we are NOT a VM based IO request,  	 * (i.e. not headed for the buffer cache) 	 * but there IS a vm object associated with it. 	 */
 if|if
 condition|(
 operator|(
@@ -402,7 +401,6 @@ operator|>=
 name|PAGE_SIZE
 condition|)
 block|{
-comment|/* 			 * Then if it's at least a page in size, try  			 * get the data from the object using vm tricks 			 */
 name|error
 operator|=
 name|uioread
@@ -434,7 +432,6 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 				 * If we finished or there was an error 				 * then finish up. 				 */
 if|if
 condition|(
 operator|!
@@ -458,7 +455,6 @@ if|if
 condition|(
 name|object
 condition|)
-comment|/* 					 * This I don't understand 					 */
 name|vm_object_vndeallocate
 argument_list|(
 name|object
@@ -472,7 +468,6 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Ok so we couldn't do it all in one vm trick... 	 * so cycle around trying smaller bites.. 	 */
 for|for
 control|(
 name|error
@@ -533,7 +528,6 @@ operator|&&
 name|object
 condition|)
 block|{
-comment|/* 			 * Obviously we didn't finish above, but we 			 * didn't get an error either. Try the same trick again. 			 * but this time we are looping. 			 */
 name|int
 name|nread
 decl_stmt|,
@@ -555,7 +549,6 @@ name|toread
 operator|=
 name|bytesinfile
 expr_stmt|;
-comment|/* 			 * Once again, if there isn't enough for a 			 * whole page, don't try optimising. 			 */
 if|if
 condition|(
 name|toread
@@ -626,7 +619,6 @@ return|return
 name|error
 return|;
 block|}
-comment|/* 				 * To get here we didnt't finish or err. 				 * If we did get some data, 				 * loop to try another bite. 				 */
 if|if
 condition|(
 name|nread
@@ -679,7 +671,6 @@ operator|->
 name|uio_offset
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The amount we want to transfer in this iteration is 		 * one FS block less the amount of the data before 		 * our startpoint (duh!) 		 */
 name|xfersize
 operator|=
 name|fs
@@ -688,7 +679,6 @@ name|fs_bsize
 operator|-
 name|blkoffset
 expr_stmt|;
-comment|/* 		 * But if we actually want less than the block, 		 * or the file doesn't have a whole block more of data, 		 * then use the lesser number. 		 */
 if|if
 condition|(
 name|uio
@@ -726,7 +716,6 @@ name|ip
 operator|->
 name|i_size
 condition|)
-comment|/* 			 * Don't do readahead if this is the end of the file. 			 */
 name|error
 operator|=
 name|bread
@@ -758,7 +747,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-comment|/*  			 * Otherwise if we are allowed to cluster, 			 * grab as much as we can. 			 * 			 * XXX  This may not be a win if we are not 			 * doing sequential access. 			 */
 name|error
 operator|=
 name|cluster_read
@@ -797,7 +785,6 @@ operator|->
 name|v_lastr
 condition|)
 block|{
-comment|/* 			 * If we are NOT allowed to cluster, then 			 * if we appear to be acting sequentially, 			 * fire off a request for a readahead 			 * as well as a read. Note that the 4th and 5th 			 * arguments point to arrays of the size specified in 			 * the 6th argument. 			 */
 name|int
 name|nextsize
 init|=
@@ -836,7 +823,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* 			 * Failing all of the above, just read what the  			 * user asked for. Interestingly, the same as 			 * the first option above. 			 */
 name|error
 operator|=
 name|bread
@@ -869,7 +855,6 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Remember where we read so we can see latter if we start 		 * acting sequential. 		 */
 name|vp
 operator|->
 name|v_lastr
@@ -937,7 +922,6 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 			 * If VFS IO  optimisation is turned on, 			 * and it's an exact page multiple 			 * And a normal VM based op, 			 * then use uiomiveco() 			 */
 name|error
 operator|=
 name|uiomoveco
@@ -965,7 +949,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * otherwise use the general form 			 */
 name|error
 operator|=
 name|uiomove
@@ -1015,7 +998,6 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* 			 * If there are no dependencies, and 			 * it's VMIO, then we don't need the buf, 			 * mark it available for freeing. The VM has the data. 			 */
 name|bp
 operator|->
 name|b_flags
@@ -1030,7 +1012,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Otherwise let whoever 			 * made the request take care of 			 * freeing it. We just queue 			 * it onto another list. 			 */
 name|bqrelse
 argument_list|(
 name|bp
@@ -1038,7 +1019,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * This can only happen in the case of an error 	 * because the loop above resets bp to NULL on each iteration 	 * and on normal completion has not set a new value into it. 	 * so it must have come from a 'break' statement 	 */
 if|if
 condition|(
 name|bp
@@ -1196,6 +1176,10 @@ decl_stmt|,
 name|size
 decl_stmt|,
 name|xfersize
+decl_stmt|;
+name|struct
+name|timeval
+name|tv
 decl_stmt|;
 name|vm_object_t
 name|object
@@ -1949,15 +1933,29 @@ operator|&
 name|IO_SYNC
 operator|)
 condition|)
+block|{
+name|getmicrotime
+argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|UFS_UPDATE
 argument_list|(
 name|vp
 argument_list|,
+operator|&
+name|tv
+argument_list|,
+operator|&
+name|tv
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

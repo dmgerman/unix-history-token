@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.33 1998/10/13 14:52:33 des Exp $"
+literal|"$Id: xinstall.c,v 1.32 1998/06/02 12:00:07 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -728,11 +728,6 @@ argument_list|(
 name|set
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|set
 argument_list|)
 expr_stmt|;
 break|break;

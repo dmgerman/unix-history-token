@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)shutdown.c	8.4 (Berkeley) 4/28/95";
+unit|static char sccsid[] = "@(#)shutdown.c	8.2 (Berkeley) 2/16/94";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: shutdown.c,v 1.15 1998/12/11 11:04:19 bde Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,8 +352,6 @@ specifier|static
 name|int
 name|dohalt
 decl_stmt|,
-name|dopower
-decl_stmt|,
 name|doreboot
 decl_stmt|,
 name|killflg
@@ -562,7 +560,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-hknpr"
+literal|"-hknr"
 argument_list|)
 operator|)
 operator|!=
@@ -607,14 +605,6 @@ literal|"-n"
 expr_stmt|;
 break|break;
 case|case
-literal|'p'
-case|:
-name|dopower
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'r'
 case|:
 name|doreboot
@@ -650,17 +640,13 @@ expr_stmt|;
 if|if
 condition|(
 name|doreboot
-operator|+
+operator|&&
 name|dohalt
-operator|+
-name|dopower
-operator|>
-literal|1
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"incompatible switches -h, -p and -r"
+literal|"incompatible switches -h and -r"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -731,12 +717,12 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-name|memmove
+name|bcopy
 argument_list|(
-name|p
-argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|p
 argument_list|,
 name|arglen
 argument_list|)
@@ -1536,10 +1522,6 @@ name|dohalt
 condition|?
 literal|"halt"
 else|:
-name|dopower
-condition|?
-literal|"power-down"
-else|:
 literal|"shutdown"
 argument_list|,
 name|whom
@@ -1608,19 +1590,6 @@ operator|)
 name|printf
 argument_list|(
 literal|"halt"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|dopower
-condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"power-down"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1697,48 +1666,6 @@ argument_list|,
 literal|"halt"
 argument_list|,
 literal|"-l"
-argument_list|,
-name|nosync
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|empty_environ
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"shutdown: can't exec %s: %m."
-argument_list|,
-name|_PATH_HALT
-argument_list|)
-expr_stmt|;
-name|warn
-argument_list|(
-name|_PATH_HALT
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|dopower
-condition|)
-block|{
-name|execle
-argument_list|(
-name|_PATH_HALT
-argument_list|,
-literal|"halt"
-argument_list|,
-literal|"-l"
-argument_list|,
-literal|"-p"
 argument_list|,
 name|nosync
 argument_list|,
@@ -2391,11 +2318,6 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-if|if
-condition|(
-operator|!
-name|killflg
-condition|)
 operator|(
 name|void
 operator|)
@@ -2436,7 +2358,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: shutdown [-] [-hknpr] time [warning-message ...]\n"
+literal|"usage: shutdown [-hknr] shutdowntime [ message ]\n"
 argument_list|)
 expr_stmt|;
 name|exit

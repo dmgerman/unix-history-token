@@ -3611,11 +3611,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|set
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|new

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_cs.c,v 1.7 1998/12/07 21:58:21 archie Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
+comment|/*  * $Id: if_cs.c,v 1.4 1998/08/27 22:41:18 msmith Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
 end_comment
 
 begin_comment
@@ -263,14 +263,6 @@ index|]
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-end_if
-
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -279,11 +271,6 @@ init|=
 name|NCS
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -360,13 +347,6 @@ name|void
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|csintr
 decl_stmt|;
 end_decl_stmt
 
@@ -964,6 +944,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|timeout
+init|=
+literal|1000
+decl_stmt|;
 name|DELAY
 argument_list|(
 literal|30000
@@ -1156,6 +1141,9 @@ name|sc
 parameter_list|)
 block|{
 name|int
+name|i
+decl_stmt|;
+name|int
 name|unit
 init|=
 name|sc
@@ -1245,6 +1233,17 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|unit
+init|=
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_unit
+decl_stmt|;
 name|char
 name|test_packet
 index|[]
@@ -1765,6 +1764,8 @@ decl_stmt|,
 name|irq
 init|=
 literal|0
+decl_stmt|,
+name|result
 decl_stmt|;
 name|int
 name|eeprom_buff
@@ -3105,12 +3106,6 @@ name|dev
 operator|->
 name|id_flags
 decl_stmt|;
-name|dev
-operator|->
-name|id_ointr
-operator|=
-name|csintr
-expr_stmt|;
 return|return
 name|cs_attach
 argument_list|(
@@ -3166,6 +3161,8 @@ name|int
 name|i
 decl_stmt|,
 name|s
+decl_stmt|,
+name|result
 decl_stmt|,
 name|rx_cfg
 decl_stmt|;
@@ -3855,6 +3852,8 @@ operator|)
 decl_stmt|;
 name|int
 name|status
+decl_stmt|,
+name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4057,7 +4056,6 @@ comment|/*  * Handle interrupts  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|csintr
 parameter_list|(
@@ -5791,6 +5789,11 @@ name|unit
 parameter_list|)
 block|{
 name|struct
+name|cs_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
 name|csintr_list
 modifier|*
 name|intr
@@ -5981,10 +5984,10 @@ name|unit
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|u_int
+name|u_short
 name|irq
 decl_stmt|;
-name|int
+name|short
 name|drq
 decl_stmt|;
 name|struct
@@ -6090,7 +6093,7 @@ literal|0
 expr_stmt|;
 name|dev
 operator|->
-name|id_ointr
+name|id_intr
 operator|=
 name|csintr_pnp
 expr_stmt|;

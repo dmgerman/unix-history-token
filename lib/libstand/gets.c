@@ -272,23 +272,8 @@ name|err
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* EOF */
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-comment|/* nothing to read */
 break|break;
-block|}
 if|if
 condition|(
 operator|(

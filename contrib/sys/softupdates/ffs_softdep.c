@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.28 (McKusick) 8/8/98  *	$Id: ffs_softdep.c,v 1.19 1999/01/06 18:18:04 bde Exp $  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.28 (McKusick) 8/8/98  *	$Id: ffs_softdep.c,v 1.14 1998/09/24 15:02:46 luoqi Exp $  */
 end_comment
 
 begin_comment
@@ -4750,7 +4750,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"ffs_mountfs: superblock updated for soft updates\n"
+literal|"ffs_mountfs: superblock updated\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5808,7 +5808,7 @@ name|NDADDR
 condition|)
 name|panic
 argument_list|(
-literal|"allocdirect_check: old %d != new %d || lbn %ld>= %d"
+literal|"allocdirect_check: old %d != new %d || lbn %d>= %d"
 argument_list|,
 name|newadp
 operator|->
@@ -7659,7 +7659,7 @@ condition|(
 name|getdirtybuf
 argument_list|(
 operator|&
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|vp
@@ -7673,7 +7673,7 @@ condition|)
 block|{
 name|bp
 operator|=
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|vp
@@ -12837,7 +12837,7 @@ name|ad_newblkno
 condition|)
 name|panic
 argument_list|(
-literal|"%s: direct pointer #%ld mismatch %d != %d"
+literal|"%s: direct pointer #%d mismatch %d != %d"
 argument_list|,
 literal|"softdep_write_inodeblock"
 argument_list|,
@@ -12884,7 +12884,7 @@ name|ad_newblkno
 condition|)
 name|panic
 argument_list|(
-literal|"%s: indirect pointer #%ld mismatch %d != %d"
+literal|"%s: indirect pointer #%d mismatch %d != %d"
 argument_list|,
 literal|"softdep_write_inodeblock"
 argument_list|,
@@ -14251,6 +14251,11 @@ decl_stmt|;
 comment|/* buffer containing the inode block */
 block|{
 name|struct
+name|pagedep
+modifier|*
+name|pagedep
+decl_stmt|;
+name|struct
 name|worklist
 modifier|*
 name|wk
@@ -14270,6 +14275,11 @@ name|struct
 name|dinode
 modifier|*
 name|dp
+decl_stmt|;
+name|struct
+name|diradd
+modifier|*
+name|dap
 decl_stmt|;
 name|int
 name|hadchanges
@@ -14442,7 +14452,7 @@ name|ad_oldblkno
 condition|)
 name|panic
 argument_list|(
-literal|"%s: %s #%ld mismatch %d != %d"
+literal|"%s: %s #%d mismatch %d != %d"
 argument_list|,
 literal|"handle_written_inodeblock"
 argument_list|,
@@ -14499,7 +14509,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: %s #%ld allocated as %d"
+literal|"%s: %s #%d allocated as %d"
 argument_list|,
 literal|"handle_written_inodeblock"
 argument_list|,
@@ -15467,6 +15477,11 @@ name|inodedep
 modifier|*
 name|inodedep
 decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|gotit
+decl_stmt|;
 comment|/* 	 * Check for alternate nlink count. 	 */
 name|ip
 operator|->
@@ -15587,7 +15602,7 @@ comment|/* the buffer containing the inode block */
 name|int
 name|waitfor
 decl_stmt|;
-comment|/* nonzero => update must be allowed */
+comment|/* 1 => update must be allowed */
 block|{
 name|struct
 name|inodedep
@@ -16143,15 +16158,10 @@ name|ret
 decl_stmt|,
 name|flushparent
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 name|struct
 name|timeval
 name|tv
 decl_stmt|;
-endif|#
-directive|endif
 name|ino_t
 name|parentino
 decl_stmt|;
@@ -16469,24 +16479,26 @@ condition|(
 name|flushparent
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-name|error
-operator|=
-name|UFS_UPDATE
-argument_list|(
-name|pvp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tv
 operator|=
 name|time
 expr_stmt|;
+else|#
+directive|else
+name|getmicrotime
+argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
+if|if
+condition|(
 name|error
 operator|=
 name|UFS_UPDATE
@@ -16499,14 +16511,8 @@ argument_list|,
 operator|&
 name|tv
 argument_list|,
-literal|1
+name|MNT_WAIT
 argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|error
 condition|)
 block|{
 name|vput
@@ -16763,7 +16769,7 @@ condition|(
 name|getdirtybuf
 argument_list|(
 operator|&
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|vp
@@ -16836,7 +16842,7 @@ return|;
 block|}
 name|bp
 operator|=
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|vp
@@ -17313,7 +17319,7 @@ operator|)
 name|getdirtybuf
 argument_list|(
 operator|&
-name|TAILQ_NEXT
+name|LIST_NEXT
 argument_list|(
 name|bp
 argument_list|,
@@ -17325,7 +17331,7 @@ argument_list|)
 expr_stmt|;
 name|nbp
 operator|=
-name|TAILQ_NEXT
+name|LIST_NEXT
 argument_list|(
 name|bp
 argument_list|,
@@ -17441,7 +17447,7 @@ block|}
 comment|/* 	 * If we have managed to get rid of all the dirty buffers, 	 * then we are done. For certain directories and block 	 * devices, we may need to do further work. 	 */
 if|if
 condition|(
-name|TAILQ_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|vp
@@ -17954,15 +17960,10 @@ name|diradd
 modifier|*
 name|dap
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 name|struct
 name|timeval
 name|tv
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|vnode
 modifier|*
@@ -18014,50 +18015,46 @@ operator|&
 name|MKDIR_PARENT
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+name|tv
+operator|=
+name|time
+expr_stmt|;
+else|#
+directive|else
+name|getmicrotime
+argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 name|FREE_LOCK
 argument_list|(
 operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|error
-operator|=
-name|UFS_UPDATE
-argument_list|(
-name|pvp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|tv
-operator|=
-name|time
-expr_stmt|;
-name|error
-operator|=
-name|UFS_UPDATE
-argument_list|(
-name|pvp
-argument_list|,
-operator|&
-name|tv
-argument_list|,
-operator|&
-name|tv
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
+operator|=
+name|UFS_UPDATE
+argument_list|(
+name|pvp
+argument_list|,
+operator|&
+name|tv
+argument_list|,
+operator|&
+name|tv
+argument_list|,
+name|MNT_WAIT
+argument_list|)
 condition|)
 break|break;
 name|ACQUIRE_LOCK
@@ -18407,24 +18404,24 @@ name|lk
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-name|error
-operator|=
-name|UFS_UPDATE
-argument_list|(
-name|vp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tv
 operator|=
 name|time
 expr_stmt|;
+else|#
+directive|else
+name|getmicrotime
+argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 name|error
 operator|=
 name|UFS_UPDATE
@@ -18437,11 +18434,9 @@ argument_list|,
 operator|&
 name|tv
 argument_list|,
-literal|1
+name|MNT_WAIT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vput
 argument_list|(
 name|vp

@@ -680,6 +680,8 @@ name|iqlen
 condition|)
 block|{
 name|int
+name|flag
+decl_stmt|,
 name|chn
 decl_stmt|;
 name|midi_sleeper

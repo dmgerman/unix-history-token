@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_user.c,v 1.24 1999/01/02 04:37:46 billf Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -5747,14 +5747,10 @@ index|[
 name|i
 index|]
 operator|%
-operator|(
 sizeof|sizeof
 argument_list|(
 name|chars
 argument_list|)
-operator|-
-literal|1
-operator|)
 index|]
 expr_stmt|;
 name|pwbuf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.91 (Berkeley) 8/19/1998"
+literal|"@(#)collect.c	8.89 (Berkeley) 6/4/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,6 +307,19 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
+name|eatheader
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
 name|tferror
 name|__P
 argument_list|(
@@ -403,11 +416,7 @@ operator||=
 name|EF_NO_BODY_RETN
 expr_stmt|;
 name|finis
-argument_list|(
-name|TRUE
-argument_list|,
-name|ExitStat
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -596,6 +605,26 @@ init|;
 condition|;
 control|)
 block|{
+specifier|extern
+name|int
+name|chompheader
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|,
+name|HDR
+operator|*
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1631,11 +1660,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|(
-name|TRUE
-argument_list|,
-name|ExitStat
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* An EOF when running SMTP is an error */
@@ -1824,11 +1849,7 @@ operator|=
 name|EX_QUIT
 expr_stmt|;
 name|finis
-argument_list|(
-name|TRUE
-argument_list|,
-name|ExitStat
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
@@ -2010,6 +2031,24 @@ modifier|*
 name|hdr
 init|=
 name|NULL
+decl_stmt|;
+specifier|extern
+name|void
+name|addheader
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|HDR
+operator|*
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 comment|/* create an Apparently-To: field */
 comment|/*    that or reject the message.... */
@@ -2302,11 +2341,7 @@ name|dfname
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|(
-name|TRUE
-argument_list|,
-name|ExitStat
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}

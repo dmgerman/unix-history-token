@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_portal.c,v 1.13 1998/07/06 07:19:25 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -719,9 +719,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Everything is ready to go - now is a good time to fork 	 */
-ifndef|#
-directive|ifndef
-name|DEBUG
 name|daemon
 argument_list|(
 literal|0
@@ -729,8 +726,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Start logging (and change name) 	 */
 name|openlog
 argument_list|(

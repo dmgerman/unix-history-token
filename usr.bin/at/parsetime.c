@@ -753,12 +753,11 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.15 1998/08/30 17:33:05 steve Exp $"
+literal|"$Id: parsetime.c,v 1.14 1998/08/08 14:02:06 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1946,8 +1945,6 @@ operator|)
 decl_stmt|;
 name|long
 name|mday
-init|=
-literal|0
 decl_stmt|,
 name|wday
 decl_stmt|,

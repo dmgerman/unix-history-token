@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.25 1999/01/08 17:31:29 eivind Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.21 1998/04/25 04:50:01 dyson Exp $  */
 end_comment
 
 begin_include
@@ -696,9 +696,12 @@ name|z
 operator|->
 name|zitems
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
 operator|(
 operator|(
 name|void
@@ -1308,9 +1311,12 @@ name|z
 operator|->
 name|zitems
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
 operator|(
 operator|(
 name|void
@@ -1387,9 +1393,12 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -1478,14 +1487,9 @@ index|[
 literal|14
 index|]
 decl_stmt|;
-name|snprintf
+name|sprintf
 argument_list|(
 name|tmpbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmpbuf
-argument_list|)
 argument_list|,
 literal|"\nITEM            SIZE     LIMIT    USED    FREE  REQUESTS\n"
 argument_list|)
@@ -1647,17 +1651,10 @@ operator|=
 literal|'\n'
 expr_stmt|;
 block|}
-name|snprintf
+name|sprintf
 argument_list|(
 name|tmpbuf
 operator|+
-name|offset
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmpbuf
-argument_list|)
-operator|-
 name|offset
 argument_list|,
 literal|"%s %6.6u, %8.8u, %6.6u, %6.6u, %8.8u\n"
@@ -1746,11 +1743,14 @@ return|;
 block|}
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANT_SUPPORT
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+end_if
 
 begin_function
 name|void
@@ -1855,7 +1855,7 @@ name|zone_kmem_pages
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of interrupt safe pages allocated by zone"
+literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1876,7 +1876,7 @@ name|zone_kmem_kvaspace
 argument_list|,
 literal|0
 argument_list|,
-literal|"KVA space allocated by zone"
+literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1897,7 +1897,7 @@ name|zone_kern_pages
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of non-interrupt safe pages allocated by zone"
+literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt

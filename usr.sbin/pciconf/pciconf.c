@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pciconf.c,v 1.6 1998/09/15 08:21:13 gibbs Exp $"
+literal|"$Id: pciconf.c,v 1.5 1997/10/06 11:38:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,11 +497,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|none_count
-init|=
-literal|0
-decl_stmt|;
 name|fd
 operator|=
 name|open
@@ -651,45 +646,38 @@ name|p
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|pd_name
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+operator|*
+name|p
+operator|->
+name|pd_name
+operator|==
+literal|'\0'
+operator|)
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|"%s%d@pci%d:%d:%d:\tclass=0x%06x card=0x%08lx "
 literal|"chip=0x%08lx rev=0x%02x hdr=0x%02x\n"
 argument_list|,
-operator|(
 name|p
 operator|->
 name|pd_name
-operator|&&
-operator|*
-name|p
-operator|->
-name|pd_name
-operator|)
-condition|?
-name|p
-operator|->
-name|pd_name
-else|:
-literal|"none"
 argument_list|,
-operator|(
-name|p
-operator|->
-name|pd_name
-operator|&&
-operator|*
-name|p
-operator|->
-name|pd_name
-operator|)
-condition|?
 name|p
 operator|->
 name|pd_unit
-else|:
-name|none_count
-operator|++
 argument_list|,
 name|p
 operator|->

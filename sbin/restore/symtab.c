@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: symtab.c,v 1.5 1998/07/28 06:20:13 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1947,13 +1947,13 @@ begin_struct
 struct|struct
 name|symtableheader
 block|{
-name|int32_t
+name|long
 name|volno
 decl_stmt|;
-name|int32_t
+name|long
 name|stringsize
 decl_stmt|;
-name|int32_t
+name|long
 name|entrytblsize
 decl_stmt|;
 name|time_t
@@ -1965,7 +1965,7 @@ decl_stmt|;
 name|ino_t
 name|maxino
 decl_stmt|;
-name|int32_t
+name|long
 name|ntrec
 decl_stmt|;
 block|}

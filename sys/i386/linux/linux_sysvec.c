@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.43 1999/01/06 23:05:38 julian Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.36 1998/10/11 21:08:02 alex Exp $  */
 end_comment
 
 begin_comment
@@ -259,8 +259,6 @@ name|int
 name|bsd_to_linux_errno
 index|[
 name|ELAST
-operator|+
-literal|1
 index|]
 init|=
 block|{
@@ -508,22 +506,10 @@ operator|-
 literal|6
 block|,
 operator|-
-literal|6
-block|,
-operator|-
 literal|43
 block|,
 operator|-
 literal|42
-block|,
-operator|-
-literal|75
-block|,
-operator|-
-literal|6
-block|,
-operator|-
-literal|84
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1288,27 +1274,6 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * grow() will return FALSE if the fp will not fit inside the stack 	 *	and the stack can not be grown. useracc will return FALSE 	 *	if access is denied. 	 */
-ifdef|#
-directive|ifdef
-name|VM_STACK
-if|if
-condition|(
-operator|(
-name|grow_stack
-argument_list|(
-name|p
-argument_list|,
-operator|(
-name|int
-operator|)
-name|fp
-argument_list|)
-operator|==
-name|FALSE
-operator|)
-operator|||
-else|#
-directive|else
 if|if
 condition|(
 operator|(
@@ -1325,8 +1290,6 @@ operator|==
 name|FALSE
 operator|)
 operator|||
-endif|#
-directive|endif
 operator|(
 name|useracc
 argument_list|(
@@ -1662,7 +1625,17 @@ name|regs
 operator|->
 name|tf_eip
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|PS_STRINGS
+operator|)
 operator|-
 operator|*
 operator|(
@@ -1672,6 +1645,7 @@ name|p_sysent
 operator|->
 name|sv_szsigcode
 operator|)
+argument_list|)
 expr_stmt|;
 name|regs
 operator|->
@@ -2142,8 +2116,6 @@ block|,
 name|bsd_to_linux_signal
 block|,
 name|ELAST
-operator|+
-literal|1
 block|,
 name|bsd_to_linux_errno
 block|,
@@ -2184,8 +2156,6 @@ block|,
 name|bsd_to_linux_signal
 block|,
 name|ELAST
-operator|+
-literal|1
 block|,
 name|bsd_to_linux_errno
 block|,
@@ -2208,6 +2178,10 @@ name|elf_coredump
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Installed either via SYSINIT() or via LKM stubs.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2263,6 +2237,31 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * XXX: this is WRONG, it needs to be SI_SUB_EXEC, but this is just at the  * "proof of concept" stage and will be fixed shortly  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|linux_elf_modevent
+name|__P
+argument_list|(
+operator|(
+name|module_t
+name|mod
+operator|,
+name|modeventtype_t
+name|type
+operator|,
+name|void
+operator|*
+name|data
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -2271,7 +2270,7 @@ parameter_list|(
 name|module_t
 name|mod
 parameter_list|,
-name|int
+name|modeventtype_t
 name|type
 parameter_list|,
 name|void

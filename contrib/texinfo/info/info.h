@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.7 1998/02/27 21:36:04 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.h -- Header file which includes all of the other headers. */
+end_comment
+
+begin_comment
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_if
@@ -9,70 +13,63 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|INFO_H
+name|_INFO_H_
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|INFO_H
+name|_INFO_H_
 end_define
-
-begin_comment
-comment|/* We always want these, so why clutter up the compile command?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HANDLE_MAN_PAGES
-end_define
-
-begin_define
-define|#
-directive|define
-name|NAMED_FUNCTIONS
-end_define
-
-begin_comment
-comment|/* System dependencies.  */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|"system.h"
+file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRING_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Some of our other include files use these.  */
+comment|/* HAVE_STRING_H */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|Function
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-name|VFunction
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|CFunction
-parameter_list|()
-function_decl|;
-end_typedef
 
 begin_include
 include|#
@@ -95,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"echo-area.h"
+file|"echo_area.h"
 end_include
 
 begin_include
@@ -115,226 +112,6 @@ include|#
 directive|include
 file|"gc.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|info_toupper
-parameter_list|(
-name|x
-parameter_list|)
-value|(islower (x) ? toupper (x) : x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|info_tolower
-parameter_list|(
-name|x
-parameter_list|)
-value|(isupper (x) ? tolower (x) : x)
-end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|whitespace
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|whitespace
-parameter_list|(
-name|c
-parameter_list|)
-value|((c == ' ') || (c == '\t'))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !whitespace */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|whitespace_or_newline
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|whitespace_or_newline
-parameter_list|(
-name|c
-parameter_list|)
-value|(whitespace (c) || (c == '\n'))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !whitespace_or_newline */
-end_comment
-
-begin_comment
-comment|/* Add POINTER to the list of pointers found in ARRAY.  SLOTS is the number    of slots that have already been allocated.  INDEX is the index into the    array where POINTER should be added.  GROW is the number of slots to grow    ARRAY by, in the case that it needs growing.  TYPE is a cast of the type    of object stored in ARRAY (e.g., NODE_ENTRY *. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|add_pointer_to_array
-parameter_list|(
-name|pointer
-parameter_list|,
-name|idx
-parameter_list|,
-name|array
-parameter_list|,
-name|slots
-parameter_list|,
-name|grow
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|do { \     if (idx + 2>= slots) \       array = (type *)(xrealloc (array, (slots += grow) * sizeof (type))); \     array[idx++] = (type)pointer; \     array[idx] = (type)NULL; \   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|maybe_free
-parameter_list|(
-name|x
-parameter_list|)
-value|do { if (x) free (x); } while (0)
-end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|zero_mem
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_MEMSET
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|zero_mem
-parameter_list|(
-name|mem
-parameter_list|,
-name|length
-parameter_list|)
-value|memset (mem, 0, length)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !zero_mem&& HAVE_MEMSET */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|zero_mem
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_BZERO
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|zero_mem
-parameter_list|(
-name|mem
-parameter_list|,
-name|length
-parameter_list|)
-value|bzero (mem, length)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !zero_mem&& HAVE_BZERO */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|zero_mem
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|zero_mem
-parameter_list|(
-name|mem
-parameter_list|,
-name|length
-parameter_list|)
-define|\
-value|do {                                  \         register int zi;                \         register unsigned char *place;  \                                         \         place = (unsigned char *)mem;   \         for (zi = 0; zi< length; zi++) \           place[zi] = 0;                \       } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !zero_mem */
-end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* A structure associating the nodes visited in a particular window. */
@@ -450,6 +227,8 @@ name|int
 name|info_major_version
 decl_stmt|,
 name|info_minor_version
+decl_stmt|,
+name|info_patch_level
 decl_stmt|;
 end_decl_stmt
 
@@ -474,105 +253,105 @@ begin_define
 define|#
 directive|define
 name|CANT_FIND_NODE
-value|_("Cannot find the node \"%s\".")
+value|"Cannot find the node \"%s\"."
 end_define
 
 begin_define
 define|#
 directive|define
 name|CANT_FILE_NODE
-value|_("Cannot find the node \"(%s)%s\".")
+value|"Cannot find the node \"(%s)%s\"."
 end_define
 
 begin_define
 define|#
 directive|define
 name|CANT_FIND_WIND
-value|_("Cannot find a window!")
+value|"Cannot find a window!"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CANT_FIND_POINT
-value|_("Point doesn't appear within this window's node!")
+value|"Point doesn't appear within this window's node!"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CANT_KILL_LAST
-value|_("Cannot delete the last window.")
+value|"Cannot delete the last window."
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_MENU_NODE
-value|_("No menu in this node.")
+value|"No menu in this node."
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_FOOT_NODE
-value|_("No footnotes in this node.")
+value|"No footnotes in this node."
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_XREF_NODE
-value|_("No cross references in this node.")
+value|"No cross references in this node."
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_POINTER
-value|_("No \"%s\" pointer for this node.")
+value|"No \"%s\" pointer for this node."
 end_define
 
 begin_define
 define|#
 directive|define
 name|UNKNOWN_COMMAND
-value|_("Unknown Info command `%c'.  `?' for help.")
+value|"Unknown Info command `%c'.  `?' for help."
 end_define
 
 begin_define
 define|#
 directive|define
 name|TERM_TOO_DUMB
-value|_("Terminal type \"%s\" is not smart enough to run Info.")
+value|"Terminal type \"%s\" is not smart enough to run Info."
 end_define
 
 begin_define
 define|#
 directive|define
 name|AT_NODE_BOTTOM
-value|_("You are already at the last page of this node.")
+value|"You are already at the last page of this node."
 end_define
 
 begin_define
 define|#
 directive|define
 name|AT_NODE_TOP
-value|_("You are already at the first page of this node.")
+value|"You are already at the first page of this node."
 end_define
 
 begin_define
 define|#
 directive|define
 name|ONE_WINDOW
-value|_("Only one window.")
+value|"Only one window."
 end_define
 
 begin_define
 define|#
 directive|define
 name|WIN_TOO_SMALL
-value|_("Resulting window would be too small.")
+value|"Resulting window would be too small."
 end_define
 
 begin_define
@@ -580,77 +359,16 @@ define|#
 directive|define
 name|CANT_MAKE_HELP
 define|\
-value|_("There isn't enough room to make a help window.  Please delete a window.")
+value|"There isn't enough room to make a help window.  Please delete a window."
 end_define
 
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Found in info-utils.c. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|filename_non_directory
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BUILDING_LIBRARY
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Found in session.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|info_windows_initialized_p
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Found in window.c. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|message_in_echo_area
-argument_list|()
-decl_stmt|,
-name|unmessage_in_echo_area
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !BUILDING_LIBRARY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !INFO_H */
+comment|/* !_INFO_H_ */
 end_comment
 
 end_unit

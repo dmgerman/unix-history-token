@@ -4,13 +4,31 @@ comment|/* search.c -- How to search large bodies of text. */
 end_comment
 
 begin_comment
-comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"info.h"
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"general.h"
 end_include
 
 begin_include
@@ -24,6 +42,32 @@ include|#
 directive|include
 file|"nodes.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NULL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0x0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NULL */
+end_comment
 
 begin_comment
 comment|/* The search functions take two arguments:       1) a string to search for, and       2) a pointer to a SEARCH_BINDING which contains the buffer, start,         and end of the search.     They return a long, which is the offset from the start of the buffer    at which the match was found.  An offset of -1 indicates failure. */
@@ -165,15 +209,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                 The Actual Searching Functions                   */
+comment|/*		   The Actual Searching Functions		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -308,7 +352,7 @@ condition|)
 block|{
 name|alternate
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|string
 argument_list|)
@@ -649,7 +693,7 @@ condition|)
 block|{
 name|alternate
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|string
 argument_list|)
@@ -1027,15 +1071,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                    Small String Searches                         */
+comment|/*		      Small String Searches			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -1314,7 +1358,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* If the character following the close paren is a space or period,          then this node name has no more characters associated with it. */
+comment|/* If the character following the close paren is a space or period, 	 then this node name has no more characters associated with it. */
 if|if
 condition|(
 name|c
@@ -1373,13 +1417,16 @@ operator|==
 literal|'.'
 operator|&&
 operator|(
-if|#
-directive|if
-literal|0
-comment|/* This test causes a node name ending in a period, like `This.', not to    be found.  The trailing . is stripped.  This occurs in the jargon    file (`I see no X here.' is a node name).  */
-expr|(!string[i + 1]) ||
-endif|#
-directive|endif
+operator|(
+operator|!
+name|string
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|)
+operator|||
 operator|(
 name|whitespace_or_newline
 argument_list|(
@@ -1423,15 +1470,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                   Searching FILE_BUFFER's                        */
+comment|/*		     Searching FILE_BUFFER's			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -1878,9 +1925,11 @@ modifier|*
 name|binding
 decl_stmt|;
 block|{
+specifier|register
 name|long
 name|position
 decl_stmt|;
+specifier|register
 name|int
 name|offset
 decl_stmt|,
@@ -2022,7 +2071,7 @@ argument_list|,
 name|DONT_SKIP_NEWLINES
 argument_list|)
 expr_stmt|;
-comment|/* Notice that this is an exact match.  You cannot grovel through          the buffer with this function looking for random nodes. */
+comment|/* Notice that this is an exact match.  You cannot grovel through 	 the buffer with this function looking for random nodes. */
 if|if
 condition|(
 operator|(

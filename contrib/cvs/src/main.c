@@ -702,8 +702,6 @@ literal|"    -r           Make checked-out files read-only.\n"
 block|,
 literal|"    -w           Make checked-out files read-write (default).\n"
 block|,
-literal|"    -g           Force group-write perms on checked-out files.\n"
-block|,
 literal|"    -l           Turn history logging off.\n"
 block|,
 literal|"    -n           Do not execute anything that will change the disk.\n"
@@ -1807,7 +1805,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+QqgrwtnRlvb:T:e:d:Hfz:s:xaU"
+literal|"+QqrwtnRlvb:T:e:d:Hfz:s:xaU"
 argument_list|,
 name|long_options
 argument_list|,
@@ -1895,21 +1893,6 @@ case|:
 name|cvswrite
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'g'
-case|:
-comment|/* 		 * force full group write perms (used for shared checked-out 		 * source trees, see manual page) 		 */
-name|umask
-argument_list|(
-name|umask
-argument_list|(
-literal|077
-argument_list|)
-operator|&
-literal|007
-argument_list|)
 expr_stmt|;
 break|break;
 case|case

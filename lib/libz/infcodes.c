@@ -46,6 +46,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|base
+value|more.Base
+end_define
+
+begin_define
+define|#
+directive|define
+name|next
+value|more.Next
+end_define
+
+begin_define
+define|#
+directive|define
 name|exop
 value|word.what.Exop
 end_define
@@ -658,10 +672,8 @@ operator|.
 name|tree
 operator|=
 name|t
-operator|+
-name|t
 operator|->
-name|base
+name|next
 expr_stmt|;
 break|break;
 block|}
@@ -917,10 +929,8 @@ operator|.
 name|tree
 operator|=
 name|t
-operator|+
-name|t
 operator|->
-name|base
+name|next
 expr_stmt|;
 break|break;
 block|}
@@ -1199,33 +1209,6 @@ case|case
 name|WASH
 case|:
 comment|/* o: got eob, possibly more output */
-if|if
-condition|(
-name|k
-operator|>
-literal|7
-condition|)
-comment|/* return unused byte, if any */
-block|{
-name|Assert
-argument_list|(
-argument|k<
-literal|16
-argument_list|,
-literal|"inflate_codes grabbed too many bytes"
-argument_list|)
-name|k
-operator|-=
-literal|8
-expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
-name|p
-operator|--
-expr_stmt|;
-comment|/* can always return one */
-block|}
 name|FLUSH
 if|if
 condition|(

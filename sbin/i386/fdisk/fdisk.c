@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fdisk.c,v 1.26 1998/11/06 03:43:21 alex Exp $"
+literal|"$Id: fdisk.c,v 1.23 1998/07/06 06:44:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +220,7 @@ init|=
 block|{
 literal|"/dev/rwd0"
 block|,
-literal|"/dev/rda0"
+literal|"/dev/rsd0"
 block|,
 literal|"/dev/rod0"
 block|,
@@ -1643,12 +1643,6 @@ literal|"Amoeba bad block table"
 block|}
 block|,
 block|{
-literal|0x9F
-block|,
-literal|"BSD/OS"
-block|}
-block|,
-block|{
 literal|0xA5
 block|,
 literal|"FreeBSD/NetBSD/386BSD"
@@ -1664,12 +1658,6 @@ block|{
 literal|0xA7
 block|,
 literal|"NEXTSTEP"
-block|}
-block|,
-block|{
-literal|0xA9
-block|,
-literal|"NetBSD"
 block|}
 block|,
 block|{

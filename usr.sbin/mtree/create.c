@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: create.c,v 1.12 1999/01/12 02:58:23 jkoshy Exp $"
+literal|"$Id: create.c,v 1.10 1998/06/05 14:43:39 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vis.h>
 end_include
 
 begin_include
@@ -680,51 +674,6 @@ name|fd
 decl_stmt|,
 name|offset
 decl_stmt|;
-name|char
-modifier|*
-name|escaped_name
-decl_stmt|;
-name|escaped_name
-operator|=
-name|calloc
-argument_list|(
-literal|1
-argument_list|,
-name|p
-operator|->
-name|fts_namelen
-operator|*
-literal|4
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|escaped_name
-operator|==
-name|NULL
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"statf(): calloc() failed"
-argument_list|)
-expr_stmt|;
-name|strvis
-argument_list|(
-name|escaped_name
-argument_list|,
-name|p
-operator|->
-name|fts_name
-argument_list|,
-name|VIS_WHITE
-operator||
-name|VIS_OCTAL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|iflag
@@ -748,7 +697,9 @@ name|indent
 argument_list|,
 literal|""
 argument_list|,
-name|escaped_name
+name|p
+operator|->
+name|fts_name
 argument_list|)
 expr_stmt|;
 else|else
@@ -762,12 +713,9 @@ name|indent
 argument_list|,
 literal|""
 argument_list|,
-name|escaped_name
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|escaped_name
+name|p
+operator|->
+name|fts_name
 argument_list|)
 expr_stmt|;
 if|if

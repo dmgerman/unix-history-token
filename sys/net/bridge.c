@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -91,12 +85,6 @@ directive|include
 file|"opt_ipfw.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_ipdn.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -115,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_fw.h>
 end_include
 
 begin_include
@@ -842,8 +824,6 @@ control|(
 name|ifp
 operator|=
 name|ifnet
-operator|.
-name|tqh_first
 init|;
 name|ifp
 condition|;
@@ -851,9 +831,7 @@ name|ifp
 operator|=
 name|ifp
 operator|->
-name|if_link
-operator|.
-name|tqe_next
+name|if_next
 control|)
 block|{
 if|if
@@ -878,6 +856,9 @@ name|IFF_UP
 operator|)
 condition|)
 block|{
+name|int
+name|ret
+decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -1040,6 +1021,8 @@ name|dummy
 decl_stmt|;
 block|{
 name|int
+name|s
+decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
@@ -1141,7 +1124,7 @@ name|bdg_addresses
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"BRIDGE 981214, have %d interfaces\n"
+literal|"BRIDGE 980911, have %d interfaces\n"
 argument_list|,
 name|if_index
 argument_list|)
@@ -1155,8 +1138,6 @@ operator|,
 name|ifp
 operator|=
 name|ifnet
-operator|.
-name|tqh_first
 init|;
 name|i
 operator|<
@@ -1169,9 +1150,7 @@ name|ifp
 operator|=
 name|ifp
 operator|->
-name|if_link
-operator|.
-name|tqe_next
+name|if_next
 control|)
 if|if
 condition|(
@@ -1334,7 +1313,7 @@ argument_list|)
 expr_stmt|;
 name|do_bridge
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -1875,8 +1854,6 @@ block|{
 name|ifp
 operator|=
 name|ifnet
-operator|.
-name|tqh_first
 expr_stmt|;
 name|once
 operator|=
@@ -2083,9 +2060,6 @@ name|m
 argument_list|,
 operator|&
 name|rule
-argument_list|,
-name|NULL
-comment|/*next hop */
 argument_list|)
 expr_stmt|;
 if|if
@@ -2255,9 +2229,7 @@ name|ifp
 operator|=
 name|ifp
 operator|->
-name|if_link
-operator|.
-name|tqe_next
+name|if_next
 control|)
 block|{
 if|if
@@ -2318,9 +2290,7 @@ name|canfree
 operator|&&
 name|ifp
 operator|->
-name|if_link
-operator|.
-name|tqe_next
+name|if_next
 operator|==
 name|NULL
 condition|)

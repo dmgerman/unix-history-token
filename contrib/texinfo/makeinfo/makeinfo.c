@@ -1,31 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Makeinfo -- convert Texinfo source files into Info files.    $Id: makeinfo.c,v 1.60 1998/02/25 20:36:22 karl Exp $     Copyright (C) 1987, 92, 93, 94, 95, 96, 97, 98    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Makeinfo was authored by Brian Fox (bfox@ai.mit.edu). */
-end_comment
-
-begin_comment
-comment|/* Indent #pragma so that older Cpp's don't try to parse it. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX
-end_ifdef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|alloca
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _AIX */
+comment|/* Makeinfo -- convert texinfo format files into info files.    $Id: makeinfo.c,v 1.37 1996/10/04 18:20:52 karl Exp $     Copyright (C) 1987, 92, 93, 94, 95, 96 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Makeinfo is authored by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_decl_stmt
@@ -40,264 +15,12 @@ begin_decl_stmt
 name|int
 name|minor_version
 init|=
-literal|68
+literal|67
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"system.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"getopt.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TM_IN_SYS_TIME
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* !TM_IN_SYS_TIME */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|alloca
-end_undef
-
-begin_define
-define|#
-directive|define
-name|alloca
-value|__builtin_alloca
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_ALLOCA_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<alloca.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_AIX
-end_ifndef
-
-begin_function_decl
-name|char
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* We'd like to take advantage of _doprnt if it's around, a la error.c,    but then we'd have no VA_SPRINTF.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|HAVE_VPRINTF
-end_if
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|args
-parameter_list|,
-name|lastarg
-parameter_list|)
-value|va_start(args, lastarg)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|args
-parameter_list|,
-name|lastarg
-parameter_list|)
-value|va_start(args)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|VA_FPRINTF
-parameter_list|(
-name|file
-parameter_list|,
-name|fmt
-parameter_list|,
-name|ap
-parameter_list|)
-value|vfprintf (file, fmt, ap)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_SPRINTF
-parameter_list|(
-name|str
-parameter_list|,
-name|fmt
-parameter_list|,
-name|ap
-parameter_list|)
-value|vsprintf (str, fmt, ap)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not HAVE_VPRINTF */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|args
-parameter_list|,
-name|lastarg
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_alist
-value|a1, a2, a3, a4, a5, a6, a7, a8
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_dcl
-value|char *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8;
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_end
-parameter_list|(
-name|args
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* You can change some of the behavior of Makeinfo by changing the    following defines: */
+comment|/* You can change some of the behaviour of Makeinfo by changing the    following defines: */
 end_comment
 
 begin_comment
@@ -342,7 +65,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define HAVE_MACROS to enable the macro facility of Texinfo.  Using this    facility, users can create their own command procedures with    arguments.   Must always be defined.  */
+comment|/* Define HAVE_MACROS to enable the macro facility of Texinfo.  Using this    facility, users can create their own command procedures with arguments. */
 end_comment
 
 begin_define
@@ -350,6 +73,438 @@ define|#
 directive|define
 name|HAVE_MACROS
 end_define
+
+begin_comment
+comment|/* Indent #pragma so that older Cpp's don't try to parse it. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_if
+
+begin_pragma
+pragma|#
+directive|pragma
+name|alloca
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _AIX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_VARARGS_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_VARARGS_H */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"getopt.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_UNISTD_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<perror.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRING_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_STRING_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TM_IN_SYS_TIME
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !TM_IN_SYS_TIME */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_FCNTL_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_SYS_FCNTL_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_FILE_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_FILE_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|alloca
+value|__builtin_alloca
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_ALLOCA_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<alloca.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !HAVE_ALLOCA_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|alloca
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_AIX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_ALLOCA_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_decl_stmt
+name|void
+modifier|*
+name|xmalloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|xrealloc
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|malloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|realloc
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __osf__ */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+modifier|*
+name|get_brace_args
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|array_len
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_array
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|isolate_nodename
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -364,7 +519,7 @@ file|"makeinfo.h"
 end_include
 
 begin_comment
-comment|/* Nonzero means that we are currently hacking the insides of an    insertion which would use a fixed width font. */
+comment|/* Non-zero means that we are currently hacking the insides of an    insertion which would use a fixed width font. */
 end_comment
 
 begin_decl_stmt
@@ -377,7 +532,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that start_paragraph () MUST be called before we pay    any attention to close_paragraph () calls. */
+comment|/* Non-zero means that start_paragraph () MUST be called before we pay    any attention to close_paragraph () calls. */
 end_comment
 
 begin_decl_stmt
@@ -389,26 +544,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means a string is in execution, as opposed to a file. */
+comment|/* Non-zero means a string is in execution, as opposed to a file. */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|executing_string
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means a macro string is in execution, as opposed to a file. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|me_executing_string
 init|=
 literal|0
 decl_stmt|;
@@ -424,7 +566,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* If non-NULL, this is an output stream to write the full macro expansion    of the input text to.  The result is another texinfo file, but    missing @include, @infoinclude, @macro, and macro invocations.  Instead,    all of the text is placed within the file. */
+comment|/* If non-NULL, this is an output stream to write the full macro expansion    of the input text to.  The resultant file is another texinfo file, but    missing @include, @infoinclude, @macro, and macro invocations.  Instead,    all of the text is placed within the file. */
 end_comment
 
 begin_decl_stmt
@@ -437,13 +579,6 @@ name|FILE
 operator|*
 operator|)
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|macro_expansion_filename
 decl_stmt|;
 end_decl_stmt
 
@@ -495,7 +630,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means to inhibit writing macro expansions to the output    stream, because it has already been written. */
+comment|/* Non-zero means to inhibit the writing of macro expansions to the output    stream.  This is used in special cases where the output has already been    written. */
 end_comment
 
 begin_decl_stmt
@@ -553,6 +688,19 @@ begin_comment
 comment|/* HAVE_MACROS */
 end_comment
 
+begin_comment
+comment|/* Some systems don't declare this function in pwd.h. */
+end_comment
+
+begin_function_decl
+name|struct
+name|passwd
+modifier|*
+name|getpwnam
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_escape
 end_escape
 
@@ -561,15 +709,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                          Global Variables                        */
+comment|/*			    Global Variables			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -588,7 +736,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return nonzero if STRING is the text at input_text + input_text_offset,    else zero. */
+comment|/* Return non-zero if STRING is the text at input_text + input_text_offset,    else zero. */
 end_comment
 
 begin_define
@@ -665,6 +813,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Current output stream. */
+end_comment
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|output_stream
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Position in the output file. */
 end_comment
 
@@ -690,7 +849,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero indicates that filling will take place on long lines. */
+comment|/* Filling.. */
+end_comment
+
+begin_comment
+comment|/* Non-zero indicates that filling will take place on long lines. */
 end_comment
 
 begin_decl_stmt
@@ -702,7 +865,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that words are not to be split, even in long lines.  This    gets changed for cm_w (). */
+comment|/* Non-zero means that words are not to be split, even in long lines.  This    gets changed for cm_w (). */
 end_comment
 
 begin_decl_stmt
@@ -714,7 +877,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero indicates that filling a line also indents the new line. */
+comment|/* Non-zero indicates that filling a line also indents the new line. */
 end_comment
 
 begin_decl_stmt
@@ -738,7 +901,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that the use of paragraph_start_indent is inhibited.    @example uses this to line up the left columns of the example text.    A negative value for this variable is incremented each time it is used.    @noindent uses this to inhibit indentation for a single paragraph.  */
+comment|/* Non-zero means that the use of paragraph_start_indent is inhibited.    @example uses this to line up the left columns of the example text.    A negative value for this variable is incremented each time it is used.    @noindent uses this to inhibit indentation for a single paragraph.  */
 end_comment
 
 begin_decl_stmt
@@ -774,7 +937,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero indicates that indentation is temporarily turned off. */
+comment|/* Non-zero indicates that indentation is temporarily turned off. */
 end_comment
 
 begin_decl_stmt
@@ -786,7 +949,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means forcing output text to be flushright. */
+comment|/* Non-zero means forcing output text to be flushright. */
 end_comment
 
 begin_decl_stmt
@@ -798,7 +961,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that the footnote style for this document was set on    the command line, which overrides any other settings. */
+comment|/* Non-zero means that the footnote style for this document was set on    the command line, which overrides any other settings. */
 end_comment
 
 begin_decl_stmt
@@ -810,7 +973,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that we automatically number footnotes that have no    specified marker. */
+comment|/* Non-zero means that we automatically number footnotes that have no    specified marker. */
 end_comment
 
 begin_decl_stmt
@@ -878,7 +1041,7 @@ literal|'e'
 block|,
 literal|' '
 block|,
-literal|0
+literal|'\0'
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -905,7 +1068,7 @@ literal|'n'
 block|,
 literal|'u'
 block|,
-literal|0
+literal|'\0'
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -944,7 +1107,7 @@ literal|'m'
 block|,
 literal|'e'
 block|,
-literal|0
+literal|'\0'
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1098,7 +1261,7 @@ comment|/* The file that this node was found in. */
 name|int
 name|touched
 decl_stmt|;
-comment|/* Nonzero means this node has been referenced. */
+comment|/* non-zero means this node has been referenced. */
 name|int
 name|flags
 decl_stmt|;
@@ -1160,38 +1323,6 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Values for calling handle_variable_internal (). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLEAR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFSET
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCLEAR
-value|4
-end_define
-
 begin_if
 if|#
 directive|if
@@ -1251,7 +1382,7 @@ comment|/* Line number within FILENAME. */
 name|int
 name|inhibited
 decl_stmt|;
-comment|/* Nonzero means make find_macro () fail. */
+comment|/* Non-zero means make find_macro () fail. */
 name|int
 name|flags
 decl_stmt|;
@@ -1400,7 +1531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that we have seen "@top" once already. */
+comment|/* Non-zero means that we have seen "@top" once already. */
 end_comment
 
 begin_decl_stmt
@@ -1412,7 +1543,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that we have seen a non-"@top" node already. */
+comment|/* Non-zero means that we have seen a non-"@top" node already. */
 end_comment
 
 begin_decl_stmt
@@ -1426,18 +1557,6 @@ end_decl_stmt
 begin_comment
 comment|/* Flags controlling the operation of the program. */
 end_comment
-
-begin_comment
-comment|/* Default is to remove output if there were errors.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|force
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Default is to notify users of bad choices. */
@@ -1464,7 +1583,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means do not output "Node: Foo" for node separations. */
+comment|/* Non-zero means do not output "Node: Foo" for node separations. */
 end_comment
 
 begin_decl_stmt
@@ -1500,7 +1619,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means print out information about what is going on when it    is going on. */
+comment|/* Non-zero means print out information about what is going on when it    is going on. */
 end_comment
 
 begin_decl_stmt
@@ -1512,7 +1631,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means to be relaxed about the input file.  This is useful when    we can successfully format the input, but it doesn't strictly match our    somewhat pedantic ideas of correctness.  Right now, it affects what    @table and @itemize do without arguments. */
+comment|/* Non-zero means to be relaxed about the input file.  This is useful when    we can successfully format the input, but it doesn't strictly match our    somewhat pedantic ideas of correctness.  Right now, it affects what    @table and @itemize do without arguments. */
 end_comment
 
 begin_decl_stmt
@@ -1581,6 +1700,38 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Forward declarations. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STRDUP
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strdup
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STRDUP */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
@@ -1613,15 +1764,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|remember_error
-argument_list|()
-decl_stmt|,
-name|flush_file_stack
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -1707,6 +1855,13 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|execute_string
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|normalize_node_name
 parameter_list|()
 function_decl|;
@@ -1742,53 +1897,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|get_brace_args
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|expansion
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|array_len
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|free_array
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|end_of_sentence_p
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|isolate_nodename
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|void
 name|reader_loop
@@ -1821,6 +1929,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|add_word_args
+argument_list|()
+decl_stmt|,
 name|add_word
 argument_list|()
 decl_stmt|,
@@ -1859,15 +1970,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|do_flush_right_indentation
-argument_list|()
-decl_stmt|,
-name|discard_insertions
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -1878,73 +1986,6 @@ name|indent
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VA_FPRINTF
-argument_list|)
-operator|&&
-name|__STDC__
-end_if
-
-begin_comment
-comment|/* Unfortunately we must use prototypes if we are to use<stdarg.h>.  */
-end_comment
-
-begin_function_decl
-name|void
-name|add_word_args
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|execute_string
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|add_word_args
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|execute_string
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* will not use prototypes */
-end_comment
 
 begin_escape
 end_escape
@@ -2006,13 +2047,10 @@ decl_stmt|,
 name|cm_kbd
 argument_list|()
 decl_stmt|,
-name|cm_key
+name|cm_angle_brackets
 argument_list|()
 decl_stmt|,
 name|cm_no_op
-argument_list|()
-decl_stmt|,
-name|cm_no_op_line_arg
 argument_list|()
 decl_stmt|,
 name|cm_not_fixed_width
@@ -2021,13 +2059,10 @@ decl_stmt|,
 name|cm_strong
 argument_list|()
 decl_stmt|,
-name|cm_var_sc
+name|cm_var
 argument_list|()
 decl_stmt|,
 name|cm_w
-argument_list|()
-decl_stmt|,
-name|cm_image
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -2101,7 +2136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* All @def... commands map to cm_defun, most accent commands map to    cm_accent, most non-English letters map to cm_special_char.  */
+comment|/* All @defxxx commands map to cm_defun, most accent commands map to    cm_accent, most non-English letters map to cm_special_char.  */
 end_comment
 
 begin_decl_stmt
@@ -2141,12 +2176,6 @@ name|cm_pxref
 argument_list|()
 decl_stmt|,
 name|cm_inforef
-argument_list|()
-decl_stmt|,
-name|cm_uref
-argument_list|()
-decl_stmt|,
-name|cm_email
 argument_list|()
 decl_stmt|,
 name|cm_quotation
@@ -2206,12 +2235,6 @@ decl_stmt|,
 name|cm_ifinfo
 argument_list|()
 decl_stmt|,
-name|cm_ifnothtml
-argument_list|()
-decl_stmt|,
-name|cm_ifnottex
-argument_list|()
-decl_stmt|,
 name|cm_kindex
 argument_list|()
 decl_stmt|,
@@ -2261,6 +2284,9 @@ name|cm_defindex
 argument_list|()
 decl_stmt|,
 name|cm_defcodeindex
+argument_list|()
+decl_stmt|,
+name|cm_sc
 argument_list|()
 decl_stmt|,
 name|cm_result
@@ -2467,7 +2493,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|COMMAND
-name|command_table
+name|CommandTable
 index|[]
 init|=
 block|{
@@ -3252,7 +3278,7 @@ block|,
 block|{
 literal|"email"
 block|,
-name|cm_email
+name|cm_angle_brackets
 block|,
 name|BRACE_ARGS
 block|}
@@ -3435,14 +3461,6 @@ name|NO_BRACE_ARGS
 block|}
 block|,
 block|{
-literal|"html"
-block|,
-name|command_name_condition
-block|,
-name|NO_BRACE_ARGS
-block|}
-block|,
-block|{
 literal|"hyphenation"
 block|,
 name|cm_no_op
@@ -3491,30 +3509,6 @@ name|NO_BRACE_ARGS
 block|}
 block|,
 block|{
-literal|"ifnothtml"
-block|,
-name|cm_ifnothtml
-block|,
-name|NO_BRACE_ARGS
-block|}
-block|,
-block|{
-literal|"ifnotinfo"
-block|,
-name|command_name_condition
-block|,
-name|NO_BRACE_ARGS
-block|}
-block|,
-block|{
-literal|"ifnottex"
-block|,
-name|cm_ifnottex
-block|,
-name|NO_BRACE_ARGS
-block|}
-block|,
-block|{
 literal|"ifset"
 block|,
 name|cm_ifset
@@ -3536,14 +3530,6 @@ block|,
 name|command_name_condition
 block|,
 name|NO_BRACE_ARGS
-block|}
-block|,
-block|{
-literal|"image"
-block|,
-name|cm_image
-block|,
-name|BRACE_ARGS
 block|}
 block|,
 block|{
@@ -3595,17 +3581,9 @@ name|BRACE_ARGS
 block|}
 block|,
 block|{
-literal|"kbdinputstyle"
-block|,
-name|cm_no_op_line_arg
-block|,
-name|NO_BRACE_ARGS
-block|}
-block|,
-block|{
 literal|"key"
 block|,
-name|cm_key
+name|cm_angle_brackets
 block|,
 name|BRACE_ARGS
 block|}
@@ -3642,6 +3620,12 @@ block|,
 name|NO_BRACE_ARGS
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MACROS
+argument_list|)
 block|{
 literal|"macro"
 block|,
@@ -3650,6 +3634,8 @@ block|,
 name|NO_BRACE_ARGS
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"majorheading"
 block|,
@@ -3877,7 +3863,7 @@ block|,
 block|{
 literal|"sc"
 block|,
-name|cm_var_sc
+name|cm_sc
 block|,
 name|BRACE_ARGS
 block|}
@@ -4203,14 +4189,6 @@ name|NO_BRACE_ARGS
 block|}
 block|,
 block|{
-literal|"uref"
-block|,
-name|cm_uref
-block|,
-name|BRACE_ARGS
-block|}
-block|,
-block|{
 literal|"url"
 block|,
 name|cm_code
@@ -4237,7 +4215,7 @@ block|,
 block|{
 literal|"var"
 block|,
-name|cm_var_sc
+name|cm_var
 block|,
 name|BRACE_ARGS
 block|}
@@ -4379,7 +4357,7 @@ block|,
 name|NO_BRACE_ARGS
 block|}
 block|,
-comment|/* Now @include does what this was used to. */
+comment|/* Now @include does what this was supposed to. */
 block|{
 literal|"infoinclude"
 block|,
@@ -4397,12 +4375,20 @@ name|NO_BRACE_ARGS
 block|}
 block|,
 block|{
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 block|,
+operator|(
+name|COMMAND_FUNCTION
+operator|*
+operator|)
 name|NULL
+block|}
 block|,
 name|NO_BRACE_ARGS
-block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4448,17 +4434,6 @@ block|}
 block|,
 comment|/* formerly -ft */
 block|{
-literal|"force"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|'F'
-block|}
-block|,
-comment|/* do not remove output */
-block|{
 literal|"no-headers"
 block|,
 literal|0
@@ -4469,7 +4444,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* do not output Node: foo */
+comment|/* Do not output Node: foo */
 block|{
 literal|"no-pointer-validate"
 block|,
@@ -4518,6 +4493,12 @@ literal|0
 block|}
 block|,
 comment|/* formerly -nw */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MACROS
+argument_list|)
 block|{
 literal|"macro-expand"
 block|,
@@ -4528,6 +4509,9 @@ block|,
 literal|'E'
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* HAVE_MACROS */
 block|{
 literal|"number-footnotes"
 block|,
@@ -4631,508 +4615,51 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **************************************************************** */
+comment|/* Values for calling handle_variable_internal (). */
 end_comment
 
-begin_comment
-comment|/*                                                                  */
-end_comment
+begin_define
+define|#
+directive|define
+name|SET
+value|1
+end_define
 
-begin_comment
-comment|/*                      Error Handling                              */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLEAR
+value|2
+end_define
 
-begin_comment
-comment|/*                                                                  */
-end_comment
+begin_define
+define|#
+directive|define
+name|IFSET
+value|3
+end_define
 
-begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/* Number of errors encountered. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|errors_printed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Print the last error gotten from the file system. */
-end_comment
-
-begin_function
-name|int
-name|fs_error
-parameter_list|(
-name|filename
-parameter_list|)
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-block|{
-name|remember_error
-argument_list|()
-expr_stmt|;
-name|perror
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Print an error message, and return false. */
-end_comment
-
-begin_decl_stmt
-name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VA_FPRINTF
-argument_list|)
-operator|&&
-name|__STDC__
-name|error
-argument_list|(
-name|char
-operator|*
-name|format
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-name|error
-argument_list|(
-name|format
-argument_list|,
-name|va_alist
-argument_list|)
-name|char
-modifier|*
-name|format
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
-block|{
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|va_list
-name|ap
-decl_stmt|;
-endif|#
-directive|endif
-name|remember_error
-argument_list|()
-expr_stmt|;
-name|VA_START
-argument_list|(
-name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|VA_FPRINTF
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|,
-name|a4
-argument_list|,
-name|a5
-argument_list|,
-name|a6
-argument_list|,
-name|a7
-argument_list|,
-name|a8
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not VA_FPRINTF */
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|putc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/* Just like error (), but print the line number as well. */
-end_comment
-
-begin_function
-name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VA_FPRINTF
-argument_list|)
-operator|&&
-name|__STDC__
-name|line_error
-parameter_list|(
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|line_error
-parameter_list|(
-name|format
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|format
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|va_list
-name|ap
-decl_stmt|;
-endif|#
-directive|endif
-name|remember_error
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: "
-argument_list|,
-name|input_filename
-argument_list|,
-name|line_number
-argument_list|)
-expr_stmt|;
-name|VA_START
-argument_list|(
-name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|VA_FPRINTF
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|,
-name|a4
-argument_list|,
-name|a5
-argument_list|,
-name|a6
-argument_list|,
-name|a7
-argument_list|,
-name|a8
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not VA_FPRINTF */
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|".\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_decl_stmt
-name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VA_FPRINTF
-argument_list|)
-operator|&&
-name|__STDC__
-name|warning
-argument_list|(
-name|char
-operator|*
-name|format
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-name|warning
-argument_list|(
-name|format
-argument_list|,
-name|va_alist
-argument_list|)
-name|char
-modifier|*
-name|format
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
-block|{
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|va_list
-name|ap
-decl_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|print_warnings
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s:%d: warning: "
-argument_list|)
-argument_list|,
-name|input_filename
-argument_list|,
-name|line_number
-argument_list|)
-expr_stmt|;
-name|VA_START
-argument_list|(
-name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|VA_FPRINTF
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|,
-name|a4
-argument_list|,
-name|a5
-argument_list|,
-name|a6
-argument_list|,
-name|a7
-argument_list|,
-name|a8
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not VA_FPRINTF */
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|".\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_comment
-comment|/* Remember that an error has been printed.  If more than    max_error_level have been printed, then exit the program. */
-end_comment
-
-begin_function
-name|void
-name|remember_error
-parameter_list|()
-block|{
-name|errors_printed
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|max_error_level
-operator|&&
-operator|(
-name|errors_printed
-operator|>
-name|max_error_level
-operator|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"Too many errors!  Gave up.\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|flush_file_stack
-argument_list|()
-expr_stmt|;
-name|cm_bye
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_escape
-end_escape
+begin_define
+define|#
+directive|define
+name|IFCLEAR
+value|4
+end_define
 
 begin_comment
 comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                      Main ()  Start of code                      */
+comment|/*			Main ()  Start of code  		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*					        		    */
 end_comment
 
 begin_comment
@@ -5190,39 +4717,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_SETLOCALE
-comment|/* Do not use LC_ALL, because LC_NUMERIC screws up the scanf parsing      of the argument to @multicolumn.  */
-name|setlocale
-argument_list|(
-name|LC_TIME
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|setlocale
-argument_list|(
-name|LC_MESSAGES
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Set the text message domain.  */
-name|bindtextdomain
-argument_list|(
-name|PACKAGE
-argument_list|,
-name|LOCALEDIR
-argument_list|)
-expr_stmt|;
-name|textdomain
-argument_list|(
-name|PACKAGE
-argument_list|)
-expr_stmt|;
 comment|/* Parse argument flags from the input line. */
 while|while
 condition|(
@@ -5235,8 +4729,21 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:e:E:f:I:o:p:P:r:s:U:V"
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MACROS
+argument_list|)
+literal|"D:E:U:I:f:o:p:e:r:s:V"
 argument_list|,
+else|#
+directive|else
+literal|"D:U:I:f:o:p:e:r:s:V"
+argument_list|,
+endif|#
+directive|endif
+comment|/* !HAVE_MACROS */
 name|long_options
 argument_list|,
 operator|&
@@ -5276,13 +4783,13 @@ condition|(
 name|c
 condition|)
 block|{
+comment|/* User specified variable to set or clear? */
 case|case
 literal|'D'
 case|:
 case|case
 literal|'U'
 case|:
-comment|/* User specified variable to set or clear. */
 name|handle_variable_internal
 argument_list|(
 operator|(
@@ -5299,77 +4806,24 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'e'
-case|:
-comment|/* User specified error level. */
-if|if
-condition|(
-name|sscanf
+if|#
+directive|if
+name|defined
 argument_list|(
-name|optarg
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|max_error_level
+name|HAVE_MACROS
 argument_list|)
-operator|!=
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: %s arg must be numeric, not `%s'.\n"
-argument_list|)
-argument_list|,
-literal|"--error-limit"
-argument_list|,
-name|progname
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|(
-name|stderr
-argument_list|,
-name|FATAL
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
+comment|/* Use specified a macro expansion output file? */
 case|case
 literal|'E'
 case|:
-comment|/* User specified a macro expansion output file. */
 if|if
 condition|(
 operator|!
 name|macro_expansion_output_stream
 condition|)
 block|{
-name|macro_expansion_filename
-operator|=
-name|optarg
-expr_stmt|;
 name|macro_expansion_output_stream
 operator|=
-name|strcmp
-argument_list|(
-name|optarg
-argument_list|,
-literal|"-"
-argument_list|)
-operator|==
-literal|0
-condition|?
-name|stdout
-else|:
 name|fopen
 argument_list|(
 name|optarg
@@ -5384,10 +4838,7 @@ name|macro_expansion_output_stream
 condition|)
 name|error
 argument_list|(
-name|_
-argument_list|(
-literal|"Couldn't open macro expansion output `%s'"
-argument_list|)
+literal|"Couldn't open macro expansion output \"%s\""
 argument_list|,
 name|optarg
 argument_list|)
@@ -5396,76 +4847,17 @@ block|}
 else|else
 name|error
 argument_list|(
-name|_
-argument_list|(
 literal|"Cannot specify more than one macro expansion output"
 argument_list|)
-argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'f'
-case|:
-comment|/* User specified fill_column. */
-if|if
-condition|(
-name|sscanf
-argument_list|(
-name|optarg
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|fill_column
-argument_list|)
-operator|!=
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: %s arg must be numeric, not `%s'.\n"
-argument_list|)
-argument_list|,
-literal|"--fill-column"
-argument_list|,
-name|progname
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|(
-name|FATAL
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-literal|'F'
-case|:
-name|force
-operator|++
-expr_stmt|;
-comment|/* Do not remove erroneous output.  */
-break|break;
-case|case
-literal|'h'
-case|:
-name|usage
-argument_list|(
-name|NO_ERROR
-argument_list|)
-expr_stmt|;
-break|break;
+endif|#
+directive|endif
+comment|/* HAVE_MACROS */
+comment|/* User specified include file path? */
 case|case
 literal|'I'
 case|:
-comment|/* Append user-specified dir to include file path. */
 if|if
 condition|(
 operator|!
@@ -5473,7 +4865,7 @@ name|include_files_path
 condition|)
 name|include_files_path
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"."
 argument_list|)
@@ -5516,22 +4908,59 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* User specified fill_column? */
+case|case
+literal|'f'
+case|:
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|optarg
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|fill_column
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: --fill-column arg must be numeric, not `%s'.\n"
+argument_list|,
+name|progname
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|FATAL
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+comment|/* User specified output file? */
 case|case
 literal|'o'
 case|:
-comment|/* User specified output file. */
 name|command_output_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* User specified paragraph indent (paragraph_start_index)? */
 case|case
 literal|'p'
 case|:
-comment|/* User specified paragraph indent (paragraph_start_index). */
 if|if
 condition|(
 name|set_paragraph_indent
@@ -5546,10 +4975,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
-literal|"%s: --paragraph-indent arg must be numeric/`none'/`asis', not `%s'.\n"
-argument_list|)
+literal|"%s: --paragraph-indent arg must be numeric/none/asis, not `%s'.\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -5563,117 +4989,49 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+comment|/* User specified error level? */
 case|case
-literal|'P'
+literal|'e'
 case|:
-comment|/* Prepend user-specified include dir to include path. */
 if|if
 condition|(
-operator|!
-name|include_files_path
+name|sscanf
+argument_list|(
+name|optarg
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|max_error_level
+argument_list|)
+operator|!=
+literal|1
 condition|)
 block|{
-name|include_files_path
-operator|=
-name|xstrdup
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: --error-limit arg must be numeric, not `%s'.\n"
+argument_list|,
+name|progname
+argument_list|,
 name|optarg
-argument_list|)
-expr_stmt|;
-name|include_files_path
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xrealloc
-argument_list|(
-name|include_files_path
-argument_list|,
-name|strlen
-argument_list|(
-name|include_files_path
-argument_list|)
-operator|+
-literal|3
-argument_list|)
-expr_stmt|;
-comment|/* 3 for ":.\0" */
-name|strcat
-argument_list|(
-name|include_files_path
-argument_list|,
-literal|":."
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|char
-modifier|*
-name|tmp
-init|=
-name|xstrdup
+name|usage
 argument_list|(
-name|include_files_path
-argument_list|)
-decl_stmt|;
-name|include_files_path
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xrealloc
-argument_list|(
-name|include_files_path
+name|stderr
 argument_list|,
-name|strlen
-argument_list|(
-name|include_files_path
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|optarg
-argument_list|)
-operator|+
-literal|2
+name|FATAL
 argument_list|)
 expr_stmt|;
-comment|/* 2 for ":\0" */
-name|strcpy
-argument_list|(
-name|include_files_path
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|include_files_path
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|include_files_path
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
+comment|/* User specified reference warning limit? */
 case|case
 literal|'r'
 case|:
-comment|/* User specified reference warning limit. */
 if|if
 condition|(
 name|sscanf
@@ -5693,12 +5051,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
-literal|"%s: %s arg must be numeric, not `%s'.\n"
-argument_list|)
-argument_list|,
-literal|"--reference-limit"
+literal|"%s: --reference-limit arg must be numeric, not `%s'.\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -5712,10 +5065,10 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+comment|/* User specified footnote style? */
 case|case
 literal|'s'
 case|:
-comment|/* User specified footnote style. */
 if|if
 condition|(
 name|set_footnote_style
@@ -5730,10 +5083,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
 literal|"%s: --footnote-style arg must be `separate' or `end', not `%s'.\n"
-argument_list|)
 argument_list|,
 name|progname
 argument_list|,
@@ -5752,20 +5102,24 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'h'
+case|:
+name|usage
+argument_list|(
+name|NO_ERROR
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* User requested version info? */
+case|case
 literal|'V'
 case|:
-comment|/* User requested version info. */
 name|print_version_info
 argument_list|()
 expr_stmt|;
-name|printf
+name|puts
 argument_list|(
-name|_
-argument_list|(
-literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
-argument_list|)
-argument_list|,
-literal|"1998"
+literal|"Copyright (C) 1996 Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5814,10 +5168,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
 literal|"%s: missing file argument.\n"
-argument_list|)
 argument_list|,
 name|progname
 argument_list|)
@@ -5839,7 +5190,7 @@ name|splitting
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If the user has not specified an output file, use stdout. */
+comment|/* If the user has not specified an output file, then use stdout by 	 default. */
 if|if
 condition|(
 operator|!
@@ -5847,7 +5198,7 @@ name|command_output_filename
 condition|)
 name|command_output_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"-"
 argument_list|)
@@ -5920,17 +5271,215 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"makeinfo (GNU %s %s) %d.%d\n"
-argument_list|,
-name|PACKAGE
-argument_list|,
-name|VERSION
+literal|"GNU Makeinfo (Texinfo 3.9) %d.%d\n"
 argument_list|,
 name|major_version
 argument_list|,
 name|minor_version
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **************************************************************** */
+end_comment
+
+begin_comment
+comment|/*								    */
+end_comment
+
+begin_comment
+comment|/*			Generic Utilities			    */
+end_comment
+
+begin_comment
+comment|/*								    */
+end_comment
+
+begin_comment
+comment|/* **************************************************************** */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|memory_error
+parameter_list|(
+name|callers_name
+parameter_list|,
+name|bytes_wanted
+parameter_list|)
+name|char
+modifier|*
+name|callers_name
+decl_stmt|;
+name|int
+name|bytes_wanted
+decl_stmt|;
+block|{
+name|char
+name|printable_string
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|printable_string
+argument_list|,
+literal|"Virtual memory exhausted in %s ()!  Needed %d bytes."
+argument_list|,
+name|callers_name
+argument_list|,
+name|bytes_wanted
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+name|printable_string
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Just like malloc, but kills the program in case of fatal error. */
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|xmalloc
+parameter_list|(
+name|nbytes
+parameter_list|)
+name|unsigned
+name|int
+name|nbytes
+decl_stmt|;
+block|{
+name|void
+modifier|*
+name|temp
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|nbytes
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|nbytes
+operator|&&
+name|temp
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+name|NULL
+condition|)
+name|memory_error
+argument_list|(
+literal|"xmalloc"
+argument_list|,
+name|nbytes
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|temp
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Like realloc (), but barfs if there isn't enough memory. */
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|xrealloc
+parameter_list|(
+name|pointer
+parameter_list|,
+name|nbytes
+parameter_list|)
+name|void
+modifier|*
+name|pointer
+decl_stmt|;
+name|unsigned
+name|int
+name|nbytes
+decl_stmt|;
+block|{
+name|void
+modifier|*
+name|temp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pointer
+condition|)
+name|temp
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+name|nbytes
+argument_list|)
+expr_stmt|;
+else|else
+name|temp
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|pointer
+argument_list|,
+name|nbytes
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nbytes
+operator|&&
+operator|!
+name|temp
+condition|)
+name|memory_error
+argument_list|(
+literal|"xrealloc"
+argument_list|,
+name|nbytes
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|temp
+operator|)
+return|;
 block|}
 end_function
 
@@ -5958,10 +5507,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
 literal|"Try `%s --help' for more information.\n"
-argument_list|)
 argument_list|,
 name|progname
 argument_list|)
@@ -5969,18 +5515,15 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-name|_
-argument_list|(
-literal|"Usage: %s [OPTION]... TEXINFO-FILE...\n\ \n\ Translate Texinfo source documentation to a format suitable for reading\n\ with GNU Info.\n\ \n\ Options:\n\ -D VAR                 define a variable, as with @set.\n\ -E MACRO-OFILE         process macros only, output texinfo source.\n\ -I DIR                 append DIR to the @include directory search path.\n\ -P DIR                 prepend DIR to the @include directory search path.\n\ -U VAR                 undefine a variable, as with @clear.\n\ --error-limit NUM      quit after NUM errors (default %d).\n\ --fill-column NUM      break lines at NUM characters (default %d).\n\ --footnote-style STYLE output footnotes according to STYLE:\n\                          `separate' to place footnotes in their own node,\n\                          `end' to place the footnotes at the end of\n\                          the node in which they are defined (the default).\n\ --force                preserve output even if errors.\n\ --help                 display this help and exit.\n\ --no-validate          suppress node cross-reference validation.\n\ --no-warn              suppress warnings (but not errors).\n\ --no-split             suppress splitting of large files.\n\ --no-headers           suppress node separators and Node: Foo headers.\n\ --output FILE, -o FILE output to FILE, and ignore any @setfilename.\n\ --paragraph-indent VAL indent paragraphs with VAL spaces (default %d).\n\                          if VAL is `none', do not indent; if VAL is `asis',\n\                          preserve any existing indentation.\n\ --reference-limit NUM  complain about at most NUM references (default %d).\n\ --verbose              report about what is being done.\n\ --version              display version information and exit.\n\ \n\ Email bug reports to bug-texinfo@gnu.org.\n\ "
-argument_list|)
+literal|"Usage: %s [OPTION]... TEXINFO-FILE...\n\ \n\ Translate Texinfo source documentation to a format suitable for reading\n\ with GNU Info.\n\ \n\ Options:\n\ -D VAR                 define a variable, as with @set.\n\ -E MACRO-OFILE	       process macros only, output texinfo source.\n\ -I DIR                 add DIR to the directory search list for @include.\n\ -U VAR                 undefine a variable, as with @clear.\n\ --error-limit NUM      quit after NUM errors (default %d).\n\ --fill-column NUM      break lines at NUM characters (default %d).\n\ --footnote-style STYLE output footnotes according to STYLE:\n\                          `separate' to place footnotes in their own node,\n\                          `end' to place the footnotes at the end of\n\                          the node in which they are defined (the default).\n\ --help                 display this help and exit.\n\ --no-validate          suppress node cross-reference validation.\n\ --no-warn              suppress warnings (but not errors).\n\ --no-split             suppress splitting of large files.\n\ --no-headers           suppress node separators and Node: Foo headers.\n\ --output FILE, -o FILE output to FILE, and ignore any @setfilename.\n\ --paragraph-indent NUM indent paragraphs with NUM spaces (default %d).\n\ --reference-limit NUM  complain about at most NUM references (default %d).\n\ --verbose              report about what is being done.\n\ --version              display version information and exit.\n\ \n\ Email bug reports to bug-texinfo@prep.ai.mit.edu.\n\ "
 argument_list|,
 name|progname
 argument_list|,
-name|max_error_level
+name|paragraph_start_indent
 argument_list|,
 name|fill_column
 argument_list|,
-name|paragraph_start_indent
+name|max_error_level
 argument_list|,
 name|reference_warning_limit
 argument_list|)
@@ -6118,6 +5661,10 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
+name|n
+decl_stmt|,
+name|i
+decl_stmt|,
 name|count
 init|=
 literal|0
@@ -6194,14 +5741,18 @@ condition|)
 goto|goto
 name|error_exit
 goto|;
-comment|/* Load the file, with enough room for a newline and a null. */
+comment|/* Load the file. */
 name|result
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
-name|file_size
+literal|1
 operator|+
-literal|2
+name|file_size
 argument_list|)
 expr_stmt|;
 comment|/* VMS stat lies about the st_size value.  The actual number of      readable bytes is always less than this value.  The arcane      mysteries of VMS/RMS are too much to probe, so this hack     suffices to make things work. */
@@ -6211,14 +5762,6 @@ name|defined
 argument_list|(
 name|VMS
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-ifdef|#
-directive|ifdef
-name|VMS
 while|while
 condition|(
 operator|(
@@ -6238,31 +5781,6 @@ operator|)
 operator|>
 literal|0
 condition|)
-else|#
-directive|else
-comment|/* WIN32 */
-while|while
-condition|(
-operator|(
-name|n
-operator|=
-name|read
-argument_list|(
-name|file
-argument_list|,
-name|result
-operator|+
-name|count
-argument_list|,
-literal|1
-argument_list|)
-operator|)
-operator|>
-literal|0
-condition|)
-endif|#
-directive|endif
-comment|/* WIN32 */
 name|count
 operator|+=
 name|n
@@ -6276,7 +5794,7 @@ literal|1
 condition|)
 else|#
 directive|else
-comment|/* !VMS&& !WIN32 */
+comment|/* !VMS */
 name|count
 operator|=
 name|file_size
@@ -6296,7 +5814,7 @@ name|file_size
 condition|)
 endif|#
 directive|endif
-comment|/* !VMS&& !WIN32 */
+comment|/* !VMS */
 name|error_exit
 label|:
 block|{
@@ -6360,7 +5878,7 @@ name|fullpath
 expr_stmt|;
 name|node_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|fullpath
 argument_list|)
@@ -6373,23 +5891,13 @@ name|line_number
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Not strictly necessary.  This magic prevents read_token () from doing      extra unnecessary work each time it is called (that is a lot of times).      SIZE_OF_INPUT_TEXT is one past the actual end of the text. */
+comment|/* Not strictly necessary.  This magic prevents read_token () from doing      extra unnecessary work each time it is called (that is a lot of times).      The SIZE_OF_INPUT_TEXT is one past the actual end of the text. */
 name|input_text
 index|[
 name|size_of_input_text
 index|]
 operator|=
 literal|'\n'
-expr_stmt|;
-comment|/* This, on the other hand, is always necessary.  */
-name|input_text
-index|[
-name|size_of_input_text
-operator|+
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -6533,9 +6041,6 @@ if|if
 condition|(
 operator|!
 name|executing_string
-operator|&&
-operator|!
-name|me_executing_string
 condition|)
 name|discard_braces
 argument_list|()
@@ -6767,7 +6272,7 @@ operator|++
 expr_stmt|;
 name|basename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|basename
 argument_list|)
@@ -6800,7 +6305,7 @@ condition|)
 operator|*
 name|temp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 endif|#
@@ -6925,7 +6430,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 name|free
@@ -6984,7 +6489,7 @@ literal|'/'
 condition|)
 return|return
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 operator|+
@@ -6996,7 +6501,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -7072,7 +6577,7 @@ argument_list|)
 expr_stmt|;
 name|filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"noname.texi"
 argument_list|)
@@ -7334,7 +6839,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 literal|""
 argument_list|)
@@ -7379,7 +6884,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 name|filename
 argument_list|)
@@ -7442,10 +6947,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
 literal|"%s: getwd: %s, %s\n"
-argument_list|)
 argument_list|,
 name|progname
 argument_list|,
@@ -7476,7 +6978,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|localdir
 argument_list|)
@@ -7489,9 +6991,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifndef|#
-directive|ifndef
-name|WIN32
 if|if
 condition|(
 name|filename
@@ -7502,7 +7001,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
-comment|/* Return the concatenation of the environment variable HOME              and the rest of the string. */
+comment|/* Return the concatenation of the environment variable HOME 	     and the rest of the string. */
 name|char
 modifier|*
 name|temp_home
@@ -7550,7 +7049,7 @@ expr_stmt|;
 operator|*
 name|result
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -7606,14 +7105,12 @@ name|i
 operator|=
 literal|1
 init|;
-operator|(
 name|c
 operator|=
 name|filename
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++
@@ -7648,7 +7145,7 @@ operator|-
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|user_entry
 operator|=
@@ -7664,7 +7161,7 @@ name|user_entry
 condition|)
 return|return
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 name|filename
 argument_list|)
@@ -7719,9 +7216,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* not WIN32 */
 return|return
 operator|(
 name|result
@@ -7767,15 +7261,584 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                      Hacking Tokens and Strings                  */
+comment|/*			Error Handling				    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
+end_comment
+
+begin_comment
+comment|/* **************************************************************** */
+end_comment
+
+begin_comment
+comment|/* Number of errors encountered. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|errors_printed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print the last error gotten from the file system. */
+end_comment
+
+begin_function
+name|int
+name|fs_error
+parameter_list|(
+name|filename
+parameter_list|)
+name|char
+modifier|*
+name|filename
+decl_stmt|;
+block|{
+name|remember_error
+argument_list|()
+expr_stmt|;
+name|perror
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Print an error message, and return false. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_VARARGS_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_VFPRINTF
+argument_list|)
+end_if
+
+begin_function
+name|int
+name|error
+parameter_list|(
+name|va_alist
+parameter_list|)
+function|va_dcl
+block|{
+name|char
+modifier|*
+name|format
+decl_stmt|;
+name|va_list
+name|args
+decl_stmt|;
+name|remember_error
+argument_list|()
+expr_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|format
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Just like error (), but print the line number as well. */
+end_comment
+
+begin_function
+name|int
+name|line_error
+parameter_list|(
+name|va_alist
+parameter_list|)
+function|va_dcl
+block|{
+name|char
+modifier|*
+name|format
+decl_stmt|;
+name|va_list
+name|args
+decl_stmt|;
+name|remember_error
+argument_list|()
+expr_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s:%d: "
+argument_list|,
+name|input_filename
+argument_list|,
+name|line_number
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|format
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|".\n"
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|warning
+parameter_list|(
+name|va_alist
+parameter_list|)
+function|va_dcl
+block|{
+name|char
+modifier|*
+name|format
+decl_stmt|;
+name|va_list
+name|args
+decl_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|print_warnings
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s:%d: Warning: "
+argument_list|,
+name|input_filename
+argument_list|,
+name|line_number
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|format
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|".\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !(HAVE_VARARGS_H&& HAVE_VFPRINTF) */
+end_comment
+
+begin_function
+name|int
+name|error
+parameter_list|(
+name|format
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|,
+name|arg4
+parameter_list|,
+name|arg5
+parameter_list|)
+name|char
+modifier|*
+name|format
+decl_stmt|;
+block|{
+name|remember_error
+argument_list|()
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|format
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|arg3
+argument_list|,
+name|arg4
+argument_list|,
+name|arg5
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Just like error (), but print the line number as well. */
+end_comment
+
+begin_function
+name|int
+name|line_error
+parameter_list|(
+name|format
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|,
+name|arg4
+parameter_list|,
+name|arg5
+parameter_list|)
+name|char
+modifier|*
+name|format
+decl_stmt|;
+block|{
+name|remember_error
+argument_list|()
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s:%d: "
+argument_list|,
+name|input_filename
+argument_list|,
+name|line_number
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|format
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|arg3
+argument_list|,
+name|arg4
+argument_list|,
+name|arg5
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|".\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|warning
+parameter_list|(
+name|format
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|,
+name|arg4
+parameter_list|,
+name|arg5
+parameter_list|)
+name|char
+modifier|*
+name|format
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|print_warnings
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s:%d: Warning: "
+argument_list|,
+name|input_filename
+argument_list|,
+name|line_number
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|format
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|arg3
+argument_list|,
+name|arg4
+argument_list|,
+name|arg5
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|".\n"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !(HAVE_VARARGS_H&& HAVE_VFPRINTF) */
+end_comment
+
+begin_comment
+comment|/* Remember that an error has been printed.  If this is the first    error printed, then tell them which program is printing them.    If more than max_error_level have been printed, then exit the    program. */
+end_comment
+
+begin_function
+name|void
+name|remember_error
+parameter_list|()
+block|{
+name|errors_printed
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|max_error_level
+operator|&&
+operator|(
+name|errors_printed
+operator|>
+name|max_error_level
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Too many errors!  Gave up.\n"
+argument_list|)
+expr_stmt|;
+name|flush_file_stack
+argument_list|()
+expr_stmt|;
+name|cm_bye
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **************************************************************** */
+end_comment
+
+begin_comment
+comment|/*								    */
+end_comment
+
+begin_comment
+comment|/*			Hacking Tokens and Strings		    */
+end_comment
+
+begin_comment
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -7829,7 +7892,7 @@ operator|++
 expr_stmt|;
 name|result
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|" "
 argument_list|)
@@ -7911,7 +7974,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -7922,7 +7985,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return nonzero if CHARACTER is self-delimiting. */
+comment|/* Return non-zero if CHARACTER is self-delimiting. */
 end_comment
 
 begin_function
@@ -8056,7 +8119,7 @@ operator|+
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 end_function
@@ -8193,7 +8256,7 @@ index|[
 name|temp_index
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -8308,10 +8371,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Expected `%s'"
-argument_list|)
 argument_list|,
 name|string
 argument_list|)
@@ -8469,7 +8529,7 @@ index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 comment|/* Now leave input_text_offset in a consistent state. */
 name|input_text_offset
@@ -8502,15 +8562,10 @@ begin_function
 name|void
 name|get_until_in_line
 parameter_list|(
-name|expand
-parameter_list|,
 name|match
 parameter_list|,
 name|string
 parameter_list|)
-name|int
-name|expand
-decl_stmt|;
 name|char
 modifier|*
 name|match
@@ -8525,209 +8580,35 @@ begin_block
 block|{
 name|int
 name|real_bottom
-init|=
-name|size_of_input_text
+decl_stmt|,
+name|temp
 decl_stmt|;
-name|int
-name|limit
-init|=
+name|real_bottom
+operator|=
+name|size_of_input_text
+expr_stmt|;
+name|temp
+operator|=
 name|search_forward
 argument_list|(
 literal|"\n"
 argument_list|,
 name|input_text_offset
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|limit
+name|temp
 operator|<
 literal|0
 condition|)
-name|limit
+name|temp
 operator|=
 name|size_of_input_text
 expr_stmt|;
-comment|/* Replace input_text[input_text_offset .. limit-1] with its macro      expansion (actually, we expand all commands).  This allows the node      names themselves to be constructed via a macro, as in:         @macro foo{p, q}         Together: \p\& \q\.         @end macro          @node @foo{A,B}, next, prev, top            Otherwise, the `,' separating the macro args A and B is taken as      the node argument separator, so the node name is `@foo{A'.  This      expansion is only necessary on the first call, since we expand the      whole line then.            Furthermore, if we're executing a string, don't do it -- we'll end      up shrinking the execution string which is currently aliased to      `input_text', so it might get moved, and not updated in the      `execution_strings' array.  This happens when processing the      (synthetic) Overview-Footnotes node in the Texinfo manual.  */
-if|if
-condition|(
-name|expand
-operator|&&
-operator|!
-name|executing_string
-operator|&&
-operator|!
-name|me_executing_string
-condition|)
-block|{
-name|char
-modifier|*
-name|xp
-decl_stmt|;
-name|unsigned
-name|xp_len
-decl_stmt|,
-name|new_len
-decl_stmt|;
-comment|/* Get original string from input.  */
-name|unsigned
-name|raw_len
-init|=
-name|limit
-operator|-
-name|input_text_offset
-decl_stmt|;
-name|char
-modifier|*
-name|str
-init|=
-name|xmalloc
-argument_list|(
-name|raw_len
-operator|+
-literal|1
-argument_list|)
-decl_stmt|;
-name|strncpy
-argument_list|(
-name|str
-argument_list|,
-name|input_text
-operator|+
-name|input_text_offset
-argument_list|,
-name|raw_len
-argument_list|)
-expr_stmt|;
-name|str
-index|[
-name|raw_len
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Expand it.  */
-name|xp
-operator|=
-name|expansion
-argument_list|(
-name|str
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|xp_len
-operator|=
-name|strlen
-argument_list|(
-name|xp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-comment|/* Plunk the expansion into the middle of `input_text' --          which is terminated by a newline, not a null.  */
-name|str
-operator|=
-name|xmalloc
-argument_list|(
-name|real_bottom
-operator|-
-name|limit
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|str
-argument_list|,
-name|input_text
-operator|+
-name|limit
-argument_list|,
-name|real_bottom
-operator|-
-name|limit
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|new_len
-operator|=
-name|input_text_offset
-operator|+
-name|xp_len
-operator|+
-name|real_bottom
-operator|-
-name|limit
-operator|+
-literal|1
-expr_stmt|;
-name|input_text
-operator|=
-name|xrealloc
-argument_list|(
-name|input_text
-argument_list|,
-name|new_len
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|input_text
-operator|+
-name|input_text_offset
-argument_list|,
-name|xp
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|input_text
-operator|+
-name|input_text_offset
-operator|+
-name|xp_len
-argument_list|,
-name|str
-argument_list|,
-name|real_bottom
-operator|-
-name|limit
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|xp
-argument_list|)
-expr_stmt|;
-name|limit
-operator|+=
-name|xp_len
-operator|-
-name|raw_len
-expr_stmt|;
-name|real_bottom
-operator|+=
-name|xp_len
-operator|-
-name|raw_len
-expr_stmt|;
-block|}
 name|size_of_input_text
 operator|=
-name|limit
+name|temp
 expr_stmt|;
 name|get_until
 argument_list|(
@@ -8842,10 +8723,6 @@ end_function
 
 begin_block
 block|{
-name|char
-modifier|*
-name|temp
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -8860,6 +8737,10 @@ name|strlen
 argument_list|(
 name|match
 argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|temp
 decl_stmt|;
 for|for
 control|(
@@ -8975,7 +8856,7 @@ index|[
 name|match_len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|input_text_offset
 operator|=
@@ -8997,15 +8878,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                      Converting the File                         */
+comment|/*			Converting the File     		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -9078,7 +8959,7 @@ value|(4 * 4096)
 end_define
 
 begin_comment
-comment|/* Convert the Texinfo file coming from the open stream STREAM.  Assume the    source of the stream is named NAME. */
+comment|/* Convert the texinfo file coming from the open stream STREAM.  Assume the    source of the stream is named NAME. */
 end_comment
 
 begin_function
@@ -9218,14 +9099,14 @@ name|buffer_offset
 expr_stmt|;
 name|input_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
 name|node_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -9523,10 +9404,7 @@ name|REQUIRE_SETFILENAME
 argument_list|)
 name|error
 argument_list|(
-name|_
-argument_list|(
 literal|"No `%s' found in `%s'"
-argument_list|)
 argument_list|,
 name|setfilename_search
 argument_list|,
@@ -9716,40 +9594,9 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|macro_expansion_filename
-operator|&&
-name|strcmp
-argument_list|(
-name|macro_expansion_filename
-argument_list|,
-literal|"-"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: Skipping macro expansion to stdout as Info output is going there.\n"
-argument_list|)
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|macro_expansion_output_stream
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|real_output_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|real_output_filename
 argument_list|)
@@ -9783,7 +9630,7 @@ expr_stmt|;
 else|else
 name|real_output_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|real_output_filename
 argument_list|)
@@ -9800,16 +9647,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|verbose_mode
+operator|&&
 name|output_stream
 operator|!=
 name|stdout
 condition|)
 name|printf
 argument_list|(
-name|_
-argument_list|(
 literal|"Making %s file `%s' from `%s'.\n"
-argument_list|)
 argument_list|,
 name|no_headers
 condition|?
@@ -9855,7 +9701,7 @@ expr_stmt|;
 else|else
 name|pretty_output_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"stdout"
 argument_list|)
@@ -9899,10 +9745,7 @@ condition|)
 block|{
 name|add_word_args
 argument_list|(
-name|_
-argument_list|(
 literal|"This is Info file %s, produced by Makeinfo version %d.%d"
-argument_list|)
 argument_list|,
 name|output_filename
 argument_list|,
@@ -9913,10 +9756,7 @@ argument_list|)
 expr_stmt|;
 name|add_word_args
 argument_list|(
-name|_
-argument_list|(
 literal|" from the input file %s.\n"
-argument_list|)
 argument_list|,
 name|input_filename
 argument_list|)
@@ -9930,11 +9770,6 @@ argument_list|()
 expr_stmt|;
 name|finished
 label|:
-name|discard_insertions
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|close_paragraph
 argument_list|()
 expr_stmt|;
@@ -9951,74 +9786,19 @@ if|if
 condition|(
 name|macro_expansion_output_stream
 condition|)
-block|{
 name|fclose
 argument_list|(
 name|macro_expansion_output_stream
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|errors_printed
-operator|&&
-operator|!
-name|force
-operator|&&
-name|strcmp
-argument_list|(
-name|macro_expansion_filename
-argument_list|,
-literal|"-"
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|strcmp
-argument_list|(
-name|macro_expansion_filename
-argument_list|,
-literal|"/dev/null"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: Removing macro output file `%s' due to errors; use --force to preserve.\n"
-argument_list|)
-argument_list|,
-name|progname
-argument_list|,
-name|macro_expansion_filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|unlink
-argument_list|(
-name|macro_expansion_filename
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|perror
-argument_list|(
-name|macro_expansion_filename
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 endif|#
 directive|endif
 comment|/* HAVE_MACROS */
 if|if
 condition|(
 name|output_stream
+operator|!=
+name|NULL
 condition|)
 block|{
 name|output_pending_notes
@@ -10075,16 +9855,10 @@ argument_list|(
 name|tag_table
 argument_list|)
 expr_stmt|;
+comment|/* This used to test&& !errors_printed. 	 But some files might have legit warnings.  So split anyway.  */
 if|if
 condition|(
 name|splitting
-operator|&&
-operator|(
-operator|!
-name|errors_printed
-operator|||
-name|force
-operator|)
 condition|)
 name|split_file
 argument_list|(
@@ -10093,63 +9867,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|errors_printed
-operator|&&
-operator|!
-name|force
-operator|&&
-name|strcmp
-argument_list|(
-name|real_output_filename
-argument_list|,
-literal|"-"
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|strcmp
-argument_list|(
-name|real_output_filename
-argument_list|,
-literal|"/dev/null"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* If there were errors, and no --force, remove the output.  */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: Removing output file `%s' due to errors; use --force to preserve.\n"
-argument_list|)
-argument_list|,
-name|progname
-argument_list|,
-name|real_output_filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|unlink
-argument_list|(
-name|real_output_filename
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|perror
-argument_list|(
-name|real_output_filename
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|free
 argument_list|(
@@ -10173,8 +9890,16 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|pointer
+operator|)
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 condition|)
 block|{
 name|free
@@ -10208,6 +9933,12 @@ block|{
 name|free_and_clear
 argument_list|(
 operator|&
+name|current_node
+argument_list|)
+expr_stmt|;
+name|free_and_clear
+argument_list|(
+operator|&
 name|output_filename
 argument_list|)
 expr_stmt|;
@@ -10232,11 +9963,6 @@ expr_stmt|;
 name|init_brace_stack
 argument_list|()
 expr_stmt|;
-name|current_node
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* sometimes already freed */
 name|command_index
 operator|=
 literal|0
@@ -10288,7 +10014,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|output_paragraph_offset
 operator|=
@@ -10415,7 +10141,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* If this is a whitespace character, then check to see if the line          is blank.  If so, advance to the carriage return. */
+comment|/* If this is a whitespace character, then check to see if the line 	 is blank.  If so, advance to the carriage return. */
 if|if
 condition|(
 name|whitespace
@@ -10493,7 +10219,7 @@ block|{
 name|line_number
 operator|++
 expr_stmt|;
-comment|/* Check for a menu entry here, since the "escape sequence"              that begins menu entries is "\n* ". */
+comment|/* Check for a menu entry here, since the "escape sequence" 	     that begins menu entries is "\n* ". */
 if|if
 condition|(
 name|in_menu
@@ -10513,7 +10239,7 @@ decl_stmt|,
 modifier|*
 name|tem
 decl_stmt|;
-comment|/* Note that the value of TEM is discarded, since it is                  gauranteed to be NULL when glean_node_from_menu () is                  called with a Nonzero argument. */
+comment|/* Note that the value of TEM is discarded, since it is 		 gauranteed to be NULL when glean_node_from_menu () is 		 called with a non-zero argument. */
 if|if
 condition|(
 operator|!
@@ -10543,15 +10269,10 @@ break|break;
 case|case
 literal|'{'
 case|:
-comment|/* Special case.  I'm not supposed to see this character by itself.              If I do, it means there is a syntax error in the input text.              Report the error here, but remember this brace on the stack so              you can ignore its partner. */
+comment|/* Special case.  I'm not supposed to see this character by itself. 	     If I do, it means there is a syntax error in the input text. 	     Report the error here, but remember this brace on the stack so 	     you can ignore its partner. */
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Misplaced %c"
-argument_list|)
-argument_list|,
-literal|'{'
+literal|"Misplaced `{'"
 argument_list|)
 expr_stmt|;
 name|remember_brace
@@ -10559,7 +10280,7 @@ argument_list|(
 name|misplaced_brace
 argument_list|)
 expr_stmt|;
-comment|/* Don't advance input_text_offset since this happens in              remember_brace ().              input_text_offset++;            */
+comment|/* Don't advance input_text_offset since this happens in 	     remember_brace (). 	     input_text_offset++;            */
 break|break;
 case|case
 literal|'}'
@@ -10631,7 +10352,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|command_table
+name|CommandTable
 index|[
 name|i
 index|]
@@ -10645,7 +10366,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|command_table
+name|CommandTable
 index|[
 name|i
 index|]
@@ -10660,7 +10381,7 @@ condition|)
 return|return
 operator|(
 operator|&
-name|command_table
+name|CommandTable
 index|[
 name|i
 index|]
@@ -10711,7 +10432,7 @@ name|i
 index|]
 operator|)
 return|;
-comment|/* We never heard of this command. */
+comment|/* Nope, we never heard of this command. */
 return|return
 operator|(
 operator|(
@@ -10776,7 +10497,7 @@ condition|(
 name|def
 condition|)
 block|{
-comment|/* We disallow recursive use of a macro call.  Inhibit the expansion            of this macro during the life of its execution. */
+comment|/* We disallow recursive use of a macro call.  Inhibit the expansion 	   of this macro during the life of its execution. */
 if|if
 condition|(
 operator|!
@@ -10843,10 +10564,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Unknown command `%s'"
-argument_list|)
 argument_list|,
 name|command
 argument_list|)
@@ -10911,7 +10629,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|command_table
+name|CommandTable
 index|[
 name|i
 index|]
@@ -10925,7 +10643,7 @@ if|if
 condition|(
 name|proc
 operator|==
-name|command_table
+name|CommandTable
 index|[
 name|i
 index|]
@@ -10933,18 +10651,19 @@ operator|.
 name|proc
 condition|)
 return|return
-name|command_table
+operator|(
+name|CommandTable
 index|[
 name|i
 index|]
 operator|.
 name|name
+operator|)
 return|;
 return|return
-name|_
-argument_list|(
+operator|(
 literal|"NO_NAME!"
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10985,10 +10704,7 @@ literal|'{'
 condition|)
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"%c%s expected `{...}'"
-argument_list|)
+literal|"%c%s expected `{..}'"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -11115,10 +10831,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Unmatched }"
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11280,10 +10993,7 @@ argument_list|)
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%c%s missing close brace"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -11387,13 +11097,8 @@ name|output_column
 expr_stmt|;
 break|break;
 default|default:
-comment|/* ASCII control characters appear as two characters in the output          (e.g., ^A).  But characters with the high bit set are just one          on suitable terminals, so don't count them as two for line          breaking purposes.  */
 if|if
 condition|(
-literal|0
-operator|<=
-name|character
-operator|&&
 name|character
 operator|<
 literal|' '
@@ -11416,39 +11121,27 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
+begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|VA_FPRINTF
+name|HAVE_VARARGS_H
 argument_list|)
 operator|&&
-name|__STDC__
+name|defined
+argument_list|(
+name|HAVE_VSPRINTF
+argument_list|)
+end_if
+
+begin_function
+name|void
 name|add_word_args
 parameter_list|(
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|add_word_args
-parameter_list|(
-name|format
-parameter_list|,
 name|va_alist
 parameter_list|)
-name|char
-modifier|*
-name|format
-decl_stmt|;
 function|va_dcl
-endif|#
-directive|endif
 block|{
 name|char
 name|buffer
@@ -11456,64 +11149,40 @@ index|[
 literal|1000
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|va_list
-name|ap
-decl_stmt|;
-endif|#
-directive|endif
-name|VA_START
-argument_list|(
-name|ap
-argument_list|,
+name|char
+modifier|*
 name|format
+decl_stmt|;
+name|va_list
+name|args
+decl_stmt|;
+name|va_start
+argument_list|(
+name|args
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VA_SPRINTF
-name|VA_SPRINTF
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+name|vsprintf
 argument_list|(
 name|buffer
 argument_list|,
 name|format
 argument_list|,
-name|ap
+name|args
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sprintf
-argument_list|(
-name|temp_string
-argument_list|,
-name|format
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|,
-name|a4
-argument_list|,
-name|a5
-argument_list|,
-name|a6
-argument_list|,
-name|a7
-argument_list|,
-name|a8
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not VA_SPRINTF */
 name|va_end
 argument_list|(
-name|ap
+name|args
 argument_list|)
 expr_stmt|;
 name|add_word
@@ -11523,6 +11192,76 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !(HAVE_VARARGS_H&& HAVE_VSPRINTF) */
+end_comment
+
+begin_function
+name|void
+name|add_word_args
+parameter_list|(
+name|format
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|,
+name|arg4
+parameter_list|,
+name|arg5
+parameter_list|)
+name|char
+modifier|*
+name|format
+decl_stmt|;
+block|{
+name|char
+name|buffer
+index|[
+literal|1000
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buffer
+argument_list|,
+name|format
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|arg3
+argument_list|,
+name|arg4
+argument_list|,
+name|arg5
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+name|buffer
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !(HAVE_VARARGS_H&& HAVE_VSPRINTF) */
+end_comment
 
 begin_comment
 comment|/* Add STRING to output_paragraph. */
@@ -11555,7 +11294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Nonzero if the last character inserted has the syntax class of NEWLINE. */
+comment|/* Non-zero if the last character inserted has the syntax class of NEWLINE. */
 end_comment
 
 begin_decl_stmt
@@ -11579,7 +11318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that a newline character has already been    inserted, so close_paragraph () should insert one less. */
+comment|/* Non-zero means that a newline character has already been    inserted, so close_paragraph () should insert one less. */
 end_comment
 
 begin_decl_stmt
@@ -11591,7 +11330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* When nonzero we have finished an insertion (see `end_insertion') and we    want to ignore false continued paragraph closings. */
+comment|/* When non-zero we have finished an insertion (see end_insertion ()) and we    want to ignore false continued paragraph closings. */
 end_comment
 
 begin_decl_stmt
@@ -11603,7 +11342,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means attempt to make all of the lines have fill_column width. */
+comment|/* Non-zero means attempt to make all of the lines have fill_column width. */
 end_comment
 
 begin_decl_stmt
@@ -11615,7 +11354,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Add the character to the current paragraph.  If filling_enabled is    nonzero, then do filling as well. */
+comment|/* Add the character to the current paragraph.  If filling_enabled is    non-zero, then do filling as well. */
 end_comment
 
 begin_function
@@ -11757,8 +11496,10 @@ comment|/* CHARACTER is newline, and filling is enabled. */
 block|{
 if|if
 condition|(
-name|end_of_sentence_p
-argument_list|()
+name|sentence_ender
+argument_list|(
+name|last_inserted_character
+argument_list|)
 condition|)
 block|{
 name|insert
@@ -11853,7 +11594,7 @@ block|{
 name|start_paragraph
 argument_list|()
 expr_stmt|;
-comment|/* If the paragraph is supposed to be indented a certain way,                then discard all of the pending whitespace.  Otherwise, we                let the whitespace stay. */
+comment|/* If the paragraph is supposed to be indented a certain way, 	       then discard all of the pending whitespace.  Otherwise, we 	       let the whitespace stay. */
 if|if
 condition|(
 operator|!
@@ -11905,7 +11646,7 @@ operator|!=
 literal|'\n'
 condition|)
 block|{
-comment|/* If we have found a space, we have the place to break                        the line. */
+comment|/* If we have found a space, we have the place to break 		       the line. */
 if|if
 condition|(
 name|output_paragraph
@@ -11942,7 +11683,7 @@ index|]
 operator|=
 literal|'\n'
 expr_stmt|;
-comment|/* We have correctly broken the line where we want                            to.  What we don't want is spaces following where                            we have decided to break the line.  We get rid of                            them. */
+comment|/* We have correctly broken the line where we want 			   to.  What we don't want is spaces following where 			   we have decided to break the line.  We get rid of 			   them. */
 block|{
 name|int
 name|t1
@@ -12089,7 +11830,7 @@ name|indentation
 init|=
 literal|0
 decl_stmt|;
-comment|/* We have to shift any markers that are in                                front of the wrap point. */
+comment|/* We have to shift any markers that are in 			       front of the wrap point. */
 name|adjust_braces_following
 argument_list|(
 name|temp
@@ -12335,66 +12076,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Sentences might have these characters after the period (or whatever).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|post_sentence
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) == ')' || (c) == '\'' || (c) == '"' \                           || (c) == ']')
-end_define
-
-begin_comment
-comment|/* Return true if at an end-of-sentence character, possibly followed by    post-sentence punctuation to ignore.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|end_of_sentence_p
-parameter_list|()
-block|{
-name|int
-name|loc
-init|=
-name|output_paragraph_offset
-operator|-
-literal|1
-decl_stmt|;
-while|while
-condition|(
-name|loc
-operator|>
-literal|0
-operator|&&
-name|post_sentence
-argument_list|(
-name|output_paragraph
-index|[
-name|loc
-index|]
-argument_list|)
-condition|)
-name|loc
-operator|--
-expr_stmt|;
-return|return
-name|sentence_ender
-argument_list|(
-name|output_paragraph
-index|[
-name|loc
-index|]
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Remove upto COUNT characters of whitespace from the    the current output line.  If COUNT is less than zero,    then remove until none left. */
 end_comment
 
@@ -12475,7 +12156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Nonzero means do not honor calls to flush_output (). */
+comment|/* Non-zero means do not honor calls to flush_output (). */
 end_comment
 
 begin_decl_stmt
@@ -12659,23 +12340,23 @@ comment|/* Close the current paragraph, breaking the line. */
 name|close_single_paragraph
 argument_list|()
 expr_stmt|;
-comment|/* Start a new paragraph, with the correct indentation for the now          current insertion level (one above the one that we are ending). */
+comment|/* Start a new paragraph here, inserting whatever indention is correct 	 for the now current insertion level (one above the one that we are 	 ending). */
 name|start_paragraph
 argument_list|()
 expr_stmt|;
-comment|/* Tell `close_paragraph' that the previous line has already been          broken, so it should insert one less newline. */
+comment|/* Tell close_paragraph () that the previous line has already been 	 broken, so it should insert one less newline. */
 name|line_already_broken
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Tell functions such as `add_char' we've already found a newline. */
+comment|/* Let functions such as add_char () know that we have already found a 	 newline. */
 name|ignore_blank_line
 argument_list|()
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If the insertion paragraph is closed already, then we are seeing          two `@end' commands in a row.  Note that the first one we saw was          handled in the first part of this if-then-else clause, and at that          time `start_paragraph' was called, partially to handle the proper          indentation of the current line.  However, the indentation level          may have just changed again, so we may have to outdent the current          line to the new indentation level. */
+comment|/* If the insertion paragraph is closed already, then we are seeing 	 two `@end' commands in a row.  Note that the first one we saw was 	 handled in the first part of this if-then-else clause, and at that 	 time start_paragraph () was called, partially to handle the proper 	 indentation of the current line.  However, the indentation level 	 may have just changed again, so we may have to outdent the current 	 line to the new indentation level. */
 if|if
 condition|(
 name|current_indent
@@ -12762,7 +12443,7 @@ name|tindex
 operator|=
 name|output_paragraph_offset
 expr_stmt|;
-comment|/* Back up to last non-newline/space character, forcing all such          subsequent characters to be newlines.  This isn't strictly          necessary, but a couple of functions use the presence of a newline          to make decisions. */
+comment|/* Back up to last non-newline/space character, forcing all such 	 subsequent characters to be newlines.  This isn't strictly 	 necessary, but a couple of functions use the presence of a newline 	 to make decisions. */
 for|for
 control|(
 name|tindex
@@ -12824,7 +12505,7 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-comment|/* Add as many blank lines as is specified in `paragraph_spacing'. */
+comment|/* Add as many blank lines as is specified in PARAGRAPH_SPACING. */
 if|if
 condition|(
 operator|!
@@ -12854,7 +12535,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we are doing flush right indentation, then do it now          on the paragraph (really a single line). */
+comment|/* If we are doing flush right indentation, then do it now 	 on the paragraph (really a single line). */
 if|if
 condition|(
 name|force_flush_right
@@ -12941,7 +12622,7 @@ index|[
 name|output_paragraph_offset
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -13524,12 +13205,6 @@ case|case
 name|ifinfo
 case|:
 case|case
-name|ifnothtml
-case|:
-case|case
-name|ifnottex
-case|:
-case|case
 name|ifset
 case|:
 case|case
@@ -13598,6 +13273,11 @@ argument_list|)
 expr_stmt|;
 name|backup_input_pointer
 argument_list|()
+expr_stmt|;
+name|canon_white
+argument_list|(
+name|item_function
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -13678,7 +13358,7 @@ name|new
 operator|->
 name|filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|input_filename
 argument_list|)
@@ -13840,10 +13520,7 @@ return|;
 else|else
 return|return
 operator|(
-name|_
-argument_list|(
 literal|"Broken-Type in insertion_type_pname"
-argument_list|)
 operator|)
 return|;
 block|}
@@ -14145,10 +13822,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Enumeration stack overflow"
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -14283,10 +13957,7 @@ operator|)
 expr_stmt|;
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"lettering overflow, restarting at %c"
-argument_list|)
+literal|"Lettering overflow, restarting at %c"
 argument_list|,
 name|current_enumval
 argument_list|)
@@ -14369,7 +14040,7 @@ name|push_insertion
 argument_list|(
 name|type
 argument_list|,
-name|xstrdup
+name|strdup
 argument_list|(
 literal|""
 argument_list|)
@@ -14421,10 +14092,7 @@ name|no_headers
 condition|)
 name|add_word
 argument_list|(
-name|_
-argument_list|(
 literal|"* Menu:\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|in_menu
@@ -14491,7 +14159,7 @@ literal|"START-INFO-DIR-ENTRY\n"
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* I think @quotation is meant to do filling.          If you don't want filling, then use @display. */
+comment|/* I think @quotation is meant to do filling. 	 If you don't want filling, then use @display. */
 case|case
 name|quotation
 case|:
@@ -14652,7 +14320,7 @@ name|insertion_stack
 operator|->
 name|item_function
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"@bullet"
 argument_list|)
@@ -14679,10 +14347,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%s requires an argument: the formatter for %citem"
-argument_list|)
 argument_list|,
 name|insertion_type_pname
 argument_list|(
@@ -14788,12 +14453,6 @@ break|break;
 comment|/* Insertions that are no-ops in info, but do something in TeX. */
 case|case
 name|ifinfo
-case|:
-case|case
-name|ifnothtml
-case|:
-case|case
-name|ifnottex
 case|:
 case|case
 name|ifset
@@ -14938,7 +14597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Try to end the insertion with the specified TYPE.  With a value of    `bad_type', TYPE gets translated to match the value currently on top    of the stack.  Otherwise, if TYPE doesn't match the top of the    insertion stack, give error. */
+comment|/* Try to end the insertion with the specified TYPE.    TYPE, with a value of bad_type,  gets translated to match    the value currently on top of the stack.    Otherwise, if TYPE doesn't match the top of the insertion stack,    give error. */
 end_comment
 
 begin_function
@@ -14986,10 +14645,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"`%cend' expected `%s', but saw `%s'"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -15015,12 +14671,6 @@ name|type
 condition|)
 block|{
 comment|/* Insertions which have no effect on paragraph formatting. */
-case|case
-name|ifnothtml
-case|:
-case|case
-name|ifnottex
-case|:
 case|case
 name|ifinfo
 case|:
@@ -15137,7 +14787,7 @@ case|:
 case|case
 name|quotation
 case|:
-comment|/* @format is the only fixed_width insertion without a change          in indentation. */
+comment|/* @format is the only fixed_width insertion without a change 	 in indentation. */
 if|if
 condition|(
 name|type
@@ -15148,7 +14798,7 @@ name|current_indent
 operator|-=
 name|default_indentation_increment
 expr_stmt|;
-comment|/* The ending of one of these insertions always marks the          start of a new paragraph. */
+comment|/* The ending of one of these insertions always marks the 	 start of a new paragraph. */
 name|close_insertion_paragraph
 argument_list|()
 expr_stmt|;
@@ -15195,18 +14845,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Insertions cannot cross certain boundaries, such as node beginnings.  In    code that creates such boundaries, you should call `discard_insertions'    before doing anything else.  It prints the errors for you, and cleans up    the insertion stack.  With nonzero SPECIALS_OK, allows unmatched    ifinfo, ifset, ifclear, otherwise not.  */
+comment|/* Insertions cannot cross certain boundaries, such as node beginnings.  In    code that creates such boundaries, you should call discard_insertions ()    before doing anything else.  It prints the errors for you, and cleans up    the insertion stack. */
 end_comment
 
 begin_function
 name|void
 name|discard_insertions
-parameter_list|(
-name|specials_ok
-parameter_list|)
-name|int
-name|specials_ok
-decl_stmt|;
+parameter_list|()
 block|{
 name|int
 name|real_line_number
@@ -15220,9 +14865,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|specials_ok
-operator|&&
-operator|(
 name|insertion_stack
 operator|->
 name|insertion
@@ -15240,7 +14882,6 @@ operator|->
 name|insertion
 operator|==
 name|ifclear
-operator|)
 condition|)
 break|break;
 else|else
@@ -15248,20 +14889,28 @@ block|{
 name|char
 modifier|*
 name|offender
-init|=
+decl_stmt|;
+name|char
+modifier|*
+name|current_filename
+decl_stmt|;
+name|current_filename
+operator|=
+name|input_filename
+expr_stmt|;
+name|offender
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|insertion_type_pname
 argument_list|(
 name|insertion_stack
 operator|->
 name|insertion
 argument_list|)
-decl_stmt|;
-name|char
-modifier|*
-name|current_filename
-init|=
-name|input_filename
-decl_stmt|;
+expr_stmt|;
 name|input_filename
 operator|=
 name|insertion_stack
@@ -15276,10 +14925,9 @@ name|line_number
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"No matching `%cend %s'"
-argument_list|)
+literal|"This `%s' doesn't have a matching `%cend %s'"
+argument_list|,
+name|offender
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -15373,9 +15021,19 @@ block|{
 name|close_single_paragraph
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ASTERISK_NEW_PARAGRAPH
+argument_list|)
 name|cm_noindent
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ASTERISK_NEW_PARAGRAPH */
 block|}
 end_function
 
@@ -15850,10 +15508,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|_
-argument_list|(
 literal|"How did @%s end up in cm_special_char?\n"
-argument_list|)
 argument_list|,
 name|command
 argument_list|)
@@ -15910,10 +15565,7 @@ condition|)
 comment|/* This error message isn't perfect if the argument is multiple            characters, but it doesn't seem worth getting right.  */
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%c%s expects `i' or `j' as argument, not `%c'"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -15936,10 +15588,7 @@ literal|1
 condition|)
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%c%s expects a single character `i' or `j' as argument"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -15970,65 +15619,29 @@ literal|12
 index|]
 init|=
 block|{
-name|N_
-argument_list|(
 literal|"January"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"February"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"March"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"April"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"May"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"June"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"July"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"August"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"September"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"October"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"November"
-argument_list|)
 block|,
-name|N_
-argument_list|(
 literal|"December"
-argument_list|)
 block|}
 decl_stmt|;
 if|if
@@ -16061,25 +15674,30 @@ name|add_word_args
 argument_list|(
 literal|"%d %s %d"
 argument_list|,
+operator|(
 name|ts
 operator|->
 name|tm_mday
+operator|)
 argument_list|,
-name|_
-argument_list|(
+operator|(
 name|months
 index|[
 name|ts
 operator|->
 name|tm_mon
 index|]
-argument_list|)
+operator|)
 argument_list|,
+operator|(
+operator|(
 name|ts
 operator|->
 name|tm_year
+operator|)
 operator|+
 literal|1900
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -16163,7 +15781,7 @@ end_function
 
 begin_function
 name|void
-name|cm_key
+name|cm_angle_brackets
 parameter_list|(
 name|arg
 parameter_list|)
@@ -16239,10 +15857,7 @@ literal|1
 condition|)
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%c%s expects a single character as an argument"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -16326,12 +15941,74 @@ block|}
 end_function
 
 begin_comment
-comment|/* Small caps and @var in makeinfo just uppercase the text. */
+comment|/* Small caps in makeinfo has to do just all caps. */
 end_comment
 
 begin_function
 name|void
-name|cm_var_sc
+name|cm_sc
+parameter_list|(
+name|arg
+parameter_list|,
+name|start_pos
+parameter_list|,
+name|end_pos
+parameter_list|)
+name|int
+name|arg
+decl_stmt|,
+name|start_pos
+decl_stmt|,
+name|end_pos
+decl_stmt|;
+block|{
+name|not_fixed_width
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+name|END
+condition|)
+block|{
+while|while
+condition|(
+name|start_pos
+operator|<
+name|end_pos
+condition|)
+block|{
+name|output_paragraph
+index|[
+name|start_pos
+index|]
+operator|=
+name|coerce_to_upper
+argument_list|(
+name|output_paragraph
+index|[
+name|start_pos
+index|]
+argument_list|)
+expr_stmt|;
+name|start_pos
+operator|++
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* @var in makeinfo just uppercases the text. */
+end_comment
+
+begin_function
+name|void
+name|cm_var
 parameter_list|(
 name|arg
 parameter_list|,
@@ -16514,7 +16191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Various commands are no-op's. */
+comment|/* Various commands are NOP's. */
 end_comment
 
 begin_function
@@ -16522,33 +16199,6 @@ name|void
 name|cm_no_op
 parameter_list|()
 block|{ }
-end_function
-
-begin_comment
-comment|/* No-op that eats its argument on same line.  */
-end_comment
-
-begin_function
-name|void
-name|cm_no_op_line_arg
-parameter_list|()
-block|{
-name|char
-modifier|*
-name|temp
-decl_stmt|;
-name|get_rest_of_line
-argument_list|(
-operator|&
-name|temp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|temp
-argument_list|)
-expr_stmt|;
-block|}
 end_function
 
 begin_comment
@@ -16619,10 +16269,7 @@ name|START
 condition|)
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"%c%s is obsolete"
-argument_list|)
+literal|"The command `%c%s' is obsolete"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -16689,9 +16336,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|append_to_expansion_output
 argument_list|(
@@ -16724,15 +16368,14 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 block|{
 name|char
 modifier|*
 name|temp1
-init|=
+decl_stmt|;
+name|temp1
+operator|=
 operator|(
 name|char
 operator|*
@@ -16746,7 +16389,7 @@ argument_list|(
 name|temp
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|temp1
@@ -17194,7 +16837,6 @@ name|i
 operator|=
 literal|0
 init|;
-operator|(
 name|t
 operator|=
 name|section_alist
@@ -17203,7 +16845,6 @@ name|i
 index|]
 operator|.
 name|name
-operator|)
 condition|;
 name|i
 operator|++
@@ -17390,10 +17031,7 @@ name|tag_table
 decl_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Node with %ctop as a section already exists"
-argument_list|)
+literal|"There already is a node having %ctop as a section"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
@@ -17445,10 +17083,7 @@ name|filename
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Here is the %ctop node"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
@@ -17501,10 +17136,7 @@ argument_list|)
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%ctop used before %cnode, defaulting to %s"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -17563,7 +17195,7 @@ name|non_top_node_seen
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Move to the end of this line, and find out what the                sectioning command is here. */
+comment|/* Move to the end of this line, and find out what the 	       sectioning command is here. */
 while|while
 condition|(
 name|input_text
@@ -17594,7 +17226,7 @@ operator|+
 name|input_text_offset
 argument_list|)
 expr_stmt|;
-comment|/* If we found a sectioning command, then give the top section                a level of this section - 1. */
+comment|/* If we found a sectioning command, then give the top section 	       a level of this section - 1. */
 if|if
 condition|(
 name|this_section
@@ -17752,10 +17384,7 @@ decl_stmt|;
 block|{
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"%c%s is obsolete; use %c%s instead"
-argument_list|)
+literal|"The command `%c%s' is obsolete; use `%c%s' instead"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -18033,15 +17662,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                 Adding nodes, and making tags                    */
+comment|/*		   Adding nodes, and making tags		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -18266,12 +17895,7 @@ begin_function
 name|char
 modifier|*
 name|get_node_token
-parameter_list|(
-name|expand
-parameter_list|)
-name|int
-name|expand
-decl_stmt|;
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -18279,8 +17903,6 @@ name|string
 decl_stmt|;
 name|get_until_in_line
 argument_list|(
-name|expand
-argument_list|,
 literal|","
 argument_list|,
 operator|&
@@ -18494,10 +18116,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Node `%s' multiply defined (line %d is first definition at)"
-argument_list|)
+literal|"Node `%s' multiply defined (%d is first definition)"
 argument_list|,
 name|node
 argument_list|,
@@ -18669,9 +18288,7 @@ argument_list|()
 expr_stmt|;
 comment|/* There also might be insertions left lying around that haven't been      ended yet.  Do that also. */
 name|discard_insertions
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -18712,9 +18329,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|append_to_expansion_output
 argument_list|(
@@ -18729,44 +18343,22 @@ comment|/* HAVE_MACROS */
 name|node
 operator|=
 name|get_node_token
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|next
 operator|=
 name|get_node_token
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|prev
 operator|=
 name|get_node_token
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|up
 operator|=
 name|get_node_token
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|verbose_mode
-condition|)
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"Formatting node %s...\n"
-argument_list|)
-argument_list|,
-name|node
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|#
 directive|if
@@ -18777,9 +18369,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|remember_itext
 argument_list|(
@@ -18817,9 +18406,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|me_execute_string
 argument_list|(
@@ -18848,20 +18434,32 @@ comment|/* Check for defaulting of this node's next, prev, and up fields. */
 name|defaulting
 operator|=
 operator|(
-operator|*
+operator|(
+name|strlen
+argument_list|(
 name|next
+argument_list|)
 operator|==
 literal|0
+operator|)
 operator|&&
-operator|*
+operator|(
+name|strlen
+argument_list|(
 name|prev
+argument_list|)
 operator|==
 literal|0
+operator|)
 operator|&&
-operator|*
+operator|(
+name|strlen
+argument_list|(
 name|up
+argument_list|)
 operator|==
 literal|0
+operator|)
 operator|)
 expr_stmt|;
 name|this_section
@@ -18967,10 +18565,7 @@ break|break;
 block|}
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Node `%s' requires a sectioning command (e.g. %c%s)"
-argument_list|)
 argument_list|,
 name|node
 argument_list|,
@@ -18994,7 +18589,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Default the NEXT pointer to be the first menu item in                  this node, if there is a menu in this node.  We have to                  try very hard to find the menu, as it may be obscured                  by execution_strings which are on the filestack.  For                  every member of the filestack which has a FILENAME                  member which is identical to the current INPUT_FILENAME,                  search forward from that offset. */
+comment|/* Default the NEXT pointer to be the first menu item in 		 this node, if there is a menu in this node.  We have to 		 try very hard to find the menu, as it may be obscured 		 by execution_strings which are on the filestack.  For 		 every member of the filestack which has a FILENAME 		 member which is identical to the current INPUT_FILENAME, 		 search forward from that offset. */
 name|int
 name|saved_input_text_offset
 init|=
@@ -19035,7 +18630,7 @@ argument_list|)
 expr_stmt|;
 name|up
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"(dir)"
 argument_list|)
@@ -19135,7 +18730,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* We got here, so it hasn't been found yet.  Try                      the next file on the filestack if there is one. */
+comment|/* We got here, so it hasn't been found yet.  Try 		     the next file on the filestack if there is one. */
 if|if
 condition|(
 name|next_file
@@ -19199,7 +18794,7 @@ name|saved_size_of_input_text
 expr_stmt|;
 block|}
 block|}
-comment|/* Fix the level of the menu references in the Top node, iff it          was declared with @top, and no subsequent reference was found. */
+comment|/* Fix the level of the menu references in the Top node, iff it 	 was declared with @top, and no subsequent reference was found. */
 if|if
 condition|(
 name|top_node_seen
@@ -19308,7 +18903,7 @@ argument_list|)
 expr_stmt|;
 name|up
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|containing_node
 argument_list|)
@@ -19344,7 +18939,7 @@ argument_list|)
 expr_stmt|;
 name|next
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|last_ref
 operator|->
@@ -19421,7 +19016,7 @@ argument_list|)
 expr_stmt|;
 name|prev
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|ref
 operator|->
@@ -19458,7 +19053,7 @@ argument_list|)
 expr_stmt|;
 name|prev
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|ref
 operator|->
@@ -19490,9 +19085,6 @@ comment|/* Insert the correct args if we are expanding macros, and the node's   
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 operator|&&
 operator|!
 name|defaulting
@@ -19958,7 +19550,9 @@ argument_list|,
 literal|"Next"
 argument_list|)
 expr_stmt|;
-comment|/* If the Next node exists, and there is no Up, then make              sure that the Prev of the Next points back. */
+comment|/* If the Next node exists, and there is no Up, then make 	     sure that the Prev of the Next points back. */
+if|if
+condition|(
 name|temp_tag
 operator|=
 name|find_node
@@ -19967,10 +19561,6 @@ name|tags
 operator|->
 name|next
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|temp_tag
 condition|)
 block|{
 name|char
@@ -19986,7 +19576,7 @@ operator|&
 name|NO_WARN
 condition|)
 block|{
-comment|/* Do nothing if we aren't supposed to issue warnings                      about this node. */
+comment|/* Do nothing if we aren't supposed to issue warnings 		     about this node. */
 block|}
 else|else
 block|{
@@ -20017,10 +19607,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Node `%s''s Next field not pointed back to"
-argument_list|)
 argument_list|,
 name|tags
 operator|->
@@ -20041,10 +19628,7 @@ name|filename
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"This node (`%s') is the one with the bad `Prev'"
-argument_list|)
 argument_list|,
 name|temp_tag
 operator|->
@@ -20073,7 +19657,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Validate the Prev field if there is one, and we haven't already          complained about it in some way.  You don't have to have a Prev          field at this stage. */
+comment|/* Validate the Prev field if there is one, and we haven't already 	 complained about it in some way.  You don't have to have a Prev 	 field at this stage. */
 if|if
 condition|(
 operator|!
@@ -20091,7 +19675,7 @@ name|prev
 condition|)
 block|{
 name|int
-name|valid_p
+name|valid
 init|=
 name|validate
 argument_list|(
@@ -20109,7 +19693,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|valid_p
+name|valid
 condition|)
 name|tags
 operator|->
@@ -20119,7 +19703,7 @@ name|PREV_ERROR
 expr_stmt|;
 else|else
 block|{
-comment|/* If the Prev field is not the same as the Up field,                  then the node pointed to by the Prev field must have                  a Next field which points to this node. */
+comment|/* If the Prev field is not the same as the Up field, 		 then the node pointed to by the Prev field must have 		 a Next field which points to this node. */
 if|if
 condition|(
 name|tags
@@ -20151,7 +19735,7 @@ operator|->
 name|prev
 argument_list|)
 expr_stmt|;
-comment|/* If we aren't supposed to issue warnings about the                      target node, do nothing. */
+comment|/* If we aren't supposed to issue warnings about the 		     target node, do nothing. */
 if|if
 condition|(
 operator|!
@@ -20195,10 +19779,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Node `%s's Prev field not pointed back to"
-argument_list|)
+literal|"Node `%s''s Prev field not pointed back to"
 argument_list|,
 name|tags
 operator|->
@@ -20219,10 +19800,7 @@ name|filename
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"This node (`%s') has the bad Next"
-argument_list|)
+literal|"This node (`%s') is the one with the bad `Next'"
 argument_list|,
 name|temp_tag
 operator|->
@@ -20266,10 +19844,7 @@ name|tags
 operator|->
 name|node
 argument_list|,
-name|_
-argument_list|(
 literal|"Top"
-argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -20277,10 +19852,7 @@ operator|)
 condition|)
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Node `%s' missing Up field"
-argument_list|)
+literal|"Node `%s' is missing an \"Up\" field"
 argument_list|,
 name|tags
 operator|->
@@ -20296,7 +19868,7 @@ name|up
 condition|)
 block|{
 name|int
-name|valid_p
+name|valid
 init|=
 name|validate
 argument_list|(
@@ -20311,10 +19883,10 @@ argument_list|,
 literal|"Up"
 argument_list|)
 decl_stmt|;
-comment|/* If node X has Up: Y, then warn if Y fails to have a menu item              or note pointing at X, if Y isn't of the form "(Y)". */
+comment|/* If node X has Up: Y, then warn if Y fails to have a menu item 	     or note pointing at X, if Y isn't of the form "(Y)". */
 if|if
 condition|(
-name|valid_p
+name|valid
 operator|&&
 operator|*
 name|tags
@@ -20454,10 +20026,7 @@ name|tref
 condition|)
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"`%s' has an Up field of `%s', but `%s' has no menu item for `%s'"
-argument_list|)
 argument_list|,
 name|tags
 operator|->
@@ -20561,10 +20130,7 @@ name|line_no
 expr_stmt|;
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"node `%s' has been referenced %d times"
-argument_list|)
+literal|"Node `%s' has been referenced %d times"
 argument_list|,
 name|tags
 operator|->
@@ -20597,7 +20163,7 @@ name|tags
 operator|->
 name|line_no
 expr_stmt|;
-comment|/* Notice that the node "Top" is special, and doesn't have to              be referenced. */
+comment|/* Notice that the node "Top" is special, and doesn't have to 	     be referenced. */
 if|if
 condition|(
 name|strcasecmp
@@ -20606,20 +20172,14 @@ name|tags
 operator|->
 name|node
 argument_list|,
-name|_
-argument_list|(
 literal|"Top"
-argument_list|)
 argument_list|)
 operator|!=
 literal|0
 condition|)
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"unreferenced node `%s'"
-argument_list|)
+literal|"Unreferenced node `%s'"
 argument_list|,
 name|tags
 operator|->
@@ -20711,10 +20271,7 @@ name|line
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"%s reference to nonexistent node `%s'"
-argument_list|)
+literal|"Validation error.  `%s' field points to node `%s', which doesn't exist"
 argument_list|,
 name|label
 argument_list|,
@@ -20877,7 +20434,7 @@ name|root_pathname
 condition|)
 name|root_pathname
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|""
 argument_list|)
@@ -20961,7 +20518,7 @@ name|file_top
 operator|+
 name|size
 expr_stmt|;
-comment|/* If the rest of this file is only one node, then            that is the entire subfile. */
+comment|/* If the rest of this file is only one node, then 	   that is the entire subfile. */
 if|if
 condition|(
 operator|!
@@ -21046,7 +20603,7 @@ goto|goto
 name|write_region
 goto|;
 block|}
-comment|/* Otherwise, find the largest number of nodes that can fit in            this subfile. */
+comment|/* Otherwise, find the largest number of nodes that can fit in 	   this subfile. */
 for|for
 control|(
 init|;
@@ -21067,7 +20624,7 @@ operator|->
 name|next_ent
 condition|)
 block|{
-comment|/* This entry is the last node.  Search forward for the end                    of this node, and that is the end of this file. */
+comment|/* This entry is the last node.  Search forward for the end 	           of this node, and that is the end of this file. */
 name|int
 name|i
 init|=
@@ -21153,7 +20710,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* Here we want to write out everything before the last                        node, and then write the last node out in a file                        by itself. */
+comment|/* Here we want to write out everything before the last 		       node, and then write the last node out in a file 		       by itself. */
 name|file_bot
 operator|=
 name|tags
@@ -21468,7 +21025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The strings here are followed in the message by `reference to...' in    the `validate' routine.  */
+comment|/* Some menu hacking.  This is used to remember menu references while    reading the input file.  After the output file has been written, if    validation is on, then we use the contents of NODE_REFERENCES as a    list of nodes to validate. */
 end_comment
 
 begin_function
@@ -21501,7 +21058,7 @@ name|followed_reference
 case|:
 return|return
 operator|(
-literal|"Cross"
+literal|"Followed-Reference"
 operator|)
 return|;
 default|default:
@@ -21515,7 +21072,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Remember this node name for later validation use.  This is used to    remember menu references while reading the input file.  After the    output file has been written, if validation is on, then we use the    contents of `node_references' as a list of nodes to validate.  */
+comment|/* Remember this node name for later validation use. */
 end_comment
 
 begin_function
@@ -21566,7 +21123,7 @@ name|temp
 operator|->
 name|node
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|node
 argument_list|)
@@ -21593,7 +21150,7 @@ name|temp
 operator|->
 name|containing_node
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|current_node
 condition|?
@@ -21878,8 +21435,6 @@ literal|1
 expr_stmt|;
 name|get_until_in_line
 argument_list|(
-literal|0
-argument_list|,
 literal|":"
 argument_list|,
 operator|&
@@ -21969,7 +21524,7 @@ operator|-
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -22066,7 +21621,7 @@ block|{
 operator|*
 name|nodename
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return;
 block|}
@@ -22091,14 +21646,12 @@ block|}
 for|for
 control|(
 init|;
-operator|(
 name|c
 operator|=
 name|nodename
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++
@@ -22130,7 +21683,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* If the character following the close paren is a space, then this          node has no more characters associated with it. */
+comment|/* If the character following the close paren is a space, then this 	 node has no more characters associated with it. */
 if|if
 condition|(
 name|c
@@ -22218,7 +21771,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 end_function
@@ -22241,20 +21794,14 @@ condition|)
 block|{
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"%cmenu seen before first node"
-argument_list|)
+literal|"%cmenu seen before a node has been defined"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
 expr_stmt|;
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"creating `Top' node"
-argument_list|)
+literal|"Creating `TOP' node."
 argument_list|)
 expr_stmt|;
 name|execute_string
@@ -22289,20 +21836,14 @@ condition|)
 block|{
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"%cmenu seen before first node"
-argument_list|)
+literal|"%cmenu seen before a node has been defined"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
 expr_stmt|;
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"creating `Top' node"
-argument_list|)
+literal|"Creating `TOP' node."
 argument_list|)
 expr_stmt|;
 name|execute_string
@@ -22327,23 +21868,19 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                      Cross Reference Hacking                     */
+comment|/*			Cross Reference Hacking			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/* Return next comma-delimited argument, but do not cross a close-brace    boundary.  Clean up whitespace, too.  */
 end_comment
 
 begin_function
@@ -22741,39 +22278,33 @@ name|input_text
 index|[
 name|temp
 index|]
-operator|!=
+operator|==
 literal|'.'
-operator|&&
+operator|||
 name|input_text
 index|[
 name|temp
 index|]
-operator|!=
+operator|==
 literal|','
-operator|&&
+operator|||
 name|input_text
 index|[
 name|temp
 index|]
-operator|!=
+operator|==
 literal|'\t'
 condition|)
+return|return;
+else|else
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"`.' or `,' must follow cross reference, not %c"
-argument_list|)
-argument_list|,
-name|input_text
-index|[
-name|temp
-index|]
+literal|"Cross-reference must be terminated with a period or a comma"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-break|break;
 block|}
 block|}
 block|}
@@ -22838,29 +22369,28 @@ block|{
 name|char
 modifier|*
 name|node
-init|=
-name|get_xref_token
-argument_list|()
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|pname
-init|=
-name|get_xref_token
-argument_list|()
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|file
-init|=
+decl_stmt|;
+name|node
+operator|=
 name|get_xref_token
 argument_list|()
-decl_stmt|;
-if|if
-condition|(
-operator|*
+expr_stmt|;
 name|pname
-condition|)
+operator|=
+name|get_xref_token
+argument_list|()
+expr_stmt|;
+name|file
+operator|=
+name|get_xref_token
+argument_list|()
+expr_stmt|;
 name|execute_string
 argument_list|(
 literal|"*note %s: (%s)%s"
@@ -22870,565 +22400,6 @@ argument_list|,
 name|file
 argument_list|,
 name|node
-argument_list|)
-expr_stmt|;
-else|else
-name|execute_string
-argument_list|(
-literal|"*note (%s)%s::"
-argument_list|,
-name|file
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|pname
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* A URL reference.  */
-end_comment
-
-begin_function
-name|void
-name|cm_uref
-parameter_list|(
-name|arg
-parameter_list|,
-name|start_pos
-parameter_list|,
-name|end_pos
-parameter_list|)
-name|int
-name|arg
-decl_stmt|,
-name|start_pos
-decl_stmt|,
-name|end_pos
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|arg
-operator|==
-name|END
-condition|)
-block|{
-name|char
-modifier|*
-name|comma
-decl_stmt|;
-name|char
-modifier|*
-name|arg
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|output_paragraph
-index|[
-name|start_pos
-index|]
-decl_stmt|;
-name|output_paragraph
-index|[
-name|end_pos
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|output_column
-operator|-=
-name|end_pos
-operator|-
-name|start_pos
-expr_stmt|;
-name|output_paragraph_offset
-operator|=
-name|start_pos
-expr_stmt|;
-name|arg
-operator|=
-name|xstrdup
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|comma
-operator|=
-name|strchr
-argument_list|(
-name|arg
-argument_list|,
-literal|','
-argument_list|)
-expr_stmt|;
-comment|/* let's hope for no commas in the url  */
-if|if
-condition|(
-name|comma
-condition|)
-block|{
-operator|*
-name|comma
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Ignore spaces at beginning of second arg.  */
-for|for
-control|(
-name|comma
-operator|++
-init|;
-name|isspace
-argument_list|(
-operator|*
-name|comma
-argument_list|)
-condition|;
-name|comma
-operator|++
-control|)
-empty_stmt|;
-name|add_word
-argument_list|(
-name|comma
-argument_list|)
-expr_stmt|;
-name|add_char
-argument_list|(
-literal|' '
-argument_list|)
-expr_stmt|;
-name|add_char
-argument_list|(
-literal|'('
-argument_list|)
-expr_stmt|;
-name|add_word
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|add_char
-argument_list|(
-literal|')'
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-specifier|extern
-name|int
-name|printing_index
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|printing_index
-condition|)
-name|add_char
-argument_list|(
-literal|'`'
-argument_list|)
-expr_stmt|;
-name|add_word
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|printing_index
-condition|)
-name|add_char
-argument_list|(
-literal|'\''
-argument_list|)
-expr_stmt|;
-block|}
-name|free
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* An email reference.  */
-end_comment
-
-begin_function
-name|void
-name|cm_email
-parameter_list|(
-name|arg
-parameter_list|,
-name|start_pos
-parameter_list|,
-name|end_pos
-parameter_list|)
-name|int
-name|arg
-decl_stmt|,
-name|start_pos
-decl_stmt|,
-name|end_pos
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|arg
-operator|==
-name|END
-condition|)
-block|{
-name|char
-modifier|*
-name|comma
-decl_stmt|;
-name|char
-modifier|*
-name|arg
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|output_paragraph
-index|[
-name|start_pos
-index|]
-decl_stmt|;
-name|output_paragraph
-index|[
-name|end_pos
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|output_column
-operator|-=
-name|end_pos
-operator|-
-name|start_pos
-expr_stmt|;
-name|output_paragraph_offset
-operator|=
-name|start_pos
-expr_stmt|;
-name|arg
-operator|=
-name|xstrdup
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|comma
-operator|=
-name|strchr
-argument_list|(
-name|arg
-argument_list|,
-literal|','
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|comma
-condition|)
-block|{
-operator|*
-name|comma
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|comma
-operator|++
-init|;
-name|isspace
-argument_list|(
-operator|*
-name|comma
-argument_list|)
-condition|;
-name|comma
-operator|++
-control|)
-empty_stmt|;
-name|add_word
-argument_list|(
-name|comma
-argument_list|)
-expr_stmt|;
-name|add_char
-argument_list|(
-literal|' '
-argument_list|)
-expr_stmt|;
-block|}
-name|add_char
-argument_list|(
-literal|'<'
-argument_list|)
-expr_stmt|;
-name|add_word
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|add_char
-argument_list|(
-literal|'>'
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* An external image is a reference, kind of.  The parsing is (not    coincidentally) similar, anyway.  */
-end_comment
-
-begin_function
-name|void
-name|cm_image
-parameter_list|(
-name|arg
-parameter_list|)
-name|int
-name|arg
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|arg
-operator|==
-name|START
-condition|)
-block|{
-name|char
-modifier|*
-name|name_arg
-init|=
-name|get_xref_token
-argument_list|()
-decl_stmt|;
-comment|/* We don't yet care about any other args, but read them so they          don't end up in the text.  */
-name|char
-modifier|*
-name|arg
-init|=
-name|get_xref_token
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|arg
-condition|)
-name|free
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|arg
-operator|=
-name|get_xref_token
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|arg
-condition|)
-name|free
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|name_arg
-condition|)
-block|{
-comment|/* Try to open foo.txt.  */
-name|FILE
-modifier|*
-name|image_file
-decl_stmt|;
-name|char
-modifier|*
-name|name
-init|=
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|name_arg
-argument_list|)
-operator|+
-literal|4
-argument_list|)
-decl_stmt|;
-name|strcpy
-argument_list|(
-name|name
-argument_list|,
-name|name_arg
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|name
-argument_list|,
-literal|".txt"
-argument_list|)
-expr_stmt|;
-name|image_file
-operator|=
-name|fopen
-argument_list|(
-name|name
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|image_file
-condition|)
-block|{
-name|int
-name|ch
-decl_stmt|;
-name|int
-name|save_inhibit_indentation
-init|=
-name|inhibit_paragraph_indentation
-decl_stmt|;
-name|int
-name|save_filling_enabled
-init|=
-name|filling_enabled
-decl_stmt|;
-name|inhibit_paragraph_indentation
-operator|=
-literal|1
-expr_stmt|;
-name|filling_enabled
-operator|=
-literal|0
-expr_stmt|;
-name|last_char_was_newline
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Maybe we need to remove the final newline if the image                  file is only one line to allow in-line images.  On the                  other hand, they could just make the file without a                  final newline.  */
-while|while
-condition|(
-operator|(
-name|ch
-operator|=
-name|getc
-argument_list|(
-name|image_file
-argument_list|)
-operator|)
-operator|!=
-name|EOF
-condition|)
-name|add_char
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-name|inhibit_paragraph_indentation
-operator|=
-name|save_inhibit_indentation
-expr_stmt|;
-name|filling_enabled
-operator|=
-name|save_filling_enabled
-expr_stmt|;
-if|if
-condition|(
-name|fclose
-argument_list|(
-name|image_file
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-name|warning
-argument_list|(
-name|_
-argument_list|(
-literal|"@image file `%s' unreadable: %s"
-argument_list|)
-argument_list|,
-name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|line_error
-argument_list|(
-name|_
-argument_list|(
-literal|"@image missing filename argument"
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name_arg
-condition|)
-name|free
-argument_list|(
-name|name_arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -23443,15 +22414,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                      Insertion Command Stubs                     */
+comment|/*			Insertion Command Stubs			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -23524,7 +22495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* @cartouche/@end cartouche draws box with rounded corners in    TeX output.  Right now, just a no-op insertion. */
+comment|/* @cartouche/@end cartouche draws box with rounded corners in    TeX output.  Right now, just a NOP insertion. */
 end_comment
 
 begin_function
@@ -23637,8 +22608,6 @@ decl_stmt|;
 block|{
 name|get_until_in_line
 argument_list|(
-literal|0
-argument_list|,
 literal|"."
 argument_list|,
 operator|&
@@ -23664,7 +22633,7 @@ argument_list|)
 expr_stmt|;
 name|enumeration_arg
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|default_string
 argument_list|)
@@ -23689,10 +22658,7 @@ condition|)
 block|{
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"%s requires letter or digit"
-argument_list|)
+literal|"%s requires a letter or a digit"
 argument_list|,
 name|insertion_type_pname
 argument_list|(
@@ -23716,7 +22682,7 @@ break|break;
 block|}
 name|enumeration_arg
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|default_string
 argument_list|)
@@ -23809,32 +22775,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|cm_ifnothtml
-parameter_list|()
-block|{
-name|begin_insertion
-argument_list|(
-name|ifnothtml
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cm_ifnottex
-parameter_list|()
-block|{
-name|begin_insertion
-argument_list|(
-name|ifnottex
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* Begin an insertion where the lines are not filled or indented. */
 end_comment
@@ -23869,116 +22809,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* End existing insertion block. */
-end_comment
-
-begin_function
-name|void
-name|cm_end
-parameter_list|()
-block|{
-name|char
-modifier|*
-name|temp
-decl_stmt|;
-name|enum
-name|insertion_type
-name|type
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|insertion_level
-condition|)
-block|{
-name|line_error
-argument_list|(
-name|_
-argument_list|(
-literal|"Unmatched `%c%s'"
-argument_list|)
-argument_list|,
-name|COMMAND_PREFIX
-argument_list|,
-name|command
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|get_rest_of_line
-argument_list|(
-operator|&
-name|temp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|temp
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-condition|)
-name|line_error
-argument_list|(
-name|_
-argument_list|(
-literal|"`%c%s' needs something after it"
-argument_list|)
-argument_list|,
-name|COMMAND_PREFIX
-argument_list|,
-name|command
-argument_list|)
-expr_stmt|;
-name|type
-operator|=
-name|find_type_from_name
-argument_list|(
-name|temp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|bad_type
-condition|)
-block|{
-name|line_error
-argument_list|(
-name|_
-argument_list|(
-literal|"Bad argument to `%s', `%s', using `%s'"
-argument_list|)
-argument_list|,
-name|command
-argument_list|,
-name|temp
-argument_list|,
-name|insertion_type_pname
-argument_list|(
-name|current_insertion_type
-argument_list|()
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|end_insertion
-argument_list|(
-name|type
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|temp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_escape
 end_escape
 
@@ -23987,15 +22817,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                        Conditional Handling                      */
+comment|/*			  Conditional Handling			    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -24110,7 +22940,7 @@ name|temp
 operator|->
 name|value
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|value
 argument_list|)
@@ -24141,7 +22971,7 @@ name|temp
 operator|->
 name|name
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -24150,7 +22980,7 @@ name|temp
 operator|->
 name|value
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|value
 argument_list|)
@@ -24464,6 +23294,10 @@ name|void
 name|cm_ifeq
 parameter_list|()
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -24571,7 +23405,12 @@ block|{
 name|char
 modifier|*
 name|name
-init|=
+decl_stmt|,
+modifier|*
+name|value
+decl_stmt|;
+name|name
+operator|=
 operator|(
 name|char
 operator|*
@@ -24581,21 +23420,17 @@ name|output_paragraph
 index|[
 name|start_pos
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|value
-decl_stmt|;
+expr_stmt|;
 name|output_paragraph
 index|[
 name|end_pos
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|name
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -24631,10 +23466,7 @@ expr_stmt|;
 else|else
 name|add_word_args
 argument_list|(
-name|_
-argument_list|(
 literal|"{No Value For \"%s\"}"
-argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -24674,6 +23506,11 @@ argument_list|)
 expr_stmt|;
 name|backup_input_pointer
 argument_list|()
+expr_stmt|;
+name|canon_white
+argument_list|(
+name|name
+argument_list|)
 expr_stmt|;
 name|handle_variable_internal
 argument_list|(
@@ -24791,7 +23628,7 @@ expr_stmt|;
 operator|*
 name|temp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -24801,10 +23638,7 @@ name|name
 condition|)
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%c%s requires a name"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -24832,7 +23666,7 @@ name|defined
 argument_list|(
 name|SET_WITH_EQUAL
 argument_list|)
-comment|/* Allow a value to be saved along with a variable.  The value is                the text following an `=' sign in NAME, if any is present. */
+comment|/* Allow a value to be saved along with a variable.  The value is 	       the text following an `=' sign in NAME, if any is present. */
 for|for
 control|(
 name|value
@@ -24860,7 +23694,7 @@ operator|*
 name|value
 operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -24888,13 +23722,13 @@ operator|-
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 else|#
 directive|else
 comment|/* !SET_WITH_EQUAL */
-comment|/* The VALUE of NAME is the remainder of the line sans                whitespace. */
+comment|/* The VALUE of NAME is the remainder of the line sans 	       whitespace. */
 if|if
 condition|(
 name|additional_text_present
@@ -24944,7 +23778,7 @@ case|:
 case|case
 name|IFCLEAR
 case|:
-comment|/* If IFSET and NAME is not set, or if IFCLEAR and NAME is set,              read lines from the the file until we reach a matching              "@end CONDITION".  This means that we only take note of              "@ifset/clear" and "@end" commands. */
+comment|/* If IFSET and NAME is not set, or if IFCLEAR and NAME is set, 	     read lines from the the file until we reach a matching 	     "@end CONDITION".  This means that we only take note of 	     "@ifset/clear" and "@end" commands. */
 block|{
 name|char
 name|condition
@@ -24954,11 +23788,6 @@ index|]
 decl_stmt|;
 name|int
 name|condition_len
-decl_stmt|;
-name|int
-name|orig_line_number
-init|=
-name|line_number
 decl_stmt|;
 if|if
 condition|(
@@ -25027,10 +23856,6 @@ while|while
 condition|(
 operator|!
 name|done
-operator|&&
-name|input_text_offset
-operator|<
-name|size_of_input_text
 condition|)
 block|{
 name|char
@@ -25150,7 +23975,7 @@ expr_stmt|;
 operator|*
 name|temp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -25187,37 +24012,7 @@ name|freeable_line
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|done
-condition|)
-block|{
-name|int
-name|save
-init|=
-name|line_number
-decl_stmt|;
-name|line_number
-operator|=
-name|orig_line_number
-expr_stmt|;
-name|line_error
-argument_list|(
-name|_
-argument_list|(
-literal|"Reached eof before matching @end %s"
-argument_list|)
-argument_list|,
-name|condition
-argument_list|)
-expr_stmt|;
-name|line_number
-operator|=
-name|save
-expr_stmt|;
-block|}
-comment|/* We found the end of a false @ifset/ifclear.  If we are                  in a menu, back up over the newline that ends the ifset,                  since that newline may also begin the next menu entry. */
+comment|/* We found the end of a false @ifset/ifclear.  If we are 		 in a menu, back up over the newline that ends the ifset, 		 since that newline may also begin the next menu entry. */
 break|break;
 block|}
 else|else
@@ -25270,7 +24065,7 @@ comment|/* The size of the buffer. */
 name|int
 name|in_use
 decl_stmt|;
-comment|/* Nonzero means string currently in use. */
+comment|/* Non-zero means string currently in use. */
 block|}
 name|EXECUTION_STRING
 typedef|;
@@ -25540,39 +24335,27 @@ begin_comment
 comment|/* Execute the string produced by formatting the ARGs with FORMAT.  This    is like submitting a new file with @include. */
 end_comment
 
-begin_function
-name|void
+begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|VA_FPRINTF
+name|HAVE_VARARGS_H
 argument_list|)
 operator|&&
-name|__STDC__
+name|defined
+argument_list|(
+name|HAVE_VSPRINTF
+argument_list|)
+end_if
+
+begin_function
+name|void
 name|execute_string
 parameter_list|(
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|execute_string
-parameter_list|(
-name|format
-parameter_list|,
 name|va_alist
 parameter_list|)
-name|char
-modifier|*
-name|format
-decl_stmt|;
 function|va_dcl
-endif|#
-directive|endif
 block|{
 name|EXECUTION_STRING
 modifier|*
@@ -25582,14 +24365,13 @@ name|char
 modifier|*
 name|temp_string
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VA_FPRINTF
-name|va_list
-name|ap
+name|char
+modifier|*
+name|format
 decl_stmt|;
-endif|#
-directive|endif
+name|va_list
+name|args
+decl_stmt|;
 name|es
 operator|=
 name|get_execution_string
@@ -25609,58 +24391,105 @@ name|in_use
 operator|=
 literal|1
 expr_stmt|;
-name|VA_START
+name|va_start
 argument_list|(
-name|ap
-argument_list|,
-name|format
+name|args
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VA_SPRINTF
-name|VA_SPRINTF
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+name|vsprintf
 argument_list|(
 name|temp_string
 argument_list|,
 name|format
 argument_list|,
-name|ap
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* !(HAVE_VARARGS_H&& HAVE_VSPRINTF) */
+name|void
+name|execute_string
+parameter_list|(
+name|format
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|,
+name|arg4
+parameter_list|,
+name|arg5
+parameter_list|)
+name|char
+modifier|*
+name|format
+decl_stmt|;
+block|{
+name|EXECUTION_STRING
+modifier|*
+name|es
+decl_stmt|;
+name|char
+modifier|*
+name|temp_string
+decl_stmt|;
+name|es
+operator|=
+name|get_execution_string
+argument_list|(
+literal|4000
+argument_list|)
+expr_stmt|;
+name|temp_string
+operator|=
+name|es
+operator|->
+name|string
+expr_stmt|;
+name|es
+operator|->
+name|in_use
+operator|=
+literal|1
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|temp_string
 argument_list|,
 name|format
 argument_list|,
-name|a1
+name|arg1
 argument_list|,
-name|a2
+name|arg2
 argument_list|,
-name|a3
+name|arg3
 argument_list|,
-name|a4
+name|arg4
 argument_list|,
-name|a5
-argument_list|,
-name|a6
-argument_list|,
-name|a7
-argument_list|,
-name|a8
+name|arg5
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not VA_SPRINTF */
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
+comment|/* !(HAVE_VARARGS_H&& HAVE_VSPRINTF) */
 name|pushfile
 argument_list|()
 expr_stmt|;
@@ -25674,7 +24503,7 @@ name|temp_string
 expr_stmt|;
 name|input_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|input_filename
 argument_list|)
@@ -25710,13 +24539,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Return what would be output for STR, i.e., expand Texinfo commands.    If IMPLICIT_CODE is set, expand @code{STR}.  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|expansion
@@ -25753,10 +24576,6 @@ name|paragraph_is_open
 decl_stmt|;
 name|inhibit_output_flushing
 argument_list|()
-expr_stmt|;
-name|paragraph_is_open
-operator|=
-literal|1
 expr_stmt|;
 name|execute_string
 argument_list|(
@@ -25825,25 +24644,13 @@ return|return
 name|result
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* @itemx, @item. */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|itemx_flag
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|cm_itemx
 parameter_list|()
@@ -25858,9 +24665,6 @@ name|itemx_flag
 operator|--
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_item
 parameter_list|()
@@ -25900,12 +24704,17 @@ operator|&
 name|rest_of_line
 argument_list|)
 expr_stmt|;
+name|canon_white
+argument_list|(
+name|rest_of_line
+argument_list|)
+expr_stmt|;
 name|item_func
 operator|=
 name|current_item_function
 argument_list|()
 expr_stmt|;
-comment|/* Okay, do the right thing depending on which insertion function          is active. */
+comment|/* Okay, do the right thing depending on which insertion function 	 is active. */
 name|switch_top
 label|:
 switch|switch
@@ -25921,7 +24730,7 @@ case|:
 name|multitable_item
 argument_list|()
 expr_stmt|;
-comment|/* Ultra special hack.  It appears that some people incorrectly              place text directly after the @item, instead of on a new line              by itself.  This happens to work in TeX, so I make it work              here. */
+comment|/* Ultra special hack.  It appears that some people incorrectly 	     place text directly after the @item, instead of on a new line 	     by itself.  This happens to work in TeX, so I make it work 	     here. */
 if|if
 condition|(
 operator|*
@@ -25994,10 +24803,7 @@ name|group
 case|:
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"The `%c%s' command is meaningless within a `@%s' block"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -26024,10 +24830,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%citemx is not meaningful inside of a `%s' block"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -26073,7 +24876,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* I need some way to determine whether this command                      takes braces or not.  I believe the user can type                      either "@bullet" or "@bullet{}".  Of course, they                      can also type "o" or "#" or whatever else they want. */
+comment|/* I need some way to determine whether this command 		     takes braces or not.  I believe the user can type 		     either "@bullet" or "@bullet{}".  Of course, they 		     can also type "o" or "#" or whatever else they want. */
 if|if
 condition|(
 name|item_func
@@ -26140,12 +24943,12 @@ else|else
 name|enumerate_item
 argument_list|()
 expr_stmt|;
-comment|/* Special hack.  This makes `close_paragraph' a no-op until                  `start_paragraph' has been called. */
+comment|/* Special hack.  This makes close paragraph ignore you until 		 the start_paragraph () function has been called. */
 name|must_start_paragraph
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Handle text directly after the @item.  */
+comment|/* Ultra special hack.  It appears that some people incorrectly 		 place text directly after the @item, instead of on a new line 		 by itself.  This happens to work in TeX, so I make it work 		 here. */
 if|if
 condition|(
 operator|*
@@ -26172,13 +24975,6 @@ case|case
 name|vtable
 case|:
 block|{
-comment|/* We need this to determine if we have two @item's in a row                (see test just below).  */
-specifier|static
-name|int
-name|last_item_output_position
-init|=
-literal|0
-decl_stmt|;
 comment|/* Get rid of extra characters. */
 name|kill_self_indent
 argument_list|(
@@ -26186,22 +24982,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* If we have one @item followed directly by another @item,                we need to insert a blank line.  This is not true for                @itemx, though.  */
-if|if
-condition|(
-operator|!
-name|itemx_flag
-operator|&&
-name|last_item_output_position
-operator|==
-name|output_position
-condition|)
-name|insert
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-comment|/* `close_paragraph' almost does what we want.  The problem                is when paragraph_is_open, and last_char_was_newline, and                the last newline has been turned into a space, because                filling_enabled. I handle it here. */
+comment|/* close_paragraph () almost does what we want.  The problem 	       is when paragraph_is_open, and last_char_was_newline, and 	       the last newline has been turned into a space, because 	       filling_enabled. I handle it here. */
 if|if
 condition|(
 name|last_char_was_newline
@@ -26227,15 +25008,17 @@ argument_list|)
 comment|/* Indent on a new line, but back up one indentation level. */
 block|{
 name|int
-name|save
-init|=
-name|inhibit_paragraph_indentation
+name|t
 decl_stmt|;
+name|t
+operator|=
+name|inhibit_paragraph_indentation
+expr_stmt|;
 name|inhibit_paragraph_indentation
 operator|=
 literal|1
 expr_stmt|;
-comment|/* At this point, inserting any non-whitespace character will                  force the existing indentation to be output. */
+comment|/* At this point, inserting any non-whitespace character will 		 force the existing indentation to be output. */
 name|add_char
 argument_list|(
 literal|'i'
@@ -26243,7 +25026,7 @@ argument_list|)
 expr_stmt|;
 name|inhibit_paragraph_indentation
 operator|=
-name|save
+name|t
 expr_stmt|;
 block|}
 else|#
@@ -26312,7 +25095,6 @@ argument_list|,
 name|rest_of_line
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|current_insertion_type
@@ -26329,7 +25111,7 @@ argument_list|,
 name|rest_of_line
 argument_list|)
 expr_stmt|;
-comment|/* Start a new line, and let start_paragraph ()                do the indenting of it for you. */
+comment|/* Start a new line, and let start_paragraph () 	       do the indenting of it for you. */
 name|close_single_paragraph
 argument_list|()
 expr_stmt|;
@@ -26338,10 +25120,6 @@ operator|=
 name|filling_enabled
 operator|=
 literal|1
-expr_stmt|;
-name|last_item_output_position
-operator|=
-name|output_position
 expr_stmt|;
 block|}
 block|}
@@ -26357,10 +25135,7 @@ name|no_insertion
 label|:
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%c%s found outside of an insertion block"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -26369,32 +25144,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                      Defun and Friends                           */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
+comment|/*								    */
+comment|/*			Defun and Friends       		    */
+comment|/*								    */
 comment|/* **************************************************************** */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DEFUN_SELF_DELIMITING
@@ -26402,10 +25156,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|(((c) == '(')                                                         \    || ((c) == ')')                                                      \    || ((c) == '[')                                                      \    || ((c) == ']'))
-end_define
-
-begin_struct
+value|(((c) == '(')								\    || ((c) == ')')							\    || ((c) == '[')							\    || ((c) == ']'))
 struct|struct
 name|token_accumulator
 block|{
@@ -26424,9 +25175,6 @@ name|tokens
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_function
 name|void
 name|initialize_token_accumulator
 parameter_list|(
@@ -26463,9 +25211,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|accumulate_token
 parameter_list|(
@@ -26555,9 +25300,6 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|char
 modifier|*
 name|copy_substring
@@ -26627,7 +25369,7 @@ expr_stmt|;
 operator|*
 name|scan_result
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -26635,13 +25377,7 @@ name|result
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Given `string' pointing at an open brace, skip forward and return a    pointer to just past the matching close brace. */
-end_comment
-
-begin_function
 name|int
 name|scan_group_in_string
 parameter_list|(
@@ -26715,20 +25451,17 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
-comment|/* Tweak line_number to compensate for fact that              we gobbled the whole line before coming here. */
+comment|/* Tweak line_number to compensate for fact that 	     we gobbled the whole line before coming here. */
 name|line_number
 operator|-=
 literal|1
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Missing `}' in %cdef arg"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
@@ -26776,13 +25509,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Return a list of tokens from the contents of `string'.    Commands and brace-delimited groups count as single tokens.    Contiguous whitespace characters are converted to a token    consisting of a single space. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 modifier|*
@@ -26826,7 +25553,7 @@ operator|*
 name|scan_string
 operator|)
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
 comment|/* Replace arbitrary whitespace by a single space. */
@@ -26863,7 +25590,7 @@ name|accumulator
 operator|)
 argument_list|,
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 literal|" "
 argument_list|)
@@ -26925,7 +25652,7 @@ condition|(
 operator|(
 name|c
 operator|==
-literal|0
+literal|'\0'
 operator|)
 operator|||
 operator|(
@@ -27055,7 +25782,7 @@ else|:
 name|scan_string
 expr_stmt|;
 block|}
-comment|/* Otherwise a token is delimited by whitespace, parentheses,          brackets, or braces.  A token is also ended by a command. */
+comment|/* Otherwise a token is delimited by whitespace, parentheses, 	 brackets, or braces.  A token is also ended by a command. */
 else|else
 block|{
 name|token_start
@@ -27103,7 +25830,7 @@ operator|--
 expr_stmt|;
 break|break;
 block|}
-comment|/* If we encounter a command embedded within a token,                  then end the token. */
+comment|/* If we encounter a command embedded within a token, 		 then end the token. */
 if|if
 condition|(
 name|c
@@ -27152,9 +25879,6 @@ name|tokens
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|process_defun_args
 parameter_list|(
@@ -27299,9 +26023,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|char
 modifier|*
 name|next_nonwhite_defun_arg
@@ -27385,13 +26106,7 @@ name|arg
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/* Make the defun type insertion.    TYPE says which insertion this is.    X_P, if nonzero, says not to start a new insertion. */
-end_comment
-
-begin_function
+comment|/* Make the defun type insertion.    TYPE says which insertion this is.    X_P says not to start a new insertion if non-zero. */
 name|void
 name|defun_internal
 parameter_list|(
@@ -27473,10 +26188,7 @@ name|defun
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Function"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27488,10 +26200,7 @@ name|defmac
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Macro"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27503,10 +26212,7 @@ name|defspec
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Special Form"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27518,10 +26224,7 @@ name|defvar
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Variable"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27533,10 +26236,7 @@ name|defopt
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"User Option"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27548,10 +26248,7 @@ name|deftypefun
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Function"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27563,10 +26260,7 @@ name|deftypevar
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Variable"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27578,10 +26272,7 @@ name|defivar
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Instance Variable"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27593,10 +26284,7 @@ name|defmethod
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Method"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27608,10 +26296,7 @@ name|deftypemethod
 case|:
 name|category
 operator|=
-name|_
-argument_list|(
 literal|"Method"
-argument_list|)
 expr_stmt|;
 name|base_type
 operator|=
@@ -27917,8 +26602,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Through Makeinfo 1.67 we processed remaining args only for deftp,          deftypefn, and deftypemethod.  But the libc manual, for example,          needs to say:             @deftypevar {char *} tzname[2]          And simply allowing the extra text seems far simpler than trying          to invent yet more defn commands.  In any case, we should either          output it or give an error, not silently ignore it.  */
-default|default:
+case|case
+name|deftp
+case|:
+case|case
+name|deftypefn
+case|:
+case|case
+name|deftypemethod
+case|:
 name|process_defun_args
 argument_list|(
 name|scan_args
@@ -27935,7 +26627,12 @@ expr_stmt|;
 name|close_single_paragraph
 argument_list|()
 expr_stmt|;
-comment|/* Make an entry in the appropriate index. */
+if|if
+condition|(
+operator|!
+name|macro_expansion_output_stream
+condition|)
+comment|/* Make an entry in the appropriate index unless we are just        expanding macros. */
 switch|switch
 condition|(
 name|base_type
@@ -28047,13 +26744,7 @@ name|defun_args
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Add an entry for a function, macro, special form, variable, or option.    If the name of the calling command ends in `x', then this is an extra    entry included in the body of an insertion of the same type. */
-end_comment
-
-begin_function
 name|void
 name|cm_defun
 parameter_list|()
@@ -28069,7 +26760,7 @@ name|char
 modifier|*
 name|temp
 init|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|command
 argument_list|)
@@ -28104,7 +26795,7 @@ operator|-
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|type
 operator|=
@@ -28137,10 +26828,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Must be in a `%s' insertion in order to use `%s'x"
-argument_list|)
 argument_list|,
 name|command
 argument_list|,
@@ -28162,36 +26850,112 @@ name|x_p
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* End existing insertion block. */
+name|void
+name|cm_end
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|temp
+decl_stmt|;
+name|enum
+name|insertion_type
+name|type
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|insertion_level
+condition|)
+block|{
+name|line_error
+argument_list|(
+literal|"Unmatched `%c%s'"
+argument_list|,
+name|COMMAND_PREFIX
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|get_rest_of_line
+argument_list|(
+operator|&
+name|temp
+argument_list|)
+expr_stmt|;
+name|canon_white
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|temp
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|line_error
+argument_list|(
+literal|"`%c%s' needs something after it"
+argument_list|,
+name|COMMAND_PREFIX
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|find_type_from_name
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|bad_type
+condition|)
+block|{
+name|line_error
+argument_list|(
+literal|"Bad argument to `%s', `%s', using `%s'"
+argument_list|,
+name|command
+argument_list|,
+name|temp
+argument_list|,
+name|insertion_type_pname
+argument_list|(
+name|current_insertion_type
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|end_insertion
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                      Other Random Commands                       */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
+comment|/*								    */
+comment|/*			Other Random Commands		   	    */
+comment|/*								    */
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
 comment|/* This says to inhibit the indentation of the next paragraph, but    not of following paragraphs.  */
-end_comment
-
-begin_function
 name|void
 name|cm_noindent
 parameter_list|()
@@ -28207,13 +26971,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* I don't know exactly what to do with this.  Should I allow    someone to switch filenames in the middle of output?  Since the    file could be partially written, this doesn't seem to make sense.    Another option: ignore it, since they don't *really* want to    switch files.  Finally, complain, or at least warn. */
-end_comment
-
-begin_function
 name|void
 name|cm_setfilename
 parameter_list|()
@@ -28235,9 +26993,6 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_ignore_line
 parameter_list|()
@@ -28248,13 +27003,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* @br can be immediately followed by `{}', so we have to read those here.    It should simply close the paragraph. */
-end_comment
-
-begin_function
 name|void
 name|cm_br
 parameter_list|()
@@ -28289,13 +27038,7 @@ name|close_paragraph
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Insert the number of blank lines passed as argument. */
-end_comment
-
-begin_function
 name|void
 name|cm_sp
 parameter_list|()
@@ -28330,10 +27073,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%csp requires a positive numeric argument"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
@@ -28368,13 +27108,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* @dircategory LINE  outputs  INFO-DIR-SECTION LINE,    but not if --no-headers.  */
-end_comment
-
-begin_function
 name|void
 name|cm_dircategory
 parameter_list|()
@@ -28382,6 +27116,9 @@ block|{
 name|char
 modifier|*
 name|line
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|get_rest_of_line
 argument_list|(
@@ -28418,13 +27155,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Start a new line with just this text on it.    Then center the line of text.    This always ends the current paragraph. */
-end_comment
-
-begin_function
 name|void
 name|cm_center
 parameter_list|()
@@ -28641,13 +27372,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Show what an expression returns. */
-end_comment
-
-begin_function
 name|void
 name|cm_result
 parameter_list|(
@@ -28669,13 +27394,7 @@ literal|"=>"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* What an expression expands to. */
-end_comment
-
-begin_function
 name|void
 name|cm_expansion
 parameter_list|(
@@ -28697,13 +27416,7 @@ literal|"==>"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Indicates two expressions are equivalent. */
-end_comment
-
-begin_function
 name|void
 name|cm_equiv
 parameter_list|(
@@ -28725,13 +27438,7 @@ literal|"=="
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* What an expression may print. */
-end_comment
-
-begin_function
 name|void
 name|cm_print
 parameter_list|(
@@ -28753,13 +27460,7 @@ literal|"-|"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* An error signaled. */
-end_comment
-
-begin_function
 name|void
 name|cm_error
 parameter_list|(
@@ -28781,13 +27482,7 @@ literal|"error-->"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* The location of point in an example of a buffer. */
-end_comment
-
-begin_function
 name|void
 name|cm_point
 parameter_list|(
@@ -28809,13 +27504,7 @@ literal|"-!-"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Start a new line with just this text on it.    The text is outdented one level if possible. */
-end_comment
-
-begin_function
 name|void
 name|cm_exdent
 parameter_list|()
@@ -28866,13 +27555,58 @@ name|close_single_paragraph
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STRERROR
+argument_list|)
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|(
+name|num
+parameter_list|)
+name|int
+name|num
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|num
+operator|>=
+name|sys_nerr
+condition|)
+return|return
+operator|(
+literal|"Unknown file system error"
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|sys_errlist
+index|[
+name|num
+index|]
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* !HAVE_STRERROR */
 comment|/* Remember this file, and move onto the next. */
-end_comment
-
-begin_function
 name|void
 name|cm_include
 parameter_list|()
@@ -28890,9 +27624,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|me_append_before_this_command
 argument_list|()
@@ -28918,9 +27649,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|remember_itext
 argument_list|(
@@ -29028,7 +27756,7 @@ expr_stmt|;
 comment|/* Cannot "@include foo", in line 5 of "/wh/bar". */
 name|line_error
 argument_list|(
-literal|"%c%s %s: %s"
+literal|"`%c%s %s': %s"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -29060,9 +27788,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|remember_itext
 argument_list|(
@@ -29087,35 +27812,18 @@ name|popfile
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* The other side of a malformed expression. */
-end_comment
-
-begin_function
 name|void
 name|misplaced_brace
 parameter_list|()
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Misplaced %c"
-argument_list|)
-argument_list|,
-literal|'}'
+literal|"Misplaced `}'"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Signals end of processing.  Easy to make this happen. */
-end_comment
-
-begin_function
 name|void
 name|cm_bye
 parameter_list|()
@@ -29125,196 +27833,12 @@ operator|=
 name|size_of_input_text
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/* Set the paragraph indentation variable to the value specified in STRING.    Values can be:      `asis': Don't change existing indentation.      `none': Remove existing indentation.         NUM: Indent NUM spaces at the starts of paragraphs.              If NUM is zero, we assume `none'.    Returns 0 if successful, or nonzero if STRING isn't one of the above. */
-end_comment
-
-begin_function
-name|int
-name|set_paragraph_indent
-parameter_list|(
-name|string
-parameter_list|)
-name|char
-modifier|*
-name|string
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|string
-argument_list|,
-literal|"asis"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|string
-argument_list|,
-name|_
-argument_list|(
-literal|"asis"
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|paragraph_start_indent
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|string
-argument_list|,
-literal|"none"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|string
-argument_list|,
-name|_
-argument_list|(
-literal|"none"
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|paragraph_start_indent
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|sscanf
-argument_list|(
-name|string
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|paragraph_start_indent
-argument_list|)
-operator|!=
-literal|1
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-else|else
-block|{
-if|if
-condition|(
-name|paragraph_start_indent
-operator|==
-literal|0
-condition|)
-name|paragraph_start_indent
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cm_paragraphindent
-parameter_list|()
-block|{
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-name|get_rest_of_line
-argument_list|(
-operator|&
-name|arg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|set_paragraph_indent
-argument_list|(
-name|arg
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|line_error
-argument_list|(
-name|_
-argument_list|(
-literal|"Bad argument to %c%s"
-argument_list|)
-argument_list|,
-name|COMMAND_PREFIX
-argument_list|,
-name|command
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                      Indexing Stuff                              */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
+comment|/*								    */
+comment|/*			Indexing Stuff				    */
+comment|/*								    */
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
 comment|/* An index element... */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|index_elt
@@ -29337,26 +27861,15 @@ comment|/* The node from whence it came. */
 name|int
 name|code
 decl_stmt|;
-comment|/* Nonzero means add `@code{...}' when                                    printing this element. */
+comment|/* Non-zero means add `@code{...}' when 				   printing this element. */
 name|int
 name|defining_line
 decl_stmt|;
 comment|/* Line number where this entry was written. */
-name|char
-modifier|*
-name|defining_file
-decl_stmt|;
-comment|/* Source file for defining_line. */
 block|}
 name|INDEX_ELT
 typedef|;
-end_typedef
-
-begin_comment
-comment|/* A list of short-names for each index.     There are two indices into the the_indices array.     * read_index is the index that points to the list of index      entries that we will find if we ask for the list of entries for      this name.     * write_index is the index that points to the list of index entries      that we will add new entries to.     Initially, read_index and write index are the same, but the    @syncodeindex and @synindex commands can change the list we add    entries to.     For example, after the commands       @cindex foo      @defindex ii      @synindex cp ii      @cindex bar     the cp index will contain the entry `foo', and the new ii    index will contain the entry `bar'.  This is consistent with the    way texinfo.tex handles the same situation.     In addition, for each index, it is remembered whether that index is    a code index or not.  Code indices have @code{} inserted around the    first word when they are printed with printindex. */
-end_comment
-
-begin_typedef
+comment|/* A list of short-names for each index, and the index to that index in our    index array, the_indices.  In addition, for each index, it is remembered    whether that index is a code index or not.  Code indices have @code{}    inserted around the first word when they are printed with printindex. */
 typedef|typedef
 struct|struct
 block|{
@@ -29365,22 +27878,14 @@ modifier|*
 name|name
 decl_stmt|;
 name|int
-name|read_index
+name|index
 decl_stmt|;
-comment|/* index entries for `name' */
-name|int
-name|write_index
-decl_stmt|;
-comment|/* store index entries here, @synindex can change it */
 name|int
 name|code
 decl_stmt|;
 block|}
 name|INDEX_ALIST
 typedef|;
-end_typedef
-
-begin_decl_stmt
 name|INDEX_ALIST
 modifier|*
 modifier|*
@@ -29393,13 +27898,7 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* An array of pointers.  Each one is for a different index.  The    "synindex" command changes which array slot is pointed to by a    given "index". */
-end_comment
-
-begin_decl_stmt
 name|INDEX_ELT
 modifier|*
 modifier|*
@@ -29412,21 +27911,37 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* The number of defined indices. */
-end_comment
-
-begin_decl_stmt
 name|int
 name|defined_indices
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_function
+comment|/* We predefine these. */
+define|#
+directive|define
+name|program_index
+value|0
+define|#
+directive|define
+name|function_index
+value|1
+define|#
+directive|define
+name|concept_index
+value|2
+define|#
+directive|define
+name|variable_index
+value|3
+define|#
+directive|define
+name|datatype_index
+value|4
+define|#
+directive|define
+name|key_index
+value|5
 name|void
 name|init_indices
 parameter_list|()
@@ -29523,7 +28038,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|undefindex
 argument_list|(
 name|name_index_alist
@@ -29534,55 +28048,14 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|name_index_alist
-index|[
-name|i
-index|]
-condition|)
-block|{
-comment|/* Suppose we're called with two input files, and the first              does a @synindex pg cp.  Then, when we get here to start              the second file, the "pg" element won't get freed by              undefindex (because it's pointing to "cp").  So free it              here; otherwise, when we try to define the pg index again              just below, it will still point to cp.  */
-name|free
-argument_list|(
-name|name_index_alist
-index|[
-name|i
-index|]
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|name_index_alist
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|name_index_alist
-index|[
-name|i
-index|]
-operator|=
-operator|(
-name|INDEX_ALIST
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-block|}
-block|}
 comment|/* Add the default indices. */
 name|top_defindex
 argument_list|(
-literal|"cp"
+literal|"pg"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* cp is the only non-code index.  */
 name|top_defindex
 argument_list|(
 literal|"fn"
@@ -29590,42 +28063,37 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* "fn" is a code index.  */
 name|top_defindex
 argument_list|(
-literal|"ky"
+literal|"cp"
 argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|top_defindex
-argument_list|(
-literal|"pg"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|top_defindex
-argument_list|(
-literal|"tp"
-argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|top_defindex
 argument_list|(
 literal|"vr"
 argument_list|,
-literal|1
+literal|0
+argument_list|)
+expr_stmt|;
+name|top_defindex
+argument_list|(
+literal|"tp"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|top_defindex
+argument_list|(
+literal|"ky"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Find which element in the known list of indices has this name.    Returns -1 if NAME isn't found. */
-end_comment
-
-begin_function
 name|int
 name|find_index_offset
 parameter_list|(
@@ -29676,7 +28144,12 @@ literal|0
 condition|)
 return|return
 operator|(
+name|name_index_alist
+index|[
 name|i
+index|]
+operator|->
+name|index
 operator|)
 return|;
 return|return
@@ -29686,13 +28159,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Return a pointer to the entry of (name . index) for this name.    Return NULL if the index doesn't exist. */
-end_comment
-
-begin_function
 name|INDEX_ALIST
 modifier|*
 name|find_index
@@ -29738,13 +28205,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Given an index name, return the offset in the_indices of this index,    or -1 if there is no such index. */
-end_comment
-
-begin_function
 name|int
 name|translate_index
 parameter_list|(
@@ -29772,7 +28233,7 @@ return|return
 operator|(
 name|which
 operator|->
-name|read_index
+name|index
 operator|)
 return|;
 else|else
@@ -29783,13 +28244,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Return the index list which belongs to NAME. */
-end_comment
-
-begin_function
 name|INDEX_ELT
 modifier|*
 name|index_list
@@ -29835,13 +28290,7 @@ index|]
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Please release me, let me go... */
-end_comment
-
-begin_function
 name|void
 name|free_index
 parameter_list|(
@@ -29878,8 +28327,13 @@ operator|->
 name|entry
 argument_list|)
 expr_stmt|;
-comment|/* Do not free the node, because we already freed the tag table,          which freed all the node names.  */
-comment|/* free (temp->node); */
+name|free
+argument_list|(
+name|temp
+operator|->
+name|node
+argument_list|)
+expr_stmt|;
 name|index
 operator|=
 name|index
@@ -29893,13 +28347,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
-comment|/* Flush an index by name.  This will delete the list of entries that    would be written by a @printindex command for this index. */
-end_comment
-
-begin_function
+comment|/* Flush an index by name. */
 name|void
 name|undefindex
 parameter_list|(
@@ -29921,18 +28369,11 @@ argument_list|(
 name|name
 argument_list|)
 decl_stmt|;
-comment|/* The index might have already been freed if this was the target of      an @synindex.  */
 if|if
 condition|(
 name|which
 operator|<
 literal|0
-operator|||
-operator|!
-name|name_index_alist
-index|[
-name|which
-index|]
 condition|)
 return|return;
 name|i
@@ -29942,7 +28383,7 @@ index|[
 name|which
 index|]
 operator|->
-name|read_index
+name|index
 expr_stmt|;
 name|free_index
 argument_list|(
@@ -29993,13 +28434,7 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/* Define an index known as NAME.  We assign the slot number.    CODE if Nonzero says to make this a code index. */
-end_comment
-
-begin_function
+comment|/* Define an index known as NAME.  We assign the slot number.    CODE if non-zero says to make this a code index. */
 name|void
 name|defindex
 parameter_list|(
@@ -30158,7 +28593,7 @@ index|]
 operator|->
 name|name
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -30168,16 +28603,7 @@ index|[
 name|slot
 index|]
 operator|->
-name|read_index
-operator|=
-name|slot
-expr_stmt|;
-name|name_index_alist
-index|[
-name|slot
-index|]
-operator|->
-name|write_index
+name|index
 operator|=
 name|slot
 expr_stmt|;
@@ -30202,13 +28628,7 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Add the arguments to the current index command to the index NAME. */
-end_comment
-
-begin_function
 name|void
 name|index_add_arg
 parameter_list|(
@@ -30243,7 +28663,7 @@ name|tem
 condition|?
 name|tem
 operator|->
-name|write_index
+name|index
 else|:
 operator|-
 literal|1
@@ -30257,9 +28677,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|append_to_expansion_output
 argument_list|(
@@ -30289,9 +28706,6 @@ argument_list|)
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 block|{
 name|int
@@ -30335,10 +28749,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Unknown index `%s'"
-argument_list|)
+literal|"Unknown index reference `%s'"
 argument_list|,
 name|name
 argument_list|)
@@ -30404,12 +28815,6 @@ name|line_number
 operator|-
 literal|1
 expr_stmt|;
-name|new
-operator|->
-name|defining_file
-operator|=
-name|input_filename
-expr_stmt|;
 name|the_indices
 index|[
 name|which
@@ -30419,20 +28824,11 @@ name|new
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|INDEX_COMMAND_SUFFIX
 value|"index"
-end_define
-
-begin_comment
 comment|/* The function which user defined index commands call. */
-end_comment
-
-begin_function
 name|void
 name|gen_index
 parameter_list|()
@@ -30441,7 +28837,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|command
 argument_list|)
@@ -30471,7 +28867,7 @@ literal|"index"
 argument_list|)
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|index_add_arg
 argument_list|(
@@ -30484,9 +28880,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|top_defindex
 parameter_list|(
@@ -30558,13 +28951,7 @@ name|temp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Define a new index command.  Arg is name of index. */
-end_comment
-
-begin_function
 name|void
 name|cm_defindex
 parameter_list|()
@@ -30575,9 +28962,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_defcodeindex
 parameter_list|()
@@ -30588,9 +28972,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|gen_defindex
 parameter_list|(
@@ -30620,10 +29001,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Index `%s' already exists"
-argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -30692,124 +29070,215 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
+comment|/* Append LIST2 to LIST1.  Return the head of the list. */
+name|INDEX_ELT
+modifier|*
+name|index_append
+parameter_list|(
+name|head
+parameter_list|,
+name|tail
+parameter_list|)
+name|INDEX_ELT
+modifier|*
+name|head
+decl_stmt|,
+decl|*
+name|tail
+decl_stmt|;
+block|{
+specifier|register
+name|INDEX_ELT
+modifier|*
+name|t_head
+init|=
+name|head
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|t_head
+condition|)
+return|return
+operator|(
+name|tail
+operator|)
+return|;
+while|while
+condition|(
+name|t_head
+operator|->
+name|next
+condition|)
+name|t_head
+operator|=
+name|t_head
+operator|->
+name|next
+expr_stmt|;
+name|t_head
+operator|->
+name|next
+operator|=
+name|tail
+expr_stmt|;
+return|return
+operator|(
+name|head
+operator|)
+return|;
+block|}
 comment|/* Expects 2 args, on the same line.  Both are index abbreviations.    Make the first one be a synonym for the second one, i.e. make the    first one have the same index as the second one. */
-end_comment
-
-begin_function
 name|void
 name|cm_synindex
 parameter_list|()
 block|{
 name|int
-name|source
+name|redirector
 decl_stmt|,
-name|target
+name|redirectee
 decl_stmt|;
 name|char
 modifier|*
-name|abbrev1
-decl_stmt|,
-modifier|*
-name|abbrev2
+name|temp
 decl_stmt|;
 name|skip_whitespace
 argument_list|()
 expr_stmt|;
 name|get_until_in_line
 argument_list|(
-literal|0
-argument_list|,
 literal|" "
 argument_list|,
 operator|&
-name|abbrev1
+name|temp
 argument_list|)
 expr_stmt|;
-name|target
+name|redirectee
 operator|=
 name|find_index_offset
 argument_list|(
-name|abbrev1
+name|temp
 argument_list|)
 expr_stmt|;
 name|skip_whitespace
 argument_list|()
 expr_stmt|;
+name|free_and_clear
+argument_list|(
+operator|&
+name|temp
+argument_list|)
+expr_stmt|;
 name|get_until_in_line
 argument_list|(
-literal|0
-argument_list|,
 literal|" "
 argument_list|,
 operator|&
-name|abbrev2
+name|temp
 argument_list|)
 expr_stmt|;
-name|source
+name|redirector
 operator|=
 name|find_index_offset
 argument_list|(
-name|abbrev2
+name|temp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|temp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|source
+name|redirector
 operator|<
 literal|0
 operator|||
-name|target
+name|redirectee
 operator|<
 literal|0
 condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Unknown index `%s' and/or `%s' in @synindex"
-argument_list|)
-argument_list|,
-name|abbrev1
-argument_list|,
-name|abbrev2
+literal|"Unknown index reference"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* I think that we should let the user make indices synonymous to          each other without any lossage of info.  This means that one can          say @synindex cp dt anywhere in the file, and things that used to          be in cp will go into dt. */
+name|INDEX_ELT
+modifier|*
+name|i1
+init|=
+name|the_indices
+index|[
+name|redirectee
+index|]
+decl_stmt|,
+modifier|*
+name|i2
+init|=
+name|the_indices
+index|[
+name|redirector
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|i1
+operator|||
+name|i2
+condition|)
+block|{
+if|if
+condition|(
+name|i1
+condition|)
+name|the_indices
+index|[
+name|redirectee
+index|]
+operator|=
+name|index_append
+argument_list|(
+name|i1
+argument_list|,
+name|i2
+argument_list|)
+expr_stmt|;
+else|else
+name|the_indices
+index|[
+name|redirectee
+index|]
+operator|=
+name|index_append
+argument_list|(
+name|i2
+argument_list|,
+name|i1
+argument_list|)
+expr_stmt|;
+block|}
 name|name_index_alist
 index|[
-name|target
+name|redirectee
 index|]
 operator|->
-name|write_index
+name|index
 operator|=
 name|name_index_alist
 index|[
-name|source
+name|redirector
 index|]
 operator|->
-name|write_index
+name|index
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|abbrev1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|abbrev2
-argument_list|)
-expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_pindex
 parameter_list|()
@@ -30821,9 +29290,6 @@ literal|"pg"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_vindex
 parameter_list|()
@@ -30835,9 +29301,6 @@ literal|"vr"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_kindex
 parameter_list|()
@@ -30849,9 +29312,6 @@ literal|"ky"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_cindex
 parameter_list|()
@@ -30863,9 +29323,6 @@ literal|"cp"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_findex
 parameter_list|()
@@ -30877,9 +29334,6 @@ literal|"fn"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_tindex
 parameter_list|()
@@ -30891,13 +29345,7 @@ literal|"tp"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Sorting the index. */
-end_comment
-
-begin_function
 name|int
 name|index_element_compare
 parameter_list|(
@@ -30914,9 +29362,6 @@ decl|*
 modifier|*
 name|element2
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 return|return
 operator|(
@@ -30939,13 +29384,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/* Force all index entries to be unique. */
-end_comment
-
-begin_function
 name|void
 name|make_index_entries_unique
 parameter_list|(
@@ -31151,7 +29590,7 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* Fix entry names which are the same.  They point to different nodes,          so we make the entry name unique. */
+comment|/* Fix entry names which are the same.  They point to different nodes, 	 so we make the entry name unique. */
 if|if
 condition|(
 operator|(
@@ -31291,13 +29730,7 @@ name|copy
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Sort the index passed in INDEX, returning an array of    pointers to elements.  The array is terminated with a NULL    pointer.  We call qsort because it's supposed to be fast.    I think this looks bad. */
-end_comment
-
-begin_function
 name|INDEX_ELT
 modifier|*
 modifier|*
@@ -31312,30 +29745,19 @@ decl_stmt|;
 block|{
 name|INDEX_ELT
 modifier|*
-modifier|*
-name|array
-decl_stmt|;
-name|INDEX_ELT
-modifier|*
 name|temp
 init|=
 name|index
+decl_stmt|;
+name|INDEX_ELT
+modifier|*
+modifier|*
+name|array
 decl_stmt|;
 name|int
 name|count
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|save_line_number
-init|=
-name|line_number
-decl_stmt|;
-name|char
-modifier|*
-name|save_input_filename
-init|=
-name|input_filename
 decl_stmt|;
 while|while
 condition|(
@@ -31408,30 +29830,8 @@ index|]
 operator|=
 name|temp
 expr_stmt|;
-comment|/* Set line number and input filename to the source line for this          index entry, as this expansion finds any errors.  */
-name|line_number
-operator|=
-name|array
-index|[
-name|count
-operator|-
-literal|1
-index|]
-operator|->
-name|defining_line
-expr_stmt|;
-name|input_filename
-operator|=
-name|array
-index|[
-name|count
-operator|-
-literal|1
-index|]
-operator|->
-name|defining_file
-expr_stmt|;
-comment|/* If this particular entry should be printed as a "code" index,          then wrap the entry with "@code{...}". */
+comment|/* Maybe should set line number to the defining_line?  Any errors          have already been given, though, I think.  */
+comment|/* If this particular entry should be printed as a "code" index, 	 then wrap the entry with "@code{...}". */
 name|array
 index|[
 name|count
@@ -31471,14 +29871,6 @@ operator|)
 name|NULL
 expr_stmt|;
 comment|/* terminate the array. */
-name|line_number
-operator|=
-name|save_line_number
-expr_stmt|;
-name|input_filename
-operator|=
-name|save_input_filename
-expr_stmt|;
 comment|/* Sort the array. */
 name|qsort
 argument_list|(
@@ -31508,25 +29900,13 @@ name|array
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/* Nonzero means that we are in the middle of printing an index. */
-end_comment
-
-begin_decl_stmt
+comment|/* Non-zero means that we are in the middle of printing an index. */
 name|int
 name|printing_index
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Takes one arg, a short name of an index to print.    Outputs a menu of the sorted elements of the index. */
-end_comment
-
-begin_function
 name|void
 name|cm_printindex
 parameter_list|()
@@ -31594,10 +29974,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"Unknown index `%s' in @printindex"
-argument_list|)
+literal|"Unknown index name `%s'"
 argument_list|,
 name|index_name
 argument_list|)
@@ -31640,10 +30017,7 @@ argument_list|()
 expr_stmt|;
 name|add_word
 argument_list|(
-name|_
-argument_list|(
 literal|"* Menu:\n\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -31713,28 +30087,12 @@ name|index
 operator|->
 name|entry
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|new_length
-operator|<
-literal|37
-condition|)
-comment|/* minimum length used below */
-name|new_length
-operator|=
-literal|37
-expr_stmt|;
-name|new_length
-operator|+=
+operator|+
 name|strlen
 argument_list|(
 name|index_node
 argument_list|)
-operator|+
-literal|7
-expr_stmt|;
-comment|/* * : .\n\0 */
+decl_stmt|;
 if|if
 condition|(
 name|new_length
@@ -31745,7 +30103,10 @@ block|{
 name|line_length
 operator|=
 name|new_length
+operator|+
+literal|6
 expr_stmt|;
+comment|/* * : .\0 */
 name|line
 operator|=
 name|xrealloc
@@ -31832,13 +30193,7 @@ operator|=
 name|saved_inhibit_paragraph_indentation
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/* User-defined commands, which happens only from user-defined indexes. */
-end_comment
-
-begin_function
+comment|/* User-defined commands. */
 name|void
 name|define_user_command
 parameter_list|(
@@ -31939,7 +30294,7 @@ index|]
 operator|->
 name|name
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -31963,62 +30318,156 @@ operator|=
 name|needs_braces_p
 expr_stmt|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* Set the paragraph indentation variable to the value specified in STRING.    Values can be:    `asis': Don't change existing indentation.    `none': Remove existing indentation.       NUM: Indent NUM spaces at the starts of paragraphs.            Note that if NUM is zero, we assume `none'.     Returns 0 if successful, or non-zero if STRING isn't one of the above. */
+name|int
+name|set_paragraph_indent
+parameter_list|(
+name|string
+parameter_list|)
+name|char
+modifier|*
+name|string
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|string
+argument_list|,
+literal|"asis"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|paragraph_start_indent
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|string
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|paragraph_start_indent
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|string
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|paragraph_start_indent
+argument_list|)
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+else|else
+block|{
+if|if
+condition|(
+name|paragraph_start_indent
+operator|==
+literal|0
+condition|)
+name|paragraph_start_indent
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|void
+name|cm_paragraphindent
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+name|get_rest_of_line
+argument_list|(
+operator|&
+name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|set_paragraph_indent
+argument_list|(
+name|arg
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|line_error
+argument_list|(
+literal|"Bad argument to %c%s"
+argument_list|,
+name|COMMAND_PREFIX
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Some support for footnotes. */
-end_comment
-
-begin_comment
-comment|/* Footnotes are a new construct in Info.  We don't know the best method    of implementing them for sure, so we present two possiblities.     SeparateNode:         Make them look like followed references, with the reference         destinations in a makeinfo manufactured node or,     EndNode:         Make them appear at the bottom of the node that they originally         appeared in. */
-end_comment
-
-begin_define
+comment|/* Footnotes are a new construct in Info.  We don't know the best method    of implementing them for sure, so we present two possiblities.     SeparateNode: 	Make them look like followed references, with the reference 	destinations in a makeinfo manufactured node or,     EndNode: 	Make them appear at the bottom of the node that they originally 	appeared in. */
 define|#
 directive|define
 name|SeparateNode
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|EndNode
 value|1
-end_define
-
-begin_decl_stmt
 name|int
 name|footnote_style
 init|=
 name|EndNode
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|first_footnote_this_node
 init|=
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|footnote_count
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Set the footnote style based on he style identifier in STRING. */
-end_comment
-
-begin_function
 name|int
 name|set_footnote_style
 parameter_list|(
@@ -32099,9 +30548,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_footnotestyle
 parameter_list|()
@@ -32144,9 +30590,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|fn
@@ -32167,9 +30610,6 @@ decl_stmt|;
 block|}
 name|FN
 typedef|;
-end_typedef
-
-begin_decl_stmt
 name|FN
 modifier|*
 name|pending_notes
@@ -32180,13 +30620,7 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* A method for remembering footnotes.  Note that this list gets output    at the end of the current node. */
-end_comment
-
-begin_function
 name|void
 name|remember_note
 parameter_list|(
@@ -32201,9 +30635,6 @@ decl_stmt|,
 decl|*
 name|note
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|FN
 modifier|*
@@ -32225,7 +30656,7 @@ name|temp
 operator|->
 name|marker
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|marker
 argument_list|)
@@ -32234,7 +30665,7 @@ name|temp
 operator|->
 name|note
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|note
 argument_list|)
@@ -32253,13 +30684,7 @@ name|footnote_count
 operator|++
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/* How to get rid of existing footnotes. */
-end_comment
-
-begin_function
 name|void
 name|free_pending_notes
 parameter_list|()
@@ -32318,17 +30743,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* What to do when you see a @footnote construct. */
-end_comment
-
-begin_comment
-comment|/* Handle a "footnote".     footnote *{this is a footnote}     where "*" is the (optional) marker character for this note. */
-end_comment
-
-begin_function
+comment|/* Handle a "footnote".     footnote *{this is a footnote}     where "*" is the marker character for this note. */
 name|void
 name|cm_footnote
 parameter_list|()
@@ -32354,21 +30770,6 @@ argument_list|(
 name|marker
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
-condition|)
-name|append_to_expansion_output
-argument_list|(
-name|input_text_offset
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* include the { */
 comment|/* Read the argument in braces. */
 if|if
 condition|(
@@ -32380,10 +30781,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
-literal|"`%c%s' needs an argument `{...}', not just `%s'"
-argument_list|)
+literal|"`%c%s' expected more than just `%s'.  It needs something in `{...}'"
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|,
@@ -32402,18 +30800,18 @@ block|}
 else|else
 block|{
 name|int
-name|len
-decl_stmt|;
-name|int
 name|braces
 init|=
 literal|1
 decl_stmt|;
 name|int
-name|loc
+name|temp
 init|=
 operator|++
 name|input_text_offset
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 while|while
 condition|(
@@ -32422,17 +30820,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|loc
+name|temp
 operator|==
 name|size_of_input_text
 condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"No closing brace for footnote `%s'"
-argument_list|)
 argument_list|,
 name|marker
 argument_list|)
@@ -32443,7 +30838,7 @@ if|if
 condition|(
 name|input_text
 index|[
-name|loc
+name|temp
 index|]
 operator|==
 literal|'{'
@@ -32456,7 +30851,7 @@ if|if
 condition|(
 name|input_text
 index|[
-name|loc
+name|temp
 index|]
 operator|==
 literal|'}'
@@ -32469,7 +30864,7 @@ if|if
 condition|(
 name|input_text
 index|[
-name|loc
+name|temp
 index|]
 operator|==
 literal|'\n'
@@ -32477,14 +30872,14 @@ condition|)
 name|line_number
 operator|++
 expr_stmt|;
-name|loc
+name|temp
 operator|++
 expr_stmt|;
 block|}
 name|len
 operator|=
 operator|(
-name|loc
+name|temp
 operator|-
 name|input_text_offset
 operator|)
@@ -32522,54 +30917,11 @@ index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|input_text_offset
 operator|=
-name|loc
-expr_stmt|;
-block|}
-comment|/* Must write the macro-expanded argument to the macro expansion      output stream.  This is like the case in index_add_arg.  */
-if|if
-condition|(
-name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
-condition|)
-block|{
-name|int
-name|op_orig
-decl_stmt|;
-name|remember_itext
-argument_list|(
-name|input_text
-argument_list|,
-name|input_text_offset
-argument_list|)
-expr_stmt|;
-name|op_orig
-operator|=
-name|output_paragraph_offset
-expr_stmt|;
-name|me_execute_string
-argument_list|(
-name|note
-argument_list|)
-expr_stmt|;
-comment|/* Calling me_execute_string on a lone } provokes an error, since          as far as the reader knows there is no matching {.  We wrote          the { above in the call to append_to_expansion_output. */
-name|write_region_to_macro_output
-argument_list|(
-literal|"}"
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|output_paragraph_offset
-operator|=
-name|op_orig
+name|temp
 expr_stmt|;
 block|}
 if|if
@@ -32584,10 +30936,7 @@ condition|)
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Footnote defined without parent node"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -32646,7 +30995,7 @@ block|}
 else|else
 name|marker
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"*"
 argument_list|)
@@ -32702,10 +31051,7 @@ operator|+
 operator|(
 name|strlen
 argument_list|(
-name|_
-argument_list|(
 literal|"-Footnotes"
-argument_list|)
 argument_list|)
 operator|)
 operator|+
@@ -32778,25 +31124,13 @@ name|note
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/* Nonzero means that we are currently in the process of outputting    footnotes. */
-end_comment
-
-begin_decl_stmt
+comment|/* Non-zero means that we are currently in the process of outputting    footnotes. */
 name|int
 name|already_outputting_pending_notes
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Output the footnotes.  We are at the end of the current node. */
-end_comment
-
-begin_function
 name|void
 name|output_pending_notes
 parameter_list|()
@@ -32832,7 +31166,7 @@ name|char
 modifier|*
 name|old_command
 init|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|command
 argument_list|)
@@ -32880,10 +31214,7 @@ operator|++
 expr_stmt|;
 name|execute_string
 argument_list|(
-name|_
-argument_list|(
 literal|"---------- Footnotes ----------\n\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|in_fixed_width_font
@@ -32962,7 +31293,6 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|footnote
 operator|=
 name|array
@@ -32970,12 +31300,22 @@ index|[
 operator|++
 name|footnote_count
 index|]
-operator|)
 condition|)
 block|{
+switch|switch
+condition|(
+name|footnote_style
+condition|)
+block|{
+case|case
+name|SeparateNode
+case|:
+case|case
+name|EndNode
+case|:
 name|execute_string
 argument_list|(
-literal|"(%s) %s"
+literal|"(%s)  %s"
 argument_list|,
 name|footnote
 operator|->
@@ -32989,6 +31329,8 @@ expr_stmt|;
 name|close_paragraph
 argument_list|()
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|close_paragraph
 argument_list|()
@@ -33000,45 +31342,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
 comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*              User definable Macros (text substitution)           */
-end_comment
-
-begin_comment
+comment|/*              User definable Macros (text substitution)	    */
 comment|/*                                                                  */
-end_comment
-
-begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|HAVE_MACROS
 argument_list|)
-end_if
-
-begin_comment
 comment|/* Array of macros and definitions. */
-end_comment
-
-begin_decl_stmt
 name|MACRO_DEF
 modifier|*
 modifier|*
@@ -33051,37 +31366,19 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|macro_list_len
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Number of elements. */
-end_comment
-
-begin_decl_stmt
 name|int
 name|macro_list_size
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Number of slots in total. */
-end_comment
-
-begin_comment
 comment|/* Return the macro definition of NAME or NULL if NAME is not defined. */
-end_comment
-
-begin_function
 name|MACRO_DEF
 modifier|*
 name|find_macro
@@ -33161,13 +31458,7 @@ name|def
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Add the macro NAME with ARGLIST and BODY to the list of defined macros.    SOURCE_FILE is the name of the file where this definition can be found,    and SOURCE_LINENO is the line number within that file.  If a macro already    exists with NAME, then a warning is produced, and that previous    definition is overwritten. */
-end_comment
-
-begin_function
 name|void
 name|add_macro
 parameter_list|(
@@ -33321,10 +31612,7 @@ name|line_number
 decl_stmt|;
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"macro `%s' previously defined"
-argument_list|)
+literal|"The macro `%s' is previously defined"
 argument_list|,
 name|name
 argument_list|)
@@ -33343,10 +31631,7 @@ name|source_lineno
 expr_stmt|;
 name|warning
 argument_list|(
-name|_
-argument_list|(
-literal|"here is the previous definition of `%s'"
-argument_list|)
+literal|"Here is the previous definition of `%s'"
 argument_list|,
 name|name
 argument_list|)
@@ -33423,7 +31708,7 @@ name|def
 operator|->
 name|source_file
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|source_file
 argument_list|)
@@ -33459,13 +31744,7 @@ operator|=
 name|flags
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Delete the macro with name NAME.  The macro is deleted from the list,    but it is also returned.  If there was no macro defined, NULL is    returned. */
-end_comment
-
-begin_function
 name|MACRO_DEF
 modifier|*
 name|delete_macro
@@ -33557,9 +31836,6 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|macro_list_len
-operator|--
-expr_stmt|;
 break|break;
 block|}
 return|return
@@ -33568,21 +31844,12 @@ name|def
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Return the arglist on the current line.  This can behave in two different    ways, depending on the variable BRACES_REQUIRED_FOR_MACRO_ARGS. */
-end_comment
-
-begin_decl_stmt
 name|int
 name|braces_required_for_macro_args
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|char
 modifier|*
 modifier|*
@@ -33657,7 +31924,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Braces are not required to fill out the macro arguments.  If              this macro takes one argument, it is considered to be the              remainder of the line, sans whitespace. */
+comment|/* Braces are not required to fill out the macro arguments.  If 	     this macro takes one argument, it is considered to be the 	     remainder of the line, sans whitespace. */
 if|if
 condition|(
 name|def
@@ -33702,14 +31969,9 @@ index|]
 operator|==
 literal|'\n'
 condition|)
-block|{
 name|input_text_offset
 operator|--
 expr_stmt|;
-name|line_number
-operator|--
-expr_stmt|;
-block|}
 comment|/* canon_white (word); */
 name|arglist
 operator|=
@@ -33755,7 +32017,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* The macro either took no arguments, or took more than                  one argument.  In that case, it must be invoked with                  arguments surrounded by braces. */
+comment|/* The macro either took no arguments, or took more than 		 one argument.  In that case, it must be invoked with 		 arguments surrounded by braces. */
 return|return
 operator|(
 operator|(
@@ -33782,13 +32044,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Substitute actual parameters for named parameters in body.    The named parameters which appear in BODY must by surrounded    reverse slashes, as in \foo\. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|apply
@@ -33811,9 +32067,6 @@ decl_stmt|,
 modifier|*
 name|body
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -33980,7 +32233,7 @@ index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -33989,7 +32242,6 @@ index|[
 name|i
 index|]
 condition|)
-comment|/* move past \ */
 name|i
 operator|++
 expr_stmt|;
@@ -34027,8 +32279,6 @@ condition|)
 break|break;
 if|if
 condition|(
-name|named
-operator|&&
 name|named
 index|[
 name|which
@@ -34076,27 +32326,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* not a parameter, restore \'s */
-name|i
-operator|=
-name|body
-index|[
-name|i
-index|]
-condition|?
-operator|(
-name|i
-operator|-
-literal|1
-operator|)
-else|:
-name|i
-expr_stmt|;
 name|len
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 name|text
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 literal|1
@@ -34108,7 +32347,7 @@ name|sprintf
 argument_list|(
 name|text
 argument_list|,
-literal|"\\%s"
+literal|"\\%s\\"
 argument_list|,
 name|param
 argument_list|)
@@ -34127,23 +32366,25 @@ operator|)
 operator|<
 name|len
 condition|)
-block|{
-name|new_body_size
-operator|+=
-name|len
-operator|+
-literal|1
-expr_stmt|;
 name|new_body
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xrealloc
 argument_list|(
 name|new_body
 argument_list|,
 name|new_body_size
+operator|+=
+operator|(
+literal|1
+operator|+
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|param
@@ -34166,9 +32407,6 @@ if|if
 condition|(
 operator|!
 name|named
-operator|||
-operator|!
-name|named
 index|[
 name|which
 index|]
@@ -34185,7 +32423,7 @@ index|[
 name|new_body_index
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -34193,13 +32431,7 @@ name|new_body
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/* Execute the macro passed in DEF, a pointer to a MACRO_DEF.  */
-end_comment
-
-begin_function
 name|void
 name|execute_macro
 parameter_list|(
@@ -34210,6 +32442,10 @@ modifier|*
 name|def
 decl_stmt|;
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -34231,9 +32467,6 @@ decl_stmt|;
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 operator|&&
 operator|!
 name|me_inhibit_expansion
@@ -34276,10 +32509,7 @@ argument_list|)
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"Macro `%s' called with too many args"
-argument_list|)
 argument_list|,
 name|def
 operator|->
@@ -34326,9 +32556,6 @@ condition|(
 name|macro_expansion_output_stream
 operator|&&
 operator|!
-name|executing_string
-operator|&&
-operator|!
 name|me_inhibit_expansion
 condition|)
 block|{
@@ -34360,13 +32587,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Read and remember the definition of a macro. */
-end_comment
-
-begin_function
 name|void
 name|cm_macro
 parameter_list|()
@@ -34437,9 +32658,6 @@ expr_stmt|;
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|me_append_before_this_command
 argument_list|()
@@ -34528,7 +32746,7 @@ index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|input_text_offset
 operator|=
@@ -34574,7 +32792,7 @@ decl_stmt|;
 name|int
 name|character
 decl_stmt|;
-comment|/* Read the words inside of the braces which determine the arglist.          These words will be replaced within the body of the macro at          execution time. */
+comment|/* Read the words inside of the braces which determine the arglist. 	 These words will be replaced within the body of the macro at 	 execution time. */
 name|input_text_offset
 operator|++
 expr_stmt|;
@@ -34595,14 +32813,12 @@ name|i
 operator|=
 name|input_text_offset
 init|;
-operator|(
 name|character
 operator|=
 name|input_text
 index|[
 name|i
 index|]
-operator|)
 condition|;
 name|i
 operator|++
@@ -34667,13 +32883,13 @@ index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|input_text_offset
 operator|=
 name|i
 expr_stmt|;
-comment|/* Advance to the comma or close-brace that signified                      the end of the argument. */
+comment|/* Advance to the comma or close-brace that signified 		     the end of the argument. */
 while|while
 condition|(
 operator|(
@@ -34831,10 +33047,7 @@ name|defining_line
 expr_stmt|;
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%cend macro not found"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
@@ -34888,7 +33101,7 @@ index|[
 literal|16
 index|]
 operator|==
-literal|0
+literal|'\0'
 operator|||
 name|whitespace
 argument_list|(
@@ -34982,7 +33195,7 @@ index|[
 literal|10
 index|]
 operator|==
-literal|0
+literal|'\0'
 operator|||
 name|whitespace
 argument_list|(
@@ -35060,10 +33273,7 @@ else|else
 block|{
 name|line_error
 argument_list|(
-name|_
-argument_list|(
 literal|"%cquote-arg only useful when the macro takes a single argument"
-argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
@@ -35193,37 +33403,13 @@ index|[
 name|body_index
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 name|free
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
-block|}
-comment|/* If it was an empty macro like      @macro foo      @end macro      create an empty body.  (Otherwise, the macro is not expanded.)  */
-if|if
-condition|(
-operator|!
-name|body
-condition|)
-block|{
-name|body
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-operator|*
-name|body
-operator|=
-literal|0
 expr_stmt|;
 block|}
 comment|/* We now have the name, the arglist, and the body.  However, BODY      includes the final newline which preceded the `@end macro' text.      Delete it. */
@@ -35246,7 +33432,7 @@ operator|-
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|add_macro
 argument_list|(
@@ -35266,9 +33452,6 @@ expr_stmt|;
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|remember_itext
 argument_list|(
@@ -35278,9 +33461,6 @@ name|input_text_offset
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cm_unmacro
 parameter_list|()
@@ -35303,9 +33483,6 @@ decl_stmt|;
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|me_append_before_this_command
 argument_list|()
@@ -35313,6 +33490,11 @@ expr_stmt|;
 name|get_rest_of_line
 argument_list|(
 operator|&
+name|line
+argument_list|)
+expr_stmt|;
+name|canon_white
+argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
@@ -35349,8 +33531,6 @@ operator|)
 name|xmalloc
 argument_list|(
 name|i
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|strncpy
@@ -35367,7 +33547,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|def
 operator|=
@@ -35466,9 +33646,6 @@ expr_stmt|;
 if|if
 condition|(
 name|macro_expansion_output_stream
-operator|&&
-operator|!
-name|executing_string
 condition|)
 name|remember_itext
 argument_list|(
@@ -35478,17 +33655,8 @@ name|input_text_offset
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* How to output sections of the input file verbatim. */
-end_comment
-
-begin_comment
 comment|/* Set the value of POINTER's offset to OFFSET. */
-end_comment
-
-begin_function
 name|ITEXT
 modifier|*
 name|remember_itext
@@ -35639,7 +33807,7 @@ operator|==
 name|itext_size
 condition|)
 block|{
-comment|/* Find a blank slot (or create a new one), and remember the          pointer and offset. */
+comment|/* Find a blank slot, (or create a new one), and remember the 	 pointer and offset. */
 for|for
 control|(
 name|i
@@ -35778,13 +33946,7 @@ name|itext
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Forget the input text associated with POINTER. */
-end_comment
-
-begin_function
 name|void
 name|forget_itext
 parameter_list|(
@@ -35853,13 +34015,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Append the text which appeared in input_text from the last offset to    the character just before the command that we are currently executing. */
-end_comment
-
-begin_function
 name|void
 name|me_append_before_this_command
 parameter_list|()
@@ -35897,13 +34053,7 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Similar to execute_string (), but only takes a single string argument,    and remembers the input text location, etc. */
-end_comment
-
-begin_function
 name|void
 name|me_execute_string
 parameter_list|(
@@ -35927,7 +34077,7 @@ name|execution_string
 expr_stmt|;
 name|input_filename
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|input_filename
 argument_list|)
@@ -35946,7 +34096,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|me_executing_string
+name|executing_string
 operator|++
 expr_stmt|;
 name|reader_loop
@@ -35955,17 +34105,11 @@ expr_stmt|;
 name|popfile
 argument_list|()
 expr_stmt|;
-name|me_executing_string
+name|executing_string
 operator|--
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Append the text which appears in input_text from the last offset to    the current OFFSET. */
-end_comment
-
-begin_function
 name|void
 name|append_to_expansion_output
 parameter_list|(
@@ -36033,7 +34177,15 @@ condition|(
 operator|!
 name|itext
 condition|)
-return|return;
+name|itext
+operator|=
+name|remember_itext
+argument_list|(
+name|input_text
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|offset
@@ -36063,13 +34215,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Only write this input text iff it appears in our itext list. */
-end_comment
-
-begin_function
 name|void
 name|maybe_write_itext
 parameter_list|(
@@ -36175,9 +34321,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|write_region_to_macro_output
 parameter_list|(
@@ -36217,22 +34360,10 @@ name|macro_expansion_output_stream
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* HAVE_MACROS */
-end_comment
-
-begin_comment
 comment|/* Return the length of the array in ARRAY. */
-end_comment
-
-begin_function
 name|int
 name|array_len
 parameter_list|(
@@ -36281,9 +34412,6 @@ name|i
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|free_array
 parameter_list|(
@@ -36339,13 +34467,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Function is used even when we don't have macros.  Although, I have    to admit, it is unlikely that you would have a use for it if you    aren't using macros. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 modifier|*
@@ -36419,12 +34541,10 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|character
 operator|=
 name|curchar
 argument_list|()
-operator|)
 condition|)
 block|{
 if|if
@@ -36530,7 +34650,7 @@ index|[
 name|len
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 comment|/* Clean up escaped characters. */
 if|if
@@ -36694,36 +34814,12 @@ name|arglist
 operator|)
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
 comment|/*                                                                  */
-end_comment
-
-begin_comment
 comment|/*                  Looking For Include Files                       */
-end_comment
-
-begin_comment
 comment|/*                                                                  */
-end_comment
-
-begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
 comment|/* Given a string containing units of information separated by colons,    return the next one pointed to by INDEX, or NULL if there are no more.    Advance INDEX to the character after the colon. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|extract_colon_unit
@@ -36838,7 +34934,7 @@ expr_stmt|;
 comment|/* Return "" in the case of a trailing `:'. */
 return|return
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 literal|""
 argument_list|)
@@ -36892,7 +34988,7 @@ operator|-
 name|start
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -36901,13 +34997,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* Return the full pathname for FILENAME by searching along PATH.    When found, return the stat () info for FILENAME in FINFO.    If PATH is NULL, only the current directory is searched.    If the file could not be found, return a NULL pointer. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|get_file_info_in_path
@@ -36925,17 +35015,11 @@ decl_stmt|,
 decl|*
 name|path
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|struct
 name|stat
 modifier|*
 name|finfo
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -37001,43 +35085,6 @@ literal|'/'
 operator|)
 operator|)
 operator|)
-ifdef|#
-directive|ifdef
-name|WIN32
-comment|/* Handle names that look like "d:/foo/bar" */
-operator|||
-operator|(
-name|isalpha
-argument_list|(
-operator|*
-name|filename
-argument_list|)
-operator|&&
-name|filename
-index|[
-literal|1
-index|]
-operator|==
-literal|':'
-operator|&&
-operator|(
-name|filename
-index|[
-literal|2
-index|]
-operator|==
-literal|'/'
-operator|||
-name|filename
-index|[
-literal|2
-index|]
-operator|==
-literal|'\\'
-operator|)
-operator|)
-endif|#
-directive|endif
 condition|)
 block|{
 if|if
@@ -37053,7 +35100,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|xstrdup
+name|strdup
 argument_list|(
 name|filename
 argument_list|)
@@ -37072,7 +35119,6 @@ return|;
 block|}
 while|while
 condition|(
-operator|(
 name|dir
 operator|=
 name|extract_colon_unit
@@ -37082,7 +35128,6 @@ argument_list|,
 operator|&
 name|index
 argument_list|)
-operator|)
 condition|)
 block|{
 name|char
@@ -37103,7 +35148,7 @@ argument_list|)
 expr_stmt|;
 name|dir
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 literal|"."
 argument_list|)
@@ -37174,10 +35219,16 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

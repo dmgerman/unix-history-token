@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.139 (Berkeley) 8/5/1998"
+literal|"@(#)savemail.c	8.138 (Berkeley) 6/17/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,12 +320,12 @@ argument_list|(
 literal|"553 Cannot parse Postmaster!"
 argument_list|)
 expr_stmt|;
-name|finis
-argument_list|(
-name|TRUE
-argument_list|,
+name|ExitStat
+operator|=
 name|EX_SOFTWARE
-argument_list|)
+expr_stmt|;
+name|finis
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2063,9 +2063,6 @@ name|ee
 operator|->
 name|e_id
 argument_list|,
-operator|(
-name|long
-operator|)
 name|curtime
 argument_list|()
 argument_list|,
@@ -2300,9 +2297,6 @@ name|buf
 argument_list|,
 literal|"Postmaster notify: %.*s"
 argument_list|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 name|buf
 operator|-
@@ -2339,9 +2333,6 @@ name|buf
 argument_list|,
 literal|"Returned mail: %.*s"
 argument_list|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 name|buf
 operator|-

@@ -9799,6 +9799,37 @@ name|__i386__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FREEBSD_AOUT
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|objformat_aout
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set default format in absense of */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* any other hints. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -9807,6 +9838,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

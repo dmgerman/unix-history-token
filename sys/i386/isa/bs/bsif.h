@@ -371,30 +371,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_all.h>
+file|<scsi/scsi_all.h>
 end_include
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsiconf.h>
+file|<scsi/scsiconf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_da.h>
+file|<scsi/scsi_disk.h>
 end_include
 
 begin_include
@@ -661,18 +650,18 @@ name|XSBS_ITSDONE
 value|ITSDONE
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|XSBS_SCSI_NOSLEEP
 value|SCSI_NOSLEEP
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
 
 begin_define
 define|#
@@ -713,6 +702,31 @@ comment|/* __FreeBSD__ */
 end_comment
 
 begin_comment
+comment|/***************************************************  * Special operations  ***************************************************/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BS_ADDRESS_CHECK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_comment
 comment|/***************************************************  * declare  ***************************************************/
 end_comment
 
@@ -733,12 +747,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
 
 begin_decl_stmt
 name|XSBS_INT32T
@@ -771,39 +779,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_function_decl
-name|void
-name|bs_scsi_cmd
-parameter_list|(
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-parameter_list|,
-name|union
-name|ccb
-modifier|*
-name|ccb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern

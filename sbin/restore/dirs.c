@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dirs.c,v 1.12 1998/07/28 06:20:05 charnier Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,10 +164,10 @@ decl_stmt|;
 name|ino_t
 name|t_ino
 decl_stmt|;
-name|int32_t
+name|long
 name|t_seekpt
 decl_stmt|;
-name|int32_t
+name|long
 name|t_size
 decl_stmt|;
 block|}
@@ -244,10 +244,10 @@ block|{
 name|int
 name|dd_fd
 decl_stmt|;
-name|int32_t
+name|long
 name|dd_loc
 decl_stmt|;
-name|int32_t
+name|long
 name|dd_size
 decl_stmt|;
 name|char

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_util.c,v 1.12 1998/12/13 01:36:45 dillon Exp $"
+literal|"$Id: pw_util.c,v 1.9 1997/10/27 07:53:19 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -379,16 +373,6 @@ name|pw_lock
 parameter_list|()
 block|{
 comment|/* 	 * If the master password file doesn't exist, the system is hosed. 	 * Might as well try to build one.  Set the close-on-exec bit so 	 * that users can't get at the encrypted passwords while editing. 	 * Open should allow flock'ing the file; see 4.4BSD.	XXX 	 */
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|struct
-name|stat
-name|st
-decl_stmt|;
 name|lockfd
 operator|=
 name|open
@@ -445,46 +429,6 @@ argument_list|,
 literal|"the password db file is busy"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the password file was replaced while we were trying to 		 * get the lock, our hardlink count will be 0 and we have to 		 * close and retry. 		 */
-if|if
-condition|(
-name|fstat
-argument_list|(
-name|lockfd
-argument_list|,
-operator|&
-name|st
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"fstat() failed"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|st
-operator|.
-name|st_nlink
-operator|!=
-literal|0
-condition|)
-break|break;
-name|close
-argument_list|(
-name|lockfd
-argument_list|)
-expr_stmt|;
-name|lockfd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|lockfd
@@ -815,10 +759,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|execlp
 argument_list|(
 name|editor
@@ -832,7 +772,7 @@ argument_list|)
 expr_stmt|;
 name|_exit
 argument_list|(
-name|errno
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -856,13 +796,6 @@ operator|&
 name|pstat
 argument_list|,
 name|WUNTRACED
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|WEXITSTATUS
-argument_list|(
-name|pstat
 argument_list|)
 expr_stmt|;
 if|if
@@ -905,7 +838,10 @@ argument_list|(
 name|pstat
 argument_list|)
 operator|&&
-name|errno
+name|WEXITSTATUS
+argument_list|(
+name|pstat
+argument_list|)
 operator|==
 literal|0
 condition|)

@@ -226,18 +226,6 @@ name|REMOTE_DEV
 value|0
 end_define
 
-begin_decl_stmt
-name|cn_getc_t
-name|siocngetc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cn_putc_t
-name|siocnputc
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int

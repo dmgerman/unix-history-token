@@ -39,24 +39,35 @@ comment|/* number of bits in this code or subcode */
 block|}
 name|what
 struct|;
-name|uInt
+name|Bytef
+modifier|*
 name|pad
 decl_stmt|;
 comment|/* pad structure to a power of 2 (4 bytes for */
 block|}
 name|word
 union|;
-comment|/*  16-bit, 8 bytes for 32-bit int's) */
+comment|/*  16-bit, 8 bytes for 32-bit machines) */
+union|union
+block|{
 name|uInt
-name|base
+name|Base
 decl_stmt|;
-comment|/* literal, length base, distance base,                            or table offset */
+comment|/* literal, length base, or distance base */
+name|inflate_huft
+modifier|*
+name|Next
+decl_stmt|;
+comment|/* pointer to next level of table */
+block|}
+name|more
+union|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1004 huft structures (850 for length/literals    and 154 for distances, the latter actually the result of an    exhaustive search).  The actual maximum is not known, but the    value below is more than safe. */
+comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1041 huft structures (875 for length/literals    and 166 for distances, the latter actually the result of an    exhaustive search).  The actual maximum is not known, but the    value below is more than safe. */
 end_comment
 
 begin_define

@@ -735,7 +735,7 @@ name|bs_softc
 operator|*
 operator|,
 expr|struct
-name|bsccb
+name|ccb
 operator|*
 operator|,
 name|int

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.161 (Berkeley) 12/18/1998"
+literal|"@(#)recipient.c	8.154 (Berkeley) 6/24/98"
 decl_stmt|;
 end_decl_stmt
 
@@ -1299,13 +1299,6 @@ goto|;
 block|}
 block|}
 comment|/* add address on list */
-if|if
-condition|(
-name|pq
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|*
 name|pq
 operator|=
@@ -1317,7 +1310,6 @@ name|q_next
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 comment|/* 	**  Alias the name and handle special mailer types. 	*/
 name|trylocaluser
 label|:
@@ -1330,20 +1322,15 @@ argument_list|,
 literal|7
 argument_list|)
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"at trylocaluser: "
-argument_list|)
-expr_stmt|;
-name|printaddr
-argument_list|(
-name|a
+literal|"at trylocaluser %s\n"
 argument_list|,
-name|FALSE
+name|a
+operator|->
+name|q_user
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bitset
@@ -3824,7 +3811,7 @@ name|SFF_MUSTOWN
 operator||
 name|SFF_ROOTOK
 operator||
-name|SFF_NOWLINK
+name|SFF_NOSLINK
 expr_stmt|;
 name|ca
 operator|=
@@ -4959,7 +4946,7 @@ return|return
 name|rval
 return|;
 block|}
-comment|/* 	**  Check to see if some bad guy can write this file 	** 	**	Group write checking could be more clever, e.g., 	**	guessing as to which groups are actually safe ("sys" 	**	may be; "user" probably is not). 	*/
+comment|/* 	** Check to see if some bad guy can write this file 	** 	**	Group write checking could be more clever, e.g., 	**	guessing as to which groups are actually safe ("sys" 	**	may be; "user" probably is not). 	*/
 name|mode
 operator|=
 name|S_IWOTH

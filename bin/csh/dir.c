@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dir.c,v 1.8 1998/06/09 03:38:37 imp Exp $"
+literal|"$Id: dir.c,v 1.7 1997/08/07 21:42:05 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,11 +294,9 @@ decl_stmt|;
 comment|/* Don't believe the login shell home, because it may be a symlink */
 name|tcp
 operator|=
-name|getcwd
+name|getwd
 argument_list|(
 name|path
-argument_list|,
-name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 comment|/* see ngetwd.c for System V version */

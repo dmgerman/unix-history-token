@@ -17,9 +17,23 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|lkm_table
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|pccard_device
 struct_decl|;
 end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|linker_set
+name|pccarddrv_set
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -77,6 +91,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|void
+name|pccard_configure
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void

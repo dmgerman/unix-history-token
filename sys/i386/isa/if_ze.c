@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.55 1998/10/22 05:58:39 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.53 1998/06/07 17:10:39 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -678,13 +678,6 @@ name|int
 name|unit
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|zeintr
 decl_stmt|;
 end_decl_stmt
 
@@ -2187,12 +2180,6 @@ decl_stmt|;
 name|int
 name|pl
 decl_stmt|;
-name|isa_dev
-operator|->
-name|id_ointr
-operator|=
-name|zeintr
-expr_stmt|;
 comment|/* PCMCIA card can be offlined. Reconfiguration is required */
 if|if
 condition|(
@@ -2707,14 +2694,9 @@ name|isr
 decl_stmt|,
 name|imr
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|SMP
 name|u_int
 name|imask
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -4042,7 +4024,6 @@ comment|/*  * Ethernet interface interrupt processor  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|zeintr
 parameter_list|(

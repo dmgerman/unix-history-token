@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vpo.c,v 1.10 1999/01/09 18:05:46 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vpo.c,v 1.4 1997/09/01 00:51:52 bde Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -116,12 +116,6 @@ end_endif
 begin_comment
 comment|/*KERNEL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_vpo.h"
-end_include
 
 begin_include
 include|#
@@ -553,6 +547,11 @@ name|dev
 parameter_list|)
 block|{
 name|struct
+name|scsibus_data
+modifier|*
+name|scbus
+decl_stmt|;
+name|struct
 name|vpo_data
 modifier|*
 name|vpo
@@ -805,20 +804,14 @@ name|csio
 parameter_list|)
 block|{
 name|int
+name|i
+decl_stmt|,
 name|errno
 decl_stmt|;
 comment|/* error in errno.h */
 name|int
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VP0_DEBUG
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splcam
@@ -1811,30 +1804,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* XXX??? */
-name|cpi
-operator|->
-name|hba_inquiry
-operator|=
-literal|0
-expr_stmt|;
-name|cpi
-operator|->
-name|target_sprt
-operator|=
-literal|0
-expr_stmt|;
-name|cpi
-operator|->
-name|hba_misc
-operator|=
-literal|0
-expr_stmt|;
-name|cpi
-operator|->
-name|hba_eng_cnt
-operator|=
-literal|0
-expr_stmt|;
 name|cpi
 operator|->
 name|max_target

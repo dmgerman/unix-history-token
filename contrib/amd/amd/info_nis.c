@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_nis.c,v 1.1.1.1 1998/11/05 02:04:49 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_nis.c,v 5.2.2.1 1992/02/09 15:08:32 jsp beta $  *  */
 end_comment
 
 begin_comment
@@ -131,21 +131,6 @@ parameter_list|,
 name|time_t
 modifier|*
 name|tp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nis_isup
-parameter_list|(
-name|mnt_map
-modifier|*
-name|m
-parameter_list|,
-name|char
-modifier|*
-name|map
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -433,7 +418,7 @@ operator|==
 name|YP_TRUE
 condition|)
 block|{
-comment|/* add to list of maps */
+comment|/*      * Add to list of maps      */
 name|char
 modifier|*
 name|kp
@@ -472,14 +457,14 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* we want more ... */
+comment|/*      * We want more ...      */
 return|return
 name|FALSE
 return|;
 block|}
 else|else
 block|{
-comment|/* NOMORE means end of map - otherwise log error */
+comment|/*      * NOMORE means end of map - otherwise log error      */
 if|if
 condition|(
 name|status
@@ -487,7 +472,7 @@ operator|!=
 name|YP_NOMORE
 condition|)
 block|{
-comment|/* check what went wrong */
+comment|/*        * Check what went wrong        */
 name|int
 name|e
 init|=
@@ -861,7 +846,7 @@ decl_stmt|;
 name|YP_ORDER_OUTORDER_TYPE
 name|order
 decl_stmt|;
-comment|/*    * Make sure domain initialized    */
+comment|/*    * Make sure domain initialised    */
 if|if
 condition|(
 operator|!
@@ -1247,7 +1232,7 @@ name|HAVE_BAD_YP_ALL
 end_ifdef
 
 begin_comment
-comment|/*  * If you are using NIS and your yp_all function is "broken", use an  * alternate code which avoids a bug in yp_all().  The bug in yp_all() is  * that it does not close a TCP connection to ypserv, and this ypserv runs  * out of open filedescriptors, getting into an infinite loop, thus all YP  * clients eventually unbind and hang too.  *  * Systems known to be plagued with this bug:  *	earlier SunOS 4.x  *	all irix systems (at this time, up to 6.4 was checked)  *  * -Erez Zadok<ezk@cs.columbia.edu>  * -James Tanis<jtt@cs.columbia.edu> */
+comment|/*  * If you are using NIS and your yp_all function is "broken", use an  * alternate code which avoids a bug in yp_all().  The bug in yp_all() is  * that it does not close a TCP connection to ypserv, and this ypserv runs  * out of open filedescriptors, getting into an infinite loop, thus all YP  * clients enevtually unbind and hang too.  *  * Systems known to be plagued with this bug:  *	earlier SunOS 4.x  *	all irix systems (at this time, up to 6.4 was checked)  *  * -Erez Zadok<ezk@cs.columbia.edu>  * -James Tanis<jtt@cs.columbia.edu> */
 end_comment
 
 begin_function
@@ -1374,12 +1359,6 @@ name|FALSE
 condition|)
 comment|/* terminate loop */
 break|break;
-comment|/*      * We have to manually free all char ** arguments to yp_first/yp_next      * outval must be freed *before* calling yp_next again, outkey can be      * freed as outkey_old *after* the call (this saves one call to      * strnsave).      */
-name|XFREE
-argument_list|(
-name|outval
-argument_list|)
-expr_stmt|;
 name|outkey_old
 operator|=
 name|outkey
@@ -1411,11 +1390,6 @@ name|outval
 argument_list|,
 operator|&
 name|outvallen
-argument_list|)
-expr_stmt|;
-name|XFREE
-argument_list|(
-name|outkey_old
 argument_list|)
 expr_stmt|;
 block|}

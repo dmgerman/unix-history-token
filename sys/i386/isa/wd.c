@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.185 1999/01/16 01:06:23 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.176 1998/09/15 08:15:30 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -65,13 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ide_delay.h"
+file|"opt_wd.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_wd.h"
+file|"pci.h"
 end_include
 
 begin_include
@@ -270,35 +270,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IDE_DELAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT
-value|IDE_DELAY
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|TIMEOUT
 value|10000
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1325,14 +1302,19 @@ name|dk_interface
 operator|=
 name|interface
 expr_stmt|;
-name|du
-operator|->
-name|dk_port
-operator|=
-name|dvp
-operator|->
-name|id_iobase
-expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|DISABLE_PCI_IDE
+argument_list|)
+operator|&&
+operator|(
+name|NPCI
+operator|>
+literal|0
+operator|)
 if|if
 condition|(
 name|wddma
@@ -1341,8 +1323,6 @@ name|interface
 index|]
 operator|.
 name|wdd_candma
-operator|!=
-name|NULL
 condition|)
 block|{
 name|du
@@ -1363,11 +1343,15 @@ argument_list|,
 name|du
 operator|->
 name|dk_ctrlr
-argument_list|,
+argument_list|)
+expr_stmt|;
 name|du
 operator|->
-name|dk_unit
-argument_list|)
+name|dk_port
+operator|=
+name|dvp
+operator|->
+name|id_iobase
 expr_stmt|;
 name|du
 operator|->
@@ -1386,14 +1370,16 @@ name|dk_dmacookie
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+else|else
+block|{
 name|du
 operator|->
-name|dk_altport
-operator|==
-literal|0
-condition|)
+name|dk_port
+operator|=
+name|dvp
+operator|->
+name|id_iobase
+expr_stmt|;
 name|du
 operator|->
 name|dk_altport
@@ -1404,6 +1390,29 @@ name|dk_port
 operator|+
 name|wd_ctlr
 expr_stmt|;
+block|}
+else|#
+directive|else
+name|du
+operator|->
+name|dk_port
+operator|=
+name|dvp
+operator|->
+name|id_iobase
+expr_stmt|;
+name|du
+operator|->
+name|dk_altport
+operator|=
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_ctlr
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* check if we have registers that work */
 name|outb
 argument_list|(
@@ -1855,12 +1864,6 @@ name|wdparams
 modifier|*
 name|wp
 decl_stmt|;
-name|dvp
-operator|->
-name|id_intr
-operator|=
-name|wdintr
-expr_stmt|;
 if|if
 condition|(
 name|dvp
@@ -2967,6 +2970,34 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|bufqdisksort
+argument_list|(
+operator|&
+name|drive_queue
+index|[
+name|lunit
+index|]
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wdutab
+index|[
+name|lunit
+index|]
+operator|.
+name|b_active
+operator|==
+literal|0
+condition|)
+name|wdustart
+argument_list|(
+name|du
+argument_list|)
+expr_stmt|;
+comment|/* start drive */
 comment|/* Pick up changes made by readdisklabel(). */
 if|if
 condition|(
@@ -2999,34 +3030,6 @@ operator|=
 name|WANTOPEN
 expr_stmt|;
 block|}
-name|bufqdisksort
-argument_list|(
-operator|&
-name|drive_queue
-index|[
-name|lunit
-index|]
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|wdutab
-index|[
-name|lunit
-index|]
-operator|.
-name|b_active
-operator|==
-literal|0
-condition|)
-name|wdustart
-argument_list|(
-name|du
-argument_list|)
-expr_stmt|;
-comment|/* start drive */
 ifdef|#
 directive|ifdef
 name|CMD640
@@ -4537,9 +4540,8 @@ begin_function
 name|void
 name|wdintr
 parameter_list|(
-name|void
-modifier|*
-name|unitnum
+name|int
+name|unit
 parameter_list|)
 block|{
 specifier|register
@@ -4560,14 +4562,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Shut up GCC */
-name|int
-name|unit
-init|=
-operator|(
-name|int
-operator|)
-name|unitnum
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CMD640
@@ -4759,9 +4753,10 @@ argument_list|)
 operator|&
 name|WDDS_INTERRUPT
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
+return|return;
 name|dmastat
 operator|=
 name|wddma
@@ -8641,10 +8636,6 @@ argument_list|,
 name|du
 operator|->
 name|dk_ctrlr
-argument_list|,
-name|du
-operator|->
-name|dk_unit
 argument_list|)
 expr_stmt|;
 comment|/* does user want this? */
@@ -10606,7 +10597,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"wd%d: %s"
+literal|"wd%d: %s:\n"
 argument_list|,
 name|du
 operator|->
@@ -10644,7 +10635,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" (status %b error %b)\n"
+literal|"wd%d: status %b error %b\n"
+argument_list|,
+name|du
+operator|->
+name|dk_lunit
 argument_list|,
 name|du
 operator|->

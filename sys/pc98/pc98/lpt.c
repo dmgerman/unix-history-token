@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.23 1998/10/22 05:58:45 bde Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.21 1998/06/17 16:33:14 kato Exp $  */
 end_comment
 
 begin_comment
@@ -548,9 +548,7 @@ begin_define
 define|#
 directive|define
 name|lprintf
-parameter_list|(
-name|args
-parameter_list|)
+value|(void)
 end_define
 
 begin_else
@@ -562,10 +560,7 @@ begin_define
 define|#
 directive|define
 name|lprintf
-parameter_list|(
-name|args
-parameter_list|)
-value|do {				\ 				if (lptflag)		\ 					printf args;	\ 			} while (0)
+value|if (lptflag) printf
 end_define
 
 begin_decl_stmt
@@ -957,13 +952,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|lptintr
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1280,17 +1268,15 @@ condition|)
 do|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"Port 0x%x\tout=%x\tin=%x\ttout=%d\n"
-operator|,
+argument_list|,
 name|port
-operator|,
+argument_list|,
 name|data
-operator|,
+argument_list|,
 name|temp
-operator|,
+argument_list|,
 name|timeout
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1566,12 +1552,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-name|isdp
-operator|->
-name|id_ointr
-operator|=
-name|lptintr
-expr_stmt|;
 name|unit
 operator|=
 name|isdp
@@ -1680,13 +1660,11 @@ directive|endif
 comment|/* check if we can use interrupt */
 name|lprintf
 argument_list|(
-operator|(
 literal|"oldirq %x\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_irq
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1736,23 +1714,19 @@ literal|0
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"lpt%d: Polled port\n"
-operator|,
+argument_list|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"irq %x\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_irq
-operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1923,13 +1897,11 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"lp: still open %x\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_state
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1986,13 +1958,11 @@ argument_list|()
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"lp flags 0x%x\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_flags
-operator|)
 argument_list|)
 expr_stmt|;
 name|port
@@ -2121,16 +2091,14 @@ literal|0
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"status %x\n"
-operator|,
+argument_list|,
 name|inb
 argument_list|(
 name|port
 operator|+
 name|lpt_status
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2291,13 +2259,11 @@ expr_stmt|;
 comment|/* only use timeout if using interrupt */
 name|lprintf
 argument_list|(
-operator|(
 literal|"irq %x\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_irq
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2338,9 +2304,7 @@ expr_stmt|;
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"opened.\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2373,9 +2337,8 @@ name|pl
 decl_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"T %x "
-operator|,
+argument_list|,
 name|inb
 argument_list|(
 name|sc
@@ -2384,7 +2347,6 @@ name|sc_port
 operator|+
 name|lpt_status
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2688,9 +2650,7 @@ literal|0
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"closed.\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2735,9 +2695,7 @@ name|sc_port
 decl_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"p"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* loop for every character .. */
@@ -3082,9 +3040,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"i"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* if the printer is ready for a char, */
@@ -3104,13 +3060,11 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"\nC %d. "
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_xfercnt
-operator|)
 argument_list|)
 expr_stmt|;
 name|pl
@@ -3136,9 +3090,7 @@ expr_stmt|;
 block|}
 name|lprintf
 argument_list|(
-operator|(
 literal|"W "
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3206,9 +3158,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"p"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3242,7 +3192,6 @@ comment|/*  * lptintr -- handle printer interrupts which occur when the printer 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|lptintr
 parameter_list|(
@@ -3372,7 +3321,7 @@ name|sc_xfercnt
 condition|)
 block|{
 comment|/* send char */
-comment|/*lprintf(("%x ", *sc->sc_cp)); */
+comment|/*lprintf("%x ", *sc->sc_cp); */
 name|outb
 argument_list|(
 name|port
@@ -3454,9 +3403,7 @@ argument_list|)
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"w "
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3500,11 +3447,9 @@ endif|#
 directive|endif
 name|lprintf
 argument_list|(
-operator|(
 literal|"sts %x "
-operator|,
+argument_list|,
 name|sts
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4414,11 +4359,9 @@ break|break;
 default|default:
 name|lprintf
 argument_list|(
-operator|(
 literal|"LP:ioctl(0x%lx)\n"
-operator|,
+argument_list|,
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4897,9 +4840,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"DROP"
-operator|)
 argument_list|)
 expr_stmt|;
 name|IF_DROP
@@ -5176,9 +5117,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"DROP"
-operator|)
 argument_list|)
 expr_stmt|;
 name|IF_DROP
@@ -5297,9 +5236,7 @@ argument_list|)
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"R"
-operator|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5610,9 +5547,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"&"
-operator|)
 argument_list|)
 expr_stmt|;
 name|lptintr
@@ -5912,9 +5847,7 @@ operator|++
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"X"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5956,9 +5889,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"^"
-operator|)
 argument_list|)
 expr_stmt|;
 name|lptintr
@@ -5993,9 +5924,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"&"
-operator|)
 argument_list|)
 expr_stmt|;
 name|lptintr
@@ -6127,9 +6056,7 @@ operator|++
 expr_stmt|;
 name|lprintf
 argument_list|(
-operator|(
 literal|"X"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6224,9 +6151,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-operator|(
 literal|"^"
-operator|)
 argument_list|)
 expr_stmt|;
 name|lptintr

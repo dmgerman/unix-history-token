@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Kenneth D. Merry  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: camcontrol.c,v 1.8 1998/12/20 20:32:34 mjacob Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 Kenneth D. Merry  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: camcontrol.c,v 1.4 1998/10/13 16:23:26 ken Exp $  */
 end_comment
 
 begin_include
@@ -176,10 +176,6 @@ block|,
 name|CAM_ARG_DEBUG
 init|=
 literal|0x0000000b
-block|,
-name|CAM_ARG_RESET
-init|=
-literal|0x0000000c
 block|,
 name|CAM_ARG_OPT_MASK
 init|=
@@ -413,14 +409,6 @@ block|{
 literal|"rescan"
 block|,
 name|CAM_ARG_RESCAN
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|"reset"
-block|,
-name|CAM_ARG_RESET
 block|,
 name|NULL
 block|}
@@ -716,7 +704,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|dorescan_or_reset
+name|dorescan
 parameter_list|(
 name|int
 name|argc
@@ -725,9 +713,6 @@ name|char
 modifier|*
 modifier|*
 name|argv
-parameter_list|,
-name|int
-name|rescan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -735,13 +720,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|rescan_or_reset_bus
+name|rescanbus
 parameter_list|(
 name|int
 name|bus
-parameter_list|,
-name|int
-name|rescan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -749,7 +731,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|scanlun_or_reset_dev
+name|scanlun
 parameter_list|(
 name|int
 name|bus
@@ -759,9 +741,6 @@ name|target
 parameter_list|,
 name|int
 name|lun
-parameter_list|,
-name|int
-name|scan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1747,10 +1726,6 @@ operator|->
 name|target_lun
 argument_list|)
 expr_stmt|;
-name|need_close
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 block|}
 case|case
@@ -1781,8 +1756,6 @@ expr_stmt|;
 if|if
 condition|(
 name|need_close
-operator|>
-literal|1
 condition|)
 name|fprintf
 argument_list|(
@@ -1807,7 +1780,8 @@ name|unit_number
 argument_list|)
 expr_stmt|;
 name|need_close
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -3675,7 +3649,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|dorescan_or_reset
+name|dorescan
 parameter_list|(
 name|int
 name|argc
@@ -3684,19 +3658,8 @@ name|char
 modifier|*
 modifier|*
 name|argv
-parameter_list|,
-name|int
-name|rescan
 parameter_list|)
 block|{
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|must
-init|=
-literal|"you must specify a bus, or a bus:target:lun to %s"
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -3736,13 +3699,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-name|must
-argument_list|,
-name|rescan
-condition|?
-literal|"rescan"
-else|:
-literal|"reset"
+literal|"you must specify a bus, or a bus:target:lun to rescan"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3918,13 +3875,12 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-name|must
-argument_list|,
-name|rescan
-condition|?
-literal|"rescan"
-else|:
-literal|"reset"
+literal|"you must specify either a bus or"
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"a bus, target and lun for rescanning"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3938,13 +3894,7 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-name|must
-argument_list|,
-name|rescan
-condition|?
-literal|"rescan"
-else|:
-literal|"reset"
+literal|"you must at least specify a bus to rescan"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3977,15 +3927,13 @@ operator|)
 condition|)
 name|error
 operator|=
-name|scanlun_or_reset_dev
+name|scanlun
 argument_list|(
 name|bus
 argument_list|,
 name|target
 argument_list|,
 name|lun
-argument_list|,
-name|rescan
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3997,11 +3945,9 @@ name|CAM_ARG_BUS
 condition|)
 name|error
 operator|=
-name|rescan_or_reset_bus
+name|rescanbus
 argument_list|(
 name|bus
-argument_list|,
-name|rescan
 argument_list|)
 expr_stmt|;
 else|else
@@ -4012,13 +3958,12 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-name|must
-argument_list|,
-name|rescan
-condition|?
-literal|"rescan"
-else|:
-literal|"reset"
+literal|"you must specify either a bus or"
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"a bus, target and lun for rescanning"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4034,13 +3979,10 @@ end_function
 begin_function
 specifier|static
 name|int
-name|rescan_or_reset_bus
+name|rescanbus
 parameter_list|(
 name|int
 name|bus
-parameter_list|,
-name|int
-name|rescan
 parameter_list|)
 block|{
 name|union
@@ -4112,11 +4054,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|=
-name|rescan
-condition|?
 name|XPT_SCAN_BUS
-else|:
-name|XPT_RESET_BUS
 expr_stmt|;
 name|ccb
 operator|.
@@ -4217,13 +4155,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s of bus %d was successful\n"
-argument_list|,
-name|rescan
-condition|?
-literal|"Re-scan"
-else|:
-literal|"Reset"
+literal|"Re-scan of bus %d was successful\n"
 argument_list|,
 name|bus
 argument_list|)
@@ -4240,13 +4172,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s of bus %d returned error %#x\n"
-argument_list|,
-name|rescan
-condition|?
-literal|"Re-scan"
-else|:
-literal|"Reset"
+literal|"Re-scan of bus %d returned error %#x\n"
 argument_list|,
 name|bus
 argument_list|,
@@ -4271,7 +4197,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|scanlun_or_reset_dev
+name|scanlun
 parameter_list|(
 name|int
 name|bus
@@ -4281,9 +4207,6 @@ name|target
 parameter_list|,
 name|int
 name|lun
-parameter_list|,
-name|int
-name|scan
 parameter_list|)
 block|{
 name|union
@@ -4395,13 +4318,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|=
-operator|(
-name|scan
-operator|)
-condition|?
 name|XPT_SCAN_LUN
-else|:
-name|XPT_RESET_DEV
 expr_stmt|;
 name|ccb
 operator|.
@@ -4501,13 +4418,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s of %d:%d:%d was successful\n"
-argument_list|,
-name|scan
-condition|?
-literal|"Re-scan"
-else|:
-literal|"Reset"
+literal|"Re-scan of %d:%d:%d was successful\n"
 argument_list|,
 name|bus
 argument_list|,
@@ -4528,13 +4439,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s of %d:%d:%d returned error %#x\n"
-argument_list|,
-name|scan
-condition|?
-literal|"Re-scan"
-else|:
-literal|"Reset"
+literal|"Re-scan of %d:%d:%d returned error %#x\n"
 argument_list|,
 name|bus
 argument_list|,
@@ -8177,7 +8082,6 @@ literal|"        camcontrol start      [generic args]\n"
 literal|"        camcontrol stop       [generic args]\n"
 literal|"        camcontrol eject      [generic args]\n"
 literal|"        camcontrol rescan<bus[:target:lun]>\n"
-literal|"        camcontrol reset<bus[:target:lun]>\n"
 literal|"        camcontrol defects    [generic args]<-f format> [-P][-G]\n"
 literal|"        camcontrol modepage   [generic args]<-m page> [-P pagectl][-e][-d]\n"
 literal|"        camcontrol cmd        [generic args]<-c cmd [args]> \n"
@@ -8192,7 +8096,6 @@ literal|"start       send a Start Unit command to the device\n"
 literal|"stop        send a Stop Unit command to the device\n"
 literal|"eject       send a Stop Unit command to the device with the eject bit set\n"
 literal|"rescan      rescan the given bus, or bus:target:lun\n"
-literal|"reset       reset the given bus, or bus:target:lun\n"
 literal|"defects     read the defect list of the specified device\n"
 literal|"modepage    display or edit (-e) the given mode page\n"
 literal|"cmd         send the given scsi command, may need -i or -o as well\n"
@@ -8663,16 +8566,6 @@ operator|&
 name|CAM_ARG_OPT_MASK
 operator|)
 operator|!=
-name|CAM_ARG_RESET
-operator|)
-operator|&&
-operator|(
-operator|(
-name|arglist
-operator|&
-name|CAM_ARG_OPT_MASK
-operator|)
-operator|!=
 name|CAM_ARG_DEVTREE
 operator|)
 operator|&&
@@ -8726,7 +8619,7 @@ name|cam_errbuf
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Reset optind to 2, and reset getopt, so these routines can parse 	 * the arguments again. 	 */
+comment|/* 	 * Reset optind to 2, and reset getopt, so these routines cam parse 	 * the arguments again. 	 */
 name|optind
 operator|=
 literal|2
@@ -8826,28 +8719,11 @@ name|CAM_ARG_RESCAN
 case|:
 name|error
 operator|=
-name|dorescan_or_reset
+name|dorescan
 argument_list|(
 name|argc
 argument_list|,
 name|argv
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CAM_ARG_RESET
-case|:
-name|error
-operator|=
-name|dorescan_or_reset
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;

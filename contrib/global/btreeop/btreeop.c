@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, 1997, 1998 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	btreeop.c				12-Nov-98  *  */
+comment|/*  * Copyright (c) 1996, 1997 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	btreeop.c				6-Nov-97  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -42,11 +36,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dbio.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"global.h"
 end_include
 
 begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|dbdefault
@@ -60,7 +59,6 @@ comment|/* default database name */
 end_comment
 
 begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|progname
@@ -111,7 +109,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 decl|main
 name|__P
 argument_list|(
@@ -132,7 +130,7 @@ name|dbwrite
 name|__P
 argument_list|(
 operator|(
-name|DBOP
+name|DBIO
 operator|*
 operator|)
 argument_list|)
@@ -145,7 +143,7 @@ name|dbkey
 name|__P
 argument_list|(
 operator|(
-name|DBOP
+name|DBIO
 operator|*
 operator|,
 name|char
@@ -163,7 +161,7 @@ name|dbscan
 name|__P
 argument_list|(
 operator|(
-name|DBOP
+name|DBIO
 operator|*
 operator|,
 name|char
@@ -181,7 +179,7 @@ name|dbdel
 name|__P
 argument_list|(
 operator|(
-name|DBOP
+name|DBIO
 operator|*
 operator|,
 name|char
@@ -199,7 +197,7 @@ name|dbbysecondkey
 name|__P
 argument_list|(
 operator|(
-name|DBOP
+name|DBIO
 operator|*
 operator|,
 name|int
@@ -239,7 +237,7 @@ name|stderr
 argument_list|,
 literal|"%s\n"
 argument_list|,
-literal|"usage: btreeop [-A][-C][-D[n] key][-K[n] key][-L[2]][-k prefix][dbname]"
+literal|"usage: btreeop [-A][-C][-D[n] key][-K[n] key][-L][-k prefix][dbname]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -316,7 +314,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -348,14 +346,13 @@ name|mode
 init|=
 literal|0
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
-name|db_name
+name|dbname
 decl_stmt|;
-name|DBOP
+name|DBIO
 modifier|*
-name|dbop
+name|dbio
 decl_stmt|;
 name|int
 name|i
@@ -367,16 +364,15 @@ name|secondkey
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|keylist
-init|=
-literal|0
-decl_stmt|;
 name|char
 modifier|*
 name|prefix
 init|=
-name|NULL
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -456,25 +452,14 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|++
-name|i
-operator|<
-name|argc
-condition|)
 name|key
 operator|=
 name|argv
 index|[
+operator|++
 name|i
 index|]
 expr_stmt|;
-else|else
-name|usage
-argument_list|()
-expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|'A'
 case|:
@@ -497,55 +482,17 @@ name|command
 operator|=
 name|c
 expr_stmt|;
-if|if
-condition|(
-name|command
-operator|==
-literal|'L'
-condition|)
-block|{
-name|keylist
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|argv
-index|[
-name|i
-index|]
-index|[
-literal|2
-index|]
-operator|==
-literal|'2'
-condition|)
-name|keylist
-operator|=
-literal|2
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'k'
 case|:
-if|if
-condition|(
-operator|++
-name|i
-operator|<
-name|argc
-condition|)
 name|prefix
 operator|=
 name|argv
 index|[
+operator|++
 name|i
 index|]
-expr_stmt|;
-else|else
-name|usage
-argument_list|()
 expr_stmt|;
 break|break;
 default|default:
@@ -554,7 +501,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|db_name
+name|dbname
 operator|=
 operator|(
 name|i
@@ -608,58 +555,32 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|dbop
+name|dbio
 operator|=
-name|dbop_open
+name|db_open
 argument_list|(
-name|db_name
+name|dbname
 argument_list|,
 name|mode
 argument_list|,
 literal|0644
 argument_list|,
-name|DBOP_DUP
+name|DBIO_DUP
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dbop
+name|dbio
 operator|==
 name|NULL
 condition|)
-block|{
-switch|switch
-condition|(
-name|mode
-condition|)
-block|{
-case|case
-literal|0
-case|:
-case|case
-literal|2
-case|:
 name|die1
 argument_list|(
-literal|"cannot open '%s'."
+literal|"db_open failed (dbname = %s)."
 argument_list|,
-name|db_name
+name|dbname
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|die1
-argument_list|(
-literal|"cannot create '%s'."
-argument_list|,
-name|db_name
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
 switch|switch
 condition|(
 name|command
@@ -675,7 +596,7 @@ case|:
 comment|/* Create database */
 name|dbwrite
 argument_list|(
-name|dbop
+name|dbio
 argument_list|)
 expr_stmt|;
 break|break;
@@ -685,7 +606,7 @@ case|:
 comment|/* Delete records */
 name|dbdel
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|key
 argument_list|,
@@ -699,7 +620,7 @@ case|:
 comment|/* Keyed (indexed) read */
 name|dbkey
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|key
 argument_list|,
@@ -717,18 +638,26 @@ case|:
 comment|/* primary key List */
 name|dbscan
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|prefix
 argument_list|,
-name|keylist
+operator|(
+name|command
+operator|==
+literal|'L'
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|dbop_close
+name|db_close
 argument_list|(
-name|dbop
+name|dbio
 argument_list|)
 expr_stmt|;
 if|if
@@ -749,18 +678,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dbwrite: write to database  *  *	i)	dbop		database  */
+comment|/*  * dbwrite: write to database  *  *	i)	dbio		database  */
 end_comment
 
 begin_function
 name|void
 name|dbwrite
 parameter_list|(
-name|dbop
+name|dbio
 parameter_list|)
-name|DBOP
+name|DBIO
 modifier|*
-name|dbop
+name|dbio
 decl_stmt|;
 block|{
 name|char
@@ -792,9 +721,9 @@ name|mgets
 argument_list|(
 name|stdin
 argument_list|,
-name|NULL
-argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -931,9 +860,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|dbop_put
+name|db_put
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|keybuf
 argument_list|,
@@ -945,22 +874,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dbkey: Keyed search  *  *	i)	dbop		database  *	i)	skey		key for search  *	i)	secondkey	0: primary key,>0: secondary key  */
+comment|/*  * dbkey: Keyed search  *  *	i)	dbio		database  *	i)	skey		key for search  *	i)	secondkey	0: primary key,>0: secondary key  */
 end_comment
 
 begin_function
 name|void
 name|dbkey
 parameter_list|(
-name|dbop
+name|dbio
 parameter_list|,
 name|skey
 parameter_list|,
 name|secondkey
 parameter_list|)
-name|DBOP
+name|DBIO
 modifier|*
-name|dbop
+name|dbio
 decl_stmt|;
 name|char
 modifier|*
@@ -984,9 +913,9 @@ for|for
 control|(
 name|p
 operator|=
-name|dbop_first
+name|db_first
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|skey
 argument_list|,
@@ -997,9 +926,9 @@ name|p
 condition|;
 name|p
 operator|=
-name|dbop_next
+name|db_next
 argument_list|(
-name|dbop
+name|dbio
 argument_list|)
 control|)
 name|detab
@@ -1013,7 +942,7 @@ return|return;
 block|}
 name|dbbysecondkey
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|F_KEY
 argument_list|,
@@ -1026,22 +955,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dbscan: Scan records  *  *	i)	dbop		database  *	i)	prefix		prefix of primary key  *	i)	keylist		0: data, 1: key, 2: key and data  */
+comment|/*  * dbscan: Scan records  *  *	i)	dbio		database  *	i)	prefix		prefix of primary key  *	i)	keylist		0: key and data, 1: primary key only  */
 end_comment
 
 begin_function
 name|void
 name|dbscan
 parameter_list|(
-name|dbop
+name|dbio
 parameter_list|,
 name|prefix
 parameter_list|,
 name|keylist
 parameter_list|)
-name|DBOP
+name|DBIO
 modifier|*
-name|dbop
+name|dbio
 decl_stmt|;
 name|char
 modifier|*
@@ -1058,7 +987,7 @@ decl_stmt|;
 name|int
 name|flags
 init|=
-literal|0
+name|DBIO_SKIPMETA
 decl_stmt|;
 if|if
 condition|(
@@ -1066,7 +995,7 @@ name|prefix
 condition|)
 name|flags
 operator||=
-name|DBOP_PREFIX
+name|DBIO_PREFIX
 expr_stmt|;
 if|if
 condition|(
@@ -1074,15 +1003,15 @@ name|keylist
 condition|)
 name|flags
 operator||=
-name|DBOP_KEY
+name|DBIO_KEY
 expr_stmt|;
 for|for
 control|(
 name|p
 operator|=
-name|dbop_first
+name|db_first
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|prefix
 argument_list|,
@@ -1093,32 +1022,11 @@ name|p
 condition|;
 name|p
 operator|=
-name|dbop_next
+name|db_next
 argument_list|(
-name|dbop
+name|dbio
 argument_list|)
 control|)
-block|{
-if|if
-condition|(
-name|keylist
-operator|==
-literal|2
-condition|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%s %s\n"
-argument_list|,
-name|p
-argument_list|,
-name|dbop
-operator|->
-name|lastdat
-argument_list|)
-expr_stmt|;
-else|else
 name|detab
 argument_list|(
 name|stdout
@@ -1127,26 +1035,25 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*  * dbdel: Delete records  *  *	i)	dbop		database  *	i)	skey		key for search  *	i)	secondkey	0: primary key,>0: secondary key  */
+comment|/*  * dbdel: Delete records  *  *	i)	dbio		database  *	i)	skey		key for search  *	i)	secondkey	0: primary key,>0: secondary key  */
 end_comment
 
 begin_function
 name|void
 name|dbdel
 parameter_list|(
-name|dbop
+name|dbio
 parameter_list|,
 name|skey
 parameter_list|,
 name|secondkey
 parameter_list|)
-name|DBOP
+name|DBIO
 modifier|*
-name|dbop
+name|dbio
 decl_stmt|;
 name|char
 modifier|*
@@ -1165,9 +1072,9 @@ operator|!
 name|secondkey
 condition|)
 block|{
-name|dbop_del
+name|db_del
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|skey
 argument_list|)
@@ -1176,7 +1083,7 @@ return|return;
 block|}
 name|dbbysecondkey
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|F_DEL
 argument_list|,
@@ -1189,14 +1096,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dbbysecondkey: proc by second key  *  *	i)	dbop	database  *	i)	func	F_KEY, F_DEL  *	i)	skey  *	i)	secondkey  */
+comment|/*  * dbbysecondkey: proc by second key  *  *	i)	dbio	database  *	i)	func	F_KEY, F_DEL  *	i)	skey  *	i)	secondkey  */
 end_comment
 
 begin_function
 name|void
 name|dbbysecondkey
 parameter_list|(
-name|dbop
+name|dbio
 parameter_list|,
 name|func
 parameter_list|,
@@ -1204,9 +1111,9 @@ name|skey
 parameter_list|,
 name|secondkey
 parameter_list|)
-name|DBOP
+name|DBIO
 modifier|*
-name|dbop
+name|dbio
 decl_stmt|;
 name|int
 name|func
@@ -1287,22 +1194,22 @@ for|for
 control|(
 name|p
 operator|=
-name|dbop_first
+name|db_first
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|DBIO_SKIPMETA
 argument_list|)
 init|;
 name|p
 condition|;
 name|p
 operator|=
-name|dbop_next
+name|db_next
 argument_list|(
-name|dbop
+name|dbio
 argument_list|)
 control|)
 block|{
@@ -1446,9 +1353,9 @@ break|break;
 case|case
 name|F_DEL
 case|:
-name|dbop_del
+name|db_del
 argument_list|(
-name|dbop
+name|dbio
 argument_list|,
 name|NULL
 argument_list|)

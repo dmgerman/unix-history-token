@@ -358,17 +358,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|nmemb
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * XXX 	 * Stupid subtraction for the Cray. 	 */
 name|iflag
 operator|=
@@ -620,6 +609,8 @@ name|big
 condition|)
 block|{
 comment|/* here i = 0 */
+name|LINEAR
+label|:
 while|while
 condition|(
 operator|(
@@ -760,6 +751,8 @@ name|b
 operator|=
 name|p
 expr_stmt|;
+name|SLOWCASE
+label|:
 while|while
 condition|(
 name|t

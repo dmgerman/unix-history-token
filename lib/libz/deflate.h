@@ -8,7 +8,7 @@ comment|/* WARNING: this file should *not* be used by applications. It is    par
 end_comment
 
 begin_comment
-comment|/* @(#) $Id: deflate.h,v 1.1.1.3 1999/01/10 09:46:53 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -538,6 +538,10 @@ name|ulg
 name|static_len
 decl_stmt|;
 comment|/* bit length of current block with static trees */
+name|ulg
+name|compressed_len
+decl_stmt|;
+comment|/* total bit length of compressed file */
 name|uInt
 name|matches
 decl_stmt|;
@@ -550,13 +554,9 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 name|ulg
-name|compressed_len
-decl_stmt|;
-comment|/* total bit length of compressed file mod 2^32 */
-name|ulg
 name|bits_sent
 decl_stmt|;
-comment|/* bit length of compressed data sent mod 2^32 */
+comment|/* bit length of the compressed data */
 endif|#
 directive|endif
 name|ush
@@ -653,7 +653,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|ulg
 name|_tr_flush_block
 name|OF
 argument_list|(

@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.31 1998/08/12 18:16:38 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.30 1998/06/07 17:10:13 dfr Exp $  */
 end_comment
 
 begin_include
@@ -725,13 +725,6 @@ name|ascattach
 block|,
 literal|"asc"
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ointhand2_t
-name|ascintr
 decl_stmt|;
 end_decl_stmt
 
@@ -1799,12 +1792,6 @@ name|unittab
 operator|+
 name|unit
 decl_stmt|;
-name|isdp
-operator|->
-name|id_ointr
-operator|=
-name|ascintr
-expr_stmt|;
 name|scu
 operator|->
 name|flags
@@ -2067,7 +2054,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ascintr
 parameter_list|(

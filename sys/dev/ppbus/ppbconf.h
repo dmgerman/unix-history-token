@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.h,v 1.10 1999/01/10 12:04:55 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.h,v 1.8 1998/09/13 18:26:26 nsouch Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -91,36 +91,11 @@ begin_comment
 comment|/* ECP mode */
 end_comment
 
-begin_comment
-comment|/* mode aliases */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|PPB_SPP
 value|PPB_NIBBLE|PPB_PS2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPB_BYTE
-value|PPB_PS2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPB_MASK
-value|0x0f
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPB_OPTIONS_MASK
-value|0xf0
 end_define
 
 begin_define
@@ -384,20 +359,6 @@ name|PPB_INTR
 value|0x2
 end_define
 
-begin_define
-define|#
-directive|define
-name|PPB_POLL
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPB_FOREVER
-value|-1
-end_define
-
 begin_comment
 comment|/*  * Microsequence stuff.  */
 end_comment
@@ -563,7 +524,7 @@ comment|/* current mode of the device */
 name|ushort
 name|avm
 decl_stmt|;
-comment|/* available IEEE1284 modes of  					 * the device */
+comment|/* available modes of the device */
 name|struct
 name|ppb_context
 name|ctx
@@ -672,38 +633,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|read
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|write
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
 name|void
 function_decl|(
 modifier|*
@@ -788,7 +717,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|u_char
+name|char
 function_decl|(
 modifier|*
 name|r_dtr
@@ -797,7 +726,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-name|u_char
+name|char
 function_decl|(
 modifier|*
 name|r_str
@@ -806,7 +735,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-name|u_char
+name|char
 function_decl|(
 modifier|*
 name|r_ctr
@@ -815,7 +744,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-name|u_char
+name|char
 function_decl|(
 modifier|*
 name|r_epp
@@ -824,7 +753,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-name|u_char
+name|char
 function_decl|(
 modifier|*
 name|r_ecr
@@ -833,7 +762,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-name|u_char
+name|char
 function_decl|(
 modifier|*
 name|r_fifo
@@ -978,7 +907,7 @@ begin_define
 define|#
 directive|define
 name|PPB_PnP_STRING_SIZE
-value|256
+value|128
 end_define
 
 begin_comment
@@ -1041,18 +970,14 @@ name|int
 name|class_id
 decl_stmt|;
 comment|/* not a PnP device if class_id< 0 */
-name|int
-name|state
-decl_stmt|;
-comment|/* current IEEE1284 state */
-name|int
-name|error
-decl_stmt|;
-comment|/* last IEEE1284 error */
 name|ushort
 name|mode
 decl_stmt|;
 comment|/* IEEE 1284-1994 mode 						 * NIBBLE, PS2, EPP or ECP */
+name|ushort
+name|avm
+decl_stmt|;
+comment|/* IEEE 1284-1994 available 						 * modes */
 name|struct
 name|ppb_link
 modifier|*
@@ -1326,25 +1251,6 @@ parameter_list|(
 name|struct
 name|ppb_device
 modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ppb_write
-parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)

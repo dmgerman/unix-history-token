@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: compile.c,v 1.11 1998/12/07 05:35:54 archie Exp $"
+literal|"$Id: compile.c,v 1.9 1997/08/11 07:20:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,8 +826,6 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -2465,11 +2463,6 @@ decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
-name|int
-name|more
-init|=
-literal|0
-decl_stmt|;
 name|c
 operator|=
 operator|*
@@ -2650,37 +2643,9 @@ operator|==
 name|c
 condition|)
 block|{
-if|if
-condition|(
-operator|*
+name|p
 operator|++
-name|p
-operator|==
-literal|'\0'
-operator|&&
-name|more
-condition|)
-block|{
-if|if
-condition|(
-name|cu_fgets
-argument_list|(
-name|lbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|lbuf
-argument_list|)
-argument_list|,
-operator|&
-name|more
-argument_list|)
-condition|)
-name|p
-operator|=
-name|lbuf
 expr_stmt|;
-block|}
 operator|*
 name|sp
 operator|++
@@ -2763,10 +2728,8 @@ literal|2
 expr_stmt|;
 name|text
 operator|=
-name|xrealloc
+name|xmalloc
 argument_list|(
-name|text
-argument_list|,
 name|asize
 argument_list|)
 expr_stmt|;
@@ -2784,9 +2747,6 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
-argument_list|,
-operator|&
-name|more
 argument_list|)
 condition|)
 do|;
@@ -3467,8 +3427,6 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{

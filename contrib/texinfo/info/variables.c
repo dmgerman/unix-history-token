@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* variables.c -- How to manipulate user visible variables in Info.    $Id: variables.c,v 1.5 1997/07/18 14:34:23 karl Exp $     This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* variables.c -- How to manipulate user visible variables in Info. */
+end_comment
+
+begin_comment
+comment|/* This file is part of GNU Info, a program for reading online documentation    stored in Info format.     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -20,15 +24,15 @@ comment|/* **************************************************************** */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*                  User Visible Variables in Info                  */
+comment|/*		    User Visible Variables in Info		    */
 end_comment
 
 begin_comment
-comment|/*                                                                  */
+comment|/*								    */
 end_comment
 
 begin_comment
@@ -69,10 +73,7 @@ block|{
 block|{
 literal|"automatic-footnotes"
 block|,
-name|N_
-argument_list|(
 literal|"When \"On\", footnotes appear and disappear automatically"
-argument_list|)
 block|,
 operator|&
 name|auto_footnotes_p
@@ -88,10 +89,7 @@ block|,
 block|{
 literal|"automatic-tiling"
 block|,
-name|N_
-argument_list|(
 literal|"When \"On\", creating or deleting a window resizes other windows"
-argument_list|)
 block|,
 operator|&
 name|auto_tiling_p
@@ -107,10 +105,7 @@ block|,
 block|{
 literal|"visible-bell"
 block|,
-name|N_
-argument_list|(
 literal|"When \"On\", flash the screen instead of ringing the bell"
-argument_list|)
 block|,
 operator|&
 name|terminal_use_visible_bell_p
@@ -126,10 +121,7 @@ block|,
 block|{
 literal|"errors-ring-bell"
 block|,
-name|N_
-argument_list|(
 literal|"When \"On\", errors cause the bell to ring"
-argument_list|)
 block|,
 operator|&
 name|info_error_rings_bell_p
@@ -145,10 +137,7 @@ block|,
 block|{
 literal|"gc-compressed-files"
 block|,
-name|N_
-argument_list|(
 literal|"When \"On\", Info garbage collects files which had to be uncompressed"
-argument_list|)
 block|,
 operator|&
 name|gc_compressed_files
@@ -164,10 +153,7 @@ block|,
 block|{
 literal|"show-index-match"
 block|,
-name|N_
-argument_list|(
 literal|"When \"On\", the portion of the matched search string is highlighted"
-argument_list|)
 block|,
 operator|&
 name|show_index_match
@@ -183,10 +169,7 @@ block|,
 block|{
 literal|"scroll-behaviour"
 block|,
-name|N_
-argument_list|(
 literal|"Controls what happens when scrolling is requested at the end of a node"
-argument_list|)
 block|,
 operator|&
 name|info_scroll_behaviour
@@ -202,10 +185,7 @@ block|,
 block|{
 literal|"scroll-step"
 block|,
-name|N_
-argument_list|(
 literal|"The number lines to scroll when the cursor moves out of the window"
-argument_list|)
 block|,
 operator|&
 name|window_scroll_step
@@ -221,10 +201,7 @@ block|,
 block|{
 literal|"ISO-Latin"
 block|,
-name|N_
-argument_list|(
 literal|"When \"On\", Info accepts and displays ISO Latin characters"
-argument_list|)
 block|,
 operator|&
 name|ISO_Latin_p
@@ -272,9 +249,7 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|describe_variable
 argument_list|,
-argument|_(
 literal|"Explain the use of a variable"
-argument|)
 argument_list|)
 end_macro
 
@@ -293,10 +268,7 @@ name|var
 operator|=
 name|read_variable_name
 argument_list|(
-name|_
-argument_list|(
 literal|"Describe variable: "
-argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -326,12 +298,9 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|_
-argument_list|(
 name|var
 operator|->
 name|doc
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -363,12 +332,9 @@ name|value
 operator|)
 index|]
 argument_list|,
-name|_
-argument_list|(
 name|var
 operator|->
 name|doc
-argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -389,12 +355,9 @@ operator|->
 name|value
 operator|)
 argument_list|,
-name|_
-argument_list|(
 name|var
 operator|->
 name|doc
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|window_message_in_echo_area
@@ -417,9 +380,7 @@ name|DECLARE_INFO_COMMAND
 argument_list|(
 argument|set_variable
 argument_list|,
-argument|_(
 literal|"Set the value of an Info variable"
-argument|)
 argument_list|)
 end_macro
 
@@ -438,10 +399,7 @@ name|var
 operator|=
 name|read_variable_name
 argument_list|(
-name|_
-argument_list|(
 literal|"Set variable: "
-argument_list|)
 argument_list|,
 name|window
 argument_list|)
@@ -497,10 +455,7 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
-name|_
-argument_list|(
 literal|"Set %s to value (%d): "
-argument_list|)
 argument_list|,
 name|var
 operator|->
@@ -640,7 +595,7 @@ name|entry
 operator|->
 name|label
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|var
 operator|->
@@ -691,10 +646,7 @@ name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
-name|_
-argument_list|(
 literal|"Set %s to value (%s): "
-argument_list|)
 argument_list|,
 name|var
 operator|->
@@ -1086,7 +1038,7 @@ name|entry
 operator|->
 name|label
 operator|=
-name|xstrdup
+name|strdup
 argument_list|(
 name|info_variables
 index|[

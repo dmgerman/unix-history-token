@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -202,10 +196,6 @@ name|state
 enum|;
 name|int
 name|ch
-init|=
-literal|0
-decl_stmt|,
-name|blevel
 init|=
 literal|0
 decl_stmt|;
@@ -516,15 +506,10 @@ name|ch
 operator|==
 literal|'{'
 condition|)
-block|{
 name|state
 operator|=
 name|MVALUE
 expr_stmt|;
-operator|++
-name|blevel
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -597,11 +582,6 @@ operator|>=
 name|MAX_VALUE
 condition|)
 block|{
-name|warn
-argument_list|(
-literal|"properties_read: value exceeds max length"
-argument_list|)
-expr_stmt|;
 name|state
 operator|=
 name|COMMENT
@@ -619,10 +599,6 @@ condition|(
 name|ch
 operator|==
 literal|'}'
-operator|&&
-operator|!
-operator|--
-name|blevel
 condition|)
 block|{
 name|hold_v
@@ -644,7 +620,6 @@ name|COMMIT
 expr_stmt|;
 block|}
 else|else
-block|{
 name|hold_v
 index|[
 name|v
@@ -653,16 +628,6 @@ index|]
 operator|=
 name|ch
 expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-literal|'{'
-condition|)
-operator|++
-name|blevel
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|COMMIT
