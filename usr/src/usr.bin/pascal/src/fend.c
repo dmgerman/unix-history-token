@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.10 %G%"
+literal|"@(#)fend.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -537,7 +537,14 @@ argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
-literal|"	calls	$0,_PCEXIT"
+literal|"	pushl	$0"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	calls	$1,_PCEXIT"
 argument_list|,
 literal|0
 argument_list|)
