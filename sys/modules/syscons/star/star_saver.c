@@ -124,7 +124,8 @@ name|cell
 decl_stmt|,
 name|i
 decl_stmt|;
-name|char
+specifier|static
+name|u_char
 name|pattern
 index|[]
 init|=
@@ -135,6 +136,7 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|PC98
+specifier|static
 name|char
 name|colors
 index|[]
@@ -151,6 +153,7 @@ block|}
 decl_stmt|;
 else|#
 directive|else
+specifier|static
 name|char
 name|colors
 index|[]

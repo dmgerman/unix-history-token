@@ -94,7 +94,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|char
+name|u_char
 modifier|*
 name|message
 decl_stmt|;
