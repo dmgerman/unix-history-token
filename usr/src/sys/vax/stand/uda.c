@@ -133,13 +133,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|iob
-name|cudbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|udadevice
 modifier|*
 name|udaddr
@@ -252,12 +245,6 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|mscp
-modifier|*
-name|mp
-decl_stmt|;
-specifier|register
-name|struct
 name|disklabel
 modifier|*
 name|lp
@@ -278,8 +265,11 @@ modifier|*
 name|ubaddr
 decl_stmt|;
 specifier|register
+name|int
+name|uba
+decl_stmt|,
 name|unit
-expr_stmt|;
+decl_stmt|;
 specifier|static
 name|int
 name|udainit
@@ -290,8 +280,9 @@ index|[
 name|MAXCTLR
 index|]
 decl_stmt|;
-name|int
-name|uba
+name|struct
+name|iob
+name|tio
 decl_stmt|;
 if|if
 condition|(
@@ -366,18 +357,11 @@ name|short
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ra: nonexistent device\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|ud_ubaddr
@@ -393,14 +377,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Initialize cudbuf.i_unit so that controllers 		 * on UNIBUSes other than 0 can be used. 		 */
-name|cudbuf
-operator|.
-name|i_unit
+name|tio
 operator|=
-name|unit
+operator|*
+name|io
 expr_stmt|;
-name|cudbuf
+name|tio
 operator|.
 name|i_ma
 operator|=
@@ -410,7 +392,7 @@ operator|)
 operator|&
 name|uda1
 expr_stmt|;
-name|cudbuf
+name|tio
 operator|.
 name|i_cc
 operator|=
@@ -437,7 +419,7 @@ operator|)
 name|ubasetup
 argument_list|(
 operator|&
-name|cudbuf
+name|tio
 argument_list|,
 literal|2
 argument_list|)
@@ -678,10 +660,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|iob
-name|tio
-decl_stmt|;
 name|uda1
 operator|.
 name|uda1_cmd
@@ -773,18 +751,11 @@ argument_list|)
 operator|!=
 name|SECTSIZ
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ra: can't read disk label\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|ERDLAB
 operator|)
 return|;
-block|}
 operator|*
 name|lp
 operator|=
@@ -814,6 +785,9 @@ name|d_magic2
 operator|!=
 name|DISKMAGIC
 condition|)
+ifdef|#
+directive|ifdef
+name|COMPAT_42
 block|{
 name|printf
 argument_list|(
@@ -822,9 +796,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_42
 name|ramaptype
 argument_list|(
 name|io
@@ -832,16 +803,16 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 return|return
 operator|(
-name|ENXIO
+name|EUNLAB
 operator|)
 return|;
 endif|#
 directive|endif
-block|}
 block|}
 if|if
 condition|(
@@ -922,6 +893,7 @@ name|mscp
 modifier|*
 name|mp
 decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -985,6 +957,7 @@ index|]
 operator|->
 name|udaip
 expr_stmt|;
+comment|/* start uda polling */
 name|mp
 operator|=
 operator|&
@@ -1596,13 +1569,13 @@ modifier|*
 name|pp
 decl_stmt|;
 specifier|register
-name|u_int
-name|i
-decl_stmt|;
-specifier|register
 name|u_long
 modifier|*
 name|off
+decl_stmt|;
+specifier|register
+name|u_int
+name|i
 decl_stmt|;
 if|if
 condition|(
