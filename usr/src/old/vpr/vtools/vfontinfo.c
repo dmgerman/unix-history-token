@@ -5,12 +5,12 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vfontinfo.c	4.1 (Berkeley) %G%"
+literal|"@(#)vfontinfo.c	4.2 (Berkeley) 81/02/28"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Font Information for VCat-style fonts  *      AJH  4/79  *  *	Modified to print Ascii chars 1/80 by Mark Horton  */
+comment|/* Font Information for VCat-style fonts  *      AJH  4/79  *  *	Modified to print Ascii chars 1/80 by Mark Horton  *	Modified to use ,'| 1/81 by Mark Horton using an idea  *		from Eric Scott of CalTech.  */
 end_comment
 
 begin_include
@@ -418,6 +418,11 @@ operator|.
 name|xtend
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"\n ASCII     offset    size  left    right   up     down    width \n"
@@ -469,7 +474,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
+operator|!
+name|verbose
+condition|?
 literal|"  %3o %2s     %4d   %4d   %4d   %4d   %4d   %4d   %5d\n"
+else|:
+literal|"  %3o %2s  a=%d, n=%d, l=%d, r=%d, u=%d, d=%d, w=%d\n"
 argument_list|,
 name|j
 argument_list|,
@@ -636,7 +646,8 @@ operator|<
 name|H
 condition|;
 name|k
-operator|++
+operator|+=
+literal|2
 control|)
 block|{
 for|for
@@ -682,16 +693,26 @@ name|printf
 argument_list|(
 literal|"%c"
 argument_list|,
+literal|" ',|"
+index|[
 name|fbit
 argument_list|(
 name|k
 argument_list|,
 name|l
 argument_list|)
-condition|?
-literal|'M'
-else|:
-literal|' '
+operator|+
+literal|2
+operator|*
+name|fbit
+argument_list|(
+name|k
+operator|+
+literal|1
+argument_list|,
+name|l
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -832,6 +853,15 @@ name|thisbit
 decl_stmt|,
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|row
+operator|>=
+name|H
+condition|)
+return|return
+literal|0
+return|;
 name|thisbyte
 operator|=
 name|charbits
