@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.12 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.13 %G%"; */
 end_comment
 
 begin_define
@@ -575,9 +575,9 @@ ifdef|#
 directive|ifdef
 name|PC
 name|char
-name|ext_flags
+name|extra_flags
 decl_stmt|;
-comment|/* an extra flag is used for externals */
+comment|/* for where things are */
 endif|#
 directive|endif
 endif|PC
@@ -650,7 +650,7 @@ ifdef|#
 directive|ifdef
 name|PC
 name|char
-name|ext_flags
+name|extra_flags
 decl_stmt|;
 endif|#
 directive|endif
@@ -690,7 +690,7 @@ ifdef|#
 directive|ifdef
 name|PC
 name|char
-name|ext_flags
+name|extra_flags
 decl_stmt|;
 endif|#
 directive|endif
@@ -733,7 +733,7 @@ ifdef|#
 directive|ifdef
 name|PC
 name|char
-name|ext_flags
+name|extra_flags
 decl_stmt|;
 endif|#
 directive|endif
@@ -842,9 +842,54 @@ begin_comment
 comment|/* flag used to mark external funcs and procs */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NLOCAL
+value|0002
+end_define
+
+begin_comment
+comment|/* variable is a local */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPARAM
+value|0004
+end_define
+
+begin_comment
+comment|/* variable is a parameter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGLOBAL
+value|0010
+end_define
+
+begin_comment
+comment|/* variable is a global */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NREGVAR
+value|0020
+end_define
+
+begin_comment
+comment|/* or'ed in if variable is in a register */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
+endif|PC
 end_endif
 
 begin_comment
@@ -982,7 +1027,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Variables may reside on the stack as formals or as locals,  * or as register temporaries  */
+comment|/*      *	variables come in three flavors: globals, parameters, locals;      *	they can also hide in registers, but that's a different flag      */
 end_comment
 
 begin_define
@@ -1002,7 +1047,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|REGVAR
+name|GLOBALVAR
 value|3
 end_define
 
@@ -2037,7 +2082,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|long
+name|struct
+name|nl
+modifier|*
 name|tmpalloc
 parameter_list|()
 function_decl|;
