@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -646,7 +646,18 @@ comment|/* block size used in the stat struct */
 end_comment
 
 begin_comment
-comment|/*  * Definitions of flags stored in file flags word.  *  * Low 16-bits: super-user and owner settable.  */
+comment|/*  * Definitions of flags stored in file flags word.  *  * Super-user and owner changeable flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_SETTABLE
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* mask of owner changeable flags */
 end_comment
 
 begin_define
@@ -683,7 +694,18 @@ comment|/* writes to file may only append */
 end_comment
 
 begin_comment
-comment|/*  * High 16-bits: super-user settable.  */
+comment|/*  * Super-user changeable flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SF_SETTABLE
+value|0xffff0000
+end_define
+
+begin_comment
+comment|/* mask of superuser changeable flags */
 end_comment
 
 begin_define
