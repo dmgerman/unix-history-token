@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	5.6 (Berkeley) %G%"
+literal|"@(#)headers.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,10 +1446,6 @@ operator|=
 name|e
 operator|->
 name|e_msgsize
-operator|+
-name|e
-operator|->
-name|e_ctime
 operator|-
 name|e
 operator|->

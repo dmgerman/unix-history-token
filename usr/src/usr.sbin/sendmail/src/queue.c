@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.13 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.14 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.13 (Berkeley) %G%"
+literal|"@(#)queue.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,6 +106,10 @@ name|long
 name|w_pri
 decl_stmt|;
 comment|/* priority of message, see below */
+name|time_t
+name|w_ctime
+decl_stmt|;
+comment|/* creation time of message */
 name|struct
 name|work
 modifier|*
@@ -1708,6 +1712,26 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'T'
+case|:
+name|wlist
+index|[
+name|wn
+index|]
+operator|.
+name|w_ctime
+operator|=
+name|atol
+argument_list|(
+operator|&
+name|lbuf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 operator|(
@@ -1855,6 +1879,17 @@ name|w_pri
 expr_stmt|;
 name|w
 operator|->
+name|w_ctime
+operator|=
+name|wlist
+index|[
+name|i
+index|]
+operator|.
+name|w_ctime
+expr_stmt|;
+name|w
+operator|->
 name|w_next
 operator|=
 name|WorkQ
@@ -1967,6 +2002,10 @@ init|=
 name|a
 operator|->
 name|w_pri
+operator|+
+name|a
+operator|->
+name|w_ctime
 decl_stmt|;
 name|long
 name|pb
@@ -1974,6 +2013,10 @@ init|=
 name|b
 operator|->
 name|w_pri
+operator|+
+name|b
+operator|->
+name|w_ctime
 decl_stmt|;
 if|if
 condition|(

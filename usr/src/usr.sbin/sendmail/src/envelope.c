@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.7 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,10 +222,6 @@ operator|=
 name|parent
 operator|->
 name|e_msgsize
-operator|+
-name|e
-operator|->
-name|e_ctime
 expr_stmt|;
 end_expr_stmt
 
