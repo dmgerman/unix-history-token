@@ -967,8 +967,9 @@ name|bp
 operator|->
 name|b_flags
 operator|=
-name|B_PHYS
+literal|0
 expr_stmt|;
+comment|/* XXX necessary ? */
 name|bp
 operator|->
 name|b_iocmd

@@ -5147,12 +5147,6 @@ name|aio_nbytes
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator|=
-name|B_PHYS
-expr_stmt|;
-name|bp
-operator|->
 name|b_iodone
 operator|=
 name|aio_physwakeup

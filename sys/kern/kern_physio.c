@@ -200,7 +200,7 @@ name|bp
 operator|->
 name|b_flags
 operator|=
-name|B_PHYS
+literal|0
 expr_stmt|;
 if|if
 condition|(

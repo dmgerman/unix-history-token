@@ -637,12 +637,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_PHYS
+name|B_000400000
 value|0x00040000
 end_define
 
 begin_comment
-comment|/* I/O to user memory. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
