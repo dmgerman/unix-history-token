@@ -210,6 +210,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_HAS_ATOMIC_CMPSET_32
+end_ifndef
+
 begin_function
 specifier|static
 name|__inline
@@ -254,6 +260,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
