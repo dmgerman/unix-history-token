@@ -251,13 +251,13 @@ begin_comment
 comment|/*  * _PATH_TCSHELL      if you've change the installation location (vix)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|_BSDI_VERSION
-name|>=
-name|199701
-end_ifdef
+operator|>=
+literal|199701
+end_if
 
 begin_define
 define|#
