@@ -2916,6 +2916,8 @@ name|fp
 decl_stmt|;
 name|int
 name|kstat
+init|=
+literal|1
 decl_stmt|;
 comment|/* All of this is done only as init, just to be safe */
 if|if
