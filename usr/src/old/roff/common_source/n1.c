@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.2 %G%"
+literal|"@(#)n1.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1556,6 +1556,28 @@ name|dpn
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
+case|case
+literal|'F'
+case|:
+block|{
+specifier|extern
+name|char
+modifier|*
+name|fontfile
+decl_stmt|;
+name|fontfile
+operator|=
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+expr_stmt|;
+block|}
 continue|continue;
 endif|#
 directive|endif

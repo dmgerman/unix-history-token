@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t6.c	4.1 %G%"
+literal|"@(#)t6.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,8 +315,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+modifier|*
 name|fontfile
-index|[]
 init|=
 literal|"/usr/lib/font/ftXX"
 decl_stmt|;
@@ -326,7 +326,7 @@ begin_decl_stmt
 name|int
 name|ffi
 init|=
-literal|16
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3270,6 +3270,24 @@ expr_stmt|;
 name|int
 name|x
 decl_stmt|;
+if|if
+condition|(
+name|ffi
+operator|==
+literal|0
+condition|)
+while|while
+condition|(
+name|fontfile
+index|[
+name|ffi
+index|]
+operator|!=
+literal|'X'
+condition|)
+name|ffi
+operator|++
+expr_stmt|;
 name|skip
 argument_list|()
 expr_stmt|;
