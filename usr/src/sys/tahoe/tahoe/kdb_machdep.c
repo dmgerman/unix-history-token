@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_machdep.c	7.1	86/11/20	*/
+comment|/*	kdb_machdep.c	7.2	86/11/21	*/
 end_comment
 
 begin_include
@@ -441,8 +441,26 @@ name|escape
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Transfer control to the debugger only if the 	 * system was booted with RB_KDB and the trap 	 * enable flag (RB_NOYSNC) is set. 	 */
 if|if
 condition|(
+operator|(
+name|boothowto
+operator|&
+operator|(
+name|RB_KDB
+operator||
+name|RB_NOSYNC
+operator|)
+operator|)
+operator|!=
+operator|(
+name|RB_KDB
+operator||
+name|RB_NOSYNC
+operator|)
+operator|||
+operator|(
 name|c
 operator|!=
 literal|'k'
@@ -457,6 +475,7 @@ name|CTRL
 argument_list|(
 name|k
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(
@@ -482,15 +501,10 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Transfer control to the debugger.  If we're 	 * already in the debugger or we weren't booted 	 * with the debugger enabled, we igore the request; 	 * otherwise we post a software interrupt to force 	 * entry. 	 */
 if|if
 condition|(
 operator|!
 name|kdbactive
-operator|&&
-name|boothowto
-operator|&
-name|RB_NOSYNC
 condition|)
 name|setsoftkdb
 argument_list|()
@@ -584,6 +598,22 @@ specifier|extern
 name|int
 name|TRAP_TYPES
 decl_stmt|;
+comment|/* 	 * Allow panic if the debugger is not enabled. 	 */
+if|if
+condition|(
+operator|(
+name|boothowto
+operator|&
+name|RB_KDB
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|locr0
 operator|=
 name|apsl
