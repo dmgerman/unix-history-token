@@ -39,6 +39,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IV_NAMLEN
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
 name|IR_FREE
 value|(PIL_MAX * 2)
 end_define

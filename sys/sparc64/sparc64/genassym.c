@@ -1762,6 +1762,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|IV_NAMLEN
+argument_list|,
+name|IV_NAMLEN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|IV_MAX
 argument_list|,
 name|IV_MAX

@@ -95,6 +95,25 @@ value|lduw	[r1], r2 ; \ 9:	add	r2, 1, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r
 end_define
 
 begin_comment
+comment|/*  * Atomically increment an u_long in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC_ULONG
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|)
+define|\
+value|ldx	[r1], r2 ; \ 9:	add	r2, 1, r3 ; \ 	casxa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne,pn	%icc, 9b ; \ 	 mov	r3, r2
+end_define
+
+begin_comment
 comment|/*  * Atomically clear a number of bits of an integer in memory.  */
 end_comment
 
