@@ -542,22 +542,17 @@ name|restart
 goto|;
 block|}
 comment|/* 	 * Stack queue should have been drained 	 */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|atm_stackq_head
-operator|!=
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
+name|atm_stackq_head
+operator|==
+name|NULL
+argument_list|,
+operator|(
 literal|"atm_timexp: stack queue not empty"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Dispatch expired timers 	 */
 while|while
 condition|(
