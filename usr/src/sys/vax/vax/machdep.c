@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6329,6 +6329,93 @@ directive|endif
 default|default:
 break|break;
 block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * Return a reasonable approximation to a time-of-day register.  * More precisely, return a number that increases by one about  * once every ten milliseconds.  */
+end_comment
+
+begin_macro
+name|todr
+argument_list|()
+end_macro
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|cpu
+condition|)
+block|{
+if|#
+directive|if
+name|VAX8600
+operator|||
+name|VAX8200
+operator|||
+name|VAX780
+operator|||
+name|VAX750
+operator|||
+name|VAX730
+case|case
+name|VAX_8600
+case|:
+comment|/* case VAX_8200: */
+case|case
+name|VAX_780
+case|:
+case|case
+name|VAX_750
+case|:
+case|case
+name|VAX_730
+case|:
+return|return
+operator|(
+name|mfpr
+argument_list|(
+name|TODR
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX630
+case|case
+name|VAX_630
+case|:
+comment|/* XXX crude */
+block|{
+specifier|static
+name|int
+name|t
+decl_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|++
+name|t
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+default|default:
+name|panic
+argument_list|(
+literal|"todr"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* NOTREACHED */
 block|}
 end_block
 
