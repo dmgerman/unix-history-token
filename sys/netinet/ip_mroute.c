@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.33 1996/07/12 04:11:48 bde Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.34 1996/07/12 17:22:32 fenner Exp $  */
 end_comment
 
 begin_include
@@ -7615,13 +7615,13 @@ operator|->
 name|ip_len
 decl_stmt|;
 comment|/*      * copy the old packet& pullup it's IP header into the      * new mbuf so we can modify it.  Try to fill the new      * mbuf since if we don't the ethernet driver will.      */
-name|MGET
+name|MGETHDR
 argument_list|(
 name|mb_copy
 argument_list|,
 name|M_DONTWAIT
 argument_list|,
-name|MT_DATA
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7635,7 +7635,7 @@ name|mb_copy
 operator|->
 name|m_data
 operator|+=
-literal|16
+name|max_linkhdr
 expr_stmt|;
 name|mb_copy
 operator|->
