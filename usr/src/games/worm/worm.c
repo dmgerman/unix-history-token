@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worm.c	5.1 (Berkeley) %G%"
+literal|"@(#)worm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|attron
+name|baudrate
 end_ifndef
 
 begin_define
