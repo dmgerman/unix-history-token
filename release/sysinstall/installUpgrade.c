@@ -516,16 +516,6 @@ block|,
 block|{
 name|JUST_COPY
 block|,
-literal|"nsswitch.conf"
-block|,
-name|TRUE
-block|,
-name|NULL
-block|}
-block|,
-block|{
-name|JUST_COPY
-block|,
 literal|"pam.conf"
 block|,
 name|TRUE
