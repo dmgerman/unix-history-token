@@ -1881,7 +1881,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* Try a RTSOL scan if such behavior is desired */
+comment|/* 	 * Try a RTSOL scan if such behavior is desired. 	 * If the variable was configured and is YES, do it. 	 * If it was configured to anything else, treat it as NO. 	 * Otherwise, ask the question interactively. 	 */
 if|if
 condition|(
 operator|!
@@ -1893,22 +1893,18 @@ literal|"YES"
 argument_list|)
 operator|||
 operator|(
-operator|(
-name|variable_cmp
+name|variable_get
 argument_list|(
 name|VAR_TRY_RTSOL
-argument_list|,
-literal|"NO"
 argument_list|)
-operator|)
+operator|==
+literal|0
 operator|&&
-operator|(
 operator|!
 name|msgNoYes
 argument_list|(
 literal|"Do you want to try IPv6 configuration of the interface?"
 argument_list|)
-operator|)
 operator|)
 condition|)
 block|{
@@ -2067,7 +2063,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/* First try a DHCP scan if such behavior is desired */
+comment|/* 	 * First try a DHCP scan if such behavior is desired. 	 * If the variable was configured and is YES, do it. 	 * If it was configured to anything else, treat it as NO. 	 * Otherwise, ask the question interactively. 	 */
 if|if
 condition|(
 operator|!
@@ -2079,22 +2075,18 @@ literal|"YES"
 argument_list|)
 operator|||
 operator|(
-operator|(
-name|variable_cmp
+name|variable_get
 argument_list|(
 name|VAR_TRY_DHCP
-argument_list|,
-literal|"NO"
 argument_list|)
-operator|)
+operator|==
+literal|0
 operator|&&
-operator|(
 operator|!
 name|msgNoYes
 argument_list|(
 literal|"Do you want to try DHCP configuration of the interface?"
 argument_list|)
-operator|)
 operator|)
 condition|)
 block|{
