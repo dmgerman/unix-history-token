@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.114 (Berkeley) %G%"
+literal|"@(#)conf.c	8.115 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1523,7 +1523,7 @@ decl_stmt|;
 name|short
 name|mapreturn
 index|[
-literal|3
+name|MAXMAPACTIONS
 index|]
 decl_stmt|;
 block|{
