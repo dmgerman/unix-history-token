@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.9 1997/11/21 07:38:43 charnier Exp $"
+literal|"$Id: popen.c,v 1.10 1998/02/25 07:10:57 danny Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,6 +350,7 @@ name|cp
 operator|=
 name|NULL
 control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -369,6 +370,16 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+block|}
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* glob each piece */
 name|gargv
 index|[
