@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.c	8.2 (Berkeley) 11/15/93  * $Id: route.c,v 1.8 1994/10/02 17:48:26 phk Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.c	8.2 (Berkeley) 11/15/93  * $Id: route.c,v 1.9 1994/10/11 23:16:27 wollman Exp $  */
 end_comment
 
 begin_include
@@ -559,6 +559,22 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|radix_node_head
+modifier|*
+name|rnh
+init|=
+name|rt_tables
+index|[
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
+operator|->
+name|sa_family
+index|]
+decl_stmt|;
+specifier|register
+name|struct
 name|ifaddr
 modifier|*
 name|ifa
@@ -579,6 +595,34 @@ operator|->
 name|rt_refcnt
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|rnh
+operator|->
+name|rnh_close
+operator|&&
+name|rt
+operator|->
+name|rt_refcnt
+operator|==
+literal|0
+condition|)
+block|{
+name|rnh
+operator|->
+name|rnh_close
+argument_list|(
+operator|(
+expr|struct
+name|radix_node
+operator|*
+operator|)
+name|rt
+argument_list|,
+name|rnh
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|rt
@@ -1510,11 +1554,6 @@ name|sockaddr
 modifier|*
 name|ndst
 decl_stmt|;
-name|int
-name|doexpire
-init|=
-literal|0
-decl_stmt|;
 define|#
 directive|define
 name|senderr
@@ -1780,15 +1819,10 @@ operator|&
 name|RTF_STATIC
 condition|)
 block|{
-comment|/* 			 * We make a few assumptions here which are not 			 * necessarily valid for everybody. 			 * 1) static cloning routes want this treatment 			 * 2) somebody's link layer out there is 			 *    timing these things out 			 * 			 * (2) in particular is not presently true for any 			 * p2p links, but we hope that this will not cause 			 * problems.  (I believe that these extra routes 			 * can never cause incorrect operation, but they 			 * really should get timed out to free the memory.) 			 */
 name|flags
 operator|&=
 operator|~
 name|RTF_STATIC
-expr_stmt|;
-name|doexpire
-operator|=
-literal|1
 expr_stmt|;
 block|}
 goto|goto
@@ -2038,23 +2072,6 @@ operator|->
 name|rt_rmx
 expr_stmt|;
 comment|/* copy metrics */
-if|if
-condition|(
-name|doexpire
-condition|)
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
-operator|=
-name|time
-operator|.
-name|tv_sec
-operator|+
-literal|1200
-expr_stmt|;
-comment|/* XXX MAGIC CONSTANT */
 if|if
 condition|(
 name|ifa
