@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.14 82/02/03 */
+comment|/* tcp_timer.c 4.15 82/02/25 */
 end_comment
 
 begin_include
@@ -472,6 +472,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|tcprexmtprint
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * TCP timer processing.  */
 end_comment
@@ -556,17 +562,11 @@ name|TCPT_REXMT
 index|]
 argument_list|,
 operator|(
-call|(
 name|int
-call|)
-argument_list|(
-literal|2
-operator|*
+operator|)
 name|tp
 operator|->
 name|t_srtt
-argument_list|)
-operator|)
 argument_list|,
 name|TCPTV_MIN
 argument_list|,
@@ -598,7 +598,22 @@ argument_list|,
 name|TCPTV_MAX
 argument_list|)
 expr_stmt|;
-comment|/* printf("rexmt set to %d\n", tp->t_timer[TCPT_REXMT]); */
+if|if
+condition|(
+name|tcprexmtprint
+condition|)
+name|printf
+argument_list|(
+literal|"rexmt set to %d\n"
+argument_list|,
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_REXMT
+index|]
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|snd_nxt
@@ -650,7 +665,7 @@ index|[
 name|TCPT_PERSIST
 index|]
 argument_list|,
-literal|2
+name|tcp_beta
 operator|*
 name|tp
 operator|->
