@@ -267,6 +267,19 @@ literal|"Total Size\n"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|alarmhandler
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Display the current state of the queue. Format = 1 if long format.  */
 end_comment
@@ -314,6 +327,15 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|savealrm
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 name|lflag
 operator|=
 name|format
@@ -1105,6 +1127,20 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|savealrm
+operator|=
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|alarmhandler
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|getport
@@ -1112,6 +1148,16 @@ argument_list|(
 name|RM
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|savealrm
 argument_list|)
 expr_stmt|;
 if|if
@@ -2257,6 +2303,20 @@ argument_list|,
 name|rline
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|alarmhandler
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
+block|{
+comment|/* ignored */
 block|}
 end_function
 
