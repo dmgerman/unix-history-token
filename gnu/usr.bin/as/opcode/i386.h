@@ -5746,6 +5746,25 @@ block|}
 block|,
 comment|/* %st0<-- mem float */
 block|{
+literal|"fild"
+block|,
+literal|1
+block|,
+literal|0xdf
+block|,
+literal|0
+block|,
+name|Modrm
+block|,
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* %st0<-- mem word (16) */
+block|{
 literal|"fildl"
 block|,
 literal|1
