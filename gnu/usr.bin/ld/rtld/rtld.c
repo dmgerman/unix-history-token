@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.24 1995/05/30 05:01:49 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.24.4.1 1995/08/25 07:08:26 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1415,6 +1415,30 @@ argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
+comment|/* Fill in some fields in main's __DYNAMIC structure */
+name|crtp
+operator|->
+name|crt_dp
+operator|->
+name|d_entry
+operator|=
+operator|&
+name|ld_entry
+expr_stmt|;
+name|crtp
+operator|->
+name|crt_dp
+operator|->
+name|d_un
+operator|.
+name|d_sdt
+operator|->
+name|sdt_loaded
+operator|=
+name|link_map_head
+operator|->
+name|som_next
+expr_stmt|;
 comment|/* Relocate all loaded objects according to their RRS segments */
 for|for
 control|(
@@ -1529,30 +1553,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Fill in some field in main's __DYNAMIC structure */
-name|crtp
-operator|->
-name|crt_dp
-operator|->
-name|d_entry
-operator|=
-operator|&
-name|ld_entry
-expr_stmt|;
-name|crtp
-operator|->
-name|crt_dp
-operator|->
-name|d_un
-operator|.
-name|d_sdt
-operator|->
-name|sdt_loaded
-operator|=
-name|link_map_head
-operator|->
-name|som_next
-expr_stmt|;
 name|ddp
 operator|=
 name|crtp
@@ -1950,54 +1950,16 @@ operator|!
 name|tracing
 condition|)
 block|{
-name|char
-modifier|*
-name|name
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|sodp
-operator|->
-name|sod_name
-operator|+
-name|LM_LDBASE
-argument_list|(
-name|smp
-argument_list|)
-operator|)
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-init|=
-name|sodp
-operator|->
-name|sod_library
-condition|?
-literal|"%s: lib%s.so.%d.%d"
-else|:
-literal|"%s: %s"
-decl_stmt|;
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|fmt
+literal|"%s: %s"
 argument_list|,
 name|main_progname
 argument_list|,
-name|name
-argument_list|,
-name|sodp
-operator|->
-name|sod_major
-argument_list|,
-name|sodp
-operator|->
-name|sod_minor
+name|__dlerror
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -2604,7 +2566,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map object identified by link object LOP which was found  * in link map LMP.  */
+comment|/*  * Map object identified by link object sodp which was found in link  * map smp.  Returns a pointer to the link map for the requested object.  *  * On failure, it sets an error message that can be retrieved by __dlerror,  * and returns NULL.  */
 end_comment
 
 begin_function
@@ -2721,9 +2683,18 @@ condition|)
 block|{
 name|generror
 argument_list|(
-literal|"Can't find shared library \"%s\""
+literal|"Can't find shared library"
+literal|" \"lib%s.so.%d.%d\""
 argument_list|,
 name|name
+argument_list|,
+name|sodp
+operator|->
+name|sod_major
+argument_list|,
+name|sodp
+operator|->
+name|sod_minor
 argument_list|)
 expr_stmt|;
 return|return
