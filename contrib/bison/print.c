@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print information on generated parser, for bison,    Copyright (C) 1984, 1986, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Print information on generated parser, for bison,    Copyright (C) 1984, 1986, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"new.h"
+file|"alloc.h"
 end_include
 
 begin_include
@@ -135,69 +135,137 @@ name|final_state
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|conflict_log
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|verbose_conflict_log
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|print_reductions
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|void
+name|terse
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|verbose
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|print_token
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|print_state
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|print_core
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|print_actions
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|print_grammar
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
 name|terse
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -214,7 +282,9 @@ end_function
 begin_function
 name|void
 name|verbose
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -257,21 +327,21 @@ begin_function
 name|void
 name|print_token
 parameter_list|(
-name|extnum
-parameter_list|,
-name|token
-parameter_list|)
 name|int
 name|extnum
-decl_stmt|,
+parameter_list|,
+name|int
 name|token
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|" type %d is %s\n"
+argument_list|)
 argument_list|,
 name|extnum
 argument_list|,
@@ -288,17 +358,18 @@ begin_function
 name|void
 name|print_state
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"\n\nstate %d\n\n"
+argument_list|)
 argument_list|,
 name|state
 argument_list|)
@@ -320,11 +391,9 @@ begin_function
 name|void
 name|print_core
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -502,7 +571,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"   (rule %d)"
+argument_list|)
 argument_list|,
 name|rule
 argument_list|)
@@ -529,11 +601,9 @@ begin_function
 name|void
 name|print_actions
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -610,7 +680,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    $default\taccept\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -618,7 +691,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    NO ACTIONS\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -695,7 +771,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    $   \tgo to state %d\n"
+argument_list|)
 argument_list|,
 name|state1
 argument_list|)
@@ -705,7 +784,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    %-4s\tshift, and go to state %d\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -795,7 +877,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    %-4s\terror (nonassociative)\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -848,7 +933,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    $default\treduce using rule %d (%s)\n\n"
+argument_list|)
 argument_list|,
 name|rule
 argument_list|,
@@ -920,7 +1008,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    %-4s\tgo to state %d\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -956,7 +1047,9 @@ end_define
 begin_function
 name|void
 name|print_grammar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -981,7 +1074,10 @@ decl_stmt|;
 comment|/* rule # : LHS -> RHS */
 name|fputs
 argument_list|(
+name|_
+argument_list|(
 literal|"\nGrammar\n"
+argument_list|)
 argument_list|,
 name|foutput
 argument_list|)
@@ -1014,7 +1110,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"rule %-4d %s ->"
+argument_list|)
 argument_list|,
 name|i
 argument_list|,
@@ -1069,7 +1168,10 @@ expr_stmt|;
 else|else
 name|fputs
 argument_list|(
+name|_
+argument_list|(
 literal|"		/* empty */"
+argument_list|)
 argument_list|,
 name|foutput
 argument_list|)
@@ -1085,7 +1187,10 @@ block|}
 comment|/* TERMINAL (type #) : rule #s terminal is on RHS */
 name|fputs
 argument_list|(
+name|_
+argument_list|(
 literal|"\nTerminals, with rules where they appear\n\n"
+argument_list|)
 argument_list|,
 name|foutput
 argument_list|)
@@ -1393,7 +1498,10 @@ expr_stmt|;
 block|}
 name|fputs
 argument_list|(
+name|_
+argument_list|(
 literal|"\nNonterminals, with rules where they appear\n\n"
+argument_list|)
 argument_list|,
 name|foutput
 argument_list|)
@@ -1548,7 +1656,10 @@ argument_list|(
 name|buffer
 argument_list|)
 argument_list|,
+name|_
+argument_list|(
 literal|" on left:"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1634,7 +1745,10 @@ argument_list|(
 name|buffer
 argument_list|)
 argument_list|,
+name|_
+argument_list|(
 literal|" on right:"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Parse command line arguments for bison,    Copyright (C) 1984, 1986, 1989, 1992 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Parse command line arguments for bison,    Copyright (C) 1984, 1986, 1989, 1992 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -109,6 +109,35 @@ comment|/* for -y */
 end_comment
 
 begin_decl_stmt
+name|void
+name|usage
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|getargs
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -118,19 +147,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|version_string
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
 name|void
 name|warns
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* main.c */
@@ -320,18 +350,19 @@ begin_function
 name|void
 name|usage
 parameter_list|(
-name|stream
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\ Usage: %s [-dhklntvyV] [-b file-prefix] [-o outfile] [-p name-prefix]\n\        [--debug] [--defines] [--fixed-output-files] [--no-lines]\n\        [--verbose] [--version] [--help] [--yacc]\n\        [--no-parser] [--token-table]\n\        [--file-prefix=prefix] [--name-prefix=prefix]\n\        [--output=outfile] grammar-file\n"
+name|_
+argument_list|(
+literal|"\ Usage: %s [-dhklntvyV] [-b file-prefix] [-o outfile] [-p name-prefix]\n\        [--debug] [--defines] [--fixed-output-files] [--no-lines]\n\        [--verbose] [--version] [--help] [--yacc]\n\        [--no-parser] [--token-table]\n\        [--file-prefix=prefix] [--name-prefix=prefix]\n\        [--output=outfile] grammar-file\n\n\ Report bugs to bug-bison@gnu.org\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -343,18 +374,14 @@ begin_function
 name|void
 name|getargs
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -450,9 +477,9 @@ literal|'V'
 case|:
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%s\n"
 argument_list|,
-name|version_string
+name|VERSION_STRING
 argument_list|)
 expr_stmt|;
 name|exit
@@ -564,7 +591,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no grammar file given\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -587,7 +617,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: extra arguments ignored after '%s'\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
