@@ -751,10 +751,6 @@ name|struct
 name|ext2_super_block
 modifier|*
 name|es
-init|=
-name|sb
-operator|->
-name|s_es
 decl_stmt|;
 if|if
 condition|(
@@ -769,6 +765,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|es
+operator|=
+name|sb
+operator|->
+name|s_es
+expr_stmt|;
 name|lock_super
 argument_list|(
 name|VFSTOEXT2
@@ -1141,10 +1143,6 @@ name|struct
 name|ext2_super_block
 modifier|*
 name|es
-init|=
-name|sb
-operator|->
-name|s_es
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1176,6 +1174,12 @@ return|return
 literal|0
 return|;
 block|}
+name|es
+operator|=
+name|sb
+operator|->
+name|s_es
+expr_stmt|;
 name|lock_super
 argument_list|(
 name|VFSTOEXT2
