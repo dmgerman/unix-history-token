@@ -697,6 +697,10 @@ name|newpos
 argument_list|(
 name|col
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 name|i
@@ -873,6 +877,13 @@ literal|7
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|isprint
+argument_list|(
+name|ch
+argument_list|)
+condition|)
 operator|++
 name|col
 expr_stmt|;
