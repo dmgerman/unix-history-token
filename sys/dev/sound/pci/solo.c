@@ -2287,7 +2287,7 @@ name|play
 condition|?
 literal|0x00
 else|:
-literal|0x0a
+literal|0x08
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2363,7 +2363,7 @@ name|sc
 argument_list|,
 literal|0xb7
 argument_list|,
-literal|0x91
+literal|0x90
 operator||
 operator|(
 name|unsign
@@ -2629,6 +2629,7 @@ name|hwch
 operator|==
 literal|1
 condition|)
+block|{
 name|ess_write
 argument_list|(
 name|sc
@@ -2645,6 +2646,30 @@ operator||
 literal|0x01
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|dir
+operator|==
+name|PCMDIR_PLAY
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+comment|/* 100 ms */
+name|ess_cmd
+argument_list|(
+name|sc
+argument_list|,
+literal|0xd1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 name|ess_setmixer
 argument_list|(
@@ -2719,6 +2744,14 @@ operator|~
 literal|0x04
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+if|if (ch->dir == PCMDIR_PLAY) { 			DELAY(25000);
+comment|/* 25 ms */
+if|ess_cmd(sc, 0xd3); 		}
+endif|#
+directive|endif
 else|else
 name|ess_setmixer
 argument_list|(
@@ -3700,7 +3733,6 @@ name|int
 name|dir
 parameter_list|)
 block|{
-comment|/*  * XXX -- the constants written to register 8 and b in the playback case  * are certainly not 0x00. But I don't know what they really are  */
 name|KASSERT
 argument_list|(
 name|ch
@@ -3742,12 +3774,6 @@ name|vc
 argument_list|,
 literal|0x8
 argument_list|,
-name|dir
-operator|==
-name|PCMDIR_PLAY
-condition|?
-literal|0x00
-else|:
 literal|0xc4
 argument_list|,
 literal|1
@@ -3794,7 +3820,7 @@ name|dir
 operator|==
 name|PCMDIR_PLAY
 condition|?
-literal|0x00
+literal|0x58
 else|:
 literal|0x54
 argument_list|,
