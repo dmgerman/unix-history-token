@@ -1503,7 +1503,7 @@ operator|.
 name|lcp
 argument_list|)
 expr_stmt|;
-name|async_Init
+name|async_Setup
 argument_list|(
 operator|&
 name|dl
