@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.10 (Berkeley) 83/01/31"
+literal|"@(#)mv.c	4.11 (Berkeley) 83/01/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,14 +306,9 @@ argument_list|,
 operator|&
 name|s2
 argument_list|)
-operator|<
+operator|>=
 literal|0
-condition|)
-goto|goto
-name|usage
-goto|;
-if|if
-condition|(
+operator|&&
 name|ISDIR
 argument_list|(
 name|s2
@@ -393,7 +388,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mv [-if] f1 ... fn d1 (where `fn' is a file or directory)\n"
+literal|"usage: mv [-if] f1 f2 or mv [-if] f1 ... fn d1 (`fn' is a file or directory)\n"
 argument_list|)
 expr_stmt|;
 return|return
