@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988,1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988,1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -110,6 +110,23 @@ include|#
 directive|include
 file|"msgbuf.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"shm.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -664,6 +681,23 @@ operator|-
 name|kmempt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+name|valloc
+argument_list|(
+name|shmsegs
+argument_list|,
+expr|struct
+name|shmid_ds
+argument_list|,
+name|shminfo
+operator|.
+name|shmmni
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Determine how many buffers to allocate. 	 * Use 10% of memory for the first 2 Meg, 5% of the remaining 	 * memory. Insure a minimum of 16 buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
@@ -2336,7 +2370,7 @@ argument_list|(
 literal|"syncing disks... "
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Release inodes held by texts before sync. 		 */
+comment|/* 		 * Release vnodes held by texts before sync. 		 */
 if|if
 condition|(
 name|panicstr
