@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acu.c	4.6	82/02/02	*/
+comment|/*	acu.c	4.7	82/07/29	*/
 end_comment
 
 begin_include
@@ -266,7 +266,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|,
-literal|"0123456789-*="
+literal|"0123456789-*=&%"
 argument_list|)
 condition|;
 name|cp
@@ -493,7 +493,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|,
-literal|"0123456789-*="
+literal|"0123456789-*=&%"
 argument_list|)
 condition|;
 name|cp
