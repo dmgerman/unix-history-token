@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.4 (Berkeley) %G%"
+literal|"@(#)init.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|objs
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|void
 name|die
 parameter_list|()
 function_decl|;
