@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_3.c	1.2 83/10/10"
+literal|"@(#)pl_3.c	1.3 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -1155,6 +1155,9 @@ name|snag
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|n
 operator|=
 operator|-
@@ -1175,14 +1178,22 @@ operator|==
 name|ms
 condition|)
 continue|continue;
-if|if
-condition|(
+name|r
+operator|=
 name|range
 argument_list|(
 name|ms
 argument_list|,
 name|sp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<
+literal|0
+operator|||
+name|r
 operator|>
 literal|1
 operator|&&
@@ -1723,18 +1734,15 @@ literal|1
 index|]
 operator|)
 condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|sp
-condition|)
+block|{
 name|eyeball
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-else|else
+return|return;
+block|}
+block|}
 name|Signal
 argument_list|(
 literal|"No such ship."
