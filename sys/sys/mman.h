@@ -137,6 +137,12 @@ begin_comment
 comment|/* changes are private */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -148,11 +154,10 @@ begin_comment
 comment|/* Obsolete */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Other flags  */
@@ -168,6 +173,12 @@ end_define
 begin_comment
 comment|/* map addr must be exactly as requested */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -383,12 +394,6 @@ begin_comment
 comment|/* invalidate all cached data */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
 begin_comment
 comment|/*  * Advice to madvise  */
 end_comment
@@ -396,7 +401,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MADV_NORMAL
+name|_MADV_NORMAL
 value|0
 end_define
 
@@ -407,7 +412,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MADV_RANDOM
+name|_MADV_RANDOM
 value|1
 end_define
 
@@ -418,7 +423,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MADV_SEQUENTIAL
+name|_MADV_SEQUENTIAL
 value|2
 end_define
 
@@ -429,7 +434,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MADV_WILLNEED
+name|_MADV_WILLNEED
 value|3
 end_define
 
@@ -440,13 +445,54 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MADV_DONTNEED
+name|_MADV_DONTNEED
 value|4
 end_define
 
 begin_comment
 comment|/* dont need these pages */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|MADV_NORMAL
+value|_MADV_NORMAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MADV_RANDOM
+value|_MADV_RANDOM
+end_define
+
+begin_define
+define|#
+directive|define
+name|MADV_SEQUENTIAL
+value|_MADV_SEQUENTIAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MADV_WILLNEED
+value|_MADV_WILLNEED
+end_define
+
+begin_define
+define|#
+directive|define
+name|MADV_DONTNEED
+value|_MADV_DONTNEED
+end_define
 
 begin_define
 define|#
@@ -598,35 +644,35 @@ begin_define
 define|#
 directive|define
 name|POSIX_MADV_NORMAL
-value|MADV_NORMAL
+value|_MADV_NORMAL
 end_define
 
 begin_define
 define|#
 directive|define
 name|POSIX_MADV_RANDOM
-value|MADV_RANDOM
+value|_MADV_RANDOM
 end_define
 
 begin_define
 define|#
 directive|define
 name|POSIX_MADV_SEQUENTIAL
-value|MADV_SEQUENTIAL
+value|_MADV_SEQUENTIAL
 end_define
 
 begin_define
 define|#
 directive|define
 name|POSIX_MADV_WILLNEED
-value|MADV_WILLNEED
+value|_MADV_WILLNEED
 end_define
 
 begin_define
 define|#
 directive|define
 name|POSIX_MADV_DONTNEED
-value|MADV_DONTNEED
+value|_MADV_DONTNEED
 end_define
 
 begin_endif
