@@ -399,10 +399,10 @@ operator|(
 name|omax
 operator|-
 operator|(
+name|p
+operator|-
 operator|*
 name|pp
-operator|-
-name|p
 operator|)
 operator|)
 condition|)
