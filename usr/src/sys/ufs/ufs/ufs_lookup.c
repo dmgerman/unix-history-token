@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.13	84/07/08	*/
+comment|/*	ufs_lookup.c	6.14	84/07/27	*/
 end_comment
 
 begin_include
@@ -4301,6 +4301,8 @@ begin_expr_stmt
 name|dirempty
 argument_list|(
 name|ip
+argument_list|,
+name|parentino
 argument_list|)
 specifier|register
 expr|struct
@@ -4309,6 +4311,12 @@ operator|*
 name|ip
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|ino_t
+name|parentino
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4447,7 +4455,10 @@ operator|->
 name|d_namlen
 operator|==
 literal|1
-operator|||
+condition|)
+continue|continue;
+if|if
+condition|(
 name|dp
 operator|->
 name|d_name
@@ -4456,6 +4467,12 @@ literal|1
 index|]
 operator|==
 literal|'.'
+operator|&&
+name|dp
+operator|->
+name|d_ino
+operator|==
+name|parentino
 condition|)
 continue|continue;
 return|return
