@@ -111,7 +111,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VTONULLNODE
+name|VTONULL
 parameter_list|(
 name|vp
 parameter_list|)
