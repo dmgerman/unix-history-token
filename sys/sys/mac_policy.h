@@ -1727,6 +1727,11 @@ name|struct
 name|image_params
 modifier|*
 name|imgp
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|execlabel
 parameter_list|)
 function_decl|;
 name|int
@@ -1759,6 +1764,11 @@ name|struct
 name|image_params
 modifier|*
 name|imgp
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|execlabel
 parameter_list|)
 function_decl|;
 name|void
@@ -2719,6 +2729,11 @@ name|struct
 name|image_params
 modifier|*
 name|imgp
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|execlabel
 parameter_list|)
 function_decl|;
 name|int

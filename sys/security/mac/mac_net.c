@@ -4862,6 +4862,10 @@ argument_list|,
 name|interpvnodelabel
 argument_list|,
 name|imgp
+argument_list|,
+name|imgp
+operator|->
+name|execlabel
 argument_list|)
 expr_stmt|;
 block|}
@@ -4937,6 +4941,10 @@ argument_list|,
 name|interpvnodelabel
 argument_list|,
 name|imgp
+argument_list|,
+name|imgp
+operator|->
+name|execlabel
 argument_list|)
 expr_stmt|;
 return|return
@@ -5396,6 +5404,10 @@ operator|->
 name|v_label
 argument_list|,
 name|imgp
+argument_list|,
+name|imgp
+operator|->
+name|execlabel
 argument_list|)
 expr_stmt|;
 return|return
