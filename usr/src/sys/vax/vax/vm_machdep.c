@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	5.4	83/05/10	*/
+comment|/*	vm_machdep.c	5.5	83/05/18	*/
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"../h/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/text.h"
 end_include
 
 begin_include
@@ -279,7 +285,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Check that a process will not be too large.  */
+comment|/*  * Check for valid program size  */
 end_comment
 
 begin_macro
@@ -294,7 +300,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|size_t
+name|unsigned
 name|ts
 decl_stmt|,
 name|ds
@@ -305,6 +311,12 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|int
+name|maxdmap
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|ts
@@ -318,6 +330,122 @@ operator|||
 name|ss
 operator|>
 name|MAXSSIZ
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* check for swap map overflow */
+if|if
+condition|(
+name|maxdmap
+operator|==
+literal|0
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|blk
+decl_stmt|;
+name|blk
+operator|=
+name|dmmin
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NDMAP
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|maxdmap
+operator|+=
+name|blk
+expr_stmt|;
+if|if
+condition|(
+name|blk
+operator|<
+name|dmmax
+condition|)
+name|blk
+operator|*=
+literal|2
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|ctod
+argument_list|(
+name|ts
+argument_list|)
+operator|>
+name|NXDAD
+operator|*
+name|dmtext
+operator|||
+name|ctod
+argument_list|(
+name|ds
+argument_list|)
+operator|>
+name|maxdmap
+operator|||
+name|ctod
+argument_list|(
+name|ss
+argument_list|)
+operator|>
+name|maxdmap
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* 	 * Make sure the process isn't bigger than our 	 * virtual memory limit. 	 * 	 * THERE SHOULD BE A CONSTANT FOR THIS. 	 */
+if|if
+condition|(
+name|ts
+operator|+
+name|ds
+operator|+
+name|ss
+operator|+
+name|LOWPAGES
+operator|+
+name|HIGHPAGES
+operator|>
+name|btoc
+argument_list|(
+name|USRSTACK
+argument_list|)
 condition|)
 block|{
 name|u

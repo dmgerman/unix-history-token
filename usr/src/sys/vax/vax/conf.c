@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.68	83/05/14	*/
+comment|/*	conf.c	4.69	83/05/18	*/
 end_comment
 
 begin_include
@@ -80,6 +80,9 @@ argument_list|()
 decl_stmt|,
 name|hpioctl
 argument_list|()
+decl_stmt|,
+name|hpsize
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +131,13 @@ define|#
 directive|define
 name|hpioctl
 value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|hpsize
+value|0
 end_define
 
 begin_endif
@@ -263,11 +273,18 @@ argument_list|()
 decl_stmt|,
 name|rkintr
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|rkdump
 argument_list|()
 decl_stmt|,
 name|rkreset
+argument_list|()
+decl_stmt|,
+name|rksize
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -324,6 +341,13 @@ define|#
 directive|define
 name|rkreset
 value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|rksize
+value|0
 end_define
 
 begin_endif
@@ -690,6 +714,9 @@ argument_list|()
 decl_stmt|,
 name|uddump
 argument_list|()
+decl_stmt|,
+name|udsize
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -740,6 +767,13 @@ name|uddump
 value|nodev
 end_define
 
+begin_define
+define|#
+directive|define
+name|udsize
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -777,6 +811,9 @@ name|upreset
 argument_list|()
 decl_stmt|,
 name|updump
+argument_list|()
+decl_stmt|,
+name|upsize
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -826,6 +863,13 @@ define|#
 directive|define
 name|updump
 value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|upsize
+value|0
 end_define
 
 begin_endif
@@ -972,14 +1016,25 @@ argument_list|()
 decl_stmt|,
 name|idcwrite
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|idcreset
 argument_list|()
 decl_stmt|,
 name|idcdump
 argument_list|()
+decl_stmt|,
+name|idcsize
+argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_else
 else|#
@@ -1026,6 +1081,13 @@ define|#
 directive|define
 name|idcdump
 value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|idcsize
+value|0
 end_define
 
 begin_endif
@@ -1310,6 +1372,9 @@ argument_list|()
 decl_stmt|,
 name|rldump
 argument_list|()
+decl_stmt|,
+name|rlsize
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1374,6 +1439,13 @@ name|rldump
 value|nodev
 end_define
 
+begin_define
+define|#
+directive|define
+name|rlsize
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1399,6 +1471,7 @@ name|bdevsw
 index|[]
 init|=
 block|{
+block|{
 name|hpopen
 block|,
 name|nulldev
@@ -1407,9 +1480,13 @@ name|hpstrategy
 block|,
 name|hpdump
 block|,
-literal|0
-block|,
 comment|/*0*/
+name|hpsize
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|htopen
 block|,
 name|htclose
@@ -1418,9 +1495,13 @@ name|htstrategy
 block|,
 name|htdump
 block|,
-name|B_TAPE
-block|,
 comment|/*1*/
+literal|0
+block|,
+name|B_TAPE
+block|}
+block|,
+block|{
 name|upopen
 block|,
 name|nulldev
@@ -1429,9 +1510,13 @@ name|upstrategy
 block|,
 name|updump
 block|,
-literal|0
-block|,
 comment|/*2*/
+name|upsize
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|rkopen
 block|,
 name|nulldev
@@ -1440,9 +1525,13 @@ name|rkstrategy
 block|,
 name|rkdump
 block|,
-literal|0
-block|,
 comment|/*3*/
+name|rksize
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|nodev
 block|,
 name|nodev
@@ -1451,9 +1540,13 @@ name|swstrategy
 block|,
 name|nodev
 block|,
+comment|/*4*/
 literal|0
 block|,
-comment|/*4*/
+literal|0
+block|}
+block|,
+block|{
 name|tmopen
 block|,
 name|tmclose
@@ -1462,9 +1555,13 @@ name|tmstrategy
 block|,
 name|tmdump
 block|,
-name|B_TAPE
-block|,
 comment|/*5*/
+literal|0
+block|,
+name|B_TAPE
+block|}
+block|,
+block|{
 name|tsopen
 block|,
 name|tsclose
@@ -1473,9 +1570,13 @@ name|tsstrategy
 block|,
 name|tsdump
 block|,
-name|B_TAPE
-block|,
 comment|/*6*/
+literal|0
+block|,
+name|B_TAPE
+block|}
+block|,
+block|{
 name|mtopen
 block|,
 name|mtclose
@@ -1484,9 +1585,13 @@ name|mtstrategy
 block|,
 name|mtdump
 block|,
-name|B_TAPE
-block|,
 comment|/*7*/
+literal|0
+block|,
+name|B_TAPE
+block|}
+block|,
+block|{
 name|tuopen
 block|,
 name|tuclose
@@ -1495,9 +1600,13 @@ name|tustrategy
 block|,
 name|nodev
 block|,
-name|B_TAPE
-block|,
 comment|/*8*/
+literal|0
+block|,
+name|B_TAPE
+block|}
+block|,
+block|{
 name|udopen
 block|,
 name|nulldev
@@ -1506,9 +1615,13 @@ name|udstrategy
 block|,
 name|uddump
 block|,
-literal|0
-block|,
 comment|/*9*/
+name|udsize
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|utopen
 block|,
 name|utclose
@@ -1517,9 +1630,13 @@ name|utstrategy
 block|,
 name|utdump
 block|,
-name|B_TAPE
-block|,
 comment|/*10*/
+literal|0
+block|,
+name|B_TAPE
+block|}
+block|,
+block|{
 name|idcopen
 block|,
 name|nodev
@@ -1528,9 +1645,13 @@ name|idcstrategy
 block|,
 name|idcdump
 block|,
-literal|0
-block|,
 comment|/*11*/
+name|idcsize
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|rxopen
 block|,
 name|rxclose
@@ -1539,9 +1660,13 @@ name|rxstrategy
 block|,
 name|nodev
 block|,
+comment|/*12*/
 literal|0
 block|,
-comment|/*12*/
+literal|0
+block|}
+block|,
+block|{
 name|uuopen
 block|,
 name|uuclose
@@ -1550,9 +1675,13 @@ name|uustrategy
 block|,
 name|nodev
 block|,
+comment|/*13*/
 literal|0
 block|,
-comment|/*13*/
+literal|0
+block|}
+block|,
+block|{
 name|rlopen
 block|,
 name|rlclose
@@ -1561,10 +1690,12 @@ name|rlstrategy
 block|,
 name|rldump
 block|,
-literal|0
-block|,
 comment|/*14*/
+name|rlsize
+block|,
+literal|0
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
