@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.126
+literal|3.127
 operator|%
 name|G
 operator|%
@@ -1486,7 +1486,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VFORK
+name|VMUNIX
 end_ifdef
 
 begin_define
@@ -1499,7 +1499,7 @@ end_define
 begin_else
 else|#
 directive|else
-else|VFORK
+else|VMUNIX
 end_else
 
 begin_define
@@ -1512,7 +1512,7 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|VFORK
+endif|VMUNIX
 end_endif
 
 begin_define
@@ -2586,8 +2586,8 @@ block|}
 block|}
 ifndef|#
 directive|ifndef
-name|VFORK
-comment|/* 		**  We have to be careful with vfork - we can't mung up the 		**  memory but we don't want the mailer to inherit any extra 		**  open files.  Chances are the mailer won't 		**  care about an extra file, but then again you never know. 		**  Actually, we would like to close(fileno(pwf)), but it's 		**  declared static so we can't.  But if we fclose(pwf), which 		**  is what endpwent does, it closes it in the parent too and 		**  the next getpwnam will be slower.  If you have a weird 		**  mailer that chokes on the extra file you should do the 		**  endpwent(). 		** 		**  Similar comments apply to log.  However, openlog is 		**  clever enough to set the FIOCLEX mode on the file, 		**  so it will be closed automatically on the exec. 		*/
+name|VMUNIX
+comment|/* 		**  We have to be careful with vfork - we can't mung up the 		**  memory but we don't want the mailer to inherit any extra 		**  open files.  Chances are the mailer won't 		**  care about an extra file, but then again you never know. 		**  Actually, we would like to close(fileno(pwf)), but it's 		**  declared static so we can't.  But if we fclose(pwf), which 		**  is what endpwent does, it closes it in the parent too and 		**  the next getpwnam will be slower.  If you have a weird 		**  mailer that chokes on the extra file you should do the 		**  endpwent().			-MRH 		** 		**  Similar comments apply to log.  However, openlog is 		**  clever enough to set the FIOCLEX mode on the file, 		**  so it will be closed automatically on the exec. 		*/
 name|endpwent
 argument_list|()
 expr_stmt|;
@@ -2602,7 +2602,7 @@ directive|endif
 endif|LOG
 endif|#
 directive|endif
-endif|VFORK
+endif|VMUNIX
 comment|/* try to execute the mailer */
 name|execv
 argument_list|(
