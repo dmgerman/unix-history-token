@@ -2653,7 +2653,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a process sleeping on the specified identifier runnable.  * May wake more than one process if a target prcoess is currently  * swapped out.  */
+comment|/*  * Make a process sleeping on the specified identifier runnable.  * May wake more than one process if a target process is currently  * swapped out.  */
 end_comment
 
 begin_function
@@ -2894,7 +2894,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"microuptime() went backwards (%ld.%06ld -> %ld,%06ld)\n"
+literal|"microuptime() went backwards (%ld.%06ld -> %ld.%06ld)\n"
 argument_list|,
 name|switchtime
 operator|.
