@@ -170,6 +170,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|PREFIX

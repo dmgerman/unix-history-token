@@ -521,10 +521,6 @@ modifier|*
 name|op_value
 decl_stmt|;
 name|int
-name|op_line
-decl_stmt|;
-comment|/* line number for error-reporting */
-name|int
 name|op_ownfile
 decl_stmt|;
 comment|/* true = own file, false = makefile */
@@ -798,18 +794,6 @@ name|u_int
 name|loadaddress
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|PREFIX
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Config file name - for error messages */
-end_comment
 
 begin_decl_stmt
 specifier|extern

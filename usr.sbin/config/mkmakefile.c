@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.18.2.4 1998/06/07 13:38:16 thepish Exp $"
+literal|"$Id: mkmakefile.c,v 1.18.2.3 1997/09/16 06:57:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,21 +802,6 @@ argument_list|(
 name|ofp
 argument_list|,
 literal|" -D%s"
-argument_list|,
-name|op
-operator|->
-name|op_name
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s:%d: unknown option \"%s\"\n"
-argument_list|,
-name|PREFIX
-argument_list|,
-name|op
-operator|->
-name|op_line
 argument_list|,
 name|op
 operator|->
