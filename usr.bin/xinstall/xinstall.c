@@ -1629,6 +1629,8 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|||
+name|status
 condition|)
 operator|(
 name|void
