@@ -7696,6 +7696,15 @@ operator|=
 literal|0x1
 expr_stmt|;
 comment|/* mark the head of the list */
+name|cur
+operator|->
+name|np_private
+operator|.
+name|npp_totlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* init deletetion flag */
 for|for
 control|(
 name|i
@@ -7843,11 +7852,45 @@ name|ndis_handle
 name|pool
 decl_stmt|;
 block|{
+name|ndis_packet
+modifier|*
+name|head
+decl_stmt|;
+name|head
+operator|=
+name|pool
+expr_stmt|;
+comment|/* Mark this pool as 'going away.' */
+name|head
+operator|->
+name|np_private
+operator|.
+name|npp_totlen
+operator|=
+literal|1
+expr_stmt|;
+comment|/* If there are no buffers loaned out, destroy the pool. */
+if|if
+condition|(
+name|head
+operator|->
+name|np_private
+operator|.
+name|npp_count
+operator|==
+literal|0
+condition|)
 name|free
 argument_list|(
 name|pool
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"NDIS: buggy driver deleting active packet pool!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7903,6 +7946,23 @@ operator|.
 name|npp_flags
 operator|!=
 literal|0x1
+condition|)
+block|{
+operator|*
+name|status
+operator|=
+name|NDIS_STATUS_FAILURE
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * If this pool is marked as 'going away' don't allocate any 	 * more packets out of it. 	 */
+if|if
+condition|(
+name|head
+operator|->
+name|np_private
+operator|.
+name|npp_totlen
 condition|)
 block|{
 operator|*
@@ -8098,6 +8158,30 @@ name|np_private
 operator|.
 name|npp_count
 operator|--
+expr_stmt|;
+comment|/* 	 * If the pool has been marked for deletion and there are 	 * no more packets outstanding, nuke the pool. 	 */
+if|if
+condition|(
+name|head
+operator|->
+name|np_private
+operator|.
+name|npp_totlen
+operator|&&
+name|head
+operator|->
+name|np_private
+operator|.
+name|npp_count
+operator|==
+literal|0
+condition|)
+name|free
+argument_list|(
+name|head
+argument_list|,
+name|M_DEVBUF
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -8426,6 +8510,20 @@ operator|=
 literal|0x1
 expr_stmt|;
 comment|/* mark the head of the list */
+name|cur
+operator|->
+name|nb_bytecount
+operator|=
+literal|0
+expr_stmt|;
+comment|/* init usage count */
+name|cur
+operator|->
+name|nb_byteoffset
+operator|=
+literal|0
+expr_stmt|;
+comment|/* init deletetion flag */
 for|for
 control|(
 name|i
@@ -8477,11 +8575,41 @@ name|ndis_handle
 name|pool
 decl_stmt|;
 block|{
+name|ndis_buffer
+modifier|*
+name|head
+decl_stmt|;
+name|head
+operator|=
+name|pool
+expr_stmt|;
+comment|/* Mark this pool as 'going away.' */
+name|head
+operator|->
+name|nb_byteoffset
+operator|=
+literal|1
+expr_stmt|;
+comment|/* If there are no buffers loaned out, destroy the pool. */
+if|if
+condition|(
+name|head
+operator|->
+name|nb_bytecount
+operator|==
+literal|0
+condition|)
 name|free
 argument_list|(
 name|pool
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"NDIS: buggy driver deleting active buffer pool!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8559,6 +8687,21 @@ name|NDIS_STATUS_FAILURE
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * If this pool is marked as 'going away' don't allocate any 	 * more buffers out of it. 	 */
+if|if
+condition|(
+name|head
+operator|->
+name|nb_byteoffset
+condition|)
+block|{
+operator|*
+name|status
+operator|=
+name|NDIS_STATUS_FAILURE
+expr_stmt|;
+return|return;
+block|}
 name|buf
 operator|=
 name|head
@@ -8607,6 +8750,12 @@ operator|*
 name|buffer
 operator|=
 name|buf
+expr_stmt|;
+comment|/* Increment count of busy buffers. */
+name|head
+operator|->
+name|nb_bytecount
+operator|++
 expr_stmt|;
 operator|*
 name|status
@@ -8675,6 +8824,32 @@ operator|->
 name|nb_next
 operator|=
 name|buf
+expr_stmt|;
+comment|/* Decrement count of busy buffers. */
+name|head
+operator|->
+name|nb_bytecount
+operator|--
+expr_stmt|;
+comment|/* 	 * If the pool has been marked for deletion and there are 	 * no more buffers outstanding, nuke the pool. 	 */
+if|if
+condition|(
+name|head
+operator|->
+name|nb_byteoffset
+operator|&&
+name|head
+operator|->
+name|nb_bytecount
+operator|==
+literal|0
+condition|)
+name|free
+argument_list|(
+name|head
+argument_list|,
+name|M_DEVBUF
+argument_list|)
 expr_stmt|;
 return|return;
 block|}

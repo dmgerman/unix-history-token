@@ -5143,6 +5143,32 @@ name|nb_next
 operator|=
 name|mdl
 expr_stmt|;
+comment|/* Decrement count of busy buffers. */
+name|head
+operator|->
+name|nb_bytecount
+operator|--
+expr_stmt|;
+comment|/* 	 * If the pool has been marked for deletion and there are 	 * no more buffers outstanding, nuke the pool. 	 */
+if|if
+condition|(
+name|head
+operator|->
+name|nb_byteoffset
+operator|&&
+name|head
+operator|->
+name|nb_bytecount
+operator|==
+literal|0
+condition|)
+name|free
+argument_list|(
+name|head
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
