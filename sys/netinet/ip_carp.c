@@ -734,9 +734,29 @@ name|CARP_LOG
 parameter_list|(
 modifier|...
 parameter_list|)
-define|\
-value|if (carp_opts[CARPCTL_LOG]> 0)			\ 		log(LOG_INFO, __VA_ARGS__);		\  #define	CARP_DEBUG(...)					\ 	if (carp_opts[CARPCTL_LOG]> 1)			\ 		log(LOG_DEBUG, __VA_ARGS__);		\  void	carp_hmac_prepare(struct carp_softc *);
+value|do {				\ 	if (carp_opts[CARPCTL_LOG]> 0)			\ 		log(LOG_INFO, __VA_ARGS__);		\ } while (0)
 end_define
+
+begin_define
+define|#
+directive|define
+name|CARP_DEBUG
+parameter_list|(
+modifier|...
+parameter_list|)
+value|do {				\ 	if (carp_opts[CARPCTL_LOG]> 1)			\ 		log(LOG_DEBUG, __VA_ARGS__);		\ } while (0)
+end_define
+
+begin_function_decl
+name|void
+name|carp_hmac_prepare
+parameter_list|(
+name|struct
+name|carp_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
