@@ -1577,9 +1577,12 @@ begin_comment
 comment|/* Define if<sys/procfs.h> has prgregset_t. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PRGREGSET_T */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PRGREGSET_T
+value|1
+end_define
 
 begin_comment
 comment|/* Define if<sys/procfs.h> has prfpregset_t. */
@@ -1623,9 +1626,12 @@ begin_comment
 comment|/* Define if<sys/procfs.h> has psaddr_t. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PSADDR_T */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PSADDR_T
+value|1
+end_define
 
 begin_comment
 comment|/* Define if<sys/procfs.h> has prsysent_t. */
