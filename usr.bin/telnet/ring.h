@@ -246,6 +246,15 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|ring_at_mark
+name|P
+argument_list|(
+operator|(
+name|Ring
+operator|*
+operator|)
+argument_list|)
+decl_stmt|,
 name|ring_empty_count
 name|P
 argument_list|(

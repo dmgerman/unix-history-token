@@ -3,32 +3,34 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static const char sccsid[] = "@(#)utilities.c	8.3 (Berkeley) 5/30/95";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)utilities.c	8.3 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,15 +38,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_define
 define|#
@@ -157,15 +150,11 @@ begin_function
 name|void
 name|upcase
 parameter_list|(
-name|argument
-parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|argument
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -213,27 +202,19 @@ begin_function
 name|int
 name|SetSockOpt
 parameter_list|(
-name|fd
-parameter_list|,
-name|level
-parameter_list|,
-name|option
-parameter_list|,
-name|yesno
-parameter_list|)
 name|int
 name|fd
-decl_stmt|,
+parameter_list|,
+name|int
 name|level
-decl_stmt|,
+parameter_list|,
+name|int
 name|option
-decl_stmt|,
+parameter_list|,
+name|int
 name|yesno
-decl_stmt|;
+parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOT43
 return|return
 name|setsockopt
 argument_list|(
@@ -254,48 +235,6 @@ sizeof|sizeof
 name|yesno
 argument_list|)
 return|;
-else|#
-directive|else
-comment|/* NOT43 */
-if|if
-condition|(
-name|yesno
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Can't do that in 4.2! */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error: attempt to turn off an option 0x%x.\n"
-argument_list|,
-name|option
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-return|return
-name|setsockopt
-argument_list|(
-name|fd
-argument_list|,
-name|level
-argument_list|,
-name|option
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-return|;
-endif|#
-directive|endif
-comment|/* NOT43 */
 block|}
 end_function
 
@@ -322,13 +261,10 @@ begin_function
 name|void
 name|SetNetTrace
 parameter_list|(
-name|file
-parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -418,23 +354,17 @@ begin_function
 name|void
 name|Dump
 parameter_list|(
-name|direction
-parameter_list|,
-name|buffer
-parameter_list|,
-name|length
-parameter_list|)
 name|char
 name|direction
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|buffer
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -655,21 +585,17 @@ begin_function
 name|void
 name|printoption
 parameter_list|(
-name|direction
-parameter_list|,
-name|cmd
-parameter_list|,
-name|option
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|direction
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|,
+parameter_list|,
+name|int
 name|option
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -720,7 +646,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -873,9 +799,10 @@ end_function
 begin_function
 name|void
 name|optionstatus
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1349,36 +1276,20 @@ begin_function
 name|void
 name|printsub
 parameter_list|(
-name|direction
-parameter_list|,
-name|pointer
-parameter_list|,
-name|length
-parameter_list|)
 name|char
 name|direction
-decl_stmt|;
-comment|/* '<' or '>' */
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|pointer
-decl_stmt|;
-comment|/* where suboption data sits */
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
-comment|/* length of suboption data */
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|512
-index|]
 decl_stmt|;
 specifier|extern
 name|int
@@ -1435,7 +1346,6 @@ operator|>=
 literal|3
 condition|)
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -2795,12 +2705,11 @@ case|case
 name|TELOPT_STATUS
 case|:
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|,
@@ -3353,7 +3262,6 @@ expr_stmt|;
 name|env_common
 label|:
 block|{
-specifier|register
 name|int
 name|noquote
 init|=
@@ -3766,16 +3674,13 @@ comment|/* EmptyTerminal - called to make sure that the terminal buffer is empty
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|EmptyTerminal
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|unix
-argument_list|)
 name|fd_set
 name|o
 decl_stmt|;
@@ -3785,9 +3690,6 @@ operator|&
 name|o
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(unix) */
 if|if
 condition|(
 name|TTYBYTES
@@ -3796,12 +3698,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|unix
-argument_list|)
 name|FD_SET
 argument_list|(
 name|tout
@@ -3843,9 +3739,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* wait for TTLOWAT */
-endif|#
-directive|endif
-comment|/* defined(unix) */
 block|}
 else|else
 block|{
@@ -3863,12 +3756,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|unix
-argument_list|)
 name|FD_SET
 argument_list|(
 name|tout
@@ -3910,42 +3797,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* wait for TTLOWAT */
-endif|#
-directive|endif
-comment|/* defined(unix) */
 block|}
 block|}
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|SetForExit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|setconnmode
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
-if|if
-condition|(
-name|In3270
-condition|)
-block|{
-name|Finish3270
-argument_list|()
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* defined(TN3270) */
 do|do
 block|{
 operator|(
@@ -3969,9 +3838,6 @@ argument_list|)
 condition|)
 do|;
 comment|/* While there is any */
-endif|#
-directive|endif
-comment|/* defined(TN3270) */
 name|setcommandmode
 argument_list|()
 expr_stmt|;
@@ -3985,26 +3851,6 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
-if|if
-condition|(
-name|In3270
-condition|)
-block|{
-name|StopScreen
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* defined(TN3270) */
 name|setconnmode
 argument_list|(
 literal|0
@@ -4024,11 +3870,9 @@ begin_function
 name|void
 name|Exit
 parameter_list|(
-name|returnCode
-parameter_list|)
 name|int
 name|returnCode
-decl_stmt|;
+parameter_list|)
 block|{
 name|SetForExit
 argument_list|()
@@ -4045,17 +3889,14 @@ begin_function
 name|void
 name|ExitString
 parameter_list|(
-name|string
-parameter_list|,
-name|returnCode
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|returnCode
-decl_stmt|;
+parameter_list|)
 block|{
 name|SetForExit
 argument_list|()
