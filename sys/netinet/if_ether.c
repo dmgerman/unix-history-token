@@ -3841,6 +3841,12 @@ operator|&=
 operator|~
 name|TR_RII
 expr_stmt|;
+name|trld
+operator|->
+name|trld_rcf
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|m
 operator|->
