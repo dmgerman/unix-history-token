@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.85 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.86 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.85 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.86 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -6143,6 +6143,12 @@ condition|(
 name|n
 operator|<
 literal|0
+operator|&&
+name|RealGid
+operator|!=
+name|st
+operator|.
+name|st_gid
 condition|)
 else|#
 directive|else
