@@ -241,8 +241,10 @@ name|ucred
 modifier|*
 name|newcred
 parameter_list|,
-name|uid_t
-name|euid
+name|struct
+name|uidinfo
+modifier|*
+name|euip
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -271,8 +273,10 @@ name|ucred
 modifier|*
 name|newcred
 parameter_list|,
-name|uid_t
-name|ruid
+name|struct
+name|uidinfo
+modifier|*
+name|ruip
 parameter_list|)
 function_decl|;
 end_function_decl

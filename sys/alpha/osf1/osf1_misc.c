@@ -4928,6 +4928,11 @@ name|uid_t
 name|uid
 decl_stmt|;
 name|struct
+name|uidinfo
+modifier|*
+name|uip
+decl_stmt|;
+name|struct
 name|ucred
 modifier|*
 name|newcred
@@ -4954,6 +4959,13 @@ name|newcred
 operator|=
 name|crget
 argument_list|()
+expr_stmt|;
+name|uip
+operator|=
+name|uifind
+argument_list|(
+name|uid
+argument_list|)
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
@@ -5001,6 +5013,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|uifree
+argument_list|(
+name|uip
+argument_list|)
+expr_stmt|;
 name|crfree
 argument_list|(
 name|newcred
@@ -5039,7 +5056,7 @@ name|change_ruid
 argument_list|(
 name|newcred
 argument_list|,
-name|uid
+name|uip
 argument_list|)
 expr_stmt|;
 name|setsugid
@@ -5084,7 +5101,7 @@ name|change_euid
 argument_list|(
 name|newcred
 argument_list|,
-name|uid
+name|uip
 argument_list|)
 expr_stmt|;
 name|setsugid
@@ -5102,6 +5119,11 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|uifree
+argument_list|(
+name|uip
 argument_list|)
 expr_stmt|;
 name|crfree

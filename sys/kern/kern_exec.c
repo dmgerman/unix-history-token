@@ -560,6 +560,11 @@ decl_stmt|,
 modifier|*
 name|oldcred
 decl_stmt|;
+name|struct
+name|uidinfo
+modifier|*
+name|euip
+decl_stmt|;
 name|register_t
 modifier|*
 name|stack_base
@@ -1244,6 +1249,15 @@ operator|=
 name|crget
 argument_list|()
 expr_stmt|;
+name|euip
+operator|=
+name|uifind
+argument_list|(
+name|attr
+operator|.
+name|va_uid
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|imgp
@@ -1662,9 +1676,7 @@ name|change_euid
 argument_list|(
 name|newcred
 argument_list|,
-name|attr
-operator|.
-name|va_uid
+name|euip
 argument_list|)
 expr_stmt|;
 if|if
@@ -1955,6 +1967,11 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free any resources malloc'd earlier that we didn't use. 	 */
+name|uifree
+argument_list|(
+name|euip
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|newcred
