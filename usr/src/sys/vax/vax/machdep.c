@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.30	81/04/03	*/
+comment|/*	machdep.c	4.31	81/04/13	*/
 end_comment
 
 begin_include
@@ -639,10 +639,14 @@ if|if
 condition|(
 operator|(
 operator|(
-operator|(
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
 name|ecmap
+operator|+
+literal|1
+argument_list|)
 operator|)
 operator|&
 operator|~
@@ -663,10 +667,14 @@ name|unixsize
 operator|=
 name|btoc
 argument_list|(
-operator|(
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
 name|ecmap
+operator|+
+literal|1
+argument_list|)
 operator|&
 operator|~
 literal|0x80000000
