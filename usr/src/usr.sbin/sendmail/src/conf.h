@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.91 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.92 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2843,7 +2843,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... **	From Karl London<karl@borg.demon.co.uk>. */
+comment|/* **  Linux 0.99pl10 and above... **	From Karl London<karl@borg.demon.co.uk> and John Kennedy **<warlock@csuchico.edu>.  Conversion for "native (non-BSD) **	mode" from Florian La Roche<rzsfl@rzluxt.rz.uni-sb.de>. */
 end_comment
 
 begin_ifdef
@@ -2860,18 +2860,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* pretend to be BSD based today */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEEDVPRINTF
-name|1
-end_undef
-
-begin_comment
-comment|/* need a replacement for vprintf(3) */
+comment|/* include BSD defines */
 end_comment
 
 begin_define
@@ -2888,6 +2877,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASUNSETENV
 value|1
 end_define
@@ -2895,6 +2895,30 @@ end_define
 begin_comment
 comment|/* has unsetenv(3) call */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ERRLIST_PREDEFINED
+end_define
+
+begin_comment
+comment|/* don't declare sys_errlist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|sleep
+value|sleepXX
+end_define
 
 begin_ifndef
 ifndef|#
@@ -2914,18 +2938,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_MOUNT
+end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<linux/fs.h>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<sys/sysmacros.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|GIDSET_T
-value|gid_t
-end_define
+begin_undef
+undef|#
+directive|undef
+name|atol
+end_undef
 
 begin_endif
 endif|#
