@@ -4935,10 +4935,6 @@ literal|0
 init|;
 name|i
 operator|<=
-literal|2
-operator|&&
-name|i
-operator|<=
 name|fdp
 operator|->
 name|fd_lastfile
@@ -4953,6 +4949,13 @@ name|fdfp
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|i
+operator|>
+literal|2
+condition|)
+break|break;
 if|if
 condition|(
 operator|*
@@ -5007,7 +5010,7 @@ expr_stmt|;
 operator|*
 name|fdfp
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 if|if
 condition|(
