@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.7 (Berkeley) %G%"
+literal|"@(#)disks.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,13 +660,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<vaxuba/ubavar.h>
+file|<vax/uba/ubavar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vaxmba/mbavar.h>
+file|<vax/mba/mbavar.h>
 end_include
 
 begin_macro
