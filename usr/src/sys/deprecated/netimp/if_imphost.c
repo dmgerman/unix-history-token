@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.10	82/04/25	*/
+comment|/*	if_imphost.c	4.11	82/05/10	*/
 end_comment
 
 begin_include
@@ -437,6 +437,12 @@ name|h_timer
 operator|=
 literal|0
 expr_stmt|;
+name|hp
+operator|->
+name|h_flags
+operator|=
+literal|0
+expr_stmt|;
 name|foundhost
 label|:
 name|hp
@@ -745,6 +751,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|hp
+operator|->
+name|h_flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|--
