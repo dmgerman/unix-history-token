@@ -687,6 +687,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* for backward compatibility - messy... */
+comment|/* XXX 	 * I THINK they meant to call ip_input() 	 * The original code called ipip_input() 	 * which just calls rip_input() 	 * which makes no sense. 	 * (It is also not compiled in in LINT) 	 */
 if|if
 condition|(
 name|proto
@@ -694,7 +695,7 @@ operator|==
 name|IPPROTO_IPV4
 condition|)
 block|{
-name|ipip_input
+name|ip_input
 argument_list|(
 name|m
 argument_list|,
