@@ -446,20 +446,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"Suggested course of action:"
-argument_list|)
-expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"(F)disk, (W)rite"
+literal|"|Suggested course of action:"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -469,7 +456,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"possibly (F)disk, (B)oot"
+literal|"|"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -479,7 +466,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"(D)isklabel, (A)ssign<root>"
+literal|"|(F)disk, (W)rite"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -489,7 +476,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"  (A)ssign swap"
+literal|"|possibly (F)disk, (B)oot"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -499,7 +486,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"(P)roceed"
+literal|"|(D)isklabel, (A)ssign<root>"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -509,7 +496,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"Reboot"
+literal|"|(A)ssign swap"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -519,7 +506,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"Load cpio floppy"
+literal|"|(P)roceed"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -529,20 +516,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"Choose stand-alone shell"
-argument_list|)
-expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"Your kernel and /etc/fstab"
+literal|"|Reboot"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -552,7 +526,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"are backed up and /sbin/init"
+literal|"|Load cpio floppy"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -562,7 +536,47 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"is renamed"
+literal|"|Choose stand-alone shell"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|Your kernel and /etc/fstab"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|are backed up and /sbin/init"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|is renamed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -575,7 +589,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"You must assign some space to"
+literal|"|You must assign some space"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -585,7 +599,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"a root (/), swap, and"
+literal|"|to a root (/), swap, and"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -595,20 +609,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"optionally, a /usr partition."
-argument_list|)
-expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"Root should be a minimum of"
+literal|"|optionally a /usr partition"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -618,7 +619,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"18MB with a 30MB /usr, or"
+literal|"|"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -628,20 +629,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"50MB without a /usr."
-argument_list|)
-expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"Swap space should be a"
+literal|"|Root should be a minimum of"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -651,7 +639,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"minimum of 12MB or MEM * 2."
+literal|"|18MB with a 30MB /usr, or"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -661,7 +649,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"Also be sure to Assign"
+literal|"|50MB without a /usr."
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -671,7 +659,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"mount points to each or"
+literal|"|"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -681,11 +669,118 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"they will NOT be enabled."
+literal|"|Swap space should be a"
 argument_list|)
 expr_stmt|;
+name|mvprintw
+argument_list|(
 name|j
 operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|minimum of 12MB or MEM * 2"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|Also be sure to Assign"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|mount points to each or"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|they will NOT be enabled."
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|We suggest that you invoke"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|(F)disk, then (D)isklabel"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|in setting up your disk."
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|If installing on a drive"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|other than 0, read the"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|j
+operator|++
+argument_list|,
+literal|50
+argument_list|,
+literal|"|troubleshooting doc first"
+argument_list|)
 expr_stmt|;
 block|}
 name|j

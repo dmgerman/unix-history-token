@@ -2727,22 +2727,6 @@ argument_list|,
 literal|"(U)se entire disk for FreeBSD   (G)eometry   Write MBR (B)ootcode"
 argument_list|)
 expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|23
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enter Command> "
-argument_list|)
-expr_stmt|;
-name|move
-argument_list|(
-literal|24
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|grumble
@@ -2751,8 +2735,12 @@ block|{
 name|standout
 argument_list|()
 expr_stmt|;
-name|printw
+name|mvprintw
 argument_list|(
+literal|24
+argument_list|,
+literal|0
+argument_list|,
 name|grumble
 argument_list|)
 expr_stmt|;
@@ -2773,8 +2761,12 @@ block|{
 name|standout
 argument_list|()
 expr_stmt|;
-name|printw
+name|mvprintw
 argument_list|(
+literal|24
+argument_list|,
+literal|0
+argument_list|,
 literal|"Use (W)rite to save changes to disk"
 argument_list|)
 expr_stmt|;
@@ -2782,6 +2774,15 @@ name|standend
 argument_list|()
 expr_stmt|;
 block|}
+name|mvprintw
+argument_list|(
+literal|23
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enter Command> "
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|getch
