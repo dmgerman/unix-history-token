@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.h	7.4 (Berkeley) %G%  *  * scsi.h --  *  *	Common declarations for SCSI command formaters. This file only covers  *	definitions pertaining to the SCSI common command set that are  *	common to all SCSI device types (ie disk, tapes, WORM, printers, etc).  *	Some of the references from the proceedings of the  *	1984 Mini/Micro Northeast conference might help in understanding SCSI.   *  * from: $Header: /sprite/src/kernel/dev/RCS/scsi.h,  *	v 9.1 90/02/13 23:11:24 jhh Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.h	8.1 (Berkeley) %G%  *  * scsi.h --  *  *	Common declarations for SCSI command formaters. This file only covers  *	definitions pertaining to the SCSI common command set that are  *	common to all SCSI device types (ie disk, tapes, WORM, printers, etc).  *	Some of the references from the proceedings of the  *	1984 Mini/Micro Northeast conference might help in understanding SCSI.   *  * from: $Header: /sprite/src/kernel/dev/RCS/scsi.h,  *	v 9.1 90/02/13 23:11:24 jhh Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_ifndef
