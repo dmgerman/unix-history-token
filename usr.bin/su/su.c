@@ -186,7 +186,7 @@ define|#
 directive|define
 name|PAM_END
 parameter_list|()
-value|do {						\ 	int local_ret;						\ 	if (pamh != NULL&& creds_set) {			\ 		local_ret = pam_setcred(pamh, PAM_DELETE_CRED);	\ 		if (local_ret != PAM_SUCCESS)			\ 			syslog(LOG_ERR, "pam_setcred: %s",	\ 				pam_strerror(pamh, local_ret));	\ 		local_ret = pam_end(pamh, local_ret);		\ 		if (local_ret != PAM_SUCCESS)			\ 			syslog(LOG_ERR, "pam_end: %s",		\ 				pam_strerror(pamh, local_ret));	\ 	}							\ } while (0)
+value|do {							\ 	int local_ret;							\ 	if (pamh != NULL) {						\ 		local_ret = pam_setcred(pamh, PAM_DELETE_CRED);		\ 		if (local_ret != PAM_SUCCESS)				\ 			syslog(LOG_ERR, "pam_setcred: %s",		\ 				pam_strerror(pamh, local_ret));		\ 		if (asthem) {						\ 			local_ret = pam_close_session(pamh, 0);		\ 			if (local_ret != PAM_SUCCESS)			\ 				syslog(LOG_ERR, "pam_close_session: %s",\ 					pam_strerror(pamh, local_ret));	\ 		}							\ 		local_ret = pam_end(pamh, local_ret);			\ 		if (local_ret != PAM_SUCCESS)				\ 			syslog(LOG_ERR, "pam_end: %s",			\ 				pam_strerror(pamh, local_ret));		\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -198,7 +198,7 @@ name|what
 parameter_list|,
 name|item
 parameter_list|)
-value|do {				\ 	int local_ret;						\ 	local_ret = pam_set_item(pamh, what, item);		\ 	if (local_ret != PAM_SUCCESS) {				\ 		syslog(LOG_ERR, "pam_set_item(" #what "): %s",	\ 			pam_strerror(pamh, local_ret));		\ 		errx(1, "pam_set_item(" #what "): %s",		\ 			pam_strerror(pamh, local_ret));		\ 	}							\ } while (0)
+value|do {					\ 	int local_ret;							\ 	local_ret = pam_set_item(pamh, what, item);			\ 	if (local_ret != PAM_SUCCESS) {					\ 		syslog(LOG_ERR, "pam_set_item(" #what "): %s",		\ 			pam_strerror(pamh, local_ret));			\ 		errx(1, "pam_set_item(" #what "): %s",			\ 			pam_strerror(pamh, local_ret));			\ 	}								\ } while (0)
 end_define
 
 begin_enum
@@ -221,15 +221,6 @@ modifier|*
 name|pamh
 init|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|creds_set
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -361,6 +352,13 @@ union|;
 name|uid_t
 name|ruid
 decl_stmt|;
+name|pid_t
+name|child_pid
+decl_stmt|,
+name|child_pgrp
+decl_stmt|,
+name|pid
+decl_stmt|;
 name|int
 name|asme
 decl_stmt|,
@@ -379,12 +377,6 @@ decl_stmt|,
 name|retcode
 decl_stmt|,
 name|statusp
-decl_stmt|,
-name|child_pid
-decl_stmt|,
-name|child_pgrp
-decl_stmt|,
-name|ret_pid
 decl_stmt|,
 name|setmaclabel
 decl_stmt|;
@@ -1308,6 +1300,31 @@ argument_list|,
 name|prio
 argument_list|)
 expr_stmt|;
+comment|/* Switch to home directory */
+if|if
+condition|(
+name|asthem
+condition|)
+block|{
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|pwd
+operator|->
+name|pw_dir
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"no directory"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * PAM modules might add supplementary groups in pam_setcred(), so 	 * initialize them first. 	 */
 if|if
 condition|(
@@ -1348,11 +1365,12 @@ name|retcode
 operator|!=
 name|PAM_SUCCESS
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pam_setcred(pamh, PAM_ESTABLISH_CRED): %s"
+literal|"pam_setcred: %s"
 argument_list|,
 name|pam_strerror
 argument_list|(
@@ -1362,11 +1380,58 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|creds_set
-operator|=
+name|errx
+argument_list|(
 literal|1
+argument_list|,
+literal|"failed to establish credentials."
+argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|asthem
+condition|)
+block|{
+name|retcode
+operator|=
+name|pam_open_session
+argument_list|(
+name|pamh
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retcode
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pam_open_session: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|retcode
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"failed to open session."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * We must fork() before setuid() because we need to call 	 * pam_setcred(pamh, PAM_DELETE_CRED) as root. 	 */
 name|sa
 operator|.
@@ -1522,7 +1587,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|ret_pid
+name|pid
 operator|=
 name|waitpid
 argument_list|(
@@ -1586,7 +1651,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|ret_pid
+name|pid
 operator|==
 operator|-
 literal|1
@@ -1792,6 +1857,51 @@ operator|=
 operator|&
 name|cleanenv
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|asthem
+operator|||
+name|pwd
+operator|->
+name|pw_uid
+condition|)
+name|setenv
+argument_list|(
+literal|"USER"
+argument_list|,
+name|pwd
+operator|->
+name|pw_name
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"HOME"
+argument_list|,
+name|pwd
+operator|->
+name|pw_dir
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"SHELL"
+argument_list|,
+name|shell
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|asthem
+condition|)
+block|{
 comment|/* 				 * Add any environmental variables that the 				 * PAM modules may have set. 				 */
 name|environ_pam
 operator|=
@@ -1838,64 +1948,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|chdir
-argument_list|(
-name|pwd
-operator|->
-name|pw_dir
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"no directory"
-argument_list|)
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|asthem
-operator|||
-name|pwd
-operator|->
-name|pw_uid
-condition|)
-name|setenv
-argument_list|(
-literal|"USER"
-argument_list|,
-name|pwd
-operator|->
-name|pw_name
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|setenv
-argument_list|(
-literal|"HOME"
-argument_list|,
-name|pwd
-operator|->
-name|pw_dir
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|setenv
-argument_list|(
-literal|"SHELL"
-argument_list|,
-name|shell
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|login_close
 argument_list|(
@@ -2050,7 +2103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sanity checks on PAM environmental variables:  * - Make sure there is an '=' in the string.  * - Make sure the string doesn't run on too long.  * - Do not export certain variables.  This list was taken from the  *   Solaris pam_putenv(3) man page.  */
+comment|/*  * Sanity checks on PAM environmental variables:  * - Make sure there is an '=' in the string.  * - Make sure the string doesn't run on too long.  * - Do not export certain variables.  This list was taken from the  *   Solaris pam_putenv(3) man page.  * Note that if the user is chrooted, PAM may have a better idea than we  * do of where her home directory is.  */
 end_comment
 
 begin_function
@@ -2074,8 +2127,7 @@ init|=
 block|{
 literal|"SHELL"
 block|,
-literal|"HOME"
-block|,
+comment|/* "HOME", */
 literal|"LOGNAME"
 block|,
 literal|"MAIL"
