@@ -350,10 +350,6 @@ condition|(
 name|memf
 operator|==
 name|NULL
-operator|&&
-name|nlistf
-operator|==
-name|NULL
 condition|)
 block|{
 comment|/* 		 * Running kernel.  Use sysctl.  This gives an unwrapped 		 * buffer as a side effect. 		 */
@@ -954,7 +950,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dmesg [-a] [-M core] [-N system]\n"
+literal|"usage: dmesg [-a] [-M core [-N system]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
