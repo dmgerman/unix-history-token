@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) %G%"
+literal|"@(#)main.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,6 +595,21 @@ literal|3
 expr_stmt|;
 if|if
 condition|(
+name|getuid
+argument_list|()
+operator|==
+name|geteuid
+argument_list|()
+operator|&&
+name|getgid
+argument_list|()
+operator|==
+name|getegid
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|shinit
 operator|=
@@ -621,6 +636,7 @@ argument_list|(
 name|shinit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|state3
 label|:
