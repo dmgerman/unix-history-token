@@ -10897,6 +10897,15 @@ operator|=
 name|m
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|sc
+operator|->
+name|dc_srom
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|DC_UNLOCK
 argument_list|(
 name|sc
