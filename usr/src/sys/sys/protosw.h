@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)protosw.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)protosw.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -131,7 +131,7 @@ comment|/* 5 fast timeouts per second */
 end_comment
 
 begin_comment
-comment|/*  * Values for pr_flags  */
+comment|/*  * Values for pr_flags.  * PR_ADDR requires PR_ATOMIC;  * PR_ADDR and PR_CONNREQUIRED are mutually exclusive.  */
 end_comment
 
 begin_define
@@ -154,10 +154,6 @@ end_define
 
 begin_comment
 comment|/* addresses given with messages */
-end_comment
-
-begin_comment
-comment|/* in the current implementation, PR_ADDR needs PR_ATOMIC to work */
 end_comment
 
 begin_define
@@ -516,7 +512,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The arguments to the ctlinput routine are  *	(*protosw[].pr_ctlinput)(cmd, arg);  * where cmd is one of the commands below, and arg is  * an optional argument (caddr_t).  *  * N.B. The IMP code, in particular, pressumes the values  *      of some of the commands; change with extreme care.  * TODO:  *	spread out codes so new ICMP codes can be  *	accomodated more easily  */
+comment|/*  * The arguments to the ctlinput routine are  *	(*protosw[].pr_ctlinput)(cmd, sa, arg);  * where cmd is one of the commands below, sa is a pointer to a sockaddr,  * and arg is an optional caddr_t argument used within a protocol family.  */
 end_comment
 
 begin_define
@@ -538,7 +534,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* select new route if possible */
+comment|/* select new route if possible ??? */
 end_comment
 
 begin_define
@@ -560,7 +556,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* some said to slow down */
+comment|/* some one said to slow down */
 end_comment
 
 begin_define
@@ -582,7 +578,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* normally from IMP */
+comment|/* host appears to be down */
 end_comment
 
 begin_define
@@ -593,7 +589,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* ditto */
+comment|/* deprecated (use PRC_UNREACH_HOST) */
 end_comment
 
 begin_define
@@ -640,15 +636,8 @@ begin_comment
 comment|/* bad port # */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PRC_UNREACH_NEEDFRAG
-value|12
-end_define
-
 begin_comment
-comment|/* IP_DF caused drop */
+comment|/* was	PRC_UNREACH_NEEDFRAG	12	   (use PRC_MSGSIZE) */
 end_comment
 
 begin_define
@@ -746,6 +735,17 @@ name|PRC_NCMDS
 value|21
 end_define
 
+begin_define
+define|#
+directive|define
+name|PRC_IS_REDIRECT
+parameter_list|(
+name|cmd
+parameter_list|)
+define|\
+value|((cmd)>= PRC_REDIRECT_NET&& (cmd)<= PRC_REDIRECT_TOSHOST)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -773,7 +773,7 @@ literal|"MSGSIZE"
 block|,
 literal|"HOSTDEAD"
 block|,
-literal|"HOSTUNREACH"
+literal|"#7"
 block|,
 literal|"NET-UNREACH"
 block|,
@@ -783,7 +783,7 @@ literal|"PROTO-UNREACH"
 block|,
 literal|"PORT-UNREACH"
 block|,
-literal|"FRAG-UNREACH"
+literal|"#12"
 block|,
 literal|"SRCFAIL-UNREACH"
 block|,
