@@ -3409,6 +3409,12 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|struct
+name|varent
+modifier|*
+name|vtail
+decl_stmt|;
 specifier|register
 name|VAR
 modifier|*
@@ -3437,6 +3443,9 @@ name|FMTSEP
 value|" \t,\n"
 while|while
 condition|(
+name|p
+operator|&&
+operator|*
 name|p
 condition|)
 block|{
