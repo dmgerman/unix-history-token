@@ -238,7 +238,7 @@ comment|/* do not log more */
 end_comment
 
 begin_comment
-comment|/*  * Stop retrying after this many DMA overruns.  Since each retry takes  * one revolution, with 300 rpm., 25 retries take approximately 10  * seconds which the read attempt will block in case the DMA overrun  * is persistent.  */
+comment|/*  * Stop retrying after this many DMA overruns.  Since each retry takes  * one revolution, with 300 rpm., 25 retries take approximately 5  * seconds which the read attempt will block in case the DMA overrun  * is persistent.  */
 end_comment
 
 begin_define
