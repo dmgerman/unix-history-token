@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)strings.c	5.2 (Berkeley) %G%"
+literal|"@(#)strings.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,12 +70,13 @@ operator|=
 name|size
 expr_stmt|;
 name|s
-operator|++
+operator|+=
+literal|3
 expr_stmt|;
 name|s
 operator|&=
 operator|~
-literal|01
+literal|03
 expr_stmt|;
 name|index
 operator|=
