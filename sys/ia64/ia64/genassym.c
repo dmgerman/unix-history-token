@@ -629,7 +629,7 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|TF_SPECIAL_NDIRTY
+name|TF_SPECIAL_IIP
 argument_list|,
 name|offsetof
 argument_list|(
@@ -638,7 +638,7 @@ name|trapframe
 argument_list|,
 name|tf_special
 operator|.
-name|ndirty
+name|iip
 argument_list|)
 argument_list|)
 expr_stmt|;
