@@ -529,6 +529,13 @@ name|verbose
 parameter_list|)
 function_decl|;
 comment|/* print device information */
+name|void
+function_decl|(
+modifier|*
+name|dv_cleanup
+function_decl|)
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct

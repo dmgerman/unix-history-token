@@ -581,6 +581,8 @@ block|,
 name|noioctl
 block|,
 name|pxe_print
+block|,
+name|pxe_cleanup
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1381,24 +1383,6 @@ name|scratch_buffer
 decl_stmt|;
 name|pxe_call
 argument_list|(
-name|PXENV_UNLOAD_STACK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|unload_stack_p
-operator|->
-name|Status
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"pxe_cleanup: UNLOAD_STACK failed"
-argument_list|)
-expr_stmt|;
-name|pxe_call
-argument_list|(
 name|PXENV_UNDI_SHUTDOWN
 argument_list|)
 expr_stmt|;
@@ -1412,12 +1396,33 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pxe_cleanup: UNDI_SHUTDOWN failed"
+literal|"pxe_cleanup: UNDI_SHUTDOWN failed %x"
+argument_list|,
+name|undi_shutdown_p
+operator|->
+name|Status
 argument_list|)
 expr_stmt|;
-name|printf
+name|pxe_call
 argument_list|(
-literal|"All cleaned up!\n"
+name|PXENV_UNLOAD_STACK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unload_stack_p
+operator|->
+name|Status
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"pxe_cleanup: UNLOAD_STACK failed %x"
+argument_list|,
+name|unload_stack_p
+operator|->
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
