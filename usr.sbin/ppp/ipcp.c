@@ -5523,6 +5523,16 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NORADIUS
+name|radius_Flush
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|bundle
+operator|->
+name|radius
+argument_list|)
+expr_stmt|;
 name|radius_Account
 argument_list|(
 operator|&
