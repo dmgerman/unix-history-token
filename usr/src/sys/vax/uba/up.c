@@ -1,36 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_decl_stmt
-name|int
-name|csdel0
-init|=
-literal|30
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|csdel2
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|asdel
-init|=
-literal|500
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|softas
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*	%H%	3.10	%G%	*/
+comment|/*	%H%	3.11	%G%	*/
 end_comment
 
 begin_comment
@@ -222,6 +192,26 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Software extension to the upas register, so we can  * postpone starting SEARCH commands until the controller  * is not transferring.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|softas
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * If upseek then we don't issue SEARCH commands but rather just  * settle for a SEEK to the correct cylinder.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|upseek
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -255,30 +245,65 @@ value|19
 end_define
 
 begin_comment
-comment|/*  * Constants controlling on-cylinder SEARCH usage.  *  * We assume that it takes SDIST sectors of time to set up a transfer.  * If a drive is on-cylinder, and between SDIST and SDIST+RDIST sectors  * from the first sector to be transferred, then we just perform the  * transfer.  SDIST represents interrupt latency, RDIST the amount  * of rotation which is tolerable to avoid another interrupt.  */
+comment|/*  * Constants controlling on-cylinder SEARCH usage.  *  * 	SDIST/2 msec		time needed to start transfer  * 	IDIST/2 msec		slop for interrupt latency  * 	RDIST/2 msec		tolerable rotational latency when on-cylinder  *  * If we are no closer than SDIST sectors and no further than SDIST+RDIST  * and in the driver then we take it as it is.  Otherwise we do a SEARCH  * requesting an interrupt SDIST+IDIST sectors in advance.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDIST
-value|3
-end_define
-
-begin_comment
-comment|/* 2-3 sectors 1-1.5 msec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RDIST
+name|_SDIST
 value|6
 end_define
 
 begin_comment
-comment|/* 5-6 sectors 2.5-3 msec */
+comment|/* 3.0 msec */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_RDIST
+value|6
+end_define
+
+begin_comment
+comment|/* 2.5 msec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_IDIST
+value|1
+end_define
+
+begin_comment
+comment|/* 0.5 msec */
+end_comment
+
+begin_decl_stmt
+name|int
+name|SDIST
+init|=
+name|_SDIST
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|RDIST
+init|=
+name|_RDIST
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|IDIST
+init|=
+name|_IDIST
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * To fill a 300M drive:  *	A is designed to be used as a root.  *	B is suitable for a swap area.  *	H is the primary storage area.  * On systems with RP06'es, we normally use only 291346 blocks of the H  * area, and use DEF or G to cover the rest of the drive.  The C system  * covers the whole drive and can be used for pack-pack copying.  */
@@ -536,6 +561,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SEEK
+value|04
+end_define
+
+begin_comment
+comment|/* Seek to cylinder */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RECAL
 value|06
 end_define
@@ -779,6 +815,42 @@ end_decl_stmt
 
 begin_comment
 comment|/* Delay after selecting drive in upcs2 */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rdelay
+init|=
+literal|100
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Delay after SEARCH */
+end_comment
+
+begin_decl_stmt
+name|int
+name|asdel
+init|=
+literal|100
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Delay after clearing bit in upas */
+end_comment
+
+begin_decl_stmt
+name|int
+name|csdel2
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ??? Delay in upstart ??? */
 end_comment
 
 begin_define
@@ -1080,6 +1152,7 @@ name|didie
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Other drivers tend to say something like 	 *	upaddr->upcs1 = IE; 	 *	upaddr->upas = 1<<unit; 	 * here, but the SC-11B will cancel a command which 	 * happens to be sitting in the cs1 if you clear the go 	 * bit by storing there (so the first is not safe), 	 * and it also does not like being bothered with operations 	 * such as clearing upas when a transfer is active (as 	 * it may well be.) 	 * 	 * Thus we keep careful track of when we re-enable IE 	 * after an interrupt and do it only if we didn't issue 	 * a command which re-enabled it as a matter of course. 	 * We clear bits in upas in the interrupt routine, when 	 * no transfers are active. 	 */
 if|if
 condition|(
 name|unit
@@ -1089,22 +1162,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-if|if
-condition|(
-name|uptab
-operator|.
-name|b_active
-condition|)
-block|{
-name|softas
-operator||=
-literal|1
-operator|<<
-name|unit
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Whether or not it was before, this unit is no longer busy. 	 * Check to see if there is (still or now) a request in this 	 * drives queue, and if there is, select this unit. 	 */
 if|if
 condition|(
 name|unit
@@ -1149,6 +1206,26 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* 	 * The SC-11B doesn't start SEARCH commands when transfers are 	 * in progress.  In fact, it tends to get confused when given 	 * SEARCH'es during transfers, generating interrupts with neither 	 * RDY nor a bit in the upas register.  Thus we defer 	 * until an interrupt when a transfer is pending. 	 */
+if|if
+condition|(
+name|uptab
+operator|.
+name|b_active
+condition|)
+block|{
+name|softas
+operator||=
+literal|1
+operator|<<
+name|unit
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1181,7 +1258,7 @@ else|else
 name|neasycs2
 operator|++
 expr_stmt|;
-comment|/* 	 * If we have changed packs or just initialized, 	 * the the volume will not be valid; if so, clear 	 * the drive, preset it and put in 16bit/word mode. 	 */
+comment|/* 	 * If we have changed packs or just initialized, 	 * then the volume will not be valid; if so, clear 	 * the drive, preset it and put in 16bit/word mode. 	 */
 if|if
 condition|(
 operator|(
@@ -1231,12 +1308,32 @@ name|upof
 operator|=
 name|FMT22
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"VV done ds %o, er? %o %o %o\n"
+argument_list|,
+name|upaddr
+operator|->
+name|upds
+argument_list|,
+name|upaddr
+operator|->
+name|uper1
+argument_list|,
+name|upaddr
+operator|->
+name|uper2
+argument_list|,
+name|upaddr
+operator|->
+name|uper3
+argument_list|)
+expr_stmt|;
 name|didie
 operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * We are called from upstrategy when a new request arrives 	 * if we are not already active (with dp->b_active == 0), 	 * and we then set dp->b_active to 1 if we are to SEARCH 	 * for the desired cylinder, or 2 if we are on-cylinder. 	 * If we SEARCH then we will later be called from upintr() 	 * when the search is complete, and will link this disk onto 	 * the uptab.  We then set dp->b_active to 2 so that upintr() 	 * will not call us again. 	 * 	 * NB: Other drives clear the bit in the attention status 	 * (i.e. upas) register corresponding to the drive when they 	 * place the drive on the ready (i.e. uptab) queue.  This does 	 * not work with the Emulex, as the controller hangs the UBA 	 * of the VAX shortly after the upas register is set, for 	 * reasons unknown.  This only occurs in multi-spindle configurations, 	 * but to avoid the problem we use the fact that dp->b_active is 	 * 2 to replace the clearing of the upas bit. 	 */
 if|if
 condition|(
 name|dp
@@ -1275,8 +1372,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* Will redetect error in upstart() soon */
-comment|/* 	 * Do enough of the disk address decoding to determine 	 * which cylinder and sector the request is on. 	 * Then compute the number of the sector SDIST sectors before 	 * the one where the transfer is to start, this being the 	 * point where we wish to attempt to begin the transfer, 	 * allowing approximately SDIST/2 msec for interrupt latency 	 * and preparation of the request. 	 * 	 * If we are on the correct cylinder and the desired sector 	 * lies between SDIST and SDIST+RDIST sectors ahead of us, then 	 * we don't bother to SEARCH but just begin the transfer asap. 	 */
+comment|/* 	 * Do enough of the disk address decoding to determine 	 * which cylinder and sector the request is on. 	 * If we are on the correct cylinder and the desired sector 	 * lies between SDIST and SDIST+RDIST sectors ahead of us, then 	 * we don't bother to SEARCH but just begin the transfer asap. 	 * Otherwise ask for a interrupt SDIST+IDIST sectors ahead. 	 */
 name|bn
 operator|=
 name|dkblock
@@ -1324,6 +1420,15 @@ goto|goto
 name|search
 goto|;
 comment|/* Not on-cylinder */
+elseif|else
+if|if
+condition|(
+name|upseek
+condition|)
+goto|goto
+name|done
+goto|;
+comment|/* Ok just to be on-cylinder */
 name|csn
 operator|=
 operator|(
@@ -1367,6 +1472,22 @@ name|updc
 operator|=
 name|cn
 expr_stmt|;
+if|if
+condition|(
+name|upseek
+condition|)
+name|upaddr
+operator|->
+name|upcs1
+operator|=
+name|IE
+operator||
+name|SEEK
+operator||
+name|GO
+expr_stmt|;
+else|else
+block|{
 name|upaddr
 operator|->
 name|upda
@@ -1383,6 +1504,7 @@ name|SEARCH
 operator||
 name|GO
 expr_stmt|;
+block|}
 name|didie
 operator|=
 literal|1
@@ -1412,13 +1534,9 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|csdel0
-condition|)
 name|DELAY
 argument_list|(
-name|csdel0
+name|rdelay
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1426,13 +1544,7 @@ name|out
 goto|;
 name|done
 label|:
-comment|/* 	 * This unit is ready to go.  Make active == 2 so 	 * we won't get called again (by upintr() because upas&(1<<unit)) 	 * and link us onto the chain of ready disks. 	 */
-name|dp
-operator|->
-name|b_active
-operator|=
-literal|2
-expr_stmt|;
+comment|/* 	 * This unit is ready to go so 	 * link it onto the chain of ready disks. 	 */
 name|dp
 operator|->
 name|b_forw
@@ -1670,11 +1782,7 @@ name|upcs2
 operator|=
 name|dn
 expr_stmt|;
-name|DELAY
-argument_list|(
-name|sdelay
-argument_list|)
-expr_stmt|;
+comment|/* DELAY(sdelay);		Provided by ubasetup() */
 name|nwaitcs2
 operator|++
 expr_stmt|;
@@ -1692,7 +1800,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* In a funny place for delay... */
+comment|/* Providing delay */
 comment|/* 	 * If drive is not present and on-line, then 	 * get rid of this with an error and loop to get 	 * rid of the rest of its queued requests. 	 * (Then on to any other ready drives.) 	 */
 if|if
 condition|(
@@ -1715,6 +1823,17 @@ name|MOL
 operator|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"!DPR || !MOL, unit %d, ds %o\n"
+argument_list|,
+name|dn
+argument_list|,
+name|upaddr
+operator|->
+name|upds
+argument_list|)
+expr_stmt|;
 name|uptab
 operator|.
 name|b_active
@@ -2137,16 +2256,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|upaddr
-operator|->
-name|upcs1
-operator|&
-name|TRE
-condition|)
-block|{
-comment|/* 			 * An error occurred, indeed.  Select this unit 			 * to get at the drive status (a SEARCH may have 			 * intervened to change the selected unit), and 			 * wait for the command which caused the interrupt 			 * to complete (DRY). 			 * 			 * WHY IS THE WAIT NECESSARY? 			 */
-if|if
-condition|(
 operator|(
 name|upaddr
 operator|->
@@ -2177,6 +2286,16 @@ else|else
 name|neasycs2
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|upaddr
+operator|->
+name|upds
+operator|&
+name|ERR
+condition|)
+block|{
+comment|/* 			 * An error occurred, indeed.  Select this unit 			 * to get at the drive status (a SEARCH may have 			 * intervened to change the selected unit), and 			 * wait for the command which caused the interrupt 			 * to complete (DRY). 			 */
 while|while
 condition|(
 operator|(
@@ -2473,6 +2592,37 @@ name|short
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_resid
+condition|)
+name|printf
+argument_list|(
+literal|"resid %d ds %o er? %o %o %o\n"
+argument_list|,
+name|bp
+operator|->
+name|b_resid
+argument_list|,
+name|upaddr
+operator|->
+name|upds
+argument_list|,
+name|upaddr
+operator|->
+name|uper1
+argument_list|,
+name|upaddr
+operator|->
+name|uper2
+argument_list|,
+name|upaddr
+operator|->
+name|uper3
+argument_list|)
+expr_stmt|;
 name|iodone
 argument_list|(
 name|bp
@@ -2657,14 +2807,12 @@ if|if
 condition|(
 name|needie
 condition|)
-block|{
 name|upaddr
 operator|->
 name|upcs1
 operator|=
 name|IE
 expr_stmt|;
-block|}
 block|}
 end_block
 
