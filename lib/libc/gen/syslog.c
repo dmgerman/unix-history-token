@@ -1098,7 +1098,7 @@ operator|>=
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Output the message to the console; don't worry about blocking, 	 * if console blocks everything will.  Make sure the error reported 	 * is the one from the syslogd failure. 	 */
+comment|/* 	 * Output the message to the console; try not to block 	 * as a blocking console should not stop other processes. 	 * Make sure the error reported is the one from the syslogd failure. 	 */
 if|if
 condition|(
 name|LogStat
@@ -1113,6 +1113,8 @@ argument_list|(
 name|_PATH_CONSOLE
 argument_list|,
 name|O_WRONLY
+operator||
+name|O_NONBLOCK
 argument_list|,
 literal|0
 argument_list|)
