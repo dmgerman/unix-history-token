@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.21	81/05/08	*/
+comment|/*	bio.c	4.21	81/05/08	*/
 end_comment
 
 begin_include
@@ -810,12 +810,9 @@ name|bp
 operator|->
 name|b_dev
 argument_list|,
-name|dbtofsb
-argument_list|(
 name|bp
 operator|->
 name|b_blkno
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1814,12 +1811,9 @@ name|bp
 operator|->
 name|b_dev
 argument_list|,
-name|dbtofsb
-argument_list|(
 name|bp
 operator|->
 name|b_blkno
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2036,12 +2030,9 @@ name|bp
 operator|->
 name|b_dev
 argument_list|,
-name|dbtofsb
-argument_list|(
 name|bp
 operator|->
 name|b_blkno
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2873,6 +2864,22 @@ operator|=
 name|nbytes
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|TRACE
+name|trace
+argument_list|(
+name|TR_SWAPIO
+argument_list|,
+name|dev
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 operator|*
 name|bdevsw
