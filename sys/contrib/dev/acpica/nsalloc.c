@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 79 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 82 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -172,6 +172,7 @@ name|ParentNode
 operator|->
 name|Child
 expr_stmt|;
+comment|/* Find the node that is the previous peer in the parent's child list */
 while|while
 condition|(
 name|NextNode
@@ -195,6 +196,7 @@ condition|(
 name|PrevNode
 condition|)
 block|{
+comment|/* Node is not first child, unlink it */
 name|PrevNode
 operator|->
 name|Peer
@@ -222,6 +224,27 @@ block|}
 block|}
 else|else
 block|{
+comment|/* Node is first child (has no previous peer) */
+if|if
+condition|(
+name|NextNode
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_END_OF_PEER_LIST
+condition|)
+block|{
+comment|/* No peers at all */
+name|ParentNode
+operator|->
+name|Child
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Link peer list to parent */
 name|ParentNode
 operator|->
 name|Child
@@ -230,6 +253,7 @@ name|NextNode
 operator|->
 name|Peer
 expr_stmt|;
+block|}
 block|}
 name|ACPI_MEM_TRACKING
 argument_list|(
@@ -436,7 +460,7 @@ block|{
 name|UINT16
 name|OwnerId
 init|=
-name|TABLE_ID_DSDT
+literal|0
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -784,6 +808,10 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|NextNode
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
 name|UINT8
 name|Flags
 decl_stmt|;
@@ -888,6 +916,56 @@ argument_list|(
 name|ChildNode
 argument_list|)
 expr_stmt|;
+comment|/*          * Decrement the reference count(s) of all parents up to          * the root! (counts were incremented when the node was created)          */
+name|Node
+operator|=
+name|ChildNode
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|Node
+operator|=
+name|AcpiNsGetParentNode
+argument_list|(
+name|Node
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|Node
+operator|->
+name|ReferenceCount
+operator|--
+expr_stmt|;
+block|}
+comment|/* There should be only one reference remaining on this node */
+if|if
+condition|(
+name|ChildNode
+operator|->
+name|ReferenceCount
+operator|!=
+literal|1
+condition|)
+block|{
+name|ACPI_REPORT_WARNING
+argument_list|(
+operator|(
+literal|"Existing references (%d) on node being deleted (%p)\n"
+operator|,
+name|ChildNode
+operator|->
+name|ReferenceCount
+operator|,
+name|ChildNode
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Now we can delete the node */
 name|ACPI_MEM_FREE
 argument_list|(
 name|ChildNode
@@ -1054,7 +1132,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|AcpiNsRemoveReference
 parameter_list|(

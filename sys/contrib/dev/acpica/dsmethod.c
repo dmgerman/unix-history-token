@@ -635,6 +635,17 @@ name|AE_NULL_OBJECT
 argument_list|)
 expr_stmt|;
 block|}
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|OwningId
+operator|=
+name|AcpiUtAllocateOwnerId
+argument_list|(
+name|ACPI_OWNER_TYPE_METHOD
+argument_list|)
+expr_stmt|;
 comment|/* Init for new method, wait on concurrency semaphore */
 name|Status
 operator|=
