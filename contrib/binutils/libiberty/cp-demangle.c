@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Demangler for IA64 / g++ V3 ABI.    Copyright (C) 2000, 2001 Free Software Foundation, Inc.    Written by Alex Samuel<samuel@codesourcery.com>.      This file is part of GNU CC.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Demangler for IA64 / g++ V3 ABI.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Alex Samuel<samuel@codesourcery.com>.      This file is part of GNU CC.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combined    executable.)     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -69,6 +69,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -3060,6 +3066,9 @@ name|int
 operator|,
 name|int
 operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4525,6 +4534,8 @@ literal|0
 argument_list|,
 operator|&
 name|num_args
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4958,6 +4969,9 @@ operator|>
 literal|0
 condition|)
 block|{
+name|int
+name|ch
+decl_stmt|;
 if|if
 condition|(
 name|end_of_name_p
@@ -4968,6 +4982,151 @@ condition|)
 return|return
 literal|"Unexpected end of name in<identifier>."
 return|;
+name|ch
+operator|=
+name|next_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* Handle extended Unicode characters.  We encode them as __U{hex}_,          where {hex} omits leading 0's.  For instance, '$' is encoded as          "__U24_".  */
+if|if
+condition|(
+name|ch
+operator|==
+literal|'_'
+operator|&&
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+operator|==
+literal|'_'
+operator|&&
+name|peek_char_next
+argument_list|(
+name|dm
+argument_list|)
+operator|==
+literal|'U'
+condition|)
+block|{
+name|char
+name|buf
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|int
+name|pos
+init|=
+literal|0
+decl_stmt|;
+name|advance_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+name|advance_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
+while|while
+condition|(
+name|length
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
+name|ch
+operator|=
+name|next_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isxdigit
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+break|break;
+name|buf
+index|[
+name|pos
+operator|++
+index|]
+operator|=
+name|ch
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ch
+operator|!=
+literal|'_'
+operator|||
+name|length
+operator|<
+literal|0
+condition|)
+return|return
+name|STATUS_ERROR
+return|;
+if|if
+condition|(
+name|pos
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* __U_ just means __U.  */
+if|if
+condition|(
+operator|!
+name|dyn_string_append_cstr
+argument_list|(
+name|identifier
+argument_list|,
+literal|"__U"
+argument_list|)
+condition|)
+return|return
+name|STATUS_ALLOCATION_FAILED
+return|;
+continue|continue;
+block|}
+else|else
+block|{
+name|buf
+index|[
+name|pos
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|ch
+operator|=
+name|strtol
+argument_list|(
+name|buf
+argument_list|,
+literal|0
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 operator|!
@@ -4975,10 +5134,7 @@ name|dyn_string_append_char
 argument_list|(
 name|identifier
 argument_list|,
-name|next_char
-argument_list|(
-name|dm
-argument_list|)
+name|ch
 argument_list|)
 condition|)
 return|return
@@ -5074,7 +5230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits an<operator-name>.  If SHORT_NAME is non-zero,    the short form is emitted; otherwise the full source form    (`operator +' etc.) is emitted.  *NUM_ARGS is set to the number of    operands that the operator takes.<operator-name>                   ::= nw        # new                              ::= na        # new[]                   ::= dl        # delete                           ::= da        # delete[]       		  ::= ps        # + (unary)                   ::= ng        # - (unary)                        ::= ad        #& (unary)                        ::= de        # * (unary)                        ::= co        # ~                                ::= pl        # +                                ::= mi        # -                                ::= ml        # *                                ::= dv        # /                                ::= rm        # %                                ::= an        #&                                ::= or        # |                                ::= eo        # ^                                ::= aS        # =                                ::= pL        # +=                               ::= mI        # -=                               ::= mL        # *=                               ::= dV        # /=                               ::= rM        # %=                               ::= aN        #&=                               ::= oR        # |=                               ::= eO        # ^=                               ::= ls        #<<                               ::= rs        #>>                               ::= lS        #<<=                              ::= rS        #>>=                              ::= eq        # ==                               ::= ne        # !=                               ::= lt        #<                                ::= gt        #>                                ::= le        #<=                               ::= ge        #>=                               ::= nt        # !                                ::= aa        #&&                               ::= oo        # ||                               ::= pp        # ++                               ::= mm        # --                               ::= cm        # ,                                ::= pm        # ->*                              ::= pt        # ->                               ::= cl        # ()                               ::= ix        # []                               ::= qu        # ?                   ::= sz        # sizeof                    ::= cv<type> # cast         		  ::= v [0-9]<source-name>  # vendor extended operator  */
+comment|/* Demangles and emits an<operator-name>.  If SHORT_NAME is non-zero,    the short form is emitted; otherwise the full source form    (`operator +' etc.) is emitted.  *NUM_ARGS is set to the number of    operands that the operator takes.  If TYPE_ARG is non-NULL,    *TYPE_ARG is set to 1 if the first argument is a type and 0    otherwise.<operator-name>                   ::= nw        # new                              ::= na        # new[]                   ::= dl        # delete                           ::= da        # delete[]       		  ::= ps        # + (unary)                   ::= ng        # - (unary)                        ::= ad        #& (unary)                        ::= de        # * (unary)                        ::= co        # ~                                ::= pl        # +                                ::= mi        # -                                ::= ml        # *                                ::= dv        # /                                ::= rm        # %                                ::= an        #&                                ::= or        # |                                ::= eo        # ^                                ::= aS        # =                                ::= pL        # +=                               ::= mI        # -=                               ::= mL        # *=                               ::= dV        # /=                               ::= rM        # %=                               ::= aN        #&=                               ::= oR        # |=                               ::= eO        # ^=                               ::= ls        #<<                               ::= rs        #>>                               ::= lS        #<<=                              ::= rS        #>>=                              ::= eq        # ==                               ::= ne        # !=                               ::= lt        #<                                ::= gt        #>                                ::= le        #<=                               ::= ge        #>=                               ::= nt        # !                                ::= aa        #&&                               ::= oo        # ||                               ::= pp        # ++                               ::= mm        # --                               ::= cm        # ,                                ::= pm        # ->*                              ::= pt        # ->                               ::= cl        # ()                               ::= ix        # []                               ::= qu        # ? 		  ::= st        # sizeof (a type)                   ::= sz        # sizeof (an expression)                   ::= cv<type> # cast         		  ::= v [0-9]<source-name>  # vendor extended operator  */
 end_comment
 
 begin_function
@@ -5087,6 +5243,8 @@ parameter_list|,
 name|short_name
 parameter_list|,
 name|num_args
+parameter_list|,
+name|type_arg
 parameter_list|)
 name|demangling_t
 name|dm
@@ -5097,6 +5255,10 @@ decl_stmt|;
 name|int
 modifier|*
 name|num_args
+decl_stmt|;
+name|int
+modifier|*
+name|type_arg
 decl_stmt|;
 block|{
 struct|struct
@@ -5572,6 +5734,16 @@ argument_list|,
 name|dm
 argument_list|)
 expr_stmt|;
+comment|/* Assume the first argument is not a type.  */
+if|if
+condition|(
+name|type_arg
+condition|)
+operator|*
+name|type_arg
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Is this a vendor-extended operator?  */
 if|if
 condition|(
@@ -5647,6 +5819,46 @@ operator|*
 name|num_args
 operator|=
 literal|0
+expr_stmt|;
+return|return
+name|STATUS_OK
+return|;
+block|}
+comment|/* Is it the sizeof variant that takes a type?  */
+if|if
+condition|(
+name|c0
+operator|==
+literal|'s'
+operator|&&
+name|c1
+operator|==
+literal|'t'
+condition|)
+block|{
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|" sizeof"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|num_args
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|type_arg
+condition|)
+operator|*
+name|type_arg
+operator|=
+literal|1
 expr_stmt|;
 return|return
 name|STATUS_OK
@@ -10303,6 +10515,9 @@ block|{
 name|int
 name|num_args
 decl_stmt|;
+name|int
+name|type_arg
+decl_stmt|;
 name|status_t
 name|status
 init|=
@@ -10330,6 +10545,9 @@ literal|1
 argument_list|,
 operator|&
 name|num_args
+argument_list|,
+operator|&
+name|type_arg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10429,6 +10647,19 @@ literal|'('
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type_arg
+condition|)
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_type
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_expression
@@ -11714,11 +11945,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IN_LIBGCC2
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IN_GLIBCPP_V3
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -12020,7 +12259,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !IN_LIBGCC2 */
+comment|/* ! (IN_LIBGCC2 || IN_GLIBCPP_V3) */
 end_comment
 
 begin_comment
@@ -12528,12 +12767,21 @@ argument_list|(
 name|cplus_demangled
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|demangled
+condition|)
 name|return_value
 operator|=
 name|dyn_string_release
 argument_list|(
 name|demangled
 argument_list|)
+expr_stmt|;
+else|else
+name|return_value
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 name|return_value
@@ -12547,8 +12795,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IN_LIBGCC2 */
+comment|/* IN_LIBGCC2 || IN_GLIBCPP_V3 */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN_GLIBCPP_V3
+end_ifndef
 
 begin_comment
 comment|/* Demangle NAME in the G++ V3 ABI demangling style, and return either    zero, indicating that some error occurred, or a demangling_t    holding the results.  */
@@ -12783,6 +13037,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IN_GLIBCPP_V3 */
+end_comment
 
 begin_ifdef
 ifdef|#

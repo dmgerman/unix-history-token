@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A Bison parser, made from defparse.y    by GNU bison 1.33.  */
+comment|/* A Bison parser, made from defparse.y    by GNU bison 1.35.  */
 end_comment
 
 begin_define
@@ -270,6 +270,13 @@ define|#
 directive|define
 name|YYSTYPE
 value|yystype
+end_define
+
+begin_define
+define|#
+directive|define
+name|YYSTYPE_IS_TRIVIAL
+value|1
 end_define
 
 begin_endif
@@ -1759,7 +1766,7 @@ literal|"option_list"
 block|,
 literal|"option"
 block|,
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3132,42 +3139,6 @@ begin_comment
 comment|/* All symbols defined below should begin with yy or YY, to avoid    infringing on user name space.  This should be done even for local    variables, as they might otherwise be expanded by user macros.    There are some unavoidable exceptions within include files to    define necessary library symbols; they are noted "INFRINGES ON    USER NAME SPACE" below.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|YYSTD
-parameter_list|(
-name|x
-parameter_list|)
-value|std::x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|YYSTD
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -3297,39 +3268,19 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<cstdlib>
-end_include
-
-begin_comment
-comment|/* INFRINGES ON USER NAME SPACE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YYSIZE_T
-value|std::size_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -3353,29 +3304,61 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|YYSTACK_ALLOC
-value|YYSTD (malloc)
+value|malloc
 end_define
 
 begin_define
 define|#
 directive|define
 name|YYSTACK_FREE
-value|YYSTD (free)
+value|free
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! defined (yyoverflow) || defined (YYERROR_VERBOSE) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|yyoverflow
+argument_list|)
+expr|\
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+expr|\
+operator|||
+operator|(
+name|YYLTYPE_IS_TRIVIAL
+operator|&&
+name|YYSTYPE_IS_TRIVIAL
+operator|)
+operator|)
+operator|)
+end_if
 
 begin_comment
 comment|/* A type that is properly aligned for any stack member.  */
@@ -3457,20 +3440,56 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Relocate the TYPE STACK from its old location to the new one.  The    local variables YYSIZE and YYSTACKSIZE give the old and new number of    elements in the stack, and YYPTR gives the new location of the    stack.  Advance YYPTR to a properly aligned location for the next    stack.  */
+comment|/* Copy COUNT objects from FROM to TO.  The source and destination do    not overlap.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YYCOPY
+end_ifndef
+
+begin_if
+if|#
+directive|if
+literal|1
+operator|<
+name|__GNUC__
+end_if
 
 begin_define
 define|#
 directive|define
-name|YYSTACK_RELOCATE
+name|YYCOPY
 parameter_list|(
-name|Type
+name|To
 parameter_list|,
-name|Stack
+name|From
+parameter_list|,
+name|Count
 parameter_list|)
 define|\
-value|do									\       {									\ 	YYSIZE_T yynewbytes;						\ 	yymemcpy ((char *) yyptr, (char *) (Stack),			\ 		  yysize * (YYSIZE_T) sizeof (Type));			\ 	Stack =&yyptr->Stack;						\ 	yynewbytes = yystacksize * sizeof (Type) + YYSTACK_GAP_MAX;	\ 	yyptr += yynewbytes / sizeof (*yyptr);				\       }									\     while (0)
+value|__builtin_memcpy (To, From, (Count) * sizeof (*(From)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|YYCOPY
+parameter_list|(
+name|To
+parameter_list|,
+name|From
+parameter_list|,
+name|Count
+parameter_list|)
+define|\
+value|do					\ 	{					\ 	  register YYSIZE_T yyi;		\ 	  for (yyi = 0; yyi< (Count); yyi++)	\ 	    (To)[yyi] = (From)[yyi];		\ 	}					\       while (0)
 end_define
 
 begin_endif
@@ -3478,9 +3497,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* ! defined (yyoverflow) || defined (YYERROR_VERBOSE) */
+comment|/* Relocate STACK from its old location to the new one.  The    local variables YYSIZE and YYSTACKSIZE give the old and new number of    elements in the stack, and YYPTR gives the new location of the    stack.  Advance YYPTR to a properly aligned location for the next    stack.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|YYSTACK_RELOCATE
+parameter_list|(
+name|Stack
+parameter_list|)
+define|\
+value|do									\       {									\ 	YYSIZE_T yynewbytes;						\ 	YYCOPY (&yyptr->Stack, Stack, yysize);				\ 	Stack =&yyptr->Stack;						\ 	yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAX;	\ 	yyptr += yynewbytes / sizeof (*yyptr);				\       }									\     while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -3546,39 +3586,19 @@ name|YYSIZE_T
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<cstddef>
-end_include
-
-begin_comment
-comment|/* INFRINGES ON USER NAME SPACE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YYSIZE_T
-value|std::size_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -3596,11 +3616,6 @@ directive|define
 name|YYSIZE_T
 value|size_t
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -3894,27 +3909,6 @@ directive|ifndef
 name|YYFPRINTF
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<cstdio>
-end_include
-
-begin_comment
-comment|/* INFRINGES ON USER NAME SPACE */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -3925,16 +3919,11 @@ begin_comment
 comment|/* INFRINGES ON USER NAME SPACE */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|YYFPRINTF
-value|YYSTD (fprintf)
+value|fprintf
 end_define
 
 begin_endif
@@ -3954,7 +3943,7 @@ value|do {						\   if (yydebug)					\     YYFPRINTF Args;				\ } while (0)
 end_define
 
 begin_comment
-comment|/* Nonzero means print parse trace. [The following comment makes no    sense to me.  Could someone clarify it?  --akim] Since this is    uninitialized, it does not stop multiple parsers from coexisting.    */
+comment|/* Nonzero means print parse trace.  It is left uninitialized so that    multiple parsers can coexist.  */
 end_comment
 
 begin_decl_stmt
@@ -4055,156 +4044,6 @@ end_endif
 
 begin_escape
 end_escape
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|yyoverflow
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|yymemcpy
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>
-literal|1
-end_if
-
-begin_comment
-comment|/* GNU C and GNU C++ define this.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|yymemcpy
-value|__builtin_memcpy
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not GNU C or C++ */
-end_comment
-
-begin_comment
-comment|/* This is the most reliable way to avoid incompatibilities    in available built-in functions on various systems.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-name|yymemcpy
-parameter_list|(
-name|char
-modifier|*
-name|yyto
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|yyfrom
-parameter_list|,
-name|YYSIZE_T
-name|yycount
-parameter_list|)
-else|#
-directive|else
-function|yymemcpy
-parameter_list|(
-name|yyto
-parameter_list|,
-name|yyfrom
-parameter_list|,
-name|yycount
-parameter_list|)
-name|char
-modifier|*
-name|yyto
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|yyfrom
-decl_stmt|;
-name|YYSIZE_T
-name|yycount
-decl_stmt|;
-endif|#
-directive|endif
-block|{
-specifier|register
-specifier|const
-name|char
-modifier|*
-name|yyf
-init|=
-name|yyfrom
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|yyt
-init|=
-name|yyto
-decl_stmt|;
-specifier|register
-name|YYSIZE_T
-name|yyi
-init|=
-name|yycount
-decl_stmt|;
-while|while
-condition|(
-name|yyi
-operator|--
-operator|!=
-literal|0
-condition|)
-operator|*
-name|yyt
-operator|++
-operator|=
-operator|*
-name|yyf
-operator|++
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -4466,7 +4305,7 @@ end_escape
 begin_line
 line|#
 directive|line
-number|341
+number|315
 file|"/usr/share/bison/bison.simple"
 end_line
 
@@ -4480,11 +4319,19 @@ directive|ifdef
 name|YYPARSE_PARAM
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__cplusplus
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -4504,10 +4351,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !__cplusplus */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -4526,10 +4369,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !__cplusplus */
-end_comment
 
 begin_else
 else|#
@@ -5011,6 +4850,14 @@ block|}
 else|#
 directive|else
 comment|/* no yyoverflow */
+ifndef|#
+directive|ifndef
+name|YYSTACK_RELOCATE
+goto|goto
+name|yyoverflowlab
+goto|;
+else|#
+directive|else
 comment|/* Extend the stack our own way.  */
 if|if
 condition|(
@@ -5070,15 +4917,11 @@ name|yyoverflowlab
 goto|;
 name|YYSTACK_RELOCATE
 argument_list|(
-name|short
-argument_list|,
 name|yyss
 argument_list|)
 expr_stmt|;
 name|YYSTACK_RELOCATE
 argument_list|(
-name|YYSTYPE
-argument_list|,
 name|yyvs
 argument_list|)
 expr_stmt|;
@@ -5087,8 +4930,6 @@ directive|if
 name|YYLSP_NEEDED
 name|YYSTACK_RELOCATE
 argument_list|(
-name|YYLTYPE
-argument_list|,
 name|yyls
 argument_list|)
 expr_stmt|;
@@ -5109,6 +4950,8 @@ name|yyss1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* no yyoverflow */
@@ -6776,7 +6619,7 @@ break|break;
 block|}
 line|#
 directive|line
-number|727
+number|705
 file|"/usr/share/bison/bison.simple"
 name|yyvsp
 operator|-=

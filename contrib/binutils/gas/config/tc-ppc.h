@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -668,33 +668,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Niclas Andersson<nican@ida.liu.se> says this is needed.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ppc_subseg_align
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|SUB_SEGMENT_ALIGN
-parameter_list|(
-name|SEG
-parameter_list|)
-value|ppc_subseg_align()
-end_define
-
-begin_comment
 comment|/* We also need to copy, in particular, the class of the symbol,    over what obj-coff would otherwise have copied.  */
 end_comment
 
@@ -738,7 +711,7 @@ parameter_list|(
 name|FIXP
 parameter_list|)
 define|\
-value|((FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRTAKEN				\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRNTAKEN			\  || (BFD_DEFAULT_TARGET_SIZE == 64					\&& (FIXP)->fx_r_type == BFD_RELOC_PPC64_TOC)			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_INHERIT			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_ENTRY)
+value|((FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRTAKEN				\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_B16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC_BA16_BRNTAKEN			\  || (FIXP)->fx_r_type == BFD_RELOC_PPC64_TOC				\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_INHERIT			\  || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_ENTRY)
 end_define
 
 begin_define
@@ -874,31 +847,6 @@ parameter_list|)
 value|ppc_section_flags (FLAGS, ATTR, TYPE)
 end_define
 
-begin_if
-if|#
-directive|if
-name|BFD_DEFAULT_TARGET_SIZE
-operator|==
-literal|64
-end_if
-
-begin_comment
-comment|/* Extra sections for 64-bit ELF PPC. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELF_TC_SPECIAL_SECTIONS
-define|\
-value|{ ".toc",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE}, \   { ".tocbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE},
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Add extra PPC sections -- Note, for now, make .sbss2 and .PPC.EMB.sbss0 a    normal section, and not a bss section so that the linker doesn't crater    when trying to make more than 2 sections.  */
 end_comment
@@ -908,13 +856,10 @@ define|#
 directive|define
 name|ELF_TC_SPECIAL_SECTIONS
 define|\
-value|{ ".tags",		SHT_ORDERED,	SHF_ALLOC }, \   { ".sdata",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE }, \   { ".sbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE }, \   { ".sdata2",		SHT_PROGBITS,	SHF_ALLOC }, \   { ".sbss2",		SHT_PROGBITS,	SHF_ALLOC }, \   { ".PPC.EMB.sdata0",	SHT_PROGBITS,	SHF_ALLOC }, \   { ".PPC.EMB.sbss0",	SHT_PROGBITS,	SHF_ALLOC },
+value|{ ".tags",		SHT_ORDERED,	SHF_ALLOC },			\   { ".sdata",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE },	\   { ".sbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE },	\   { ".sdata2",		SHT_PROGBITS,	SHF_ALLOC },			\   { ".sbss2",		SHT_PROGBITS,	SHF_ALLOC },			\   { ".PPC.EMB.sdata0",	SHT_PROGBITS,	SHF_ALLOC },			\   { ".PPC.EMB.sbss0",	SHT_PROGBITS,	SHF_ALLOC },			\
+comment|/* Extra sections for 64-bit ELF PPC.  */
+value|\   { ".toc",		SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE},		\   { ".tocbss",		SHT_NOBITS,	SHF_ALLOC + SHF_WRITE},
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -976,48 +921,25 @@ define|\
 value|((FIX)->fx_addsy == NULL \    || (! S_IS_EXTERNAL ((FIX)->fx_addsy) \&& ! S_IS_WEAK ((FIX)->fx_addsy) \&& S_IS_DEFINED ((FIX)->fx_addsy) \&& ! S_IS_COMMON ((FIX)->fx_addsy)))
 end_define
 
-begin_if
-if|#
-directive|if
-name|BFD_DEFAULT_TARGET_SIZE
-operator|==
-literal|64
-end_if
-
-begin_comment
-comment|/* Finish up the symbol.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|tc_frob_symbol
-parameter_list|(
-name|sym
-parameter_list|,
-name|punt
-parameter_list|)
-value|punt = ppc_elf_frob_symbol (sym)
+name|tc_frob_file_before_adjust
+value|ppc_frob_file_before_adjust
 end_define
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|ppc_elf_frob_symbol
+name|void
+name|ppc_frob_file_before_adjust
 name|PARAMS
 argument_list|(
 operator|(
-name|symbolS
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

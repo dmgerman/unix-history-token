@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bfd.h>
+file|"bfd.h"
 end_include
 
 begin_include
@@ -34,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libiberty.h>
+file|"libiberty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<getopt.h>
+file|"getopt.h"
 end_include
 
 begin_include
@@ -913,7 +913,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Obsolete ??     static int absolute_p;  */
+comment|/* Obsolete ??    static int absolute_p;  */
 end_comment
 
 begin_decl_stmt
@@ -4705,7 +4705,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Obsolete ?     static void    dty_start ()    {    struct IT_dty dty;    dty.end = 0;    dty.neg = 0x1001;    dty.spare = 0;    sysroff_swap_dty_out (file,&dty);    }     static void    dty_stop ()    {    struct IT_dty dty;    dty.end = 0;    dty.neg = 0x1001;    dty.end = 1;    sysroff_swap_dty_out (file,&dty);    }      static void    dump_tree_structure (sfile, symbol, type, nest)    struct coff_sfile *sfile;    struct coff_symbol *symbol;    struct coff_type *type;    int nest;    {    if (symbol->type->type == coff_function_type)    {      }     }  */
+comment|/* Obsolete ?    static void    dty_start ()    {    struct IT_dty dty;    dty.end = 0;    dty.neg = 0x1001;    dty.spare = 0;    sysroff_swap_dty_out (file,&dty);    }     static void    dty_stop ()    {    struct IT_dty dty;    dty.end = 0;    dty.neg = 0x1001;    dty.end = 1;    sysroff_swap_dty_out (file,&dty);    }      static void    dump_tree_structure (sfile, symbol, type, nest)    struct coff_sfile *sfile;    struct coff_symbol *symbol;    struct coff_type *type;    int nest;    {    if (symbol->type->type == coff_function_type)    {      }     }  */
 end_comment
 
 begin_function

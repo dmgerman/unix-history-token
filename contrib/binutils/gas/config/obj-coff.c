@@ -1216,7 +1216,7 @@ operator|!
 name|debug_section
 condition|)
 block|{
-name|CONST
+specifier|const
 name|asymbol
 modifier|*
 name|s
@@ -2805,7 +2805,7 @@ case|case
 name|C_FCN
 case|:
 block|{
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5266,7 +5266,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * implement the .section pseudo op:  *	.section name {, "flags"}  *                ^         ^  *                |         +--- optional flags: 'b' for bss  *                |                              'i' for info  *                +-- section name               'l' for lib  *                                               'n' for noload  *                                               'o' for over  *                                               'w' for data  *						 'd' (apparently m88k for data)  *                                               'x' for text  *						 'r' for read-only data  *						 's' for shared data (PE)  * But if the argument is not a quoted string, treat it as a  * subsegment number.  */
+comment|/* Implement the .section pseudo op:   	.section name {, "flags"}                   ^         ^                   |         +--- optional flags: 'b' for bss                   |                              'i' for info                   +-- section name               'l' for lib                                                  'n' for noload                                                  'o' for over                                                  'w' for data   						 'd' (apparently m88k for data)                                                  'x' for text   						 'r' for read-only data   						 's' for shared data (PE)    But if the argument is not a quoted string, treat it as a    subsegment number.     Note the 'a' flag is silently ignored.  This allows the same    .section directive to be parsed in both ELF and COFF formats.  */
 end_comment
 
 begin_function
@@ -5465,6 +5465,11 @@ operator|~
 name|SEC_READONLY
 expr_stmt|;
 break|break;
+case|case
+literal|'a'
+case|:
+break|break;
+comment|/* For compatability with ELF.  */
 case|case
 literal|'x'
 case|:
@@ -13426,6 +13431,62 @@ name|coff_flags
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUB_SEGMENT_ALIGN
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HANDLE_ALIGN
+end_ifdef
+
+begin_comment
+comment|/* The last subsegment gets an aligment corresponding to the alignment    of the section.  This allows proper nop-filling at the end of    code-bearing sections.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUB_SEGMENT_ALIGN
+parameter_list|(
+name|SEG
+parameter_list|,
+name|FRCHAIN
+parameter_list|)
+define|\
+value|(!(FRCHAIN)->frch_next || (FRCHAIN)->frch_next->frch_seg != (SEG)	\    ? get_recorded_alignment (SEG) : 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SUB_SEGMENT_ALIGN
+parameter_list|(
+name|SEG
+parameter_list|,
+name|FRCHAIN
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|extern
 name|void
@@ -13512,6 +13573,7 @@ name|string_byte_count
 operator|=
 literal|4
 expr_stmt|;
+comment|/* Run through all the sub-segments and align them up.  Also      close any open frags.  We tack a .fill onto the end of the      frag chain so that any .align's size can be worked by looking      at the next frag.  */
 for|for
 control|(
 name|frchain_ptr
@@ -13534,7 +13596,9 @@ operator|->
 name|frch_next
 control|)
 block|{
-comment|/* Run through all the sub-segments and align them up.  Also 	 close any open frags.  We tack a .fill onto the end of the 	 frag chain so that any .align's size can be worked by looking 	 at the next frag.  */
+name|int
+name|alignment
+decl_stmt|;
 name|subseg_set
 argument_list|(
 name|frchain_ptr
@@ -13546,27 +13610,21 @@ operator|->
 name|frch_subseg
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+name|alignment
+operator|=
 name|SUB_SEGMENT_ALIGN
-define|#
-directive|define
-name|SUB_SEGMENT_ALIGN
-parameter_list|(
-name|SEG
-parameter_list|)
-value|1
-endif|#
-directive|endif
+argument_list|(
+name|now_seg
+argument_list|,
+name|frchain_ptr
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|md_do_align
 name|md_do_align
 argument_list|(
-name|SUB_SEGMENT_ALIGN
-argument_list|(
-name|now_seg
-argument_list|)
+name|alignment
 argument_list|,
 operator|(
 name|char
@@ -13592,10 +13650,7 @@ argument_list|)
 condition|)
 name|frag_align_code
 argument_list|(
-name|SUB_SEGMENT_ALIGN
-argument_list|(
-name|now_seg
-argument_list|)
+name|alignment
 argument_list|,
 literal|0
 argument_list|)
@@ -13603,10 +13658,7 @@ expr_stmt|;
 else|else
 name|frag_align
 argument_list|(
-name|SUB_SEGMENT_ALIGN
-argument_list|(
-name|now_seg
-argument_list|)
+name|alignment
 argument_list|,
 literal|0
 argument_list|,

@@ -55,7 +55,7 @@ file|<sys/stat.h>
 end_include
 
 begin_comment
-comment|/* A list of symbols to explicitly strip out, or to keep.  A linked    list is good enough for a small number from the command line, but    this will slow things down a lot if many symbols are being    deleted. */
+comment|/* A list of symbols to explicitly strip out, or to keep.  A linked    list is good enough for a small number from the command line, but    this will slow things down a lot if many symbols are being    deleted.  */
 end_comment
 
 begin_struct
@@ -693,7 +693,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Print file and target names. */
+comment|/* Print file and target names.  */
 end_comment
 
 begin_decl_stmt
@@ -742,7 +742,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Which symbols to remove. */
+comment|/* Which symbols to remove.  */
 end_comment
 
 begin_decl_stmt
@@ -2178,7 +2178,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This flag distinguishes between strip and objcopy:    1 means this is 'strip'; 0 means this is 'objcopy'.    -1 means if we should use argv[0] to decide. */
+comment|/* This flag distinguishes between strip and objcopy:    1 means this is 'strip'; 0 means this is 'objcopy'.    -1 means if we should use argv[0] to decide.  */
 end_comment
 
 begin_decl_stmt
@@ -2866,7 +2866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add symbols listed in `filename' to strip_specific_list. */
+comment|/* Add symbols listed in `filename' to strip_specific_list.  */
 end_comment
 
 begin_define
@@ -3941,7 +3941,7 @@ elseif|else
 if|if
 condition|(
 name|relocatable
-comment|/* Relocatable file. */
+comment|/* Relocatable file.  */
 operator|&&
 operator|(
 name|flags
@@ -4741,7 +4741,7 @@ name|start
 operator|+=
 name|change_start
 expr_stmt|;
-comment|/* Neither the start address nor the flags       need to be set for a core file. */
+comment|/* Neither the start address nor the flags      need to be set for a core file.  */
 if|if
 condition|(
 name|bfd_get_format
@@ -6642,7 +6642,7 @@ name|output_bfd
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Error in new object file. Don't change archive. */
+comment|/* Error in new object file. Don't change archive.  */
 name|status
 operator|=
 literal|1
@@ -7943,6 +7943,9 @@ decl_stmt|;
 name|long
 name|relsize
 decl_stmt|;
+name|flagword
+name|flags
+decl_stmt|;
 comment|/* If we have already failed earlier on,      do not keep on generating complaints now.  */
 if|if
 condition|(
@@ -7951,15 +7954,19 @@ operator|!=
 literal|0
 condition|)
 return|return;
-if|if
-condition|(
-operator|(
+name|flags
+operator|=
 name|bfd_get_section_flags
 argument_list|(
 name|ibfd
 argument_list|,
 name|isection
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
 operator|&
 name|SEC_DEBUGGING
 operator|)
@@ -7985,6 +7992,17 @@ name|LOCALS_ALL
 operator|||
 name|convert_debugging
 operator|)
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|SEC_GROUP
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return;
 name|p
@@ -8054,7 +8072,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* Core files do not need to be relocated. */
+comment|/* Core files do not need to be relocated.  */
 if|if
 condition|(
 name|bfd_get_format
@@ -8162,7 +8180,7 @@ operator|==
 name|STRIP_ALL
 condition|)
 block|{
-comment|/* Remove relocations which are not in 	     keep_strip_specific_list. */
+comment|/* Remove relocations which are not in 	     keep_strip_specific_list.  */
 name|arelent
 modifier|*
 modifier|*

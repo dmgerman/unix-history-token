@@ -2450,6 +2450,10 @@ name|file
 argument_list|,
 literal|"\t%p %-10s\t%10d frags\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|frchp
 argument_list|,
 name|segment_name

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF 2 support.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Adapted from gdb/dwarf2read.c by Gavin Koch of Cygnus Solutions    (gavin@cygnus.com).     From the dwarf2read.c header:    Adapted by Gary Funck (gary@intrepid.com), Intrepid Technology,    Inc.  with support from Florida State University (under contract    with the Ada Joint Program Office), and Silicon Graphics, Inc.    Initial contribution by Brent Benson, Harris Computer Systems, Inc.,    based on Fred Fish's (Cygnus Support) implementation of DWARF 1    support in dwarfread.c  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DWARF 2 support.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Adapted from gdb/dwarf2read.c by Gavin Koch of Cygnus Solutions    (gavin@cygnus.com).     From the dwarf2read.c header:    Adapted by Gary Funck (gary@intrepid.com), Intrepid Technology,    Inc.  with support from Florida State University (under contract    with the Ada Joint Program Office), and Silicon Graphics, Inc.    Initial contribution by Brent Benson, Harris Computer Systems, Inc.,    based on Fred Fish's (Cygnus Support) implementation of DWARF 1    support in dwarfread.c     This file is part of BFD.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or (at    your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -3762,6 +3762,17 @@ operator|->
 name|comp_dir
 operator|)
 decl_stmt|;
+comment|/* Not all tools set DW_AT_comp_dir, so dirname may be unknown.  The 	 best we can do is return the filename part.  */
+if|if
+condition|(
+name|dirname
+operator|==
+name|NULL
+condition|)
+return|return
+name|filename
+return|;
+else|else
 return|return
 operator|(
 name|char
@@ -4314,6 +4325,43 @@ operator|=
 literal|8
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|lh
+operator|.
+name|total_length
+operator|==
+literal|0
+operator|&&
+name|unit
+operator|->
+name|addr_size
+operator|==
+literal|8
+condition|)
+block|{
+comment|/* Handle (non-standard) 64-bit DWARF2 formats.  */
+name|lh
+operator|.
+name|total_length
+operator|=
+name|read_4_bytes
+argument_list|(
+name|abfd
+argument_list|,
+name|line_ptr
+argument_list|)
+expr_stmt|;
+name|line_ptr
+operator|+=
+literal|4
+expr_stmt|;
+name|offset_size
+operator|=
+literal|8
+expr_stmt|;
+block|}
 name|line_end
 operator|=
 name|line_ptr
@@ -4849,13 +4897,15 @@ name|int
 name|end_sequence
 init|=
 literal|0
-decl_stmt|,
-name|need_low_pc
-init|=
-literal|1
 decl_stmt|;
+comment|/* eraxxon@alumni.rice.edu: Against the DWARF2 specs, some          compilers generate address sequences that are wildly out of          order using DW_LNE_set_address (e.g. Intel C++ 6.0 compiler          for ia64-Linux).  Thus, to determine the low and high          address, we must compare on every DW_LNS_copy, etc.  */
 name|bfd_vma
 name|low_pc
+init|=
+literal|0
+decl_stmt|;
+name|bfd_vma
+name|high_pc
 init|=
 literal|0
 decl_stmt|;
@@ -4947,18 +4997,28 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|need_low_pc
-condition|)
-block|{
-name|need_low_pc
-operator|=
+name|low_pc
+operator|==
 literal|0
-expr_stmt|;
+operator|||
+name|address
+operator|<
+name|low_pc
+condition|)
 name|low_pc
 operator|=
 name|address
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|address
+operator|>
+name|high_pc
+condition|)
+name|high_pc
+operator|=
+name|address
+expr_stmt|;
 block|}
 else|else
 switch|switch
@@ -4969,11 +5029,11 @@ block|{
 case|case
 name|DW_LNS_extended_op
 case|:
+comment|/* Ignore length.  */
 name|line_ptr
 operator|+=
 literal|1
 expr_stmt|;
-comment|/* Ignore length.  */
 name|extended_op
 operator|=
 name|read_1_byte
@@ -5014,20 +5074,39 @@ argument_list|,
 name|end_sequence
 argument_list|)
 expr_stmt|;
+name|arange_add
+argument_list|(
+name|unit
+argument_list|,
+name|low_pc
+argument_list|,
+name|high_pc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|need_low_pc
-condition|)
-block|{
-name|need_low_pc
-operator|=
+name|low_pc
+operator|==
 literal|0
-expr_stmt|;
+operator|||
+name|address
+operator|<
+name|low_pc
+condition|)
 name|low_pc
 operator|=
 name|address
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|address
+operator|>
+name|high_pc
+condition|)
+name|high_pc
+operator|=
+name|address
+expr_stmt|;
 name|arange_add
 argument_list|(
 name|unit
@@ -5274,18 +5353,28 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|need_low_pc
-condition|)
-block|{
-name|need_low_pc
-operator|=
+name|low_pc
+operator|==
 literal|0
-expr_stmt|;
+operator|||
+name|address
+operator|<
+name|low_pc
+condition|)
 name|low_pc
 operator|=
 name|address
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|address
+operator|>
+name|high_pc
+condition|)
+name|high_pc
+operator|=
+name|address
+expr_stmt|;
 break|break;
 case|case
 name|DW_LNS_advance_pc
@@ -5339,7 +5428,7 @@ name|unsigned
 name|int
 name|file
 decl_stmt|;
-comment|/* The file and directory tables are 0 based, the references 		   are 1 based.  */
+comment|/* The file and directory tables are 0 		   based, the references are 1 based.  */
 name|file
 operator|=
 name|read_unsigned_leb128
@@ -5449,10 +5538,10 @@ expr_stmt|;
 break|break;
 default|default:
 block|{
-comment|/* Unknown standard opcode, ignore it.  */
 name|int
 name|i
 decl_stmt|;
+comment|/* Unknown standard opcode, ignore it.  */
 for|for
 control|(
 name|i
@@ -7315,7 +7404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Locate a section in a BFD containing debugging info.  The search starts from the    section after AFTER_SEC, or from the first section in the BFD if AFTER_SEC is    NULL.  The search works by examining the names of the sections.  There are two    permissiable names.  The first is .debug_info.  This is the standard DWARF2 name.    The second is a prefix .gnu.linkonce.wi.  This is a variation on the .debug_info    section which has a checksum describing the contents appended onto the name.  This    allows the linker to identify and discard duplicate debugging sections for    different compilation units.  */
+comment|/* Locate a section in a BFD containing debugging info.  The search starts    from the section after AFTER_SEC, or from the first section in the BFD if    AFTER_SEC is NULL.  The search works by examining the names of the    sections.  There are two permissiable names.  The first is .debug_info.    This is the standard DWARF2 name.  The second is a prefix .gnu.linkonce.wi.    This is a variation on the .debug_info section which has a checksum    describing the contents appended onto the name.  This allows the linker to    identify and discard duplicate debugging sections for different    compilation units.  */
 end_comment
 
 begin_define
@@ -7942,6 +8031,39 @@ operator|->
 name|info_ptr
 operator|+=
 literal|8
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|length
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Handle (non-standard) 64-bit DWARF2 formats.  */
+name|offset_size
+operator|=
+literal|8
+expr_stmt|;
+name|length
+operator|=
+name|read_4_bytes
+argument_list|(
+name|abfd
+argument_list|,
+name|stash
+operator|->
+name|info_ptr
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|stash
+operator|->
+name|info_ptr
+operator|+=
+literal|4
 expr_stmt|;
 block|}
 block|}

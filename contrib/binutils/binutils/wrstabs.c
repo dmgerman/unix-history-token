@@ -6385,10 +6385,6 @@ begin_comment
 comment|/* Start outputting a struct.  We ignore the tag, and handle it in    stab_tag.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -10739,10 +10735,6 @@ end_function
 
 begin_comment
 comment|/* End a function.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function

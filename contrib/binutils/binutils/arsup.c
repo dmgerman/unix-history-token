@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* arsup.c - Archive support for MRI compatibility    Copyright 1992, 1994, 1995, 1996, 1997, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* arsup.c - Archive support for MRI compatibility    Copyright 1992, 1994, 1995, 1996, 1997, 2000, 2002    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Contributed by Steve Chamberlain    		  sac@cygnus.com  This file looks after requests from arparse.y, to provide the MRI style librarian command syntax + 1 word LIST  */
+comment|/* Contributed by Steve Chamberlain    sac@cygnus.com     This file looks after requests from arparse.y, to provide the MRI    style librarian command syntax + 1 word LIST.  */
 end_comment
 
 begin_include
@@ -326,10 +326,6 @@ name|outfile
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -538,25 +534,21 @@ name|real_name
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|ar_open
-argument_list|,
-operator|(
+parameter_list|(
 name|name
-operator|,
+parameter_list|,
 name|t
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|name
-name|AND
+decl_stmt|;
 name|int
 name|t
-argument_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -791,7 +783,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
@@ -811,7 +803,7 @@ modifier|*
 name|prev
 decl_stmt|;
 block|{
-comment|/* Add this module to the output bfd */
+comment|/* Add this module to the output bfd.  */
 if|if
 condition|(
 name|prev
@@ -918,26 +910,22 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-comment|/* Don't close the bfd, since it will make the elements disasppear */
+comment|/* Don't close the bfd, since it will make the elements disasppear.  */
 block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|ar_addmod
-argument_list|,
-operator|(
+parameter_list|(
 name|list
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|list
-operator|*
+modifier|*
 name|list
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1033,14 +1021,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|ar_clear
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1055,21 +1041,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|ar_delete
-argument_list|,
-operator|(
+parameter_list|(
 name|list
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|list
-operator|*
+modifier|*
 name|list
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1100,7 +1082,7 @@ condition|(
 name|list
 condition|)
 block|{
-comment|/* Find this name in the archive */
+comment|/* Find this name in the archive.  */
 name|bfd
 modifier|*
 name|member
@@ -1160,7 +1142,6 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-block|{
 name|prev
 operator|=
 operator|&
@@ -1170,7 +1151,6 @@ operator|->
 name|next
 operator|)
 expr_stmt|;
-block|}
 name|member
 operator|=
 name|member
@@ -1213,14 +1193,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|ar_save
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1283,21 +1261,17 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|ar_replace
-argument_list|,
-operator|(
+parameter_list|(
 name|list
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|list
-operator|*
+modifier|*
 name|list
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1328,7 +1302,7 @@ condition|(
 name|list
 condition|)
 block|{
-comment|/* Find this name in the archive */
+comment|/* Find this name in the archive.  */
 name|bfd
 modifier|*
 name|member
@@ -1375,7 +1349,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Found the one to replace */
+comment|/* Found the one to replace.  */
 name|bfd
 modifier|*
 name|abfd
@@ -1517,13 +1491,11 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
-block|{
 operator|*
 name|prev
 operator|=
 name|abfd
 expr_stmt|;
-block|}
 block|}
 name|list
 operator|=
@@ -1534,18 +1506,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* And I added this one */
+comment|/* And I added this one.  */
 end_comment
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|ar_list
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1618,7 +1588,6 @@ name|abfd
 operator|->
 name|next
 control|)
-block|{
 name|ar_directory_doer
 argument_list|(
 name|abfd
@@ -1632,15 +1601,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|ar_end
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1672,21 +1638,17 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|ar_extract
-argument_list|,
-operator|(
+parameter_list|(
 name|list
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|list
-operator|*
+modifier|*
 name|list
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1700,7 +1662,7 @@ name|stderr
 argument_list|,
 name|_
 argument_list|(
-literal|"%s: no open  archive\n"
+literal|"%s: no open archive\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -1717,7 +1679,7 @@ condition|(
 name|list
 condition|)
 block|{
-comment|/* Find this name in the archive */
+comment|/* Find this name in the archive.  */
 name|bfd
 modifier|*
 name|member
@@ -1813,7 +1775,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

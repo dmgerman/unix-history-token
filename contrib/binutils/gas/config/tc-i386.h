@@ -314,6 +314,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_FreeBSD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_FORMAT
+value|"elf32-i386-freebsd"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ELF_TARGET_FORMAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_FORMAT
+value|"elf32-i386"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -380,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
-value|"elf32-i386"
+value|ELF_TARGET_FORMAT
 end_define
 
 begin_endif
@@ -451,6 +487,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SUB_SEGMENT_ALIGN
+parameter_list|(
+name|SEG
+parameter_list|,
+name|FRCHAIN
+parameter_list|)
+value|0
+end_define
 
 begin_else
 else|#
@@ -562,6 +610,8 @@ directive|define
 name|SUB_SEGMENT_ALIGN
 parameter_list|(
 name|SEG
+parameter_list|,
+name|FRCHAIN
 parameter_list|)
 define|\
 value|((strcmp (obj_segment_name (SEG), ".text") == 0			\     || strcmp (obj_segment_name (SEG), ".data") == 0			\     || strcmp (obj_segment_name (SEG), ".bss") == 0			\     || strncmp (obj_segment_name (SEG), ".gnu.linkonce.t", 15) == 0	\     || strncmp (obj_segment_name (SEG), ".gnu.linkonce.d", 15) == 0	\     || strncmp (obj_segment_name (SEG), ".gnu.linkonce.r", 15) == 0)	\    ? 4									\    : 2)
@@ -578,6 +628,8 @@ directive|define
 name|SUB_SEGMENT_ALIGN
 parameter_list|(
 name|SEG
+parameter_list|,
+name|FRCHAIN
 parameter_list|)
 value|2
 end_define
@@ -731,30 +783,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|TC_FORCE_RELOCATION
 parameter_list|(
-name|fixp
+name|FIXP
 parameter_list|)
-value|tc_i386_force_relocation(fixp)
+define|\
+value|((FIXP)->fx_r_type == BFD_RELOC_VTABLE_INHERIT	\    || (FIXP)->fx_r_type == BFD_RELOC_VTABLE_ENTRY)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|tc_i386_force_relocation
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* For COFF.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION
+parameter_list|(
+name|FIXP
+parameter_list|)
+define|\
+value|((FIXP)->fx_r_type == 7)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

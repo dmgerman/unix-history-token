@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Routines to link ECOFF debugging information.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Routines to link ECOFF debugging information.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -6689,6 +6689,7 @@ expr_stmt|;
 comment|/* Get the external symbol information.  */
 if|if
 condition|(
+operator|!
 call|(
 modifier|*
 name|get_extr
@@ -6699,16 +6700,13 @@ argument_list|,
 operator|&
 name|esym
 argument_list|)
-operator|==
-name|false
 condition|)
 continue|continue;
 comment|/* If we're producing an executable, move common symbols into 	 bss.  */
 if|if
 condition|(
+operator|!
 name|relocateable
-operator|==
-name|false
 condition|)
 block|{
 if|if
@@ -7008,6 +7006,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|ecoff_add_bytes
 argument_list|(
 operator|(
@@ -7038,8 +7037,6 @@ name|namelen
 operator|+
 literal|1
 argument_list|)
-operator|==
-name|false
 condition|)
 return|return
 name|false
@@ -7081,6 +7078,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|ecoff_add_bytes
 argument_list|(
 operator|(
@@ -7116,8 +7114,6 @@ name|size_t
 operator|)
 name|external_ext_size
 argument_list|)
-operator|==
-name|false
 condition|)
 return|return
 name|false
@@ -8608,7 +8604,7 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 operator|(
 name|bfd_size_type
@@ -8629,18 +8625,6 @@ condition|)
 return|return
 name|false
 return|;
-name|memset
-argument_list|(
-operator|(
-name|PTR
-operator|)
-name|s
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bfd_bwrite
@@ -9113,7 +9097,7 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 operator|(
 name|bfd_size_type
@@ -9134,18 +9118,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-name|memset
-argument_list|(
-operator|(
-name|PTR
-operator|)
-name|s
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bfd_bwrite
@@ -9268,7 +9240,7 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 operator|(
 name|bfd_size_type
@@ -9289,18 +9261,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-name|memset
-argument_list|(
-operator|(
-name|PTR
-operator|)
-name|s
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bfd_bwrite

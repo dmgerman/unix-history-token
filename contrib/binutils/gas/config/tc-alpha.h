@@ -29,11 +29,47 @@ name|TARGET_ARCH
 value|bfd_arch_alpha
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_FreeBSD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_FORMAT
+value|"elf64-alpha-freebsd"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ELF_TARGET_FORMAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_FORMAT
+value|"elf64-alpha"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
-value|(OUTPUT_FLAVOR == bfd_target_ecoff_flavour	\ 		       ? "ecoff-littlealpha"				\ 		       : OUTPUT_FLAVOR == bfd_target_elf_flavour	\ 		       ? "elf64-alpha"					\ 		       : OUTPUT_FLAVOR == bfd_target_evax_flavour	\ 		       ? "vms-alpha"					\ 		       : "unknown-format")
+value|(OUTPUT_FLAVOR == bfd_target_ecoff_flavour	\ 		       ? "ecoff-littlealpha"				\ 		       : OUTPUT_FLAVOR == bfd_target_elf_flavour	\ 		       ? ELF_TARGET_FORMAT				\ 		       : OUTPUT_FLAVOR == bfd_target_evax_flavour	\ 		       ? "vms-alpha"					\ 		       : "unknown-format")
 end_define
 
 begin_define

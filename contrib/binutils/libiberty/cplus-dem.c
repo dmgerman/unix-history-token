@@ -7500,7 +7500,7 @@ name|value
 decl_stmt|;
 comment|/* By default, we let the number decide whether we shall consume an 	 underscore.  */
 name|int
-name|consume_following_underscore
+name|multidigit_without_leading_underscore
 init|=
 literal|0
 decl_stmt|;
@@ -7564,7 +7564,7 @@ literal|'m'
 condition|)
 block|{
 comment|/* Since consume_count_with_underscores does not handle the 	     `m'-prefix we must do it here, using consume_count and 	     adjusting underscores: we have to consume the underscore 	     matching the prepended one.  */
-name|consume_following_underscore
+name|multidigit_without_leading_underscore
 operator|=
 literal|1
 expr_stmt|;
@@ -7595,7 +7595,20 @@ operator|==
 literal|'_'
 condition|)
 block|{
-comment|/* Do not consume a following underscore; 	     consume_following_underscore will consume what should be 	     consumed.  */
+comment|/* Do not consume a following underscore; 	     multidigit_without_leading_underscore will consume what should be 	     consumed.  */
+name|leave_following_underscore
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Since consume_count_with_underscores does not handle 	     multi-digit numbers that do not start with an underscore, 	     and this number can be an integer template parameter, 	     we have to call consume_count. */
+name|multidigit_without_leading_underscore
+operator|=
+literal|1
+expr_stmt|;
+comment|/* These multi-digit numbers never end on an underscore, 	     so if there is one then don't eat it. */
 name|leave_following_underscore
 operator|=
 literal|1
@@ -7604,7 +7617,7 @@ block|}
 comment|/* We must call consume_count if we expect to remove a trailing 	 underscore, since consume_count_with_underscores expects 	 the leading underscore (that we consumed) if it is to handle 	 multi-digit numbers.  */
 if|if
 condition|(
-name|consume_following_underscore
+name|multidigit_without_leading_underscore
 condition|)
 name|value
 operator|=
@@ -7659,7 +7672,7 @@ name|value
 operator|>
 literal|9
 operator|||
-name|consume_following_underscore
+name|multidigit_without_leading_underscore
 operator|)
 operator|&&
 operator|!
@@ -10198,6 +10211,14 @@ goto|;
 break|break;
 default|default:
 comment|/* Not handling other HP cfront stuff */
+block|{
+specifier|const
+name|char
+modifier|*
+name|old_args
+init|=
+name|args
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -10215,6 +10236,15 @@ condition|)
 goto|goto
 name|cfront_template_args_done
 goto|;
+comment|/* Fail if we didn't make any progress: prevent infinite loop. */
+if|if
+condition|(
+name|args
+operator|==
+name|old_args
+condition|)
+return|return;
+block|}
 block|}
 name|string_appends
 argument_list|(

@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<getopt.h>
+file|"getopt.h"
 end_include
 
 begin_include

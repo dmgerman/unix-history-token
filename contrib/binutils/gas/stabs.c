@@ -1971,7 +1971,7 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-comment|/* Remember the last file/line and avoid duplicates. */
+comment|/* Remember the last file/line and avoid duplicates.  */
 specifier|static
 name|unsigned
 name|int
@@ -2001,7 +2001,7 @@ operator|&
 name|lineno
 argument_list|)
 expr_stmt|;
-comment|/* Don't emit sequences of stabs for the same line. */
+comment|/* Don't emit sequences of stabs for the same line.  */
 if|if
 condition|(
 name|prev_file
@@ -2009,7 +2009,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* First time thru. */
+comment|/* First time thru.  */
 name|prev_file
 operator|=
 name|xstrdup
@@ -2039,12 +2039,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Same file/line as last time. */
+comment|/* Same file/line as last time.  */
 return|return;
 block|}
 else|else
 block|{
-comment|/* Remember file/line for next time. */
+comment|/* Remember file/line for next time.  */
 name|prev_lineno
 operator|=
 name|lineno

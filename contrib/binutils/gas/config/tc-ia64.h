@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<opcode/ia64.h>
+file|"opcode/ia64.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<elf/ia64.h>
+file|"elf/ia64.h"
 end_include
 
 begin_define
@@ -1453,7 +1453,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This expression evaluates to false if the relocation is for a local     object for which we still want to do the relocation at runtime.    True if we are willing to perform this relocation while building    the .o file.  This is only used for pcrel relocations.  */
+comment|/* This expression evaluates to false if the relocation is for a local    object for which we still want to do the relocation at runtime.    True if we are willing to perform this relocation while building    the .o file.  This is only used for pcrel relocations.  */
 end_comment
 
 begin_comment

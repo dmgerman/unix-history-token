@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for PowerPC Microsoft Portable Executable files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.     Original version pieced together by Kim Knuttila (krk@cygnus.com)     There is nothing new under the sun. This file draws a lot on other    coff files, in particular, those for the rs/6000, alpha, mips, and    intel backends, and the PE work for the arm.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for PowerPC Microsoft Portable Executable files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.     Original version pieced together by Kim Knuttila (krk@cygnus.com)     There is nothing new under the sun. This file draws a lot on other    coff files, in particular, those for the rs/6000, alpha, mips, and    intel backends, and the PE work for the arm.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -751,10 +751,8 @@ expr|struct
 name|ppc_coff_link_hash_table
 operator|*
 operator|)
-name|bfd_alloc
+name|bfd_malloc
 argument_list|(
-name|abfd
-argument_list|,
 name|amt
 argument_list|)
 expr_stmt|;
@@ -780,10 +778,8 @@ name|ppc_coff_link_hash_newfunc
 argument_list|)
 condition|)
 block|{
-name|bfd_release
+name|free
 argument_list|(
-name|abfd
-argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;

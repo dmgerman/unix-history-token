@@ -40,6 +40,13 @@ name|YYSTYPE
 value|yystype
 end_define
 
+begin_define
+define|#
+directive|define
+name|YYSTYPE_IS_TRIVIAL
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif

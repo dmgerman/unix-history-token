@@ -670,7 +670,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* We have to clean up here. */
+comment|/* We have to clean up here.  */
 name|non_fatal
 argument_list|(
 name|_
@@ -782,7 +782,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* We have to clean up here. */
+comment|/* We have to clean up here.  */
 name|non_fatal
 argument_list|(
 name|_

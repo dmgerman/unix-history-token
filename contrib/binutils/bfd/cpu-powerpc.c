@@ -133,7 +133,7 @@ directive|if
 name|BFD_DEFAULT_TARGET_SIZE
 operator|==
 literal|64
-comment|/* default arch must come first.  */
+comment|/* Default arch must come first.  */
 block|{
 literal|64
 block|,
@@ -168,6 +168,7 @@ literal|1
 index|]
 block|}
 block|,
+comment|/* elf32-ppc:ppc_elf_object_p relies on the default 32 bit arch      being immediately after the 64 bit default.  */
 block|{
 literal|32
 block|,
@@ -204,6 +205,7 @@ block|,   }
 block|,
 else|#
 directive|else
+comment|/* Default arch must come first.  */
 block|{
 literal|32
 block|,
@@ -239,6 +241,7 @@ literal|1
 index|]
 block|,   }
 block|,
+comment|/* elf64-ppc:ppc64_elf_object_p relies on the default 64 bit arch      being immediately after the 32 bit default.  */
 block|{
 literal|64
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* IBM RS/6000 "XCOFF64" file definitions for BFD.    Copyright (C) 2000 Free Software Foundation, Inc.       This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   */
+comment|/* IBM RS/6000 "XCOFF64" file definitions for BFD.    Copyright (C) 2000, 2002 Free Software Foundation, Inc.       This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* IBM RS/6000 */
+comment|/* IBM RS/6000.  */
 end_comment
 
 begin_define
@@ -76,7 +76,18 @@ value|0757
 end_define
 
 begin_comment
-comment|/* readonly text segments and TOC, XCOFF64 */
+comment|/* Aix 4.3 64-bit XCOFF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|U64_TOCMAGIC
+value|0767
+end_define
+
+begin_comment
+comment|/* AIX 5+ 64-bit XCOFF */
 end_comment
 
 begin_define
@@ -86,7 +97,7 @@ name|BADMAG
 parameter_list|(
 name|x
 parameter_list|)
-value|((x).f_magic != U803XTOCMAGIC)
+value|((x).f_magic != U803XTOCMAGIC&& (x).f_magic != U64_TOCMAGIC)
 end_define
 
 begin_define
@@ -437,7 +448,7 @@ comment|/********************** LINE NUMBERS **********************/
 end_comment
 
 begin_comment
-comment|/* 1 line number entry for every "breakpointable" source line in a section.  * Line numbers are grouped on a per function basis; first entry in a function  * grouping will have l_lnno = 0 and in place of physical address will be the  * symbol table index of the function name.  */
+comment|/* 1 line number entry for every "breakpointable" source line in a section.    Line numbers are grouped on a per function basis; first entry in a function    grouping will have l_lnno = 0 and in place of physical address will be the    symbol table index of the function name.  */
 end_comment
 
 begin_struct
@@ -858,7 +869,7 @@ value|((symptr)->n_sclass& DBXMASK)
 end_define
 
 begin_comment
-comment|/* Values for auxtype field in XCOFF64, taken from AIX 4.3 sym.h */
+comment|/* Values for auxtype field in XCOFF64, taken from AIX 4.3 sym.h.  */
 end_comment
 
 begin_define

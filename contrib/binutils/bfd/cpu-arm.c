@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD support for the ARM processor    Copyright 1994, 1997, 1999, 2000 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD support for the ARM processor    Copyright 1994, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -63,7 +63,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This routine is provided two arch_infos and works out which ARM    machine which would be compatible with both and returns a pointer    to its info structure */
+comment|/* This routine is provided two arch_infos and works out which ARM    machine which would be compatible with both and returns a pointer    to its info structure.  */
 end_comment
 
 begin_function
@@ -88,7 +88,7 @@ modifier|*
 name|b
 decl_stmt|;
 block|{
-comment|/* If a& b are for different architecture we can do nothing */
+comment|/* If a& b are for different architecture we can do nothing.  */
 if|if
 condition|(
 name|a
@@ -102,7 +102,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* If a& b are for the same machine then all is well */
+comment|/* If a& b are for the same machine then all is well.  */
 if|if
 condition|(
 name|a
@@ -116,7 +116,7 @@ condition|)
 return|return
 name|a
 return|;
-comment|/* Otherwise if either a or b is the 'default' machine then      it can be polymorphed into the other */
+comment|/* Otherwise if either a or b is the 'default' machine      then it can be polymorphed into the other.  */
 if|if
 condition|(
 name|a
@@ -135,7 +135,7 @@ condition|)
 return|return
 name|a
 return|;
-comment|/* So far all newer ARM architecture cores are supersets of previous cores */
+comment|/* So far all newer ARM architecture cores are      supersets of previous cores.  */
 if|if
 condition|(
 name|a
@@ -163,7 +163,7 @@ condition|)
 return|return
 name|a
 return|;
-comment|/* Never reached! */
+comment|/* Never reached!  */
 return|return
 name|NULL
 return|;
@@ -174,9 +174,9 @@ begin_struct
 specifier|static
 struct|struct
 block|{
-name|enum
-name|bfd_architecture
-name|arch
+name|unsigned
+name|int
+name|mach
 decl_stmt|;
 name|char
 modifier|*
@@ -370,7 +370,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* First test for an exact match */
+comment|/* First test for an exact match.  */
 if|if
 condition|(
 name|strcasecmp
@@ -387,7 +387,7 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* Next check for a processor name instead of an Architecture name */
+comment|/* Next check for a processor name instead of an Architecture name.  */
 for|for
 control|(
 name|i
@@ -437,19 +437,19 @@ literal|1
 operator|&&
 name|info
 operator|->
-name|arch
+name|mach
 operator|==
 name|processors
 index|[
 name|i
 index|]
 operator|.
-name|arch
+name|mach
 condition|)
 return|return
 name|true
 return|;
-comment|/* Finally check for the default architecture */
+comment|/* Finally check for the default architecture.  */
 if|if
 condition|(
 name|strcasecmp

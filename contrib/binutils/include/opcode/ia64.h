@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ia64.h -- Header file for ia64 opcode table    Copyright (C) 1998, 1999 David Mosberger-Tang<davidm@hpl.hp.com>     See the file HP-COPYRIGHT for additional information.  */
+comment|/* ia64.h -- Header file for ia64 opcode table    Copyright (C) 1998, 1999, 2002 David Mosberger-Tang<davidm@hpl.hp.com>     See the file HP-COPYRIGHT for additional information.  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bfd.h>
+file|"bfd.h"
 end_include
 
 begin_typedef

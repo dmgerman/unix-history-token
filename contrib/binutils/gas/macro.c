@@ -4506,7 +4506,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* The Microtec assembler ignores this if followed by a white space.     		   (Macro invocation with empty extension) */
+comment|/* The Microtec assembler ignores this if followed by a white space. 	     (Macro invocation with empty extension) */
 name|idx
 operator|++
 expr_stmt|;

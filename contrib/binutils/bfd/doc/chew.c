@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ansidecl.h>
+file|"ansidecl.h"
 end_include
 
 begin_include
@@ -2098,9 +2098,7 @@ begin_function
 specifier|static
 name|void
 name|paramstuff
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|unsigned
 name|int
@@ -2626,9 +2624,7 @@ begin_function
 specifier|static
 name|void
 name|outputdots
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|unsigned
 name|int
@@ -5102,9 +5098,7 @@ begin_function
 specifier|static
 name|void
 name|perform
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|tos
 operator|=
@@ -5759,9 +5753,7 @@ begin_function
 specifier|static
 name|void
 name|bang
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 operator|*
 operator|(
@@ -6036,9 +6028,7 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(

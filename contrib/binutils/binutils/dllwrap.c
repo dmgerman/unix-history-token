@@ -1067,7 +1067,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Deduce the name of the program we are want to invoke.    PROG_NAME is the basic name of the program we want to run,    eg "as" or "ld".  The catch is that we might want actually    run "i386-pe-as" or "ppc-pe-ld".       If argv[0] contains the full path, then try to find the program    in the same place, with and then without a target-like prefix.     Given, argv[0] = /usr/local/bin/i586-cygwin32-dlltool,    deduce_name("as") uses the following search order:        /usr/local/bin/i586-cygwin32-as      /usr/local/bin/as      as        If there's an EXECUTABLE_SUFFIX, it'll use that as well; for each    name, it'll try without and then with EXECUTABLE_SUFFIX.     Given, argv[0] = i586-cygwin32-dlltool, it will not even try "as"    as the fallback, but rather return i586-cygwin32-as.          Oh, and given, argv[0] = dlltool, it'll return "as".     Returns a dynamically allocated string.  */
+comment|/* Deduce the name of the program we are want to invoke.    PROG_NAME is the basic name of the program we want to run,    eg "as" or "ld".  The catch is that we might want actually    run "i386-pe-as" or "ppc-pe-ld".     If argv[0] contains the full path, then try to find the program    in the same place, with and then without a target-like prefix.     Given, argv[0] = /usr/local/bin/i586-cygwin32-dlltool,    deduce_name("as") uses the following search order:       /usr/local/bin/i586-cygwin32-as      /usr/local/bin/as      as     If there's an EXECUTABLE_SUFFIX, it'll use that as well; for each    name, it'll try without and then with EXECUTABLE_SUFFIX.     Given, argv[0] = i586-cygwin32-dlltool, it will not even try "as"    as the fallback, but rather return i586-cygwin32-as.     Oh, and given, argv[0] = dlltool, it'll return "as".     Returns a dynamically allocated string.  */
 end_comment
 
 begin_function
@@ -2477,7 +2477,7 @@ value|149
 end_define
 
 begin_comment
-comment|/* GENERIC options. */
+comment|/* GENERIC options.  */
 end_comment
 
 begin_define
@@ -2502,7 +2502,7 @@ value|(OPTION_VERBOSE + 1)
 end_define
 
 begin_comment
-comment|/* DLLWRAP options. */
+comment|/* DLLWRAP options.  */
 end_comment
 
 begin_define
@@ -2562,7 +2562,7 @@ value|(OPTION_TARGET + 1)
 end_define
 
 begin_comment
-comment|/* DLLTOOL options. */
+comment|/* DLLTOOL options.  */
 end_comment
 
 begin_define
@@ -2707,7 +2707,7 @@ name|long_options
 index|[]
 init|=
 block|{
-comment|/* generic options. */
+comment|/* generic options.  */
 block|{
 literal|"quiet"
 block|,
@@ -2748,7 +2748,7 @@ block|,
 name|OPTION_OUTPUT_LIB
 block|}
 block|,
-comment|/* dllwrap options. */
+comment|/* dllwrap options.  */
 block|{
 literal|"dry-run"
 block|,
@@ -2819,7 +2819,7 @@ block|,
 name|OPTION_TARGET
 block|}
 block|,
-comment|/* dlltool options. */
+comment|/* dlltool options.  */
 block|{
 literal|"no-delete"
 block|,
@@ -3309,7 +3309,7 @@ block|}
 name|cmdline_len
 operator|++
 expr_stmt|;
-comment|/* We recognize dllwrap and dlltool options, and everything else is      passed onto the language driver (eg., to GCC). We collect options      to dlltool and driver in dlltool_args and driver_args. */
+comment|/* We recognize dllwrap and dlltool options, and everything else is      passed onto the language driver (eg., to GCC). We collect options      to dlltool and driver in dlltool_args and driver_args.  */
 name|opterr
 operator|=
 literal|0
@@ -3368,13 +3368,13 @@ operator|!=
 literal|'?'
 condition|)
 block|{
-comment|/* We recognize this option, so it has to be either dllwrap or 	     dlltool option. Do not pass to driver unless it's one of the 	     generic options that are passed to all the tools (such as -v) 	     which are dealt with later. */
+comment|/* We recognize this option, so it has to be either dllwrap or 	     dlltool option. Do not pass to driver unless it's one of the 	     generic options that are passed to all the tools (such as -v) 	     which are dealt with later.  */
 name|driver_arg
 operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* deal with generic and dllwrap options first. */
+comment|/* deal with generic and dllwrap options first.  */
 switch|switch
 condition|(
 name|c
@@ -3589,7 +3589,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* Handle passing through --option=value case. */
+comment|/* Handle passing through --option=value case.  */
 if|if
 condition|(
 name|optarg
@@ -3702,7 +3702,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* sanity checks. */
+comment|/* sanity checks.  */
 if|if
 condition|(
 operator|!
@@ -3759,7 +3759,7 @@ name|dll_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Deduce driver-name and dlltool-name from our own. */
+comment|/* Deduce driver-name and dlltool-name from our own.  */
 if|if
 condition|(
 name|driver_name
@@ -3855,7 +3855,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set the target platform. */
+comment|/* set the target platform.  */
 if|if
 condition|(
 name|strstr
@@ -3888,7 +3888,7 @@ name|which_target
 operator|=
 name|UNKNOWN_TARGET
 expr_stmt|;
-comment|/* re-create the command lines as a string, taking care to quote stuff. */
+comment|/* re-create the command lines as a string, taking care to quote stuff.  */
 name|dlltool_cmdline
 operator|=
 name|dyn_string_new
@@ -4624,7 +4624,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Step 1. Call GCC/LD to create base relocation file. If using GCC, the    * driver command line will look like the following:    *        *    % gcc -Wl,--dll --Wl,--base-file,foo.base [rest of command line]    *    * If the user does not specify a base name, create temporary one that    * is deleted at exit.    *    */
+comment|/*    * Step 1. Call GCC/LD to create base relocation file. If using GCC, the    * driver command line will look like the following:    *    *    % gcc -Wl,--dll --Wl,--base-file,foo.base [rest of command line]    *    * If the user does not specify a base name, create temporary one that    * is deleted at exit.    *    */
 if|if
 condition|(
 operator|!
@@ -4807,7 +4807,7 @@ name|step1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Step 2. generate the exp file by running dlltool.     * dlltool command line will look like the following:    *        *    % dlltool -Wl,--dll --Wl,--base-file,foo.base [rest of command line]    *    * If the user does not specify a base name, create temporary one that    * is deleted at exit.    *    */
+comment|/*    * Step 2. generate the exp file by running dlltool.    * dlltool command line will look like the following:    *    *    % dlltool -Wl,--dll --Wl,--base-file,foo.base [rest of command line]    *    * If the user does not specify a base name, create temporary one that    * is deleted at exit.    *    */
 if|if
 condition|(
 operator|!
@@ -5072,7 +5072,7 @@ name|step2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Step 3. Call GCC/LD to again, adding the exp file this time.    * driver command line will look like the following:    *        *    % gcc -Wl,--dll --Wl,--base-file,foo.base foo.exp [rest ...]    */
+comment|/*    * Step 3. Call GCC/LD to again, adding the exp file this time.    * driver command line will look like the following:    *    *    % gcc -Wl,--dll --Wl,--base-file,foo.base foo.exp [rest ...]    */
 block|{
 name|int
 name|quote
@@ -5463,7 +5463,7 @@ name|step4
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Step 5. Link it all together and be done with it.    * driver command line will look like the following:    *        *    % gcc -Wl,--dll foo.exp [rest ...]    *    */
+comment|/*    * Step 5. Link it all together and be done with it.    * driver command line will look like the following:    *    *    % gcc -Wl,--dll foo.exp [rest ...]    *    */
 block|{
 name|int
 name|quote

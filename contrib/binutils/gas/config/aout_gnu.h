@@ -346,6 +346,10 @@ init|=
 literal|102
 block|,
 comment|/* IBM RS/6000 */
+name|M_VAX4K_NETBSD
+init|=
+literal|150
+block|,
 comment|/* HP/BSD formats */
 name|M_HP200
 init|=

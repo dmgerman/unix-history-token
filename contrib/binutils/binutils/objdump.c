@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* objdump.c -- dump information about an object file.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* objdump.c -- dump information about an object file.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"bucomm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"budemang.h"
 end_include
 
 begin_include
@@ -2001,27 +2007,6 @@ argument_list|)
 expr_stmt|;
 name|PF
 argument_list|(
-name|SEC_CONSTRUCTOR_TEXT
-argument_list|,
-literal|"CONSTRUCTOR TEXT"
-argument_list|)
-expr_stmt|;
-name|PF
-argument_list|(
-name|SEC_CONSTRUCTOR_DATA
-argument_list|,
-literal|"CONSTRUCTOR DATA"
-argument_list|)
-expr_stmt|;
-name|PF
-argument_list|(
-name|SEC_CONSTRUCTOR_BSS
-argument_list|,
-literal|"CONSTRUCTOR BSS"
-argument_list|)
-expr_stmt|;
-name|PF
-argument_list|(
 name|SEC_LOAD
 argument_list|,
 literal|"LOAD"
@@ -2123,6 +2108,13 @@ argument_list|(
 name|SEC_ARCH_BIT_0
 argument_list|,
 literal|"ARCH_BIT_0"
+argument_list|)
+expr_stmt|;
+name|PF
+argument_list|(
+name|SEC_THREAD_LOCAL
+argument_list|,
+literal|"THREAD_LOCAL"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2272,6 +2264,25 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* With BFD64, non-ELF returns -1 and wants always 64 bit addresses.  */
+if|if
+condition|(
+name|bfd_get_arch_size
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+literal|32
+condition|)
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"Idx Name          Size      VMA       LMA       File off  Algn"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 name|_
@@ -2405,7 +2416,6 @@ if|if
 condition|(
 name|storage
 condition|)
-block|{
 name|sy
 operator|=
 operator|(
@@ -2418,7 +2428,6 @@ argument_list|(
 name|storage
 argument_list|)
 expr_stmt|;
-block|}
 name|symcount
 operator|=
 name|bfd_canonicalize_symtab
@@ -2561,7 +2570,6 @@ if|if
 condition|(
 name|storage
 condition|)
-block|{
 name|sy
 operator|=
 operator|(
@@ -2574,7 +2582,6 @@ argument_list|(
 name|storage
 argument_list|)
 expr_stmt|;
-block|}
 name|dynsymcount
 operator|=
 name|bfd_canonicalize_dynamic_symtab
@@ -2624,7 +2631,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Filter out (in place) symbols that are useless for disassembly.    COUNT is the number of elements in SYMBOLS.    Return the number of useful symbols. */
+comment|/* Filter out (in place) symbols that are useless for disassembly.    COUNT is the number of elements in SYMBOLS.    Return the number of useful symbols.  */
 end_comment
 
 begin_function
@@ -3482,11 +3489,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|print
-decl_stmt|;
 name|alloc
 operator|=
 name|NULL
@@ -3500,61 +3502,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|do_demangle
-operator|||
+operator|&&
 name|name
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'\0'
 condition|)
-name|print
-operator|=
-name|name
-expr_stmt|;
-else|else
 block|{
 comment|/* Demangle the name.  */
-if|if
-condition|(
-name|bfd_get_symbol_leading_char
+name|alloc
+operator|=
+name|demangle
 argument_list|(
 name|abfd
-argument_list|)
-operator|==
-name|name
-index|[
-literal|0
-index|]
-condition|)
-operator|++
-name|name
-expr_stmt|;
-name|alloc
-operator|=
-name|cplus_demangle
-argument_list|(
-name|name
 argument_list|,
-name|DMGL_ANSI
-operator||
-name|DMGL_PARAMS
+name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|alloc
-operator|==
-name|NULL
-condition|)
-name|print
-operator|=
 name|name
-expr_stmt|;
-else|else
-name|print
 operator|=
 name|alloc
 expr_stmt|;
@@ -3578,7 +3546,7 @@ name|stream
 argument_list|,
 literal|"%s"
 argument_list|,
-name|print
+name|name
 argument_list|)
 expr_stmt|;
 else|else
@@ -3586,7 +3554,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|print
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -3776,7 +3744,7 @@ condition|)
 operator|--
 name|thisplace
 expr_stmt|;
-comment|/* If the file is relocateable, and the symbol could be from this      section, prefer a symbol from this section over symbols from      others, even if the other symbol's value might be closer.              Note that this may be wrong for some symbol references if the      sections have overlapping memory ranges, but in that case there's      no way to tell what's desired without looking at the relocation      table.  */
+comment|/* If the file is relocateable, and the symbol could be from this      section, prefer a symbol from this section over symbols from      others, even if the other symbol's value might be closer.       Note that this may be wrong for some symbol references if the      sections have overlapping memory ranges, but in that case there's      no way to tell what's desired without looking at the relocation      table.  */
 if|if
 condition|(
 name|sorted_syms
@@ -4850,12 +4818,12 @@ name|bfd_vma
 name|addr_offset
 decl_stmt|;
 block|{
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|functionname
@@ -9225,7 +9193,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* Either print the stab name, or, if unnamed, print its number 	 again (makes consistent formatting for tools like awk). */
+comment|/* Either print the stab name, or, if unnamed, print its number 	 again (makes consistent formatting for tools like awk).  */
 name|name
 operator|=
 name|bfd_get_stab_name
@@ -10879,11 +10847,12 @@ name|alloc
 decl_stmt|;
 name|name
 operator|=
-name|bfd_asymbol_name
-argument_list|(
+operator|(
 operator|*
 name|current
-argument_list|)
+operator|)
+operator|->
+name|name
 expr_stmt|;
 name|alloc
 operator|=
@@ -10903,46 +10872,16 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|n
-decl_stmt|;
 comment|/* If we want to demangle the name, we demangle it                      here, and temporarily clobber it while calling                      bfd_print_symbol.  FIXME: This is a gross hack.  */
-name|n
+name|alloc
 operator|=
-name|name
-expr_stmt|;
-if|if
-condition|(
-name|bfd_get_symbol_leading_char
+name|demangle
 argument_list|(
 name|cur_bfd
-argument_list|)
-operator|==
-operator|*
-name|n
-condition|)
-operator|++
-name|n
-expr_stmt|;
-name|alloc
-operator|=
-name|cplus_demangle
-argument_list|(
-name|n
 argument_list|,
-name|DMGL_ANSI
-operator||
-name|DMGL_PARAMS
+name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|alloc
-operator|!=
-name|NULL
-condition|)
 operator|(
 operator|*
 name|current
@@ -10951,16 +10890,6 @@ operator|->
 name|name
 operator|=
 name|alloc
-expr_stmt|;
-else|else
-operator|(
-operator|*
-name|current
-operator|)
-operator|->
-name|name
-operator|=
-name|n
 expr_stmt|;
 block|}
 name|bfd_print_symbol
@@ -11895,7 +11824,7 @@ condition|(
 name|section_name
 operator|==
 operator|(
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|)

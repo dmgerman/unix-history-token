@@ -453,6 +453,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|bfd_elf_version_expr
+modifier|*
+name|ldemul_new_vers_pattern
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_elf_version_expr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -751,6 +768,23 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Called when adding a new version pattern.  PowerPC64-ELF uses      this hook to add a pattern matching ".foo" for every "foo".  */
+name|struct
+name|bfd_elf_version_expr
+modifier|*
+argument_list|(
+operator|*
+name|new_vers_pattern
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_elf_version_expr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 block|}
 name|ld_emulation_xfer_type
 typedef|;

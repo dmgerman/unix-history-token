@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"demangle.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"debug.h"
 end_include
 

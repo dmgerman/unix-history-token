@@ -92,6 +92,10 @@ comment|/* Return the last component of a path name.  Note that we can't use a  
 comment|/* HAVE_DECL_* is a three-state macro: undefined, 0 or 1.  If it is    undefined, we haven't run the autoconf check so provide the    declaration without arguments.  If it is 0, we checked and failed    to find the declaration so provide a fully prototyped one.  If it    is 1, we found it so don't provide any declaration at all.  */
 if|#
 directive|if
+operator|!
+name|HAVE_DECL_BASENAME
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNU_LIBRARY__
@@ -122,15 +126,10 @@ argument_list|(
 name|__CYGWIN32__
 argument_list|)
 operator|||
-operator|(
 name|defined
 argument_list|(
 name|HAVE_DECL_BASENAME
 argument_list|)
-operator|&&
-operator|!
-name|HAVE_DECL_BASENAME
-operator|)
 specifier|extern
 name|char
 modifier|*
@@ -146,13 +145,6 @@ argument_list|)
 decl_stmt|;
 else|#
 directive|else
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_DECL_BASENAME
-argument_list|)
 specifier|extern
 name|char
 modifier|*

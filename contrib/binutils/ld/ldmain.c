@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldgram.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ldexp.h"
 end_include
 
@@ -91,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"ldlang.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldgram.h"
 end_include
 
 begin_include
@@ -1126,6 +1126,18 @@ name|false
 expr_stmt|;
 name|link_info
 operator|.
+name|allow_multiple_definition
+operator|=
+name|false
+expr_stmt|;
+name|link_info
+operator|.
+name|allow_undefined_version
+operator|=
+name|true
+expr_stmt|;
+name|link_info
+operator|.
 name|strip
 operator|=
 name|strip_none
@@ -1151,6 +1163,12 @@ expr_stmt|;
 name|link_info
 operator|.
 name|create_object_symbols_section
+operator|=
+name|NULL
+expr_stmt|;
+name|link_info
+operator|.
+name|gc_sym_list
 operator|=
 name|NULL
 expr_stmt|;
@@ -1241,9 +1259,16 @@ name|false
 expr_stmt|;
 name|link_info
 operator|.
+name|pei386_auto_import
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|link_info
+operator|.
 name|combreloc
 operator|=
-name|false
+name|true
 expr_stmt|;
 name|link_info
 operator|.

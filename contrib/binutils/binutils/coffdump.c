@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bfd.h>
+file|"bfd.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<libiberty.h>
+file|"libiberty.h"
 end_include
 
 begin_include

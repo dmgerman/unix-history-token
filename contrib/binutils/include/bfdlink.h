@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -385,6 +385,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|bfd_sym_chain
+block|{
+name|struct
+name|bfd_sym_chain
+modifier|*
+name|next
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_escape
 end_escape
 
@@ -407,11 +425,11 @@ comment|/* true if BFD should generate a relocateable object file.  */
 name|boolean
 name|relocateable
 decl_stmt|;
-comment|/* true if BFD should generate relocation information in the final executable.  */
+comment|/* true if BFD should generate relocation information in the final      executable.  */
 name|boolean
 name|emitrelocations
 decl_stmt|;
-comment|/* true if BFD should generate a "task linked" object file,      similar to relocatable but also with globals converted to statics. */
+comment|/* true if BFD should generate a "task linked" object file,      similar to relocatable but also with globals converted to      statics.  */
 name|boolean
 name|task_link
 decl_stmt|;
@@ -447,6 +465,14 @@ comment|/* true if BFD should allow undefined symbols in shared objects even    
 name|boolean
 name|allow_shlib_undefined
 decl_stmt|;
+comment|/* true if ok to have multiple definition.  */
+name|boolean
+name|allow_multiple_definition
+decl_stmt|;
+comment|/* true if ok to have version with no definition.  */
+name|boolean
+name|allow_undefined_version
+decl_stmt|;
 comment|/* Which symbols to strip.  */
 name|enum
 name|bfd_link_strip
@@ -470,6 +496,12 @@ comment|/* If a symbol should be created for each input BFD, this is section    
 name|asection
 modifier|*
 name|create_object_symbols_section
+decl_stmt|;
+comment|/* List of global symbol names that are starting points for marking      sections against garbage collection.  */
+name|struct
+name|bfd_sym_chain
+modifier|*
+name|gc_sym_list
 decl_stmt|;
 comment|/* Hash table handled by BFD.  */
 name|struct
@@ -531,8 +563,8 @@ comment|/* May be used to set DT_FLAGS_1 for ELF. */
 name|bfd_vma
 name|flags_1
 decl_stmt|;
-comment|/* True if auto-import thunks for DATA items in pei386 DLLs       should be generated/linked against.  */
-name|boolean
+comment|/* Non-zero if auto-import thunks for DATA items in pei386 DLLs       should be generated/linked against.  Set to 1 if this feature      is explicitly requested by the user, -1 if enabled by default.  */
+name|int
 name|pei386_auto_import
 decl_stmt|;
 comment|/* True if non-PLT relocs should be merged into one reloc section      and sorted so that relocs against the same symbol come together.  */
@@ -956,9 +988,6 @@ comment|/* Undefined.  */
 name|bfd_indirect_link_order
 block|,
 comment|/* Built from a section.  */
-name|bfd_fill_link_order
-block|,
-comment|/* Fill with a 16 bit constant.  */
 name|bfd_data_link_order
 block|,
 comment|/* Set to explicit data.  */
@@ -1013,17 +1042,12 @@ name|indirect
 struct|;
 struct|struct
 block|{
-comment|/* Value to fill with.  */
+comment|/* Size of contents, or zero when contents size == size 	     within output section. 	     A non-zero value allows filling of the output section 	     with an arbitrary repeated pattern.  */
 name|unsigned
 name|int
-name|value
+name|size
 decl_stmt|;
-block|}
-name|fill
-struct|;
-struct|struct
-block|{
-comment|/* Data to put into file.  The size field gives the number 	     of bytes which this field points to.  */
+comment|/* Data to put into file.  */
 name|bfd_byte
 modifier|*
 name|contents
@@ -1150,6 +1174,20 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Defined by ".symver".  */
+name|unsigned
+name|int
+name|symver
+range|:
+literal|1
+decl_stmt|;
+comment|/* Defined by version script.  */
+name|unsigned
+name|int
+name|script
+range|:
+literal|1
+decl_stmt|;
 block|}
 struct|;
 end_struct

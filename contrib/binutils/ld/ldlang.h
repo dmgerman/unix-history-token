@@ -35,13 +35,23 @@ name|lang_input_file_enum_type
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
+begin_struct
+struct|struct
+name|_fill_type
+block|{
+name|size_t
+name|size
+decl_stmt|;
 name|unsigned
-name|int
-name|fill_type
-typedef|;
-end_typedef
+name|char
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
@@ -317,6 +327,7 @@ name|size_t
 name|block_value
 decl_stmt|;
 name|fill_type
+modifier|*
 name|fill
 decl_stmt|;
 name|int
@@ -331,6 +342,12 @@ name|union
 name|etree_union
 modifier|*
 name|load_base
+decl_stmt|;
+comment|/* If non-null, an expression to evaluate after setting the section's      size.  The expression is evaluated inside REGION (above) with '.'      set to the end of the section.  Used in the last overlay section      to move '.' past all the overlaid sections.  */
+name|union
+name|etree_union
+modifier|*
+name|update_dot_tree
 decl_stmt|;
 name|struct
 name|lang_output_section_phdr_list
@@ -374,6 +391,7 @@ name|lang_statement_header_type
 name|header
 decl_stmt|;
 name|fill_type
+modifier|*
 name|fill
 decl_stmt|;
 name|int
@@ -682,6 +700,7 @@ modifier|*
 name|output_section
 decl_stmt|;
 name|fill_type
+modifier|*
 name|fill
 decl_stmt|;
 block|}
@@ -940,9 +959,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
-name|char
-modifier|*
+name|struct
+name|bfd_sym_chain
 name|entry_symbol
 decl_stmt|;
 end_decl_stmt
@@ -1227,7 +1245,8 @@ name|lang_add_fill
 name|PARAMS
 argument_list|(
 operator|(
-name|int
+name|fill_type
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1299,7 +1318,8 @@ name|lang_leave_output_section_statement
 name|PARAMS
 argument_list|(
 operator|(
-name|bfd_vma
+name|fill_type
+operator|*
 operator|,
 specifier|const
 name|char
@@ -1450,6 +1470,7 @@ operator|*
 name|output_section_statement
 operator|,
 name|fill_type
+operator|*
 name|fill
 operator|,
 name|bfd_vma
@@ -1739,6 +1760,7 @@ operator|*
 name|prev
 operator|,
 name|fill_type
+operator|*
 name|fill
 operator|,
 name|bfd_vma
@@ -1857,11 +1879,6 @@ argument_list|(
 operator|(
 name|etree_type
 operator|*
-operator|,
-name|etree_type
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1889,7 +1906,8 @@ name|lang_leave_overlay_section
 name|PARAMS
 argument_list|(
 operator|(
-name|bfd_vma
+name|fill_type
+operator|*
 operator|,
 expr|struct
 name|lang_output_section_phdr_list
@@ -1906,7 +1924,13 @@ name|lang_leave_overlay
 name|PARAMS
 argument_list|(
 operator|(
-name|bfd_vma
+name|etree_type
+operator|*
+operator|,
+name|int
+operator|,
+name|fill_type
+operator|*
 operator|,
 specifier|const
 name|char

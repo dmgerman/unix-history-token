@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF core file support for BFD.    Copyright 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF core file support for BFD.    Copyright 1995, 1996, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_function
@@ -263,13 +263,12 @@ block|}
 comment|/* Check the magic number.  */
 if|if
 condition|(
+operator|!
 name|elf_file_p
 argument_list|(
 operator|&
 name|x_ehdr
 argument_list|)
-operator|==
-name|false
 condition|)
 goto|goto
 name|wrong
@@ -867,6 +866,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 call|(
 modifier|*
 name|ebd
@@ -876,8 +876,6 @@ call|)
 argument_list|(
 name|abfd
 argument_list|)
-operator|==
-name|false
 condition|)
 goto|goto
 name|wrong

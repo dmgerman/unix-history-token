@@ -313,7 +313,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s%sCannot allocate %lu bytes after allocating %lu bytes\n"
+literal|"\n%s%sout of memory allocating %lu bytes after a total of %lu bytes\n"
 argument_list|,
 name|name
 argument_list|,
@@ -344,7 +344,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s%sCannot allocate %lu bytes\n"
+literal|"\n%s%sout of memory allocating %lu bytes\n"
 argument_list|,
 name|name
 argument_list|,

@@ -139,7 +139,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Routines and macros for saving fixup chains. */
+comment|/* Routines and macros for saving fixup chains.  */
 end_comment
 
 begin_decl_stmt
