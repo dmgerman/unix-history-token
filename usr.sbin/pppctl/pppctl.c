@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: pppctl.c,v 1.10 1997/11/18 00:22:07 brian Exp $  */
 end_comment
 
 begin_include
@@ -1271,17 +1271,10 @@ name|inet_aton
 argument_list|(
 name|host
 argument_list|,
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
 operator|&
 name|ifsin
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 condition|)
 block|{
