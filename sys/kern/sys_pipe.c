@@ -5491,15 +5491,11 @@ name|cnt
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|wpipe
 operator|->
 name|pipe_state
 operator|&
 name|PIPE_DIRECTW
-operator|)
-operator|==
-literal|0
 condition|)
 name|kn
 operator|->
