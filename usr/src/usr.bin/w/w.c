@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.12 (Berkeley) %G%"
+literal|"@(#)w.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1462,7 +1462,7 @@ name|prfrom
 condition|)
 name|printf
 argument_list|(
-literal|"User     tty from           login@  idle   JCPU   PCPU  what\n"
+literal|"USER    TTY FROM            LOGIN@  IDLE   JCPU   PCPU  WHAT\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1472,7 +1472,7 @@ name|lflag
 condition|)
 name|printf
 argument_list|(
-literal|"User     tty       login@  idle   JCPU   PCPU  what\n"
+literal|"USER     TTY       LOGIN@  IDLE   JCPU   PCPU  WHAT\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1482,13 +1482,13 @@ name|prfrom
 condition|)
 name|printf
 argument_list|(
-literal|"User    tty from            idle  what\n"
+literal|"USER    TTY FROM            IDLE  WHAT\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"User    tty  idle  what\n"
+literal|"USER    TTY  IDLE  WHAT\n"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2072,6 +2072,21 @@ condition|(
 name|prfrom
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|utmp
+operator|.
+name|ut_host
+operator|==
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|" -             "
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" %-14.14s"
@@ -2346,7 +2361,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%3d:"
+literal|" %2d:"
 argument_list|,
 name|tim
 operator|/
@@ -2369,7 +2384,7 @@ elseif|else
 if|if
 condition|(
 name|tim
-operator|>
+operator|>=
 literal|0
 condition|)
 name|printf
@@ -2377,12 +2392,6 @@ argument_list|(
 literal|"    %2d"
 argument_list|,
 name|tim
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"      "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2567,7 +2576,15 @@ name|DAY
 condition|)
 name|printf
 argument_list|(
-literal|" %s%2d%s"
+literal|" %*s%d%s"
+argument_list|,
+name|hr
+operator|<
+literal|10
+condition|?
+literal|4
+else|:
+literal|3
 argument_list|,
 name|weekday
 index|[
