@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2001 Mark R V Murray  * Copyright Frank Cusack fcusack@fcusack.com 1999-2000  * All rights reserved  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ---------------------------------------------------------------------------  *   * This software may contain code from Naomaru Itoi:  *   * PAM-kerberos5 module Copyright notice.  * Naomaru Itoi<itoi@eecs.umich.edu>, June 24, 1997.  *   * ----------------------------------------------------------------------------  * COPYRIGHT (c)  1997  * THE REGENTS OF THE UNIVERSITY OF MICHIGAN  * ALL RIGHTS RESERVED  *   * PERMISSION IS GRANTED TO USE, COPY, CREATE DERIVATIVE WORKS AND REDISTRIBUTE  * THIS SOFTWARE AND SUCH DERIVATIVE WORKS FOR ANY PURPOSE, SO LONG AS THE NAME  * OF THE UNIVERSITY OF MICHIGAN IS NOT USED IN ANY ADVERTISING OR PUBLICITY  * PERTAINING TO THE USE OR DISTRIBUTION OF THIS SOFTWARE WITHOUT SPECIFIC,  * WRITTEN PRIOR AUTHORIZATION.  IF THE ABOVE COPYRIGHT NOTICE OR ANY OTHER  * IDENTIFICATION OF THE UNIVERSITY OF MICHIGAN IS INCLUDED IN ANY COPY OF ANY  * PORTION OF THIS SOFTWARE, THEN THE DISCLAIMER BELOW MUST ALSO BE INCLUDED.  *   * THE SOFTWARE IS PROVIDED AS IS, WITHOUT REPRESENTATION FROM THE UNIVERSITY OF  * MICHIGAN AS TO ITS FITNESS FOR ANY PURPOSE, AND WITHOUT WARRANTY BY THE  * UNIVERSITY OF MICHIGAN OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING  * WITHOUT LIMITATION THE IMPLIED WARRANTIES OF MERCHANTABITILY AND FITNESS FOR A  * PARTICULAR PURPOSE.  THE REGENTS OF THE UNIVERSITY OF MICHIGAN SHALL NOT BE  * LIABLE FOR ANY DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR  * CONSEQUENTIAL DAMAGES, WITH RESPECT TO ANY CLAIM ARISING OUT OF OR IN  * CONNECTION WITH THE USE OF THE SOFTWARE, EVEN IF IT HAS BEEN OR IS HEREAFTER  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  *   * PAM-kerberos5 module is written based on PAM-kerberos4 module  * by Derrick J. Brashear and kerberos5-1.0pl1 by M.I.T. kerberos team.  * Permission to use, copy, modify, distribute this software is hereby  * granted, as long as it is granted by Derrick J. Brashear and  * M.I.T. kerberos team. Followings are their copyright information.    * ----------------------------------------------------------------------------  *   * This software may contain code from Derrick J. Brashear:  *   *   * Copyright (c) Derrick J. Brashear, 1996. All rights reserved  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *   * ----------------------------------------------------------------------------  *   * This software may contain code from MIT Kerberos 5:  *   * Copyright Notice and Legal Administrivia  * ----------------------------------------  *   * Copyright (C) 1996 by the Massachusetts Institute of Technology.  *   * All rights reserved.  *   * Export of this software from the United States of America may require  * a specific license from the United States Government.  It is the  * responsibility of any person or organization contemplating export to  * obtain such a license before exporting.  *   * WITHIN THAT CONSTRAINT, permission to use, copy, modify, and  * distribute this software and its documentation for any purpose and  * without fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright notice and  * this permission notice appear in supporting documentation, and that  * the name of M.I.T. not be used in advertising or publicity pertaining  * to distribution of the software without specific, written prior  * permission.  M.I.T. makes no representations about the suitability of  * this software for any purpose.  It is provided "as is" without express  * or implied warranty.  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * Individual source code files are copyright MIT, Cygnus Support,  * OpenVision, Oracle, Sun Soft, and others.  *   * Project Athena, Athena, Athena MUSE, Discuss, Hesiod, Kerberos, Moira,  * and Zephyr are trademarks of the Massachusetts Institute of Technology  * (MIT).  No commercial use of these trademarks may be made without  * prior written permission of MIT.  *   * "Commercial use" means use of a name in a product or other for-profit  * manner.  It does NOT prevent a commercial firm from referring to the  * MIT trademarks in order to convey information (although in doing so,  * recognition of their trademark status should be given).  *   * The following copyright and permission notice applies to the  * OpenVision Kerberos Administration system located in kadmin/create,  * kadmin/dbutil, kadmin/passwd, kadmin/server, lib/kadm5, and portions  * of lib/rpc:  *   *    Copyright, OpenVision Technologies, Inc., 1996, All Rights Reserved  *   *    WARNING: Retrieving the OpenVision Kerberos Administration system   *    source code, as described below, indicates your acceptance of the   *    following terms.  If you do not agree to the following terms, do not   *    retrieve the OpenVision Kerberos administration system.  *   *    You may freely use and distribute the Source Code and Object Code  *    compiled from it, with or without modification, but this Source  *    Code is provided to you "AS IS" EXCLUSIVE OF ANY WARRANTY,  *    INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY OR  *    FITNESS FOR A PARTICULAR PURPOSE, OR ANY OTHER WARRANTY, WHETHER  *    EXPRESS OR IMPLIED.  IN NO EVENT WILL OPENVISION HAVE ANY LIABILITY  *    FOR ANY LOST PROFITS, LOSS OF DATA OR COSTS OF PROCUREMENT OF   *    SUBSTITUTE GOODS OR SERVICES, OR FOR ANY SPECIAL, INDIRECT, OR  *    CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, INCLUDING,   *    WITHOUT LIMITATION, THOSE RESULTING FROM THE USE OF THE SOURCE   *    CODE, OR THE FAILURE OF THE SOURCE CODE TO PERFORM, OR FOR ANY   *    OTHER REASON.  *   *    OpenVision retains all copyrights in the donated Source Code. OpenVision  *    also retains copyright to derivative works of the Source Code, whether  *    created by OpenVision or by a third party. The OpenVision copyright   *    notice must be preserved if derivative works are made based on the   *    donated Source Code.  *   *    OpenVision Technologies, Inc. has donated this Kerberos   *    Administration system to MIT for inclusion in the standard   *    Kerberos 5 distribution.  This donation underscores our   *    commitment to continuing Kerberos technology development   *    and our gratitude for the valuable work which has been   *    performed by MIT and the Kerberos community.  *   */
+comment|/*-  * Copyright 2001 Mark R V Murray  * Copyright Frank Cusack fcusack@fcusack.com 1999-2000  * All rights reserved  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *   * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ---------------------------------------------------------------------------  *   * This software may contain code from Naomaru Itoi:  *   * PAM-kerberos5 module Copyright notice.  * Naomaru Itoi<itoi@eecs.umich.edu>, June 24, 1997.  *   * ----------------------------------------------------------------------------  * COPYRIGHT (c)  1997  * THE REGENTS OF THE UNIVERSITY OF MICHIGAN  * ALL RIGHTS RESERVED  *   * PERMISSION IS GRANTED TO USE, COPY, CREATE DERIVATIVE WORKS AND REDISTRIBUTE  * THIS SOFTWARE AND SUCH DERIVATIVE WORKS FOR ANY PURPOSE, SO LONG AS THE NAME  * OF THE UNIVERSITY OF MICHIGAN IS NOT USED IN ANY ADVERTISING OR PUBLICITY  * PERTAINING TO THE USE OR DISTRIBUTION OF THIS SOFTWARE WITHOUT SPECIFIC,  * WRITTEN PRIOR AUTHORIZATION.  IF THE ABOVE COPYRIGHT NOTICE OR ANY OTHER  * IDENTIFICATION OF THE UNIVERSITY OF MICHIGAN IS INCLUDED IN ANY COPY OF ANY  * PORTION OF THIS SOFTWARE, THEN THE DISCLAIMER BELOW MUST ALSO BE INCLUDED.  *   * THE SOFTWARE IS PROVIDED AS IS, WITHOUT REPRESENTATION FROM THE UNIVERSITY OF  * MICHIGAN AS TO ITS FITNESS FOR ANY PURPOSE, AND WITHOUT WARRANTY BY THE  * UNIVERSITY OF MICHIGAN OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING  * WITHOUT LIMITATION THE IMPLIED WARRANTIES OF MERCHANTABITILY AND FITNESS FOR A  * PARTICULAR PURPOSE.  THE REGENTS OF THE UNIVERSITY OF MICHIGAN SHALL NOT BE  * LIABLE FOR ANY DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR  * CONSEQUENTIAL DAMAGES, WITH RESPECT TO ANY CLAIM ARISING OUT OF OR IN  * CONNECTION WITH THE USE OF THE SOFTWARE, EVEN IF IT HAS BEEN OR IS HEREAFTER  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  *   * PAM-kerberos5 module is written based on PAM-kerberos4 module  * by Derrick J. Brashear and kerberos5-1.0pl1 by M.I.T. kerberos team.  * Permission to use, copy, modify, distribute this software is hereby  * granted, as long as it is granted by Derrick J. Brashear and  * M.I.T. kerberos team. Followings are their copyright information.    * ----------------------------------------------------------------------------  *   * This software may contain code from Derrick J. Brashear:  *   *   * Copyright (c) Derrick J. Brashear, 1996. All rights reserved  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *   * ----------------------------------------------------------------------------  *   * This software may contain code from MIT Kerberos 5:  *   * Copyright Notice and Legal Administrivia  * ----------------------------------------  *   * Copyright (C) 1996 by the Massachusetts Institute of Technology.  *   * All rights reserved.  *   * Export of this software from the United States of America may require  * a specific license from the United States Government.  It is the  * responsibility of any person or organization contemplating export to  * obtain such a license before exporting.  *   * WITHIN THAT CONSTRAINT, permission to use, copy, modify, and  * distribute this software and its documentation for any purpose and  * without fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright notice and  * this permission notice appear in supporting documentation, and that  * the name of M.I.T. not be used in advertising or publicity pertaining  * to distribution of the software without specific, written prior  * permission.  M.I.T. makes no representations about the suitability of  * this software for any purpose.  It is provided "as is" without express  * or implied warranty.  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * Individual source code files are copyright MIT, Cygnus Support,  * OpenVision, Oracle, Sun Soft, and others.  *   * Project Athena, Athena, Athena MUSE, Discuss, Hesiod, Kerberos, Moira,  * and Zephyr are trademarks of the Massachusetts Institute of Technology  * (MIT).  No commercial use of these trademarks may be made without  * prior written permission of MIT.  *   * "Commercial use" means use of a name in a product or other for-profit  * manner.  It does NOT prevent a commercial firm from referring to the  * MIT trademarks in order to convey information (although in doing so,  * recognition of their trademark status should be given).  *   * The following copyright and permission notice applies to the  * OpenVision Kerberos Administration system located in kadmin/create,  * kadmin/dbutil, kadmin/passwd, kadmin/server, lib/kadm5, and portions  * of lib/rpc:  *   *    Copyright, OpenVision Technologies, Inc., 1996, All Rights Reserved  *   *    WARNING: Retrieving the OpenVision Kerberos Administration system   *    source code, as described below, indicates your acceptance of the   *    following terms.  If you do not agree to the following terms, do not   *    retrieve the OpenVision Kerberos administration system.  *   *    You may freely use and distribute the Source Code and Object Code  *    compiled from it, with or without modification, but this Source  *    Code is provided to you "AS IS" EXCLUSIVE OF ANY WARRANTY,  *    INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY OR  *    FITNESS FOR A PARTICULAR PURPOSE, OR ANY OTHER WARRANTY, WHETHER  *    EXPRESS OR IMPLIED.  IN NO EVENT WILL OPENVISION HAVE ANY LIABILITY  *    FOR ANY LOST PROFITS, LOSS OF DATA OR COSTS OF PROCUREMENT OF   *    SUBSTITUTE GOODS OR SERVICES, OR FOR ANY SPECIAL, INDIRECT, OR  *    CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, INCLUDING,   *    WITHOUT LIMITATION, THOSE RESULTING FROM THE USE OF THE SOURCE   *    CODE, OR THE FAILURE OF THE SOURCE CODE TO PERFORM, OR FOR ANY   *    OTHER REASON.  *   *    OpenVision retains all copyrights in the donated Source Code. OpenVision  *    also retains copyright to derivative works of the Source Code, whether  *    created by OpenVision or by a third party. The OpenVision copyright   *    notice must be preserved if derivative works are made based on the   *    donated Source Code.  *   *    OpenVision Technologies, Inc. has donated this Kerberos   *    Administration system to MIT for inclusion in the standard   *    Kerberos 5 distribution.  This donation underscores our   *    commitment to continuing Kerberos technology development   *    and our gratitude for the valuable work which has been   *    performed by MIT and the Kerberos community.  *   */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -231,13 +231,6 @@ name|NEW_PASSWORD_PROMPT
 value|"New Password:"
 end_define
 
-begin_define
-define|#
-directive|define
-name|NEW_PASSWORD_PROMPT_2
-value|"New Password (again):"
-end_define
-
 begin_enum
 enum|enum
 block|{
@@ -390,6 +383,9 @@ name|luser
 index|[
 literal|32
 index|]
+decl_stmt|,
+modifier|*
+name|srvdup
 decl_stmt|;
 name|pam_std_option
 argument_list|(
@@ -763,17 +759,16 @@ expr_stmt|;
 comment|/* Get password */
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
+argument_list|,
+name|PAM_AUTHTOK
 argument_list|,
 operator|&
 name|pass
 argument_list|,
 name|PASSWORD_PROMPT
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,17 +1156,35 @@ expr_stmt|;
 comment|/* Verify them */
 if|if
 condition|(
+operator|(
+name|srvdup
+operator|=
+name|strdup
+argument_list|(
+name|service
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|retval
+operator|=
+name|PAM_BUF_ERR
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
+name|krbret
+operator|=
 name|verify_krb_v5_tgt
 argument_list|(
 name|pam_context
 argument_list|,
 name|ccache
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|service
+name|srvdup
 argument_list|,
 name|pam_test_option
 argument_list|(
@@ -1183,6 +1196,15 @@ argument_list|,
 name|NULL
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|srvdup
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|krbret
 operator|==
 operator|-
 literal|1
@@ -2886,13 +2908,13 @@ name|user
 decl_stmt|,
 modifier|*
 name|pass
-decl_stmt|,
-modifier|*
-name|pass2
 decl_stmt|;
 name|char
 modifier|*
 name|princ_name
+decl_stmt|,
+modifier|*
+name|passdup
 decl_stmt|;
 name|pam_std_option
 argument_list|(
@@ -3098,17 +3120,16 @@ expr_stmt|;
 comment|/* Get password */
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
+argument_list|,
+name|PAM_OLDAUTHTOK
 argument_list|,
 operator|&
 name|pass
 argument_list|,
 name|PASSWORD_PROMPT
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -3194,45 +3215,41 @@ literal|"Credentials established"
 argument_list|)
 expr_stmt|;
 comment|/* Now get the new password */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
+argument_list|,
+name|PAM_AUTHTOK
 argument_list|,
 operator|&
 name|pass
 argument_list|,
 name|NEW_PASSWORD_PROMPT
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|retval
 operator|!=
-name|PAM_SUCCESS
+name|PAM_TRY_AGAIN
 condition|)
-goto|goto
-name|cleanup
-goto|;
-name|retval
-operator|=
-name|pam_get_pass
+break|break;
+name|pam_error
 argument_list|(
 name|pamh
 argument_list|,
-operator|&
-name|pass2
-argument_list|,
-name|NEW_PASSWORD_PROMPT_2
-argument_list|,
-operator|&
-name|options
+literal|"Mismatch; try again, EOF to quit."
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|retval
@@ -3244,40 +3261,32 @@ name|cleanup
 goto|;
 name|PAM_LOG
 argument_list|(
-literal|"Got new password twice"
+literal|"Got new password"
 argument_list|)
 expr_stmt|;
+comment|/* Change it */
 if|if
 condition|(
-name|strcmp
+operator|(
+name|passdup
+operator|=
+name|strdup
 argument_list|(
 name|pass
-argument_list|,
-name|pass2
 argument_list|)
-operator|!=
-literal|0
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error strcmp(): passwords are different"
-argument_list|)
-expr_stmt|;
 name|retval
 operator|=
-name|PAM_AUTHTOK_ERR
+name|PAM_BUF_ERR
 expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
 block|}
-name|PAM_LOG
-argument_list|(
-literal|"New passwords are the same"
-argument_list|)
-expr_stmt|;
-comment|/* Change it */
 name|krbret
 operator|=
 name|krb5_change_password
@@ -3287,11 +3296,7 @@ argument_list|,
 operator|&
 name|creds
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|pass
+name|passdup
 argument_list|,
 operator|&
 name|result_code
@@ -3301,6 +3306,11 @@ name|result_code_string
 argument_list|,
 operator|&
 name|result_string
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|passdup
 argument_list|)
 expr_stmt|;
 if|if
