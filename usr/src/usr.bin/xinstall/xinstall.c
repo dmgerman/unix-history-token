@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.7 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,21 +116,17 @@ begin_comment
 comment|/* no/false */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|PERROR
+parameter_list|(
+name|head
+parameter_list|,
+name|msg
+parameter_list|)
+value|{ \ 	fputs(head, stderr); \ 	perror(msg); \ }
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -633,18 +629,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: open: %s: %s\n"
+literal|"install: open: "
 argument_list|,
 name|from_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|exit
@@ -799,18 +788,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: %s: %s\n"
+literal|"install: "
 argument_list|,
 name|to_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|exit
@@ -829,18 +811,11 @@ name|mode
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: fchmod: %s: %s\n"
+literal|"install: fchmod: "
 argument_list|,
 name|to_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -879,18 +854,11 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: fchown: %s: %s\n"
+literal|"install: fchown: "
 argument_list|,
 name|to_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -989,18 +957,11 @@ name|mode
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: chmod: %s: %s\n"
+literal|"install: chmod: "
 argument_list|,
 name|to_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1223,18 +1184,11 @@ name|EXEC
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: write: %s: %s\n"
+literal|"install: write: "
 argument_list|,
 name|to_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1294,18 +1248,11 @@ operator|!=
 name|n
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: write: %s: %s\n"
+literal|"install: write: "
 argument_list|,
 name|to_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1338,18 +1285,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: read: %s: %s\n"
+literal|"install: read: "
 argument_list|,
 name|from_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1466,18 +1406,11 @@ operator|!=
 name|n
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: write: %s: %s\n"
+literal|"install: write: "
 argument_list|,
 name|to_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1492,18 +1425,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|PERROR
 argument_list|(
-name|stderr
-argument_list|,
-literal|"install: read: %s: %s\n"
+literal|"install: read: "
 argument_list|,
 name|from_name
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1599,7 +1525,7 @@ argument_list|()
 block|{
 name|fputs
 argument_list|(
-literal|"usage: install [-cs] [-g group] [-m mode] [-o owner] f1 f2;\n\tor f1 ... fn directory\n"
+literal|"usage: install [-cs] [-g group] [-m mode] [-o owner] file1 file2;\n\tor file1 ... fileN directory\n"
 argument_list|,
 name|stderr
 argument_list|)
