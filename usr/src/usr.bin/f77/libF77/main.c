@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.3	%G%"
+literal|"@(#)main.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sigf
 operator|=
 name|signal
@@ -112,6 +113,7 @@ name|SIGQUIT
 argument_list|,
 name|sigdie
 argument_list|)
+operator|)
 operator|!=
 name|SIG_DFL
 condition|)
@@ -124,6 +126,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sigf
 operator|=
 name|signal
@@ -132,6 +135,7 @@ name|SIGINT
 argument_list|,
 name|sigdie
 argument_list|)
+operator|)
 operator|!=
 name|SIG_DFL
 condition|)
@@ -144,6 +148,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sigf
 operator|=
 name|signal
@@ -152,6 +157,7 @@ name|SIGTERM
 argument_list|,
 name|sigdie
 argument_list|)
+operator|)
 operator|!=
 name|SIG_DFL
 condition|)
@@ -164,6 +170,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sigf
 operator|=
 name|signal
@@ -172,6 +179,7 @@ name|SIGILL
 argument_list|,
 name|sigdie
 argument_list|)
+operator|)
 operator|!=
 name|SIG_DFL
 condition|)
@@ -184,6 +192,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sigf
 operator|=
 name|signal
@@ -192,6 +201,7 @@ name|SIGEMT
 argument_list|,
 name|sigdie
 argument_list|)
+operator|)
 operator|!=
 name|SIG_DFL
 condition|)
@@ -204,6 +214,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sigf
 operator|=
 name|signal
@@ -212,6 +223,7 @@ name|SIGBUS
 argument_list|,
 name|sigdie
 argument_list|)
+operator|)
 operator|!=
 name|SIG_DFL
 condition|)
@@ -224,6 +236,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sigf
 operator|=
 name|signal
@@ -232,6 +245,7 @@ name|SIGSEGV
 argument_list|,
 name|sigdie
 argument_list|)
+operator|)
 operator|!=
 name|SIG_DFL
 condition|)
