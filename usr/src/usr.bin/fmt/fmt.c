@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	2.2 (Berkeley) %G%"
+literal|"@(#)fmt.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,12 +147,6 @@ name|errs
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|sobuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -172,13 +166,6 @@ name|mark
 operator|=
 operator|-
 literal|10
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|sobuf
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
