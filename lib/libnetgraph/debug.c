@@ -1251,19 +1251,6 @@ argument_list|)
 expr_stmt|;
 name|NGLOGX
 argument_list|(
-literal|"    acfcomp   %s"
-argument_list|,
-name|ac
-operator|->
-name|acfcomp
-condition|?
-literal|"YES"
-else|:
-literal|"NO"
-argument_list|)
-expr_stmt|;
-name|NGLOGX
-argument_list|(
 literal|"    Async MRU %u"
 argument_list|,
 name|ac
