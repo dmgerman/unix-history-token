@@ -3792,10 +3792,7 @@ name|s
 decl_stmt|;
 name|int
 name|revents
-init|=
-literal|0
 decl_stmt|;
-comment|/* 	 * An imitation of the FIONREAD ioctl code. 	 */
 name|d
 operator|=
 name|dev
@@ -3815,6 +3812,16 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|revents
+operator|=
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLWRNORM
+operator|)
+expr_stmt|;
 name|s
 operator|=
 name|splimp
@@ -3831,6 +3838,7 @@ name|POLLRDNORM
 operator|)
 condition|)
 block|{
+comment|/* 		 * An imitation of the FIONREAD ioctl code. 		 * XXX not quite.  An exact imitation: 		 *	if (d->b_slen != 0 || 		 *	    (d->bd_hbuf != NULL&& d->bd_hlen != 0) 		 */
 if|if
 condition|(
 name|d
