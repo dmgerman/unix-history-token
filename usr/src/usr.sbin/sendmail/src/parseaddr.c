@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.29 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6340,7 +6340,7 @@ else|else
 block|{
 name|usrerr
 argument_list|(
-literal|"%s"
+literal|"553 %s"
 argument_list|,
 name|buf
 argument_list|)
