@@ -3493,6 +3493,8 @@ operator||
 name|SOUND_MASK_VOLUME
 operator||
 name|SOUND_MASK_LINE1
+operator||
+name|SOUND_MASK_SPEAKER
 argument_list|)
 expr_stmt|;
 name|ess_setmixer
@@ -3648,6 +3650,14 @@ expr_stmt|;
 name|rreg
 operator|=
 literal|0x6a
+expr_stmt|;
+break|break;
+case|case
+name|SOUND_MIXER_SPEAKER
+case|:
+name|preg
+operator|=
+literal|0x3c
 expr_stmt|;
 break|break;
 case|case
