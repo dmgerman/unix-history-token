@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.30.4.4 1996/02/12 14:37:24 phk Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.30.4.5 1996/02/12 14:40:10 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1093,6 +1093,16 @@ name|lptioctl
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|lptintr
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -1100,46 +1110,27 @@ name|CDEV_MAJOR
 value|16
 end_define
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|lpt_cdevsw
-init|=
-block|{
-name|lptopen
-block|,
-name|lptclose
-block|,
-name|noread
-block|,
-name|lptwrite
-block|,
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static struct cdevsw lpt_cdevsw =  	{ lptopen,	lptclose,	noread,		lptwrite,
 comment|/*16*/
-name|lptioctl
-block|,
-name|nullstop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
+end_comment
+
+begin_comment
+unit|lptioctl,	nullstop,	nullreset,	nodevtotty,
 comment|/* lpt */
-name|seltrue
-block|,
-name|nommap
-block|,
-name|nostrat
-block|,
-literal|"lpt"
-block|,
-name|NULL
-block|,
-operator|-
-literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
+end_comment
+
+begin_endif
+unit|seltrue,	nommap,		nostrat,	"lpt",	NULL,	-1 };
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1861,7 +1852,6 @@ comment|/*  * lptopen -- reset the printer, then wait until it's selected and no
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|lptopen
 parameter_list|(
@@ -2507,7 +2497,6 @@ comment|/*  * lptclose -- close the device, free the local line buffer.  *  * Ch
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|lptclose
 parameter_list|(
@@ -2915,7 +2904,6 @@ comment|/*  * lptwrite --copy a line from user space to a local buffer, then cal
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|lptwrite
 parameter_list|(
@@ -3423,7 +3411,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|lptioctl
 parameter_list|(
@@ -3613,12 +3600,6 @@ name|sc
 operator|->
 name|sc_if
 decl_stmt|;
-name|ifp
-operator|->
-name|if_softc
-operator|=
-name|sc
-expr_stmt|;
 name|ifp
 operator|->
 name|if_name
