@@ -423,6 +423,13 @@ argument_list|,
 name|ed_pci_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|ed_detach
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
