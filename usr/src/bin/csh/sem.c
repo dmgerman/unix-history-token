@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c 4.3 %G%"
+literal|"@(#)sem.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -599,9 +599,17 @@ name|oOLDSTD
 decl_stmt|,
 name|otpgrp
 decl_stmt|;
-name|sighold
+name|int
+name|omask
+decl_stmt|;
+name|omask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
 argument_list|(
 name|SIGCHLD
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ochild
@@ -666,9 +674,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGCHLD
+name|omask
 argument_list|)
 expr_stmt|;
 name|error
@@ -760,9 +768,9 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGCHLD
+name|omask
 argument_list|)
 expr_stmt|;
 block|}
@@ -833,7 +841,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
-name|sigsys
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -842,7 +850,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sigsys
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -853,7 +861,7 @@ else|:
 name|vffree
 argument_list|)
 expr_stmt|;
-name|sigsys
+name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -871,21 +879,21 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTTIN
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -893,7 +901,7 @@ name|SIG_DFL
 argument_list|)
 expr_stmt|;
 block|}
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -918,14 +926,14 @@ name|FINT
 operator|)
 condition|)
 block|{
-name|sigsys
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigsys
+name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -984,7 +992,7 @@ name|t_dflg
 operator|&
 name|FNOHUP
 condition|)
-name|sigsys
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -999,8 +1007,12 @@ name|t_dflg
 operator|&
 name|FNICE
 condition|)
-name|nice
+name|setpriority
 argument_list|(
+name|PRIO_PROCESS
+argument_list|,
+literal|0
+argument_list|,
 name|t
 operator|->
 name|t_nice

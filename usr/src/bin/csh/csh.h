@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* csh.h 4.10 83/07/01 */
+comment|/* csh.h 4.11 84/08/31 */
 end_comment
 
 begin_include
@@ -88,42 +88,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(strcmp(a, b) == 0)
-end_define
-
-begin_comment
-comment|/*  * For 4.2bsd signals.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< ((s)-1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigsys
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
-value|signal(s, a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sighold
-parameter_list|(
-name|s
-parameter_list|)
-value|sigblock(mask(s))
 end_define
 
 begin_comment

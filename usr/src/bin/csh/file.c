@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c 1.2 (Berkeley from Hp Labs) %G%"
+literal|"@(#)file.c 1.3 (Berkeley from Hp Labs) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,42 +48,6 @@ include|#
 directive|include
 file|<pwd.h>
 end_include
-
-begin_comment
-comment|/*  * For 4.2bsd signals.  *  * (can't include sh.h)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< ((s)-1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigsys
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
-value|signal(s, a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sighold
-parameter_list|(
-name|s
-parameter_list|)
-value|sigblock(mask(s))
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -183,9 +147,17 @@ argument_list|(
 argument|on
 argument_list|)
 block|{
-name|sigignore
+name|int
+name|omask
+block|;
+name|omask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
 argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 block|;
 if|if
@@ -295,9 +267,9 @@ block|}
 end_block
 
 begin_expr_stmt
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGINT
+name|omask
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -321,9 +293,17 @@ name|tty
 decl_stmt|,
 name|tty_normal
 decl_stmt|;
-name|sigignore
+name|int
+name|omask
+decl_stmt|;
+name|omask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
 argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -379,9 +359,9 @@ operator|&
 name|tty_normal
 argument_list|)
 expr_stmt|;
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGINT
+name|omask
 argument_list|)
 expr_stmt|;
 block|}
@@ -416,9 +396,17 @@ name|tty
 decl_stmt|,
 name|tty_normal
 decl_stmt|;
-name|sigignore
+name|int
+name|omask
+decl_stmt|;
+name|omask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
 argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -483,9 +471,9 @@ operator|&
 name|tty_normal
 argument_list|)
 expr_stmt|;
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGINT
+name|omask
 argument_list|)
 expr_stmt|;
 block|}
@@ -1553,7 +1541,7 @@ parameter_list|(
 name|items
 parameter_list|)
 define|\
-value|{\     sighold (SIGINT);\     free_items (items);\     items = NULL;\     sigrelse (SIGINT);\ }
+value|{   int omask;\     omask = sigblock (sigmask(SIGINT));\     free_items (items);\     items = NULL;\     sigsetmask (omask);\ }
 end_define
 
 begin_comment

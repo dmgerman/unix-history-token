@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c 4.5 %G%"
+literal|"@(#)glob.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1796,7 +1796,11 @@ return|;
 default|default:
 if|if
 condition|(
+operator|(
 name|c
+operator|&
+name|TRIM
+operator|)
 operator|!=
 name|scc
 condition|)
@@ -3213,19 +3217,25 @@ name|t_dflg
 operator||=
 name|FPAR
 expr_stmt|;
-name|sigignore
+name|signal
 argument_list|(
 name|SIGTSTP
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigignore
+name|signal
 argument_list|(
 name|SIGTTIN
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigignore
+name|signal
 argument_list|(
 name|SIGTTOU
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|execute

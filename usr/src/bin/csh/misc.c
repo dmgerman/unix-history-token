@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c 4.2 %G%"
+literal|"@(#)misc.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,30 +304,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_macro
-name|cfree
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_function
 name|char

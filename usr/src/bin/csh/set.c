@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)set.c 4.2 %G%"
+literal|"@(#)set.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1432,7 +1432,7 @@ operator|)
 operator|&
 name|cp
 condition|)
-name|cfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
