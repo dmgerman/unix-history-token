@@ -836,15 +836,11 @@ comment|/* FX80 set Double Strike */
 comment|/* \(lt */
 literal|"\000\033H"
 block|,
-end_struct
-
-begin_comment
 comment|/* FX80 cancels D.S.  */
-end_comment
-
-begin_comment
 comment|/* \(lb */
-end_comment
+block|}
+struct|;
+end_struct
 
 end_unit
 
