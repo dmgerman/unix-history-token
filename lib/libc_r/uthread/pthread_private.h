@@ -331,7 +331,7 @@ name|jb
 parameter_list|,
 name|ra
 parameter_list|)
-value|do {			\ 	(jb)[0]._jb[2] = (unsigned long)(ra) + 8UL;	\ 	(jb)[0]._jb[R_RA + 4] = 0;			\ 	(jb)[0]._jb[R_T12 + 4] = (long)(ra);		\ } while (0)
+value|do {			\ 	(jb)[0]._jb[2] = (long)(ra);			\ 	(jb)[0]._jb[R_RA + 4] = (long)(ra);		\ 	(jb)[0]._jb[R_T12 + 4] = (long)(ra);		\ } while (0)
 end_define
 
 begin_else
