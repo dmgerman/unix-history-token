@@ -1733,6 +1733,7 @@ operator|(
 name|pthread_attr_t
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|sched_param
 operator|*
