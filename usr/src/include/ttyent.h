@@ -17,7 +17,7 @@ name|char
 modifier|*
 name|ty_getty
 decl_stmt|;
-comment|/* name for gettytab (5) */
+comment|/* command to execute, usually getty */
 name|char
 modifier|*
 name|ty_type
@@ -29,9 +29,14 @@ decl_stmt|;
 comment|/* status flags (see below for defines) */
 name|char
 modifier|*
+name|ty_window
+decl_stmt|;
+comment|/* command to start up window manager */
+name|char
+modifier|*
 name|ty_comment
 decl_stmt|;
-comment|/* unused - for comments */
+comment|/* usually the location of the terminal */
 block|}
 struct|;
 end_struct
