@@ -214,13 +214,6 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
-name|_flags
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Release this FILE for reuse. */
-name|fp
-operator|->
 name|_file
 operator|=
 operator|-
@@ -237,6 +230,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Mess up if reaccessed. */
+name|fp
+operator|->
+name|_flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Release this FILE for reuse. */
 return|return
 operator|(
 name|r
