@@ -180,12 +180,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/elf.h>
 end_include
 
@@ -1998,16 +1992,32 @@ operator|)
 expr_stmt|;
 comment|/* 	 * From this point on, we may have resources that need to be freed. 	 */
 comment|/* 	 * Yeah, I'm paranoid.  There is every reason in the world to get 	 * VTEXT now since from here on out, there are places we can have 	 * a context switch.  Better safe than sorry; I really don't want 	 * the file to change while it's being loaded. 	 */
-name|atomic_set_long
+name|simple_lock
 argument_list|(
 operator|&
 name|imgp
 operator|->
 name|vp
 operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+name|imgp
+operator|->
+name|vp
+operator|->
 name|v_flag
-argument_list|,
+operator||=
 name|VTEXT
+expr_stmt|;
+name|simple_unlock
+argument_list|(
+operator|&
+name|imgp
+operator|->
+name|vp
+operator|->
+name|v_interlock
 argument_list|)
 expr_stmt|;
 if|if
