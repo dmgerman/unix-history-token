@@ -31,10 +31,8 @@ begin_function_decl
 name|int
 name|vchan_initsys
 parameter_list|(
-name|struct
-name|snddev_info
-modifier|*
-name|d
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
