@@ -3663,11 +3663,6 @@ operator|&=
 operator|~
 name|IFF_RUNNING
 expr_stmt|;
-name|em_stop
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 name|em_init
 argument_list|(
 name|adapter
