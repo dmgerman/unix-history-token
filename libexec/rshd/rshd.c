@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rshd.c,v 1.20 1997/12/02 12:30:04 charnier Exp $"
+literal|"$Id: rshd.c,v 1.21 1998/05/05 00:28:51 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -229,6 +235,12 @@ end_comment
 begin_decl_stmt
 name|int
 name|sent_null
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|no_delay
 decl_stmt|;
 end_decl_stmt
 
@@ -355,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"alnkvxL"
+value|"alnkvxDL"
 end_define
 
 begin_decl_stmt
@@ -407,7 +419,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"alnL"
+value|"alnDL"
 end_define
 
 begin_endif
@@ -549,6 +561,14 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+case|case
+literal|'D'
+case|:
+name|no_delay
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'L'
 case|:
@@ -743,6 +763,36 @@ argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"setsockopt (SO_LINGER): %m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|no_delay
+operator|&&
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|IPPROTO_TCP
+argument_list|,
+name|TCP_NODELAY
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (TCP_NODELAY): %m"
 argument_list|)
 expr_stmt|;
 name|doit
