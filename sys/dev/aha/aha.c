@@ -1902,38 +1902,39 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
+comment|/* parent	*/
 name|aha
 operator|->
 name|parent_dmat
 argument_list|,
-comment|/*alignment*/
+comment|/* alignment	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*filter*/
+comment|/* filter	*/
 name|NULL
 argument_list|,
-comment|/*filterarg*/
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
-comment|/*maxsize*/
+comment|/* maxsize	*/
 name|MAXBSIZE
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 name|AHA_NSEG
 argument_list|,
-comment|/*maxsegsz*/
+comment|/* maxsegsz	*/
 name|BUS_SPACE_MAXSIZE_24BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 operator|&
@@ -1959,28 +1960,30 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
+comment|/* parent	*/
 name|aha
 operator|->
 name|parent_dmat
 argument_list|,
-comment|/*alignment*/
+comment|/* alignment	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*filter*/
+comment|/* filter	*/
 name|NULL
 argument_list|,
-comment|/*filterarg*/
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
+comment|/* maxsize	*/
 name|aha
 operator|->
 name|num_boxes
@@ -1997,13 +2000,13 @@ name|aha_mbox_out_t
 argument_list|)
 operator|)
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 literal|1
 argument_list|,
-comment|/*maxsegsz*/
+comment|/* maxsegsz	*/
 name|BUS_SPACE_MAXSIZE_24BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 literal|0
 argument_list|,
 operator|&
@@ -2135,28 +2138,30 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
+comment|/* parent	*/
 name|aha
 operator|->
 name|parent_dmat
 argument_list|,
-comment|/*alignment*/
+comment|/* alignment	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*filter*/
+comment|/* filter	*/
 name|NULL
 argument_list|,
-comment|/*filterarg*/
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
+comment|/* maxsize	*/
 name|aha
 operator|->
 name|max_ccbs
@@ -2167,13 +2172,13 @@ expr|struct
 name|aha_ccb
 argument_list|)
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 literal|1
 argument_list|,
-comment|/*maxsegsz*/
+comment|/* maxsegsz	*/
 name|BUS_SPACE_MAXSIZE_24BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 literal|0
 argument_list|,
 operator|&
@@ -2276,37 +2281,39 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
+comment|/* parent	*/
 name|aha
 operator|->
 name|parent_dmat
 argument_list|,
-comment|/*alignment*/
+comment|/* alignment	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*filter*/
+comment|/* filter	*/
 name|NULL
 argument_list|,
-comment|/*filterarg*/
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
+comment|/* maxsize	*/
 name|PAGE_SIZE
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 literal|1
 argument_list|,
-comment|/*maxsegsz*/
+comment|/* maxsegsz	*/
 name|BUS_SPACE_MAXSIZE_24BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 literal|0
 argument_list|,
 operator|&

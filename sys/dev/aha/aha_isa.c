@@ -889,35 +889,38 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-comment|/*parent*/
+comment|/* parent	*/
 name|NULL
 argument_list|,
-comment|/*alignemnt*/
+comment|/* alignemnt	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
+comment|/* lowaddr	*/
 name|lowaddr
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* filter	*/
 name|filter
 argument_list|,
+comment|/* filterarg	*/
 name|filter_arg
 argument_list|,
-comment|/*maxsize*/
+comment|/* maxsize	*/
 name|BUS_SPACE_MAXSIZE_24BIT
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 operator|~
 literal|0
 argument_list|,
-comment|/*maxsegsz*/
+comment|/* maxsegsz	*/
 name|BUS_SPACE_MAXSIZE_24BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 literal|0
 argument_list|,
 operator|&

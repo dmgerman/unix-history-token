@@ -672,13 +672,16 @@ argument_list|,
 comment|/* boundary	*/
 literal|0
 argument_list|,
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR_24BIT
 argument_list|,
 comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
+comment|/* filter	*/
 name|NULL
 argument_list|,
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
 comment|/* maxsize	*/
