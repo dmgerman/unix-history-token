@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ulpt.c,v 1.48 2002/02/11 15:11:49 augustss Exp $	*/
+comment|/*	$NetBSD: ulpt.c,v 1.50 2002/07/11 21:14:31 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -913,7 +913,7 @@ operator|->
 name|bInterfaceSubClass
 argument_list|)
 expr_stmt|;
-comment|/* XXX  	 * Stepping through the alternate settings needs to be abstracted out. 	 */
+comment|/* XXX 	 * Stepping through the alternate settings needs to be abstracted out. 	 */
 name|cdesc
 operator|=
 name|usbd_get_config_descriptor
