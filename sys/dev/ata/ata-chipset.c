@@ -18846,6 +18846,16 @@ name|reg
 operator|+=
 literal|0x10
 expr_stmt|;
+if|if
+condition|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|cfg1
+operator|!=
+name|VIA133
+condition|)
 name|pci_write_config
 argument_list|(
 name|parent
