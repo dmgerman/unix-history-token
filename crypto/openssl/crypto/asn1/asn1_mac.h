@@ -284,6 +284,18 @@ define|\
 value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 		M_ASN1_I2D_put_SEQUENCE_type(type,a,f);
 define|#
 directive|define
+name|M_ASN1_I2D_put_SEQUENCE_opt_ex_type
+parameter_list|(
+name|type
+parameter_list|,
+name|a
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|if (a) M_ASN1_I2D_put_SEQUENCE_type(type,a,f);
+define|#
+directive|define
 name|M_ASN1_D2I_get_IMP_set_opt
 parameter_list|(
 name|b
@@ -622,6 +634,18 @@ define|\
 value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			M_ASN1_I2D_len_SEQUENCE_type(type,a,f);
 define|#
 directive|define
+name|M_ASN1_I2D_len_SEQUENCE_opt_ex_type
+parameter_list|(
+name|type
+parameter_list|,
+name|a
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|if (a) M_ASN1_I2D_len_SEQUENCE_type(type,a,f);
+define|#
+directive|define
 name|M_ASN1_I2D_len_IMP_SET
 parameter_list|(
 name|a
@@ -774,6 +798,24 @@ name|v
 parameter_list|)
 define|\
 value|if ((a != NULL)&& (sk_##type##_num(a) != 0))\ 			{ \ 			v=i2d_ASN1_SET_OF_##type(a,NULL,f,tag, \ 						 V_ASN1_UNIVERSAL, \ 						 IS_SEQUENCE); \ 			ret+=ASN1_object_size(1,v,mtag); \ 			}
+define|#
+directive|define
+name|M_ASN1_I2D_len_EXP_SEQUENCE_opt_ex_type
+parameter_list|(
+name|type
+parameter_list|,
+name|a
+parameter_list|,
+name|f
+parameter_list|,
+name|mtag
+parameter_list|,
+name|tag
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|if (a)\ 			{ \ 			v=i2d_ASN1_SET_OF_##type(a,NULL,f,tag, \ 						 V_ASN1_UNIVERSAL, \ 						 IS_SEQUENCE); \ 			ret+=ASN1_object_size(1,v,mtag); \ 			}
 comment|/* Put Macros */
 define|#
 directive|define
@@ -1000,6 +1042,24 @@ name|v
 parameter_list|)
 define|\
 value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			{ \ 			ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \ 			i2d_ASN1_SET_OF_##type(a,&p,f,tag,V_ASN1_UNIVERSAL, \ 					       IS_SEQUENCE); \ 			}
+define|#
+directive|define
+name|M_ASN1_I2D_put_EXP_SEQUENCE_opt_ex_type
+parameter_list|(
+name|type
+parameter_list|,
+name|a
+parameter_list|,
+name|f
+parameter_list|,
+name|mtag
+parameter_list|,
+name|tag
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|if (a) \ 			{ \ 			ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \ 			i2d_ASN1_SET_OF_##type(a,&p,f,tag,V_ASN1_UNIVERSAL, \ 					       IS_SEQUENCE); \ 			}
 define|#
 directive|define
 name|M_ASN1_I2D_seq_total

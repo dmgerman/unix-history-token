@@ -597,7 +597,7 @@ comment|/* Used for temp variables */
 define|#
 directive|define
 name|BN_CTX_NUM
-value|12
+value|16
 define|#
 directive|define
 name|BN_CTX_NUM_POS
@@ -887,6 +887,18 @@ name|top
 parameter_list|,
 name|int
 name|bottom
+parameter_list|)
+function_decl|;
+name|int
+name|BN_rand_range
+parameter_list|(
+name|BIGNUM
+modifier|*
+name|rnd
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|range
 parameter_list|)
 function_decl|;
 name|int
@@ -2437,6 +2449,10 @@ name|BN_F_BN_RAND
 value|114
 define|#
 directive|define
+name|BN_F_BN_RAND_RANGE
+value|122
+define|#
+directive|define
 name|BN_F_BN_USUB
 value|115
 comment|/* Reason codes. */
@@ -2448,6 +2464,10 @@ define|#
 directive|define
 name|BN_R_BAD_RECIPROCAL
 value|101
+define|#
+directive|define
+name|BN_R_BIGNUM_TOO_LONG
+value|114
 define|#
 directive|define
 name|BN_R_CALLED_WITH_EVEN_MODULUS
@@ -2468,6 +2488,10 @@ define|#
 directive|define
 name|BN_R_INVALID_LENGTH
 value|106
+define|#
+directive|define
+name|BN_R_INVALID_RANGE
+value|115
 define|#
 directive|define
 name|BN_R_NOT_INITIALIZED

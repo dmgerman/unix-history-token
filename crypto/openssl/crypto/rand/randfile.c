@@ -135,6 +135,10 @@ begin_comment
 comment|/* #define RFILE ".rnd" - defined in ../../e_os.h */
 end_comment
 
+begin_comment
+comment|/* Note that these functions are intended for seed files only.  * Entropy devices and EGD sockets are handled in rand_unix.c */
+end_comment
+
 begin_function
 name|int
 name|RAND_load_file
@@ -329,7 +333,7 @@ expr_stmt|;
 if|if
 condition|(
 name|bytes
-operator|==
+operator|<=
 literal|0
 condition|)
 break|break;

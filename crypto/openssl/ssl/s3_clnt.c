@@ -3623,6 +3623,16 @@ name|peer
 operator|=
 name|x
 expr_stmt|;
+name|s
+operator|->
+name|session
+operator|->
+name|verify_result
+operator|=
+name|s
+operator|->
+name|verify_result
+expr_stmt|;
 name|x
 operator|=
 name|NULL

@@ -1984,6 +1984,16 @@ name|session
 operator|=
 name|session
 expr_stmt|;
+name|s
+operator|->
+name|verify_result
+operator|=
+name|s
+operator|->
+name|session
+operator|->
+name|verify_result
+expr_stmt|;
 comment|/* CRYPTO_w_unlock(CRYPTO_LOCK_SSL);*/
 name|ret
 operator|=

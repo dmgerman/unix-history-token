@@ -1306,6 +1306,8 @@ operator|-
 name|s
 operator|->
 name|init_num
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1623,6 +1625,8 @@ name|init_num
 index|]
 argument_list|,
 name|n
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

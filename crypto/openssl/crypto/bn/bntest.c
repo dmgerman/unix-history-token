@@ -413,18 +413,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|linux
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-comment|/* can we use GNU bc features? */
 name|BIO_puts
 argument_list|(
 name|out
@@ -446,8 +434,6 @@ argument_list|,
 literal|"\\n\"\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -178,6 +178,8 @@ name|asc2uni
 argument_list|(
 name|pass
 argument_list|,
+name|passlen
+argument_list|,
 operator|&
 name|unipass
 argument_list|,
