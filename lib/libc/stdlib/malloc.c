@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.29 1997/07/26 03:43:14 jdp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.30 1997/08/27 06:40:34 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -298,6 +298,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_include
@@ -2341,21 +2347,26 @@ return|;
 comment|/* Find length of admin structure */
 name|l
 operator|=
-sizeof|sizeof
-expr|*
-name|bp
-operator|-
-sizeof|sizeof
+name|offsetof
 argument_list|(
-name|u_long
+expr|struct
+name|pginfo
+argument_list|,
+name|bits
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|l
 operator|+=
 sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
+name|bp
+operator|->
+name|bits
+index|[
+literal|0
+index|]
 operator|*
 operator|(
 operator|(
