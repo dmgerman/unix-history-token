@@ -142,16 +142,7 @@ name|id
 decl_stmt|;
 name|id
 operator|=
-operator|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|<<
-literal|16
-operator|)
-operator||
-name|pci_get_device
+name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
@@ -172,6 +163,28 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"NEC uPD72861"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|id
+operator|==
+operator|(
+name|FW_VENDORID_NEC
+operator||
+name|FW_DEVICE_UPD871
+operator|)
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"NEC uPD72871/2"
 argument_list|)
 expr_stmt|;
 return|return
