@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -76,6 +76,12 @@ modifier|*
 name|m_vnodecovered
 decl_stmt|;
 comment|/* vnode we mounted on */
+name|struct
+name|vnode
+modifier|*
+name|m_mounth
+decl_stmt|;
+comment|/* list of vnodes this mount */
 name|int
 name|m_flag
 decl_stmt|;
@@ -576,22 +582,6 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Arguments to mount UFS  */
-end_comment
-
-begin_struct
-struct|struct
-name|ufs_args
-block|{
-name|char
-modifier|*
-name|fspec
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Generic file handle  */
 end_comment
 
@@ -620,6 +610,31 @@ name|fhandle_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Arguments to mount UFS  */
+end_comment
+
+begin_struct
+struct|struct
+name|ufs_args
+block|{
+name|char
+modifier|*
+name|fspec
+decl_stmt|;
+comment|/* block special device to mount */
+name|int
+name|exflags
+decl_stmt|;
+comment|/* export related flags */
+name|uid_t
+name|exroot
+decl_stmt|;
+comment|/* mapping for root uid */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -638,12 +653,15 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+comment|/* name to export for statfs */
 name|caddr_t
 name|base
 decl_stmt|;
+comment|/* base address of file system in memory */
 name|u_long
 name|size
 decl_stmt|;
+comment|/* size of file system */
 block|}
 struct|;
 end_struct
@@ -832,18 +850,6 @@ end_ifdef
 
 begin_comment
 comment|/*  * exported vnode operations  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|vfs_add
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* add a new vfs to mounted vfs list */
 end_comment
 
 begin_function_decl
