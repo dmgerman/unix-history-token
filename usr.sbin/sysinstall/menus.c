@@ -3325,7 +3325,22 @@ literal|"=ftp://ftp2.pt.freebsd.org"
 block|}
 block|,
 block|{
-literal|"Russia"
+literal|"Romania"
+block|,
+literal|"ftp.ro.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.ro.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Russia"
 block|,
 literal|"ftp.ru.freebsd.org"
 block|,
