@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logent.c	5.6 (Berkeley) %G%"
+literal|"@(#)logent.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +369,15 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *	make a log entry  */
 end_comment
@@ -404,11 +413,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|static
-name|pid
-operator|=
-literal|0
-expr_stmt|;
 specifier|register
 name|struct
 name|tm
@@ -444,8 +448,9 @@ literal|""
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|pid
+operator|==
+literal|0
 condition|)
 name|pid
 operator|=
@@ -570,7 +575,7 @@ argument|; 	}
 endif|#
 directive|endif
 endif|LOGBYSITE
-argument|if (Sp == NULL) { 		if (!Stried) { 			int savemask;
+argument|if (!pid) 		pid = getpid(); 	if (Sp == NULL) { 		if (!Stried) { 			int savemask;
 ifdef|#
 directive|ifdef
 name|F_SETFL
@@ -629,20 +634,20 @@ ifdef|#
 directive|ifdef
 name|USG
 argument|fprintf(Sp,
-literal|"(%d/%d-%2.2d:%2.2d) "
+literal|"(%d/%d-%2.2d:%2.2d-%d) "
 argument|, tp->tm_mon +
 literal|1
-argument|, 		tp->tm_mday, tp->tm_hour, tp->tm_min); 	fprintf(Sp,
+argument|, 		tp->tm_mday, tp->tm_hour, tp->tm_min, pid); 	fprintf(Sp,
 literal|"(%ld) %s\n"
 argument|, Now.time, text);
 else|#
 directive|else
 else|!USG
 argument|fprintf(Sp,
-literal|"(%d/%d-%02d:%02d) "
+literal|"(%d/%d-%02d:%02d-%d) "
 argument|, tp->tm_mon +
 literal|1
-argument|, 		tp->tm_mday, tp->tm_hour, tp->tm_min); 	fprintf(Sp,
+argument|, 		tp->tm_mday, tp->tm_hour, tp->tm_min, pid); 	fprintf(Sp,
 literal|"(%ld.%02u) %s\n"
 argument|, Now.time, Now.millitm/
 literal|10
