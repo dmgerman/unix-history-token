@@ -14,5 +14,12 @@ name|_PATH_MAILERCONF
 value|"/etc/mail/mailer.conf"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_DEFAULTMTA
+value|"/usr/libexec/sendmail/sendmail"
+end_define
+
 end_unit
 
