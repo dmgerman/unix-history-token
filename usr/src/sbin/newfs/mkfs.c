@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.27 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6440,13 +6440,45 @@ name|u_long
 name|size
 decl_stmt|;
 block|{
-comment|/* always fail for now */
+name|void
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
 return|return
 operator|(
-operator|(
-name|caddr_t
+name|NULL
 operator|)
-literal|0
+return|;
+name|bcopy
+argument_list|(
+name|ptr
+argument_list|,
+name|p
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|p
 operator|)
 return|;
 block|}
