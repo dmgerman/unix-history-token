@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.2 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*      *		random constants for pc      */
 end_comment
 
 begin_comment
-comment|/*      *	the name of the display.      *	the display is made up of saved AP's and FP's.      *	FP's are used to find locals, and AP's are used to find parameters.      *	FP and AP are untyped pointers, but are used throughout as (char *).      *	the display is used by adding AP_OFFSET or FP_OFFSET to the       *	address of the approriate display entry.      */
+comment|/*      *	the name of the display.      */
 end_comment
 
 begin_define
@@ -20,36 +20,6 @@ define|#
 directive|define
 name|DISPLAYNAME
 value|"__disply"
-end_define
-
-begin_struct
-struct|struct
-name|dispsave
-block|{
-name|char
-modifier|*
-name|savedAP
-decl_stmt|;
-name|char
-modifier|*
-name|savedFP
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|AP_OFFSET
-value|( 0 )
-end_define
-
-begin_define
-define|#
-directive|define
-name|FP_OFFSET
-value|( sizeof(char *) )
 end_define
 
 begin_comment
@@ -144,7 +114,7 @@ value|( ( 1<< 15 ) | ( 1<< 14 ) )
 end_define
 
 begin_comment
-comment|/*      *	formats for various names      *	    NAMEFORMAT		arbitrary length strings.      *	    EXTFORMAT		for externals, a preceding underscore.      *	    PREFIXFORMAT	used to print made up names with prefixes.      *	    LABELPREFIX		with getlab() makes up label names.      *	    LLABELPREFIX	with getlab() makes up sdb labels.      *	a typical use might be to print out a name with a preceeding underscore      *	with putprintf( EXTFORMAT , 0 , name );      */
+comment|/*      *	formats for various names      *	    NAMEFORMAT		arbitrary length strings.      *	    EXTFORMAT		for externals, a preceding underscore.      *	    PREFIXFORMAT	used to print made up names with prefixes.      *	    LABELPREFIX		with getlab() makes up label names.      *	    LLABELPREFIX	with getlab() makes up sdb labels.      *	    FORMALPREFIX	prefix for EXTFORMAT for formal entry points.      *	a typical use might be to print out a name with a preceeding underscore      *	with putprintf( EXTFORMAT , 0 , name );      */
 end_comment
 
 begin_define
@@ -180,6 +150,13 @@ define|#
 directive|define
 name|LLABELPREFIX
 value|"LL"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORMALPREFIX
+value|"__"
 end_define
 
 begin_comment

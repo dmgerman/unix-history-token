@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.10 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.11 %G%"; */
 end_comment
 
 begin_define
@@ -1431,6 +1431,98 @@ define|#
 directive|define
 name|DSPLYSZ
 value|20
+end_define
+
+begin_comment
+comment|/*      *	the display is made up of saved AP's and FP's.      *	FP's are used to find locals, and AP's are used to find parameters.      *	FP and AP are untyped pointers, but are used throughout as (char *).      *	the display is used by adding AP_OFFSET or FP_OFFSET to the       *	address of the approriate display entry.      */
+end_comment
+
+begin_struct
+struct|struct
+name|dispsave
+block|{
+name|char
+modifier|*
+name|savedAP
+decl_stmt|;
+name|char
+modifier|*
+name|savedFP
+decl_stmt|;
+block|}
+name|display
+index|[
+name|DSPLYSZ
+index|]
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AP_OFFSET
+value|( 0 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|FP_OFFSET
+value|( sizeof(char *) )
+end_define
+
+begin_comment
+comment|/*      *	formal routine structure:      */
+end_comment
+
+begin_struct
+struct|struct
+name|formalrtn
+block|{
+name|long
+function_decl|(
+modifier|*
+name|fentryaddr
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* formal entry point */
+name|long
+name|fbn
+decl_stmt|;
+comment|/* block number of function */
+name|struct
+name|dispsave
+name|fdisp
+index|[
+name|DSPLYSZ
+index|]
+decl_stmt|;
+comment|/* saved at first passing */
+block|}
+name|frtn
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FENTRYOFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBNOFFSET
+value|( FENTRYOFFSET + sizeof frtn.fentryaddr )
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDISPOFFSET
+value|( FBNOFFSET + sizeof frtn.fbn )
 end_define
 
 begin_comment

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.8 %G%"
+literal|"@(#)flvalue.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,41 +65,6 @@ begin_endif
 endif|#
 directive|endif
 endif|PC
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ
-end_ifdef
-
-begin_comment
-comment|/*  * runtime display structure  */
-end_comment
-
-begin_struct
-struct|struct
-name|dispsave
-block|{
-name|char
-modifier|*
-name|locvars
-decl_stmt|;
-comment|/* pointer to local variables */
-name|struct
-name|stack
-modifier|*
-name|stp
-decl_stmt|;
-comment|/* pointer to local stack frame */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-endif|OBJ
 end_endif
 
 begin_comment
@@ -371,33 +336,15 @@ return|return
 name|NIL
 return|;
 block|}
-comment|/* 			 *	formal routine structure: 			 * 			 *	struct formalrtn { 			 *		long		(*entryaddr)(); 			 *		long		cbn; 			 *		struct dispsave	disp[2*MAXLVL]; 			 *	}; 			 */
+comment|/* 			 *	allocate space for the thunk 			 */
 name|tempoff
 operator|=
 name|tmpalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|long
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-operator|+
-literal|2
-operator|*
-name|bn
-operator|*
-sizeof|sizeof
-argument_list|(
 expr|struct
-name|dispsave
+name|formalrtn
 argument_list|)
 argument_list|,
 name|nl
@@ -477,9 +424,25 @@ argument_list|,
 literal|"_FSAV"
 argument_list|)
 expr_stmt|;
-name|sextname
+name|sprintf
 argument_list|(
 name|extname
+argument_list|,
+literal|"%s"
+argument_list|,
+name|FORMALPREFIX
+argument_list|)
+expr_stmt|;
+name|sextname
+argument_list|(
+operator|&
+name|extname
+index|[
+name|strlen
+argument_list|(
+name|extname
+argument_list|)
+index|]
 argument_list|,
 name|p
 operator|->
