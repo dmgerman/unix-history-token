@@ -444,10 +444,6 @@ begin_comment
 comment|/* Loop through a list. Note, that you may not delete the list element. */
 end_comment
 
-begin_comment
-comment|/* #define	LST_FOREACH(PTR, LST)						\ 	for ((PTR) = (LST)->firstPtr; (PTR) != NULL; (PTR) = (PTR)->nextPtr) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -458,7 +454,7 @@ parameter_list|,
 name|LST
 parameter_list|)
 define|\
-value|for (LstNode *_tmp1 = (LST)->firstPtr, *_tmp2 = Lst_Succ(_tmp1);\ 	    ((PTR) = _tmp1) != NULL;					\ 	    (Lst_Succ(_tmp1) != _tmp2 ? abort() : (void)0),		\ 	    (_tmp1 = _tmp2), _tmp2 = Lst_Succ(_tmp1))
+value|for ((PTR) = (LST)->firstPtr; (PTR) != NULL; (PTR) = (PTR)->nextPtr)
 end_define
 
 begin_comment
