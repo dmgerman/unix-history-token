@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.6	86/01/27	*/
+comment|/*	cy.c	1.7	86/11/03	*/
 end_comment
 
 begin_include
@@ -35,18 +35,6 @@ directive|define
 name|dlog
 value|if (cydebug) log
 end_define
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/pte.h"
-end_include
 
 begin_include
 include|#
@@ -142,6 +130,24 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/pte.h"
 end_include
 
 begin_include
