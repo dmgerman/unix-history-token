@@ -5402,6 +5402,19 @@ argument_list|,
 name|IFAN_DEPARTURE
 argument_list|)
 expr_stmt|;
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: changing name to '%s'\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|,
+name|new_name
+argument_list|)
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|ifp
