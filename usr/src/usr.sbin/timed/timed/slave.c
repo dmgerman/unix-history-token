@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.7 (Berkeley) %G%"
+literal|"@(#)slave.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -971,6 +971,22 @@ name|SUBMASTER
 condition|)
 name|spreadtime
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|gettimeofday
+argument_list|(
+operator|&
+name|time
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+literal|0
+argument_list|)
 expr_stmt|;
 name|electiontime
 operator|=
