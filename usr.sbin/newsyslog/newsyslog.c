@@ -8654,9 +8654,7 @@ name|ndiff
 operator|=
 name|strcmp
 argument_list|(
-name|ent
-operator|->
-name|pid_file
+name|zipfname
 argument_list|,
 name|ztmp
 operator|->
