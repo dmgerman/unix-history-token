@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.6 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/resolv.h>
+file|<resolv.h>
 end_include
 
 begin_decl_stmt

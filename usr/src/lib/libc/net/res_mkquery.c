@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.2 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/resolv.h>
+file|<resolv.h>
 end_include
 
 begin_function_decl
