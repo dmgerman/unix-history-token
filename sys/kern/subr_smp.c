@@ -93,6 +93,12 @@ directive|include
 file|<machine/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_sched.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -113,6 +119,24 @@ name|started_cpus
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|cpumask_t
+name|idle_cpus_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|cpumask_t
+name|hlt_cpus_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|cpumask_t
+name|logical_cpus_mask
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 function_decl|(
@@ -129,6 +153,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* This is used in modules that need to work in both SMP and UP. */
+end_comment
+
+begin_decl_stmt
+name|cpumask_t
+name|all_cpus
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -160,12 +194,6 @@ begin_decl_stmt
 specifier|volatile
 name|int
 name|smp_started
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cpumask_t
-name|all_cpus
 decl_stmt|;
 end_decl_stmt
 

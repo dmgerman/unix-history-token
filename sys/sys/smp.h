@@ -133,6 +133,27 @@ name|stopped_cpus
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|cpumask_t
+name|idle_cpus_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|cpumask_t
+name|hlt_cpus_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|cpumask_t
+name|logical_cpus_mask
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -144,15 +165,15 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|cpumask_t
-name|all_cpus
+name|u_int
+name|mp_maxid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int
-name|mp_maxid
+name|int
+name|mp_maxcpus
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +189,13 @@ specifier|extern
 specifier|volatile
 name|int
 name|smp_started
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|cpumask_t
+name|all_cpus
 decl_stmt|;
 end_decl_stmt
 
