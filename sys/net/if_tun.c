@@ -1167,6 +1167,11 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|TUNDEBUG
 argument_list|(
 literal|"%s%d: tuninit\n"
@@ -1217,6 +1222,21 @@ operator|.
 name|tqe_next
 control|)
 block|{
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|==
+name|NULL
+condition|)
+name|error
+operator|=
+name|EFAULT
+expr_stmt|;
+comment|/* XXX: Should maybe return straight off? */
+else|else
+block|{
 ifdef|#
 directive|ifdef
 name|INET
@@ -1249,8 +1269,6 @@ name|ifa_addr
 expr_stmt|;
 if|if
 condition|(
-name|si
-operator|&&
 name|si
 operator|->
 name|sin_addr
@@ -1294,8 +1312,11 @@ block|}
 endif|#
 directive|endif
 block|}
+block|}
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1407,14 +1428,12 @@ operator|->
 name|tun_pid
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCSIFADDR
 case|:
+name|error
+operator|=
 name|tuninit
 argument_list|(
 name|ifp
@@ -1422,7 +1441,7 @@ argument_list|)
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: address set\n"
+literal|"%s%d: address set, error=%d\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1431,12 +1450,16 @@ argument_list|,
 name|ifp
 operator|->
 name|if_unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|SIOCSIFDSTADDR
 case|:
+name|error
+operator|=
 name|tuninit
 argument_list|(
 name|ifp
@@ -1444,7 +1467,7 @@ argument_list|)
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: destination address set\n"
+literal|"%s%d: destination address set, error=%d\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1453,6 +1476,8 @@ argument_list|,
 name|ifp
 operator|->
 name|if_unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 break|break;
