@@ -851,23 +851,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|bus_dmamap_callback_t
 name|sis_dma_map_desc_ptr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
