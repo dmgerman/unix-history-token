@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.5	84/07/21	*/
+comment|/*	user.h	6.6	84/08/28	*/
 end_comment
 
 begin_ifdef
@@ -18,25 +18,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/dmap.h"
+file|"dmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/resource.h"
+file|"resource.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/namei.h"
+file|"namei.h"
 end_include
 
 begin_else
@@ -489,11 +489,33 @@ begin_comment
 comment|/* u_error codes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"errno.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

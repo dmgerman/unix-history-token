@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.6	84/07/08	*/
+comment|/*	namei.h	6.7	84/08/28	*/
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/uio.h"
+file|"uio.h"
 end_include
 
 begin_else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	6.3	84/07/31	*/
+comment|/*	param.h	6.4	84/08/28	*/
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/signal.h"
+file|"signal.h"
 end_include
 
 begin_else
@@ -512,7 +512,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"../h/types.h"
+file|"types.h"
 end_include
 
 begin_endif

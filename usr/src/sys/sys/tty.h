@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	6.1	83/07/29	*/
+comment|/*	tty.h	6.2	84/08/28	*/
 end_comment
 
 begin_ifdef
@@ -12,13 +12,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/ttychars.h"
+file|"ttychars.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ttydev.h"
+file|"ttydev.h"
 end_include
 
 begin_else
