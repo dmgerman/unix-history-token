@@ -2160,8 +2160,6 @@ decl_stmt|;
 name|vm_map_entry_t
 name|last
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Start looking either from the head of the list, or from the hint. 	 */
 name|cur
 operator|=
@@ -7645,8 +7643,6 @@ decl_stmt|;
 name|vm_map_entry_t
 name|tmp_entry
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm_map_lock_read
 argument_list|(
 name|map
