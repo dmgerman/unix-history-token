@@ -426,6 +426,17 @@ argument_list|(
 name|mediaDevice
 argument_list|)
 expr_stmt|;
+comment|/* write out any changes to sysconfig .. */
+if|if
+condition|(
+operator|!
+name|status
+condition|)
+name|configSysconfig
+argument_list|(
+literal|"/etc/sysconfig"
+argument_list|)
+expr_stmt|;
 comment|/* Shut down the dialog library */
 if|if
 condition|(
