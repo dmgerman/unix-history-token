@@ -10727,7 +10727,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ISPASYNC_PDB_CHANGED
+name|ISPASYNC_LOGGED_INOUT
 case|:
 block|{
 specifier|const
@@ -10892,6 +10892,17 @@ block|}
 case|case
 name|ISPASYNC_CHANGE_NOTIFY
 case|:
+if|if
+condition|(
+name|arg
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+literal|1
+condition|)
+block|{
 name|isp_prt
 argument_list|(
 name|isp
@@ -10901,6 +10912,19 @@ argument_list|,
 literal|"Name Server Database Changed"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Name Server Database Changed"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 ifdef|#
 directive|ifdef
