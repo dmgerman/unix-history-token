@@ -2267,7 +2267,7 @@ name|SYSINIT
 argument_list|(
 name|devfs
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_DEVFS
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
