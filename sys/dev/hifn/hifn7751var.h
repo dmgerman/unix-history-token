@@ -436,11 +436,6 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* device backpointer */
-name|struct
-name|mtx
-name|sc_mtx
-decl_stmt|;
-comment|/* per-instance lock */
 name|bus_dma_tag_t
 name|sc_dmat
 decl_stmt|;
@@ -602,26 +597,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|HIFN_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HIFN_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sc_mtx)
-end_define
 
 begin_comment
 comment|/*  *  hifn_command_t  *  *  This is the control structure used to pass commands to hifn_encrypt().  *  *  flags  *  -----  *  Flags is the bitwise "or" values for command configuration.  A single  *  encrypt direction needs to be set:  *  *	HIFN_ENCODE or HIFN_DECODE  *  *  To use cryptography, a single crypto algorithm must be included:  *  *	HIFN_CRYPT_3DES or HIFN_CRYPT_DES  *  *  To use authentication is used, a single MAC algorithm must be included:  *  *	HIFN_MAC_MD5 or HIFN_MAC_SHA1  *  *  By default MD5 uses a 16 byte hash and SHA-1 uses a 20 byte hash.  *  If the value below is set, hash values are truncated or assumed  *  truncated to 12 bytes:  *  *	HIFN_MAC_TRUNC  *  *  Keys for encryption and authentication can be sent as part of a command,  *  or the last key value used with a particular session can be retrieved  *  and used again if either of these flags are not specified.  *  *	HIFN_CRYPT_NEW_KEY, HIFN_MAC_NEW_KEY  *  *  session_num  *  -----------  *  A number between 0 and 2048 (for DRAM models) or a number between   *  0 and 768 (for SRAM models).  Those who don't want to use session  *  numbers should leave value at zero and send a new crypt key and/or  *  new MAC key on every command.  If you use session numbers and  *  don't send a key with a command, the last key sent for that same  *  session number will be used.  *  *  Warning:  Using session numbers and multiboard at the same time  *            is currently broken.  *  *  mbuf  *  ----  *  Either fill in the mbuf pointer and npa=0 or  *	 fill packp[] and packl[] and set npa to> 0  *   *  mac_header_skip  *  ---------------  *  The number of bytes of the source_buf that are skipped over before  *  authentication begins.  This must be a number between 0 and 2^16-1  *  and can be used by IPsec implementers to skip over IP headers.  *  *** Value ignored if authentication not used ***  *  *  crypt_header_skip  *  -----------------  *  The number of bytes of the source_buf that are skipped over before  *  the cryptographic operation begins.  This must be a number between 0  *  and 2^16-1.  For IPsec, this number will always be 8 bytes larger  *  than the auth_header_skip (to skip over the ESP header).  *  *** Value ignored if cryptography not used ***  *  */

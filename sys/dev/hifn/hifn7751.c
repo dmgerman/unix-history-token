@@ -17,6 +17,12 @@ directive|define
 name|HIFN_DEBUG
 end_define
 
+begin_define
+define|#
+directive|define
+name|HIFN_NO_RNG
+end_define
+
 begin_comment
 comment|/*  * Driver for the Hifn 7751 encryption processor.  */
 end_comment
@@ -61,18 +67,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -699,6 +693,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HIFN_NO_RNG
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -709,6 +709,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1346,23 +1351,6 @@ operator|->
 name|sc_dev
 operator|=
 name|dev
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"crypto driver"
-argument_list|,
-name|MTX_DEF
-argument_list|)
 expr_stmt|;
 comment|/* XXX handle power management */
 comment|/* 	 * The 7951 has a random number generator and 	 * public key support; note this. 	 */
@@ -2496,8 +2484,6 @@ operator|&
 name|sc
 operator|->
 name|sc_tickto
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -2642,14 +2628,6 @@ argument_list|)
 expr_stmt|;
 name|fail_pci
 label|:
-name|mtx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2681,6 +2659,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|sc
@@ -2692,10 +2673,10 @@ literal|"hifn_detach: null software carrier!"
 operator|)
 argument_list|)
 expr_stmt|;
-name|HIFN_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 comment|/*XXX other resources */
 name|callout_stop
@@ -2838,17 +2819,9 @@ operator|->
 name|sc_bar0res
 argument_list|)
 expr_stmt|;
-name|HIFN_UNLOCK
+name|splx
 argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -3192,9 +3165,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
-name|r
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3287,6 +3257,9 @@ operator|)
 return|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|HIFN_NO_RNG
 comment|/* Enable the rng, if available */
 if|if
 condition|(
@@ -3411,8 +3384,6 @@ operator|&
 name|sc
 operator|->
 name|sc_rngto
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -3432,6 +3403,8 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Enable public key engine, if available */
 if|if
 condition|(
@@ -3476,6 +3449,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HIFN_NO_RNG
+end_ifndef
 
 begin_function
 specifier|static
@@ -3688,6 +3667,11 @@ directive|undef
 name|RANDOM_BITS
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -10243,10 +10227,13 @@ name|sc
 init|=
 name|vsc
 decl_stmt|;
-name|HIFN_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -10387,9 +10374,9 @@ operator|->
 name|sc_active
 operator|--
 expr_stmt|;
-name|HIFN_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -10441,11 +10428,6 @@ name|i
 decl_stmt|,
 name|u
 decl_stmt|;
-name|HIFN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|dma
 operator|=
 name|sc
@@ -10560,11 +10542,6 @@ name|hifnstats
 operator|.
 name|hst_noirq
 operator|++
-expr_stmt|;
-name|HIFN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -10712,11 +10689,6 @@ name|hst_abort
 operator|++
 expr_stmt|;
 name|hifn_abort
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|HIFN_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11221,11 +11193,6 @@ name|wakeup
 argument_list|)
 expr_stmt|;
 block|}
-name|HIFN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
