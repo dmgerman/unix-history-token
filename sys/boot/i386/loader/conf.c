@@ -40,6 +40,9 @@ block|{
 operator|&
 name|biosdisk
 block|,
+operator|&
+name|pxedisk
+block|,
 comment|/* XXX network devices? */
 name|NULL
 block|}
@@ -62,6 +65,9 @@ name|dosfs_fsops
 block|,
 operator|&
 name|zipfs_fsops
+block|,
+operator|&
+name|pxe_fsops
 block|,
 name|NULL
 block|}

@@ -56,6 +56,13 @@ name|KARGS_FLAGS_CD
 value|0x1
 end_define
 
+begin_define
+define|#
+directive|define
+name|KARGS_FLAGS_PXE
+value|0x2
+end_define
+
 begin_comment
 comment|/* Arguments passed in from the boot1/boot2 loader */
 end_comment
@@ -74,7 +81,7 @@ name|u_int32_t
 name|bootflags
 decl_stmt|;
 name|u_int32_t
-name|res1
+name|pxeinfo
 decl_stmt|;
 name|u_int32_t
 name|res2
@@ -223,6 +230,10 @@ name|bootdev
 expr_stmt|;
 name|initial_bootinfo
 operator|=
+name|kargs
+operator|->
+name|bootinfo
+condition|?
 operator|(
 expr|struct
 name|bootinfo
@@ -234,6 +245,8 @@ name|kargs
 operator|->
 name|bootinfo
 argument_list|)
+else|:
+name|NULL
 expr_stmt|;
 comment|/*       * Initialise the heap as early as possible.  Once this is done, malloc() is usable.      */
 name|bios_getmem
@@ -282,6 +295,47 @@ literal|512
 argument_list|)
 expr_stmt|;
 comment|/* 16k cache XXX tune this */
+comment|/*      * We only want the PXE disk to try to init itself in the below walk through      * devsw if we actually booted off of PXE.      */
+if|if
+condition|(
+operator|(
+name|kargs
+operator|->
+name|bootinfo
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|(
+operator|(
+name|kargs
+operator|->
+name|bootflags
+operator|&
+name|KARGS_FLAGS_PXE
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|pxe_enable
+argument_list|(
+name|kargs
+operator|->
+name|pxeinfo
+condition|?
+name|PTOV
+argument_list|(
+name|kargs
+operator|->
+name|pxeinfo
+argument_list|)
+else|:
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * March through the device switch probing for things.      */
 for|for
 control|(
@@ -441,17 +495,14 @@ name|major
 decl_stmt|,
 name|biosdev
 decl_stmt|;
-comment|/* We're booting from a BIOS disk, try to spiff this */
+comment|/* Assume we are booting from a BIOS disk by default */
 name|currdev
 operator|.
 name|d_dev
 operator|=
-name|devsw
-index|[
-literal|0
-index|]
+operator|&
+name|biosdisk
 expr_stmt|;
-comment|/* XXX presumes that biosdisk is first in devsw */
 name|currdev
 operator|.
 name|d_type
@@ -462,17 +513,18 @@ name|d_dev
 operator|->
 name|dv_type
 expr_stmt|;
+comment|/* new-style boot loaders such as pxeldr and cdldr */
 if|if
 condition|(
-operator|(
 name|kargs
 operator|->
 name|bootinfo
 operator|==
 name|NULL
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|kargs
 operator|->
@@ -482,7 +534,6 @@ name|KARGS_FLAGS_CD
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* we are booting from a CD with cdldr */
@@ -511,6 +562,80 @@ name|biosdev
 operator|=
 name|initial_bootdev
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|kargs
+operator|->
+name|bootflags
+operator|&
+name|KARGS_FLAGS_PXE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* we are booting from pxeldr */
+name|currdev
+operator|.
+name|d_dev
+operator|=
+operator|&
+name|pxedisk
+expr_stmt|;
+name|currdev
+operator|.
+name|d_type
+operator|=
+name|currdev
+operator|.
+name|d_dev
+operator|->
+name|dv_type
+expr_stmt|;
+name|currdev
+operator|.
+name|d_kind
+operator|.
+name|netif
+operator|.
+name|unit
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* we don't know what our boot device is */
+name|currdev
+operator|.
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|slice
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|currdev
+operator|.
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|partition
+operator|=
+literal|0
+expr_stmt|;
+name|biosdev
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -634,8 +759,23 @@ argument_list|)
 expr_stmt|;
 comment|/* assume harddisk */
 block|}
+comment|/*      * If we are booting off of a BIOS disk and we didn't succeed in determining      * which one we booted off of, just use disk0: as a reasonable default.      */
 if|if
 condition|(
+operator|(
+name|currdev
+operator|.
+name|d_type
+operator|==
+name|devsw
+index|[
+literal|0
+index|]
+operator|->
+name|dv_type
+operator|)
+operator|&&
+operator|(
 operator|(
 name|currdev
 operator|.
@@ -653,6 +793,7 @@ operator|)
 operator|==
 operator|-
 literal|1
+operator|)
 condition|)
 block|{
 name|printf
