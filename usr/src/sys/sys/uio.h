@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uio.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uio.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,19 +15,32 @@ directive|define
 name|_SYS_UIO_H_
 end_define
 
+begin_comment
+comment|/*  * XXX  * iov_base should be a void *.  */
+end_comment
+
 begin_struct
 struct|struct
 name|iovec
 block|{
-name|caddr_t
+name|char
+modifier|*
 name|iov_base
 decl_stmt|;
-name|int
+comment|/* Base address. */
+name|size_t
 name|iov_len
 decl_stmt|;
+comment|/* Length. */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_enum
 enum|enum
@@ -96,7 +109,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Limits   */
+comment|/*  * Limits  */
 end_comment
 
 begin_define
@@ -119,6 +132,15 @@ end_define
 
 begin_comment
 comment|/* 8 on stack, else malloc */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
 end_comment
 
 begin_ifndef
