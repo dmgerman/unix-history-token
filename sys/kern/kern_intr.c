@@ -2667,6 +2667,15 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 		 * Processed all our interrupts.  Now get the sched 		 * lock.  This may take a while and it_need may get 		 * set again, so we have to check it again. 		 */
+name|WITNESS_WARN
+argument_list|(
+name|WARN_PANIC
+argument_list|,
+name|NULL
+argument_list|,
+literal|"suspending ithread"
+argument_list|)
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
