@@ -368,6 +368,17 @@ literal|"NVRAM"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|bun
+index|[]
+init|=
+literal|"bad underrun for %d.%d (count %d, resid %d, status %s)"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Local function prototypes.  */
 end_comment
@@ -21332,6 +21343,98 @@ break|break;
 case|case
 name|RQCS_DATA_UNDERRUN
 case|:
+block|{
+if|if
+condition|(
+name|IS_FC
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|int
+name|ru_marked
+init|=
+operator|(
+name|sp
+operator|->
+name|req_scsi_status
+operator|&
+name|RQCS_RU
+operator|)
+operator|!=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ru_marked
+operator|||
+name|sp
+operator|->
+name|req_resid
+operator|>
+name|XS_XFRLEN
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+name|bun
+argument_list|,
+name|XS_TGT
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|XS_XFRLEN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
+name|sp
+operator|->
+name|req_resid
+argument_list|,
+operator|(
+name|ru_marked
+operator|)
+condition|?
+literal|"marked"
+else|:
+literal|"not marked"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_BOTCH
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+block|}
 name|XS_RESID
 argument_list|(
 name|xs
@@ -21358,6 +21461,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return;
+block|}
 case|case
 name|RQCS_XACT_ERR1
 case|:
@@ -21466,17 +21570,17 @@ name|ISP_LOGDEBUG0
 argument_list|,
 literal|"internal queues full for %d.%d.%d status 0x%x"
 argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
 argument_list|,
 name|XS_LUN
-argument_list|(
-name|xs
-argument_list|)
-argument_list|,
-name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -21835,7 +21939,7 @@ name|isp
 argument_list|,
 name|ISP_LOGINFO
 argument_list|,
-literal|"Port Unavailable for target %d"
+literal|"port unavailable for target %d"
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -21858,7 +21962,7 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we're on a local loop, force a LIP (which is overkill) 		 * to force a re-login of this unit. 		 */
+comment|/* 		 * If we're on a local loop, force a LIP (which is overkill) 		 * to force a re-login of this unit. If we're on fabric, 		 * then we'll have to relogin as a matter of course. 		 */
 if|if
 condition|(
 name|FCPARAM
@@ -24123,20 +24227,20 @@ block|,
 comment|/* 0x5a: */
 name|ISPOPMAP
 argument_list|(
-literal|0x00
+literal|0x03
 argument_list|,
-literal|0x00
+literal|0x01
 argument_list|)
 block|,
-comment|/* 0x5b: */
+comment|/* 0x5b: MBOX_DRIVER_HEARTBEAT */
 name|ISPOPMAP
 argument_list|(
-literal|0x00
+literal|0xcf
 argument_list|,
-literal|0x00
+literal|0x01
 argument_list|)
 block|,
-comment|/* 0x5c: */
+comment|/* 0x5c: MBOX_FW_HEARTBEAT */
 name|ISPOPMAP
 argument_list|(
 literal|0x07
