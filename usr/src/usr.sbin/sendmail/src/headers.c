@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -588,8 +588,6 @@ argument_list|(
 name|h
 operator|->
 name|h_value
-argument_list|,
-literal|0
 argument_list|,
 operator|(
 name|ADDRESS
@@ -1771,6 +1769,23 @@ name|rhs
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* strip leading spaces */
+while|while
+condition|(
+operator|*
+name|addr
+operator|!=
+literal|'\0'
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|addr
+argument_list|)
+condition|)
+name|addr
+operator|++
+expr_stmt|;
 comment|/* 	**  See if we have anything in angle brackets.  If so, that is 	**  the address part, and the rest is the comment. 	*/
 name|p
 operator|=
@@ -1810,13 +1825,25 @@ argument_list|)
 expr_stmt|;
 operator|*
 name|p
+operator|++
 operator|=
 literal|'<'
+expr_stmt|;
+comment|/* skip spaces */
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
 expr_stmt|;
 comment|/* find the matching right angle bracket */
 name|addr
 operator|=
-operator|++
 name|p
 expr_stmt|;
 for|for
