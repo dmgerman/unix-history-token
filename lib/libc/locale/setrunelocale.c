@@ -258,7 +258,7 @@ name|PATH_MAX
 condition|)
 return|return
 operator|(
-name|EFAULT
+name|ENAMETOOLONG
 operator|)
 return|;
 name|_PathLocale
