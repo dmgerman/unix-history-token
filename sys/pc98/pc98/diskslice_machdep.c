@@ -1699,7 +1699,7 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
-literal|"sd"
+literal|"da"
 argument_list|,
 literal|2
 argument_list|)
@@ -1731,7 +1731,7 @@ comment|/* IBM-PC HDD */
 name|bp
 operator|->
 name|b_flags
-operator|=
+operator||=
 name|B_INVAL
 operator||
 name|B_AGE
