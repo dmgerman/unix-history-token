@@ -176,6 +176,17 @@ name|stolen
 decl_stmt|,
 name|topstolen
 decl_stmt|;
+specifier|extern
+name|char
+name|_ncurses_copyright
+index|[]
+decl_stmt|;
+name|char
+modifier|*
+name|use_it
+init|=
+name|_ncurses_copyright
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE
