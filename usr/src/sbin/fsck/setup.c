@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.12 (Berkeley) %G%"
+literal|"@(#)setup.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,45 +647,24 @@ operator|<
 literal|1
 condition|)
 block|{
-name|pwarn
-argument_list|(
-literal|"IMPOSSIBLE INTERLEAVE=%d IN SUPERBLOCK"
-argument_list|,
 name|sblock
 operator|.
 name|fs_interleave
-argument_list|)
-expr_stmt|;
+block|)
+empty_stmt|;
 name|sblock
 operator|.
 name|fs_interleave
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|preen
-condition|)
-name|printf
-argument_list|(
-literal|" (FIXED)\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|preen
-operator|||
-name|reply
-argument_list|(
-literal|"SET TO DEFAULT"
-argument_list|)
-operator|==
-literal|1
-condition|)
 name|sbdirty
 argument_list|()
 expr_stmt|;
 block|}
+end_block
+
+begin_if
 if|if
 condition|(
 name|sblock
@@ -697,15 +676,14 @@ operator|.
 name|fs_nsect
 condition|)
 block|{
-name|pwarn
-argument_list|(
-literal|"IMPOSSIBLE NPSECT=%d IN SUPERBLOCK"
-argument_list|,
 name|sblock
 operator|.
 name|fs_npsect
-argument_list|)
-expr_stmt|;
+block|)
+empty_stmt|;
+end_if
+
+begin_expr_stmt
 name|sblock
 operator|.
 name|fs_npsect
@@ -714,33 +692,22 @@ name|sblock
 operator|.
 name|fs_nsect
 expr_stmt|;
-if|if
-condition|(
-name|preen
-condition|)
-name|printf
-argument_list|(
-literal|" (FIXED)\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|preen
-operator|||
-name|reply
-argument_list|(
-literal|"SET TO DEFAULT"
-argument_list|)
-operator|==
-literal|1
-condition|)
+end_expr_stmt
+
+begin_expr_stmt
 name|sbdirty
 argument_list|()
 expr_stmt|;
-block|}
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/* 	 * read in the summary info. 	 */
-for|for
-control|(
+end_comment
+
+begin_expr_stmt
+unit|for
+operator|(
 name|i
 operator|=
 literal|0
@@ -748,13 +715,13 @@ operator|,
 name|j
 operator|=
 literal|0
-init|;
+expr|;
 name|i
 operator|<
 name|sblock
 operator|.
 name|fs_cssize
-condition|;
+expr|;
 name|i
 operator|+=
 name|sblock
@@ -763,7 +730,7 @@ name|fs_bsize
 operator|,
 name|j
 operator|++
-control|)
+operator|)
 block|{
 name|size
 operator|=
@@ -776,17 +743,17 @@ operator|<
 name|sblock
 operator|.
 name|fs_bsize
-condition|?
+operator|?
 name|sblock
 operator|.
 name|fs_cssize
 operator|-
 name|i
-else|:
+operator|:
 name|sblock
 operator|.
 name|fs_bsize
-expr_stmt|;
+block|;
 name|sblock
 operator|.
 name|fs_csp
@@ -808,7 +775,7 @@ name|unsigned
 operator|)
 name|size
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|bread
@@ -854,7 +821,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * allocate and initialize the necessary maps 	 */
+end_comment
+
+begin_expr_stmt
 name|bmapsz
 operator|=
 name|roundup
@@ -872,6 +845,9 @@ name|short
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|blockmap
 operator|=
 name|calloc
@@ -887,6 +863,9 @@ name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|blockmap
@@ -905,6 +884,9 @@ goto|goto
 name|badsb
 goto|;
 block|}
+end_if
+
+begin_expr_stmt
 name|statemap
 operator|=
 name|calloc
@@ -924,6 +906,9 @@ name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|statemap
@@ -944,6 +929,9 @@ goto|goto
 name|badsb
 goto|;
 block|}
+end_if
+
+begin_expr_stmt
 name|lncntp
 operator|=
 operator|(
@@ -967,6 +955,9 @@ name|short
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|lncntp
@@ -994,40 +985,49 @@ goto|goto
 name|badsb
 goto|;
 block|}
+end_if
+
+begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+end_return
+
+begin_label
 name|badsb
 label|:
+end_label
+
+begin_expr_stmt
 name|ckfini
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Read in the super block and its summary info.  */
 end_comment
 
-begin_macro
-name|readsb
-argument_list|(
-argument|listerr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|readsb
+operator|(
+name|listerr
+operator|)
 name|int
 name|listerr
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
