@@ -880,15 +880,12 @@ name|high
 decl_stmt|,
 name|low
 decl_stmt|;
-name|int
+name|critical_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* Select timer0 and latch counter value. */
@@ -915,7 +912,7 @@ argument_list|(
 name|TIMER_CNTR0
 argument_list|)
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -1212,15 +1209,12 @@ block|{
 name|int
 name|new_timer0_max_count
 decl_stmt|;
-name|int
+name|critical_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|timer_freq
@@ -1275,7 +1269,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -1302,13 +1296,12 @@ operator|==
 name|i8254_get_timecount
 condition|)
 block|{
-name|int
+name|critical_t
 name|s
-init|=
-name|save_intr
-argument_list|()
 decl_stmt|;
-name|disable_intr
+name|s
+operator|=
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -1334,7 +1327,7 @@ name|clkintr_pending
 operator|=
 literal|0
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -2053,15 +2046,12 @@ name|high
 decl_stmt|,
 name|low
 decl_stmt|;
-name|int
+name|critical_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* Select timer0 and latch counter value. */
@@ -2152,7 +2142,7 @@ name|count
 operator|+=
 name|i8254_offset
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -2313,13 +2303,12 @@ name|int
 name|period
 parameter_list|)
 block|{
-name|int
+name|critical_t
 name|s
-init|=
-name|save_intr
-argument_list|()
 decl_stmt|;
-name|disable_intr
+name|s
+operator|=
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -2338,7 +2327,7 @@ name|beeping
 condition|)
 block|{
 comment|/* Something else owns it. */
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -2421,7 +2410,7 @@ name|period
 argument_list|)
 expr_stmt|;
 block|}
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)

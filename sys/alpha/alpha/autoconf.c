@@ -404,11 +404,6 @@ name|void
 name|cpu_rootconf
 parameter_list|()
 block|{
-name|int
-name|order
-init|=
-literal|0
-decl_stmt|;
 if|#
 directive|if
 name|defined

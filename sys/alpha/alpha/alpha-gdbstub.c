@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/prom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -2414,9 +2420,7 @@ operator|==
 name|NODEV
 condition|)
 comment|/* somebody's removed it */
-return|return
-literal|1
-return|;
+return|return;
 comment|/* get out of here */
 name|remcomOutBuffer
 index|[
@@ -2499,7 +2503,9 @@ case|case
 literal|'k'
 case|:
 name|prom_halt
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 break|break;

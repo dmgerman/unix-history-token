@@ -832,7 +832,7 @@ operator|&
 name|RB_GDB
 operator|)
 decl_stmt|;
-name|int
+name|critical_t
 name|s
 decl_stmt|;
 comment|/* 	 * Don't bother checking for usermode, since a benign entry 	 * by the kernel (call to Debugger() or a breakpoint) has 	 * already checked for usermode.  If neither of those 	 * conditions exist, something Bad has happened. 	 */
@@ -900,10 +900,7 @@ name|regs
 expr_stmt|;
 name|s
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|#
@@ -961,7 +958,7 @@ literal|0
 block|restart_cpus(stopped_cpus);
 endif|#
 directive|endif
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -1127,6 +1124,9 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+name|u_int
+name|saveintr
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -1134,8 +1134,20 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+name|saveintr
+operator|=
+name|alpha_pal_swpipl
+argument_list|(
+name|ALPHA_PSL_IPL_HIGH
+argument_list|)
+expr_stmt|;
 asm|__asm("call_pal 0x81");
 comment|/* XXX bugchk */
+name|alpha_pal_swpipl
+argument_list|(
+name|saveintr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

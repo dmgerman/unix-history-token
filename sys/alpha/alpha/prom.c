@@ -377,7 +377,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|int
+name|critical_t
 name|enter_prom
 name|__P
 argument_list|(
@@ -395,7 +395,7 @@ name|leave_prom
 name|__P
 argument_list|(
 operator|(
-name|int
+name|critical_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -435,7 +435,7 @@ operator|*
 operator|)
 literal|0x20000000
 decl_stmt|;
-name|int
+name|critical_t
 name|s
 decl_stmt|;
 name|s
@@ -443,7 +443,7 @@ operator|=
 name|enter_prom
 argument_list|()
 expr_stmt|;
-comment|/* disable_intr() and map prom */
+comment|/* critical_enter() and map prom */
 operator|*
 name|to
 operator|=
@@ -485,7 +485,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* unmap prom and restore_intr(s) */
+comment|/* unmap prom and critical_exit(s) */
 block|}
 end_function
 
@@ -643,7 +643,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|critical_t
 name|enter_prom
 parameter_list|()
 block|{
@@ -651,13 +651,12 @@ name|pt_entry_t
 modifier|*
 name|lev1map
 decl_stmt|;
-name|int
+name|critical_t
 name|s
-init|=
-name|save_intr
-argument_list|()
 decl_stmt|;
-name|disable_intr
+name|s
+operator|=
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -779,22 +778,16 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|leave_prom
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|s
-operator|)
-argument_list|)
-name|int
+parameter_list|)
+name|critical_t
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|pt_entry_t
 modifier|*
@@ -839,24 +832,21 @@ argument_list|()
 expr_stmt|;
 comment|/* XXX */
 block|}
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|prom_cache_sync
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
+parameter_list|)
 block|{
 name|ALPHA_TBIA
 argument_list|()
@@ -865,7 +855,7 @@ name|alpha_pal_imb
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|int
@@ -992,7 +982,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* 	 * Turn off interrupts, for sanity. 	 */
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set "boot request" part of the CPU state depending on what 	 * we want to happen when we halt. 	 */
