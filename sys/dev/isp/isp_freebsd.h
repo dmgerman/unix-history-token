@@ -245,12 +245,13 @@ name|HANDLE_LOOPSTATE_IN_OUTER_LAYERS
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|ISP_SMPLOCK
-value|1
-end_define
+begin_comment
+comment|/* turn this off for now */
+end_comment
+
+begin_comment
+comment|/* #define	ISP_SMPLOCK			1	*/
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -646,6 +647,12 @@ begin_comment
 comment|/*  * Locking macros...  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -687,6 +694,56 @@ parameter_list|)
 define|\
 value|mtx_unlock(&Giant); mtx_lock(&(isp)->isp_lock)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISP_LOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_UNLOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISPLOCK_2_CAMLOCK
+parameter_list|(
+name|isp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMLOCK_2_ISPLOCK
+parameter_list|(
+name|isp
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Required Macros/Defines  */
@@ -1931,6 +1988,9 @@ name|mboxwaiting
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 operator|(
 name|void
 operator|)
@@ -1953,6 +2013,27 @@ argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|tsleep
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_mbxworkp
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"isp_mboxwaiting"
+argument_list|,
+name|lim
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isp

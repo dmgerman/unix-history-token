@@ -1113,7 +1113,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_freeze_loopdown
 parameter_list|(
@@ -2535,7 +2535,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|is_lun_enabled
 parameter_list|(
@@ -2552,7 +2552,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|are_any_luns_enabled
 parameter_list|(
@@ -2567,7 +2567,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|tstate_t
 modifier|*
 name|get_lun_statep
@@ -2585,7 +2585,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|rls_lun_statep
 parameter_list|(
@@ -2601,7 +2601,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_psema_sig_rqe
 parameter_list|(
@@ -2616,7 +2616,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_cv_wait_timed_rqe
 parameter_list|(
@@ -2633,7 +2633,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_cv_signal_rqe
 parameter_list|(
@@ -2650,7 +2650,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_vsema_rqe
 parameter_list|(
@@ -2665,7 +2665,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|atio_private_data_t
 modifier|*
 name|isp_get_atpd
@@ -2872,7 +2872,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|is_lun_enabled
 parameter_list|(
@@ -2973,7 +2973,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|are_any_luns_enabled
 parameter_list|(
@@ -3076,7 +3076,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|tstate_t
 modifier|*
 name|get_lun_statep
@@ -3230,7 +3230,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|rls_lun_statep
 parameter_list|(
@@ -3260,7 +3260,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_psema_sig_rqe
 parameter_list|(
@@ -3298,6 +3298,9 @@ index|]
 operator||=
 name|TM_WANTED
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 if|if
 condition|(
 name|cv_wait_sig
@@ -3326,6 +3329,39 @@ literal|1
 operator|)
 return|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|tsleep
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|tgtcv0
+index|[
+name|bus
+index|]
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"cv_isp"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 name|isp
 operator|->
 name|isp_osinfo
@@ -3348,7 +3384,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_cv_wait_timed_rqe
 parameter_list|(
@@ -3364,6 +3400,9 @@ name|int
 name|timo
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 if|if
 condition|(
 name|cv_timedwait
@@ -3394,6 +3433,39 @@ literal|1
 operator|)
 return|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|tsleep
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|tgtcv1
+index|[
+name|bus
+index|]
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"cv_isp1"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3404,7 +3476,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_cv_signal_rqe
 parameter_list|(
@@ -3431,6 +3503,9 @@ index|]
 operator|=
 name|status
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|cv_signal
 argument_list|(
 operator|&
@@ -3444,12 +3519,29 @@ name|bus
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|wakeup
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|tgtcv1
+index|[
+name|bus
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_vsema_rqe
 parameter_list|(
@@ -3488,6 +3580,9 @@ operator|&=
 operator|~
 name|TM_WANTED
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|cv_signal
 argument_list|(
 operator|&
@@ -3501,6 +3596,23 @@ name|bus
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|cv_signal
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|tgtcv0
+index|[
+name|bus
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|isp
 operator|->
@@ -3519,7 +3631,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|atio_private_data_t
 modifier|*
 name|isp_get_atpd
@@ -3858,7 +3970,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|destroy_lun_state
 parameter_list|(
@@ -10190,6 +10302,9 @@ name|isp
 init|=
 name|arg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|mtx_lock
 argument_list|(
 operator|&
@@ -10198,6 +10313,8 @@ operator|->
 name|isp_lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The first loop is for our usage where we have yet to have 	 * gotten good fibre channel state. 	 */
 for|for
 control|(
@@ -10284,6 +10401,9 @@ block|{
 break|break;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|msleep
 argument_list|(
 name|isp_kthread
@@ -10300,6 +10420,24 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|tsleep
+argument_list|(
+name|isp_kthread
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"isp_fcthrd"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 		 * Even if we didn't get good loop state we may be 		 * unfreezing the SIMQ so that we can kill off 		 * commands (if we've never seen loop before, for example). 		 */
 name|isp
@@ -10380,6 +10518,9 @@ argument_list|,
 literal|"kthread: waiting until called"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|cv_wait
 argument_list|(
 operator|&
@@ -10395,6 +10536,29 @@ operator|->
 name|isp_lock
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|tsleep
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|kthread_cv
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"fc_cv"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -10971,6 +11135,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|cv_signal
 argument_list|(
 operator|&
@@ -10981,6 +11148,20 @@ operator|.
 name|kthread_cv
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|wakeup
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|kthread_cv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|isp_freeze_loopdown
 argument_list|(
 name|isp
@@ -14918,6 +15099,9 @@ literal|"Name Server Database Changed"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
 name|cv_signal
 argument_list|(
 operator|&
@@ -14928,6 +15112,20 @@ operator|.
 name|kthread_cv
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|wakeup
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|kthread_cv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|ISPASYNC_FABRIC_DEV
