@@ -1202,6 +1202,7 @@ name|parent
 argument_list|)
 expr_stmt|;
 comment|/* add us to our grandparent's channel list */
+comment|/* 	 * XXX maybe we shouldn't always add the dev_t  	 */
 name|err
 operator|=
 name|pcm_chn_add
@@ -1209,9 +1210,6 @@ argument_list|(
 name|d
 argument_list|,
 name|child
-argument_list|,
-operator|!
-name|first
 argument_list|)
 expr_stmt|;
 if|if
@@ -1456,9 +1454,6 @@ argument_list|(
 name|d
 argument_list|,
 name|c
-argument_list|,
-operator|!
-name|last
 argument_list|)
 expr_stmt|;
 if|if
