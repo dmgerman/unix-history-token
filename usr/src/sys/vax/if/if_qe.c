@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/****************************************************************  *				
 end_comment
 
 begin_comment
-comment|/* ---------------------------------------------------------------------  * Modification History   *  * 15-Apr-86  -- afd  *	Rename "unused_multi" to "qunused_multi" for extending Generic  *	kernel to MicroVAXen.  *  * 18-mar-86  -- jaw     br/cvec changed to NOT use registers.  *  * 12 March 86 -- Jeff Chase  *	Modified to handle the new MCLGET macro  *	Changed if_qe_data.c to use more receive buffers  *	Added a flag to poke with adb to log qe_restarts on console  *  * 19 Oct 85 -- rjl  *	Changed the watch dog timer from 30 seconds to 3.  VMS is using  * 	less than 1 second in their's. Also turned the printf into an  *	mprintf.  *  *  09/16/85 -- Larry Cohen  * 		Add 43bsd alpha tape changes for subnet routing		  *  *  1 Aug 85 -- rjl  *	Panic on a non-existent memory interrupt and the case where a packet  *	was chained.  The first should never happen because non-existant   *	memory interrupts cause a bus reset. The second should never happen  *	because we hang 2k input buffers on the device.  *  *  1 Aug 85 -- rich  *      Fixed the broadcast loopback code to handle Clusters without  *      wedging the system.  *  *  27 Feb. 85 -- ejf  *	Return default hardware address on ioctl request.  *  *  12 Feb. 85 -- ejf  *	Added internal extended loopback capability.  *  *  27 Dec. 84 -- rjl  *	Fixed bug that caused every other transmit descriptor to be used  *	instead of every descriptor.  *  *  21 Dec. 84 -- rjl  *	Added watchdog timer to mask hardware bug that causes device lockup.  *  *  18 Dec. 84 -- rjl  *	Reworked driver to use q-bus mapping routines.  MicroVAX-I now does  *	copying instead of m-buf shuffleing.  *	A number of deficencies in the hardware/firmware were compensated  *	for. See comments in qestart and qerint.  *  *  14 Nov. 84 -- jf  *	Added usage counts for multicast addresses.  *	Updated general protocol support to allow access to the Ethernet  *	header.  *  *  04 Oct. 84 -- jf  *	Added support for new ioctls to add and delete multicast addresses  *	and set the physical address.  *	Add support for general protocols.  *  *  14 Aug. 84 -- rjl  *	Integrated Shannon changes. (allow arp above 1024 and ? )  *  *  13 Feb. 84 -- rjl  *  *	Initial version of driver. derived from IL driver.  *   * ---------------------------------------------------------------------  */
+comment|/* ---------------------------------------------------------------------  * Modification History  *  * 15-Apr-86  -- afd  *	Rename "unused_multi" to "qunused_multi" for extending Generic  *	kernel to MicroVAXen.  *  * 18-mar-86  -- jaw     br/cvec changed to NOT use registers.  *  * 12 March 86 -- Jeff Chase  *	Modified to handle the new MCLGET macro  *	Changed if_qe_data.c to use more receive buffers  *	Added a flag to poke with adb to log qe_restarts on console  *  * 19 Oct 85 -- rjl  *	Changed the watch dog timer from 30 seconds to 3.  VMS is using  * 	less than 1 second in their's. Also turned the printf into an  *	mprintf.  *  *  09/16/85 -- Larry Cohen  * 		Add 43bsd alpha tape changes for subnet routing  *  *  1 Aug 85 -- rjl  *	Panic on a non-existent memory interrupt and the case where a packet  *	was chained.  The first should never happen because non-existant  *	memory interrupts cause a bus reset. The second should never happen  *	because we hang 2k input buffers on the device.  *  *  1 Aug 85 -- rich  *      Fixed the broadcast loopback code to handle Clusters without  *      wedging the system.  *  *  27 Feb. 85 -- ejf  *	Return default hardware address on ioctl request.  *  *  12 Feb. 85 -- ejf  *	Added internal extended loopback capability.  *  *  27 Dec. 84 -- rjl  *	Fixed bug that caused every other transmit descriptor to be used  *	instead of every descriptor.  *  *  21 Dec. 84 -- rjl  *	Added watchdog timer to mask hardware bug that causes device lockup.  *  *  18 Dec. 84 -- rjl  *	Reworked driver to use q-bus mapping routines.  MicroVAX-I now does  *	copying instead of m-buf shuffleing.  *	A number of deficencies in the hardware/firmware were compensated  *	for. See comments in qestart and qerint.  *  *  14 Nov. 84 -- jf  *	Added usage counts for multicast addresses.  *	Updated general protocol support to allow access to the Ethernet  *	header.  *  *  04 Oct. 84 -- jf  *	Added support for new ioctls to add and delete multicast addresses  *	and set the physical address.  *	Add support for general protocols.  *  *  14 Aug. 84 -- rjl  *	Integrated Shannon changes. (allow arp above 1024 and ? )  *  *  13 Feb. 84 -- rjl  *  *	Initial version of driver. derived from IL driver.  *  * ---------------------------------------------------------------------  */
 end_comment
 
 begin_include
@@ -233,8 +233,14 @@ begin_if
 if|#
 directive|if
 name|NQE
-operator|>
+operator|==
 literal|1
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|QNIVERT
+argument_list|)
 end_if
 
 begin_define
@@ -257,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|NRCV
-value|20
+value|10
 end_define
 
 begin_comment
@@ -545,13 +551,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|QE_TIMEO
-value|(15)
-end_define
-
-begin_define
-define|#
-directive|define
 name|QEUNIT
 parameter_list|(
 name|x
@@ -560,7 +559,7 @@ value|minor(x)
 end_define
 
 begin_comment
-comment|/*  * The deqna shouldn't receive more than ETHERMTU + sizeof(struct ether_header)  * but will actually take in up to 2048 bytes. To guard against the receiver  * chaining buffers (which we aren't prepared to handle) we allocate 2kb   * size buffers.  */
+comment|/*  * The deqna shouldn't receive more than ETHERMTU + sizeof(struct ether_header)  * but will actually take in up to 2048 bytes. To guard against the receiver  * chaining buffers (which we aren't prepared to handle) we allocate 2kb  * size buffers.  */
 end_comment
 
 begin_define
@@ -676,7 +675,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The QNA interrupts on i/o operations. To do an I/O operation  	 * we have to setup the interface by transmitting a setup  packet. 	 */
+comment|/* 	 * The QNA interrupts on i/o operations. To do an I/O operation 	 * we have to setup the interface by transmitting a setup  packet. 	 */
 name|addr
 operator|->
 name|qe_csr
@@ -783,7 +782,7 @@ operator|->
 name|rringaddr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The QNA will loop the setup packet back to the receive ring 	 * for verification, therefore we initialize the first  	 * receive& transmit ring descriptors and link the setup packet 	 * to them. 	 */
+comment|/* 	 * The QNA will loop the setup packet back to the receive ring 	 * for verification, therefore we initialize the first 	 * receive& transmit ring descriptors and link the setup packet 	 * to them. 	 */
 name|qeinitdesc
 argument_list|(
 name|sc
@@ -898,7 +897,7 @@ name|qe_valid
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Get the addr off of the interface and place it into the setup 	 * packet. This code looks strange due to the fact that the address 	 * is placed in the setup packet in col. major order.  	 */
+comment|/* 	 * Get the addr off of the interface and place it into the setup 	 * packet. This code looks strange due to the fact that the address 	 * is placed in the setup packet in col. major order. 	 */
 for|for
 control|(
 name|i
@@ -1370,7 +1369,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Initialization of interface.   */
+comment|/*  * Initialization of interface.  */
 end_comment
 
 begin_macro
@@ -1480,7 +1479,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * map the communications area onto the device  		 */
+comment|/* 		 * map the communications area onto the device 		 */
 name|i
 operator|=
 name|uballoc
@@ -1633,7 +1632,7 @@ name|fail
 label|:
 name|printf
 argument_list|(
-literal|"qe%d: can't initialize\n"
+literal|"qe%d: can't allocate uba resources\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1957,7 +1956,7 @@ name|rindex
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Take the interface out of reset, program the vector,  	 * enable interrupts, and tell the world we are up. 	 */
+comment|/* 	 * Take the interface out of reset, program the vector, 	 * enable interrupts, and tell the world we are up. 	 */
 name|s
 operator|=
 name|splimp
@@ -2136,7 +2135,7 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-comment|/* 	 * The deqna doesn't look at anything but the valid bit 	 * to determine if it should transmit this packet. If you have 	 * a ring and fill it the device will loop indefinately on the 	 * packet and continue to flood the net with packets until you 	 * break the ring. For this reason we never queue more than n-1 	 * packets in the transmit ring.  	 * 	 * The microcoders should have obeyed their own defination of the 	 * flag and status words, but instead we have to compensate. 	 */
+comment|/* 	 * The deqna doesn't look at anything but the valid bit 	 * to determine if it should transmit this packet. If you have 	 * a ring and fill it the device will loop indefinately on the 	 * packet and continue to flood the net with packets until you 	 * break the ring. For this reason we never queue more than n-1 	 * packets in the transmit ring. 	 * 	 * The microcoders should have obeyed their own defination of the 	 * flag and status words, but instead we have to compensate. 	 */
 for|for
 control|(
 name|index
@@ -2278,7 +2277,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 *  Does buffer end on odd byte ?  		 */
+comment|/* 		 *  Does buffer end on odd byte ? 		 */
 if|if
 condition|(
 name|len
@@ -2378,11 +2377,15 @@ name|qe_valid
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
 name|sc
 operator|->
 name|nxmit
 operator|++
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|sc
 operator|->
 name|qe_if
@@ -2499,12 +2502,12 @@ name|buf_addr
 decl_stmt|,
 name|csr
 decl_stmt|;
-name|splx
-argument_list|(
-name|sc
-operator|->
-name|ipl
-argument_list|)
+comment|/* 	splx(sc->ipl); */
+operator|(
+name|void
+operator|)
+name|splimp
+argument_list|()
 expr_stmt|;
 name|csr
 operator|=
@@ -2554,9 +2557,11 @@ name|csr
 operator|&
 name|QE_NEX_MEM_INT
 condition|)
-name|panic
+name|printf
 argument_list|(
-literal|"qe: Non existant memory interrupt"
+literal|"qe%d: Nonexistent memory interrupt\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2928,7 +2933,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Ethernet interface receiver interrupt.  * If can't determine length from type, then have to drop packet.    * Othewise decapsulate packet based on type and pass to type specific   * higher-level input routine.  */
+comment|/*  * Ethernet interface receiver interrupt.  * If can't determine length from type, then have to drop packet.  * Othewise decapsulate packet based on type and pass to type specific  * higher-level input routine.  */
 end_comment
 
 begin_macro
@@ -5030,10 +5035,10 @@ literal|"qe%d: transmit timeout, restarted %d\n"
 argument_list|,
 name|unit
 argument_list|,
-operator|++
 name|sc
 operator|->
 name|qe_restarts
+operator|++
 argument_list|)
 expr_stmt|;
 name|qerestart
@@ -5097,6 +5102,13 @@ name|addr
 operator|->
 name|qe_csr
 operator|=
+name|QE_RESET
+expr_stmt|;
+name|addr
+operator|->
+name|qe_csr
+operator|&=
+operator|~
 name|QE_RESET
 expr_stmt|;
 name|qesetup
