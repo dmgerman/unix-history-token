@@ -2255,6 +2255,10 @@ return|;
 block|}
 if|if
 condition|(
+name|size
+operator|>
+literal|0
+operator|&&
 name|kd
 operator|->
 name|procbase
