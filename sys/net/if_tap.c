@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -113,12 +119,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -3374,7 +3374,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 return|return
 operator|(
