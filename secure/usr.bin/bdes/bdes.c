@@ -195,7 +195,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|if (fwrite(buf, sizeof(char), n, stdout) != n)	\ 			warnx("fwrite error at %d", n);
+value|if (fwrite(buf, sizeof(char), n, stdout) != (size_t)n)	\ 			warnx("fwrite error at %d", n);
 end_define
 
 begin_comment
@@ -548,11 +548,11 @@ name|int
 name|main
 parameter_list|(
 name|int
-name|ac
+name|argc
 parameter_list|,
 name|char
 modifier|*
-name|av
+name|argv
 index|[]
 parameter_list|)
 block|{
@@ -579,93 +579,12 @@ name|int
 name|kflag
 decl_stmt|;
 comment|/* command-line encryptiooon key */
-name|int
-name|argc
-decl_stmt|;
-comment|/* the real arg count */
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-comment|/* the real argument vector */
-comment|/* 	 * Hide the arguments from ps(1) by making private copies of them 	 * and clobbering the global (visible to ps(1)) ones. 	 */
-name|argc
-operator|=
-name|ac
-expr_stmt|;
-name|ac
-operator|=
-literal|1
-expr_stmt|;
-name|argv
-operator|=
-name|malloc
+name|setproctitle
 argument_list|(
-operator|(
-name|argc
-operator|+
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
+literal|"-"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|argc
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|argv
-index|[
-name|i
-index|]
-operator|=
-name|strdup
-argument_list|(
-name|av
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|MEMZERO
-argument_list|(
-name|av
-index|[
-name|i
-index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|av
-index|[
-name|i
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|argv
-index|[
-name|argc
-index|]
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* Hide command-line arguments */
 comment|/* initialize the initialization vctor */
 name|MEMZERO
 argument_list|(
