@@ -156,7 +156,6 @@ name|offset
 parameter_list|,
 name|whence
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
