@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyerror.c	5.1 (Berkeley) %G%"
+literal|"@(#)yyerror.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,17 @@ literal|'E'
 expr_stmt|;
 return|return;
 block|}
+comment|/* no continuations allowed here */
+if|if
+condition|(
+name|errpfx
+operator|==
+literal|' '
+condition|)
+name|errpfx
+operator|=
+literal|'E'
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PXP
