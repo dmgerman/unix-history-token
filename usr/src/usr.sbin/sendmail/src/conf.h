@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	@(#)conf.h	4.3		%G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)conf.h	5.1 (Berkeley) %G% */
+end_comment
+
+begin_comment
+comment|/* **  CONF.H -- All user-configurable parameters for sendmail */
 end_comment
 
 begin_comment
