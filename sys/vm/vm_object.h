@@ -109,10 +109,6 @@ name|int
 name|shadow_count
 decl_stmt|;
 comment|/* how many objects that this is a shadow for */
-name|int
-name|hash_rand
-decl_stmt|;
-comment|/* (c) hash table randomizer */
 name|objtype_t
 name|type
 decl_stmt|;
