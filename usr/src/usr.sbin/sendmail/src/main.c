@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.55.1.3 (Berkeley) %G%"
+literal|"@(#)main.c	8.82 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3200,16 +3200,32 @@ name|warn_f_flag
 operator|!=
 literal|'\0'
 operator|&&
+operator|(
+operator|(
+name|st
+operator|=
 name|stab
 argument_list|(
 name|RealUserName
 argument_list|,
-name|ST_TRUSTED
+name|ST_CLASS
 argument_list|,
 name|ST_FIND
 argument_list|)
+operator|)
 operator|==
 name|NULL
+operator|||
+operator|!
+name|bitnset
+argument_list|(
+literal|'t'
+argument_list|,
+name|st
+operator|->
+name|s_class
+argument_list|)
+operator|)
 condition|)
 name|auth_warning
 argument_list|(
