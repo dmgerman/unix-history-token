@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	8.1 (Berkeley) %G%"
+literal|"@(#)init.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1810,7 +1810,7 @@ parameter_list|()
 function_decl|;
 name|demo
 operator|=
-name|start
+name|Start
 argument_list|(
 literal|0
 argument_list|)

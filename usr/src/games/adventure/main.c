@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +165,7 @@ case|:
 comment|/* The restore worked fine */
 name|yea
 operator|=
-name|start
+name|Start
 argument_list|(
 literal|0
 argument_list|)

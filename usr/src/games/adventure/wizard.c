@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wizard.c	8.1 (Berkeley) %G%"
+literal|"@(#)wizard.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,7 +172,7 @@ block|}
 end_block
 
 begin_macro
-name|start
+name|Start
 argument_list|(
 argument|n
 argument_list|)
