@@ -478,26 +478,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|G_MIRROR_BUMP_SYNCID_OFW
-value|0x1
-end_define
-
-begin_comment
-comment|/* Bump syncid immediately. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|G_MIRROR_BUMP_SYNCID_IMM
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_MIRROR_BUMP_SYNCID
-value|(G_MIRROR_BUMP_SYNCID_OFW | \ 					 G_MIRROR_BUMP_SYNCID_IMM)
+value|0x1
 end_define
 
 begin_comment
@@ -507,15 +489,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|G_MIRROR_BUMP_GENID_IMM
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_MIRROR_BUMP_GENID
-value|(G_MIRROR_BUMP_GENID_IMM)
+value|0x2
 end_define
 
 begin_struct

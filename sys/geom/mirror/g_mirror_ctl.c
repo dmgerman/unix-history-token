@@ -2858,7 +2858,7 @@ name|sc
 operator|->
 name|sc_bump_id
 operator||=
-name|G_MIRROR_BUMP_SYNCID_OFW
+name|G_MIRROR_BUMP_SYNCID
 expr_stmt|;
 name|g_mirror_event_send
 argument_list|(
