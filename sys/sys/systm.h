@@ -405,6 +405,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|dumpstatus
+name|__P
+argument_list|(
+operator|(
+name|vm_offset_t
+name|addr
+operator|,
+name|long
+name|count
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|nullop
 name|__P
 argument_list|(
