@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.2 1994/09/23 10:25:38 davidg Exp $"
+literal|"$Id: ypbind.c,v 1.3 1995/02/16 01:21:44 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -347,6 +353,14 @@ name|int
 name|ypsetmode
 init|=
 name|YPSET_NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ypsecuremode
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1300,6 +1314,24 @@ name|ypsetmode
 operator|=
 name|YPSET_LOCAL
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"-s"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ypsecuremode
+operator|++
+expr_stmt|;
 block|}
 comment|/* blow away everything in BINDINGDIR */
 ifdef|#
@@ -1900,34 +1932,6 @@ name|dom_answered
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|ypdb
-operator|->
-name|dom_vers
-operator|==
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"NIS server [%s] for domain %s not responding."
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|ypdb
-operator|->
-name|dom_server_addr
-operator|.
-name|sin_addr
-argument_list|)
-argument_list|,
-name|ypdb
-operator|->
-name|dom_domain
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1971,6 +1975,26 @@ operator|->
 name|dom_interval
 operator|=
 literal|5
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"NIS server [%s] for domain %s not responding."
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ypdb
+operator|->
+name|dom_server_addr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|,
+name|ypdb
+operator|->
+name|dom_domain
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3095,7 +3119,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-comment|/*printf("returned from %s about %s\n", inet_ntoa(raddrp->sin_addr), dom);*/
+comment|/*printf("returned from %s/%d about %s\n", inet_ntoa(raddrp->sin_addr), 	       ntohs(raddrp->sin_port), dom);*/
 if|if
 condition|(
 name|dom
@@ -3103,6 +3127,48 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* if in securemode, check originating port number */
+if|if
+condition|(
+name|ypsecuremode
+operator|&&
+operator|(
+name|ntohs
+argument_list|(
+name|raddrp
+operator|->
+name|sin_port
+argument_list|)
+operator|>=
+name|IPPORT_RESERVED
+operator|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Rejected NIS server on [%s/%d] for domain %s."
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|raddrp
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|raddrp
+operator|->
+name|sin_port
+argument_list|)
+argument_list|,
+name|dom
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|ypdb
@@ -3237,6 +3303,18 @@ name|time
 argument_list|(
 name|NULL
 argument_list|)
+operator|&&
+operator|(
+name|ypdb
+operator|->
+name|dom_server_addr
+operator|.
+name|sin_port
+operator|==
+name|raddrp
+operator|->
+name|sin_port
+operator|)
 condition|)
 block|{
 name|ypdb
@@ -3270,10 +3348,8 @@ literal|"NIS server [%s] for domain %s OK."
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|ypdb
+name|raddrp
 operator|->
-name|dom_server_addr
-operator|.
 name|sin_addr
 argument_list|)
 argument_list|,
