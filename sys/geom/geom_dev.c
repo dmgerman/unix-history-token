@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -717,6 +723,33 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|w
+condition|)
+block|{
+comment|/* 		 * When running in very secure mode, do not allow 		 * opens for writing of any disks. 		 */
+name|error
+operator|=
+name|securelevel_ge
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
