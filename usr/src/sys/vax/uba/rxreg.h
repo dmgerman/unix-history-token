@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rxreg.h	4.4	83/04/11	*/
+comment|/*	rxreg.h	4.5	83/04/12	*/
 end_comment
 
 begin_comment
@@ -358,6 +358,17 @@ end_comment
 
 begin_comment
 comment|/* `deleted data'?*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RXIOC_GDENS
+value|(('d'<<8)|4)
+end_define
+
+begin_comment
+comment|/* return density of current disk */
 end_comment
 
 begin_ifdef
