@@ -786,7 +786,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Intelligent Stick USB disk-on-key 		 * Reported by: Samuel Tardieu<sam@rfc1149.net> 		 */
+comment|/* 		 * Intelligent Stick USB disk-on-key 		 * PR: kern/53005 		 */
 block|{
 name|T_DIRECT
 block|,
