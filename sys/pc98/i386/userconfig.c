@@ -1360,6 +1360,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"cue"
+block|,
+literal|"CATC USB ethernet adapter"
+block|,
+name|FLG_FIXED
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"kue"
 block|,
 literal|"Kawasaki LSI USB ethernet adapter"
@@ -10241,7 +10251,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/eisa/eisaconf.h>
+file|<dev/eisa/eisaconf.h>
 end_include
 
 begin_function_decl
