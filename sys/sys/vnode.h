@@ -995,34 +995,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VADMIN
-value|010000
+name|VEXEC
+value|000100
 end_define
 
 begin_comment
-comment|/* permission to administer vnode */
+comment|/* execute/search permission */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VSUID
-value|004000
+name|VWRITE
+value|000200
 end_define
 
 begin_comment
-comment|/* set user id on execution */
+comment|/* write permission */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VSGID
-value|002000
+name|VREAD
+value|000400
 end_define
 
 begin_comment
-comment|/* set group id on execution */
+comment|/* read permission */
 end_comment
 
 begin_define
@@ -1039,27 +1039,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VREAD
-value|000400
+name|VSGID
+value|002000
 end_define
 
 begin_comment
-comment|/* read, write, execute permissions */
+comment|/* set group id on execution */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VWRITE
-value|000200
+name|VSUID
+value|004000
 end_define
+
+begin_comment
+comment|/* set user id on execution */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|VEXEC
-value|000100
+name|VADMIN
+value|010000
 end_define
+
+begin_comment
+comment|/* permission to administer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTAT
+value|020000
+end_define
+
+begin_comment
+comment|/* permission to retrieve attrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VAPPEND
+value|040000
+end_define
+
+begin_comment
+comment|/* permission to write/append */
+end_comment
 
 begin_comment
 comment|/*  * Token indicating no attribute value yet assigned.  */
