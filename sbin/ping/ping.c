@@ -625,16 +625,16 @@ comment|/* who to ping */
 end_comment
 
 begin_decl_stmt
-name|long
-name|maxpayload
+name|int
+name|datalen
+init|=
+name|DEFDATALEN
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|datalen
-init|=
-name|DEFDATALEN
+name|maxpayload
 decl_stmt|;
 end_decl_stmt
 
@@ -2275,7 +2275,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"packet size too large: %lu> %u"
+literal|"packet size too large: %d> %d"
 argument_list|,
 name|datalen
 argument_list|,
