@@ -7356,8 +7356,11 @@ name|NULL
 condition|)
 return|return;
 name|va
-operator|&=
-name|PG_FRAME
+operator|=
+name|trunc_page
+argument_list|(
+name|va
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -10755,9 +10758,10 @@ condition|)
 return|return;
 name|base
 operator|=
+name|trunc_page
+argument_list|(
 name|va
-operator|&
-name|PG_FRAME
+argument_list|)
 expr_stmt|;
 name|offset
 operator|=
