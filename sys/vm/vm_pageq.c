@@ -109,17 +109,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|vm_pageq_mtx
-index|[
-name|PQ_COUNT
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|vm_pageq_init
@@ -249,42 +238,27 @@ operator|.
 name|pl
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|vm_pageq_mtx
-index|[
-name|i
-index|]
-argument_list|,
-literal|"vm pageq mutex"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
 
-begin_function
-name|struct
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
 name|vpgqueues
-modifier|*
+operator|*
 name|vm_pageq_aquire
-parameter_list|(
-name|int
-name|queue
-parameter_list|)
-block|{
-name|struct
+argument_list|(
+argument|int queue
+argument_list|)
+block|{ 	struct
 name|vpgqueues
-modifier|*
+operator|*
 name|vpq
-init|=
+operator|=
 name|NULL
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|queue
@@ -300,47 +274,26 @@ index|[
 name|queue
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|mtx_lock(&vm_pageq_mtx[queue]);
-endif|#
-directive|endif
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|vpq
 operator|)
 return|;
-block|}
-end_function
+end_return
 
-begin_function
-name|void
-name|vm_pageq_release
-parameter_list|(
-name|struct
-name|vpgqueues
-modifier|*
-name|vpq
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-block|mtx_unlock(&vm_pageq_mtx[vpq -&vm_page_queues[0]]);
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_function
-name|void
+begin_macro
+unit|}  void
 name|vm_pageq_requeue
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
+argument_list|(
+argument|vm_page_t m
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|queue
@@ -385,13 +338,8 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
-name|vm_pageq_release
-argument_list|(
-name|vpq
-argument_list|)
-expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	vm_pageq_enqueue:  *  */
