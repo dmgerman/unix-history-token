@@ -1916,6 +1916,13 @@ name|DC_WDOG_MUSTBEZERO
 value|0x00000100
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_WDOG_CTLWREN
+value|0x08000000
+end_define
+
 begin_comment
 comment|/*  * Size of a setup frame.  */
 end_comment
