@@ -8342,6 +8342,22 @@ break|break;
 case|case
 name|SIOCSIFFLAGS
 case|:
+comment|/* 		 * Can't do promisc and hostap at the same time. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|wi_ptype
+operator|==
+name|WI_PORTTYPE_AP
+condition|)
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_PROMISC
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -8417,11 +8433,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|wi_init
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -10431,6 +10449,46 @@ operator|&
 name|mac
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize promisc mode. 	 *      Being in the Host-AP mode causes 	 *      great deal of pain if promisc mode is set. 	 *      Therefore we avoid confusing the firmware 	 *      and always reset promisc mode in Host-AP regime, 	 *      it shows us all the packets anyway. 	 */
+comment|/* 	 * Can't do promisc and hostap at the same time. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|wi_ptype
+operator|==
+name|WI_PORTTYPE_AP
+condition|)
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_PROMISC
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_PROMISC
+condition|)
+name|WI_SETVAL
+argument_list|(
+name|WI_RID_PROMISC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|WI_SETVAL
+argument_list|(
+name|WI_RID_PROMISC
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Configure WEP. */
 if|if
 condition|(
@@ -10511,9 +10569,15 @@ operator|->
 name|wi_use_wep
 condition|)
 block|{
-comment|/* 			 * ONLY HWB3163 EVAL-CARD Firmware version 			 * less than 0.8 variant2 			 * 			 *   If promiscuous mode disable, Prism2 chip 			 *  does not work with WEP . 			 * It is under investigation for details. 			 * (ichiro@netbsd.org) 			 */
+comment|/* 			 * ONLY HWB3163 EVAL-CARD Firmware version 			 * less than 0.8 variant2 			 * 			 * If promiscuous mode disable, Prism2 chip 			 * does not work with WEP. 			 * It is under investigation for details. 			 * (ichiro@netbsd.org) 			 * 			 * And make sure that we don't need to do it 			 * in hostap mode, since it interferes with 			 * the above hostap workaround. 			 */
 if|if
 condition|(
+name|sc
+operator|->
+name|wi_ptype
+operator|!=
+name|WI_PORTTYPE_AP
+operator|&&
 name|sc
 operator|->
 name|sc_firmware_type
@@ -10546,34 +10610,6 @@ name|wi_authtype
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* Initialize promisc mode. */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
-condition|)
-block|{
-name|WI_SETVAL
-argument_list|(
-name|WI_RID_PROMISC
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|WI_SETVAL
-argument_list|(
-name|WI_RID_PROMISC
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Set multicast filter. */
 name|wi_setmulti
