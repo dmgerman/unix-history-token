@@ -1999,14 +1999,14 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"Can't make sense out of name %s\n"
+literal|"Warning: Can't find blockdevice corresponding to name %s\n"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|name
 operator|)
 return|;
 block|}
