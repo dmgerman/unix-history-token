@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_mem.h,v 1.9 1999/10/13 08:10:58 augustss Exp $	*/
+comment|/*	$NetBSD: usb_mem.h,v 1.16 2002/05/19 06:24:33 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -77,7 +77,8 @@ name|dma
 parameter_list|,
 name|offset
 parameter_list|)
-value|((dma)->block->segs[0].ds_addr + (dma)->offs + (offset))
+define|\
+value|((dma)->block->map->dm_segs[0].ds_addr + (dma)->offs + (offset))
 end_define
 
 begin_define
@@ -89,7 +90,8 @@ name|dma
 parameter_list|,
 name|offset
 parameter_list|)
-value|((void *)((dma)->block->kaddr + (dma)->offs) + (offset))
+define|\
+value|((void *)((char *)((dma)->block->kaddr + (dma)->offs) + (offset)))
 end_define
 
 begin_function_decl
@@ -246,6 +248,7 @@ name|dma
 parameter_list|,
 name|offset
 parameter_list|)
+define|\
 value|(alpha_XXX_dmamap((vm_offset_t) *(dma) + (offset)))
 end_define
 
