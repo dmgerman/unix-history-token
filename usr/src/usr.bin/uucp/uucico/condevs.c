@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.4 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4466,25 +4466,27 @@ begin_comment
 comment|/*#define HAYSTONE*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|hysqopn
 argument_list|(
-name|telno
+argument|telno
 argument_list|,
-name|flds
+argument|flds
 argument_list|,
-name|dev
+argument|dev
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|telno
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|flds
 index|[]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
