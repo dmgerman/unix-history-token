@@ -497,7 +497,12 @@ comment|/* Needs Two File Marks at EOD */
 name|SA_QUIRK_1FM
 init|=
 literal|0x10
+block|,
 comment|/* No more than 1 File Mark at EOD */
+name|SA_QUIRK_NODREAD
+init|=
+literal|0x20
+comment|/* Don't try and dummy read density */
 block|}
 name|sa_quirks
 typedef|;
@@ -846,6 +851,26 @@ literal|"*"
 block|}
 block|,
 name|SA_QUIRK_NOCOMP
+operator||
+name|SA_QUIRK_NODREAD
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"ARCHIVE"
+block|,
+literal|"Python*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_NODREAD
 block|,
 literal|0
 block|}
@@ -7850,6 +7875,19 @@ goto|goto
 name|exit
 goto|;
 block|}
+if|if
+condition|(
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|SA_QUIRK_NODREAD
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|scsi_sa_read_write
 argument_list|(
 operator|&
@@ -7986,6 +8024,7 @@ expr_stmt|;
 goto|goto
 name|exit
 goto|;
+block|}
 block|}
 comment|/* 		 * Next off, determine block limits. 		 */
 name|scsi_read_block_limits
@@ -12051,6 +12090,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
+comment|/* 	 * We can be quiet about illegal requests. 	 */
 if|if
 condition|(
 name|CAM_DEBUGGED
@@ -12062,10 +12102,12 @@ argument_list|,
 name|CAM_DEBUG_INFO
 argument_list|)
 condition|)
+block|{
 name|sf
 operator|=
 literal|0
 expr_stmt|;
+block|}
 else|else
 name|sf
 operator|=
@@ -12101,7 +12143,6 @@ argument_list|,
 literal|100000
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We can be quiet about illegal requests. 	 */
 name|error
 operator|=
 name|cam_periph_runccb
