@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	6.6	84/11/27	*/
+comment|/*	uipc_syscalls.c	6.7	85/05/27	*/
 end_comment
 
 begin_include
@@ -4095,18 +4095,39 @@ name|r
 expr_stmt|;
 if|if
 condition|(
-name|piconnect
+name|u
+operator|.
+name|u_error
+operator|=
+name|unp_connect2
 argument_list|(
 name|wso
 argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
+argument_list|,
 name|rso
 argument_list|)
-operator|==
-literal|0
 condition|)
 goto|goto
 name|free4
 goto|;
+name|wso
+operator|->
+name|so_state
+operator||=
+name|SS_CANTRCVMORE
+expr_stmt|;
+name|rso
+operator|->
+name|so_state
+operator||=
+name|SS_CANTSENDMORE
+expr_stmt|;
 return|return;
 name|free4
 label|:
