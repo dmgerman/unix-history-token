@@ -139,7 +139,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ALPHA_IEEEFP_H_ */
+comment|/* _MACHINE_IEEEFP_H_ */
 end_comment
 
 end_unit
