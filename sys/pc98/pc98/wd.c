@@ -2744,11 +2744,7 @@ name|dev
 operator|->
 name|si_drv1
 operator|=
-operator|&
-name|wddrives
-index|[
-name|lunit
-index|]
+name|du
 expr_stmt|;
 block|}
 else|else
@@ -2992,7 +2988,7 @@ name|lunit
 operator|=
 name|du
 operator|->
-name|dk_unit
+name|dk_lunit
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3400,7 +3396,7 @@ name|lunit
 operator|=
 name|du
 operator|->
-name|dk_unit
+name|dk_lunit
 expr_stmt|;
 ifdef|#
 directive|ifdef
