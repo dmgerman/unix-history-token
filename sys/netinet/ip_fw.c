@@ -9609,11 +9609,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|printf
-argument_list|(
-literal|"IPFW: MOD_LOAD\n"
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splimp
@@ -9654,11 +9649,6 @@ break|break ;
 case|case
 name|MOD_UNLOAD
 case|:
-name|printf
-argument_list|(
-literal|"IPFW: MOD_UNLOAD\n"
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 operator|!
