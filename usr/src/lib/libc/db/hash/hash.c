@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.9 (Berkeley) %G%"
+literal|"@(#)hash.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -76,25 +76,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hash.h"
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash.h"
 end_include
 
 begin_comment
@@ -149,19 +155,6 @@ directive|define
 name|ABNORMAL
 value|1
 end_define
-
-begin_comment
-comment|/* external routines */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* page.c */

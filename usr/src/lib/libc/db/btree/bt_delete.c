@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.1 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include

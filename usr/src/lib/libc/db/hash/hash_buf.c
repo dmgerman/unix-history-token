@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.4 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,13 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -68,13 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hash.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hash.h"
 end_include
 
 begin_comment

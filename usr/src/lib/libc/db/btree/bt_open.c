@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.4 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,37 +50,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -128,6 +140,7 @@ name|mode
 parameter_list|,
 name|b
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|f
@@ -138,6 +151,7 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
+specifier|const
 name|BTREEINFO
 modifier|*
 name|b
@@ -249,7 +263,7 @@ name|bt_close
 expr_stmt|;
 name|db
 operator|->
-name|delete
+name|del
 operator|=
 name|bt_delete
 expr_stmt|;

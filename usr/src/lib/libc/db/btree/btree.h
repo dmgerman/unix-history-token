@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  *  @(#)btree.h	5.1 (Berkeley) %G%  */
+comment|/*  *  @(#)btree.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -94,19 +94,6 @@ end_endif
 begin_comment
 comment|/* ndef NULL */
 end_comment
-
-begin_comment
-comment|/* libc */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* these are defined in lrucache.c */

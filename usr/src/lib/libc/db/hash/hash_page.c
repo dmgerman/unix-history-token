@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.8 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -81,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
