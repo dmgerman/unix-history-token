@@ -4907,6 +4907,8 @@ name|i
 argument_list|,
 name|VM_ALLOC_RETRY
 operator||
+name|VM_ALLOC_WIRED
+operator||
 name|VM_ALLOC_ZERO
 argument_list|)
 expr_stmt|;
@@ -4926,16 +4928,6 @@ name|pmap_zero_page
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|wire_count
-operator|++
-expr_stmt|;
-name|cnt
-operator|.
-name|v_wire_count
-operator|++
 expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
