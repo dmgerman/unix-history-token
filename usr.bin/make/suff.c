@@ -1830,7 +1830,7 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-comment|/* 	 * SuffParseTransform() may fail for special rules which are not 	 * actual transformation rules (e.g., .DEFAULT). 	 */
+comment|/* 		 * SuffParseTransform() may fail for special rules which are not 		 * actual transformation rules (e.g., .DEFAULT). 		 */
 if|if
 condition|(
 operator|!
@@ -1869,7 +1869,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the source from the target's children list. We check for a 	 * NULL return to handle a beanhead saying something like 	 *  .c.o .c.o: 	 * 	 * We'll be called twice when the next target is seen, but .c and .o 	 * are only linked once... 	 */
+comment|/* 		 * Remove the source from the target's children list. We check 		 * for a NULL return to handle a beanhead saying something like 		 *  .c.o .c.o: 		 * 		 * We'll be called twice when the next target is seen, but .c 		 * and .o are only linked once... 		 */
 name|SuffRemove
 argument_list|(
 operator|&
@@ -1880,7 +1880,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the target from the source's parents list 	 */
+comment|/* 		 * Remove the target from the source's parents list 		 */
 name|SuffRemove
 argument_list|(
 operator|&
