@@ -105,32 +105,12 @@ name|int
 name|i_effnlink
 decl_stmt|;
 comment|/* i_nlink when I/O completes */
-union|union
-block|{
-comment|/* Associated filesystem. */
 name|struct
 name|fs
 modifier|*
-name|fs
-decl_stmt|;
-comment|/* FFS */
-name|struct
-name|ext2_sb_info
-modifier|*
-name|e2fs
-decl_stmt|;
-comment|/* EXT2FS */
-block|}
-name|inode_u
-union|;
-define|#
-directive|define
 name|i_fs
-value|inode_u.fs
-define|#
-directive|define
-name|i_e2fs
-value|inode_u.e2fs
+decl_stmt|;
+comment|/* Associated filesystem superblock. */
 name|struct
 name|dquot
 modifier|*
@@ -175,13 +155,6 @@ name|u_int32_t
 name|i_reclen
 decl_stmt|;
 comment|/* Size of found directory entry. */
-name|u_int32_t
-name|i_spare
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* XXX actually non-spare (for ext2fs). */
 name|struct
 name|dirhash
 modifier|*

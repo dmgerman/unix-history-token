@@ -134,36 +134,12 @@ modifier|*
 name|um_devvp
 decl_stmt|;
 comment|/* block device mounted vnode */
-union|union
-block|{
-comment|/* pointer to superblock */
 name|struct
 name|fs
 modifier|*
-name|fs
-decl_stmt|;
-comment|/* FFS */
-name|struct
-name|ext2_sb_info
-modifier|*
-name|e2fs
-decl_stmt|;
-comment|/* EXT2FS */
-block|}
-name|ufsmount_u
-union|;
-define|#
-directive|define
 name|um_fs
-value|ufsmount_u.fs
-define|#
-directive|define
-name|um_e2fs
-value|ufsmount_u.e2fs
-define|#
-directive|define
-name|um_e2fsb
-value|ufsmount_u.e2fs->s_es
+decl_stmt|;
+comment|/* pointer to superblock */
 name|struct
 name|vnode
 modifier|*
@@ -230,10 +206,6 @@ modifier|*
 name|um_malloctype
 decl_stmt|;
 comment|/* The inodes malloctype */
-name|int
-name|um_i_effnlink_valid
-decl_stmt|;
-comment|/* i_effnlink valid? */
 name|int
 function_decl|(
 modifier|*
