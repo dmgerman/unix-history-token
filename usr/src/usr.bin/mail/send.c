@@ -1076,31 +1076,6 @@ name|sflag
 expr_stmt|;
 if|if
 condition|(
-name|fsize
-argument_list|(
-name|mtf
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|hp
-operator|->
-name|h_subject
-operator|==
-name|NOSTR
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No message !?!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
 name|intty
 operator|&&
 name|value
@@ -1356,6 +1331,20 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
+name|hp
+operator|->
+name|h_subject
+operator|==
+name|NOSTR
+condition|)
+name|printf
+argument_list|(
+literal|"No message, no subject; hope that's ok\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Null message body; hope that's ok\n"
