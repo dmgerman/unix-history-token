@@ -1673,7 +1673,8 @@ expr_stmt|;
 else|else
 name|pmap
 operator|=
-name|NULL
+name|pmap_kernel
+argument_list|()
 expr_stmt|;
 name|lastaddr
 operator|=
@@ -1792,7 +1793,9 @@ operator|)
 operator|!=
 name|L2_TYPE_INV
 argument_list|,
+operator|(
 literal|"INV type"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
