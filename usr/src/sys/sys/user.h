@@ -4,7 +4,7 @@ comment|/* @(#)user.h 2.1 3/25/82 */
 end_comment
 
 begin_comment
-comment|/*	user.h	4.13	82/06/25	*/
+comment|/*	user.h	4.14	82/07/16	*/
 end_comment
 
 begin_ifdef
@@ -474,6 +474,20 @@ decl_stmt|;
 comment|/* saved previous fault page number */
 endif|#
 directive|endif
+name|struct
+name|quota
+modifier|*
+name|u_quota
+decl_stmt|;
+comment|/* user's quota structure */
+name|int
+name|u_qflags
+decl_stmt|;
+comment|/* per process quota flags */
+name|int
+name|u_pflags
+decl_stmt|;
+comment|/* per process other sorts of flags */
 name|int
 name|u_stack
 index|[
