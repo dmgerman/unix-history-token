@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.43 1995/11/04 17:07:08 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.44 1995/12/06 23:50:06 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1840,6 +1840,10 @@ name|int
 name|numccbs
 decl_stmt|;
 comment|/* how many we have malloc'd */
+name|int
+name|bt_bounce
+decl_stmt|;
+comment|/* should we bounce? */
 name|struct
 name|scsi_link
 name|sc_link
@@ -3155,7 +3159,13 @@ name|sc_link
 operator|.
 name|flags
 operator|=
+name|bt
+operator|->
+name|bt_bounce
+condition|?
 name|SDEV_BOUNCE
+else|:
+literal|0
 expr_stmt|;
 comment|/* 	 * Prepare the scsibus_data area for the upperlevel 	 * scsi code. 	 */
 name|scbus
@@ -5030,6 +5040,59 @@ index|[
 literal|0
 index|]
 operator|==
+literal|'4'
+operator|&&
+name|binfo
+operator|.
+name|id
+index|[
+literal|1
+index|]
+operator|==
+literal|'4'
+operator|&&
+name|binfo
+operator|.
+name|id
+index|[
+literal|2
+index|]
+operator|==
+literal|'5'
+operator|&&
+name|binfo
+operator|.
+name|id
+index|[
+literal|3
+index|]
+operator|==
+literal|'S'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bt%d: Your card cannot DMA above 16MB boundary. Bounce buffering enabled.\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|bt
+operator|->
+name|bt_bounce
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|binfo
+operator|.
+name|id
+index|[
+literal|0
+index|]
+operator|==
 literal|'5'
 condition|)
 block|{
@@ -5060,6 +5123,11 @@ literal|"bt%d: if you have more than 16MBytes memory.\n"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|bt
+operator|->
+name|bt_bounce
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -5092,6 +5160,11 @@ literal|"bt%d: 16MBytes memory handling with this driver.\n"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|bt
+operator|->
+name|bt_bounce
+operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Assume we have a board at this stage 	 * setup dma channel from jumpers and save int 	 * level 	 */
