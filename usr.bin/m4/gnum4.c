@@ -1254,7 +1254,7 @@ name|re_nsub
 condition|)
 name|warnx
 argument_list|(
-literal|"No subexpression %d"
+literal|"No subexpression %u"
 argument_list|,
 name|n
 argument_list|)
