@@ -2128,9 +2128,6 @@ argument_list|,
 literal|"control setsockopt: %m"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPV6_BINDV6ONLY
 if|if
 condition|(
 name|family
@@ -2150,7 +2147,7 @@ name|ctl_sock
 argument_list|,
 name|IPPROTO_IPV6
 argument_list|,
-name|IPV6_BINDV6ONLY
+name|IPV6_V6ONLY
 argument_list|,
 operator|(
 name|char
@@ -2171,13 +2168,10 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"control setsockopt(IPV6_BINDV6ONLY): %m"
+literal|"control setsockopt(IPV6_V6ONLY): %m"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* IPV6_BINDV6ONLY */
 name|memcpy
 argument_list|(
 operator|&

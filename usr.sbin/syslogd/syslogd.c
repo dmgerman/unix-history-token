@@ -12950,9 +12950,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|IPV6_BINDV6ONLY
 if|if
 condition|(
 name|r
@@ -12976,7 +12973,7 @@ name|s
 argument_list|,
 name|IPPROTO_IPV6
 argument_list|,
-name|IPV6_BINDV6ONLY
+name|IPV6_V6ONLY
 argument_list|,
 operator|(
 name|char
@@ -13008,8 +13005,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|bind
