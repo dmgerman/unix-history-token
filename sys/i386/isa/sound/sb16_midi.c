@@ -152,6 +152,13 @@ value|0x3F
 end_define
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|sb16midi_opened
@@ -887,10 +894,6 @@ name|int
 name|ok
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|sbc_major
 decl_stmt|;
 if|if
 condition|(
