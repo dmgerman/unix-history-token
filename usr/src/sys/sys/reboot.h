@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)reboot.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)reboot.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,7 +107,7 @@ comment|/* reboot due to boot() */
 end_comment
 
 begin_comment
-comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  */
+comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  Except for that of the "magic  * number", each mask applies to the shifted value.  */
 end_comment
 
 begin_define
@@ -121,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|B_ADAPTORMASK
-value|0xff
+value|0x0f
 end_define
 
 begin_define
@@ -164,6 +164,20 @@ define|#
 directive|define
 name|B_TYPEMASK
 value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_MAGICMASK
+value|0xf0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_DEVMAGIC
+value|0xa0000000
 end_define
 
 end_unit
