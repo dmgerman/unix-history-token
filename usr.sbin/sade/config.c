@@ -5374,35 +5374,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|file_readable
+name|variable_set2
 argument_list|(
-literal|"/usr/local/etc/exim/configure.default"
-argument_list|)
-operator|&&
-operator|!
-name|file_readable
-argument_list|(
-literal|"/usr/local/etc/exim/configure"
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|vsystem
-argument_list|(
-literal|"cp /usr/local/etc/exim/configure.default /usr/local/etc/exim/configure"
-argument_list|)
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"An error occurred while coping the exim configuration file.\n"
-literal|"Please check if exim is working after you have completed this\n"
-literal|"installation.\n"
+literal|"exim_enable"
+argument_list|,
+literal|"YES"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Update periodic.conf */
 name|perconf
 operator|=
@@ -5444,7 +5424,28 @@ name|fprintf
 argument_list|(
 name|perconf
 argument_list|,
+literal|"daily_clean_hoststat_enable=\"NO\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|perconf
+argument_list|,
 literal|"daily_status_include_submit_mailq=\"NO\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|perconf
+argument_list|,
+literal|"daily_status_mail_rejects_enable=\"NO\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|perconf
+argument_list|,
+literal|"daily_submit_queuerun=\"NO\"\n"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -5526,14 +5527,28 @@ name|fprintf
 argument_list|(
 name|mailerconf
 argument_list|,
-literal|"mailq		/usr/local/sbin/exim -bp\n"
+literal|"mailq		/usr/local/sbin/exim\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|mailerconf
 argument_list|,
-literal|"newaliases	/usr/bin/true\n"
+literal|"newaliases	/usr/local/sbin/exim -bi\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|mailerconf
+argument_list|,
+literal|"hoststat	/usr/bin/true\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|mailerconf
+argument_list|,
+literal|"purgestat	/usr/bin/true\n"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -5582,14 +5597,14 @@ name|fprintf
 argument_list|(
 name|newsyslogconf
 argument_list|,
-literal|"/var/log/exim/mainlog	mailnull:mail	640  7	   *	@T00  Z\n"
+literal|"/var/log/exim/mainlog	mailnull:mail	640  7	   *	@T00  ZN\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|newsyslogconf
 argument_list|,
-literal|"/var/log/exim/rejectlog	mailnull:mail	640  7	   *	@T00  Z\n"
+literal|"/var/log/exim/rejectlog	mailnull:mail	640  7	   *	@T00  ZN\n"
 argument_list|)
 expr_stmt|;
 name|fclose
