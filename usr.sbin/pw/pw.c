@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw.c,v 1.1.1.1.2.5 1997/11/04 07:16:15 charnier Exp $"
+literal|"$Id: pw.c,v 1.1.1.1.2.6 1998/07/16 17:20:18 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_decl_stmt
@@ -186,6 +192,19 @@ name|mode
 parameter_list|,
 name|int
 name|which
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|filelock
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -710,6 +729,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* 	 * Try to lock the master passowrd and group files right away (we 	 * don't care if it works, since this is just advisory locking. 	 */
+end_comment
+
+begin_expr_stmt
+name|filelock
+argument_list|(
+name|_PATH_GROUP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|filelock
+argument_list|(
+name|_PATH_MASTERPASSWD
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 name|funcs
@@ -729,6 +768,31 @@ end_return
 
 begin_function
 unit|}  static
+name|void
+name|filelock
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+block|{
+name|open
+argument_list|(
+name|filename
+argument_list|,
+name|O_RDONLY
+operator||
+name|O_EXLOCK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|getindex
 parameter_list|(
