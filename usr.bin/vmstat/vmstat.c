@@ -4440,7 +4440,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Size   In Use   Free   Requests  HighWater  Couldfree\n"
+literal|"Size   In Use   Free   Requests  HighWater  Couldfree\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4485,14 +4485,41 @@ literal|1
 operator|<<
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+literal|1024
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8d %8ld %6ld %10ld %7ld %10ld\n"
+literal|"%4d"
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%3dK"
+argument_list|,
+name|size
+operator|>>
+literal|10
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %8ld %6ld %10ld %7ld %10ld\n"
 argument_list|,
 name|kp
 operator|->
@@ -4553,7 +4580,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    Size  Type(s)\n"
+literal|"Size  Type(s)\n"
 argument_list|)
 expr_stmt|;
 name|kp
@@ -4680,12 +4707,32 @@ expr_stmt|;
 if|if
 condition|(
 name|first
+operator|&&
+name|j
+operator|<
+literal|1024
 condition|)
 name|printf
 argument_list|(
-literal|"%8d  %s"
+literal|"%4d  %s"
 argument_list|,
 name|j
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|first
+condition|)
+name|printf
+argument_list|(
+literal|"%3dK  %s"
+argument_list|,
+name|j
+operator|>>
+literal|10
 argument_list|,
 name|name
 argument_list|)
@@ -4700,7 +4747,7 @@ if|if
 condition|(
 name|len
 operator|>=
-literal|80
+literal|79
 condition|)
 block|{
 name|printf
@@ -4746,7 +4793,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\nMemory statistics by type                        Type  Kern\n"
+literal|"\nMemory statistics by type                          Type  Kern\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4754,7 +4801,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"      Type  InUse MemUse HighUse  Limit Requests Limit Limit Size(s)\n"
+literal|"        Type  InUse MemUse HighUse  Limit Requests Limit Limit Size(s)\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4796,7 +4843,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%11s%6ld%6ldK%7ldK%6ldK%9ld%5u%6u"
+literal|"%13s%6ld%6ldK%7ldK%6ldK%9ld%5u%6u"
 argument_list|,
 name|kmemnames
 index|[
@@ -4903,7 +4950,24 @@ name|first
 condition|)
 name|printf
 argument_list|(
-literal|"  %d"
+literal|"  "
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|<
+literal|1024
+condition|)
+name|printf
+argument_list|(
+literal|"%d"
 argument_list|,
 name|j
 argument_list|)
@@ -4911,9 +4975,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|",%d"
+literal|"%dK"
 argument_list|,
 name|j
+operator|>>
+literal|10
 argument_list|)
 expr_stmt|;
 name|first
