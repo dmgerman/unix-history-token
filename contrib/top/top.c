@@ -33,6 +33,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -695,6 +701,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* indicates unspecified */
+name|int
+name|sel_ret
+init|=
+literal|0
+decl_stmt|;
 name|time_t
 name|curr_time
 decl_stmt|;
@@ -2492,30 +2503,41 @@ name|restart
 goto|;
 block|}
 comment|/* wait for either input or the end of the delay period */
-if|if
-condition|(
+name|sel_ret
+operator|=
 name|select
 argument_list|(
-literal|32
+literal|2
 argument_list|,
 operator|&
 name|readfds
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|NULL
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|NULL
 argument_list|,
 operator|&
 name|timeout
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sel_ret
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|EINTR
+condition|)
+name|quit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sel_ret
 operator|>
 literal|0
 condition|)
@@ -2533,9 +2555,8 @@ argument_list|()
 expr_stmt|;
 comment|/* now read it and convert to command strchr */
 comment|/* (use "change" as a temporary to hold strchr) */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|read
 argument_list|(
 literal|0
@@ -2544,6 +2565,13 @@ operator|&
 name|ch
 argument_list|,
 literal|1
+argument_list|)
+operator|!=
+literal|1
+condition|)
+name|quit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
