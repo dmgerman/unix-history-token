@@ -245,7 +245,7 @@ index|[
 name|value
 index|]
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|printf
@@ -543,7 +543,7 @@ argument_list|(
 literal|"The waves subside and it is possible to descend to the sea cave now."
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 return|return
@@ -579,7 +579,7 @@ name|position
 operator|=
 literal|229
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 return|return
@@ -1169,7 +1169,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 switch|switch
@@ -1442,7 +1442,7 @@ if|if
 condition|(
 name|followfight
 operator|==
-name|time
+name|gtime
 condition|)
 block|{
 name|puts
@@ -1506,7 +1506,7 @@ if|if
 condition|(
 name|followgod
 operator|==
-name|time
+name|gtime
 condition|)
 block|{
 name|puts

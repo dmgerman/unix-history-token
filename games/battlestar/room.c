@@ -149,7 +149,6 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|unsigned
 name|int
 modifier|*
 name|p

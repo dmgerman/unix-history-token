@@ -1344,7 +1344,7 @@ name|printf
 argument_list|(
 literal|"Time (was %d) = "
 argument_list|,
-name|time
+name|gtime
 argument_list|)
 expr_stmt|;
 name|fgets
@@ -1370,7 +1370,7 @@ argument_list|,
 literal|"%d"
 argument_list|,
 operator|&
-name|time
+name|gtime
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1509,7 +1509,7 @@ name|printf
 argument_list|(
 literal|"Clock (was %d) = "
 argument_list|,
-name|clock
+name|gclock
 argument_list|)
 expr_stmt|;
 name|fgets
@@ -1535,7 +1535,7 @@ argument_list|,
 literal|"%d"
 argument_list|,
 operator|&
-name|clock
+name|gclock
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1630,7 +1630,7 @@ argument_list|,
 name|rate
 argument_list|()
 argument_list|,
-name|time
+name|gtime
 argument_list|)
 expr_stmt|;
 name|printf

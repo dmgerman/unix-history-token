@@ -103,7 +103,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|fuel
@@ -213,7 +213,7 @@ name|fuel
 operator|-=
 literal|2
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|puts
@@ -298,27 +298,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * sigh -- this program thinks "time" is an int.  It's easier to not load  *<time.h> than try and fix it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
 
 begin_macro
 name|post
@@ -726,7 +710,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|time
+name|gtime
 operator|+=
 literal|15
 expr_stmt|;
@@ -957,7 +941,7 @@ argument_list|(
 literal|"Your match splutters to life."
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|matchlight
