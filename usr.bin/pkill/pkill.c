@@ -1255,12 +1255,6 @@ name|P_SYSTEM
 operator|)
 operator|!=
 literal|0
-operator|||
-name|kp
-operator|->
-name|ki_pid
-operator|==
-name|mypid
 condition|)
 continue|continue;
 if|if
