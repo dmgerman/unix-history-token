@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -106,23 +112,6 @@ include|#
 directive|include
 file|<sys/vmmeter.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -5316,7 +5305,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|backtrace
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
 comment|/* 			 * We will not be on the run queue. So we must be 			 * sleeping or similar. 			 */
