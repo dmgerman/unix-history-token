@@ -3645,9 +3645,6 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|s
 operator|=
 name|splvm
@@ -3759,6 +3756,9 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 if|#
 directive|if
