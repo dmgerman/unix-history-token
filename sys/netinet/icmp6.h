@@ -2847,13 +2847,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMPV6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "rediraccept", CTLTYPE_INT }, \ 	{ "redirtimeout", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "nd6_prune", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "nd6_delay", CTLTYPE_INT }, \ 	{ "nd6_umaxtries", CTLTYPE_INT }, \ 	{ "nd6_mmaxtries", CTLTYPE_INT }, \ 	{ "nd6_useloopback", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "nodeinfo", CTLTYPE_INT }, \ 	{ "errppslimit", CTLTYPE_INT }, \ 	{ "nd6_maxnudhint", CTLTYPE_INT }, \ 	{ "mtudisc_hiwat", CTLTYPE_INT }, \ 	{ "mtudisc_lowat", CTLTYPE_INT }, \ 	{ "nd6_debug", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ }
-end_define
-
-begin_define
-define|#
-directive|define
 name|RTF_PROBEMTU
 value|RTF_PROTO1
 end_define
