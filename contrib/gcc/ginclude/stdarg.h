@@ -94,10 +94,6 @@ directive|ifdef
 name|_STDARG_H
 end_ifdef
 
-begin_comment
-comment|/* Note that the type used in va_arg is supposed to match the    actual type **after default promotions**.    Thus, va_arg (..., short) is not valid.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -107,21 +103,29 @@ name|v
 parameter_list|,
 name|l
 parameter_list|)
-value|__builtin_stdarg_start((v),l)
+value|__builtin_va_start(v,l)
 end_define
 
 begin_define
 define|#
 directive|define
 name|va_end
-value|__builtin_va_end
+parameter_list|(
+name|v
+parameter_list|)
+value|__builtin_va_end(v)
 end_define
 
 begin_define
 define|#
 directive|define
 name|va_arg
-value|__builtin_va_arg
+parameter_list|(
+name|v
+parameter_list|,
+name|l
+parameter_list|)
+value|__builtin_va_arg(v,l)
 end_define
 
 begin_if
@@ -149,7 +153,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|__builtin_va_copy((d),(s))
+value|__builtin_va_copy(d,s)
 end_define
 
 begin_endif
@@ -166,7 +170,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|__builtin_va_copy((d),(s))
+value|__builtin_va_copy(d,s)
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output dbx-format symbol table information from GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output dbx-format symbol table information from GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -392,7 +392,7 @@ begin_define
 define|#
 directive|define
 name|FORCE_TEXT
-value|text_section ();
+value|function_section (current_function_decl);
 end_define
 
 begin_else
@@ -1037,6 +1037,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|dbxout_class_name_qualifiers
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|dbxout_symbol_location
 name|PARAMS
@@ -1253,6 +1266,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|dbx_debug_hooks
@@ -1283,10 +1297,10 @@ comment|/* source_line */
 name|dbxout_source_line
 block|,
 comment|/* begin_prologue: just output line info */
-name|debug_nothing_int
+name|debug_nothing_int_charstar
 block|,
 comment|/* end_prologue */
-name|debug_nothing_void
+name|debug_nothing_int_charstar
 block|,
 comment|/* end_epilogue */
 ifdef|#
@@ -1340,6 +1354,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|xcoff_debug_hooks
@@ -1369,7 +1384,7 @@ block|,
 name|xcoffout_begin_prologue
 block|,
 comment|/* begin_prologue */
-name|debug_nothing_int
+name|debug_nothing_int_charstar
 block|,
 comment|/* end_prologue */
 name|xcoffout_end_epilogue
@@ -1565,7 +1580,14 @@ decl_stmt|;
 name|tree
 name|syms
 init|=
+call|(
+modifier|*
+name|lang_hooks
+operator|.
+name|decls
+operator|.
 name|getdecls
+call|)
 argument_list|()
 decl_stmt|;
 name|asmfile
@@ -4104,11 +4126,18 @@ argument_list|)
 operator|==
 name|VECTOR_TYPE
 condition|)
+comment|/* The frontend feeds us a representation for the vector as a struct        containing an array.  Pull out the array type.  */
 name|type
 operator|=
+name|TREE_TYPE
+argument_list|(
+name|TYPE_FIELDS
+argument_list|(
 name|TYPE_DEBUG_REPRESENTATION_TYPE
 argument_list|(
 name|type
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* If there was an input error and we don't really have a type,      avoid crashing and write something that is at least valid      by assuming `int'.  */
@@ -7392,6 +7421,131 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Output leading leading struct or class names needed for qualifying    type whose scope is limited to a struct or class.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|dbxout_class_name_qualifiers
+parameter_list|(
+name|decl
+parameter_list|)
+name|tree
+name|decl
+decl_stmt|;
+block|{
+name|tree
+name|context
+init|=
+name|decl_type_context
+argument_list|(
+name|decl
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|context
+operator|!=
+name|NULL_TREE
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|context
+argument_list|)
+operator|==
+name|RECORD_TYPE
+operator|&&
+name|TYPE_NAME
+argument_list|(
+name|context
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|TREE_CODE
+argument_list|(
+name|TYPE_NAME
+argument_list|(
+name|context
+argument_list|)
+argument_list|)
+operator|==
+name|IDENTIFIER_NODE
+operator|||
+operator|(
+name|DECL_NAME
+argument_list|(
+name|TYPE_NAME
+argument_list|(
+name|context
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|)
+condition|)
+block|{
+name|tree
+name|name
+init|=
+name|TYPE_NAME
+argument_list|(
+name|context
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|TYPE_DECL
+condition|)
+block|{
+name|dbxout_class_name_qualifiers
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+name|name
+operator|=
+name|DECL_NAME
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|asmfile
+argument_list|,
+literal|"%s::"
+argument_list|,
+name|IDENTIFIER_POINTER
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CHARS
+argument_list|(
+name|IDENTIFIER_LENGTH
+argument_list|(
+name|name
+argument_list|)
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -7888,14 +8042,34 @@ name|NULL_TREE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Output .stabs (or whatever) and leading double quote.  */
+name|fprintf
+argument_list|(
+name|asmfile
+argument_list|,
+literal|"%s\""
+argument_list|,
+name|ASM_STABS_OP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|use_gnu_debug_info_extensions
+condition|)
+block|{
+comment|/* Output leading class/struct qualifiers.  */
+name|dbxout_class_name_qualifiers
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Output typedef name.  */
 name|fprintf
 argument_list|(
 name|asmfile
 argument_list|,
-literal|"%s\"%s:"
-argument_list|,
-name|ASM_STABS_OP
+literal|"%s:"
 argument_list|,
 name|IDENTIFIER_POINTER
 argument_list|(
@@ -8523,7 +8697,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|/* Don't mention a variable at all      if it was completely optimized into nothingness.            If the decl was from an inline function, then its rtl      is not identically the rtl that was used in this      particular compilation.  */
+comment|/* Don't mention a variable at all      if it was completely optimized into nothingness.       If the decl was from an inline function, then its rtl      is not identically the rtl that was used in this      particular compilation.  */
 if|if
 condition|(
 name|GET_CODE
@@ -9570,7 +9744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output definitions of all the decls in a chain. Return non-zero if    anything was output */
+comment|/* Output definitions of all the decls in a chain. Return nonzero if    anything was output */
 end_comment
 
 begin_function
@@ -9859,7 +10033,7 @@ name|DBX_MEMPARM_STABS_LETTER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* It is quite tempting to use: 	        	           dbxout_type (TREE_TYPE (parms), 0);  	       as the next statement, rather than using DECL_ARG_TYPE(), so 	       that gcc reports the actual type of the parameter, rather 	       than the promoted type.  This certainly makes GDB's life 	       easier, at least for some ports.  The change is a bad idea 	       however, since GDB expects to be able access the type without 	       performing any conversions.  So for example, if we were 	       passing a float to an unprototyped function, gcc will store a 	       double on the stack, but if we emit a stab saying the type is a 	       float, then gdb will only read in a single value, and this will 	       produce an erroneous value.  */
+comment|/* It is quite tempting to use:  	           dbxout_type (TREE_TYPE (parms), 0);  	       as the next statement, rather than using DECL_ARG_TYPE(), so 	       that gcc reports the actual type of the parameter, rather 	       than the promoted type.  This certainly makes GDB's life 	       easier, at least for some ports.  The change is a bad idea 	       however, since GDB expects to be able access the type without 	       performing any conversions.  So for example, if we were 	       passing a float to an unprototyped function, gcc will store a 	       double on the stack, but if we emit a stab saying the type is a 	       float, then gdb will only read in a single value, and this will 	       produce an erroneous value.  */
 name|dbxout_type
 argument_list|(
 name|DECL_ARG_TYPE
@@ -10389,6 +10563,10 @@ expr_stmt|;
 name|current_sym_addr
 operator|=
 literal|0
+expr_stmt|;
+name|current_sym_code
+operator|=
+name|N_PSYM
 expr_stmt|;
 name|FORCE_TEXT
 expr_stmt|;

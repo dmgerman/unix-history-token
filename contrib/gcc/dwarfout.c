@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output Dwarf format symbol table information from the GNU C compiler.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com) of Network Computing Devices.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output Dwarf format symbol table information from the GNU C compiler.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1998, 2002,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com) of Network Computing Devices.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*   Notes on the GNU Implementation of DWARF Debugging Information  --------------------------------------------------------------  Last Major Update: Sun Jul 17 08:17:42 PDT 1994 by rfg@segfault.us.com  ------------------------------------------------------------   This file describes special and unique aspects of the GNU implementation of  the DWARF Version 1 debugging information language, as provided in the GNU  version 2.x compiler(s).   For general information about the DWARF debugging information language,  you should obtain the DWARF version 1.1 specification document (and perhaps  also the DWARF version 2 draft specification document) developed by the  (now defunct) UNIX International Programming Languages Special Interest Group.   To obtain a copy of the DWARF Version 1 and/or DWARF Version 2  specification, visit the web page for the DWARF Version 2 committee, at     http://www.eagercon.com/dwarf/dwarf2std.htm   The generation of DWARF debugging information by the GNU version 2.x C  compiler has now been tested rather extensively for m88k, i386, i860, and  Sparc targets.  The DWARF output of the GNU C compiler appears to inter-  operate well with the standard SVR4 SDB debugger on these kinds of target  systems (but of course, there are no guarantees).   DWARF 1 generation for the GNU g++ compiler is implemented, but limited.  C++ users should definitely use DWARF 2 instead.   Future plans for the dwarfout.c module of the GNU compiler(s) includes the  addition of full support for GNU FORTRAN.  (This should, in theory, be a  lot simpler to add than adding support for g++... but we'll see.)   Many features of the DWARF version 2 specification have been adapted to  (and used in) the GNU implementation of DWARF (version 1).  In most of  these cases, a DWARF version 2 approach is used in place of (or in addition  to) DWARF version 1 stuff simply because it is apparent that DWARF version  1 is not sufficiently expressive to provide the kinds of information which  may be necessary to support really robust debugging.  In all of these cases  however, the use of DWARF version 2 features should not interfere in any  way with the interoperability (of GNU compilers) with generally available  "classic" (pre version 1) DWARF consumer tools (e.g. SVR4 SDB).   The DWARF generation enhancement for the GNU compiler(s) was initially  donated to the Free Software Foundation by Network Computing Devices.  (Thanks NCD!) Additional development and maintenance of dwarfout.c has  been largely supported (i.e. funded) by Intel Corporation.  (Thanks Intel!)   If you have questions or comments about the DWARF generation feature, please  send mail to me<rfg@netcom.com>.  I will be happy to investigate any bugs  reported and I may even provide fixes (but of course, I can make no promises).   The DWARF debugging information produced by GCC may deviate in a few minor  (but perhaps significant) respects from the DWARF debugging information  currently produced by other C compilers.  A serious attempt has been made  however to conform to the published specifications, to existing practice,  and to generally accepted norms in the GNU implementation of DWARF.       ** IMPORTANT NOTE **    ** IMPORTANT NOTE **    ** IMPORTANT NOTE **   Under normal circumstances, the DWARF information generated by the GNU  compilers (in an assembly language file) is essentially impossible for  a human being to read.  This fact can make it very difficult to debug  certain DWARF-related problems.  In order to overcome this difficulty,  a feature has been added to dwarfout.c (enabled by the -dA  option) which causes additional comments to be placed into the assembly  language output file, out to the right-hand side of most bits of DWARF  material.  The comments indicate (far more clearly that the obscure  DWARF hex codes do) what is actually being encoded in DWARF.  Thus, the  -dA option can be highly useful for those who must study the  DWARF output from the GNU compilers in detail.   ---------   (Footnote: Within this file, the term `Debugging Information Entry' will  be abbreviated as `DIE'.)    Release Notes  (aka known bugs)  -------------------------------   In one very obscure case involving dynamically sized arrays, the DWARF  "location information" for such an array may make it appear that the  array has been totally optimized out of existence, when in fact it  *must* actually exist.  (This only happens when you are using *both* -g  *and* -O.)  This is due to aggressive dead store elimination in the  compiler, and to the fact that the DECL_RTL expressions associated with  variables are not always updated to correctly reflect the effects of  GCC's aggressive dead store elimination.   -------------------------------   When attempting to set a breakpoint at the "start" of a function compiled  with -g1, the debugger currently has no way of knowing exactly where the  end of the prologue code for the function is.  Thus, for most targets,  all the debugger can do is to set the breakpoint at the AT_low_pc address  for the function.  But if you stop there and then try to look at one or  more of the formal parameter values, they may not have been "homed" yet,  so you may get inaccurate answers (or perhaps even addressing errors).   Some people may consider this simply a non-feature, but I consider it a  bug, and I hope to provide some GNU-specific attributes (on function  DIEs) which will specify the address of the end of the prologue and the  address of the beginning of the epilogue in a future release.   -------------------------------   It is believed at this time that old bugs relating to the AT_bit_offset  values for bit-fields have been fixed.   There may still be some very obscure bugs relating to the DWARF description  of type `long long' bit-fields for target machines (e.g. 80x86 machines)  where the alignment of type `long long' data objects is different from  (and less than) the size of a type `long long' data object.   Please report any problems with the DWARF description of bit-fields as you  would any other GCC bug.  (Procedures for bug reporting are given in the  GNU C compiler manual.)   --------------------------------   At this time, GCC does not know how to handle the GNU C "nested functions"  extension.  (See the GCC manual for more info on this extension to ANSI C.)   --------------------------------   The GNU compilers now represent inline functions (and inlined instances  thereof) in exactly the manner described by the current DWARF version 2  (draft) specification.  The version 1 specification for handling inline  functions (and inlined instances) was known to be brain-damaged (by the  PLSIG) when the version 1 spec was finalized, but it was simply too late  in the cycle to get it removed before the version 1 spec was formally  released to the public (by UI).   --------------------------------   At this time, GCC does not generate the kind of really precise information  about the exact declared types of entities with signed integral types which  is required by the current DWARF draft specification.   Specifically, the current DWARF draft specification seems to require that  the type of an non-unsigned integral bit-field member of a struct or union  type be represented as either a "signed" type or as a "plain" type,  depending upon the exact set of keywords that were used in the  type specification for the given bit-field member.  It was felt (by the  UI/PLSIG) that this distinction between "plain" and "signed" integral types  could have some significance (in the case of bit-fields) because ANSI C  does not constrain the signedness of a plain bit-field, whereas it does  constrain the signedness of an explicitly "signed" bit-field.  For this  reason, the current DWARF specification calls for compilers to produce  type information (for *all* integral typed entities... not just bit-fields)  which explicitly indicates the signedness of the relevant type to be  "signed" or "plain" or "unsigned".   Unfortunately, the GNU DWARF implementation is currently incapable of making  such distinctions.   --------------------------------    Known Interoperability Problems  -------------------------------   Although the GNU implementation of DWARF conforms (for the most part) with  the current UI/PLSIG DWARF version 1 specification (with many compatible  version 2 features added in as "vendor specific extensions" just for good  measure) there are a few known cases where GCC's DWARF output can cause  some confusion for "classic" (pre version 1) DWARF consumers such as the  System V Release 4 SDB debugger.  These cases are described in this section.   --------------------------------   The DWARF version 1 specification includes the fundamental type codes  FT_ext_prec_float, FT_complex, FT_dbl_prec_complex, and FT_ext_prec_complex.  Since GNU C is only a C compiler (and since C doesn't provide any "complex"  data types) the only one of these fundamental type codes which GCC ever  generates is FT_ext_prec_float.  This fundamental type code is generated  by GCC for the `long double' data type.  Unfortunately, due to an apparent  bug in the SVR4 SDB debugger, SDB can become very confused wherever any  attempt is made to print a variable, parameter, or field whose type was  given in terms of FT_ext_prec_float.   (Actually, SVR4 SDB fails to understand *any* of the four fundamental type  codes mentioned here.  This will fact will cause additional problems when  there is a GNU FORTRAN front-end.)   --------------------------------   In general, it appears that SVR4 SDB is not able to effectively ignore  fundamental type codes in the "implementation defined" range.  This can  cause problems when a program being debugged uses the `long long' data  type (or the signed or unsigned varieties thereof) because these types  are not defined by ANSI C, and thus, GCC must use its own private fundamental  type codes (from the implementation-defined range) to represent these types.   --------------------------------    General GNU DWARF extensions  ----------------------------   In the current DWARF version 1 specification, no mechanism is specified by  which accurate information about executable code from include files can be  properly (and fully) described.  (The DWARF version 2 specification *does*  specify such a mechanism, but it is about 10 times more complicated than  it needs to be so I'm not terribly anxious to try to implement it right  away.)   In the GNU implementation of DWARF version 1, a fully downward-compatible  extension has been implemented which permits the GNU compilers to specify  which executable lines come from which files.  This extension places  additional information (about source file names) in GNU-specific sections  (which should be totally ignored by all non-GNU DWARF consumers) so that  this extended information can be provided (to GNU DWARF consumers) in a way  which is totally transparent (and invisible) to non-GNU DWARF consumers  (e.g. the SVR4 SDB debugger).  The additional information is placed *only*  in specialized GNU-specific sections, where it should never even be seen  by non-GNU DWARF consumers.   To understand this GNU DWARF extension, imagine that the sequence of entries  in the .lines section is broken up into several subsections.  Each contiguous  sequence of .line entries which relates to a sequence of lines (or statements)  from one particular file (either a `base' file or an `include' file) could  be called a `line entries chunk' (LEC).   For each LEC there is one entry in the .debug_srcinfo section.   Each normal entry in the .debug_srcinfo section consists of two 4-byte  words of data as follows:  	 (1)	The starting address (relative to the entire .line section) 		 of the first .line entry in the relevant LEC.  	 (2)	The starting address (relative to the entire .debug_sfnames 		 section) of a NUL terminated string representing the 		 relevant filename.  (This filename name be either a 		 relative or an absolute filename, depending upon how the 		 given source file was located during compilation.)   Obviously, each .debug_srcinfo entry allows you to find the relevant filename,  and it also points you to the first .line entry that was generated as a result  of having compiled a given source line from the given source file.   Each subsequent .line entry should also be assumed to have been produced  as a result of compiling yet more lines from the same file.  The end of  any given LEC is easily found by looking at the first 4-byte pointer in  the *next* .debug_srcinfo entry.  That next .debug_srcinfo entry points  to a new and different LEC, so the preceding LEC (implicitly) must have  ended with the last .line section entry which occurs at the 2 1/2 words  just before the address given in the first pointer of the new .debug_srcinfo  entry.   The following picture may help to clarify this feature.  Let's assume that  `LE' stands for `.line entry'.  Also, assume that `* 'stands for a pointer.   	 .line section	   .debug_srcinfo section     .debug_sfnames section 	 ----------------------------------------------------------------  	 LE<---------------------- * 	 LE			    * -----------------> "foobar.c"<--- 	 LE								| 	 LE								| 	 LE<---------------------- *					| 	 LE			    * -----------------> "foobar.h"<|	| 	 LE							     |	| 	 LE							     |	| 	 LE<---------------------- *				     |	| 	 LE			    * ----------------->  "inner.h"  |	| 	 LE							     |	| 	 LE<---------------------- *				     |	| 	 LE			    * -------------------------------	| 	 LE								| 	 LE								| 	 LE								| 	 LE								| 	 LE<---------------------- *					| 	 LE			    * ----------------------------------- 	 LE 	 LE 	 LE   In effect, each entry in the .debug_srcinfo section points to *both* a  filename (in the .debug_sfnames section) and to the start of a block of  consecutive LEs (in the .line section).   Note that just like in the .line section, there are specialized first and  last entries in the .debug_srcinfo section for each object file.  These  special first and last entries for the .debug_srcinfo section are very  different from the normal .debug_srcinfo section entries.  They provide  additional information which may be helpful to a debugger when it is  interpreting the data in the .debug_srcinfo, .debug_sfnames, and .line  sections.   The first entry in the .debug_srcinfo section for each compilation unit  consists of five 4-byte words of data.  The contents of these five words  should be interpreted (by debuggers) as follows:  	 (1)	The starting address (relative to the entire .line section) 		 of the .line section for this compilation unit.  	 (2)	The starting address (relative to the entire .debug_sfnames 		 section) of the .debug_sfnames section for this compilation 		 unit.  	 (3)	The starting address (in the execution virtual address space) 		 of the .text section for this compilation unit.  	 (4)	The ending address plus one (in the execution virtual address 		 space) of the .text section for this compilation unit.  	 (5)	The date/time (in seconds since midnight 1/1/70) at which the 		 compilation of this compilation unit occurred.  This value 		 should be interpreted as an unsigned quantity because gcc 		 might be configured to generate a default value of 0xffffffff 		 in this field (in cases where it is desired to have object 		 files created at different times from identical source files 		 be byte-for-byte identical).  By default, these timestamps 		 are *not* generated by dwarfout.c (so that object files 		 compiled at different times will be byte-for-byte identical). 		 If you wish to enable this "timestamp" feature however, you 		 can simply place a #define for the symbol `DWARF_TIMESTAMPS' 		 in your target configuration file and then rebuild the GNU 		 compiler(s).   Note that the first string placed into the .debug_sfnames section for each  compilation unit is the name of the directory in which compilation occurred.  This string ends with a `/' (to help indicate that it is the pathname of a  directory).  Thus, the second word of each specialized initial .debug_srcinfo  entry for each compilation unit may be used as a pointer to the (string)  name of the compilation directory, and that string may in turn be used to  "absolutize" any relative pathnames which may appear later on in the  .debug_sfnames section entries for the same compilation unit.   The fifth and last word of each specialized starting entry for a compilation  unit in the .debug_srcinfo section may (depending upon your configuration)  indicate the date/time of compilation, and this may be used (by a debugger)  to determine if any of the source files which contributed code to this  compilation unit are newer than the object code for the compilation unit  itself.  If so, the debugger may wish to print an "out-of-date" warning  about the compilation unit.   The .debug_srcinfo section associated with each compilation will also have  a specialized terminating entry.  This terminating .debug_srcinfo section  entry will consist of the following two 4-byte words of data:  	 (1)	The offset, measured from the start of the .line section to 		 the beginning of the terminating entry for the .line section.  	 (2)	A word containing the value 0xffffffff.   --------------------------------   In the current DWARF version 1 specification, no mechanism is specified by  which information about macro definitions and un-definitions may be provided  to the DWARF consumer.   The DWARF version 2 (draft) specification does specify such a mechanism.  That specification was based on the GNU ("vendor specific extension")  which provided some support for macro definitions and un-definitions,  but the "official" DWARF version 2 (draft) specification mechanism for  handling macros and the GNU implementation have diverged somewhat.  I  plan to update the GNU implementation to conform to the "official"  DWARF version 2 (draft) specification as soon as I get time to do that.   Note that in the GNU implementation, additional information about macro  definitions and un-definitions is *only* provided when the -g3 level of  debug-info production is selected.  (The default level is -g2 and the  plain old -g option is considered to be identical to -g2.)   GCC records information about macro definitions and undefinitions primarily  in a section called the .debug_macinfo section.  Normal entries in the  .debug_macinfo section consist of the following three parts:  	 (1)	A special "type" byte.  	 (2)	A 3-byte line-number/filename-offset field.  	 (3)	A NUL terminated string.   The interpretation of the second and third parts is dependent upon the  value of the leading (type) byte.   The type byte may have one of four values depending upon the type of the  .debug_macinfo entry which follows.  The 1-byte MACINFO type codes presently  used, and their meanings are as follows:  	 MACINFO_start		A base file or an include file starts here. 	 MACINFO_resume		The current base or include file ends here. 	 MACINFO_define          A #define directive occurs here. 	 MACINFO_undef           A #undef directive occur here.   (Note that the MACINFO_... codes mentioned here are simply symbolic names  for constants which are defined in the GNU dwarf.h file.)   For MACINFO_define and MACINFO_undef entries, the second (3-byte) field  contains the number of the source line (relative to the start of the current  base source file or the current include files) when the #define or #undef  directive appears.  For a MACINFO_define entry, the following string field  contains the name of the macro which is defined, followed by its definition.  Note that the definition is always separated from the name of the macro  by at least one whitespace character.  For a MACINFO_undef entry, the  string which follows the 3-byte line number field contains just the name  of the macro which is being undef'ed.   For a MACINFO_start entry, the 3-byte field following the type byte contains  the offset, relative to the start of the .debug_sfnames section for the  current compilation unit, of a string which names the new source file which  is beginning its inclusion at this point.  Following that 3-byte field,  each MACINFO_start entry always contains a zero length NUL terminated  string.   For a MACINFO_resume entry, the 3-byte field following the type byte contains  the line number WITHIN THE INCLUDING FILE at which the inclusion of the  current file (whose inclusion ends here) was initiated.  Following that  3-byte field, each MACINFO_resume entry always contains a zero length NUL  terminated string.   Each set of .debug_macinfo entries for each compilation unit is terminated  by a special .debug_macinfo entry consisting of a 4-byte zero value followed  by a single NUL byte.   --------------------------------   In the current DWARF draft specification, no provision is made for providing  a separate level of (limited) debugging information necessary to support  tracebacks (only) through fully-debugged code (e.g. code in system libraries).   A proposal to define such a level was submitted (by me) to the UI/PLSIG.  This proposal was rejected by the UI/PLSIG for inclusion into the DWARF  version 1 specification for two reasons.  First, it was felt (by the PLSIG)  that the issues involved in supporting a "traceback only" subset of DWARF  were not well understood.  Second, and perhaps more importantly, the PLSIG  is already having enough trouble agreeing on what it means to be "conforming"  to the DWARF specification, and it was felt that trying to specify multiple  different *levels* of conformance would only complicate our discussions of  this already divisive issue.  Nonetheless, the GNU implementation of DWARF  provides an abbreviated "traceback only" level of debug-info production for  use with fully-debugged "system library" code.  This level should only be  used for fully debugged system library code, and even then, it should only  be used where there is a very strong need to conserve disk space.  This  abbreviated level of debug-info production can be used by specifying the  -g1 option on the compilation command line.   --------------------------------   As mentioned above, the GNU implementation of DWARF currently uses the DWARF  version 2 (draft) approach for inline functions (and inlined instances  thereof).  This is used in preference to the version 1 approach because  (quite simply) the version 1 approach is highly brain-damaged and probably  unworkable.   --------------------------------    GNU DWARF Representation of GNU C Extensions to ANSI C  ------------------------------------------------------   The file dwarfout.c has been designed and implemented so as to provide  some reasonable DWARF representation for each and every declarative  construct which is accepted by the GNU C compiler.  Since the GNU C  compiler accepts a superset of ANSI C, this means that there are some  cases in which the DWARF information produced by GCC must take some  liberties in improvising DWARF representations for declarations which  are only valid in (extended) GNU C.   In particular, GNU C provides at least three significant extensions to  ANSI C when it comes to declarations.  These are (1) inline functions,  and (2) dynamic arrays, and (3) incomplete enum types.  (See the GCC  manual for more information on these GNU extensions to ANSI C.)  When  used, these GNU C extensions are represented (in the generated DWARF  output of GCC) in the most natural and intuitively obvious ways.   In the case of inline functions, the DWARF representation is exactly as  called for in the DWARF version 2 (draft) specification for an identical  function written in C++; i.e. we "reuse" the representation of inline  functions which has been defined for C++ to support this GNU C extension.   In the case of dynamic arrays, we use the most obvious representational  mechanism available; i.e. an array type in which the upper bound of  some dimension (usually the first and only dimension) is a variable  rather than a constant.  (See the DWARF version 1 specification for more  details.)   In the case of incomplete enum types, such types are represented simply  as TAG_enumeration_type DIEs which DO NOT contain either AT_byte_size  attributes or AT_element_list attributes.   --------------------------------    Future Directions  -----------------   The codes, formats, and other paraphernalia necessary to provide proper  support for symbolic debugging for the C++ language are still being worked  on by the UI/PLSIG.  The vast majority of the additions to DWARF which will  be needed to completely support C++ have already been hashed out and agreed  upon, but a few small issues (e.g. anonymous unions, access declarations)  are still being discussed.  Also, we in the PLSIG are still discussing  whether or not we need to do anything special for C++ templates.  (At this  time it is not yet clear whether we even need to do anything special for  these.)    With regard to FORTRAN, the UI/PLSIG has defined what is believed to be a  complete and sufficient set of codes and rules for adequately representing  all of FORTRAN 77, and most of Fortran 90 in DWARF.  While some support for  this has been implemented in dwarfout.c, further implementation and testing  is needed.   GNU DWARF support for other languages (i.e. Pascal and Modula) is a moot  issue until there are GNU front-ends for these other languages.   As currently defined, DWARF only describes a (binary) language which can  be used to communicate symbolic debugging information from a compiler  through an assembler and a linker, to a debugger.  There is no clear  specification of what processing should be (or must be) done by the  assembler and/or the linker.  Fortunately, the role of the assembler  is easily inferred (by anyone knowledgeable about assemblers) just by  looking  at examples of assembly-level DWARF code.  Sadly though, the  allowable (or required) processing steps performed by a linker are  harder to infer and (perhaps) even harder to agree upon.  There are  several forms of very useful `post-processing' steps which intelligent  linkers *could* (in theory) perform on object files containing DWARF,  but any and all such link-time transformations are currently both disallowed  and unspecified.   In particular, possible link-time transformations of DWARF code which could  provide significant benefits include (but are not limited to):  	 Commonization of duplicate DIEs obtained from multiple input 	 (object) files.  	 Cross-compilation type checking based upon DWARF type information 	 for objects and functions.  	 Other possible `compacting' transformations designed to save disk 	 space and to reduce linker& debugger I/O activity.  */
+comment|/*   Notes on the GNU Implementation of DWARF Debugging Information  --------------------------------------------------------------  Last Major Update: Sun Jul 17 08:17:42 PDT 1994 by rfg@segfault.us.com  ------------------------------------------------------------   This file describes special and unique aspects of the GNU implementation of  the DWARF Version 1 debugging information language, as provided in the GNU  version 2.x compiler(s).   For general information about the DWARF debugging information language,  you should obtain the DWARF version 1.1 specification document (and perhaps  also the DWARF version 2 draft specification document) developed by the  (now defunct) UNIX International Programming Languages Special Interest Group.   To obtain a copy of the DWARF Version 1 and/or DWARF Version 2  specification, visit the web page for the DWARF Version 2 committee, at     http://www.eagercon.com/dwarf/dwarf2std.htm   The generation of DWARF debugging information by the GNU version 2.x C  compiler has now been tested rather extensively for m88k, i386, i860, and  SPARC targets.  The DWARF output of the GNU C compiler appears to inter-  operate well with the standard SVR4 SDB debugger on these kinds of target  systems (but of course, there are no guarantees).   DWARF 1 generation for the GNU g++ compiler is implemented, but limited.  C++ users should definitely use DWARF 2 instead.   Future plans for the dwarfout.c module of the GNU compiler(s) includes the  addition of full support for GNU FORTRAN.  (This should, in theory, be a  lot simpler to add than adding support for g++... but we'll see.)   Many features of the DWARF version 2 specification have been adapted to  (and used in) the GNU implementation of DWARF (version 1).  In most of  these cases, a DWARF version 2 approach is used in place of (or in addition  to) DWARF version 1 stuff simply because it is apparent that DWARF version  1 is not sufficiently expressive to provide the kinds of information which  may be necessary to support really robust debugging.  In all of these cases  however, the use of DWARF version 2 features should not interfere in any  way with the interoperability (of GNU compilers) with generally available  "classic" (pre version 1) DWARF consumer tools (e.g. SVR4 SDB).   The DWARF generation enhancement for the GNU compiler(s) was initially  donated to the Free Software Foundation by Network Computing Devices.  (Thanks NCD!) Additional development and maintenance of dwarfout.c has  been largely supported (i.e. funded) by Intel Corporation.  (Thanks Intel!)   If you have questions or comments about the DWARF generation feature, please  send mail to me<rfg@netcom.com>.  I will be happy to investigate any bugs  reported and I may even provide fixes (but of course, I can make no promises).   The DWARF debugging information produced by GCC may deviate in a few minor  (but perhaps significant) respects from the DWARF debugging information  currently produced by other C compilers.  A serious attempt has been made  however to conform to the published specifications, to existing practice,  and to generally accepted norms in the GNU implementation of DWARF.       ** IMPORTANT NOTE **    ** IMPORTANT NOTE **    ** IMPORTANT NOTE **   Under normal circumstances, the DWARF information generated by the GNU  compilers (in an assembly language file) is essentially impossible for  a human being to read.  This fact can make it very difficult to debug  certain DWARF-related problems.  In order to overcome this difficulty,  a feature has been added to dwarfout.c (enabled by the -dA  option) which causes additional comments to be placed into the assembly  language output file, out to the right-hand side of most bits of DWARF  material.  The comments indicate (far more clearly that the obscure  DWARF hex codes do) what is actually being encoded in DWARF.  Thus, the  -dA option can be highly useful for those who must study the  DWARF output from the GNU compilers in detail.   ---------   (Footnote: Within this file, the term `Debugging Information Entry' will  be abbreviated as `DIE'.)    Release Notes  (aka known bugs)  -------------------------------   In one very obscure case involving dynamically sized arrays, the DWARF  "location information" for such an array may make it appear that the  array has been totally optimized out of existence, when in fact it  *must* actually exist.  (This only happens when you are using *both* -g  *and* -O.)  This is due to aggressive dead store elimination in the  compiler, and to the fact that the DECL_RTL expressions associated with  variables are not always updated to correctly reflect the effects of  GCC's aggressive dead store elimination.   -------------------------------   When attempting to set a breakpoint at the "start" of a function compiled  with -g1, the debugger currently has no way of knowing exactly where the  end of the prologue code for the function is.  Thus, for most targets,  all the debugger can do is to set the breakpoint at the AT_low_pc address  for the function.  But if you stop there and then try to look at one or  more of the formal parameter values, they may not have been "homed" yet,  so you may get inaccurate answers (or perhaps even addressing errors).   Some people may consider this simply a non-feature, but I consider it a  bug, and I hope to provide some GNU-specific attributes (on function  DIEs) which will specify the address of the end of the prologue and the  address of the beginning of the epilogue in a future release.   -------------------------------   It is believed at this time that old bugs relating to the AT_bit_offset  values for bit-fields have been fixed.   There may still be some very obscure bugs relating to the DWARF description  of type `long long' bit-fields for target machines (e.g. 80x86 machines)  where the alignment of type `long long' data objects is different from  (and less than) the size of a type `long long' data object.   Please report any problems with the DWARF description of bit-fields as you  would any other GCC bug.  (Procedures for bug reporting are given in the  GNU C compiler manual.)   --------------------------------   At this time, GCC does not know how to handle the GNU C "nested functions"  extension.  (See the GCC manual for more info on this extension to ANSI C.)   --------------------------------   The GNU compilers now represent inline functions (and inlined instances  thereof) in exactly the manner described by the current DWARF version 2  (draft) specification.  The version 1 specification for handling inline  functions (and inlined instances) was known to be brain-damaged (by the  PLSIG) when the version 1 spec was finalized, but it was simply too late  in the cycle to get it removed before the version 1 spec was formally  released to the public (by UI).   --------------------------------   At this time, GCC does not generate the kind of really precise information  about the exact declared types of entities with signed integral types which  is required by the current DWARF draft specification.   Specifically, the current DWARF draft specification seems to require that  the type of a non-unsigned integral bit-field member of a struct or union  type be represented as either a "signed" type or as a "plain" type,  depending upon the exact set of keywords that were used in the  type specification for the given bit-field member.  It was felt (by the  UI/PLSIG) that this distinction between "plain" and "signed" integral types  could have some significance (in the case of bit-fields) because ANSI C  does not constrain the signedness of a plain bit-field, whereas it does  constrain the signedness of an explicitly "signed" bit-field.  For this  reason, the current DWARF specification calls for compilers to produce  type information (for *all* integral typed entities... not just bit-fields)  which explicitly indicates the signedness of the relevant type to be  "signed" or "plain" or "unsigned".   Unfortunately, the GNU DWARF implementation is currently incapable of making  such distinctions.   --------------------------------    Known Interoperability Problems  -------------------------------   Although the GNU implementation of DWARF conforms (for the most part) with  the current UI/PLSIG DWARF version 1 specification (with many compatible  version 2 features added in as "vendor specific extensions" just for good  measure) there are a few known cases where GCC's DWARF output can cause  some confusion for "classic" (pre version 1) DWARF consumers such as the  System V Release 4 SDB debugger.  These cases are described in this section.   --------------------------------   The DWARF version 1 specification includes the fundamental type codes  FT_ext_prec_float, FT_complex, FT_dbl_prec_complex, and FT_ext_prec_complex.  Since GNU C is only a C compiler (and since C doesn't provide any "complex"  data types) the only one of these fundamental type codes which GCC ever  generates is FT_ext_prec_float.  This fundamental type code is generated  by GCC for the `long double' data type.  Unfortunately, due to an apparent  bug in the SVR4 SDB debugger, SDB can become very confused wherever any  attempt is made to print a variable, parameter, or field whose type was  given in terms of FT_ext_prec_float.   (Actually, SVR4 SDB fails to understand *any* of the four fundamental type  codes mentioned here.  This will fact will cause additional problems when  there is a GNU FORTRAN front-end.)   --------------------------------   In general, it appears that SVR4 SDB is not able to effectively ignore  fundamental type codes in the "implementation defined" range.  This can  cause problems when a program being debugged uses the `long long' data  type (or the signed or unsigned varieties thereof) because these types  are not defined by ANSI C, and thus, GCC must use its own private fundamental  type codes (from the implementation-defined range) to represent these types.   --------------------------------    General GNU DWARF extensions  ----------------------------   In the current DWARF version 1 specification, no mechanism is specified by  which accurate information about executable code from include files can be  properly (and fully) described.  (The DWARF version 2 specification *does*  specify such a mechanism, but it is about 10 times more complicated than  it needs to be so I'm not terribly anxious to try to implement it right  away.)   In the GNU implementation of DWARF version 1, a fully downward-compatible  extension has been implemented which permits the GNU compilers to specify  which executable lines come from which files.  This extension places  additional information (about source file names) in GNU-specific sections  (which should be totally ignored by all non-GNU DWARF consumers) so that  this extended information can be provided (to GNU DWARF consumers) in a way  which is totally transparent (and invisible) to non-GNU DWARF consumers  (e.g. the SVR4 SDB debugger).  The additional information is placed *only*  in specialized GNU-specific sections, where it should never even be seen  by non-GNU DWARF consumers.   To understand this GNU DWARF extension, imagine that the sequence of entries  in the .lines section is broken up into several subsections.  Each contiguous  sequence of .line entries which relates to a sequence of lines (or statements)  from one particular file (either a `base' file or an `include' file) could  be called a `line entries chunk' (LEC).   For each LEC there is one entry in the .debug_srcinfo section.   Each normal entry in the .debug_srcinfo section consists of two 4-byte  words of data as follows:  	 (1)	The starting address (relative to the entire .line section) 		 of the first .line entry in the relevant LEC.  	 (2)	The starting address (relative to the entire .debug_sfnames 		 section) of a NUL terminated string representing the 		 relevant filename.  (This filename name be either a 		 relative or an absolute filename, depending upon how the 		 given source file was located during compilation.)   Obviously, each .debug_srcinfo entry allows you to find the relevant filename,  and it also points you to the first .line entry that was generated as a result  of having compiled a given source line from the given source file.   Each subsequent .line entry should also be assumed to have been produced  as a result of compiling yet more lines from the same file.  The end of  any given LEC is easily found by looking at the first 4-byte pointer in  the *next* .debug_srcinfo entry.  That next .debug_srcinfo entry points  to a new and different LEC, so the preceding LEC (implicitly) must have  ended with the last .line section entry which occurs at the 2 1/2 words  just before the address given in the first pointer of the new .debug_srcinfo  entry.   The following picture may help to clarify this feature.  Let's assume that  `LE' stands for `.line entry'.  Also, assume that `* 'stands for a pointer.   	 .line section	   .debug_srcinfo section     .debug_sfnames section 	 ----------------------------------------------------------------  	 LE<---------------------- * 	 LE			    * -----------------> "foobar.c"<--- 	 LE								| 	 LE								| 	 LE<---------------------- *					| 	 LE			    * -----------------> "foobar.h"<|	| 	 LE							     |	| 	 LE							     |	| 	 LE<---------------------- *				     |	| 	 LE			    * ----------------->  "inner.h"  |	| 	 LE							     |	| 	 LE<---------------------- *				     |	| 	 LE			    * -------------------------------	| 	 LE								| 	 LE								| 	 LE								| 	 LE								| 	 LE<---------------------- *					| 	 LE			    * ----------------------------------- 	 LE 	 LE 	 LE   In effect, each entry in the .debug_srcinfo section points to *both* a  filename (in the .debug_sfnames section) and to the start of a block of  consecutive LEs (in the .line section).   Note that just like in the .line section, there are specialized first and  last entries in the .debug_srcinfo section for each object file.  These  special first and last entries for the .debug_srcinfo section are very  different from the normal .debug_srcinfo section entries.  They provide  additional information which may be helpful to a debugger when it is  interpreting the data in the .debug_srcinfo, .debug_sfnames, and .line  sections.   The first entry in the .debug_srcinfo section for each compilation unit  consists of five 4-byte words of data.  The contents of these five words  should be interpreted (by debuggers) as follows:  	 (1)	The starting address (relative to the entire .line section) 		 of the .line section for this compilation unit.  	 (2)	The starting address (relative to the entire .debug_sfnames 		 section) of the .debug_sfnames section for this compilation 		 unit.  	 (3)	The starting address (in the execution virtual address space) 		 of the .text section for this compilation unit.  	 (4)	The ending address plus one (in the execution virtual address 		 space) of the .text section for this compilation unit.  	 (5)	The date/time (in seconds since midnight 1/1/70) at which the 		 compilation of this compilation unit occurred.  This value 		 should be interpreted as an unsigned quantity because gcc 		 might be configured to generate a default value of 0xffffffff 		 in this field (in cases where it is desired to have object 		 files created at different times from identical source files 		 be byte-for-byte identical).  By default, these timestamps 		 are *not* generated by dwarfout.c (so that object files 		 compiled at different times will be byte-for-byte identical). 		 If you wish to enable this "timestamp" feature however, you 		 can simply place a #define for the symbol `DWARF_TIMESTAMPS' 		 in your target configuration file and then rebuild the GNU 		 compiler(s).   Note that the first string placed into the .debug_sfnames section for each  compilation unit is the name of the directory in which compilation occurred.  This string ends with a `/' (to help indicate that it is the pathname of a  directory).  Thus, the second word of each specialized initial .debug_srcinfo  entry for each compilation unit may be used as a pointer to the (string)  name of the compilation directory, and that string may in turn be used to  "absolutize" any relative pathnames which may appear later on in the  .debug_sfnames section entries for the same compilation unit.   The fifth and last word of each specialized starting entry for a compilation  unit in the .debug_srcinfo section may (depending upon your configuration)  indicate the date/time of compilation, and this may be used (by a debugger)  to determine if any of the source files which contributed code to this  compilation unit are newer than the object code for the compilation unit  itself.  If so, the debugger may wish to print an "out-of-date" warning  about the compilation unit.   The .debug_srcinfo section associated with each compilation will also have  a specialized terminating entry.  This terminating .debug_srcinfo section  entry will consist of the following two 4-byte words of data:  	 (1)	The offset, measured from the start of the .line section to 		 the beginning of the terminating entry for the .line section.  	 (2)	A word containing the value 0xffffffff.   --------------------------------   In the current DWARF version 1 specification, no mechanism is specified by  which information about macro definitions and un-definitions may be provided  to the DWARF consumer.   The DWARF version 2 (draft) specification does specify such a mechanism.  That specification was based on the GNU ("vendor specific extension")  which provided some support for macro definitions and un-definitions,  but the "official" DWARF version 2 (draft) specification mechanism for  handling macros and the GNU implementation have diverged somewhat.  I  plan to update the GNU implementation to conform to the "official"  DWARF version 2 (draft) specification as soon as I get time to do that.   Note that in the GNU implementation, additional information about macro  definitions and un-definitions is *only* provided when the -g3 level of  debug-info production is selected.  (The default level is -g2 and the  plain old -g option is considered to be identical to -g2.)   GCC records information about macro definitions and undefinitions primarily  in a section called the .debug_macinfo section.  Normal entries in the  .debug_macinfo section consist of the following three parts:  	 (1)	A special "type" byte.  	 (2)	A 3-byte line-number/filename-offset field.  	 (3)	A NUL terminated string.   The interpretation of the second and third parts is dependent upon the  value of the leading (type) byte.   The type byte may have one of four values depending upon the type of the  .debug_macinfo entry which follows.  The 1-byte MACINFO type codes presently  used, and their meanings are as follows:  	 MACINFO_start		A base file or an include file starts here. 	 MACINFO_resume		The current base or include file ends here. 	 MACINFO_define          A #define directive occurs here. 	 MACINFO_undef           A #undef directive occur here.   (Note that the MACINFO_... codes mentioned here are simply symbolic names  for constants which are defined in the GNU dwarf.h file.)   For MACINFO_define and MACINFO_undef entries, the second (3-byte) field  contains the number of the source line (relative to the start of the current  base source file or the current include files) when the #define or #undef  directive appears.  For a MACINFO_define entry, the following string field  contains the name of the macro which is defined, followed by its definition.  Note that the definition is always separated from the name of the macro  by at least one whitespace character.  For a MACINFO_undef entry, the  string which follows the 3-byte line number field contains just the name  of the macro which is being undef'ed.   For a MACINFO_start entry, the 3-byte field following the type byte contains  the offset, relative to the start of the .debug_sfnames section for the  current compilation unit, of a string which names the new source file which  is beginning its inclusion at this point.  Following that 3-byte field,  each MACINFO_start entry always contains a zero length NUL terminated  string.   For a MACINFO_resume entry, the 3-byte field following the type byte contains  the line number WITHIN THE INCLUDING FILE at which the inclusion of the  current file (whose inclusion ends here) was initiated.  Following that  3-byte field, each MACINFO_resume entry always contains a zero length NUL  terminated string.   Each set of .debug_macinfo entries for each compilation unit is terminated  by a special .debug_macinfo entry consisting of a 4-byte zero value followed  by a single NUL byte.   --------------------------------   In the current DWARF draft specification, no provision is made for providing  a separate level of (limited) debugging information necessary to support  tracebacks (only) through fully-debugged code (e.g. code in system libraries).   A proposal to define such a level was submitted (by me) to the UI/PLSIG.  This proposal was rejected by the UI/PLSIG for inclusion into the DWARF  version 1 specification for two reasons.  First, it was felt (by the PLSIG)  that the issues involved in supporting a "traceback only" subset of DWARF  were not well understood.  Second, and perhaps more importantly, the PLSIG  is already having enough trouble agreeing on what it means to be "conforming"  to the DWARF specification, and it was felt that trying to specify multiple  different *levels* of conformance would only complicate our discussions of  this already divisive issue.  Nonetheless, the GNU implementation of DWARF  provides an abbreviated "traceback only" level of debug-info production for  use with fully-debugged "system library" code.  This level should only be  used for fully debugged system library code, and even then, it should only  be used where there is a very strong need to conserve disk space.  This  abbreviated level of debug-info production can be used by specifying the  -g1 option on the compilation command line.   --------------------------------   As mentioned above, the GNU implementation of DWARF currently uses the DWARF  version 2 (draft) approach for inline functions (and inlined instances  thereof).  This is used in preference to the version 1 approach because  (quite simply) the version 1 approach is highly brain-damaged and probably  unworkable.   --------------------------------    GNU DWARF Representation of GNU C Extensions to ANSI C  ------------------------------------------------------   The file dwarfout.c has been designed and implemented so as to provide  some reasonable DWARF representation for each and every declarative  construct which is accepted by the GNU C compiler.  Since the GNU C  compiler accepts a superset of ANSI C, this means that there are some  cases in which the DWARF information produced by GCC must take some  liberties in improvising DWARF representations for declarations which  are only valid in (extended) GNU C.   In particular, GNU C provides at least three significant extensions to  ANSI C when it comes to declarations.  These are (1) inline functions,  and (2) dynamic arrays, and (3) incomplete enum types.  (See the GCC  manual for more information on these GNU extensions to ANSI C.)  When  used, these GNU C extensions are represented (in the generated DWARF  output of GCC) in the most natural and intuitively obvious ways.   In the case of inline functions, the DWARF representation is exactly as  called for in the DWARF version 2 (draft) specification for an identical  function written in C++; i.e. we "reuse" the representation of inline  functions which has been defined for C++ to support this GNU C extension.   In the case of dynamic arrays, we use the most obvious representational  mechanism available; i.e. an array type in which the upper bound of  some dimension (usually the first and only dimension) is a variable  rather than a constant.  (See the DWARF version 1 specification for more  details.)   In the case of incomplete enum types, such types are represented simply  as TAG_enumeration_type DIEs which DO NOT contain either AT_byte_size  attributes or AT_element_list attributes.   --------------------------------    Future Directions  -----------------   The codes, formats, and other paraphernalia necessary to provide proper  support for symbolic debugging for the C++ language are still being worked  on by the UI/PLSIG.  The vast majority of the additions to DWARF which will  be needed to completely support C++ have already been hashed out and agreed  upon, but a few small issues (e.g. anonymous unions, access declarations)  are still being discussed.  Also, we in the PLSIG are still discussing  whether or not we need to do anything special for C++ templates.  (At this  time it is not yet clear whether we even need to do anything special for  these.)   With regard to FORTRAN, the UI/PLSIG has defined what is believed to be a  complete and sufficient set of codes and rules for adequately representing  all of FORTRAN 77, and most of Fortran 90 in DWARF.  While some support for  this has been implemented in dwarfout.c, further implementation and testing  is needed.   GNU DWARF support for other languages (i.e. Pascal and Modula) is a moot  issue until there are GNU front-ends for these other languages.   As currently defined, DWARF only describes a (binary) language which can  be used to communicate symbolic debugging information from a compiler  through an assembler and a linker, to a debugger.  There is no clear  specification of what processing should be (or must be) done by the  assembler and/or the linker.  Fortunately, the role of the assembler  is easily inferred (by anyone knowledgeable about assemblers) just by  looking  at examples of assembly-level DWARF code.  Sadly though, the  allowable (or required) processing steps performed by a linker are  harder to infer and (perhaps) even harder to agree upon.  There are  several forms of very useful `post-processing' steps which intelligent  linkers *could* (in theory) perform on object files containing DWARF,  but any and all such link-time transformations are currently both disallowed  and unspecified.   In particular, possible link-time transformations of DWARF code which could  provide significant benefits include (but are not limited to):  	 Commonization of duplicate DIEs obtained from multiple input 	 (object) files.  	 Cross-compilation type checking based upon DWARF type information 	 for objects and functions.  	 Other possible `compacting' transformations designed to save disk 	 space and to reduce linker& debugger I/O activity.  */
 end_comment
 
 begin_include
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"function.h"
 end_include
 
 begin_include
@@ -164,7 +170,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define a macro which returns non-zero for any tagged type which is    used (directly or indirectly) in the specification of either some    function's return type or some formal parameter of some function.    We use this macro when we are operating in "terse" mode to help us    know what tagged types have to be represented in Dwarf (even in    terse mode) and which ones don't.     A flag bit with this meaning really should be a part of the normal    GCC ..._TYPE nodes, but at the moment, there is no such bit defined    for these nodes.  For now, we have to just fake it.  It it safe for    us to simply return zero for all complete tagged types (which will    get forced out anyway if they were used in the specification of some    formal or return type) and non-zero for all incomplete tagged types. */
+comment|/* Define a macro which returns nonzero for any tagged type which is    used (directly or indirectly) in the specification of either some    function's return type or some formal parameter of some function.    We use this macro when we are operating in "terse" mode to help us    know what tagged types have to be represented in Dwarf (even in    terse mode) and which ones don't.     A flag bit with this meaning really should be a part of the normal    GCC ..._TYPE nodes, but at the moment, there is no such bit defined    for these nodes.  For now, we have to just fake it.  It it safe for    us to simply return zero for all complete tagged types (which will    get forced out anyway if they were used in the specification of some    formal or return type) and nonzero for all incomplete tagged types. */
 end_comment
 
 begin_define
@@ -178,7 +184,7 @@ value|(TYPE_SIZE (tagged_type) == 0)
 end_define
 
 begin_comment
-comment|/* Define a macro which returns non-zero for a TYPE_DECL which was    implicitly generated for a tagged type.     Note that unlike the gcc front end (which generates a NULL named    TYPE_DECL node for each complete tagged type, each array type, and    each function type node created) the g++ front end generates a    _named_ TYPE_DECL node for each tagged type node created.    These TYPE_DECLs have DECL_ARTIFICIAL set, so we know not to    generate a DW_TAG_typedef DIE for them.  */
+comment|/* Define a macro which returns nonzero for a TYPE_DECL which was    implicitly generated for a tagged type.     Note that unlike the gcc front end (which generates a NULL named    TYPE_DECL node for each complete tagged type, each array type, and    each function type node created) the g++ front end generates a    _named_ TYPE_DECL node for each tagged type node created.    These TYPE_DECLs have DECL_ARTIFICIAL set, so we know not to    generate a DW_TAG_typedef DIE for them.  */
 end_comment
 
 begin_define
@@ -191,13 +197,6 @@ parameter_list|)
 define|\
 value|(DECL_NAME (decl) == NULL				\    || (DECL_ARTIFICIAL (decl)				\&& is_tagged_type (TREE_TYPE (decl))		\&& decl == TYPE_STUB_DECL (TREE_TYPE (decl))))
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_traditional
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Maximum size (in bytes) of an artificially generated label.	*/
@@ -389,7 +388,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* Non-zero if we are performing our file-scope finalization pass and if    we should force out Dwarf descriptions of any and all file-scope    tagged types which are still incomplete types.  */
+comment|/* Nonzero if we are performing our file-scope finalization pass and if    we should force out Dwarf descriptions of any and all file-scope    tagged types which are still incomplete types.  */
 end_comment
 
 begin_decl_stmt
@@ -499,19 +498,6 @@ begin_decl_stmt
 specifier|static
 name|tree
 name|fake_containing_scope
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The number of the current function definition that we are generating    debugging information for.  These numbers range from 1 up to the maximum    number of function definitions contained within the current compilation    unit.  These numbers are used to create unique labels for various things    contained within various function definitions.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|current_funcdef_number
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -704,7 +690,12 @@ name|dwarfout_end_epilogue
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|unsigned
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -737,6 +728,10 @@ argument_list|(
 operator|(
 name|unsigned
 name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2576,24 +2571,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VERSION_ASM_OP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VERSION_ASM_OP
-value|"\t.version\t"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|SET_ASM_OP
 end_ifndef
 
@@ -3563,78 +3540,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DERIV_BEGIN_LABEL_FMT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DERIV_BEGIN_LABEL_FMT
-value|"*.L_d%u"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DERIV_END_LABEL_FMT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DERIV_END_LABEL_FMT
-value|"*.L_d%u_e"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SL_BEGIN_LABEL_FMT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SL_BEGIN_LABEL_FMT
-value|"*.L_sl%u"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SL_END_LABEL_FMT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SL_END_LABEL_FMT
-value|"*.L_sl%u_e"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|BODY_BEGIN_LABEL_FMT
 end_ifndef
 
@@ -4252,6 +4157,7 @@ comment|/* The debug hooks structure.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|dwarf_debug_hooks
@@ -4428,7 +4334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if the given type node represents a tagged type.  */
+comment|/* Return nonzero if the given type node represents a tagged type.  */
 end_comment
 
 begin_function
@@ -5844,7 +5750,7 @@ comment|/* manually sign extend */
 end_comment
 
 begin_endif
-unit|if (((value == 0)&& ((byte& 0x40) == 0))           || ((value == -1)&& ((byte& 0x40) == 1))) 	more = 0;       else 	{ 	  byte |= 0x80; 	  more = 1; 	}       dw2_asm_output_data (1, byte, "\t%s SLEB128 number - value = %ld", 			   orig_value);     }   while (more); }
+unit|if (((value == 0)&& ((byte& 0x40) == 0)) 	  || ((value == -1)&& ((byte& 0x40) == 1))) 	more = 0;       else 	{ 	  byte |= 0x80; 	  more = 1; 	}       dw2_asm_output_data (1, byte, "\t%s SLEB128 number - value = %ld", 			   orig_value);     }   while (more); }
 endif|#
 directive|endif
 end_endif
@@ -6701,7 +6607,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a pointer to an arbitrary ..._TYPE tree node, return non-zero if the    given input type is a Dwarf "fundamental" type.  Otherwise return zero.  */
+comment|/* Given a pointer to an arbitrary ..._TYPE tree node, return nonzero if the    given input type is a Dwarf "fundamental" type.  Otherwise return zero.  */
 end_comment
 
 begin_function
@@ -10116,6 +10022,42 @@ directive|if
 literal|0
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SL_BEGIN_LABEL_FMT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SL_BEGIN_LABEL_FMT
+value|"*.L_sl%u"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SL_END_LABEL_FMT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SL_END_LABEL_FMT
+value|"*.L_sl%u_e"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 unit|static inline void string_length_attribute (upper_bound)      tree upper_bound; {   char begin_label[MAX_ARTIFICIAL_LABEL_BYTES];   char end_label[MAX_ARTIFICIAL_LABEL_BYTES];    ASM_OUTPUT_DWARF_ATTRIBUTE (asm_out_file, AT_string_length);   sprintf (begin_label, SL_BEGIN_LABEL_FMT, current_dienum);   sprintf (end_label, SL_END_LABEL_FMT, current_dienum);   ASM_OUTPUT_DWARF_DELTA2 (asm_out_file, end_label, begin_label);   ASM_OUTPUT_LABEL (asm_out_file, begin_label);   output_bound_representation (upper_bound, 0, 'u');   ASM_OUTPUT_LABEL (asm_out_file, end_label); }
 endif|#
@@ -10584,7 +10526,7 @@ if|#
 directive|if
 literal|0
 comment|/* DECL_ABSTRACT_VIRTUAL_P is C++-specific.  */
-block|if (DECL_ABSTRACT_VIRTUAL_P (func_decl))         ASM_OUTPUT_DWARF_ATTRIBUTE (asm_out_file, AT_pure_virtual);       else
+block|if (DECL_ABSTRACT_VIRTUAL_P (func_decl)) 	ASM_OUTPUT_DWARF_ATTRIBUTE (asm_out_file, AT_pure_virtual);       else
 endif|#
 directive|endif
 name|ASM_OUTPUT_DWARF_ATTRIBUTE
@@ -10937,7 +10879,7 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* The g++ front end makes the TYPE_NAME of *each* tagged type point to           a TYPE_DECL node, regardless of whether or not a `typedef' was          involved.  */
+comment|/* The g++ front end makes the TYPE_NAME of *each* tagged type point to          a TYPE_DECL node, regardless of whether or not a `typedef' was          involved.  */
 elseif|else
 if|if
 condition|(
@@ -11844,7 +11786,7 @@ name|label
 argument_list|,
 name|FUNC_END_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|high_pc_attribute
@@ -11863,7 +11805,7 @@ name|label
 argument_list|,
 name|BODY_BEGIN_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|body_begin_attribute
@@ -11877,7 +11819,7 @@ name|label
 argument_list|,
 name|BODY_END_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|body_end_attribute
@@ -12774,16 +12716,6 @@ argument_list|(
 name|LANG_JAVA
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|flag_traditional
-condition|)
-name|language_attribute
-argument_list|(
-name|LANG_C
-argument_list|)
-expr_stmt|;
 else|else
 name|language_attribute
 argument_list|(
@@ -13246,7 +13178,7 @@ name|label
 argument_list|,
 name|FUNC_END_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|high_pc_attribute
@@ -13265,7 +13197,7 @@ name|label
 argument_list|,
 name|BODY_BEGIN_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|body_begin_attribute
@@ -13279,7 +13211,7 @@ name|label
 argument_list|,
 name|BODY_END_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|body_end_attribute
@@ -14022,7 +13954,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if it is legitimate to output DIEs to represent a    given type while we are generating the list of child DIEs for some    DIE (e.g. a function or lexical block DIE) associated with a given scope.     See the comments within the function for a description of when it is    considered legitimate to output DIEs for various kinds of types.     Note that TYPE_CONTEXT(type) may be NULL (to indicate global scope)    or it may point to a BLOCK node (for types local to a block), or to a    FUNCTION_DECL node (for types local to the heading of some function    definition), or to a FUNCTION_TYPE node (for types local to the    prototyped parameter list of a function type specification), or to a    RECORD_TYPE, UNION_TYPE, or QUAL_UNION_TYPE node    (in the case of C++ nested types).     The `scope' parameter should likewise be NULL or should point to a    BLOCK node, a FUNCTION_DECL node, a FUNCTION_TYPE node, a RECORD_TYPE    node, a UNION_TYPE node, or a QUAL_UNION_TYPE node.     This function is used only for deciding when to "pend" and when to    "un-pend" types to/from the pending_types_list.     Note that we sometimes make use of this "type pending" feature in a    rather twisted way to temporarily delay the production of DIEs for the    types of formal parameters.  (We do this just to make svr4 SDB happy.)    It order to delay the production of DIEs representing types of formal    parameters, callers of this function supply `fake_containing_scope' as    the `scope' parameter to this function.  Given that fake_containing_scope    is a tagged type which is *not* the containing scope for *any* other type,    the desired effect is achieved, i.e. output of DIEs representing types    is temporarily suspended, and any type DIEs which would have otherwise    been output are instead placed onto the pending_types_list.  Later on,    we force these (temporarily pended) types to be output simply by calling    `output_pending_types_for_scope' with an actual argument equal to the    true scope of the types we temporarily pended.  */
+comment|/* Return nonzero if it is legitimate to output DIEs to represent a    given type while we are generating the list of child DIEs for some    DIE (e.g. a function or lexical block DIE) associated with a given scope.     See the comments within the function for a description of when it is    considered legitimate to output DIEs for various kinds of types.     Note that TYPE_CONTEXT(type) may be NULL (to indicate global scope)    or it may point to a BLOCK node (for types local to a block), or to a    FUNCTION_DECL node (for types local to the heading of some function    definition), or to a FUNCTION_TYPE node (for types local to the    prototyped parameter list of a function type specification), or to a    RECORD_TYPE, UNION_TYPE, or QUAL_UNION_TYPE node    (in the case of C++ nested types).     The `scope' parameter should likewise be NULL or should point to a    BLOCK node, a FUNCTION_DECL node, a FUNCTION_TYPE node, a RECORD_TYPE    node, a UNION_TYPE node, or a QUAL_UNION_TYPE node.     This function is used only for deciding when to "pend" and when to    "un-pend" types to/from the pending_types_list.     Note that we sometimes make use of this "type pending" feature in a    rather twisted way to temporarily delay the production of DIEs for the    types of formal parameters.  (We do this just to make svr4 SDB happy.)    It order to delay the production of DIEs representing types of formal    parameters, callers of this function supply `fake_containing_scope' as    the `scope' parameter to this function.  Given that fake_containing_scope    is a tagged type which is *not* the containing scope for *any* other type,    the desired effect is achieved, i.e. output of DIEs representing types    is temporarily suspended, and any type DIEs which would have otherwise    been output are instead placed onto the pending_types_list.  Later on,    we force these (temporarily pended) types to be output simply by calling    `output_pending_types_for_scope' with an actual argument equal to the    true scope of the types we temporarily pended.  */
 end_comment
 
 begin_function
@@ -17085,25 +17017,6 @@ argument_list|(
 name|asm_out_file
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-operator|==
-name|FUNCTION_DECL
-operator|&&
-name|DECL_INITIAL
-argument_list|(
-name|decl
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|current_funcdef_number
-operator|++
-expr_stmt|;
 block|}
 end_function
 
@@ -17226,10 +17139,18 @@ name|void
 name|dwarfout_end_prologue
 parameter_list|(
 name|line
+parameter_list|,
+name|file
 parameter_list|)
 name|unsigned
 name|int
 name|line
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
@@ -17256,7 +17177,7 @@ name|label
 argument_list|,
 name|BODY_BEGIN_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -17309,7 +17230,7 @@ name|label
 argument_list|,
 name|BODY_END_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -17330,7 +17251,22 @@ begin_function
 specifier|static
 name|void
 name|dwarfout_end_epilogue
-parameter_list|()
+parameter_list|(
+name|line
+parameter_list|,
+name|file
+parameter_list|)
+name|unsigned
+name|int
+name|line
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|char
 name|label
@@ -17345,7 +17281,7 @@ name|label
 argument_list|,
 name|FUNC_END_LABEL_FMT
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -18375,6 +18311,11 @@ modifier|*
 name|main_input_filename
 decl_stmt|;
 block|{
+name|warning
+argument_list|(
+literal|"support for the DWARF1 debugging format is deprecated"
+argument_list|)
+expr_stmt|;
 comment|/* Remember the name of the primary input file.  */
 name|primary_filename
 operator|=
