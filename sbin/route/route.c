@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: route.c,v 1.3 1996/01/02 20:09:22 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4470,6 +4470,8 @@ argument_list|(
 name|EX_NOHOST
 argument_list|,
 literal|"bad address: %s"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 block|}
