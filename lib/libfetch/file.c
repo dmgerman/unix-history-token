@@ -115,7 +115,7 @@ name|u
 operator|->
 name|offset
 operator|&&
-name|fseek
+name|fseeko
 argument_list|(
 name|f
 argument_list|,
@@ -239,7 +239,7 @@ name|u
 operator|->
 name|offset
 operator|&&
-name|fseek
+name|fseeko
 argument_list|(
 name|f
 argument_list|,
@@ -376,6 +376,7 @@ specifier|const
 name|char
 modifier|*
 name|flags
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -406,6 +407,7 @@ specifier|const
 name|char
 modifier|*
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|DIR
