@@ -4602,6 +4602,12 @@ name|user
 condition|)
 block|{
 comment|/* Current always do via ast() */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_flags
@@ -4611,6 +4617,12 @@ name|TDF_USTATCLOCK
 operator||
 name|TDF_ASTPENDING
 operator|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 name|td
 operator|->
