@@ -22,12 +22,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net80211/ieee80211.h>
 end_include
 

@@ -396,6 +396,12 @@ name|ieee80211com
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_DECLARE
+end_ifdef
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -403,6 +409,11 @@ name|M_80211_NODE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
