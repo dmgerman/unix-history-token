@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.35 (Berkeley) 84/12/17"
+literal|"@(#)login.c	4.35 (Berkeley) 85/01/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -1345,7 +1345,7 @@ expr_stmt|;
 else|else
 name|perror
 argument_list|(
-literal|"setuid"
+literal|"quota (Q_SETUID)"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1816,10 +1816,12 @@ if|if
 condition|(
 name|term
 index|[
-name|strlen
+sizeof|sizeof
 argument_list|(
 literal|"TERM="
 argument_list|)
+operator|-
+literal|1
 index|]
 operator|==
 literal|0
@@ -1924,6 +1926,10 @@ operator|!
 name|quietlog
 condition|)
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|showmotd
 argument_list|()
 expr_stmt|;
@@ -1938,40 +1944,41 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|access
-argument_list|(
-name|maildir
-argument_list|,
-name|R_OK
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|struct
-name|stat
-name|statb
-decl_stmt|;
 name|stat
 argument_list|(
 name|maildir
 argument_list|,
 operator|&
-name|statb
+name|st
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|statb
+operator|==
+literal|0
+operator|&&
+name|st
 operator|.
 name|st_size
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"You have mail.\n"
+literal|"You have %smail.\n"
+argument_list|,
+operator|(
+name|st
+operator|.
+name|st_mtime
+operator|>
+name|st
+operator|.
+name|st_atime
+operator|)
+condition|?
+literal|"new"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|signal
 argument_list|(
