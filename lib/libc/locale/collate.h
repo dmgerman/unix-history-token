@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|COLLATE_H_INCLUDED
+name|_COLLATE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|COLLATE_H_INCLUDED
+name|_COLLATE_H_
 end_define
 
 begin_include
@@ -262,7 +262,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not COLLATE_H_INCLUDED */
+comment|/* !_COLLATE_H_ */
 end_comment
 
 end_unit

@@ -123,7 +123,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|category_name
+name|category_filename
 parameter_list|,
 name|int
 name|locale_buf_size_max
@@ -314,7 +314,7 @@ name|strcat
 argument_list|(
 name|filename
 argument_list|,
-name|category_name
+name|category_filename
 argument_list|)
 expr_stmt|;
 name|fd
@@ -522,7 +522,7 @@ argument_list|,
 name|dst_localebuf
 argument_list|)
 expr_stmt|;
-comment|/* 	** Record the successful parse in the cache. 	*/
+comment|/* 	 * Record the successful parse in the cache. 	 */
 name|locale_buf
 operator|=
 name|lbuf
