@@ -3138,7 +3138,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Silently enforce MNT_NOSUID, MNT_NODEV and MNT_USER 	 * for unprivileged users. 	 */
+comment|/* 	 * Silently enforce MNT_NOSUID, MNT_NODEV and MNT_USER 	 * for unprivileged users and remove MNT_SUIDDIR. 	 */
 if|if
 condition|(
 name|suser
@@ -3146,6 +3146,12 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
+block|{
+name|fsflags
+operator|&=
+operator|~
+name|MNT_SUIDDIR
+expr_stmt|;
 name|fsflags
 operator||=
 name|MNT_NOSUID
@@ -3154,6 +3160,7 @@ name|MNT_NODEV
 operator||
 name|MNT_USER
 expr_stmt|;
+block|}
 comment|/* 	 * Get vnode to be covered 	 */
 name|NDINIT
 argument_list|(
