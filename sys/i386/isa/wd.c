@@ -15,7 +15,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.35 1994/03/04 16:43:07 ache Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.36 1994/03/06 03:10:58 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -986,12 +986,128 @@ literal|0
 argument_list|,
 name|TIMEOUT
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 goto|goto
 name|nodevice
 goto|;
+comment|/* 	 * drive(s) did not time out during diagnostic : 	 * Get error status and check that both drives are OK. 	 * Table 9-2 of ATA specs suggests that we must check for  	 * a value of 0x01  	 * 	 * Strangely, some controllers will return a status of 	 * 0x81 (drive 0 OK, drive 1 failure), and then when 	 * the DRV bit is set, return status of 0x01 (OK) for 	 * drive 2.  (This seems to contradict the ATA spec.) 	 */
+name|du
+operator|->
+name|dk_error
+operator|=
+name|inb
+argument_list|(
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_error
+argument_list|)
+expr_stmt|;
+comment|/* printf("Error : %x\n", du->dk_error); */
+if|if
+condition|(
+name|du
+operator|->
+name|dk_error
+operator|!=
+literal|0x01
+condition|)
+block|{
+if|if
+condition|(
+name|du
+operator|->
+name|dk_error
+operator|&
+literal|0x80
+condition|)
+block|{
+comment|/* drive 1 failure */
+comment|/* first set the DRV bit */
+name|u_int
+name|sdh
+decl_stmt|;
+name|sdh
+operator|=
+name|inb
+argument_list|(
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_sdh
+argument_list|)
+expr_stmt|;
+name|sdh
+operator|=
+name|sdh
+operator||
+literal|0x10
+expr_stmt|;
+name|outb
+argument_list|(
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_sdh
+argument_list|,
+name|sdh
+argument_list|)
+expr_stmt|;
+comment|/* Wait, to make sure drv 1 has completed diags */
+if|if
+condition|(
+name|wdwait
+argument_list|(
+name|du
+argument_list|,
+literal|0
+argument_list|,
+name|TIMEOUT
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|nodevice
+goto|;
+comment|/* Get status for drive 1 */
+name|du
+operator|->
+name|dk_error
+operator|=
+name|inb
+argument_list|(
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_error
+argument_list|)
+expr_stmt|;
+comment|/* printf("Error (drv 1) : %x\n", du->dk_error); */
+if|if
+condition|(
+name|du
+operator|->
+name|dk_error
+operator|!=
+literal|0x01
+condition|)
+goto|goto
+name|nodevice
+goto|;
+block|}
+else|else
+comment|/* drive 0 fail */
+goto|goto
+name|nodevice
+goto|;
+block|}
 name|free
 argument_list|(
 name|du
