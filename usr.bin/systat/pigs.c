@@ -57,6 +57,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -69,12 +81,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<curses.h>
 end_include
 
@@ -82,12 +88,6 @@ begin_include
 include|#
 directive|include
 file|<math.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
 end_include
 
 begin_include
@@ -106,12 +106,6 @@ begin_include
 include|#
 directive|include
 file|"extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"systat.h"
 end_include
 
 begin_function_decl
