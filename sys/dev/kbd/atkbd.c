@@ -4858,12 +4858,20 @@ return|return
 name|ENXIO
 return|;
 block|}
+comment|/* temporarily block data transmission from the keyboard */
+name|write_controller_command
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBDC_DISABLE_KBD_PORT
+argument_list|)
+expr_stmt|;
 comment|/* flush any noise in the buffer */
 name|empty_both_buffers
 argument_list|(
 name|kbdc
 argument_list|,
-literal|10
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* save the current keyboard controller command byte */
@@ -4948,13 +4956,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|c
-operator|!=
-operator|-
-literal|1
-condition|)
 comment|/* try to restore the command byte as before */
 name|set_controller_command_byte
 argument_list|(
@@ -5027,6 +5028,14 @@ return|return
 name|EIO
 return|;
 block|}
+comment|/* temporarily block data transmission from the keyboard */
+name|write_controller_command
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBDC_DISABLE_KBD_PORT
+argument_list|)
+expr_stmt|;
 comment|/* save the current controller command byte */
 name|empty_both_buffers
 argument_list|(
