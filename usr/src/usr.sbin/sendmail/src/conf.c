@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.4 (Berkeley) %G%"
+literal|"@(#)conf.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -922,6 +922,18 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"prog, P=/bin/sh, F=lsD, A=sh -c $u"
+argument_list|)
+expr_stmt|;
+name|makemailer
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|buf
