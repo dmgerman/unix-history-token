@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: rarpd.c,v 1.22 96/06/14 20:40:14 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.10 1996/11/19 23:57:06 wpaul Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2080,7 +2080,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rarpd [ -afv ] [ interface ]\n"
+literal|"usage: rarpd [ -afnv ] [ interface ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2564,15 +2564,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"truncated request"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"len: %d expected: %d\n"
+literal|"truncated request, got %d, expected %d"
 argument_list|,
 name|len
 argument_list|,
@@ -2589,8 +2581,6 @@ name|ap
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -3211,7 +3201,7 @@ name|bp
 operator|+
 name|hdrlen
 argument_list|,
-name|cc
+name|caplen
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3543,7 +3533,23 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cannot map %s to name"
+argument_list|,
+name|eatoa
+argument_list|(
+name|ep
+operator|->
+name|ether_shost
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -3557,7 +3563,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cannot map %s to IP address"
+argument_list|,
+name|ename
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * Choose correct address from list. 	 */
 if|if
 condition|(
@@ -4781,7 +4798,7 @@ name|eatoa
 argument_list|(
 name|ap
 operator|->
-name|arp_sha
+name|arp_tha
 argument_list|)
 argument_list|,
 name|intoa
