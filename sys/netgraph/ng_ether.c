@@ -1129,14 +1129,6 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|node
-operator|==
-name|NULL
-condition|)
-comment|/* no node (why not?), ignore */
-return|return;
 name|NG_NODE_REALLY_DIE
 argument_list|(
 name|node
@@ -1988,7 +1980,9 @@ directive|ifdef
 name|RESTARTABLE_PANICS
 comment|/* so we don't get an error msg in LINT */
 return|return
-name|NULL
+operator|(
+literal|0
+operator|)
 return|;
 endif|#
 directive|endif
