@@ -207,47 +207,38 @@ begin_comment
 comment|/* Storage for unused random */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_int16_t
 name|pmod
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int16_t
-operator|,
+parameter_list|,
 name|u_int16_t
-operator|,
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ip_initid
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|u_int16_t
 name|ip_randomid
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Do a fast modular exponation, returned value will be in the range  * of 0 - (mod-1)  */

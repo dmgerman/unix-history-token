@@ -2435,19 +2435,16 @@ directive|ifdef
 name|MUTEX_DEBUG
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|mtx_validate
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mtx
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

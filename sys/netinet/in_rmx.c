@@ -79,24 +79,21 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|in_inithead
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|head
-operator|,
+parameter_list|,
 name|int
 name|off
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

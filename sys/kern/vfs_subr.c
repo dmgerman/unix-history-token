@@ -176,69 +176,60 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|addalias
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-operator|,
+parameter_list|,
 name|dev_t
 name|nvp_rdev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|insmntque
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vclean
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-operator|,
+parameter_list|,
 name|int
 name|flags
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|thread
-operator|*
+modifier|*
 name|td
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1810,25 +1801,19 @@ name|vfsconf
 modifier|*
 name|vfsp
 decl_stmt|;
-extern|extern int (*lite2_mountroot
-block|)
-function|__P
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|lite2_mountroot
+function_decl|)
 parameter_list|(
-function|(void
-end_function
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+name|void
+parameter_list|)
+function_decl|;
 name|int
 name|error
 decl_stmt|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
 name|lite2_mountroot
@@ -1844,9 +1829,6 @@ call|)
 argument_list|()
 operator|)
 return|;
-end_if
-
-begin_for
 for|for
 control|(
 name|vfsp
@@ -1904,18 +1886,15 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_return
 return|return
 operator|(
 name|ENODEV
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -1925,7 +1904,7 @@ comment|/*  * Lookup a mount point by filesystem identifier.  */
 end_comment
 
 begin_function
-unit|struct
+name|struct
 name|mount
 modifier|*
 name|vfs_getvfs
@@ -5414,18 +5393,15 @@ name|updateproc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sched_sync
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -9991,18 +9967,15 @@ begin_comment
 comment|/*  * Top level filesystem related information gathering.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sysctl_ovfs_conf
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -11714,88 +11687,76 @@ begin_define
 define|#
 directive|define
 name|sync_close
-value|((int (*) __P((struct  vop_close_args *)))nullop)
+value|((int (*)(struct  vop_close_args *))nullop)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sync_fsync
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vop_fsync_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sync_inactive
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vop_inactive_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sync_reclaim
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vop_reclaim_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|sync_lock
-value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
+value|((int (*)(struct  vop_lock_args *))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|sync_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
+value|((int (*)(struct  vop_unlock_args *))vop_nounlock)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sync_print
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vop_print_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|sync_islocked
-value|((int(*) __P((struct vop_islocked_args *)))vop_noislocked)
+value|((int(*)(struct vop_islocked_args *))vop_noislocked)
 end_define
 
 begin_decl_stmt

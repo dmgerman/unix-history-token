@@ -113,34 +113,28 @@ begin_comment
 comment|/*  * Internal accounting functions.  * The former's operation is described in Leffler, et al., and the latter  * was provided by UCB with the 4.4BSD-Lite release  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|comp_t
 name|encode_comp_t
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_long
-operator|,
+parameter_list|,
 name|u_long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|acctwatch
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Accounting callout used for periodic scheduling of acctwatch.  */

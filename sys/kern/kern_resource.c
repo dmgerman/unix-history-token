@@ -105,29 +105,26 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|donice
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|proc
-operator|*
+modifier|*
 name|curp
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|proc
-operator|*
+modifier|*
 name|chgp
-operator|,
+parameter_list|,
 name|int
 name|n
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 specifier|static
@@ -184,21 +181,18 @@ begin_comment
 comment|/* size of hash table - 1 */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|uidinfo
 modifier|*
 name|uilookup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|uid_t
 name|uid
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Resource controls and accounting.  */

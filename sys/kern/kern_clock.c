@@ -193,20 +193,17 @@ begin_comment
 comment|/* DEVICE_POLLING */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|initclocks
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
+modifier|*
 name|dummy
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|SYSINIT
