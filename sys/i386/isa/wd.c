@@ -15,7 +15,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.28 1994/02/07 15:40:38 ache Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.29 1994/02/11 12:02:35 nate Exp $  */
 end_comment
 
 begin_comment
@@ -1188,7 +1188,7 @@ name|dvp
 operator|->
 name|id_iobase
 expr_stmt|;
-comment|/* 		 * Print out description of drive, suppressing multiple 		 * blanks. 		 */
+comment|/* 		 * Print out description of drive. 		 */
 if|if
 condition|(
 name|wdgetctlr
@@ -1199,14 +1199,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|blank
-decl_stmt|;
 name|printf
 argument_list|(
-literal|"wdc%d: unit %d (wd%d): "
+literal|"wdc%d: unit %d (wd%d):<%s>\n"
 argument_list|,
 name|dvp
 operator|->
@@ -1215,6 +1210,12 @@ argument_list|,
 name|unit
 argument_list|,
 name|lunit
+argument_list|,
+name|du
+operator|->
+name|dk_params
+operator|.
+name|wdp_model
 argument_list|)
 expr_stmt|;
 if|if
@@ -1229,13 +1230,17 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"size unknown"
+literal|"wd%d: size unknown\n"
+argument_list|,
+name|lunit
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%luMB %lu cyl, %lu head, %lu sec"
+literal|"wd%d: %luMB (%lu total sec), "
+argument_list|,
+name|lunit
 argument_list|,
 name|du
 operator|->
@@ -1259,6 +1264,17 @@ name|du
 operator|->
 name|dk_dd
 operator|.
+name|d_secperunit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%lu cyl, %lu head, %lu sec, bytes/sec %lu\n"
+argument_list|,
+name|du
+operator|->
+name|dk_dd
+operator|.
 name|d_ncylinders
 argument_list|,
 name|du
@@ -1272,101 +1288,12 @@ operator|->
 name|dk_dd
 operator|.
 name|d_nsectors
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|", type "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|blank
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-sizeof|sizeof
-argument_list|(
+argument_list|,
 name|du
 operator|->
-name|dk_params
+name|dk_dd
 operator|.
-name|wdp_model
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|char
-name|c
-init|=
-name|du
-operator|->
-name|dk_params
-operator|.
-name|wdp_model
-index|[
-name|i
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|blank
-operator|&&
-name|c
-operator|==
-literal|' '
-condition|)
-continue|continue;
-if|if
-condition|(
-name|blank
-operator|&&
-name|c
-operator|!=
-literal|' '
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" %c"
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-name|blank
-operator|=
-literal|0
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|c
-operator|==
-literal|' '
-condition|)
-name|blank
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%c"
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"\n"
+name|d_secsize
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Start timeout routine for this drive. 			 * XXX timeout should be per controller. 			 */
@@ -1396,15 +1323,6 @@ name|lunit
 index|]
 operator|=
 name|NULL
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" [%d: wd%d: not found]"
-argument_list|,
-name|unit
-argument_list|,
-name|lunit
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -4723,7 +4641,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"wd%d: cannot handle %lu heads (max 16)\n"
+literal|"wd%d: cannot handle %lu heads (truncating to 16)\n"
 argument_list|,
 name|du
 operator|->
@@ -4736,11 +4654,14 @@ operator|.
 name|d_ntracks
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_ntracks
+operator|=
+literal|16
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -7342,7 +7263,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"wd%d: %s:"
+literal|"wd%d: %s:\n"
 argument_list|,
 name|du
 operator|->
@@ -7374,7 +7295,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" status %b error %b\n"
+literal|"wd%d: status %b error %b\n"
+argument_list|,
+name|du
+operator|->
+name|dk_lunit
 argument_list|,
 name|du
 operator|->
