@@ -1391,43 +1391,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CARD_D
-parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-value|{ PCCARD_S(v, p), PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), f, PCCARD_C(v, p) }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CARD2_D
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  f, PCMCIA_CIS_ ## p2}
-end_define
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_define
-define|#
-directive|define
 name|PCMCIA_CARD
 parameter_list|(
 name|v
@@ -1436,7 +1399,7 @@ name|p
 parameter_list|,
 name|f
 parameter_list|)
-value|{ NULL, PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), f, PCCARD_C(v, p) }
+value|{ PCCARD_S(v, p), PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), f, PCCARD_C(v, p) }
 end_define
 
 begin_define
@@ -1453,13 +1416,39 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|{ NULL, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  f, PCMCIA_CIS_ ## p2}
+value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  f, PCMCIA_CIS_ ## p2}
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|PCMCIA_CARD_ND
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|f
+parameter_list|)
+value|{ NULL, PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), f, PCCARD_C(v, p) }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CARD2_ND
+parameter_list|(
+name|v1
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|{ NULL, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  f, PCMCIA_CIS_ ## p2}
+end_define
 
 end_unit
 
