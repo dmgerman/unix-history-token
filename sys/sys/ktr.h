@@ -351,8 +351,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_BUSDMA
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* busdma(9) events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x02ffffff
+value|0x0bffffff
 end_define
 
 begin_comment
