@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty.c,v 1.1.1.1 1993/06/12 14:57:31 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/tty.c,v 1.2 1993/09/08 01:49:20 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8601,7 +8601,15 @@ name|FLUSHO
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|tp
+operator|->
+name|t_lflag
+operator|&
+name|EXTPROC
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|tp
 operator|->
@@ -8611,8 +8619,10 @@ name|ECHO
 operator|)
 operator|==
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|tp
 operator|->
@@ -8622,22 +8632,17 @@ name|ECHONL
 operator|)
 operator|==
 literal|0
-operator|||
-name|c
-operator|==
-literal|'\n'
-operator|)
-operator|)
-operator|||
-operator|(
-name|tp
-operator|->
-name|t_lflag
-operator|&
-name|EXTPROC
-operator|)
 condition|)
 return|return;
+elseif|else
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\n'
+condition|)
+return|return;
+block|}
 if|if
 condition|(
 name|tp
