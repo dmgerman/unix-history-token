@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.73 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.74 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.73 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.74 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4161,7 +4161,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"%s: cannot fork"
+literal|"451 %s: cannot fork"
 argument_list|,
 name|label
 argument_list|)
@@ -4207,7 +4207,7 @@ literal|1
 condition|)
 name|syserr
 argument_list|(
-literal|"%s: lost child"
+literal|"451 %s: lost child"
 argument_list|,
 name|label
 argument_list|)
@@ -4223,7 +4223,7 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"%s: died on signal %d"
+literal|"451 %s: died on signal %d"
 argument_list|,
 name|label
 argument_list|,
