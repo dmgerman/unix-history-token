@@ -341,13 +341,6 @@ name|ASM_COMMENT_START
 value|"/"
 end_define
 
-begin_define
-define|#
-directive|define
-name|COMMENT_BEGIN
-value|"/"
-end_define
-
 begin_comment
 comment|/* Output to assembler file text saying following lines    may contain character constants, extra white space, comments, etc.  */
 end_comment
