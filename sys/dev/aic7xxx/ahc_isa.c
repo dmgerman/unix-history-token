@@ -455,7 +455,7 @@ name|zero
 decl_stmt|;
 name|error
 operator|=
-name|ENODEV
+name|ENXIO
 expr_stmt|;
 name|zero
 operator|=
@@ -469,6 +469,21 @@ name|irq
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Skip probes for ISA PnP devices */
+if|if
+condition|(
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|regs
 operator|=
 name|bus_alloc_resource_any
