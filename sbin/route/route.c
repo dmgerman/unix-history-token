@@ -1276,6 +1276,23 @@ if|if
 condition|(
 name|rlen
 operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EPERM
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"write to routing socket"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rlen
+operator|<
 operator|(
 name|int
 operator|)
@@ -6481,6 +6498,19 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EPERM
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"writing to routing socket"
+argument_list|)
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"writing to routing socket"
