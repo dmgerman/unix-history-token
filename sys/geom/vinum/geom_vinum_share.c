@@ -2649,5 +2649,147 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Take a size in bytes and return a pointer to a string which represents the  * size best.  If lj is != 0, return left justified, otherwise in a fixed 10  * character field suitable for columnar printing.  *  * Note this uses a static string: it's only intended to be used immediately  * for printing.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|gv_roughlength
+parameter_list|(
+name|off_t
+name|bytes
+parameter_list|,
+name|int
+name|lj
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|desc
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Gigabytes. */
+if|if
+condition|(
+name|bytes
+operator|>
+operator|(
+name|off_t
+operator|)
+name|MEGABYTE
+operator|*
+literal|10000
+condition|)
+name|snprintf
+argument_list|(
+name|desc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|desc
+argument_list|)
+argument_list|,
+name|lj
+condition|?
+literal|"%jd GB"
+else|:
+literal|"%10jd GB"
+argument_list|,
+name|bytes
+operator|/
+name|GIGABYTE
+argument_list|)
+expr_stmt|;
+comment|/* Megabytes. */
+elseif|else
+if|if
+condition|(
+name|bytes
+operator|>
+name|KILOBYTE
+operator|*
+literal|10000
+condition|)
+name|snprintf
+argument_list|(
+name|desc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|desc
+argument_list|)
+argument_list|,
+name|lj
+condition|?
+literal|"%jd MB"
+else|:
+literal|"%10jd MB"
+argument_list|,
+name|bytes
+operator|/
+name|MEGABYTE
+argument_list|)
+expr_stmt|;
+comment|/* Kilobytes. */
+elseif|else
+if|if
+condition|(
+name|bytes
+operator|>
+literal|10000
+condition|)
+name|snprintf
+argument_list|(
+name|desc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|desc
+argument_list|)
+argument_list|,
+name|lj
+condition|?
+literal|"%jd kB"
+else|:
+literal|"%10jd kB"
+argument_list|,
+name|bytes
+operator|/
+name|KILOBYTE
+argument_list|)
+expr_stmt|;
+comment|/* Bytes. */
+else|else
+name|snprintf
+argument_list|(
+name|desc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|desc
+argument_list|)
+argument_list|,
+name|lj
+condition|?
+literal|"%jd  B"
+else|:
+literal|"%10jd  B"
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|desc
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
