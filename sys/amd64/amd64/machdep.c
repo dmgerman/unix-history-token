@@ -174,12 +174,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/msgbuf.h>
 end_include
 
