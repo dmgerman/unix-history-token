@@ -2795,6 +2795,17 @@ begin_comment
 comment|/* PF tagged */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_RTSOCKFAM
+value|25
+end_define
+
+begin_comment
+comment|/* rtsock sa family */
+end_comment
+
 begin_comment
 comment|/* Packet tag routines. */
 end_comment

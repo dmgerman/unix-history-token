@@ -48,6 +48,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NETISR_ROUTE
+value|14
+end_define
+
+begin_comment
+comment|/* routing socket */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETISR_AARP
 value|15
 end_define
