@@ -1919,20 +1919,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* The spec says P_BLK must be at least 6 bytes long. */
+comment|/*  	 * The spec says P_BLK must be 6 bytes long.  However, some 	 * systems use it to indicate a fractional set of features 	 * present so we take anything>= 4. 	 */
 if|if
 condition|(
 name|sc
 operator|->
-name|cpu_p_blk
-operator|==
-literal|0
-operator|||
-name|sc
-operator|->
 name|cpu_p_blk_len
-operator|!=
-literal|6
+operator|<
+literal|4
 condition|)
 return|return
 operator|(
@@ -2154,13 +2148,14 @@ operator|->
 name|cpu_cx_count
 operator|++
 expr_stmt|;
+comment|/*  	 * The spec says P_BLK must be 6 bytes long.  However, some systems 	 * use it to indicate a fractional set of features present so we 	 * take 5 as C2.  Some may also have a value of 7 to indicate 	 * another C3 but most use _CST for this (as required) and having 	 * "only" C1-C3 is not a hardship. 	 */
 if|if
 condition|(
 name|sc
 operator|->
 name|cpu_p_blk_len
-operator|!=
-literal|6
+operator|<
+literal|5
 condition|)
 goto|goto
 name|done
@@ -2254,6 +2249,17 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|cpu_p_blk_len
+operator|<
+literal|6
+condition|)
+goto|goto
+name|done
+goto|;
 comment|/* Validate and allocate resources for C3 (P_LVL3). */
 if|if
 condition|(
