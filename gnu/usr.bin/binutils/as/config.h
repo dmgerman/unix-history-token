@@ -439,12 +439,9 @@ begin_comment
 comment|/* Define if you have the<values.h> header file.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_VALUES_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_VALUES_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<varargs.h> header file.  */
@@ -542,7 +539,7 @@ comment|/* Default architecture. */
 end_comment
 
 begin_comment
-comment|/* #undef DEFAULT_ARCH */
+comment|/* #define DEFAULT_ARCH "i386" */
 end_comment
 
 begin_comment
@@ -670,7 +667,7 @@ comment|/* Supported emulations. */
 end_comment
 
 begin_comment
-comment|/* #define EMULATIONS */
+comment|/* #define EMULATIONS&i386elf, */
 end_comment
 
 begin_comment
@@ -678,7 +675,7 @@ comment|/* Default emulation. */
 end_comment
 
 begin_comment
-comment|/* #define DEFAULT_EMULATION "" */
+comment|/* #define DEFAULT_EMULATION "i386elf" */
 end_comment
 
 begin_comment
@@ -705,7 +702,7 @@ comment|/* Target alias. */
 end_comment
 
 begin_comment
-comment|/* #define TARGET_ALIAS "amd64-obrien-freebsd5.2.1" */
+comment|/* #define TARGET_ALIAS "i386-obrien-freebsd5.2" */
 end_comment
 
 begin_comment
@@ -713,7 +710,7 @@ comment|/* Canonical target. */
 end_comment
 
 begin_comment
-comment|/* #define TARGET_CANONICAL "amd64-obrien-freebsd5.2.1" */
+comment|/* #define TARGET_CANONICAL "i386-obrien-freebsd5.2" */
 end_comment
 
 begin_comment
@@ -721,24 +718,30 @@ comment|/* Target CPU. */
 end_comment
 
 begin_comment
-comment|/* #define TARGET_CPU "amd64" */
+comment|/* #define TARGET_CPU "i386" */
 end_comment
 
 begin_comment
 comment|/* Target vendor. */
 end_comment
 
-begin_comment
-comment|/* #define TARGET_VENDOR "obrien" */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_VENDOR
+value|"obrien"
+end_define
 
 begin_comment
 comment|/* Target OS. */
 end_comment
 
-begin_comment
-comment|/* #define TARGET_OS "freebsd5.2.1" */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_OS
+value|"freebsd5"
+end_define
 
 begin_comment
 comment|/* Define if you have the stpcpy function */

@@ -86,6 +86,60 @@ define|#
 directive|define
 name|BFD_ARCH_SIZE
 value|64
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+comment|/* The word size of the default bfd target.  */
+define|#
+directive|define
+name|BFD_DEFAULT_TARGET_SIZE
+value|32
+define|#
+directive|define
+name|BFD_HOST_64BIT_LONG
+value|0
+define|#
+directive|define
+name|BFD_HOST_64_BIT
+value|long long
+define|#
+directive|define
+name|BFD_HOST_U_64_BIT
+value|unsigned long long
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 comment|/* The word size of the default bfd target.  */
 define|#
 directive|define
@@ -97,19 +151,24 @@ name|BFD_HOST_64BIT_LONG
 value|1
 define|#
 directive|define
-name|BFD_HOST_LONG_LONG
-value|1
-if|#
-directive|if
-literal|1
-define|#
-directive|define
 name|BFD_HOST_64_BIT
 value|long
 define|#
 directive|define
 name|BFD_HOST_U_64_BIT
 value|unsigned long
+else|#
+directive|else
+error|#
+directive|error
+error|Unsupported architecture/platform.
+endif|#
+directive|endif
+comment|/* 64-bit host */
+define|#
+directive|define
+name|BFD_HOST_LONG_LONG
+value|1
 typedef|typedef
 name|BFD_HOST_64_BIT
 name|bfd_int64_t
@@ -118,8 +177,6 @@ typedef|typedef
 name|BFD_HOST_U_64_BIT
 name|bfd_uint64_t
 typedef|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|BFD_ARCH_SIZE
