@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.10 83/09/02"
+literal|"@(#)main.c	3.11 83/09/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,9 +76,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
-name|n
-expr_stmt|;
 specifier|register
 name|char
 modifier|*
