@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yymain.c 1.1 %G%"
+literal|"@(#)yymain.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,14 +48,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_decl_stmt
-name|short
-name|line
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Yymain initializes each of the utility  * clusters and then starts the processing  * by calling yyparse.  */
@@ -128,6 +120,14 @@ directive|endif
 endif|OBJ
 endif|#
 directive|endif
+name|line
+operator|=
+literal|1
+expr_stmt|;
+name|errpfx
+operator|=
+literal|'E'
+expr_stmt|;
 comment|/* 	 * Initialize the clusters 	 * 	initstring(); 	 */
 name|inithash
 argument_list|()
@@ -659,13 +659,12 @@ operator|)
 operator|-
 name|HEADER_BYTES
 expr_stmt|;
+name|time
+argument_list|(
+operator|&
 name|pxhd
 operator|.
 name|maketime
-operator|=
-name|time
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 name|pxhd

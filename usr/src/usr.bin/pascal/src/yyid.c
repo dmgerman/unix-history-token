@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyid.c 1.2 %G%"
+literal|"@(#)yyid.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,8 +382,7 @@ name|value
 index|[
 name|NL_KINDS
 index|]
-operator|=
-operator||
+operator||=
 name|kindmask
 expr_stmt|;
 name|yybadref

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yypanic.c 1.1 %G%"
+literal|"@(#)yypanic.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,7 +385,8 @@ case|case
 name|YID
 case|:
 name|syneflg
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 continue|continue;
 endif|#

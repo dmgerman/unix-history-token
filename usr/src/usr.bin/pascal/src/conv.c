@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c 1.1 %G%"
+literal|"@(#)conv.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,8 +119,10 @@ case|case
 operator|-
 literal|6
 case|:
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 name|O_STOD
 argument_list|)
 expr_stmt|;
@@ -129,8 +131,10 @@ case|case
 operator|-
 literal|4
 case|:
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 name|O_ITOD
 argument_list|)
 expr_stmt|;
@@ -143,8 +147,10 @@ case|case
 operator|-
 literal|2
 case|:
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 name|O_STOI
 argument_list|)
 expr_stmt|;
@@ -166,8 +172,10 @@ case|:
 case|case
 literal|3
 case|:
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 name|O_ITOS
 argument_list|)
 expr_stmt|;

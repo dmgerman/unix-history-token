@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c 1.1 %G%"
+literal|"@(#)error.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,7 +338,8 @@ ifndef|#
 directive|ifndef
 name|PI0
 name|eflg
-operator|++
+operator|=
+name|TRUE
 operator|,
 name|codeoff
 argument_list|()
@@ -346,7 +347,8 @@ expr_stmt|;
 else|#
 directive|else
 name|eflg
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 endif|#
 directive|endif

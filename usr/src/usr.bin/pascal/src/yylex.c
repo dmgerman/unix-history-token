@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yylex.c 1.1 %G%"
+literal|"@(#)yylex.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,8 +491,7 @@ condition|)
 block|{
 operator|*
 name|cp
-operator|=
-operator||
+operator||=
 literal|' '
 expr_stmt|;
 block|}

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyparse.c 1.1 %G%"
+literal|"@(#)yyparse.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,13 @@ name|yypv
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|unsigned
 name|yytshifts
+init|=
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Number of "true" shifts */
@@ -317,8 +318,7 @@ if|if
 condition|(
 operator|(
 name|n
-operator|=
-operator|+
+operator|+=
 name|yychar
 operator|)
 operator|!=
@@ -359,8 +359,7 @@ if|if
 condition|(
 operator|(
 name|n
-operator|=
-operator|+
+operator|+=
 name|yychar
 operator|)
 operator|!=
@@ -449,8 +448,7 @@ case|case
 literal|3
 case|:
 name|n
-operator|=
-operator|&
+operator|&=
 literal|07777
 expr_stmt|;
 name|N
@@ -500,21 +498,18 @@ operator|-
 literal|1
 expr_stmt|;
 name|ps
-operator|=
-operator|-
+operator|-=
 name|N
 expr_stmt|;
 name|yypv
-operator|=
-operator|-
+operator|-=
 name|N
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PXP
 name|yypw
-operator|=
-operator|-
+operator|-=
 name|N
 expr_stmt|;
 endif|#
@@ -560,8 +555,7 @@ operator|>=
 literal|0
 condition|)
 name|p
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 name|yystate
@@ -639,8 +633,7 @@ name|panicps
 condition|)
 block|{
 name|yypv
-operator|=
-operator|-
+operator|-=
 operator|(
 name|ps
 operator|-
@@ -653,8 +646,7 @@ ifdef|#
 directive|ifdef
 name|PXP
 name|yypw
-operator|=
-operator|-
+operator|-=
 operator|(
 name|ps
 operator|-
@@ -701,8 +693,7 @@ operator|<=
 literal|0
 condition|;
 name|p
-operator|=
-operator|+
+operator|+=
 literal|2
 control|)
 if|if
@@ -769,7 +760,8 @@ operator|!=
 name|YID
 condition|)
 name|syneflg
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 endif|#
 directive|endif

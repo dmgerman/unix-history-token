@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yycosts.c 1.1 %G%"
+literal|"@(#)yycosts.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,8 +386,7 @@ operator|!=
 name|NIL
 condition|)
 name|c
-operator|=
-operator|+
+operator|+=
 literal|4
 expr_stmt|;
 return|return
@@ -530,13 +529,14 @@ begin_comment
 comment|/*  * Routine to print out costs with "-K" option.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
 name|yysyms
 index|[]
+init|=
 literal|";,:=*+/-|&()[]<>~^"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|yycosts

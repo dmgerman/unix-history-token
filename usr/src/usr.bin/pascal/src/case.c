@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)case.c 1.2 %G%"
+literal|"@(#)case.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,9 +130,10 @@ decl_stmt|,
 name|n
 decl_stmt|;
 name|int
-name|nr
-decl_stmt|,
 name|goc
+decl_stmt|;
+name|bool
+name|nr
 decl_stmt|;
 name|goc
 operator|=
@@ -649,6 +650,12 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
+name|w
+operator|<=
+literal|2
+condition|)
 name|put
 argument_list|(
 literal|2
@@ -660,6 +667,24 @@ name|w
 operator|>>
 literal|1
 operator|)
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ctab
+index|[
+name|i
+index|]
+operator|.
+name|clong
+argument_list|)
+expr_stmt|;
+else|else
+name|put
+argument_list|(
+literal|2
+argument_list|,
+name|O_CASE4
 argument_list|,
 name|ctab
 index|[
@@ -700,7 +725,7 @@ expr_stmt|;
 comment|/* 	 * Generate code for each 	 * statement. Patch branch 	 * table to beginning of each 	 * statement and follow each 	 * statement with a branch back 	 * to the TRA above. 	 */
 name|nr
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 for|for
 control|(
@@ -770,9 +795,14 @@ name|brtab
 operator|-
 literal|1
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|lc
 operator|-
 name|brtab0
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -803,8 +833,12 @@ index|]
 argument_list|)
 expr_stmt|;
 name|nr
-operator|&=
+operator|=
+operator|(
 name|noreach
+operator|&&
+name|nr
+operator|)
 expr_stmt|;
 name|noreach
 operator|=

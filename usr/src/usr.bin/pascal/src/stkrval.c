@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stkrval.c 1.3 %G%"
+literal|"@(#)stkrval.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,7 +252,7 @@ block|{
 case|case
 name|VAR
 case|:
-comment|/* 			  if a variable is 			 * qualified then get 			 * the rvalue by a 			 * stklval and an ind. 			 */
+comment|/* 			 * if a variable is 			 * qualified then get 			 * the rvalue by a 			 * stklval and an ind. 			 */
 if|if
 condition|(
 name|r
@@ -331,6 +331,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -359,6 +362,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -387,6 +393,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -415,6 +424,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -441,6 +453,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -865,6 +880,9 @@ literal|2
 argument_list|,
 name|O_CONC4
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -1050,12 +1068,9 @@ literal|2
 argument_list|,
 name|O_CON14
 argument_list|,
-operator|(
-name|short
-operator|)
 name|p
 operator|->
-name|range
+name|value
 index|[
 literal|0
 index|]
@@ -1204,7 +1219,7 @@ name|put
 argument_list|(
 literal|1
 argument_list|,
-name|O_SDUP4
+name|PTR_DUP
 argument_list|)
 expr_stmt|;
 name|p

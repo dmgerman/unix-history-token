@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec.c 1.2 %G%"
+literal|"@(#)rec.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +214,9 @@ index|[
 name|NL_OFFS
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|align
 argument_list|(
 name|p
@@ -682,6 +685,9 @@ name|FIELD
 argument_list|,
 name|t
 argument_list|,
+operator|(
+name|int
+operator|)
 name|roundup
 argument_list|(
 name|p
@@ -691,6 +697,9 @@ index|[
 name|NL_OFFS
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|align
 argument_list|(
 name|t

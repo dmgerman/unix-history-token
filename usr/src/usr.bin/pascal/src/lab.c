@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.6 %G%"
+literal|"@(#)lab.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,7 +324,7 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-comment|/* put(2, O_GOTO | cbn<<8+INDX, p->value[1]); */
+comment|/* put(2, O_GOTO | cbn<<8+INDX, (long)p->value[1]); */
 name|put
 argument_list|(
 literal|2
@@ -335,6 +335,9 @@ name|cbn
 operator|<<
 literal|8
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|value
@@ -582,10 +585,15 @@ return|;
 ifdef|#
 directive|ifdef
 name|OBJ
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_TRA4
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|entloc

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ato.c 1.1 %G%"
+literal|"@(#)ato.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ condition|(
 operator|(
 name|l
 operator|&
-literal|0160000000000L
+literal|016000000000L
 operator|)
 operator|!=
 literal|0

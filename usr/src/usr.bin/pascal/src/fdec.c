@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.13 %G%"
+literal|"@(#)fdec.c 1.13 1/24/81"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,8 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
+name|w
+decl_stmt|,
 name|s
 decl_stmt|,
 name|o
@@ -365,7 +367,8 @@ case|case
 name|T_PROG
 case|:
 name|progseen
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -375,7 +378,8 @@ literal|'z'
 argument_list|)
 condition|)
 name|monflg
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 name|program
 operator|=
@@ -714,15 +718,23 @@ operator|-
 operator|(
 name|roundup
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 name|DPOFF1
 operator|+
-name|width
+name|lwidth
 argument_list|(
 name|p
 operator|->
 name|type
 argument_list|)
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|align
 argument_list|(
 name|p
@@ -955,6 +967,23 @@ block|}
 ifdef|#
 directive|ifdef
 name|OBJ
+name|w
+operator|=
+name|width
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|o
+operator|-=
+name|even
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEC11
 name|dp
 operator|=
 name|defnl
@@ -969,16 +998,39 @@ argument_list|,
 name|p
 argument_list|,
 name|o
-operator|-=
-name|even
-argument_list|(
-name|width
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|dp
+operator|=
+name|defnl
+argument_list|(
+name|il
+index|[
+literal|1
+index|]
+argument_list|,
+name|VAR
+argument_list|,
+name|p
+argument_list|,
+operator|(
+name|w
+operator|<
+literal|2
+operator|)
+condition|?
+name|o
+operator|+
+literal|1
+else|:
+name|o
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEC11
 endif|#
 directive|endif
 endif|OBJ
@@ -1004,6 +1056,9 @@ name|roundup
 argument_list|(
 name|o
 argument_list|,
+operator|(
+name|long
+operator|)
 name|A_STACK
 argument_list|)
 argument_list|)
@@ -1078,6 +1133,9 @@ name|roundup
 argument_list|(
 name|o
 argument_list|,
+operator|(
+name|long
+operator|)
 name|A_STACK
 argument_list|)
 argument_list|)
@@ -1147,6 +1205,9 @@ name|roundup
 argument_list|(
 name|o
 argument_list|,
+operator|(
+name|long
+operator|)
 name|A_STACK
 argument_list|)
 argument_list|)
@@ -1222,6 +1283,9 @@ name|roundup
 argument_list|(
 name|o
 argument_list|,
+operator|(
+name|long
+operator|)
 name|A_STACK
 argument_list|)
 argument_list|)
@@ -1337,6 +1401,9 @@ name|roundup
 argument_list|(
 name|o
 argument_list|,
+operator|(
+name|long
+operator|)
 name|A_STACK
 argument_list|)
 expr_stmt|;
@@ -1370,6 +1437,9 @@ literal|2
 argument_list|,
 name|O_CASE4
 argument_list|,
+operator|(
+name|long
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1381,6 +1451,9 @@ literal|2
 argument_list|,
 name|O_CASE4
 argument_list|,
+operator|(
+name|long
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1489,6 +1562,9 @@ literal|2
 argument_list|,
 name|O_TRA4
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|entloc
@@ -2048,10 +2124,11 @@ name|inp
 decl_stmt|,
 name|out
 decl_stmt|,
-name|chkref
-decl_stmt|,
 modifier|*
 name|blk
+decl_stmt|;
+name|bool
+name|chkref
 decl_stmt|;
 name|struct
 name|nl
@@ -2145,20 +2222,21 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Put out the block entrance code and the block name. 	 * HDRSZE is the number of bytes of info in the static 	 * BEG data area exclusive of the proc name. It is 	 * currently defined as: 	/*	struct hdr { 	/*		long framesze;	/* number of bytes of local vars */
 comment|/*		long nargs;	/* number of bytes of arguments */
-comment|/*		short tests;	/* TRUE => perform runtime tests */
+comment|/*		bool tests;	/* TRUE => perform runtime tests */
 comment|/*		short offset;	/* offset of procedure in source file */
 comment|/*		char name[1];	/* name of active procedure */
 comment|/*	}; 	 */
 define|#
 directive|define
 name|HDRSZE
-value|12
+value|(2 * sizeof(long) + sizeof(short) + sizeof(bool))
 name|var
 operator|=
 name|put
 argument_list|(
 literal|2
 argument_list|,
+operator|(
 operator|(
 name|lenstr
 argument_list|(
@@ -2170,6 +2248,7 @@ literal|0
 argument_list|)
 operator|+
 name|HDRSZE
+operator|)
 operator|<<
 literal|8
 operator|)
@@ -2191,6 +2270,9 @@ else|:
 name|O_BEG
 operator|)
 argument_list|,
+operator|(
+name|long
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2205,8 +2287,15 @@ name|cbn
 operator|==
 literal|1
 condition|?
+operator|(
+name|long
+operator|)
 literal|0
 else|:
+call|(
+name|long
+call|)
+argument_list|(
 name|fp
 operator|->
 name|value
@@ -2216,31 +2305,31 @@ index|]
 operator|-
 name|DPOFF2
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	     *	Output the runtime test mode for the routine 	     */
-if|if
-condition|(
+name|put
+argument_list|(
+literal|2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bool
+argument_list|)
+operator|==
+literal|2
+condition|?
+name|O_CASE2
+else|:
+name|O_CASE4
+argument_list|,
 name|opt
 argument_list|(
 literal|'t'
 argument_list|)
-condition|)
-name|put
-argument_list|(
-literal|2
-argument_list|,
-name|O_CASE2
-argument_list|,
+condition|?
 name|TRUE
-argument_list|)
-expr_stmt|;
-else|else
-name|put
-argument_list|(
-literal|2
-argument_list|,
-name|O_CASE2
-argument_list|,
+else|:
 name|FALSE
 argument_list|)
 expr_stmt|;
@@ -3492,6 +3581,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|iop
 operator|->
 name|value
@@ -3745,6 +3837,9 @@ name|cntpatch
 operator|-
 literal|2
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cnts
 argument_list|,
 literal|2
@@ -3756,6 +3851,9 @@ name|nfppatch
 operator|-
 literal|2
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pfcnt
 argument_list|,
 literal|2
@@ -4895,6 +4993,10 @@ name|patchfil
 argument_list|(
 name|var
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 operator|-
 name|sizes
 index|[
@@ -4902,6 +5004,7 @@ name|cbn
 index|]
 operator|.
 name|om_max
+argument_list|)
 argument_list|,
 literal|2
 argument_list|)
@@ -5313,7 +5416,8 @@ operator|=
 name|FALSE
 expr_stmt|;
 name|progseen
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 end_block

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.7 %G%"
+literal|"@(#)rval.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,6 +524,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -548,6 +551,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -572,6 +578,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -596,6 +605,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -618,6 +630,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -911,6 +926,10 @@ name|c
 operator|++
 control|)
 continue|continue;
+name|w
+operator|=
+name|c
+expr_stmt|;
 if|if
 condition|(
 name|contype
@@ -952,7 +971,7 @@ name|NIL
 operator|)
 return|;
 block|}
-name|c
+name|w
 operator|=
 name|width
 argument_list|(
@@ -966,25 +985,19 @@ name|OBJ
 name|put
 argument_list|(
 literal|2
-operator|+
-operator|(
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
-operator|)
 argument_list|,
 name|O_CONG
 argument_list|,
-name|c
-argument_list|,
+name|w
+argument_list|)
+expr_stmt|;
+name|putstr
+argument_list|(
 name|cp1
+argument_list|,
+name|w
+operator|-
+name|c
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1016,7 +1029,7 @@ name|STR
 argument_list|,
 literal|0
 argument_list|,
-name|c
+name|w
 argument_list|)
 expr_stmt|;
 name|q
@@ -1049,6 +1062,9 @@ literal|2
 argument_list|,
 name|O_CONC
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -1521,7 +1537,7 @@ argument_list|,
 name|O_PUSH
 argument_list|,
 operator|-
-name|width
+name|lwidth
 argument_list|(
 name|csetd
 operator|.
@@ -1576,6 +1592,10 @@ literal|2
 argument_list|,
 name|O_CTTOT
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 literal|4
 operator|+
 name|csetd
@@ -1587,6 +1607,7 @@ operator|*
 name|csetd
 operator|.
 name|paircnt
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4700,6 +4721,10 @@ literal|2
 argument_list|,
 name|O_INCT
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 literal|3
 operator|+
 name|csetd
@@ -4711,6 +4736,7 @@ operator|*
 name|csetd
 operator|.
 name|paircnt
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

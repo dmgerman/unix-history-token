@@ -4,13 +4,19 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)0.h 1.3 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.4 %G%"; */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONSETS
 end_define
 
 begin_define
@@ -44,26 +50,17 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|bool
-value|short
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|FALSE
-value|0
-end_define
+block|,
+name|TRUE
+block|}
+name|bool
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Option flags  *  * The following options are recognized in the text of the program  * and also on the command line:  *  *	b	block buffer the file output  *  *	i	make a listing of the procedures and functions in  *		the following include files  *  *	l	make a listing of the program  *  *	n	place each include file on a new page with a header  *  *	p	disable post mortem and statement limit counting  *  *	t	disable run-time tests  *  *	u	card image mode; only first 72 chars of input count  *  *	w	suppress special diagnostic warnings  *  *	z	generate counters for an execution profile  */
@@ -237,12 +234,36 @@ begin_comment
 comment|/*  * TABLE_MULTIPLIER is for uniformly increasing the sizes of the tables  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|TABLE_MULTIPLIER
 value|8
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TABLE_MULTIPLIER
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VAX
+end_endif
 
 begin_define
 define|#
@@ -269,12 +290,36 @@ begin_comment
 comment|/*  * MAXDEPTH is the depth of the parse stack.  * STACK_MULTIPLIER is for increasing its size.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|STACK_MULTIPLIER
 value|8
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STACK_MULTIPLIER
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VAX
+end_endif
 
 begin_define
 define|#
@@ -403,7 +448,7 @@ value|setpfx('e')
 end_define
 
 begin_decl_stmt
-name|bool
+name|int
 name|cgenflg
 decl_stmt|;
 end_decl_stmt
@@ -446,12 +491,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|Enoline
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|elineoff
 parameter_list|()
-value|Enoline++
+value|Enoline = TRUE
 end_define
 
 begin_define
@@ -459,14 +510,8 @@ define|#
 directive|define
 name|elineon
 parameter_list|()
-value|Enoline = 0
+value|Enoline = FALSE
 end_define
-
-begin_decl_stmt
-name|bool
-name|Enoline
-decl_stmt|;
-end_decl_stmt
 
 begin_escape
 end_escape
@@ -699,10 +744,10 @@ decl_stmt|,
 modifier|*
 name|nl_next
 decl_stmt|;
-name|long
+name|int
 name|value
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 block|}
@@ -844,7 +889,7 @@ begin_define
 define|#
 directive|define
 name|NL_ELABEL
-value|3
+value|4
 end_define
 
 begin_comment
@@ -1536,7 +1581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
+name|bool
 name|errcnt
 index|[
 name|DSPLYSZ
@@ -1744,6 +1789,13 @@ end_function_decl
 
 begin_function_decl
 name|long
+name|leven
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
 name|aryconst
 parameter_list|()
 function_decl|;
@@ -1752,6 +1804,13 @@ end_function_decl
 begin_function_decl
 name|long
 name|a8tol
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|roundup
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.4 %G%"
+literal|"@(#)lval.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,6 +373,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -630,8 +633,10 @@ condition|(
 name|o
 condition|)
 block|{
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_OFF
 argument_list|,
 name|o
@@ -659,8 +664,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 				 * Pointer cannot be 				 * nil and file cannot 				 * be at end-of-file. 				 */
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 name|p
 operator|->
 name|class
@@ -776,8 +783,10 @@ operator|==
 literal|0
 condition|)
 comment|/* 						 * global variables are 						 * referenced through pointers 						 * on the stack 						 */
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|PTR_RV
 operator||
 name|bn
@@ -790,8 +799,10 @@ name|o
 argument_list|)
 expr_stmt|;
 else|else
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_LV
 operator||
 name|bn
@@ -811,8 +822,10 @@ condition|(
 name|o
 condition|)
 block|{
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_OFF
 argument_list|,
 name|o
@@ -1015,8 +1028,10 @@ operator|==
 literal|0
 condition|)
 comment|/* 			 * global variables are referenced through 			 * pointers on the stack 			 */
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|PTR_RV
 operator||
 name|bn
@@ -1029,8 +1044,10 @@ name|o
 argument_list|)
 expr_stmt|;
 else|else
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_LV
 operator||
 name|bn
@@ -1050,8 +1067,10 @@ condition|(
 name|o
 condition|)
 block|{
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_OFF
 argument_list|,
 name|o
@@ -1453,8 +1472,10 @@ case|:
 case|case
 literal|1
 case|:
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 operator|(
 name|width
 argument_list|(

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gen.c 1.1 %G%"
+literal|"@(#)gen.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1192,8 +1192,10 @@ operator|==
 name|O_AS2
 condition|)
 block|{
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 name|O_AS2
 operator|+
 name|asgntab
@@ -1222,8 +1224,10 @@ operator|==
 name|O_REL2
 condition|)
 block|{
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 operator|(
 name|op
 operator|+
@@ -1252,8 +1256,10 @@ name|TBOOL
 operator|)
 return|;
 block|}
-name|put1
+name|put
 argument_list|(
+literal|1
+argument_list|,
 name|i
 operator|==
 literal|15
@@ -1300,8 +1306,10 @@ case|:
 case|case
 name|TSTR
 case|:
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_RELG
 operator||
 operator|(
@@ -1354,8 +1362,10 @@ literal|8
 operator|+
 name|INDX
 expr_stmt|;
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|op
 argument_list|,
 name|w1

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyprint.c 1.1 %G%"
+literal|"@(#)yyprint.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ end_function_decl
 
 begin_decl_stmt
 name|STATIC
-name|bool
+name|short
 name|bounce
 decl_stmt|;
 end_decl_stmt

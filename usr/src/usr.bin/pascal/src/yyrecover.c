@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyrecover.c 1.1 %G%"
+literal|"@(#)yyrecover.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,12 +294,13 @@ begin_comment
 comment|/*  * YCps gives the top of stack at  * the point of error.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 name|bool
 name|yyunique
+init|=
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|STATIC
@@ -904,8 +905,7 @@ operator|-
 name|ERROR
 condition|)
 name|ap
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 if|if
@@ -1430,8 +1430,7 @@ ifdef|#
 directive|ifdef
 name|PI
 name|i
-operator|=
-operator||
+operator||=
 name|ISUNDEF
 expr_stmt|;
 endif|#
@@ -1850,8 +1849,7 @@ operator|-
 name|ERROR
 condition|)
 name|ap
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 comment|/* 	 * Loop through the test actions 	 * for this state. 	 */
@@ -1867,8 +1865,7 @@ operator|<=
 literal|0
 condition|;
 name|ap
-operator|=
-operator|+
+operator|+=
 literal|2
 control|)
 block|{
@@ -2518,8 +2515,7 @@ name|mv
 operator|--
 expr_stmt|;
 name|c
-operator|=
-operator|*
+operator|*=
 operator|*
 name|mv
 expr_stmt|;
@@ -2729,8 +2725,7 @@ if|if
 condition|(
 operator|(
 name|n
-operator|=
-operator|+
+operator|+=
 name|nchar
 operator|)
 operator|!=
@@ -2751,8 +2746,7 @@ case|case
 literal|2
 case|:
 name|n
-operator|=
-operator|&
+operator|&=
 literal|07777
 expr_stmt|;
 name|yyredfail
@@ -2834,8 +2828,7 @@ case|case
 literal|3
 case|:
 name|n
-operator|=
-operator|&
+operator|&=
 literal|07777
 expr_stmt|;
 if|if
@@ -2912,8 +2905,7 @@ name|yytipct
 condition|)
 block|{
 name|i
-operator|=
-operator|-
+operator|-=
 name|yytipct
 expr_stmt|;
 name|yytipct
@@ -2921,20 +2913,17 @@ operator|=
 literal|0
 expr_stmt|;
 name|ps
-operator|=
-operator|-
+operator|-=
 name|i
 expr_stmt|;
 name|yCpv
-operator|=
-operator|-
+operator|-=
 name|i
 expr_stmt|;
 block|}
 else|else
 name|yytipct
-operator|=
-operator|-
+operator|-=
 name|i
 expr_stmt|;
 if|if
@@ -2988,8 +2977,7 @@ operator|>=
 literal|0
 condition|)
 name|p
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 ifdef|#

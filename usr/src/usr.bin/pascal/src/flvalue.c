@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.4 %G%"
+literal|"@(#)flvalue.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,6 +262,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -441,10 +444,13 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|tempoff
 argument_list|)
 expr_stmt|;
-comment|/* put( 2 , O_FSAV | bn<< 8 + INDX , p -> entloc ); */
+comment|/* put(2, O_FSAV | bn<< 8 + INDX, (long)p->entloc); */
 name|put
 argument_list|(
 literal|2
@@ -455,6 +461,9 @@ name|bn
 operator|<<
 literal|8
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|entloc

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.5 %G%"
+literal|"@(#)var.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,12 +378,20 @@ name|om_off
 operator|=
 name|roundup
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 name|op
 operator|->
 name|om_off
 operator|-
 name|w
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|align
 argument_list|(
 name|np
@@ -424,12 +432,20 @@ name|om_off
 operator|=
 name|roundup
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 name|op
 operator|->
 name|om_off
 operator|-
 name|w
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|align
 argument_list|(
 name|np
@@ -670,18 +686,16 @@ begin_comment
 comment|/*  * Evening  */
 end_comment
 
-begin_expr_stmt
-name|even
-argument_list|(
+begin_function
+name|long
+name|leven
+parameter_list|(
 name|w
-argument_list|)
+parameter_list|)
 specifier|register
-name|int
+name|long
 name|w
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -693,8 +707,7 @@ return|return
 operator|(
 name|w
 operator|&
-operator|~
-literal|1
+literal|0xfffffffe
 operator|)
 return|;
 return|return
@@ -705,12 +718,34 @@ operator|+
 literal|1
 operator|)
 operator|&
-operator|~
-literal|1
+literal|0xfffffffe
 operator|)
 return|;
 block|}
-end_block
+end_function
+
+begin_function
+name|int
+name|even
+parameter_list|(
+name|w
+parameter_list|)
+specifier|register
+name|int
+name|w
+decl_stmt|;
+block|{
+return|return
+name|leven
+argument_list|(
+operator|(
+name|long
+operator|)
+name|w
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Find the width of a type in bytes.  */
@@ -944,6 +979,10 @@ expr_stmt|;
 return|return
 name|roundup
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|set
 operator|.
@@ -953,8 +992,14 @@ literal|3
 operator|)
 operator|+
 literal|1
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|A_SET
+argument_list|)
 argument_list|)
 return|;
 case|case
@@ -995,7 +1040,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-name|long
+name|int
 name|x
 decl_stmt|;
 specifier|register

@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.2 %G%"
+literal|"@(#)main.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ file|"objfmt.h"
 end_include
 
 begin_comment
-comment|/*  * This version of pi has been in use at Berkeley since May 1977  * and is very stable, except for the syntactic error recovery which  * has just been written.  Please report any problems with the error  * recovery to the second author at the address given in the file  * READ_ME.  The second author takes full responsibility for any bugs  * in the syntactic error recovery.  */
+comment|/*  * This version of pi has been in use at Berkeley since May 1977  * and is very stable. Please report any problems with the error  * recovery to the second author at the address given in the file  * READ_ME.  The second author takes full responsibility for any bugs  * in the syntactic error recovery.  */
 end_comment
 
 begin_decl_stmt
@@ -180,7 +180,7 @@ name|char
 modifier|*
 name|howfile
 init|=
-literal|"/usr/lib/how_pi\0"
+name|HOW_STRNGS
 decl_stmt|;
 end_decl_stmt
 
@@ -201,7 +201,7 @@ name|char
 modifier|*
 name|howfile
 init|=
-literal|"/usr/lib/how_pc"
+name|HOW_STRNGS
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +312,7 @@ name|ERR_PATHLEN
 operator|,
 name|howfile
 operator|+=
-literal|9
+name|HOW_PATHLEN
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -357,7 +357,9 @@ name|pixusage
 expr_stmt|;
 name|howfile
 index|[
-literal|15
+name|HOW_PATHLEN
+operator|+
+literal|6
 index|]
 operator|=
 literal|'x'
@@ -557,19 +559,22 @@ case|case
 literal|'A'
 case|:
 name|testtrace
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 case|case
 literal|'F'
 case|:
 name|fulltrace
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 case|case
 literal|'E'
 case|:
 name|errtrace
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 name|opt
 argument_list|(
@@ -683,7 +688,8 @@ case|case
 literal|'z'
 case|:
 name|monflg
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 continue|continue;
 default|default:

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.5 %G%"
+literal|"@(#)type.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,7 +405,8 @@ decl_stmt|;
 specifier|register
 name|int
 name|oline
-decl_stmt|,
+decl_stmt|;
+name|long
 name|w
 decl_stmt|;
 if|if
@@ -838,22 +839,32 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Storage requirement of %s exceeds the implementation limit of %d by %d bytes"
+literal|"Storage requirement of %s exceeds the implementation limit of %D by %D bytes"
 argument_list|,
 name|nameof
 argument_list|(
 name|np
 argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|TOOMUCH
 operator|-
 literal|1
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|w
 operator|-
 name|TOOMUCH
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|np

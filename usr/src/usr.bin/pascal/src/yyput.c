@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyput.c 1.1 %G%"
+literal|"@(#)yyput.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,12 +882,13 @@ name|nopflg
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
 name|printed
+init|=
 literal|1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Set the current file name to be file,  * printing the name, or a header on a new  * page if required.  * there is another yysetfile in error.c  * this one is for PI and PXP that one is for PI1  */
@@ -947,8 +948,7 @@ literal|0
 condition|)
 block|{
 name|printed
-operator|=
-operator||
+operator||=
 literal|02
 expr_stmt|;
 name|header
