@@ -96,25 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"at.h"
+file|<netatalk/at.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"at_var.h"
+file|<netatalk/at_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"aarp.h"
+file|<netatalk/aarp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"phase2.h"
+file|<netatalk/phase2.h>
 end_include
 
 begin_include

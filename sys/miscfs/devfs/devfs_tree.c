@@ -1,36 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.28 1996/08/13 07:21:44 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.29 1996/08/13 19:48:40 julian Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_comment
@@ -40,37 +40,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dir.h"
+file|<sys/dir.h>
 end_include
 
 begin_comment
@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"devfsdefs.h"
+file|<sys/devfsext.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/devfsext.h"
+file|<miscfs/devfs/devfsdefs.h>
 end_include
 
 begin_macro

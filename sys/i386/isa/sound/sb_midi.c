@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_if
@@ -33,7 +33,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sb.h"
+file|<i386/isa/sound/sb.h>
 end_include
 
 begin_undef
@@ -620,7 +620,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"midi_synth.h"
+file|<i386/isa/sound/midi_synth.h>
 end_include
 
 begin_decl_stmt

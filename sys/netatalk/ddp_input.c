@@ -84,31 +84,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"at.h"
+file|<netatalk/at.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"at_var.h"
+file|<netatalk/at_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"endian.h"
+file|<netatalk/endian.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ddp.h"
+file|<netatalk/ddp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ddp_var.h"
+file|<netatalk/ddp_var.h>
 end_include
 
 begin_include

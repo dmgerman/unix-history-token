@@ -34,7 +34,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pcvt_hdr.h"
+file|<i386/isa/pcvt/pcvt_hdr.h>
 end_include
 
 begin_comment
@@ -44,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pcvt_tbl.h"
+file|<i386/isa/pcvt/pcvt_tbl.h>
 end_include
 
 begin_comment

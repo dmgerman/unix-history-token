@@ -1,83 +1,83 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.12 1996/06/12 05:08:30 gpalmer Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.13 1996/06/15 20:37:22 gpalmer Exp $  *  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"miscfs/specfs/specdev.h"
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<miscfs/devfs/devfsdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<miscfs/specfs/specdev.h>
 end_include
 
 begin_comment
 comment|/* defines v_rdev	*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"mount.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"file.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"malloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"devfsdefs.h"
-end_include
 
 begin_function_decl
 specifier|static

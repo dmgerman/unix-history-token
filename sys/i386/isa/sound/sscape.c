@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_if
@@ -27,7 +27,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"coproc.h"
+file|<i386/isa/sound/coproc.h>
 end_include
 
 begin_comment

@@ -236,7 +236,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pcvt_conf.h"
+file|<i386/isa/pcvt/pcvt_conf.h>
 end_include
 
 begin_if
@@ -534,7 +534,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"i386/isa/pcvt/pcvt_ioctl.h"
+file|<i386/isa/pcvt/pcvt_ioctl.h>
 end_include
 
 begin_elif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.23 1996/08/13 19:48:41 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.24 1996/09/03 14:22:02 bde Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -102,7 +102,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"devfsdefs.h"
+file|<miscfs/devfs/devfsdefs.h>
 end_include
 
 begin_comment

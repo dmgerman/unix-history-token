@@ -6,19 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"local.h"
+file|<i386/isa/sound/local.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"os.h"
+file|<i386/isa/sound/os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"soundvers.h"
+file|<i386/isa/sound/soundvers.h>
 end_include
 
 begin_if
@@ -1369,13 +1369,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sound_calls.h"
+file|<i386/isa/sound/sound_calls.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dev_table.h"
+file|<i386/isa/sound/dev_table.h>
 end_include
 
 begin_ifndef

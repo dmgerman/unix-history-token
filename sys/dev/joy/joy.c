@@ -20,7 +20,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/errno.h>
 end_include
 
 begin_include

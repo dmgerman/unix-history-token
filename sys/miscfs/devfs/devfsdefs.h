@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.8 1995/11/09 08:16:48 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.9 1996/01/30 22:57:01 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -731,7 +731,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"devfs_proto.h"
+file|<miscfs/devfs/devfs_proto.h>
 end_include
 
 end_unit

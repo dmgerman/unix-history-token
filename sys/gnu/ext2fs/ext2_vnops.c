@@ -154,7 +154,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<lockf.h>
+file|<sys/lockf.h>
 end_include
 
 begin_include

@@ -6,55 +6,55 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pcb.h"
+file|<machine/pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fpu_emu.h"
+file|<gnu/i386/fpemul/fpu_emu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fpu_system.h"
+file|<gnu/i386/fpemul/fpu_system.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"status_w.h"
+file|<gnu/i386/fpemul/status_w.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reg_constant.h"
+file|<gnu/i386/fpemul/reg_constant.h>
 end_include
 
 begin_decl_stmt

@@ -22,7 +22,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ic/i82365.h"
+file|<i386/isa/ic/i82365.h>
 end_include
 
 begin_comment

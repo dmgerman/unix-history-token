@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_ifndef
@@ -18,7 +18,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"gus_linearvol.h"
+file|<i386/isa/sound/gus_linearvol.h>
 end_include
 
 begin_function_decl

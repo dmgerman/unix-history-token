@@ -30,7 +30,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"pcvt_hdr.h"
+file|<i386/isa/pcvt/pcvt_hdr.h>
 end_include
 
 begin_comment
@@ -462,7 +462,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"pcvt_kbd.h"
+file|<i386/isa/pcvt/pcvt_kbd.h>
 end_include
 
 begin_comment

@@ -59,33 +59,18 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|KERNEL
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"ioctl.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
 
 begin_include
 include|#
@@ -97,6 +82,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *		IOCTLs for MF II and AT Keyboards  *---------------------------------------------------------------------------*/

@@ -264,6 +264,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/qcamreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/qcamdefs.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -275,6 +298,11 @@ include|#
 directive|include
 file|"qcamdefs.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * There should be _NO_ operating system dependant code or definitions  * past this point.  */
