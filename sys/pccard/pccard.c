@@ -2216,9 +2216,7 @@ name|ap
 operator|->
 name|ah_name
 operator|=
-name|ctrl
-operator|->
-name|name
+literal|"pcccard"
 expr_stmt|;
 name|ap
 operator|->
@@ -2263,9 +2261,7 @@ name|ap
 operator|->
 name|ah_name
 operator|=
-name|ctrl
-operator|->
-name|name
+literal|"pccard"
 expr_stmt|;
 name|ap
 operator|->

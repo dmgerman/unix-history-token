@@ -137,7 +137,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|ointhand2_t
+name|inthand2_t
 name|pcicintr
 decl_stmt|;
 end_decl_stmt
@@ -1917,8 +1917,6 @@ literal|0
 decl_stmt|;
 name|u_int
 name|free_irqs
-decl_stmt|,
-name|desired_irq
 decl_stmt|;
 name|struct
 name|slot
@@ -1934,8 +1932,27 @@ name|unsigned
 name|char
 name|c
 decl_stmt|;
+name|void
+modifier|*
+name|ih
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|int
+name|rid
 decl_stmt|;
 specifier|static
 name|int
@@ -2503,18 +2520,14 @@ block|{
 case|case
 name|PCIC_I82365
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
-literal|"i82365"
+literal|"Intel i82365"
 expr_stmt|;
 break|break;
 case|case
 name|PCIC_IBM
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"IBM PCIC"
@@ -2523,8 +2536,6 @@ break|break;
 case|case
 name|PCIC_IBM_KING
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"IBM KING PCMCIA Controller"
@@ -2533,8 +2544,6 @@ break|break;
 case|case
 name|PCIC_PD672X
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Cirrus Logic PD672X"
@@ -2543,8 +2552,6 @@ break|break;
 case|case
 name|PCIC_PD6710
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Cirrus Logic PD6710"
@@ -2553,8 +2560,6 @@ break|break;
 case|case
 name|PCIC_VG365
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Vadem 365"
@@ -2563,8 +2568,6 @@ break|break;
 case|case
 name|PCIC_VG465
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Vadem 465"
@@ -2573,8 +2576,6 @@ break|break;
 case|case
 name|PCIC_VG468
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Vadem 468"
@@ -2583,8 +2584,6 @@ break|break;
 case|case
 name|PCIC_VG469
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Vadem 469"
@@ -2593,8 +2592,6 @@ break|break;
 case|case
 name|PCIC_RF5C396
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Ricoh RF5C396"
@@ -2603,16 +2600,12 @@ break|break;
 case|case
 name|PCIC_VLSI
 case|:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"VLSI 82C146"
 expr_stmt|;
 break|break;
 default|default:
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"Unknown!"
@@ -2623,8 +2616,6 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-name|cinfo
-operator|.
 name|name
 argument_list|)
 expr_stmt|;
@@ -2673,89 +2664,108 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pcic_imask
-operator|=
-name|soft_imask
-expr_stmt|;
 comment|/* See if the user has requested a specific IRQ */
 if|if
 condition|(
+operator|!
 name|getenv_int
 argument_list|(
 literal|"machdep.pccard.pcic_irq"
 argument_list|,
 operator|&
-name|desired_irq
+name|pcic_irq
 argument_list|)
 condition|)
-block|{
-comment|/* legal IRQ? */
-if|if
-condition|(
-name|desired_irq
-operator|>=
-literal|1
-operator|&&
-name|desired_irq
-operator|<=
-name|ICU_LEN
-operator|&&
-operator|(
-literal|1ul
-operator|<<
-name|desired_irq
-operator|)
-operator|&
-name|free_irqs
-condition|)
-name|free_irqs
-operator|=
-literal|1ul
-operator|<<
-name|desired_irq
-expr_stmt|;
-else|else
-comment|/* illegal, disable use of IRQ */
-name|free_irqs
+name|pcic_irq
 operator|=
 literal|0
 expr_stmt|;
-block|}
-name|pcic_irq
+name|rid
 operator|=
-name|pccard_alloc_intr
+literal|0
+expr_stmt|;
+name|res
+operator|=
+name|bus_alloc_resource
 argument_list|(
-name|free_irqs
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+operator|&
+name|rid
+argument_list|,
+name|pcic_irq
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+condition|)
+block|{
+name|error
+operator|=
+name|bus_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|res
+argument_list|,
+name|INTR_TYPE_MISC
 argument_list|,
 name|pcicintr
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
-name|pcic_imask
-argument_list|,
-name|NULL
+name|ih
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pcic_irq
-operator|<
-literal|0
+name|error
 condition|)
-name|printf
+block|{
+name|bus_release_resource
 argument_list|(
-literal|"pcic: failed to allocate IRQ\n"
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+name|rid
+argument_list|,
+name|res
 argument_list|)
 expr_stmt|;
+return|return
+name|error
+return|;
+block|}
+name|pcic_irq
+operator|=
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"pcic: controller irq %d\n"
+literal|"pcic: polling, can't alloc %d\n"
 argument_list|,
 name|pcic_irq
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * Modem cards send the speaker audio (dialing noises) 		 * to the host's speaker.  Cirrus Logic PCIC chips must 		 * enable this.  There is also a Low Power Dynamic Mode bit 		 * that claims to reduce power consumption by 30%, so 		 * enable it and hope for the best. 		 */
 if|if
@@ -2914,11 +2924,16 @@ name|revision
 operator|=
 literal|0
 expr_stmt|;
-name|cinfo
-operator|.
 name|name
 operator|=
 literal|"PC98 Original"
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|name
+argument_list|)
 expr_stmt|;
 name|cinfo
 operator|.
@@ -4350,8 +4365,9 @@ specifier|static
 name|void
 name|pcicintr
 parameter_list|(
-name|int
-name|unit
+name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|int
