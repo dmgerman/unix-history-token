@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.14 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +91,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/inode.h>
 end_include
 
 begin_include
