@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	1.1 (Berkeley) %G%"
+literal|"@(#)slave.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,20 +42,6 @@ include|#
 directive|include
 file|<setjmp.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|OFF
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ON
-value|1
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -149,7 +135,7 @@ decl_stmt|;
 name|char
 name|candidate
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|struct
@@ -168,6 +154,8 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 name|saveaddr
+decl_stmt|,
+name|msaveaddr
 decl_stmt|;
 specifier|extern
 name|jmp_buf
@@ -180,10 +168,6 @@ decl_stmt|;
 name|struct
 name|timeval
 name|time
-decl_stmt|;
-name|struct
-name|timezone
-name|tzone
 decl_stmt|;
 name|struct
 name|tsp
@@ -215,11 +199,15 @@ name|int
 name|bytenetorder
 parameter_list|()
 function_decl|;
+name|char
+modifier|*
+name|olddate
+decl_stmt|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"timed: THIS MACHINE IS A SLAVE\n"
+literal|"THIS MACHINE IS A SLAVE"
 argument_list|)
 expr_stmt|;
 if|if
@@ -438,42 +426,17 @@ name|msg
 operator|->
 name|tsp_seq
 condition|)
-goto|goto
-name|endsettime
-goto|;
+break|break;
 name|seq
 operator|=
 name|msg
 operator|->
 name|tsp_seq
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|gettimeofday
-argument_list|(
-operator|&
-name|time
-argument_list|,
-operator|&
-name|tzone
-argument_list|)
-expr_stmt|;
-name|time
-operator|.
-name|tv_sec
+name|olddate
 operator|=
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
-expr_stmt|;
-name|time
-operator|.
-name|tv_usec
-operator|=
-literal|500000
+name|date
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -481,20 +444,29 @@ operator|)
 name|settimeofday
 argument_list|(
 operator|&
-name|time
+name|msg
+operator|->
+name|tsp_time
 argument_list|,
-operator|&
-name|tzone
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"timed: date changed to: %s\n"
+literal|"date changed by %s from: %s"
 argument_list|,
-name|date
-argument_list|()
+name|msg
+operator|->
+name|tsp_name
+argument_list|,
+name|olddate
 argument_list|)
 expr_stmt|;
 name|electiontime
@@ -580,7 +552,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -590,8 +562,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|endsettime
-label|:
 break|break;
 case|case
 name|TSP_MASTERUP
@@ -669,7 +639,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -720,6 +690,10 @@ operator|.
 name|tv_sec
 operator|+
 name|delay2
+expr_stmt|;
+name|refusetime
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -863,7 +837,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -951,11 +925,8 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|fclose
 argument_list|(
-operator|(
-name|int
-operator|)
 name|fd
 argument_list|)
 expr_stmt|;
@@ -1081,7 +1052,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: problem in election\n"
+literal|"problem in election\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1089,7 +1060,7 @@ break|break;
 case|case
 name|TSP_MSITE
 case|:
-name|saveaddr
+name|msaveaddr
 operator|=
 name|from
 expr_stmt|;
@@ -1179,7 +1150,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|saveaddr
+name|msaveaddr
 argument_list|,
 name|length
 argument_list|)
@@ -1191,7 +1162,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1269,75 +1240,49 @@ begin_block
 block|{
 name|struct
 name|timeval
-name|time
-decl_stmt|,
 name|timeout
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|gettimeofday
-argument_list|(
-operator|&
-name|time
-argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
+name|timeout
+operator|.
+name|tv_sec
+operator|=
 literal|0
-argument_list|)
-expr_stmt|;
-name|timeout
-operator|.
-name|tv_sec
-operator|=
-name|time
-operator|.
-name|tv_sec
 expr_stmt|;
 name|timeout
 operator|.
 name|tv_usec
 operator|=
-name|time
-operator|.
-name|tv_usec
-operator|+
 name|delay1
 expr_stmt|;
-while|while
-condition|(
-name|timercmp
-argument_list|(
-operator|&
-name|time
-argument_list|,
-operator|&
-name|timeout
-argument_list|,
-operator|<
-argument_list|)
-condition|)
-block|{
 operator|(
 name|void
 operator|)
-name|gettimeofday
+name|select
 argument_list|(
-operator|&
-name|time
+literal|0
 argument_list|,
 operator|(
-expr|struct
-name|timezone
+name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
+argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|timeout
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 end_block
