@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.22 (Berkeley) %G%"
+literal|"@(#)lcmd2.c	3.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,7 +163,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%d\t%d\t%d\t%d\t%d\t%d/%d\n"
+literal|"%d\t%d\t%d\t%d\t%d\t%d/%d (%.1f/%.1f)\n"
 argument_list|,
 name|wwntokdef
 argument_list|,
@@ -220,6 +220,38 @@ name|wwnwrc
 argument_list|)
 else|:
 name|wwbaud
+argument_list|,
+name|wwntokc
+operator|-
+name|wwntoksave
+condition|?
+operator|(
+name|float
+operator|)
+name|wwntokc
+operator|/
+operator|(
+name|wwntokc
+operator|-
+name|wwntoksave
+operator|)
+else|:
+literal|1.0
+argument_list|,
+name|wwnwrc
+condition|?
+call|(
+name|float
+call|)
+argument_list|(
+name|wwnwrc
+operator|+
+name|wwntoksave
+argument_list|)
+operator|/
+name|wwnwrc
+else|:
+literal|1.0
 argument_list|)
 expr_stmt|;
 name|wwprintf
