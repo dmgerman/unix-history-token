@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.62 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5364,6 +5364,8 @@ argument_list|,
 name|e
 operator|->
 name|e_from
+operator|.
+name|q_paddr
 argument_list|,
 name|e
 operator|->
