@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dr.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dr.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1459,6 +1459,10 @@ argument_list|)
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|u_short
 name|status
@@ -2214,9 +2218,21 @@ comment|/* Perform loopback test */
 comment|/* 		 * NB: MUST HAVE LOOPBACK CABLE ATTACHED -- 		 * Test results are printed on system console 		 */
 if|if
 condition|(
+name|error
+operator|=
 name|suser
-argument_list|()
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_acflag
+argument_list|)
 condition|)
+break|break;
 name|dr11loop
 argument_list|(
 name|rsaddr
@@ -2257,7 +2273,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
