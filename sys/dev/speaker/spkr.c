@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  * $FreeBSD$  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  * modified for PC98 by Kakefuda  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -63,11 +63,33 @@ directive|include
 file|<isa/isavar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -189,8 +211,79 @@ comment|/**************** MACHINE DEPENDENT PART STARTS HERE *******************
 end_comment
 
 begin_comment
-comment|/*  * PPI control values.  * XXX should be in a header and used in clock.c.  */
+comment|/*  * XXX PPI control values should be in a header and used in clock.c.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PPI_SPKR
+value|0x08
+end_define
+
+begin_comment
+comment|/* turn these PPI bits on to pass sound */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIT_COUNT
+value|0x3fdb
+end_define
+
+begin_comment
+comment|/* PIT count address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEAKER_ON
+value|outb(IO_PPI, inb(IO_PPI)& ~PPI_SPKR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPEAKER_OFF
+value|outb(IO_PPI, inb(IO_PPI) | PPI_SPKR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMER_ACQUIRE
+value|acquire_timer1(TIMER_SEL1 | TIMER_SQWAVE | TIMER_16BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMER_RELEASE
+value|release_timer1()
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPEAKER_WRITE
+parameter_list|(
+name|val
+parameter_list|)
+value|{ \ 					outb(PIT_COUNT, (val& 0xff)); \ 					outb(PIT_COUNT, (val>> 8)); \ 				}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -202,6 +295,49 @@ end_define
 begin_comment
 comment|/* turn these PPI bits on to pass sound */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEAKER_ON
+value|outb(IO_PPI, inb(IO_PPI) | PPI_SPKR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPEAKER_OFF
+value|outb(IO_PPI, inb(IO_PPI)& ~PPI_SPKR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMER_ACQUIRE
+value|acquire_timer2(TIMER_SEL2 | TIMER_SQWAVE | TIMER_16BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMER_RELEASE
+value|release_timer2()
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPEAKER_WRITE
+parameter_list|(
+name|val
+parameter_list|)
+value|{ \ 					outb(TIMER_CNTR2, (val& 0xff)); \     					outb(TIMER_CNTR2, (val>> 8)); \ 				}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -365,14 +501,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|acquire_timer2
-argument_list|(
-name|TIMER_SEL2
-operator||
-name|TIMER_SQWAVE
-operator||
-name|TIMER_16BIT
-argument_list|)
+name|TIMER_ACQUIRE
 condition|)
 block|{
 comment|/* enter list of waiting procs ??? */
@@ -391,45 +520,16 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|outb
+name|SPEAKER_WRITE
 argument_list|(
-name|TIMER_CNTR2
-argument_list|,
-operator|(
 name|divisor
-operator|&
-literal|0xff
-operator|)
 argument_list|)
 expr_stmt|;
-comment|/* send lo byte */
-name|outb
-argument_list|(
-name|TIMER_CNTR2
-argument_list|,
-operator|(
-name|divisor
-operator|>>
-literal|8
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* send hi byte */
 name|enable_intr
 argument_list|()
 expr_stmt|;
 comment|/* turn the speaker on */
-name|outb
-argument_list|(
-name|IO_PPI
-argument_list|,
-name|inb
-argument_list|(
-name|IO_PPI
-argument_list|)
-operator||
-name|PPI_SPKR
-argument_list|)
+name|SPEAKER_ON
 expr_stmt|;
 comment|/*      * Set timeout to endtone function, then give up the timeslice.      * This is so other processes can execute while the tone is being      * emitted.      */
 if|if
@@ -455,26 +555,14 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-name|outb
-argument_list|(
-name|IO_PPI
-argument_list|,
-name|inb
-argument_list|(
-name|IO_PPI
-argument_list|)
-operator|&
-operator|~
-name|PPI_SPKR
-argument_list|)
+name|SPEAKER_OFF
 expr_stmt|;
 name|sps
 operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
-name|release_timer2
-argument_list|()
+name|TIMER_RELEASE
 expr_stmt|;
 name|splx
 argument_list|(
@@ -2695,17 +2783,22 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|isa_pnp_id
-name|atspeaker_ids
+name|speaker_ids
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 literal|0x0008d041
 comment|/* PNP0800 */
 block|,
-literal|"AT speaker"
+literal|"PC speaker"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|}
@@ -2716,14 +2809,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|dev_t
-name|atspeaker_dev
+name|speaker_dev
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 specifier|static
 name|int
-name|atspeaker_probe
+name|speaker_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -2743,7 +2836,7 @@ argument_list|)
 argument_list|,
 name|dev
 argument_list|,
-name|atspeaker_ids
+name|speaker_ids
 argument_list|)
 expr_stmt|;
 comment|/* PnP match */
@@ -2780,7 +2873,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"atspeaker"
+literal|"speaker"
 argument_list|,
 literal|9
 argument_list|)
@@ -2794,7 +2887,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AT speaker"
+literal|"PC speaker"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2808,7 +2901,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|atspeaker_attach
+name|speaker_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -2816,7 +2909,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|atspeaker_dev
+name|speaker_dev
 condition|)
 block|{
 name|device_printf
@@ -2832,7 +2925,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|atspeaker_dev
+name|speaker_dev
 operator|=
 name|make_dev
 argument_list|(
@@ -2861,7 +2954,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|atspeaker_detach
+name|speaker_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -2869,7 +2962,7 @@ parameter_list|)
 block|{
 name|destroy_dev
 argument_list|(
-name|atspeaker_dev
+name|speaker_dev
 argument_list|)
 expr_stmt|;
 return|return
@@ -2883,7 +2976,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|atspeaker_methods
+name|speaker_methods
 index|[]
 init|=
 block|{
@@ -2892,21 +2985,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|atspeaker_probe
+name|speaker_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|atspeaker_attach
+name|speaker_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|atspeaker_detach
+name|speaker_detach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -2942,12 +3035,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|atspeaker_driver
+name|speaker_driver
 init|=
 block|{
-literal|"atspeaker"
+literal|"speaker"
 block|,
-name|atspeaker_methods
+name|speaker_methods
 block|,
 literal|1
 block|,
@@ -2959,20 +3052,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|atspeaker_devclass
+name|speaker_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|atspeaker
+name|speaker
 argument_list|,
 name|isa
 argument_list|,
-name|atspeaker_driver
+name|speaker_driver
 argument_list|,
-name|atspeaker_devclass
+name|speaker_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -2981,16 +3074,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|atspeaker
+name|speaker
 argument_list|,
 name|acpi
 argument_list|,
-name|atspeaker_driver
+name|speaker_driver
 argument_list|,
-name|atspeaker_devclass
+name|speaker_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -2998,6 +3097,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* spkr.c ends here */
