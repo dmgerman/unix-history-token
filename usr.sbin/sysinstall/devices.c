@@ -458,6 +458,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"axe"
+block|,
+literal|"ASIX Electronics USB ethernet adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"bge"
 block|,
 literal|"Broadcom BCM570x PCI gigabit ethernet card"
