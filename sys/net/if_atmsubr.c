@@ -253,7 +253,6 @@ decl_stmt|,
 modifier|*
 name|ad
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -261,7 +260,6 @@ name|m
 init|=
 name|m0
 decl_stmt|;
-specifier|register
 name|struct
 name|rtentry
 modifier|*
