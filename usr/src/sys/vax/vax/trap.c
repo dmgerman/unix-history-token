@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	3.5	%G%	*/
+comment|/*	trap.c	3.6	%G%	*/
 end_comment
 
 begin_include
@@ -195,12 +195,6 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ERNIE
-asm|asm("halt");
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"trap"
