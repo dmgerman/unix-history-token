@@ -1194,6 +1194,12 @@ comment|/* next descriptor to check */
 name|u_int16_t
 name|_pad
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|rpending
+decl_stmt|;
+comment|/* pending partial packet */
 comment|/*  	 * Transmit Management 	 * We have software and shared memory rings in a buddy store format. 	 */
 name|txpkt_t
 modifier|*
@@ -1273,6 +1279,36 @@ begin_comment
 comment|/* number of receive descriptors */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PADDED_CELL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RXINCR
+value|2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RXINCR
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1280,7 +1316,7 @@ name|R_NXT_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x + 1)& (WX_MAX_RDESC - 1))
+value|((x + RXINCR)& (WX_MAX_RDESC - 1))
 end_define
 
 begin_define
@@ -1290,7 +1326,7 @@ name|R_PREV_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x - 1)& (WX_MAX_RDESC - 1))
+value|((x - RXINCR)& (WX_MAX_RDESC - 1))
 end_define
 
 end_unit
