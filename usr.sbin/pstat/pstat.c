@@ -1015,7 +1015,7 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"k"
+literal|"kM:N:"
 expr_stmt|;
 name|usage
 operator|=
