@@ -413,7 +413,7 @@ comment|/* maximum number of user names */
 end_comment
 
 begin_comment
-comment|/*  * Unix sockets.  * We have two default sockets, one with 666 permissions,  * and one for priveleged programs  */
+comment|/*  * Unix sockets.  * We have two default sockets, one with 666 permissions,  * and one for privileged programs.  */
 end_comment
 
 begin_struct
