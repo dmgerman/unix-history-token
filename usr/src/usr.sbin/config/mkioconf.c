@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.8 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,6 +642,7 @@ name|mp
 operator|==
 name|TO_NEXUS
 operator|||
+operator|(
 operator|!
 name|eq
 argument_list|(
@@ -651,6 +652,17 @@ name|d_name
 argument_list|,
 literal|"uba"
 argument_list|)
+operator|&&
+operator|!
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
+literal|"bi"
+argument_list|)
+operator|)
 condition|)
 continue|continue;
 name|fprintf
