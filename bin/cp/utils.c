@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -299,7 +305,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -1548,7 +1554,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
