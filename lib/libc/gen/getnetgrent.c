@@ -987,6 +987,15 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+name|nextgrp
+operator|=
+operator|(
+expr|struct
+name|netgrp
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|YP
