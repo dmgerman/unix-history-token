@@ -7502,24 +7502,11 @@ break|break;
 case|case
 name|VCHR
 case|:
-if|if
-condition|(
-name|newvp
-operator|->
-name|v_rdev
-operator|->
-name|si_mountpoint
-operator|!=
-name|NULL
-condition|)
-block|{
 name|delay
 operator|=
 name|metadelay
 expr_stmt|;
 break|break;
-block|}
-comment|/* FALLTHROUGH */
 default|default:
 name|delay
 operator|=
