@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* -*- mode: c; tab-width: 3; c-basic-offset: 3; -*-     Alias_local.h contains the function prototypes for alias.c,     alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well     as any future add-ons).  It also includes macros, globals and     struct definitions shared by more than one alias*.c file.      This include file is intended to be used only within the aliasing     software.  Outside world interfaces are defined in alias.h      This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)<updated several times by original author and Eivind Eiklund> */
+comment|/* -*- mode: c; tab-width: 3; c-basic-offset: 3; -*-     Alias_local.h contains the function prototypes for alias.c,     alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well     as any future add-ons).  It also includes macros, globals and     struct definitions shared by more than one alias*.c file.      This include file is intended to be used only within the aliasing     software.  Outside world interfaces are defined in alias.h      This software is placed into the public domain with no restrictions     on its distribution.      Initial version:  August, 1996  (cjm)<updated several times by original author and Eivind Eklund>      $FreeBSD$ */
 end_comment
 
 begin_ifndef

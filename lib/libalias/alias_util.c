@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     Alias_util.h contains general utilities used by other functions     in the packet aliasing module.  At the moment, there are functions     for computing IP header and TCP packet checksums.      The checksum routines are based upon example code in a Unix networking     text written by Stevens (sorry, I can't remember the title -- but     at least this is a good author).      Initial Version:  August, 1996  (cjm)      Version 1.7:  January 9, 1997          Added differential checksum update function. */
+comment|/*     Alias_util.h contains general utilities used by other functions     in the packet aliasing module.  At the moment, there are functions     for computing IP header and TCP packet checksums.      The checksum routines are based upon example code in a Unix networking     text written by Stevens (sorry, I can't remember the title -- but     at least this is a good author).      Initial Version:  August, 1996  (cjm)      Version 1.7:  January 9, 1997          Added differential checksum update function.      $FreeBSD$ */
 end_comment
 
 begin_comment
