@@ -490,7 +490,7 @@ literal|"X Window System window managers."
 block|,
 literal|"zope"
 block|,
-literal|"Software related to the Zope language."
+literal|"Software related to the Zope platform."
 block|,
 name|NULL
 block|,
