@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_pn.c,v 1.49 1999/04/13 16:57:36 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_pn.c,v 1.50 1999/04/14 18:52:02 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -203,7 +203,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_pn.c,v 1.49 1999/04/13 16:57:36 wpaul Exp $"
+literal|"$Id: if_pn.c,v 1.50 1999/04/14 18:52:02 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -930,7 +930,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg) | x)
+value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg) | (x))
 end_define
 
 begin_define
@@ -945,7 +945,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg)& ~x)
+value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg)& ~(x))
 end_define
 
 begin_comment
@@ -3099,11 +3099,6 @@ name|int
 name|media
 decl_stmt|;
 block|{
-name|u_int32_t
-name|nway
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -3183,10 +3178,6 @@ argument_list|(
 literal|"100Mbps/T4, half-duplex\n"
 argument_list|)
 expr_stmt|;
-name|nway
-operator|=
-name|PN_NWAY_MODE_100T4
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3203,10 +3194,6 @@ argument_list|(
 literal|"100Mbps, "
 argument_list|)
 expr_stmt|;
-name|nway
-operator|=
-name|PN_NWAY_MODE_100HD
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3222,10 +3209,6 @@ name|printf
 argument_list|(
 literal|"10Mbps, "
 argument_list|)
-expr_stmt|;
-name|nway
-operator|=
-name|PN_NWAY_MODE_10HD
 expr_stmt|;
 block|}
 if|if
@@ -3244,10 +3227,6 @@ argument_list|(
 literal|"full duplex\n"
 argument_list|)
 expr_stmt|;
-name|nway
-operator||=
-name|PN_NWAY_DUPLEX
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3262,15 +3241,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|media
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|PN_NWAY
-argument_list|,
-name|nway
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4112,6 +4082,7 @@ name|pn_pinfo
 operator|==
 name|NULL
 condition|)
+block|{
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -4125,6 +4096,29 @@ operator||
 name|PN_GEN_100TX_LOOP
 argument_list|)
 expr_stmt|;
+name|PN_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NETCFG
+argument_list|,
+name|PN_NETCFG_PCS
+operator||
+name|PN_NETCFG_SCRAMBLER
+operator||
+name|PN_NETCFG_MIIENB
+argument_list|)
+expr_stmt|;
+name|PN_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NWAY
+argument_list|,
+name|PN_NWAY_SPEEDSEL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -4145,6 +4139,7 @@ name|pn_pinfo
 operator|==
 name|NULL
 condition|)
+block|{
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -4156,6 +4151,29 @@ operator||
 name|PN_GEN_100TX_LOOP
 argument_list|)
 expr_stmt|;
+name|PN_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NETCFG
+argument_list|,
+name|PN_NETCFG_PCS
+operator||
+name|PN_NETCFG_SCRAMBLER
+operator||
+name|PN_NETCFG_MIIENB
+argument_list|)
+expr_stmt|;
+name|PN_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NWAY
+argument_list|,
+name|PN_NWAY_SPEEDSEL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4167,6 +4185,7 @@ operator|)
 operator|==
 name|IFM_FDX
 condition|)
+block|{
 name|PN_SETBIT
 argument_list|(
 name|sc
@@ -4176,7 +4195,26 @@ argument_list|,
 name|PN_NETCFG_FULLDUPLEX
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|pn_pinfo
+operator|==
+name|NULL
+condition|)
+name|PN_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NWAY
+argument_list|,
+name|PN_NWAY_DUPLEX
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|PN_CLRBIT
 argument_list|(
 name|sc
@@ -4186,6 +4224,24 @@ argument_list|,
 name|PN_NETCFG_FULLDUPLEX
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|pn_pinfo
+operator|==
+name|NULL
+condition|)
+name|PN_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NWAY
+argument_list|,
+name|PN_NWAY_DUPLEX
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|restart
@@ -9248,6 +9304,69 @@ name|ifm_active
 operator|=
 name|IFM_ETHER
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|pn_pinfo
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NETCFG
+argument_list|)
+operator|&
+name|PN_NETCFG_SPEEDSEL
+condition|)
+name|ifmr
+operator|->
+name|ifm_active
+operator|=
+name|IFM_ETHER
+operator||
+name|IFM_10_T
+expr_stmt|;
+else|else
+name|ifmr
+operator|->
+name|ifm_active
+operator|=
+name|IFM_ETHER
+operator||
+name|IFM_100_TX
+expr_stmt|;
+if|if
+condition|(
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|PN_NETCFG
+argument_list|)
+operator|&
+name|PN_NETCFG_FULLDUPLEX
+condition|)
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_FDX
+expr_stmt|;
+else|else
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_HDX
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
