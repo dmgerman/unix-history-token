@@ -59,6 +59,12 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|__inline
@@ -230,15 +236,11 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|caddr_t
-modifier|*
-parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|char
-modifier|*
+name|enum
+name|uio_seg
 parameter_list|,
 name|char
 modifier|*
@@ -252,16 +254,32 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|CHECKALTEXIST
+name|CHECKALT
 parameter_list|(
-name|p
+name|td
 parameter_list|,
-name|sgp
+name|upath
 parameter_list|,
-name|path
+name|pathp
+parameter_list|,
+name|i
 parameter_list|)
 define|\
-value|ibcs2_emul_find(td, sgp, ibcs2_emul_path, path,&(path), 0)
+value|do {								\ 		int _error;						\ 									\ 		_error = ibcs2_emul_find(td, upath, UIO_USERSPACE, pathp, i); \ 		if (*(pathp) == NULL)					\ 			return (_error);				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECKALTEXIST
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|,
+name|pathp
+parameter_list|)
+value|CHECKALT(td, upath, pathp, 0)
 end_define
 
 begin_define
@@ -269,14 +287,13 @@ define|#
 directive|define
 name|CHECKALTCREAT
 parameter_list|(
-name|p
+name|td
 parameter_list|,
-name|sgp
+name|upath
 parameter_list|,
-name|path
+name|pathp
 parameter_list|)
-define|\
-value|ibcs2_emul_find(td, sgp, ibcs2_emul_path, path,&(path), 1)
+value|CHECKALT(td, upath, pathp, 1)
 end_define
 
 begin_ifdef
@@ -293,10 +310,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|void
-modifier|*
-name|uap
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -252,10 +252,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|void
-modifier|*
-name|uap
 parameter_list|)
 block|{
 name|struct
