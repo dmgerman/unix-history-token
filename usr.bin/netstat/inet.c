@@ -998,6 +998,27 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_cachedrtt
+argument_list|,
+literal|"\t\t%d connection%s upcated cached RTT on close\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_cachedrttvar
+argument_list|,
+literal|"\t\t%d connection%s upcated cached RTT variance on close\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_cachedssthresh
+argument_list|,
+literal|"\t\t%d connection%s updated cached ssthresh on close\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_conndrops
 argument_list|,
 literal|"\t%d embryonic connection%s dropped\n"
