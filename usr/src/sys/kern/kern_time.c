@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_time.c	5.13	82/12/28	*/
+comment|/*	kern_time.c	5.14	82/12/30	*/
 end_comment
 
 begin_include
@@ -1680,6 +1680,16 @@ operator|==
 literal|0
 condition|)
 block|{
+name|timerclear
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_realtimer
+operator|.
+name|it_value
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
