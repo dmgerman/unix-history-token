@@ -101,12 +101,6 @@ directive|include
 file|<netncp/ncp_lib.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ncp_mod.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|int

@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|NCP_VERMIN
-value|3400
+value|3500
 end_define
 
 begin_define
