@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -458,6 +458,20 @@ condition|(
 name|ap
 operator|->
 name|a_waitfor
+operator|&&
+operator|(
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ASYNC
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
