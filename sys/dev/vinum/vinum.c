@@ -143,12 +143,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACTUALLY_LKM_NOT_KERNEL
-end_ifndef
-
 begin_function_decl
 name|STATIC
 name|int
@@ -166,11 +160,6 @@ name|unused
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct

@@ -121,11 +121,6 @@ name|defined
 argument_list|(
 name|KLD_MODULE
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ACTUALLY_LKM_NOT_KERNEL
-argument_list|)
 end_if
 
 begin_comment
