@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running FreeBSD with either a.out or ELF format    Copyright (C) 1996-2000 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Added support for generating "old a.out gas" on the fly by Peter Wemm.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running FreeBSD with either a.out or ELF format    Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Added support for generating "old a.out gas" on the fly by Peter Wemm.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ value|"%|"
 end_define
 
 begin_comment
-comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     I took out %{v:%{!V:-V}}. It is too much :-(. They can use    -Wl,-V.     When the -shared link option is used a final link is not being    done.  */
+comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     When the -shared link option is used a final link is not being    done.  */
 end_comment
 
 begin_undef
@@ -74,8 +74,12 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\  %{p:%e`-p' not supported; use `-pg' and gprof(1)} \   %{maout: %{shared:-Bshareable} \     %{!shared:%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} \       %{pg:-Bstatic} %{Z}} \     %{assert*} %{R*}} \   %{!maout: \     %{Wl,*:%*} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{symbolic:-Bsymbolic} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker: -dynamic-linker /usr/libexec/ld-elf.so.1}} \       %{static:-Bstatic}}}"
+value|"\  %{p:%e`-p' not supported; use `-pg' and gprof(1)} \   %{maout: %{shared:-Bshareable} \     %{!shared:%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} \       %{pg:-Bstatic} %{Z}} \     %{assert*} %{R*}} \   %{!maout: \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker: -dynamic-linker /usr/libexec/ld-elf.so.1}} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}}"
 end_define
+
+begin_comment
+comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add the magical    crtbegin.o file (see crtstuff.c) which provides part of the support for    getting C++ file-scope static object constructed before entering `main'.  */
+end_comment
 
 begin_undef
 undef|#
@@ -87,11 +91,11 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"\   %{maout: %{shared:c++rt0.o%s} \     %{!shared: \       %{pg:gcrt0.o%s}%{!pg: \ 	%{static:scrt0.o%s} \ 	%{!static:crt0.o%s}}}} \   %{!maout: \     %{!shared: \       %{pg:gcrt1.o%s} \       %{!pg: \ 	%{p:gcrt1.o%s} \ 	%{!p:crt1.o%s}}} \     crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"\   %{maout: %{shared:c++rt0.o%s} \     %{!shared: \       %{pg:gcrt0.o%s}%{!pg: \ 	%{static:scrt0.o%s} \ 	%{!static:crt0.o%s}}}} \   %{!maout: \     %{!shared: \       %{pg:gcrt1.o%s} \       %{!pg: \ 	%{p:gcrt1.o%s} \ 	%{!p:crt1.o%s}}} \     crti.o%s \     %{!shared:crtbegin.o%s} \     %{shared:crtbeginS.o%s}}"
 end_define
 
 begin_comment
-comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/i386.  Here we tack on our    own magical crtend.o file (compare w/crtstuff.c) which provides part of the    support for getting C++ file-scope static object constructed before    entering `main', followed by the normal "finalizer" file, `crtn.o'.  */
+comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/i386.  Here we tack on our    own magical crtend.o file (see crtstuff.c) which provides part of the    support for getting C++ file-scope static object constructed before    entering `main', followed by the normal "finalizer" file, `crtn.o'.  */
 end_comment
 
 begin_undef
@@ -112,7 +116,7 @@ comment|/************************[  Target stuff  ]*****************************
 end_comment
 
 begin_comment
-comment|/* Define the actual types of some ANSI-mandated types.      Needs to agree with<machine/ansi.h>.  GCC defaults come from c-decl.c,    c-common.c, and config/<arch>/<arch>.h.  */
+comment|/* Define the actual types of some ANSI-mandated types.    Needs to agree with<machine/ansi.h>.  GCC defaults come from c-decl.c,    c-common.c, and config/<arch>/<arch>.h.  */
 end_comment
 
 begin_undef
@@ -139,6 +143,19 @@ define|#
 directive|define
 name|PTRDIFF_TYPE
 value|"int"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_TYPE_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_TYPE_SIZE
+value|BITS_PER_WORD
 end_define
 
 begin_comment
@@ -272,20 +289,20 @@ value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
 end_define
 
 begin_comment
-comment|/* Prefix for internally generated assembler labels.  If we aren't using     underscores, we are using prefix `.'s to identify labels that should      be ignored, as in `i386/gas.h' --karl@cs.umb.edu  */
+comment|/* Don't default to pcc-struct-return, we want to retain compatibility with    older gcc versions AND pcc-struct-return is nonreentrant.    (even though the SVR4 ABI for the i386 says that records and unions are    returned in memory).  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|LPREFIX
+name|DEFAULT_PCC_STRUCT_RETURN
 end_undef
 
 begin_define
 define|#
 directive|define
-name|LPREFIX
-value|((TARGET_UNDERSCORES) ? "L" : ".L")
+name|DEFAULT_PCC_STRUCT_RETURN
+value|0
 end_define
 
 begin_comment
@@ -306,54 +323,20 @@ value|TARGET_ELF
 end_define
 
 begin_comment
-comment|/* Enable alias attribute support.  */
+comment|/* Prefix for internally generated assembler labels.  If we aren't using    underscores, we are using prefix `.'s to identify labels that should    be ignored, as in `i386/gas.h' --karl@cs.umb.edu  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|SET_ASM_OP
+name|LPREFIX
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SET_ASM_OP
-value|".set"
-end_define
-
-begin_comment
-comment|/* The a.out tools do not support "Lscope" .stabs symbols. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NO_DBX_FUNCTION_END
-end_undef
-
-begin_define
-define|#
-directive|define
-name|NO_DBX_FUNCTION_END
-value|TARGET_AOUT
-end_define
-
-begin_comment
-comment|/* In ELF, the function stabs come first, before the relative offsets.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DBX_FUNCTION_FIRST
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DBX_CHECK_FUNCTION_FIRST
-value|TARGET_ELF
+name|LPREFIX
+value|((TARGET_UNDERSCORES) ? "L" : ".L")
 end_define
 
 begin_comment
@@ -536,6 +519,23 @@ value|"#NO_APP\n"
 end_define
 
 begin_comment
+comment|/* Enable alias attribute support.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
+end_define
+
+begin_comment
 comment|/* This is how to begin an assembly language file.    The .file command should always begin the output.    ELF also needs a .version.  */
 end_comment
 
@@ -557,7 +557,7 @@ value|do {									\     output_file_directive ((FILE), main_input_filename);		\
 end_define
 
 begin_comment
-comment|/* This is how to store into the string BUF    the symbol_ref name of an internal numbered label where          PREFIX is the class of label and NUM is the number within the class.      This is suitable for output with `assemble_name'.  */
+comment|/* This is how to store into the string BUF    the symbol_ref name of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.    This is suitable for output with `assemble_name'.  */
 end_comment
 
 begin_undef
@@ -872,7 +872,7 @@ value|do {									\       register unsigned char *_limited_str = (unsigned char
 end_define
 
 begin_comment
-comment|/* Switch into a generic section.      We make the section read-only and executable for a function decl,    read-only for a const data decl, and writable for a non-const data decl.      If the section has already been defined, we must not    emit the attributes here. The SVR4 assembler does not    recognize section redefinitions.    If DECL is NULL, no attributes are emitted.  */
+comment|/* Switch into a generic section.     We make the section read-only and executable for a function decl,    read-only for a const data decl, and writable for a non-const data decl.     If the section has already been defined, we must not    emit the attributes here. The SVR4 assembler does not    recognize section redefinitions.    If DECL is NULL, no attributes are emitted.  */
 end_comment
 
 begin_undef
@@ -1047,6 +1047,40 @@ end_define
 begin_comment
 comment|/************************[  Debugger stuff  ]*********************************/
 end_comment
+
+begin_comment
+comment|/* The a.out tools do not support "Lscope" .stabs symbols. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_DBX_FUNCTION_END
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NO_DBX_FUNCTION_END
+value|TARGET_AOUT
+end_define
+
+begin_comment
+comment|/* In ELF, the function stabs come first, before the relative offsets.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DBX_FUNCTION_FIRST
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DBX_CHECK_FUNCTION_FIRST
+value|TARGET_ELF
+end_define
 
 begin_comment
 comment|/* Copy this from the svr4 specifications... */
