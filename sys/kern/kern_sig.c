@@ -3197,17 +3197,6 @@ operator|=
 name|SIG_DFL
 expr_stmt|;
 block|}
-comment|/* 	 * Clear out the td's sigmask.  Normal processes use the proc sigmask. 	 */
-name|SIGEMPTYSET
-argument_list|(
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-operator|->
-name|td_sigmask
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Reset stack state to the user stack. 	 * Clear set of signals caught on the signal stack. 	 */
 name|p
 operator|->
