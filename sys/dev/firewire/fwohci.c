@@ -3369,7 +3369,7 @@ expr_stmt|;
 comment|/* XXX wait for SCLK. */
 name|DELAY
 argument_list|(
-literal|10000
+literal|100000
 argument_list|)
 expr_stmt|;
 name|reg
