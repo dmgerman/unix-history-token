@@ -4430,18 +4430,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"base   addr = 0x%x\n"
+literal|"base   addr = 0x%lx\n"
 argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"hacked addr = 0x%x\n"
+literal|"hacked addr = 0x%lx\n"
 argument_list|,
 name|base
 operator||
 operator|(
+operator|(
+name|u_int64_t
+operator|)
 name|cfg
 operator|->
 name|hose
@@ -4472,6 +4475,9 @@ expr_stmt|;
 name|base
 operator||=
 operator|(
+operator|(
+name|u_int64_t
+operator|)
 name|cfg
 operator|->
 name|hose
