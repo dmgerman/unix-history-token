@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.60
+literal|3.61
 operator|%
 name|G
 operator|%
@@ -909,6 +909,16 @@ name|c
 operator|=
 name|NOCHAR
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|state
+operator|==
+name|QST
+condition|)
+block|{
+comment|/* do nothing, just avoid next clauses */
 block|}
 elseif|else
 if|if
