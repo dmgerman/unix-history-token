@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|POSTAGE
-value|"/arch/kurt/postage"
+value|"/usr/adm/maillog"
 end_define
 
 begin_comment
