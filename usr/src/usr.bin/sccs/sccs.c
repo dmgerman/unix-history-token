@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.44 %G%"
+literal|"@(#)sccs.c	1.45 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,11 +281,6 @@ decl_stmt|;
 comment|/* flags, see below */
 name|char
 modifier|*
-name|sccsklets
-decl_stmt|;
-comment|/* valid key-letters on macros */
-name|char
-modifier|*
 name|sccspath
 decl_stmt|;
 comment|/* pathname of binary implementing */
@@ -465,8 +460,6 @@ name|PROG
 block|,
 name|REALUSER
 block|,
-literal|""
-block|,
 name|PROGPATH
 argument_list|(
 name|admin
@@ -477,8 +470,6 @@ block|,
 name|PROG
 block|,
 literal|0
-block|,
-literal|""
 block|,
 name|PROGPATH
 argument_list|(
@@ -491,8 +482,6 @@ name|PROG
 block|,
 literal|0
 block|,
-literal|""
-block|,
 name|PROGPATH
 argument_list|(
 name|comb
@@ -503,8 +492,6 @@ block|,
 name|PROG
 block|,
 literal|0
-block|,
-literal|"mysrp"
 block|,
 name|PROGPATH
 argument_list|(
@@ -517,8 +504,6 @@ name|PROG
 block|,
 literal|0
 block|,
-literal|"ixbeskcl"
-block|,
 name|PROGPATH
 argument_list|(
 name|get
@@ -529,8 +514,6 @@ block|,
 name|PROG
 block|,
 name|NO_SDOT
-block|,
-literal|""
 block|,
 name|PROGPATH
 argument_list|(
@@ -543,8 +526,6 @@ name|PROG
 block|,
 literal|0
 block|,
-literal|""
-block|,
 name|PROGPATH
 argument_list|(
 name|prt
@@ -555,8 +536,6 @@ block|,
 name|PROG
 block|,
 name|REALUSER
-block|,
-literal|"r"
 block|,
 name|PROGPATH
 argument_list|(
@@ -569,8 +548,6 @@ name|PROG
 block|,
 name|NO_SDOT
 block|,
-literal|""
-block|,
 name|PROGPATH
 argument_list|(
 name|what
@@ -581,8 +558,6 @@ block|,
 name|SHELL
 block|,
 name|REALUSER
-block|,
-literal|""
 block|,
 name|PROGPATH
 argument_list|(
@@ -595,8 +570,6 @@ name|CMACRO
 block|,
 name|NO_SDOT
 block|,
-literal|"ixbscl"
-block|,
 literal|"get -e"
 block|,
 literal|"delget"
@@ -605,9 +578,7 @@ name|CMACRO
 block|,
 name|NO_SDOT
 block|,
-literal|""
-block|,
-literal|"delta/get -t"
+literal|"delta:mysrp/get:ixbeskecl -t"
 block|,
 literal|"deledit"
 block|,
@@ -615,17 +586,13 @@ name|CMACRO
 block|,
 name|NO_SDOT
 block|,
-literal|""
-block|,
-literal|"delta/get -e -t"
+literal|"delta:mysrp/get:ixbeskecl -e -t"
 block|,
 literal|"fix"
 block|,
 name|FIX
 block|,
 name|NO_SDOT
-block|,
-literal|""
 block|,
 name|NULL
 block|,
@@ -634,8 +601,6 @@ block|,
 name|CLEAN
 block|,
 name|REALUSER
-block|,
-literal|""
 block|,
 operator|(
 name|char
@@ -649,8 +614,6 @@ name|CLEAN
 block|,
 name|REALUSER
 block|,
-literal|""
-block|,
 operator|(
 name|char
 operator|*
@@ -662,8 +625,6 @@ block|,
 name|CLEAN
 block|,
 name|REALUSER
-block|,
-literal|""
 block|,
 operator|(
 name|char
@@ -677,8 +638,6 @@ name|CLEAN
 block|,
 name|REALUSER
 block|,
-literal|""
-block|,
 operator|(
 name|char
 operator|*
@@ -691,8 +650,6 @@ name|UNEDIT
 block|,
 name|NO_SDOT
 block|,
-literal|""
-block|,
 name|NULL
 block|,
 literal|"diffs"
@@ -703,8 +660,6 @@ name|NO_SDOT
 operator||
 name|REALUSER
 block|,
-literal|""
-block|,
 name|NULL
 block|,
 name|NULL
@@ -713,8 +668,6 @@ operator|-
 literal|1
 block|,
 literal|0
-block|,
-literal|""
 block|,
 name|NULL
 block|}
@@ -1057,8 +1010,6 @@ name|argv
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
-argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
@@ -1084,8 +1035,6 @@ argument|argv
 argument_list|,
 argument|forkflag
 argument_list|,
-argument|editflag
-argument_list|,
 argument|arg0
 argument_list|)
 end_macro
@@ -1101,12 +1050,6 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|forkflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|editflag
 decl_stmt|;
 end_decl_stmt
 
@@ -1192,6 +1135,10 @@ modifier|*
 name|makefile
 parameter_list|()
 function_decl|;
+name|char
+modifier|*
+name|editchs
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -1249,6 +1196,10 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|editchs
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -1268,6 +1219,11 @@ operator|*
 name|p
 operator|!=
 literal|'/'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|':'
 condition|;
 control|)
 block|{
@@ -1303,6 +1259,11 @@ operator|*
 name|p
 operator|!=
 literal|'/'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|':'
 condition|)
 operator|*
 name|q
@@ -1318,6 +1279,45 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|':'
+condition|)
+block|{
+name|editchs
+operator|=
+name|q
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|p
+operator|!=
+literal|'\0'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'/'
+condition|)
+operator|*
+name|q
+operator|++
+operator|=
+operator|*
+name|p
+expr_stmt|;
+operator|*
+name|q
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 block|}
 operator|*
 name|np
@@ -1404,20 +1404,13 @@ index|]
 operator|==
 literal|'\0'
 operator|||
-operator|!
-name|editflag
-operator|||
-name|cmd
-operator|->
-name|sccsklets
+name|editchs
 operator|==
 name|NULL
 operator|||
 name|index
 argument_list|(
-name|cmd
-operator|->
-name|sccsklets
+name|editchs
 argument_list|,
 name|p
 index|[
@@ -1593,8 +1586,6 @@ name|p
 operator|!=
 literal|'\0'
 argument_list|,
-name|TRUE
-argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
@@ -1652,8 +1643,6 @@ index|]
 argument_list|,
 name|TRUE
 argument_list|,
-name|TRUE
-argument_list|,
 literal|"get -k"
 argument_list|)
 expr_stmt|;
@@ -1676,9 +1665,7 @@ index|]
 argument_list|,
 name|TRUE
 argument_list|,
-name|TRUE
-argument_list|,
-literal|"rmdel"
+literal|"rmdel:r"
 argument_list|)
 expr_stmt|;
 comment|/* and edit the old version (but don't clobber new vers) */
@@ -1699,8 +1686,6 @@ literal|2
 index|]
 argument_list|,
 name|FALSE
-argument_list|,
-name|TRUE
 argument_list|,
 literal|"get -e -g"
 argument_list|)
@@ -1783,8 +1768,6 @@ name|ap
 index|[
 literal|1
 index|]
-argument_list|,
-name|FALSE
 argument_list|,
 name|FALSE
 argument_list|,
@@ -3803,8 +3786,6 @@ literal|1
 index|]
 argument_list|,
 name|TRUE
-argument_list|,
-name|FALSE
 argument_list|,
 literal|"get -s -k -p"
 argument_list|)
