@@ -319,7 +319,9 @@ name|p
 operator|=
 name|proc
 operator|.
-name|p_next
+name|p_list
+operator|.
+name|le_next
 control|)
 block|{
 if|if
