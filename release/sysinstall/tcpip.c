@@ -1761,6 +1761,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|status
+decl_stmt|;
 name|menu
 operator|=
 name|deviceCreateMenu
@@ -1799,6 +1802,16 @@ argument_list|(
 name|menu
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|status
+condition|)
+name|rval
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 name|rval
 operator|=
 name|NetDev
