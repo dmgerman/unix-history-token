@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)quit.c	1.3 %G%"
+literal|"@(#)quit.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,8 @@ decl_stmt|,
 name|modify
 decl_stmt|,
 name|autohold
+decl_stmt|,
+name|anystat
 decl_stmt|;
 name|FILE
 modifier|*
@@ -285,6 +287,11 @@ name|tempResid
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Adjust the message flags in each message. 	 */
+name|anystat
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|mp
@@ -307,6 +314,40 @@ name|mp
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flag
+operator|&
+name|MNEW
+condition|)
+block|{
+name|mp
+operator|->
+name|m_flag
+operator|&=
+operator|~
+name|MNEW
+expr_stmt|;
+name|mp
+operator|->
+name|m_flag
+operator||=
+name|MSTATUS
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flag
+operator|&
+name|MSTATUS
+condition|)
+name|anystat
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -473,6 +514,9 @@ name|msgCount
 operator|&&
 operator|!
 name|modify
+operator|&&
+operator|!
+name|anystat
 condition|)
 block|{
 if|if
