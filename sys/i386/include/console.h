@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@kmd-ac.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!kmd-ac!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	$Id$  */
+comment|/*  *  Copyright (C) 1992, 1993 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@kmd-ac.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!kmd-ac!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  */
 end_comment
 
 begin_ifndef
@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|KIOCSOUND
-value|_IO('k', 63)
+value|_IO('K', 63)
 end_define
 
 begin_define
@@ -393,14 +393,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|struct
-name|vt_mode
-name|vtmode_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -529,12 +521,20 @@ name|KB_84
 value|1
 end_define
 
+begin_comment
+comment|/* 'old' 84 key AT-keyboard	*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KB_101
 value|2
 end_define
+
+begin_comment
+comment|/* MF-101 or MF-102 keyboard	*/
+end_comment
 
 begin_define
 define|#
@@ -543,12 +543,20 @@ name|KB_OTHER
 value|3
 end_define
 
+begin_comment
+comment|/* keyboard not known 		*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CLKED
 value|1
 end_define
+
+begin_comment
+comment|/* Caps locked			*/
+end_comment
 
 begin_define
 define|#
@@ -557,12 +565,20 @@ name|NLKED
 value|2
 end_define
 
+begin_comment
+comment|/* Num locked			*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SLKED
 value|4
 end_define
+
+begin_comment
+comment|/* Scroll locked		*/
+end_comment
 
 begin_define
 define|#
@@ -571,12 +587,20 @@ name|ALKED
 value|8
 end_define
 
+begin_comment
+comment|/* AltGr locked			*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LED_CAP
 value|1
 end_define
+
+begin_comment
+comment|/* Caps lock LED 		*/
+end_comment
 
 begin_define
 define|#
@@ -585,12 +609,20 @@ name|LED_NUM
 value|2
 end_define
 
+begin_comment
+comment|/* Num lock LED 		*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LED_SCR
 value|4
 end_define
+
+begin_comment
+comment|/* Scroll lock LED 		*/
+end_comment
 
 begin_comment
 comment|/* possible flag values */
@@ -624,6 +656,10 @@ name|NUM_KEYS
 value|256
 end_define
 
+begin_comment
+comment|/* number of keys in table	*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -631,12 +667,20 @@ name|NUM_STATES
 value|8
 end_define
 
+begin_comment
+comment|/* states per key		*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ALTGR_OFFSET
 value|128
 end_define
+
+begin_comment
+comment|/* offset for altlock keys	*/
+end_comment
 
 begin_struct
 struct|struct
@@ -800,6 +844,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|struct
+name|vt_mode
+name|vtmode_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 block|{
 name|char
@@ -864,6 +916,230 @@ name|fnt16_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* defines for "special" keys (spcl bit set in keymap) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOP
+value|0x00
+end_define
+
+begin_comment
+comment|/* nothing (dead key)		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSH
+value|0x02
+end_define
+
+begin_comment
+comment|/* left shift key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSH
+value|0x03
+end_define
+
+begin_comment
+comment|/* right shift key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLK
+value|0x04
+end_define
+
+begin_comment
+comment|/* caps lock key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NLK
+value|0x05
+end_define
+
+begin_comment
+comment|/* num lock key			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLK
+value|0x06
+end_define
+
+begin_comment
+comment|/* scroll lock key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LALT
+value|0x07
+end_define
+
+begin_comment
+comment|/* left alt key			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCTR
+value|0x09
+end_define
+
+begin_comment
+comment|/* left control key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEXT
+value|0x0a
+end_define
+
+begin_comment
+comment|/* switch to next screen 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SCR
+value|0x0b
+end_define
+
+begin_comment
+comment|/* switch to first screen 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L_SCR
+value|0x1a
+end_define
+
+begin_comment
+comment|/* switch to last screen 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_FN
+value|0x1b
+end_define
+
+begin_comment
+comment|/* first function key 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L_FN
+value|0x7a
+end_define
+
+begin_comment
+comment|/* last function key 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RCTR
+value|0x7b
+end_define
+
+begin_comment
+comment|/* right control key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RALT
+value|0x7c
+end_define
+
+begin_comment
+comment|/* right alt (altgr) key	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALK
+value|0x7d
+end_define
+
+begin_comment
+comment|/* alt lock key			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASH
+value|0x7e
+end_define
+
+begin_comment
+comment|/* alt shift key		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|META
+value|0x7f
+end_define
+
+begin_comment
+comment|/* meta key			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RBT
+value|0x80
+end_define
+
+begin_comment
+comment|/* boot machine			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG
+value|0x81
+end_define
+
+begin_comment
+comment|/* call debugger		*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -887,129 +1163,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|NOP
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|LSH
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|RSH
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLK
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|NLK
-value|0x05
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLK
-value|0x06
-end_define
-
-begin_define
-define|#
-directive|define
-name|LALT
-value|0x07
-end_define
-
-begin_define
-define|#
-directive|define
-name|LCTR
-value|0x09
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCTR
-value|0x7b
-end_define
-
-begin_define
-define|#
-directive|define
-name|RALT
-value|0x7c
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALK
-value|0x7d
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASH
-value|0x7e
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_SCR
-value|11
+name|NOKEY
+value|0x100
 end_define
 
 begin_comment
-comment|/* switch to first screen 	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L_SCR
-value|26
-end_define
-
-begin_comment
-comment|/* switch to last screen 	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_FN
-value|27
-end_define
-
-begin_comment
-comment|/* first function key 		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L_FN
-value|122
-end_define
-
-begin_comment
-comment|/* last function key 		*/
+comment|/* no key pressed marker 	*/
 end_comment
 
 begin_define
@@ -1021,6 +1180,17 @@ end_define
 
 begin_comment
 comment|/* funtion key marker 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MKEY
+value|0x400
+end_define
+
+begin_comment
+comment|/* meta key marker (prepend ESC)*/
 end_comment
 
 begin_define
