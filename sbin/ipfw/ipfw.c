@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34 1996/10/17 01:05:03 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34.2.1 1997/01/29 13:15:25 adam Exp $  *  */
 end_comment
 
 begin_include
@@ -171,6 +171,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Show time stamps        */
+end_comment
+
+begin_decl_stmt
+name|int
+name|do_quiet
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Be quiet in add and flush  */
 end_comment
 
 begin_decl_stmt
@@ -1931,6 +1943,7 @@ literal|"\t\tflush\n"
 literal|"\t\tadd [number] rule\n"
 literal|"\t\tdelete number\n"
 literal|"\t\tlist [number]\n"
+literal|"\t\tshow [number]\n"
 literal|"\t\tzero [number]\n"
 literal|"\trule:\taction proto src dst extras...\n"
 literal|"\t\taction: {allow|deny|reject|count|divert port} [log]\n"
@@ -4163,6 +4176,18 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|ac
+condition|)
+block|{
+name|show_usage
+argument_list|(
+literal|"'via' option specified with no interface."
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
 name|isdigit
 argument_list|(
 operator|*
@@ -4175,7 +4200,7 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-name|strcpy
+name|strncpy
 argument_list|(
 name|rule
 operator|.
@@ -4183,6 +4208,13 @@ name|fw_via_name
 argument_list|,
 operator|*
 name|av
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rule
+operator|.
+name|fw_via_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -4649,6 +4681,11 @@ literal|"Unknown argument\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|do_quiet
+condition|)
 name|show_ipfw
 argument_list|(
 operator|&
@@ -4749,6 +4786,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|do_quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Accounting cleared.\n"
@@ -4903,7 +4945,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"aftN"
+literal|"afqtN"
 argument_list|)
 operator|)
 operator|!=
@@ -4926,6 +4968,14 @@ case|case
 literal|'f'
 case|:
 name|do_force
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|do_quiet
 operator|=
 literal|1
 expr_stmt|;
@@ -5055,6 +5105,8 @@ decl_stmt|;
 if|if
 condition|(
 name|do_force
+operator|||
+name|do_quiet
 condition|)
 name|do_flush
 operator|=
@@ -5179,6 +5231,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|do_quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Flushed all rules.\n"
@@ -5271,6 +5328,38 @@ name|av
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"show"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|do_acct
+operator|++
+expr_stmt|;
+name|list
+argument_list|(
+operator|--
+name|ac
+argument_list|,
+operator|++
+name|av
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|show_usage
@@ -5332,12 +5421,17 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|strcpy
+name|strncpy
 argument_list|(
 name|progname
 argument_list|,
 operator|*
 name|av
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|progname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s
