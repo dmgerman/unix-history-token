@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -1749,80 +1755,23 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
-switch|switch
+name|pri
+operator|=
+name|ithread_priority
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
 condition|(
 name|flags
-condition|)
-block|{
-case|case
-name|INTR_TYPE_TTY
-case|:
-comment|/* keyboard or parallel port */
-name|pri
-operator|=
-name|PI_TTYLOW
-expr_stmt|;
-break|break;
-case|case
-operator|(
-name|INTR_TYPE_TTY
-operator||
+operator|&
 name|INTR_FAST
-operator|)
-case|:
-comment|/* sio */
-name|pri
-operator|=
-name|PI_TTYHIGH
-expr_stmt|;
+condition|)
 name|icflags
 operator||=
 name|INTR_FAST
 expr_stmt|;
-break|break;
-case|case
-name|INTR_TYPE_BIO
-case|:
-comment|/* 		 * XXX We need to refine this.  BSD/OS distinguishes 		 * between tape and disk priorities. 		 */
-name|pri
-operator|=
-name|PI_DISK
-expr_stmt|;
-break|break;
-case|case
-name|INTR_TYPE_NET
-case|:
-name|pri
-operator|=
-name|PI_NET
-expr_stmt|;
-break|break;
-case|case
-name|INTR_TYPE_CAM
-case|:
-name|pri
-operator|=
-name|PI_DISK
-expr_stmt|;
-comment|/* XXX or PI_CAM? */
-break|break;
-case|case
-name|INTR_TYPE_MISC
-case|:
-name|pri
-operator|=
-name|PI_DULL
-expr_stmt|;
-comment|/* don't care */
-break|break;
-comment|/* We didn't specify an interrupt level. */
-default|default:
-name|panic
-argument_list|(
-literal|"nexus_setup_intr: no interrupt type in flags"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * We depend here on rman_activate_resource() being idempotent. 	 */
 name|error
 operator|=

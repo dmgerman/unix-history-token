@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rtprio.h>
 end_include
 
@@ -128,12 +134,6 @@ begin_include
 include|#
 directive|include
 file|<machine/segments.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
 end_include
 
 begin_if
@@ -382,6 +382,7 @@ operator|)
 name|cookie
 decl_stmt|;
 comment|/* IRQ we're handling */
+name|struct
 name|ithd
 modifier|*
 name|ir
@@ -450,7 +451,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If we are in the debugger, we can't use interrupt threads to 	 * process interrupts since the threads are scheduled.  Instead, 	 * call the interrupt handlers directly.  This should be able to 	 * go away once we have light-weight interrupt handlers. 	 */
-block|if (db_active) { 		intrec	*ih;
+block|if (db_active) { 		struct intrec	*ih;
 comment|/* and our interrupt handler chain */
 if|#
 directive|if
@@ -600,11 +601,13 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|struct
 name|ithd
 modifier|*
 name|me
 decl_stmt|;
 comment|/* our thread context */
+name|struct
 name|intrec
 modifier|*
 name|ih
@@ -894,11 +897,13 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
 name|ithd
 modifier|*
 name|softintr
 decl_stmt|;
 comment|/* descriptor for the "IRQ" */
+name|struct
 name|intrec
 modifier|*
 name|idesc
@@ -1178,6 +1183,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|struct
 name|ithd
 modifier|*
 name|me

@@ -1270,8 +1270,7 @@ begin_comment
 comment|/*  * Describe an interrupt thread.  There is one of these per irq.  BSD/OS makes  * this a superset of struct proc, i.e. it_proc is the struct itself and not a  * pointer.  We point in both directions, because it feels good that way.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|ithd
 block|{
@@ -1402,9 +1401,8 @@ comment|/* number of schedule events */
 endif|#
 directive|endif
 block|}
-name|ithd
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#

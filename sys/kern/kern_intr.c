@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rtprio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -557,6 +569,95 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ithread_priority
+parameter_list|(
+name|flags
+parameter_list|)
+name|int
+name|flags
+decl_stmt|;
+block|{
+name|int
+name|pri
+decl_stmt|;
+switch|switch
+condition|(
+name|flags
+condition|)
+block|{
+case|case
+name|INTR_TYPE_TTY
+case|:
+comment|/* keyboard or parallel port */
+name|pri
+operator|=
+name|PI_TTYLOW
+expr_stmt|;
+break|break;
+case|case
+operator|(
+name|INTR_TYPE_TTY
+operator||
+name|INTR_FAST
+operator|)
+case|:
+comment|/* sio */
+name|pri
+operator|=
+name|PI_TTYHIGH
+expr_stmt|;
+break|break;
+case|case
+name|INTR_TYPE_BIO
+case|:
+comment|/* 		 * XXX We need to refine this.  BSD/OS distinguishes 		 * between tape and disk priorities. 		 */
+name|pri
+operator|=
+name|PI_DISK
+expr_stmt|;
+break|break;
+case|case
+name|INTR_TYPE_NET
+case|:
+name|pri
+operator|=
+name|PI_NET
+expr_stmt|;
+break|break;
+case|case
+name|INTR_TYPE_CAM
+case|:
+name|pri
+operator|=
+name|PI_DISK
+expr_stmt|;
+comment|/* XXX or PI_CAM? */
+break|break;
+case|case
+name|INTR_TYPE_MISC
+case|:
+name|pri
+operator|=
+name|PI_DULL
+expr_stmt|;
+comment|/* don't care */
+break|break;
+comment|/* We didn't specify an interrupt level. */
+default|default:
+name|panic
+argument_list|(
+literal|"ithread_priority: no interrupt type in flags"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|pri
+return|;
 block|}
 end_function
 

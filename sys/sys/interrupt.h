@@ -15,6 +15,56 @@ directive|define
 name|_SYS_INTERRUPT_H_
 end_define
 
+begin_comment
+comment|/*  * Describe a hardware interrupt handler.  *  * Multiple interrupt handlers for a specific vector can be chained  * together via the 'next' pointer.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ithd
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|intrec
+block|{
+name|driver_intr_t
+modifier|*
+name|handler
+decl_stmt|;
+comment|/* code address of handler */
+name|void
+modifier|*
+name|argument
+decl_stmt|;
+comment|/* argument to pass to handler */
+name|enum
+name|intr_type
+name|flags
+decl_stmt|;
+comment|/* flag bits (sys/bus.h) */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of handler */
+name|struct
+name|ithd
+modifier|*
+name|ithd
+decl_stmt|;
+comment|/* handler we're connected to */
+name|struct
+name|intrec
+modifier|*
+name|next
+decl_stmt|;
+comment|/* next handler for this irq */
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|void
@@ -79,6 +129,19 @@ operator|,
 name|swihand_t
 operator|*
 name|handler
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ithread_priority
+name|__P
+argument_list|(
+operator|(
+name|int
+name|flags
 operator|)
 argument_list|)
 decl_stmt|;

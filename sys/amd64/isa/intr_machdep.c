@@ -21,6 +21,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -302,7 +308,7 @@ comment|/* pointers to interrupt counters */
 end_comment
 
 begin_decl_stmt
-name|inthand2_t
+name|driver_intr_t
 modifier|*
 name|intr_handler
 index|[
@@ -318,6 +324,7 @@ comment|/* first level interrupt handler */
 end_comment
 
 begin_decl_stmt
+name|struct
 name|ithd
 modifier|*
 name|ithds
@@ -681,7 +688,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|inthand2_t
+name|driver_intr_t
 name|isa_strayintr
 decl_stmt|;
 end_decl_stmt
@@ -1303,7 +1310,7 @@ argument_list|(
 name|i
 argument_list|,
 operator|(
-name|inthand2_t
+name|driver_intr_t
 operator|*
 operator|)
 name|NULL
@@ -1951,7 +1958,7 @@ parameter_list|(
 name|int
 name|intr
 parameter_list|,
-name|inthand2_t
+name|driver_intr_t
 modifier|*
 name|handler
 parameter_list|,
@@ -2290,7 +2297,7 @@ parameter_list|)
 name|int
 name|intr
 decl_stmt|;
-name|inthand2_t
+name|driver_intr_t
 modifier|*
 name|handler
 decl_stmt|;
@@ -2457,6 +2464,7 @@ block|}
 end_function
 
 begin_function
+name|struct
 name|intrec
 modifier|*
 name|inthand_add
@@ -2469,7 +2477,7 @@ parameter_list|,
 name|int
 name|irq
 parameter_list|,
-name|inthand2_t
+name|driver_intr_t
 name|handler
 parameter_list|,
 name|void
@@ -2483,6 +2491,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|struct
 name|ithd
 modifier|*
 name|ithd
@@ -2493,11 +2502,13 @@ name|irq
 index|]
 decl_stmt|;
 comment|/* descriptor for the IRQ */
+name|struct
 name|intrec
 modifier|*
 name|head
 decl_stmt|;
 comment|/* chain of handlers for IRQ */
+name|struct
 name|intrec
 modifier|*
 name|idesc
@@ -3138,16 +3149,19 @@ begin_function
 name|int
 name|inthand_remove
 parameter_list|(
+name|struct
 name|intrec
 modifier|*
 name|idesc
 parameter_list|)
 block|{
+name|struct
 name|ithd
 modifier|*
 name|ithd
 decl_stmt|;
 comment|/* descriptor for the IRQ */
+name|struct
 name|intrec
 modifier|*
 name|ih

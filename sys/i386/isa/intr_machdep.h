@@ -360,7 +360,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|inthand2_t
+name|driver_intr_t
 modifier|*
 name|intr_handler
 index|[]
@@ -373,6 +373,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
 name|ithd
 modifier|*
 name|ithds
@@ -395,6 +396,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
 name|ithd
 name|softinterrupt
 decl_stmt|;
@@ -856,7 +858,7 @@ operator|(
 name|int
 name|intr
 operator|,
-name|inthand2_t
+name|driver_intr_t
 operator|*
 name|func
 operator|,
@@ -880,7 +882,7 @@ operator|(
 name|int
 name|intr
 operator|,
-name|inthand2_t
+name|driver_intr_t
 operator|*
 name|handler
 operator|)
@@ -902,51 +904,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Describe a hardware interrupt handler.  These structures are  * accessed via the array intreclist, which contains one pointer per  * hardware interrupt.  *  * Multiple interrupt handlers for a specific IRQ can be chained  * together via the 'next' pointer.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|intrec
-block|{
-name|inthand2_t
-modifier|*
-name|handler
-decl_stmt|;
-comment|/* code address of handler */
-name|void
-modifier|*
-name|argument
-decl_stmt|;
-comment|/* argument to pass to handler */
-name|enum
-name|intr_type
-name|flags
-decl_stmt|;
-comment|/* flag bits (sys/bus.h) */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* name of handler */
-name|ithd
-modifier|*
-name|ithd
-decl_stmt|;
-comment|/* handler we're connected to */
-name|struct
-name|intrec
-modifier|*
-name|next
-decl_stmt|;
-comment|/* next handler for this irq */
-block|}
-name|intrec
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * WARNING: These are internal functions and not to be used by device drivers!  * They are subject to change without notice.   */
 end_comment
 
@@ -964,7 +921,7 @@ parameter_list|,
 name|int
 name|irq
 parameter_list|,
-name|inthand2_t
+name|driver_intr_t
 name|handler
 parameter_list|,
 name|void

@@ -93,7 +93,7 @@ decl_stmt|;
 comment|/* size of i/o memory */
 union|union
 block|{
-name|inthand2_t
+name|driver_intr_t
 modifier|*
 name|id_i
 decl_stmt|;

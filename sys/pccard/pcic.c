@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -97,7 +103,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|inthand2_t
+name|driver_intr_t
 name|pcicintr
 decl_stmt|;
 end_decl_stmt
