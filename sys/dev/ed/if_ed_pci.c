@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id:$  */
+comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_ed_p.c,v 1.1 1996/05/18 17:56:40 se Exp $  */
 end_comment
 
 begin_include
@@ -73,6 +73,22 @@ value|0x802910ec
 end_define
 
 begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|ed_attach_NE2000_pci
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -116,18 +132,6 @@ name|NED
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|void
-name|ed_pci_shutdown
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{ }
-end_function
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -144,8 +148,8 @@ block|,
 operator|&
 name|ed_pci_count
 block|,
-name|ed_pci_shutdown
-block|, }
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
