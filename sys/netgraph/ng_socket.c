@@ -4020,6 +4020,8 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* Register protocol domain */
+name|error
+operator|=
 name|net_add_domain
 argument_list|(
 operator|&

@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ASYNC_COOKIE
-value|886473716
+value|886473715
 end_define
 
 begin_comment
@@ -45,7 +45,18 @@ value|"sync"
 end_define
 
 begin_comment
-comment|/* Sync frames */
+comment|/* Normal encoding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_ASYNC_HOOK_SYNC2
+value|"sync2"
+end_define
+
+begin_comment
+comment|/* Full ACCM, no ACF comp. */
 end_comment
 
 begin_define
@@ -56,7 +67,7 @@ value|"async"
 end_define
 
 begin_comment
-comment|/* Async-encoded frames */
+comment|/* Normal decoding */
 end_comment
 
 begin_comment

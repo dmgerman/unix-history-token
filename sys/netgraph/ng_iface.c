@@ -270,8 +270,33 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"bpfilter.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpfdesc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This struct describes one address family */
@@ -547,6 +572,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -567,6 +600,11 @@ name|af
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1336,6 +1374,11 @@ operator|)
 return|;
 block|}
 comment|/* Berkeley packet filter */
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
 name|ng_iface_bpftap
 argument_list|(
 name|ifp
@@ -1347,6 +1390,8 @@ operator|->
 name|sa_family
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Check address family to determine hook (if known) */
 if|if
 condition|(
@@ -1473,6 +1518,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Flash a packet by the BPF (requires prepending 4 byte AF header)  * Note the phoney mbuf; this is OK because BPF treats it read-only.  */
 end_comment
@@ -1500,13 +1553,6 @@ name|struct
 name|mbuf
 name|m2
 decl_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-block|{
 if|if
 condition|(
 name|af
@@ -1597,8 +1643,16 @@ name|m2
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NBPFILTER> 0 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2062,6 +2116,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -2074,6 +2133,8 @@ name|u_int
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Done */
 return|return
 operator|(
@@ -2812,6 +2873,11 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
 comment|/* Berkeley packet filter */
 name|ng_iface_bpftap
 argument_list|(
@@ -2824,6 +2890,8 @@ operator|->
 name|af
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Ignore any meta-data */
 name|NG_FREE_META
 argument_list|(

@@ -739,6 +739,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX Temporarily assign ourself an ISR number (1 seems unused) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NETISR_NETGRAPH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NETISR_NETGRAPH
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|ng_bypass
