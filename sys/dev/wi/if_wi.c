@@ -2699,7 +2699,7 @@ comment|/* check if device was removed */
 name|sc
 operator|->
 name|wi_gone
-operator|=
+operator||=
 operator|!
 name|bus_child_present
 argument_list|(
@@ -3042,6 +3042,11 @@ name|sc
 operator|->
 name|wi_gone
 operator|||
+operator|!
+name|sc
+operator|->
+name|sc_enabled
+operator|||
 operator|(
 name|ifp
 operator|->
@@ -3068,8 +3073,7 @@ name|sc
 argument_list|,
 name|WI_EVENT_ACK
 argument_list|,
-operator|~
-literal|0
+literal|0xFFFF
 argument_list|)
 expr_stmt|;
 name|WI_UNLOCK
@@ -3294,7 +3298,7 @@ name|wi_stop
 argument_list|(
 name|ifp
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|wi_reset
@@ -4236,7 +4240,7 @@ name|wi_stop
 argument_list|(
 name|ifp
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4298,6 +4302,11 @@ expr_stmt|;
 name|WI_LOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
 argument_list|)
 expr_stmt|;
 name|ieee80211_new_state
@@ -4382,6 +4391,22 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|wi_gone
+operator|&&
+name|disable
+condition|)
+comment|/* gone --> not enabled */
+name|sc
+operator|->
+name|sc_enabled
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|->
 name|sc_tx_timer
@@ -5319,8 +5344,8 @@ condition|(
 name|sc
 operator|->
 name|sc_firmware_type
-operator|!=
-name|WI_INTERSIL
+operator|==
+name|WI_SYMBOL
 operator|&&
 name|sc
 operator|->
@@ -5912,10 +5937,16 @@ name|wi_stop
 argument_list|(
 name|ifp
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|wi_gone
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -8300,6 +8331,13 @@ name|fid
 decl_stmt|,
 name|cur
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|wi_gone
+condition|)
+return|return;
 name|fid
 operator|=
 name|CSR_READ_2
@@ -12660,6 +12698,17 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|wi_gone
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+if|if
+condition|(
 name|count
 operator|>
 literal|0
@@ -12687,7 +12736,7 @@ name|i
 operator|--
 control|)
 block|{
-comment|/* 5s */
+comment|/* 500ms */
 if|if
 condition|(
 operator|!
@@ -12705,12 +12754,12 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|10
+literal|1
 operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 10 m sec */
+comment|/* 1ms */
 block|}
 if|if
 condition|(
@@ -12727,6 +12776,12 @@ name|sc_dev
 argument_list|,
 literal|"wi_cmd: busy bit won't clear.\n"
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|wi_gone
+operator|=
+literal|1
 expr_stmt|;
 name|count
 operator|--
@@ -12887,6 +12942,18 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+literal|0xffff
+condition|)
+name|sc
+operator|->
+name|wi_gone
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|ETIMEDOUT
@@ -12996,6 +13063,18 @@ operator|=
 name|WI_OFF_ERR
 expr_stmt|;
 comment|/* invalidate */
+if|if
+condition|(
+name|status
+operator|==
+literal|0xffff
+condition|)
+name|sc
+operator|->
+name|wi_gone
+operator|=
+literal|1
+expr_stmt|;
 return|return
 name|ETIMEDOUT
 return|;
