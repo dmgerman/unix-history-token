@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: msgs.c,v 1.11 1998/07/07 22:20:50 jkh Exp $"
+literal|"$Id: msgs.c,v 1.12 1998/07/09 14:06:54 ghelmer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -846,17 +846,12 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-name|seteuid
+name|setuid
 argument_list|(
 name|uid
 operator|=
 name|getuid
 argument_list|()
-argument_list|)
-expr_stmt|;
-name|setuid
-argument_list|(
-name|uid
 argument_list|)
 expr_stmt|;
 name|ruptible
