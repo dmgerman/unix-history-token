@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * The AD1848 codec has generic input lines called Line, Aux1 and Aux2.  * Soundcard manufacturers have connected actual inputs (CD, synth, line,  * etc) to these inputs in different order. Therefore it's difficult  * to assign mixer channels to to these inputs correctly. The following  * contains two alternative mappings. The first one is for GUS MAX and  * the second is just a generic one (line1, line2 and line3).  * (Actually this is not a mapping but rather some kind of interleaving  * solution).  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GUSMAX_MIXER
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -17,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|MODE1_REC_DEVICES
-value|(SOUND_MASK_LINE | SOUND_MASK_MIC | \ 					 SOUND_MASK_CD)
+value|(SOUND_MASK_LINE | SOUND_MASK_MIC | \ 					 SOUND_MASK_CD|SOUND_MASK_IMIX)
 end_define
 
 begin_define
@@ -47,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|MODE1_REC_DEVICES
-value|(SOUND_MASK_LINE3 | SOUND_MASK_MIC | \ 					 SOUND_MASK_LINE1)
+value|(SOUND_MASK_LINE3 | SOUND_MASK_MIC | \ 					 SOUND_MASK_LINE1|SOUND_MASK_IMIX)
 end_define
 
 begin_define
@@ -102,6 +108,220 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|char
+name|mix_cvt
+index|[
+literal|101
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|3
+block|,
+literal|7
+block|,
+literal|10
+block|,
+literal|13
+block|,
+literal|16
+block|,
+literal|19
+block|,
+literal|21
+block|,
+literal|23
+block|,
+literal|26
+block|,
+literal|28
+block|,
+literal|30
+block|,
+literal|32
+block|,
+literal|34
+block|,
+literal|35
+block|,
+literal|37
+block|,
+literal|39
+block|,
+literal|40
+block|,
+literal|42
+block|,
+literal|43
+block|,
+literal|45
+block|,
+literal|46
+block|,
+literal|47
+block|,
+literal|49
+block|,
+literal|50
+block|,
+literal|51
+block|,
+literal|52
+block|,
+literal|53
+block|,
+literal|55
+block|,
+literal|56
+block|,
+literal|57
+block|,
+literal|58
+block|,
+literal|59
+block|,
+literal|60
+block|,
+literal|61
+block|,
+literal|62
+block|,
+literal|63
+block|,
+literal|64
+block|,
+literal|65
+block|,
+literal|65
+block|,
+literal|66
+block|,
+literal|67
+block|,
+literal|68
+block|,
+literal|69
+block|,
+literal|70
+block|,
+literal|70
+block|,
+literal|71
+block|,
+literal|72
+block|,
+literal|73
+block|,
+literal|73
+block|,
+literal|74
+block|,
+literal|75
+block|,
+literal|75
+block|,
+literal|76
+block|,
+literal|77
+block|,
+literal|77
+block|,
+literal|78
+block|,
+literal|79
+block|,
+literal|79
+block|,
+literal|80
+block|,
+literal|81
+block|,
+literal|81
+block|,
+literal|82
+block|,
+literal|82
+block|,
+literal|83
+block|,
+literal|84
+block|,
+literal|84
+block|,
+literal|85
+block|,
+literal|85
+block|,
+literal|86
+block|,
+literal|86
+block|,
+literal|87
+block|,
+literal|87
+block|,
+literal|88
+block|,
+literal|88
+block|,
+literal|89
+block|,
+literal|89
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|91
+block|,
+literal|91
+block|,
+literal|92
+block|,
+literal|92
+block|,
+literal|93
+block|,
+literal|93
+block|,
+literal|94
+block|,
+literal|94
+block|,
+literal|95
+block|,
+literal|95
+block|,
+literal|96
+block|,
+literal|96
+block|,
+literal|96
+block|,
+literal|97
+block|,
+literal|97
+block|,
+literal|98
+block|,
+literal|98
+block|,
+literal|98
+block|,
+literal|99
+block|,
+literal|99
+block|,
+literal|100
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -138,11 +358,10 @@ parameter_list|,
 name|len_r
 parameter_list|)
 define|\
-value|{{reg_l, pola_l, pos_r, len_l}, {reg_r, pola_r, pos_r, len_r}}
+value|{{reg_l, pola_l, pos_l, len_l}, {reg_r, pola_r, pos_r, len_r}}
 end_define
 
 begin_decl_stmt
-specifier|static
 name|mixer_ent
 name|mix_devices
 index|[
@@ -307,7 +526,7 @@ name|SOUND_MIXER_MIC
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|5
 argument_list|,
@@ -315,7 +534,7 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|5
 argument_list|,
@@ -536,16 +755,17 @@ comment|/* Treble */
 literal|0x4b4b
 block|,
 comment|/* FM */
-literal|0x6464
+literal|0x4040
 block|,
 comment|/* PCM */
 literal|0x4b4b
 block|,
 comment|/* PC Speaker */
-literal|0x4b4b
+comment|/*  0x2020,			 Ext Line */
+literal|0x0000
 block|,
 comment|/* Ext Line */
-literal|0x1010
+literal|0x4040
 block|,
 comment|/* Mic */
 literal|0x4b4b
@@ -560,20 +780,22 @@ comment|/* SB PCM */
 literal|0x4b4b
 block|,
 comment|/* Recording level */
-literal|0x4b4b
+literal|0x2525
 block|,
 comment|/* Input gain */
-literal|0x4b4b
+literal|0x0000
 block|,
 comment|/* Output gain */
-literal|0x4b4b
+comment|/*  0x4040,			Line1 */
+literal|0x0000
 block|,
 comment|/* Line1 */
-literal|0x4b4b
+literal|0x0000
 block|,
 comment|/* Line2 */
-literal|0x4b4b
-comment|/* Line3 */
+literal|0x1515
+block|,
+comment|/* Line3 (usually line in)*/
 block|}
 decl_stmt|;
 end_decl_stmt

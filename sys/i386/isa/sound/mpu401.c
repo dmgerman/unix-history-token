@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/mpu401.c  *  * The low level driver for Roland MPU-401 compatible Midi cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified:  *  Riccardo Facchetti  24 Mar 1995  *  - Added the Audio Excel DSP 16 initialization routine.  */
+comment|/*  * sound/mpu401.c  *   * The low level driver for Roland MPU-401 compatible Midi cards.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Modified: Riccardo Facchetti  24 Mar 1995 - Added the Audio Excel DSP 16  * initialization routine.  */
 end_comment
 
 begin_define
@@ -21,33 +21,24 @@ directive|include
 file|<i386/isa/sound/sound_config.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIGURE_SOUNDCARD
-end_ifdef
-
 begin_if
 if|#
 directive|if
 operator|(
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_MPU401
+name|CONFIG_MPU401
 argument_list|)
 operator|||
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_MPU_EMU
+name|CONFIG_MPU_EMU
 argument_list|)
 operator|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_MIDI
+name|CONFIG_MIDI
 argument_list|)
 end_if
 
@@ -71,6 +62,12 @@ begin_comment
 comment|/* NOTE! pos 0 = len, start pos 1. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_SEQUENCER
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -84,6 +81,11 @@ name|TMR_INTERNAL
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|mpu_config
@@ -91,14 +93,14 @@ block|{
 name|int
 name|base
 decl_stmt|;
-comment|/* 				 * I/O base 				 */
+comment|/* I/O base */
 name|int
 name|irq
 decl_stmt|;
 name|int
 name|opened
 decl_stmt|;
-comment|/* 				 * Open mode 				 */
+comment|/* Open mode */
 name|int
 name|devno
 decl_stmt|;
@@ -122,14 +124,12 @@ define|#
 directive|define
 name|MODE_SYNTH
 value|2
-name|unsigned
-name|char
+name|u_char
 name|version
 decl_stmt|,
 name|revision
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|capabilities
 decl_stmt|;
 define|#
@@ -169,12 +169,11 @@ name|BUFTEST
 parameter_list|(
 name|dc
 parameter_list|)
-value|if (dc->m_ptr>= MBUF_MAX || dc->m_ptr< 0) \ 	{printk("MPU: Invalid buffer pointer %d/%d, s=%d\n", dc->m_ptr, dc->m_left, dc->m_state);dc->m_ptr--;}
+value|if (dc->m_ptr>= MBUF_MAX || dc->m_ptr< 0) \ 	{printf("MPU: Invalid buffer pointer %d/%d, s=%d\n", dc->m_ptr, dc->m_left, dc->m_state);dc->m_ptr--;}
 name|int
 name|m_busy
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|m_buf
 index|[
 name|MBUF_MAX
@@ -189,8 +188,7 @@ decl_stmt|;
 name|int
 name|m_left
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|last_status
 decl_stmt|;
 name|void
@@ -202,13 +200,16 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 function_decl|;
 name|int
 name|shared_irq
+decl_stmt|;
+name|sound_os_info
+modifier|*
+name|osp
 decl_stmt|;
 block|}
 struct|;
@@ -249,9 +250,9 @@ define|#
 directive|define
 name|mpu401_status
 parameter_list|(
-name|base
+name|devc
 parameter_list|)
-value|INB(STATPORT(base))
+value|inb( STATPORT(devc->base))
 end_define
 
 begin_define
@@ -259,9 +260,9 @@ define|#
 directive|define
 name|input_avail
 parameter_list|(
-name|base
+name|devc
 parameter_list|)
-value|(!(mpu401_status(base)&INPUT_AVAIL))
+value|(!(mpu401_status(devc)&INPUT_AVAIL))
 end_define
 
 begin_define
@@ -269,9 +270,9 @@ define|#
 directive|define
 name|output_ready
 parameter_list|(
-name|base
+name|devc
 parameter_list|)
-value|(!(mpu401_status(base)&OUTPUT_READY))
+value|(!(mpu401_status(devc)&OUTPUT_READY))
 end_define
 
 begin_define
@@ -279,11 +280,11 @@ define|#
 directive|define
 name|write_command
 parameter_list|(
-name|base
+name|devc
 parameter_list|,
 name|cmd
 parameter_list|)
-value|OUTB(cmd, COMDPORT(base))
+value|outb( COMDPORT(devc->base),  cmd)
 end_define
 
 begin_define
@@ -291,9 +292,9 @@ define|#
 directive|define
 name|read_data
 parameter_list|(
-name|base
+name|devc
 parameter_list|)
-value|INB(DATAPORT(base))
+value|inb( DATAPORT(devc->base))
 end_define
 
 begin_define
@@ -301,11 +302,11 @@ define|#
 directive|define
 name|write_data
 parameter_list|(
-name|base
+name|devc
 parameter_list|,
 name|byte
 parameter_list|)
-value|OUTB(byte, DATAPORT(base))
+value|outb( DATAPORT(devc->base),  byte)
 end_define
 
 begin_define
@@ -371,13 +372,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|int
 name|irq2dev
 index|[
-literal|16
+literal|17
 index|]
 init|=
 block|{
+operator|-
+literal|1
+block|,
 operator|-
 literal|1
 block|,
@@ -634,12 +639,11 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|len_tab
 index|[]
 init|=
-comment|/* # of data bytes following a status 					 */
+comment|/* # of data bytes following a status */
 block|{
 literal|2
 block|,
@@ -668,6 +672,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_SEQUENCER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STORE
+parameter_list|(
+name|cmd
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -676,8 +700,13 @@ parameter_list|(
 name|cmd
 parameter_list|)
 define|\
-value|{ \   int len; \   unsigned char obuf[8]; \   cmd; \   seq_input_event(obuf, len); \ }
+value|{ \   int len; \   u_char obuf[8]; \   cmd; \   seq_input_event(obuf, len); \ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -713,8 +742,7 @@ name|mpu_config
 modifier|*
 name|devc
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|midic
 parameter_list|)
 block|{
@@ -741,7 +769,7 @@ break|break;
 case|case
 literal|0xfc
 case|:
-name|printk
+name|printf
 argument_list|(
 literal|"<all end>"
 argument_list|)
@@ -791,7 +819,7 @@ case|:
 case|case
 literal|0xf7
 case|:
-name|printk
+name|printf
 argument_list|(
 literal|"<Trk data rq #%d>"
 argument_list|,
@@ -804,7 +832,7 @@ break|break;
 case|case
 literal|0xf9
 case|:
-name|printk
+name|printf
 argument_list|(
 literal|"<conductor rq>"
 argument_list|)
@@ -828,7 +856,7 @@ operator|<=
 literal|0xef
 condition|)
 block|{
-comment|/* printk("mpu time: %d ", midic); */
+comment|/* printf("mpu time: %d ", midic); */
 name|devc
 operator|->
 name|m_state
@@ -837,9 +865,9 @@ name|ST_TIMED
 expr_stmt|;
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
-literal|"<MPU: Unknown event %#x> "
+literal|"<MPU: Unknown event %02x> "
 argument_list|,
 name|midic
 argument_list|)
@@ -854,12 +882,17 @@ name|int
 name|msg
 init|=
 operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|midic
 operator|&
 literal|0xf0
-operator|)
+argument_list|)
 operator|>>
 literal|4
+operator|)
 decl_stmt|;
 name|devc
 operator|->
@@ -873,20 +906,25 @@ name|msg
 operator|<
 literal|8
 condition|)
-comment|/* Data byte */
 block|{
-comment|/* printk("midi msg (running status) "); */
+comment|/* Data byte */
+comment|/* printf("midi msg (running status) "); */
 name|msg
 operator|=
 operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|devc
 operator|->
 name|last_status
 operator|&
 literal|0xf0
-operator|)
+argument_list|)
 operator|>>
 literal|4
+operator|)
 expr_stmt|;
 name|msg
 operator|-=
@@ -974,8 +1012,8 @@ name|msg
 operator|==
 literal|0xf
 condition|)
-comment|/* MPU MARK */
 block|{
+comment|/* MPU MARK */
 name|devc
 operator|->
 name|m_state
@@ -990,22 +1028,22 @@ block|{
 case|case
 literal|0xf8
 case|:
-comment|/* printk("NOP "); */
+comment|/* printf("NOP "); */
 break|break;
 case|case
 literal|0xf9
 case|:
-comment|/* printk("meas end "); */
+comment|/* printf("meas end "); */
 break|break;
 case|case
 literal|0xfc
 case|:
-comment|/* printk("data end "); */
+comment|/* printf("data end "); */
 break|break;
 default|default:
-name|printk
+name|printf
 argument_list|(
-literal|"Unknown MPU mark %#x\n"
+literal|"Unknown MPU mark %02x\n"
 argument_list|,
 name|midic
 argument_list|)
@@ -1020,7 +1058,7 @@ name|last_status
 operator|=
 name|midic
 expr_stmt|;
-comment|/* printk ("midi msg "); */
+comment|/* printf ("midi msg "); */
 name|msg
 operator|-=
 literal|8
@@ -1100,7 +1138,7 @@ block|{
 case|case
 literal|0xf0
 case|:
-name|printk
+name|printf
 argument_list|(
 literal|"<SYX>"
 argument_list|)
@@ -1151,14 +1189,15 @@ break|break;
 case|case
 literal|0xf6
 case|:
-comment|/* printk("tune_request\n"); */
+comment|/* printf("tune_request\n"); */
 name|devc
 operator|->
 name|m_state
 operator|=
 name|ST_INIT
 expr_stmt|;
-comment|/* 	     *    Real time messages 	   */
+comment|/* XXX do we need a break here ? - lr 970710 */
+comment|/* 	     * Real time messages 	     */
 case|case
 literal|0xf8
 case|:
@@ -1250,7 +1289,7 @@ break|break;
 case|case
 literal|0xff
 case|:
-comment|/* printk("midi hard reset"); */
+comment|/* printf("midi hard reset"); */
 name|devc
 operator|->
 name|m_state
@@ -1259,9 +1298,9 @@ name|ST_INIT
 expr_stmt|;
 break|break;
 default|default:
-name|printk
+name|printf
 argument_list|(
-literal|"unknown MIDI sysmsg %#x\n"
+literal|"unknown MIDI sysmsg %0x\n"
 argument_list|,
 name|midic
 argument_list|)
@@ -1283,9 +1322,9 @@ name|m_state
 operator|=
 name|ST_INIT
 expr_stmt|;
-name|printk
+name|printf
 argument_list|(
-literal|"MTC frame %#x\n"
+literal|"MTC frame %x02\n"
 argument_list|,
 name|midic
 argument_list|)
@@ -1301,7 +1340,7 @@ operator|==
 literal|0xf7
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"<EOX>"
 argument_list|)
@@ -1314,9 +1353,9 @@ name|ST_INIT
 expr_stmt|;
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
-literal|"%#x "
+literal|"%02x "
 argument_list|,
 name|midic
 argument_list|)
@@ -1460,7 +1499,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|printk
+name|printf
 argument_list|(
 literal|"Bad state %d "
 argument_list|,
@@ -1493,20 +1532,18 @@ modifier|*
 name|devc
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
-decl_stmt|;
-name|int
-name|busy
 decl_stmt|;
 name|int
 name|n
+decl_stmt|,
+name|busy
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|busy
 operator|=
@@ -1520,7 +1557,7 @@ name|m_busy
 operator|=
 literal|1
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -1540,8 +1577,6 @@ condition|(
 name|input_avail
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 operator|&&
 name|n
@@ -1550,15 +1585,12 @@ operator|>
 literal|0
 condition|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|c
 init|=
 name|read_data
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 decl_stmt|;
 if|if
@@ -1614,17 +1646,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
 name|mpuintr
-argument_list|(
-name|INT_HANDLER_PARMS
-argument_list|(
+parameter_list|(
+name|int
 name|irq
-argument_list|,
-name|dummy
-argument_list|)
-argument_list|)
+parameter_list|)
 block|{
 name|struct
 name|mpu_config
@@ -1634,14 +1662,7 @@ decl_stmt|;
 name|int
 name|dev
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|linux
-name|sti
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
+comment|/*      * FreeBSD (and some others) pass unit number to the interrupt      * handler. In this case we have to scan the table for first handler.      */
 if|if
 condition|(
 name|irq
@@ -1653,15 +1674,13 @@ operator|>
 literal|15
 condition|)
 block|{
-name|printk
-argument_list|(
-literal|"MPU-401: Interrupt #%d?\n"
-argument_list|,
-name|irq
-argument_list|)
+name|dev
+operator|=
+operator|-
+literal|1
 expr_stmt|;
-return|return;
 block|}
+else|else
 name|dev
 operator|=
 name|irq2dev
@@ -1677,9 +1696,68 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* printk ("MPU-401: Interrupt #%d?\n", irq); */
+name|int
+name|origirq
+init|=
+name|irq
+decl_stmt|;
+for|for
+control|(
+name|irq
+operator|=
+literal|0
+init|;
+name|irq
+operator|<=
+literal|16
+condition|;
+name|irq
+operator|++
+control|)
+if|if
+condition|(
+name|irq2dev
+index|[
+name|irq
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
+break|break;
+if|if
+condition|(
+name|irq
+operator|>
+literal|15
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MPU-401: Bogus interrupt #%d?\n"
+argument_list|,
+name|origirq
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|dev
+operator|=
+name|irq2dev
+index|[
+name|irq
+index|]
+expr_stmt|;
+name|devc
+operator|=
+operator|&
+name|dev_conf
+index|[
+name|dev
+index|]
+expr_stmt|;
+block|}
+else|else
 name|devc
 operator|=
 operator|&
@@ -1693,8 +1771,6 @@ condition|(
 name|input_avail
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|)
 if|if
@@ -1730,13 +1806,11 @@ comment|/* Dummy read (just to acknowledge the interrupt) */
 name|read_data
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
@@ -1758,8 +1832,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 parameter_list|,
@@ -1793,10 +1866,10 @@ operator|>=
 name|num_midis
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|ENXIO
-argument_list|)
+operator|)
 return|;
 name|devc
 operator|=
@@ -1813,19 +1886,19 @@ operator|->
 name|opened
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"MPU-401: Midi busy\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
-comment|/*      *  Verify that the device is really running.      *  Some devices (such as Ensoniq SoundScape don't      *  work before the on board processor (OBP) is initialized      *  by downloadin it's microcode.    */
+comment|/*      * Verify that the device is really running. Some devices (such as      * Ensoniq SoundScape don't work before the on board processor (OBP)      * is initialized by downloadin it's microcode.      */
 if|if
 condition|(
 operator|!
@@ -1839,24 +1912,22 @@ condition|(
 name|mpu401_status
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 operator|==
 literal|0xff
 condition|)
-comment|/* Bus float */
 block|{
-name|printk
+comment|/* Bus float */
+name|printf
 argument_list|(
 literal|"MPU-401: Device not initialized properly\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EIO
-argument_list|)
+operator|)
 return|;
 block|}
 name|reset_mpu401
@@ -1874,45 +1945,6 @@ index|]
 operator|=
 name|dev
 expr_stmt|;
-if|if
-condition|(
-name|devc
-operator|->
-name|shared_irq
-operator|==
-literal|0
-condition|)
-if|if
-condition|(
-operator|(
-name|err
-operator|=
-name|snd_set_irq_handler
-argument_list|(
-name|devc
-operator|->
-name|irq
-argument_list|,
-name|mpuintr
-argument_list|,
-name|midi_devs
-index|[
-name|dev
-index|]
-operator|->
-name|info
-operator|.
-name|name
-argument_list|)
-operator|<
-literal|0
-operator|)
-condition|)
-block|{
-return|return
-name|err
-return|;
-block|}
 if|if
 condition|(
 name|midi_devs
@@ -1952,22 +1984,7 @@ operator|<
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|devc
-operator|->
-name|shared_irq
-operator|==
-literal|0
-condition|)
-name|snd_release_irq
-argument_list|(
-name|devc
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
-name|printk
+name|printf
 argument_list|(
 literal|"MPU-401: Can't access coprocessor device\n"
 argument_list|)
@@ -2053,27 +2070,12 @@ argument_list|(
 name|devc
 argument_list|)
 expr_stmt|;
-comment|/* 				 * This disables the UART mode 				 */
+comment|/* This disables the UART mode */
 name|devc
 operator|->
 name|mode
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|devc
-operator|->
-name|shared_irq
-operator|==
-literal|0
-condition|)
-name|snd_release_irq
-argument_list|(
-name|devc
-operator|->
-name|irq
-argument_list|)
 expr_stmt|;
 name|devc
 operator|->
@@ -2128,16 +2130,14 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|midi_byte
 parameter_list|)
 block|{
 name|int
 name|timeout
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 name|struct
@@ -2153,14 +2153,7 @@ index|[
 name|dev
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*    * Test for input since pending input seems to block the output.    */
-block|if (input_avail (devc->base))     {       mpu401_input_loop (devc);     }
-endif|#
-directive|endif
-comment|/*    * Sometimes it takes about 13000 loops before the output becomes ready    * (After reset). Normally it takes just about 10 loops.    */
+comment|/*      * Sometimes it takes about 13000 loops before the output becomes      * ready (After reset). Normally it takes just about 10 loops.      */
 for|for
 control|(
 name|timeout
@@ -2175,18 +2168,16 @@ operator|!
 name|output_ready
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|;
 name|timeout
 operator|--
 control|)
 empty_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2194,19 +2185,15 @@ operator|!
 name|output_ready
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
-literal|"MPU-401: Send data (%#x) timeout\n"
-argument_list|,
-name|midi_byte
+literal|"MPU-401: Send data timeout\n"
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -2218,13 +2205,11 @@ block|}
 name|write_data
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|,
 name|midi_byte
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -2260,8 +2245,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 name|struct
@@ -2283,28 +2267,26 @@ name|devc
 operator|->
 name|uart_mode
 condition|)
-comment|/* 				 * Not possible in UART mode 				 */
 block|{
-name|printk
+comment|/* Not possible in UART mode */
+name|printf
 argument_list|(
 literal|"MPU-401 commands not possible in the UART mode\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
-comment|/*    * Test for input since pending input seems to block the output.    */
+comment|/*      * Test for input since pending input seems to block the output.      */
 if|if
 condition|(
 name|input_avail
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|)
 name|mpu401_input_loop
@@ -2312,7 +2294,7 @@ argument_list|(
 name|devc
 argument_list|)
 expr_stmt|;
-comment|/*    * Sometimes it takes about 30000 loops before the output becomes ready    * (After reset). Normally it takes just about 10 loops.    */
+comment|/*      * Sometimes it takes about 30000 loops before the output becomes      * ready (After reset). Normally it takes just about 10 loops.      */
 name|timeout
 operator|=
 literal|30000
@@ -2327,9 +2309,9 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
-literal|"MPU-401: Command (%#x) timeout\n"
+literal|"MPU-401: Command (0x%x) timeout\n"
 argument_list|,
 operator|(
 name|int
@@ -2340,16 +2322,16 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EIO
-argument_list|)
+operator|)
 return|;
 block|}
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2357,12 +2339,10 @@ operator|!
 name|output_ready
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|)
 block|{
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -2374,8 +2354,6 @@ block|}
 name|write_command
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|,
 name|cmd
 operator|->
@@ -2407,8 +2385,6 @@ condition|(
 name|input_avail
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|)
 if|if
@@ -2433,8 +2409,6 @@ argument_list|,
 name|read_data
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 argument_list|)
 operator|==
@@ -2453,8 +2427,6 @@ condition|(
 name|read_data
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 operator|==
 name|MPU_ACK
@@ -2470,17 +2442,17 @@ operator|!
 name|ok
 condition|)
 block|{
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/*       printk ("MPU: No ACK to command (%#x)\n", (int) cmd->cmd); */
+comment|/* printf ("MPU: No ACK to command (0x%x)\n", (int) cmd->cmd); */
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EIO
-argument_list|)
+operator|)
 return|;
 block|}
 if|if
@@ -2519,8 +2491,6 @@ operator|!
 name|output_ready
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|;
 name|timeout
@@ -2543,14 +2513,14 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-name|printk
+name|printf
 argument_list|(
-literal|"MPU: Command (%#x), parm send failed.\n"
+literal|"MPU: Command (0x%x), parm send failed.\n"
 argument_list|,
 operator|(
 name|int
@@ -2561,10 +2531,10 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EIO
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -2628,8 +2598,6 @@ condition|(
 name|input_avail
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 condition|)
 block|{
@@ -2643,8 +2611,6 @@ operator|=
 name|read_data
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 expr_stmt|;
 name|ok
@@ -2658,21 +2624,21 @@ operator|!
 name|ok
 condition|)
 block|{
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* printk ("MPU: No response(%d) to command (%#x)\n", i, (int) cmd->cmd); */
+comment|/* printf ("MPU: No response(%d) to command (0x%x)\n", 		     *	i, (int) cmd->cmd); 		     */
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EIO
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -2686,7 +2652,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|exec_cmd
+name|mpu_cmd
 parameter_list|(
 name|int
 name|dev
@@ -2768,13 +2734,14 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
 return|return
 name|ret
 return|;
+block|}
 return|return
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|rec
 operator|.
@@ -2794,8 +2761,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|status
 parameter_list|)
 block|{
@@ -2828,7 +2794,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|dev
 argument_list|,
@@ -2839,9 +2805,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 return|return
 literal|0
 return|;
+block|}
 return|return
 literal|1
 return|;
@@ -2856,7 +2824,7 @@ literal|0xF0
 case|:
 if|if
 condition|(
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|dev
 argument_list|,
@@ -2867,9 +2835,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 return|return
 literal|0
 return|;
+block|}
 return|return
 literal|1
 return|;
@@ -2879,9 +2849,6 @@ return|return
 literal|0
 return|;
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -2923,10 +2890,10 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
@@ -2951,22 +2918,27 @@ block|{
 case|case
 literal|1
 case|:
-name|IOCTL_FROM_USER
+name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
-name|init_sequence
-argument_list|,
+operator|(
+operator|(
 operator|(
 name|char
 operator|*
 operator|)
 name|arg
-argument_list|,
+operator|)
+index|[
 literal|0
+index|]
+operator|)
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|init_sequence
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2983,23 +2955,27 @@ name|SNDCTL_MIDI_MPUMODE
 case|:
 if|if
 condition|(
+operator|!
+operator|(
 name|devc
 operator|->
-name|version
-operator|==
-literal|0
+name|capabilities
+operator|&
+name|MPU_CAP_INTLG
+operator|)
 condition|)
 block|{
-name|printk
+comment|/* No intelligent mode */
+name|printf
 argument_list|(
 literal|"MPU-401: Intelligent mode not supported by the HW\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 name|set_uart_mode
@@ -3009,10 +2985,14 @@ argument_list|,
 name|devc
 argument_list|,
 operator|!
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3029,22 +3009,28 @@ decl_stmt|;
 name|mpu_command_rec
 name|rec
 decl_stmt|;
-name|IOCTL_FROM_USER
+name|bcopy
 argument_list|(
+operator|&
+operator|(
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|arg
+operator|)
+index|[
+literal|0
+index|]
+operator|)
+argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 name|rec
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|arg
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3071,22 +3057,28 @@ condition|)
 return|return
 name|ret
 return|;
-name|IOCTL_TO_USER
+name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|arg
-argument_list|,
-literal|0
-argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 name|rec
+argument_list|,
+operator|&
+operator|(
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|arg
+operator|)
+index|[
+literal|0
+index|]
+operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3101,10 +3093,10 @@ block|}
 break|break;
 default|default:
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -3133,7 +3125,7 @@ block|{
 return|return
 literal|0
 return|;
-comment|/* 				 * No data in buffers 				 */
+comment|/* No data in buffers */
 block|}
 end_function
 
@@ -3145,12 +3137,10 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
-name|int
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
@@ -3182,10 +3172,10 @@ operator|>
 name|num_midis
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|ENXIO
-argument_list|)
+operator|)
 return|;
 name|devc
 operator|=
@@ -3203,21 +3193,27 @@ block|{
 case|case
 name|SNDCTL_SYNTH_INFO
 case|:
-name|IOCTL_TO_USER
+name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|arg
-argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|mpu_synth_info
 index|[
 name|midi_dev
 index|]
+argument_list|,
+operator|&
+operator|(
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|arg
+operator|)
+index|[
+literal|0
+index|]
+operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3239,10 +3235,10 @@ return|;
 break|break;
 default|default:
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -3291,10 +3287,10 @@ name|num_midis
 condition|)
 block|{
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|ENXIO
-argument_list|)
+operator|)
 return|;
 block|}
 name|devc
@@ -3305,7 +3301,7 @@ index|[
 name|midi_dev
 index|]
 expr_stmt|;
-comment|/*      *  Verify that the device is really running.      *  Some devices (such as Ensoniq SoundScape don't      *  work before the on board processor (OBP) is initialized      *  by downloadin it's microcode.    */
+comment|/*      * Verify that the device is really running. Some devices (such as      * Ensoniq SoundScape don't work before the on board processor (OBP)      * is initialized by downloadin it's microcode.      */
 if|if
 condition|(
 operator|!
@@ -3319,24 +3315,22 @@ condition|(
 name|mpu401_status
 argument_list|(
 name|devc
-operator|->
-name|base
 argument_list|)
 operator|==
 literal|0xff
 condition|)
-comment|/* Bus float */
 block|{
-name|printk
+comment|/* Bus float */
+name|printf
 argument_list|(
 literal|"MPU-401: Device not initialized properly\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EIO
-argument_list|)
+operator|)
 return|;
 block|}
 name|reset_mpu401
@@ -3352,16 +3346,16 @@ operator|->
 name|opened
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"MPU-401: Midi busy\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
 name|devc
@@ -3391,45 +3385,6 @@ index|]
 operator|=
 name|midi_dev
 expr_stmt|;
-if|if
-condition|(
-name|devc
-operator|->
-name|shared_irq
-operator|==
-literal|0
-condition|)
-if|if
-condition|(
-operator|(
-name|err
-operator|=
-name|snd_set_irq_handler
-argument_list|(
-name|devc
-operator|->
-name|irq
-argument_list|,
-name|mpuintr
-argument_list|,
-name|midi_devs
-index|[
-name|midi_dev
-index|]
-operator|->
-name|info
-operator|.
-name|name
-argument_list|)
-operator|<
-literal|0
-operator|)
-condition|)
-block|{
-return|return
-name|err
-return|;
-block|}
 if|if
 condition|(
 name|midi_devs
@@ -3469,22 +3424,7 @@ operator|<
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|devc
-operator|->
-name|shared_irq
-operator|==
-literal|0
-condition|)
-name|snd_release_irq
-argument_list|(
-name|devc
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
-name|printk
+name|printf
 argument_list|(
 literal|"MPU-401: Can't access coprocessor device\n"
 argument_list|)
@@ -3511,7 +3451,7 @@ operator|&
 name|OPEN_READ
 condition|)
 block|{
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|midi_dev
 argument_list|,
@@ -3521,7 +3461,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Enable data in stop mode */
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|midi_dev
 argument_list|,
@@ -3572,7 +3512,7 @@ index|[
 name|midi_dev
 index|]
 expr_stmt|;
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|midi_dev
 argument_list|,
@@ -3582,7 +3522,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Stop recording, playback and MIDI */
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|midi_dev
 argument_list|,
@@ -3592,21 +3532,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Disable data in stopped mode */
-if|if
-condition|(
-name|devc
-operator|->
-name|shared_irq
-operator|==
-literal|0
-condition|)
-name|snd_release_irq
-argument_list|(
-name|devc
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
 name|devc
 operator|->
 name|inputintr
@@ -3727,6 +3652,8 @@ name|NULL
 block|,
 comment|/* alloc */
 name|midi_synth_setup_voice
+block|,
+name|midi_synth_send_sysex
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3735,6 +3662,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|synth_operations
+modifier|*
 name|mpu401_synth_operations
 index|[
 name|MAX_MIDI_DEV
@@ -3828,7 +3756,7 @@ condition|(
 operator|(
 name|tmp
 operator|=
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|num_midis
 argument_list|,
@@ -3864,7 +3792,7 @@ condition|(
 operator|(
 name|tmp
 operator|=
-name|exec_cmd
+name|mpu_cmd
 argument_list|(
 name|num_midis
 argument_list|,
@@ -3895,20 +3823,16 @@ block|}
 end_function
 
 begin_function
-name|long
+name|void
 name|attach_mpu401
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 name|char
@@ -3926,14 +3850,12 @@ operator|>=
 name|MAX_MIDI_DEV
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"MPU-401: Too many midi devices detected\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return ;
 block|}
 name|devc
 operator|=
@@ -3950,6 +3872,14 @@ operator|=
 name|hw_config
 operator|->
 name|io_base
+expr_stmt|;
+name|devc
+operator|->
+name|osp
+operator|=
+name|hw_config
+operator|->
+name|osp
 expr_stmt|;
 name|devc
 operator|->
@@ -4021,8 +3951,49 @@ name|hw_config
 operator|->
 name|always_detect
 expr_stmt|;
+name|devc
+operator|->
+name|irq
+operator|=
+name|hw_config
+operator|->
+name|irq
+expr_stmt|;
 if|if
 condition|(
+name|devc
+operator|->
+name|irq
+operator|<
+literal|0
+condition|)
+block|{
+name|devc
+operator|->
+name|irq
+operator|*=
+operator|-
+literal|1
+expr_stmt|;
+name|devc
+operator|->
+name|shared_irq
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|irq2dev
+index|[
+name|devc
+operator|->
+name|irq
+index|]
+operator|=
+name|num_midis
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|hw_config
 operator|->
 name|always_detect
@@ -4037,13 +4008,38 @@ argument_list|(
 name|devc
 argument_list|)
 condition|)
-return|return
-name|mem_start
-return|;
-name|DISABLE_INTR
+return|return ;
+if|if
+condition|(
+operator|!
+name|devc
+operator|->
+name|shared_irq
+condition|)
+if|if
+condition|(
+name|snd_set_irq_handler
 argument_list|(
-name|flags
+name|devc
+operator|->
+name|irq
+argument_list|,
+name|mpuintr
+argument_list|,
+name|devc
+operator|->
+name|osp
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+return|return ;
+block|}
+name|flags
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|mpu401_chk_version
 argument_list|(
@@ -4063,39 +4059,139 @@ argument_list|(
 name|devc
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
 block|}
+empty_stmt|;
 if|if
 condition|(
 name|devc
 operator|->
 name|version
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
-name|memcpy
+if|if
+condition|(
+name|mpu_cmd
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
+name|num_midis
+argument_list|,
+literal|0xC5
+argument_list|,
+literal|0
+argument_list|)
+operator|>=
+literal|0
+condition|)
+comment|/* Set timebase OK */
+if|if
+condition|(
+name|mpu_cmd
+argument_list|(
+name|num_midis
+argument_list|,
+literal|0xE0
+argument_list|,
+literal|120
+argument_list|)
+operator|>=
+literal|0
+condition|)
+comment|/* Set tempo OK */
+name|devc
+operator|->
+name|capabilities
+operator||=
+name|MPU_CAP_INTLG
+expr_stmt|;
+comment|/* Supports intelligent 							 * mode */
 name|mpu401_synth_operations
 index|[
 name|num_midis
 index|]
+operator|=
+operator|(
+expr|struct
+name|synth_operations
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|synth_operations
+argument_list|)
 argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mpu401_synth_operations
+index|[
+name|num_midis
+index|]
+condition|)
+name|panic
+argument_list|(
+literal|"SOUND: Cannot allocate memory\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mpu401_synth_operations
+index|[
+name|num_midis
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mpu401: Can't allocate memory\n"
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|devc
+operator|->
+name|capabilities
+operator|&
+name|MPU_CAP_INTLG
+operator|)
+condition|)
+block|{
+comment|/* No intelligent mode */
+name|bcopy
+argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 name|std_midi_synth
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|mpu401_synth_operations
+index|[
+name|num_midis
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4107,31 +4203,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|devc
-operator|->
-name|capabilities
-operator||=
-name|MPU_CAP_INTLG
-expr_stmt|;
-comment|/* Supports intelligent mode */
-name|memcpy
+name|bcopy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|mpu401_synth_operations
-index|[
-name|num_midis
-index|]
+name|mpu401_synth_proto
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-operator|&
-name|mpu401_synth_proto
+name|mpu401_synth_operations
+index|[
+name|num_midis
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4141,8 +4229,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|memcpy
+name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|mpu401_midi_proto
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -4152,13 +4247,6 @@ name|mpu401_midi_operations
 index|[
 name|num_midis
 index|]
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|mpu401_midi_proto
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4174,14 +4262,20 @@ index|]
 operator|.
 name|converter
 operator|=
-operator|&
 name|mpu401_synth_operations
 index|[
 name|num_midis
 index|]
 expr_stmt|;
-name|memcpy
+name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|mpu_synth_info_proto
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -4191,13 +4285,6 @@ name|mpu_synth_info
 index|[
 name|num_midis
 index|]
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|mpu_synth_info_proto
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4223,8 +4310,8 @@ name|revision
 operator|>=
 literal|0x07
 condition|)
-comment|/* MusicQuest interface */
 block|{
+comment|/* MusicQuest interface */
 name|int
 name|ports
 init|=
@@ -4266,554 +4353,2540 @@ literal|'M'
 else|:
 literal|' '
 expr_stmt|;
-if|#
-directive|if
-name|defined
+name|sprintf
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|printk
-argument_list|(
-literal|"mpu0:<MQX-%d%c MIDI Interface>"
+name|mpu_synth_info
+index|[
+name|num_midis
+index|]
+operator|.
+name|name
 argument_list|,
-else|#
-directive|else
-argument|printk (
-literal|"<MQX-%d%c MIDI Interface>"
-argument|,
-endif|#
-directive|endif
-argument|ports, 	      revision_char);       sprintf (mpu_synth_info[num_midis].name,
 literal|"MQX-%d%c MIDI Interface #%d"
-argument|, 	       ports, 	       revision_char, 	       n_mpu_devs);     }   else     {        revision_char = devc->revision ? devc->revision +
-literal|'@'
-argument|:
-literal|' '
-argument|;       if (devc->revision> (
-literal|'Z'
-argument|-
-literal|'@'
-argument|)) 	revision_char =
-literal|'+'
-argument|;        devc->capabilities |= MPU_CAP_SYNC | MPU_CAP_FSK;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
+argument_list|,
+name|ports
+argument_list|,
+name|revision_char
+argument_list|,
+name|n_mpu_devs
 argument_list|)
-argument|printk (
-literal|"mpu0:<MPU-401 MIDI Interface %d.%d%c>"
-argument|,
-else|#
-directive|else
-argument|printk (
-literal|"<MPU-401 MIDI Interface %d.%d%c>"
-argument|,
-endif|#
-directive|endif
-argument|(devc->version&
-literal|0xf0
-argument|)>>
-literal|4
-argument|, 	      devc->version&
-literal|0x0f
-argument|, 	      revision_char);       sprintf (mpu_synth_info[num_midis].name,
+expr_stmt|;
+block|}
+else|else
+block|{
+name|revision_char
+operator|=
+name|devc
+operator|->
+name|revision
+condition|?
+name|devc
+operator|->
+name|revision
+operator|+
+literal|'@'
+else|:
+literal|' '
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|devc
+operator|->
+name|revision
+operator|>
+operator|(
+literal|'Z'
+operator|-
+literal|'@'
+operator|)
+condition|)
+name|revision_char
+operator|=
+literal|'+'
+expr_stmt|;
+name|devc
+operator|->
+name|capabilities
+operator||=
+name|MPU_CAP_SYNC
+operator||
+name|MPU_CAP_FSK
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|mpu_synth_info
+index|[
+name|num_midis
+index|]
+operator|.
+name|name
+argument_list|,
 literal|"MPU-401 %d.%d%c Midi interface #%d"
-argument|, 	       (devc->version&
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|devc
+operator|->
+name|version
+operator|&
 literal|0xf0
-argument|)>>
+argument_list|)
+operator|>>
 literal|4
-argument|, 	       devc->version&
+argument_list|,
+name|devc
+operator|->
+name|version
+operator|&
 literal|0x0f
-argument|, 	       revision_char, 	       n_mpu_devs);     }    strcpy (mpu401_midi_operations[num_midis].info.name, 	  mpu_synth_info[num_midis].name);    mpu401_synth_operations[num_midis].midi_dev = devc->devno = num_midis;   mpu401_synth_operations[devc->devno].info =&mpu_synth_info[devc->devno];    if (devc->capabilities& MPU_CAP_INTLG)
-comment|/* Has timer */
-argument|mpu_timer_init (num_midis);    irq2dev[devc->irq] = num_midis;   midi_devs[num_midis++] =&mpu401_midi_operations[devc->devno];   return mem_start; }  static int reset_mpu401 (struct mpu_config *devc) {   unsigned long   flags;   int             ok, timeout, n;   int             timeout_limit;
-comment|/*    * Send the RESET command. Try again if no success at the first time.    * (If the device is in the UART mode, it will not ack the reset cmd).    */
-argument|ok =
+argument_list|,
+name|revision_char
+argument_list|,
+name|n_mpu_devs
+argument_list|)
+expr_stmt|;
+block|}
+name|strcpy
+argument_list|(
+name|mpu401_midi_operations
+index|[
+name|num_midis
+index|]
+operator|.
+name|info
+operator|.
+name|name
+argument_list|,
+name|mpu_synth_info
+index|[
+name|num_midis
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|conf_printf
+argument_list|(
+name|mpu_synth_info
+index|[
+name|num_midis
+index|]
+operator|.
+name|name
+argument_list|,
+name|hw_config
+argument_list|)
+expr_stmt|;
+name|mpu401_synth_operations
+index|[
+name|num_midis
+index|]
+operator|->
+name|midi_dev
+operator|=
+name|devc
+operator|->
+name|devno
+operator|=
+name|num_midis
+expr_stmt|;
+name|mpu401_synth_operations
+index|[
+name|devc
+operator|->
+name|devno
+index|]
+operator|->
+name|info
+operator|=
+operator|&
+name|mpu_synth_info
+index|[
+name|devc
+operator|->
+name|devno
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|devc
+operator|->
+name|capabilities
+operator|&
+name|MPU_CAP_INTLG
+condition|)
+comment|/* Intelligent mode */
+name|mpu_timer_init
+argument_list|(
+name|num_midis
+argument_list|)
+expr_stmt|;
+name|irq2dev
+index|[
+name|devc
+operator|->
+name|irq
+index|]
+operator|=
+name|num_midis
+expr_stmt|;
+name|midi_devs
+index|[
+name|num_midis
+operator|++
+index|]
+operator|=
+operator|&
+name|mpu401_midi_operations
+index|[
+name|devc
+operator|->
+name|devno
+index|]
+expr_stmt|;
+return|return ;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|reset_mpu401
+parameter_list|(
+name|struct
+name|mpu_config
+modifier|*
+name|devc
+parameter_list|)
+block|{
+name|u_long
+name|flags
+decl_stmt|;
+name|int
+name|ok
+decl_stmt|,
+name|timeout
+decl_stmt|,
+name|n
+decl_stmt|;
+name|int
+name|timeout_limit
+decl_stmt|;
+comment|/*      * Send the RESET command. Try again if no success at the first time.      * (If the device is in the UART mode, it will not ack the reset      * cmd).      */
+name|ok
+operator|=
 literal|0
-argument|;    timeout_limit = devc->initialized ?
+expr_stmt|;
+name|timeout_limit
+operator|=
+name|devc
+operator|->
+name|initialized
+condition|?
 literal|30000
-argument|:
+else|:
 literal|100000
-argument|;   devc->initialized =
+expr_stmt|;
+name|devc
+operator|->
+name|initialized
+operator|=
 literal|1
-argument|;    for (n =
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
 literal|0
-argument|; n<
+init|;
+name|n
+operator|<
 literal|2
-argument|&& !ok; n++)     {       for (timeout = timeout_limit; timeout>
+operator|&&
+operator|!
+name|ok
+condition|;
+name|n
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|timeout
+operator|=
+name|timeout_limit
+init|;
+name|timeout
+operator|>
 literal|0
-argument|&& !ok; timeout--) 	ok = output_ready (devc->base);        write_command (devc->base, MPU_RESET);
-comment|/* 						 * Send MPU-401 RESET Command 						 */
-comment|/*        * Wait at least 25 msec. This method is not accurate so let's make the        * loop bit longer. Cannot sleep since this is called during boot.        */
-argument|for (timeout = timeout_limit *
+operator|&&
+operator|!
+name|ok
+condition|;
+name|timeout
+operator|--
+control|)
+name|ok
+operator|=
+name|output_ready
+argument_list|(
+name|devc
+argument_list|)
+expr_stmt|;
+name|write_command
+argument_list|(
+name|devc
+argument_list|,
+name|MPU_RESET
+argument_list|)
+expr_stmt|;
+comment|/* Send MPU-401 RESET Command */
+comment|/* 	 * Wait at least 25 msec. This method is not accurate so 	 * let's make the loop bit longer. Cannot sleep since this is 	 * called during boot. 	 */
+for|for
+control|(
+name|timeout
+operator|=
+name|timeout_limit
+operator|*
 literal|2
-argument|; timeout>
+init|;
+name|timeout
+operator|>
 literal|0
-argument|&& !ok; timeout--) 	{ 	  DISABLE_INTR (flags); 	  if (input_avail (devc->base)) 	    if (read_data (devc->base) == MPU_ACK) 	      ok =
+operator|&&
+operator|!
+name|ok
+condition|;
+name|timeout
+operator|--
+control|)
+block|{
+name|flags
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|input_avail
+argument_list|(
+name|devc
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|read_data
+argument_list|(
+name|devc
+argument_list|)
+operator|==
+name|MPU_ACK
+operator|)
+condition|)
+name|ok
+operator|=
 literal|1
-argument|; 	  RESTORE_INTR (flags); 	}      }    devc->m_state = ST_INIT;   devc->m_ptr =
+expr_stmt|;
+name|splx
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|devc
+operator|->
+name|m_state
+operator|=
+name|ST_INIT
+expr_stmt|;
+name|devc
+operator|->
+name|m_ptr
+operator|=
 literal|0
-argument|;   devc->m_left =
+expr_stmt|;
+name|devc
+operator|->
+name|m_left
+operator|=
 literal|0
-argument|;   devc->last_status =
+expr_stmt|;
+name|devc
+operator|->
+name|last_status
+operator|=
 literal|0
-argument|;   devc->uart_mode =
+expr_stmt|;
+name|devc
+operator|->
+name|uart_mode
+operator|=
 literal|0
-argument|;    return ok; }  static void set_uart_mode (int dev, struct mpu_config *devc, int arg) {    if (!arg&& devc->version ==
+expr_stmt|;
+return|return
+name|ok
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|set_uart_mode
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|struct
+name|mpu_config
+modifier|*
+name|devc
+parameter_list|,
+name|int
+name|arg
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|arg
+operator|&&
+operator|(
+name|devc
+operator|->
+name|capabilities
+operator|&
+name|MPU_CAP_INTLG
+operator|)
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|devc
+operator|->
+name|uart_mode
+operator|==
 literal|0
-argument|)     {       return;     }    if ((devc->uart_mode ==
+operator|)
+operator|==
+operator|(
+name|arg
+operator|==
 literal|0
-argument|) == (arg ==
-literal|0
-argument|))     {       return;
+operator|)
+condition|)
+return|return;
 comment|/* Already set */
-argument|}    reset_mpu401 (devc);
+name|reset_mpu401
+argument_list|(
+name|devc
+argument_list|)
+expr_stmt|;
 comment|/* This exits the uart mode */
-argument|if (arg)     {       if (exec_cmd (dev, UART_MODE_ON,
+if|if
+condition|(
+name|arg
+operator|&&
+operator|(
+name|mpu_cmd
+argument_list|(
+name|dev
+argument_list|,
+name|UART_MODE_ON
+argument_list|,
 literal|0
-argument|)<
+argument_list|)
+operator|<
 literal|0
-argument|) 	{ 	  printk (
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|"MPU%d: Can't enter UART mode\n"
-argument|, devc->devno); 	  devc->uart_mode =
+argument_list|,
+name|devc
+operator|->
+name|devno
+argument_list|)
+expr_stmt|;
+name|devc
+operator|->
+name|uart_mode
+operator|=
 literal|0
-argument|; 	  return; 	}     }   devc->uart_mode = arg;  }  int probe_mpu401 (struct address_info *hw_config) {   int             ok =
+expr_stmt|;
+return|return;
+block|}
+name|devc
+operator|->
+name|uart_mode
+operator|=
+name|arg
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|probe_mpu401
+parameter_list|(
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+block|{
+name|int
+name|ok
+init|=
 literal|0
-argument|;   struct mpu_config tmp_devc;    tmp_devc.base = hw_config->io_base;   tmp_devc.irq = hw_config->irq;   tmp_devc.initialized =
+decl_stmt|;
+name|struct
+name|mpu_config
+name|tmp_devc
+decl_stmt|;
+name|tmp_devc
+operator|.
+name|base
+operator|=
+name|hw_config
+operator|->
+name|io_base
+expr_stmt|;
+name|tmp_devc
+operator|.
+name|irq
+operator|=
+name|hw_config
+operator|->
+name|irq
+expr_stmt|;
+name|tmp_devc
+operator|.
+name|initialized
+operator|=
 literal|0
-argument|;
+expr_stmt|;
+name|tmp_devc
+operator|.
+name|opened
+operator|=
+literal|0
+expr_stmt|;
+name|tmp_devc
+operator|.
+name|osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_AEDSP16
+name|CONFIG_AEDSP16
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
 name|AEDSP16_MPU401
 argument_list|)
-comment|/*      * Initialize Audio Excel DSP 16 to MPU-401, before any operation.    */
-argument|InitAEDSP16_MPU401 (hw_config);
-endif|#
-directive|endif
-argument|if (hw_config->always_detect)     return
-literal|1
-argument|;    if (INB (hw_config->io_base +
-literal|1
-argument|) ==
-literal|0xff
-argument|)     return
-literal|0
-argument|;
-comment|/* Just bus float? */
-argument|ok = reset_mpu401 (&tmp_devc);    return ok; }
-comment|/*****************************************************  *      Timer stuff  ****************************************************/
-if|#
-directive|if
-operator|!
-name|defined
+comment|/*      * Initialize Audio Excel DSP 16 to MPU-401, before any operation.      */
+name|InitAEDSP16_MPU401
 argument_list|(
-name|EXCLUDE_SEQUENCER
+name|hw_config
 argument_list|)
-argument|static volatile int timer_initialized =
-literal|0
-argument|, timer_open =
-literal|0
-argument|, tmr_running =
-literal|0
-argument|; static volatile int curr_tempo, curr_timebase, hw_timebase; static int      max_timebase =
-literal|8
-argument|;
-comment|/* 8*24=192 ppqn */
-argument|static volatile unsigned long next_event_time; static volatile unsigned long curr_ticks, curr_clocks; static unsigned long prev_event_time; static int      metronome_mode;  static unsigned long clocks2ticks (unsigned long clocks) {
-comment|/*      * The MPU-401 supports just a limited set of possible timebase values.      * Since the applications require more choices, the driver has to      * program the HW to do it's best and to convert between the HW and      * actual timebases.    */
-argument|return ((clocks * curr_timebase) + (hw_timebase /
-literal|2
-argument|)) / hw_timebase; }  static void set_timebase (int midi_dev, int val) {   int             hw_val;    if (val<
-literal|48
-argument|)     val =
-literal|48
-argument|;   if (val>
-literal|1000
-argument|)     val =
-literal|1000
-argument|;    hw_val = val;   hw_val = (hw_val +
-literal|23
-argument|) /
-literal|24
-argument|;   if (hw_val> max_timebase)     hw_val = max_timebase;    if (exec_cmd (midi_dev,
-literal|0xC0
-argument|| (hw_val&
-literal|0x0f
-argument|),
-literal|0
-argument|)<
-literal|0
-argument|)     {       printk (
-literal|"MPU: Can't set HW timebase to %d\n"
-argument|, hw_val *
-literal|24
-argument|);       return;     }   hw_timebase = hw_val *
-literal|24
-argument|;   curr_timebase = val;  }  static void tmr_reset (void) {   unsigned long   flags;    DISABLE_INTR (flags);   next_event_time =
-literal|0xffffffff
-argument|;   prev_event_time =
-literal|0
-argument|;   curr_ticks = curr_clocks =
-literal|0
-argument|;   RESTORE_INTR (flags); }  static void set_timer_mode (int midi_dev) {   if (timer_mode& TMR_MODE_CLS)     exec_cmd (midi_dev,
-literal|0x3c
-argument|,
-literal|0
-argument|);
-comment|/* Use CLS sync */
-argument|else if (timer_mode& TMR_MODE_SMPTE)     exec_cmd (midi_dev,
-literal|0x3d
-argument|,
-literal|0
-argument|);
-comment|/* Use SMPTE sync */
-argument|if (timer_mode& TMR_INTERNAL)     {       exec_cmd (midi_dev,
-literal|0x80
-argument|,
-literal|0
-argument|);
-comment|/* Use MIDI sync */
-argument|}   else     {       if (timer_mode& (TMR_MODE_MIDI | TMR_MODE_CLS)) 	{ 	  exec_cmd (midi_dev,
-literal|0x82
-argument|,
-literal|0
-argument|);
-comment|/* Use MIDI sync */
-argument|exec_cmd (midi_dev,
-literal|0x91
-argument|,
-literal|0
-argument|);
-comment|/* Enable ext MIDI ctrl */
-argument|}       else if (timer_mode& TMR_MODE_FSK) 	exec_cmd (midi_dev,
-literal|0x81
-argument|,
-literal|0
-argument|);
-comment|/* Use FSK sync */
-argument|} }  static void stop_metronome (int midi_dev) {   exec_cmd (midi_dev,
-literal|0x84
-argument|,
-literal|0
-argument|);
-comment|/* Disable metronome */
-argument|}  static void setup_metronome (int midi_dev) {   int             numerator, denominator;   int             clks_per_click, num_32nds_per_beat;   int             beats_per_measure;    numerator = ((unsigned) metronome_mode>>
-literal|24
-argument|)&
-literal|0xff
-argument|;   denominator = ((unsigned) metronome_mode>>
-literal|16
-argument|)&
-literal|0xff
-argument|;   clks_per_click = ((unsigned) metronome_mode>>
-literal|8
-argument|)&
-literal|0xff
-argument|;   num_32nds_per_beat = (unsigned) metronome_mode&
-literal|0xff
-argument|;   beats_per_measure = (numerator *
-literal|4
-argument|)>> denominator;    if (!metronome_mode)     exec_cmd (midi_dev,
-literal|0x84
-argument|,
-literal|0
-argument|);
-comment|/* Disable metronome */
-argument|else     {       exec_cmd (midi_dev,
-literal|0xE4
-argument|, clks_per_click);       exec_cmd (midi_dev,
-literal|0xE6
-argument|, beats_per_measure);       exec_cmd (midi_dev,
-literal|0x83
-argument|,
-literal|0
-argument|);
-comment|/* Enable metronome without accents */
-argument|} }  static int start_timer (int midi_dev) {   tmr_reset ();   set_timer_mode (midi_dev);    if (tmr_running)     return TIMER_NOT_ARMED;
-comment|/* Already running */
-argument|if (timer_mode& TMR_INTERNAL)     {       exec_cmd (midi_dev,
-literal|0x02
-argument|,
-literal|0
-argument|);
-comment|/* Send MIDI start */
-argument|tmr_running =
-literal|1
-argument|;       return TIMER_NOT_ARMED;     }   else     {       exec_cmd (midi_dev,
-literal|0x35
-argument|,
-literal|0
-argument|);
-comment|/* Enable mode messages to PC */
-argument|exec_cmd (midi_dev,
-literal|0x38
-argument|,
-literal|0
-argument|);
-comment|/* Enable sys common messages to PC */
-argument|exec_cmd (midi_dev,
-literal|0x39
-argument|,
-literal|0
-argument|);
-comment|/* Enable real time messages to PC */
-argument|exec_cmd (midi_dev,
-literal|0x97
-argument|,
-literal|0
-argument|);
-comment|/* Enable system exclusive messages to PC */
-argument|}    return TIMER_ARMED; }  static int mpu_timer_open (int dev, int mode) {   int             midi_dev = sound_timer_devs[dev]->devlink;    if (timer_open)     return RET_ERROR (EBUSY);    tmr_reset ();   curr_tempo =
-literal|50
-argument|;   exec_cmd (midi_dev,
-literal|0xE0
-argument|,
-literal|50
-argument|);   curr_timebase = hw_timebase =
-literal|120
-argument|;   set_timebase (midi_dev,
-literal|120
-argument|);   timer_open =
-literal|1
-argument|;   metronome_mode =
-literal|0
-argument|;   set_timer_mode (midi_dev);    exec_cmd (midi_dev,
-literal|0xe7
-argument|,
-literal|0x04
-argument|);
-comment|/* Send all clocks to host */
-argument|exec_cmd (midi_dev,
-literal|0x95
-argument|,
-literal|0
-argument|);
-comment|/* Enable clock to host */
-argument|return
-literal|0
-argument|; }  static void mpu_timer_close (int dev) {   int             midi_dev = sound_timer_devs[dev]->devlink;    timer_open = tmr_running =
-literal|0
-argument|;   exec_cmd (midi_dev,
-literal|0x15
-argument|,
-literal|0
-argument|);
-comment|/* Stop all */
-argument|exec_cmd (midi_dev,
-literal|0x94
-argument|,
-literal|0
-argument|);
-comment|/* Disable clock to host */
-argument|exec_cmd (midi_dev,
-literal|0x8c
-argument|,
-literal|0
-argument|);
-comment|/* Disable measure end messages to host */
-argument|stop_metronome (midi_dev); }  static int mpu_timer_event (int dev, unsigned char *event) {   unsigned char   command = event[
-literal|1
-argument|];   unsigned long   parm = *(unsigned int *)&event[
-literal|4
-argument|];   int             midi_dev = sound_timer_devs[dev]->devlink;    switch (command)     {     case TMR_WAIT_REL:       parm += prev_event_time;     case TMR_WAIT_ABS:       if (parm>
-literal|0
-argument|) 	{ 	  long            time;  	  if (parm<= curr_ticks)
-comment|/* It's the time */
-argument|return TIMER_NOT_ARMED;  	  time = parm; 	  next_event_time = prev_event_time = time;  	  return TIMER_ARMED; 	}       break;      case TMR_START:       if (tmr_running) 	break;       return start_timer (midi_dev);       break;      case TMR_STOP:       exec_cmd (midi_dev,
-literal|0x01
-argument|,
-literal|0
-argument|);
-comment|/* Send MIDI stop */
-argument|stop_metronome (midi_dev);       tmr_running =
-literal|0
-argument|;       break;      case TMR_CONTINUE:       if (tmr_running) 	break;       exec_cmd (midi_dev,
-literal|0x03
-argument|,
-literal|0
-argument|);
-comment|/* Send MIDI continue */
-argument|setup_metronome (midi_dev);       tmr_running =
-literal|1
-argument|;       break;      case TMR_TEMPO:       if (parm) 	{ 	  if (parm<
-literal|8
-argument|) 	    parm =
-literal|8
-argument|; 	  if (parm>
-literal|250
-argument|) 	    parm =
-literal|250
-argument|;  	  if (exec_cmd (midi_dev,
-literal|0xE0
-argument|, parm)<
-literal|0
-argument|) 	    printk (
-literal|"MPU: Can't set tempo to %d\n"
-argument|, (int) parm); 	  curr_tempo = parm; 	}       break;      case TMR_ECHO:       seq_copy_to_input (event,
-literal|8
-argument|);       break;      case TMR_TIMESIG:       if (metronome_mode)
-comment|/* Metronome enabled */
-argument|{ 	  metronome_mode = parm; 	  setup_metronome (midi_dev); 	}       break;      default:;     }    return TIMER_NOT_ARMED; }  static unsigned long mpu_timer_get_time (int dev) {   if (!timer_open)     return
-literal|0
-argument|;    return curr_ticks; }  static int mpu_timer_ioctl (int dev, 		 unsigned int command, unsigned int arg) {   int             midi_dev = sound_timer_devs[dev]->devlink;    switch (command)     {     case SNDCTL_TMR_SOURCE:       { 	int             parm = IOCTL_IN (arg)& timer_caps;  	if (parm !=
-literal|0
-argument|) 	  { 	    timer_mode = parm;  	    if (timer_mode& TMR_MODE_CLS) 	      exec_cmd (midi_dev,
-literal|0x3c
-argument|,
-literal|0
-argument|);
-comment|/* Use CLS sync */
-argument|else if (timer_mode& TMR_MODE_SMPTE) 	      exec_cmd (midi_dev,
-literal|0x3d
-argument|,
-literal|0
-argument|);
-comment|/* Use SMPTE sync */
-argument|}  	return IOCTL_OUT (arg, timer_mode);       }       break;      case SNDCTL_TMR_START:       start_timer (midi_dev);       return
-literal|0
-argument|;       break;      case SNDCTL_TMR_STOP:       tmr_running =
-literal|0
-argument|;       exec_cmd (midi_dev,
-literal|0x01
-argument|,
-literal|0
-argument|);
-comment|/* Send MIDI stop */
-argument|stop_metronome (midi_dev);       return
-literal|0
-argument|;       break;      case SNDCTL_TMR_CONTINUE:       if (tmr_running) 	return
-literal|0
-argument|;       tmr_running =
-literal|1
-argument|;       exec_cmd (midi_dev,
-literal|0x03
-argument|,
-literal|0
-argument|);
-comment|/* Send MIDI continue */
-argument|return
-literal|0
-argument|;       break;      case SNDCTL_TMR_TIMEBASE:       { 	int             val = IOCTL_IN (arg);  	if (val) 	  set_timebase (midi_dev, val);  	return IOCTL_OUT (arg, curr_timebase);       }       break;      case SNDCTL_TMR_TEMPO:       { 	int             val = IOCTL_IN (arg); 	int             ret;  	if (val) 	  { 	    if (val<
-literal|8
-argument|) 	      val =
-literal|8
-argument|; 	    if (val>
-literal|250
-argument|) 	      val =
-literal|250
-argument|; 	    if ((ret = exec_cmd (midi_dev,
-literal|0xE0
-argument|, val))<
-literal|0
-argument|) 	      { 		printk (
-literal|"MPU: Can't set tempo to %d\n"
-argument|, (int) val); 		return ret; 	      }  	    curr_tempo = val; 	  }  	return IOCTL_OUT (arg, curr_tempo);       }       break;      case SNDCTL_SEQ_CTRLRATE:       if (IOCTL_IN (arg) !=
-literal|0
-argument|)
-comment|/* Can't change */
-argument|return RET_ERROR (EINVAL);        return IOCTL_OUT (arg, ((curr_tempo * curr_timebase) +
-literal|30
-argument|) /
-literal|60
-argument|);       break;      case SNDCTL_TMR_METRONOME:       metronome_mode = IOCTL_IN (arg);       setup_metronome (midi_dev);       return
-literal|0
-argument|;       break;      default:     }    return RET_ERROR (EINVAL); }  static void mpu_timer_arm (int dev, long time) {   if (time<
-literal|0
-argument|)     time = curr_ticks +
-literal|1
-argument|;   else if (time<= curr_ticks)
-comment|/* It's the time */
-argument|return;    next_event_time = prev_event_time = time;    return; }  static struct sound_timer_operations mpu_timer = {   {
-literal|"MPU-401 Timer"
-argument|,
-literal|0
-argument|},
-literal|10
-argument|,
-comment|/* Priority */
-literal|0
-argument|,
-comment|/* Local device link */
-argument|mpu_timer_open,   mpu_timer_close,   mpu_timer_event,   mpu_timer_get_time,   mpu_timer_ioctl,   mpu_timer_arm };  static void mpu_timer_interrupt (void) {    if (!timer_open)     return;    if (!tmr_running)     return;    curr_clocks++;   curr_ticks = clocks2ticks (curr_clocks);    if (curr_ticks>= next_event_time)     {       next_event_time =
-literal|0xffffffff
-argument|;       sequencer_timer (NULL);     } }  static void timer_ext_event (struct mpu_config *devc, int event, int parm) {   int             midi_dev = devc->devno;    if (!devc->timer_flag)     return;    switch (event)     {     case TMR_CLOCK:       printk (
-literal|"<MIDI clk>"
-argument|);       break;      case TMR_START:       printk (
-literal|"Ext MIDI start\n"
-argument|);       if (!tmr_running) 	if (timer_mode& TMR_EXTERNAL) 	  { 	    tmr_running =
-literal|1
-argument|; 	    setup_metronome (midi_dev); 	    next_event_time =
-literal|0
-argument|; 	    STORE (SEQ_START_TIMER ()); 	  }       break;      case TMR_STOP:       printk (
-literal|"Ext MIDI stop\n"
-argument|);       if (timer_mode& TMR_EXTERNAL) 	{ 	  tmr_running =
-literal|0
-argument|; 	  stop_metronome (midi_dev); 	  STORE (SEQ_STOP_TIMER ()); 	}       break;      case TMR_CONTINUE:       printk (
-literal|"Ext MIDI continue\n"
-argument|);       if (timer_mode& TMR_EXTERNAL) 	{ 	  tmr_running =
-literal|1
-argument|; 	  setup_metronome (midi_dev); 	  STORE (SEQ_CONTINUE_TIMER ()); 	}       break;      case TMR_SPP:       printk (
-literal|"Songpos: %d\n"
-argument|, parm);       if (timer_mode& TMR_EXTERNAL) 	{ 	  STORE (SEQ_SONGPOS (parm)); 	}       break;     } }  static void mpu_timer_init (int midi_dev) {   struct mpu_config *devc;   int             n;    devc =&dev_conf[midi_dev];    if (timer_initialized)     return;
-comment|/* There is already a similar timer */
-argument|timer_initialized =
-literal|1
-argument|;    mpu_timer.devlink = midi_dev;   dev_conf[midi_dev].timer_flag =
-literal|1
-argument|;
-if|#
-directive|if
-literal|1
-argument|if (num_sound_timers>= MAX_TIMER_DEV)     n =
-literal|0
-argument|;
-comment|/* Overwrite the system timer */
-argument|else     n = num_sound_timers++;
-else|#
-directive|else
-argument|n =
-literal|0
-argument|;
+expr_stmt|;
 endif|#
 directive|endif
-argument|sound_timer_devs[n] =&mpu_timer;    if (devc->version<
-literal|0x20
-argument|)
-comment|/* Original MPU-401 */
-argument|timer_caps = TMR_INTERNAL | TMR_EXTERNAL | TMR_MODE_FSK | TMR_MODE_MIDI;   else     {
-comment|/*          * The version number 2.0 is used (at least) by the          * MusicQuest cards and the Roland Super-MPU.          *          * MusicQuest has given a special meaning to the bits of the          * revision number. The Super-MPU returns 0.        */
-argument|if (devc->revision) 	timer_caps |= TMR_EXTERNAL | TMR_MODE_MIDI;        if (devc->revision&
-literal|0x02
-argument|) 	timer_caps |= TMR_MODE_CLS;
-if|#
-directive|if
+if|if
+condition|(
+name|hw_config
+operator|->
+name|always_detect
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|inb
+argument_list|(
+name|hw_config
+operator|->
+name|io_base
+operator|+
+literal|1
+argument_list|)
+operator|==
+literal|0xff
+condition|)
+block|{
+name|DDB
+argument_list|(
+name|printf
+argument_list|(
+literal|"MPU401: Port %x looks dead.\n"
+argument_list|,
+name|hw_config
+operator|->
+name|io_base
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
 literal|0
-argument|if (devc->revision& 0x04) 	timer_caps |= TMR_MODE_SMPTE;
-endif|#
-directive|endif
-argument|if (devc->revision&
-literal|0x40
-argument|) 	max_timebase =
-literal|10
-argument|;
-comment|/* Has the 216 and 240 ppqn modes */
-argument|}    timer_mode = (TMR_INTERNAL | TMR_MODE_MIDI)& timer_caps;  }
+return|;
+comment|/* Just bus float? */
+block|}
+name|ok
+operator|=
+name|reset_mpu401
+argument_list|(
+operator|&
+name|tmp_devc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ok
+condition|)
+block|{
+name|DDB
+argument_list|(
+name|printf
+argument_list|(
+literal|"MPU401: Reset failed on port %x\n"
+argument_list|,
+name|hw_config
+operator|->
+name|io_base
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|ok
+return|;
+block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  *      Timer stuff  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_SEQUENCER
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|int
+name|timer_initialized
+init|=
+literal|0
+decl_stmt|,
+name|timer_open
+init|=
+literal|0
+decl_stmt|,
+name|tmr_running
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|int
+name|curr_tempo
+decl_stmt|,
+name|curr_timebase
+decl_stmt|,
+name|hw_timebase
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_timebase
+init|=
+literal|8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 8*24=192 ppqn */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|u_long
+name|next_event_time
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|u_long
+name|curr_ticks
+decl_stmt|,
+name|curr_clocks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|prev_event_time
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|metronome_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|u_long
+name|clocks2ticks
+parameter_list|(
+name|u_long
+name|clocks
+parameter_list|)
+block|{
+comment|/*      * The MPU-401 supports just a limited set of possible timebase      * values. Since the applications require more choices, the driver      * has to program the HW to do it's best and to convert between the      * HW and actual timebases.      */
+return|return
+operator|(
+operator|(
+name|clocks
+operator|*
+name|curr_timebase
+operator|)
+operator|+
+operator|(
+name|hw_timebase
+operator|/
+literal|2
+operator|)
+operator|)
+operator|/
+name|hw_timebase
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|set_timebase
+parameter_list|(
+name|int
+name|midi_dev
+parameter_list|,
+name|int
+name|val
+parameter_list|)
+block|{
+name|int
+name|hw_val
+decl_stmt|;
+if|if
+condition|(
+name|val
+operator|<
+literal|48
+condition|)
+name|val
+operator|=
+literal|48
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|>
+literal|1000
+condition|)
+name|val
+operator|=
+literal|1000
+expr_stmt|;
+name|hw_val
+operator|=
+name|val
+expr_stmt|;
+name|hw_val
+operator|=
+operator|(
+name|hw_val
+operator|+
+literal|12
+operator|)
+operator|/
+literal|24
+expr_stmt|;
+if|if
+condition|(
+name|hw_val
+operator|>
+name|max_timebase
+condition|)
+name|hw_val
+operator|=
+name|max_timebase
+expr_stmt|;
+if|if
+condition|(
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0xC0
+operator||
+operator|(
+name|hw_val
+operator|&
+literal|0x0f
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MPU: Can't set HW timebase to %d\n"
+argument_list|,
+name|hw_val
+operator|*
+literal|24
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|hw_timebase
+operator|=
+name|hw_val
+operator|*
+literal|24
+expr_stmt|;
+name|curr_timebase
+operator|=
+name|val
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|tmr_reset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_long
+name|flags
+decl_stmt|;
+name|flags
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+name|next_event_time
+operator|=
+literal|0xffffffff
+expr_stmt|;
+name|prev_event_time
+operator|=
+literal|0
+expr_stmt|;
+name|curr_ticks
+operator|=
+name|curr_clocks
+operator|=
+literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|set_timer_mode
+parameter_list|(
+name|int
+name|midi_dev
+parameter_list|)
+block|{
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_MODE_CLS
+condition|)
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x3c
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Use CLS sync */
+elseif|else
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_MODE_SMPTE
+condition|)
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x3d
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Use SMPTE sync */
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_INTERNAL
+condition|)
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x80
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Use MIDI sync */
+else|else
+block|{
+if|if
+condition|(
+name|timer_mode
+operator|&
+operator|(
+name|TMR_MODE_MIDI
+operator||
+name|TMR_MODE_CLS
+operator|)
+condition|)
+block|{
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x82
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Use MIDI sync */
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x91
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Enable ext MIDI ctrl */
+block|}
+elseif|else
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_MODE_FSK
+condition|)
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x81
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Use FSK sync */
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|stop_metronome
+parameter_list|(
+name|int
+name|midi_dev
+parameter_list|)
+block|{
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x84
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Disable metronome */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|setup_metronome
+parameter_list|(
+name|int
+name|midi_dev
+parameter_list|)
+block|{
+name|int
+name|numerator
+decl_stmt|,
+name|denominator
+decl_stmt|;
+name|int
+name|clks_per_click
+decl_stmt|,
+name|num_32nds_per_beat
+decl_stmt|;
+name|int
+name|beats_per_measure
+decl_stmt|;
+name|numerator
+operator|=
+operator|(
+operator|(
+name|u_int
+operator|)
+name|metronome_mode
+operator|>>
+literal|24
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|denominator
+operator|=
+operator|(
+operator|(
+name|u_int
+operator|)
+name|metronome_mode
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|clks_per_click
+operator|=
+operator|(
+operator|(
+name|u_int
+operator|)
+name|metronome_mode
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|num_32nds_per_beat
+operator|=
+operator|(
+name|u_int
+operator|)
+name|metronome_mode
+operator|&
+literal|0xff
+expr_stmt|;
+name|beats_per_measure
+operator|=
+operator|(
+name|numerator
+operator|*
+literal|4
+operator|)
+operator|>>
+name|denominator
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|metronome_mode
+condition|)
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x84
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Disable metronome */
+else|else
+block|{
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0xE4
+argument_list|,
+name|clks_per_click
+argument_list|)
+expr_stmt|;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0xE6
+argument_list|,
+name|beats_per_measure
+argument_list|)
+expr_stmt|;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x83
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Enable metronome without 					 * accents */
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|mpu_start_timer
+parameter_list|(
+name|int
+name|midi_dev
+parameter_list|)
+block|{
+name|tmr_reset
+argument_list|()
+expr_stmt|;
+name|set_timer_mode
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmr_running
+condition|)
+return|return
+name|TIMER_NOT_ARMED
+return|;
+comment|/* Already running */
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_INTERNAL
+condition|)
+block|{
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x02
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Send MIDI start */
+name|tmr_running
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|TIMER_NOT_ARMED
+return|;
+block|}
+else|else
+block|{
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x35
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Enable mode messages to PC */
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x38
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Enable sys common messages to PC */
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x39
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Enable real time messages to PC */
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x97
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Enable system exclusive 					 * messages to PC */
+block|}
+return|return
+name|TIMER_ARMED
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|mpu_timer_open
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+block|{
+name|int
+name|midi_dev
+init|=
+name|sound_timer_devs
+index|[
+name|dev
+index|]
+operator|->
+name|devlink
+decl_stmt|;
+if|if
+condition|(
+name|timer_open
+condition|)
+return|return
+operator|-
+operator|(
+name|EBUSY
+operator|)
+return|;
+name|tmr_reset
+argument_list|()
+expr_stmt|;
+name|curr_tempo
+operator|=
+literal|50
+expr_stmt|;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0xE0
+argument_list|,
+literal|50
+argument_list|)
+expr_stmt|;
+name|curr_timebase
+operator|=
+name|hw_timebase
+operator|=
+literal|120
+expr_stmt|;
+name|set_timebase
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|120
+argument_list|)
+expr_stmt|;
+name|timer_open
+operator|=
+literal|1
+expr_stmt|;
+name|metronome_mode
+operator|=
+literal|0
+expr_stmt|;
+name|set_timer_mode
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0xe7
+argument_list|,
+literal|0x04
+argument_list|)
+expr_stmt|;
+comment|/* Send all clocks to host */
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x95
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Enable clock to host */
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mpu_timer_close
+parameter_list|(
+name|int
+name|dev
+parameter_list|)
+block|{
+name|int
+name|midi_dev
+init|=
+name|sound_timer_devs
+index|[
+name|dev
+index|]
+operator|->
+name|devlink
+decl_stmt|;
+name|timer_open
+operator|=
+name|tmr_running
+operator|=
+literal|0
+expr_stmt|;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x15
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Stop all */
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x94
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Disable clock to host */
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x8c
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Disable measure end messages to 					 * host */
+name|stop_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|mpu_timer_event
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|u_char
+modifier|*
+name|event
+parameter_list|)
+block|{
+name|u_char
+name|command
+init|=
+name|event
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|u_long
+name|parm
+init|=
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+operator|&
+name|event
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|int
+name|midi_dev
+init|=
+name|sound_timer_devs
+index|[
+name|dev
+index|]
+operator|->
+name|devlink
+decl_stmt|;
+switch|switch
+condition|(
+name|command
+condition|)
+block|{
+case|case
+name|TMR_WAIT_REL
+case|:
+name|parm
+operator|+=
+name|prev_event_time
+expr_stmt|;
+case|case
+name|TMR_WAIT_ABS
+case|:
+if|if
+condition|(
+name|parm
+operator|>
+literal|0
+condition|)
+block|{
+name|long
+name|time
+decl_stmt|;
+if|if
+condition|(
+name|parm
+operator|<=
+name|curr_ticks
+condition|)
+comment|/* It's the time */
+return|return
+name|TIMER_NOT_ARMED
+return|;
+name|time
+operator|=
+name|parm
+expr_stmt|;
+name|next_event_time
+operator|=
+name|prev_event_time
+operator|=
+name|time
+expr_stmt|;
+return|return
+name|TIMER_ARMED
+return|;
+block|}
+break|break;
+case|case
+name|TMR_START
+case|:
+if|if
+condition|(
+name|tmr_running
+condition|)
+break|break;
+return|return
+name|mpu_start_timer
+argument_list|(
+name|midi_dev
+argument_list|)
+return|;
+break|break;
+case|case
+name|TMR_STOP
+case|:
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x01
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Send MIDI stop */
+name|stop_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+name|tmr_running
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|TMR_CONTINUE
+case|:
+if|if
+condition|(
+name|tmr_running
+condition|)
+break|break;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x03
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Send MIDI continue */
+name|setup_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+name|tmr_running
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|TMR_TEMPO
+case|:
+if|if
+condition|(
+name|parm
+condition|)
+block|{
+if|if
+condition|(
+name|parm
+operator|<
+literal|8
+condition|)
+name|parm
+operator|=
+literal|8
+expr_stmt|;
+if|if
+condition|(
+name|parm
+operator|>
+literal|250
+condition|)
+name|parm
+operator|=
+literal|250
+expr_stmt|;
+if|if
+condition|(
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0xE0
+argument_list|,
+name|parm
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"MPU: Can't set tempo to %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|parm
+argument_list|)
+expr_stmt|;
+name|curr_tempo
+operator|=
+name|parm
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|TMR_ECHO
+case|:
+name|seq_copy_to_input
+argument_list|(
+name|event
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TMR_TIMESIG
+case|:
+if|if
+condition|(
+name|metronome_mode
+condition|)
+block|{
+comment|/* Metronome enabled */
+name|metronome_mode
+operator|=
+name|parm
+expr_stmt|;
+name|setup_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+default|default:
+empty_stmt|;
+block|}
+return|return
+name|TIMER_NOT_ARMED
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|u_long
+name|mpu_timer_get_time
+parameter_list|(
+name|int
+name|dev
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|timer_open
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|curr_ticks
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|mpu_timer_ioctl
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|u_int
+name|command
+parameter_list|,
+name|ioctl_arg
+name|arg
+parameter_list|)
+block|{
+name|int
+name|midi_dev
+init|=
+name|sound_timer_devs
+index|[
+name|dev
+index|]
+operator|->
+name|devlink
+decl_stmt|;
+switch|switch
+condition|(
+name|command
+condition|)
+block|{
+case|case
+name|SNDCTL_TMR_SOURCE
+case|:
+block|{
+name|int
+name|parm
+init|=
+call|(
+name|int
+call|)
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+argument_list|)
+operator|&
+name|timer_caps
+decl_stmt|;
+if|if
+condition|(
+name|parm
+operator|!=
+literal|0
+condition|)
+block|{
+name|timer_mode
+operator|=
+name|parm
+expr_stmt|;
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_MODE_CLS
+condition|)
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x3c
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Use CLS sync */
+elseif|else
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_MODE_SMPTE
+condition|)
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x3d
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Use SMPTE sync */
+block|}
+return|return
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+name|timer_mode
+return|;
+block|}
+break|break;
+case|case
+name|SNDCTL_TMR_START
+case|:
+name|mpu_start_timer
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+break|break;
+case|case
+name|SNDCTL_TMR_STOP
+case|:
+name|tmr_running
+operator|=
+literal|0
+expr_stmt|;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x01
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Send MIDI stop */
+name|stop_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+break|break;
+case|case
+name|SNDCTL_TMR_CONTINUE
+case|:
+if|if
+condition|(
+name|tmr_running
+condition|)
+return|return
+literal|0
+return|;
+name|tmr_running
+operator|=
+literal|1
+expr_stmt|;
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x03
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Send MIDI continue */
+return|return
+literal|0
+return|;
+break|break;
+case|case
+name|SNDCTL_TMR_TIMEBASE
+case|:
+block|{
+name|int
+name|val
+init|=
+call|(
+name|int
+call|)
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|val
+condition|)
+name|set_timebase
+argument_list|(
+name|midi_dev
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+name|curr_timebase
+return|;
+block|}
+break|break;
+case|case
+name|SNDCTL_TMR_TEMPO
+case|:
+block|{
+name|int
+name|val
+init|=
+call|(
+name|int
+call|)
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+argument_list|)
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+if|if
+condition|(
+name|val
+condition|)
+block|{
+name|RANGE
+argument_list|(
+name|val
+argument_list|,
+literal|8
+argument_list|,
+literal|250
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|mpu_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0xE0
+argument_list|,
+name|val
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MPU: Can't set tempo to %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+name|curr_tempo
+operator|=
+name|val
+expr_stmt|;
+block|}
+return|return
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+name|curr_tempo
+return|;
+block|}
+break|break;
+case|case
+name|SNDCTL_SEQ_CTRLRATE
+case|:
+if|if
+condition|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|)
+operator|!=
+literal|0
+condition|)
+comment|/* Can't change */
+return|return
+operator|-
+operator|(
+name|EINVAL
+operator|)
+return|;
+return|return
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+operator|(
+operator|(
+name|curr_tempo
+operator|*
+name|curr_timebase
+operator|)
+operator|+
+literal|30
+operator|)
+operator|/
+literal|60
+return|;
+break|break;
+case|case
+name|SNDCTL_TMR_METRONOME
+case|:
+name|metronome_mode
+operator|=
+call|(
+name|int
+call|)
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+argument_list|)
+expr_stmt|;
+name|setup_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+break|break;
+default|default:
+empty_stmt|;
+block|}
+return|return
+operator|-
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mpu_timer_arm
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|long
+name|time
+parameter_list|)
+block|{
+if|if
+condition|(
+name|time
+operator|<
+literal|0
+condition|)
+name|time
+operator|=
+name|curr_ticks
+operator|+
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|time
+operator|<=
+name|curr_ticks
+condition|)
+comment|/* It's the time */
+return|return;
+name|next_event_time
+operator|=
+name|prev_event_time
+operator|=
+name|time
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sound_timer_operations
+name|mpu_timer
+init|=
+block|{
+block|{
+literal|"MPU-401 Timer"
+block|,
+literal|0
+block|}
+block|,
+literal|10
+block|,
+comment|/* Priority */
+literal|0
+block|,
+comment|/* Local device link */
+name|mpu_timer_open
+block|,
+name|mpu_timer_close
+block|,
+name|mpu_timer_event
+block|,
+name|mpu_timer_get_time
+block|,
+name|mpu_timer_ioctl
+block|,
+name|mpu_timer_arm
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|mpu_timer_interrupt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|timer_open
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|tmr_running
+condition|)
+return|return;
+name|curr_clocks
+operator|++
+expr_stmt|;
+name|curr_ticks
+operator|=
+name|clocks2ticks
+argument_list|(
+name|curr_clocks
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|curr_ticks
+operator|>=
+name|next_event_time
+condition|)
+block|{
+name|next_event_time
+operator|=
+literal|0xffffffff
+expr_stmt|;
+name|sequencer_timer
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|timer_ext_event
+parameter_list|(
+name|struct
+name|mpu_config
+modifier|*
+name|devc
+parameter_list|,
+name|int
+name|event
+parameter_list|,
+name|int
+name|parm
+parameter_list|)
+block|{
+name|int
+name|midi_dev
+init|=
+name|devc
+operator|->
+name|devno
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|devc
+operator|->
+name|timer_flag
+condition|)
+return|return;
+switch|switch
+condition|(
+name|event
+condition|)
+block|{
+case|case
+name|TMR_CLOCK
+case|:
+name|printf
+argument_list|(
+literal|"<MIDI clk>"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TMR_START
+case|:
+name|printf
+argument_list|(
+literal|"Ext MIDI start\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tmr_running
+condition|)
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_EXTERNAL
+condition|)
+block|{
+name|tmr_running
+operator|=
+literal|1
+expr_stmt|;
+name|setup_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+name|next_event_time
+operator|=
+literal|0
+expr_stmt|;
+name|STORE
+argument_list|(
+name|SEQ_START_TIMER
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|TMR_STOP
+case|:
+name|printf
+argument_list|(
+literal|"Ext MIDI stop\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_EXTERNAL
+condition|)
+block|{
+name|tmr_running
+operator|=
+literal|0
+expr_stmt|;
+name|stop_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+name|STORE
+argument_list|(
+name|SEQ_STOP_TIMER
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|TMR_CONTINUE
+case|:
+name|printf
+argument_list|(
+literal|"Ext MIDI continue\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_EXTERNAL
+condition|)
+block|{
+name|tmr_running
+operator|=
+literal|1
+expr_stmt|;
+name|setup_metronome
+argument_list|(
+name|midi_dev
+argument_list|)
+expr_stmt|;
+name|STORE
+argument_list|(
+name|SEQ_CONTINUE_TIMER
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|TMR_SPP
+case|:
+name|printf
+argument_list|(
+literal|"Songpos: %d\n"
+argument_list|,
+name|parm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timer_mode
+operator|&
+name|TMR_EXTERNAL
+condition|)
+block|{
+name|STORE
+argument_list|(
+name|SEQ_SONGPOS
+argument_list|(
+name|parm
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mpu_timer_init
+parameter_list|(
+name|int
+name|midi_dev
+parameter_list|)
+block|{
+name|struct
+name|mpu_config
+modifier|*
+name|devc
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|devc
+operator|=
+operator|&
+name|dev_conf
+index|[
+name|midi_dev
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|timer_initialized
+condition|)
+return|return;
+comment|/* There is already a similar timer */
+name|timer_initialized
+operator|=
+literal|1
+expr_stmt|;
+name|mpu_timer
+operator|.
+name|devlink
+operator|=
+name|midi_dev
+expr_stmt|;
+name|dev_conf
+index|[
+name|midi_dev
+index|]
+operator|.
+name|timer_flag
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|num_sound_timers
+operator|>=
+name|MAX_TIMER_DEV
+condition|)
+name|n
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Overwrite the system timer */
+else|else
+name|n
+operator|=
+name|num_sound_timers
+operator|++
+expr_stmt|;
+name|sound_timer_devs
+index|[
+name|n
+index|]
+operator|=
+operator|&
+name|mpu_timer
+expr_stmt|;
+if|if
+condition|(
+name|devc
+operator|->
+name|version
+operator|<
+literal|0x20
+condition|)
+comment|/* Original MPU-401 */
+name|timer_caps
+operator|=
+name|TMR_INTERNAL
+operator||
+name|TMR_EXTERNAL
+operator||
+name|TMR_MODE_FSK
+operator||
+name|TMR_MODE_MIDI
+expr_stmt|;
+else|else
+block|{
+comment|/* 	 * The version number 2.0 is used (at least) by the 	 * MusicQuest cards and the Roland Super-MPU. 	 *  	 * MusicQuest has given a special meaning to the bits of the 	 * revision number. The Super-MPU returns 0. 	 */
+if|if
+condition|(
+name|devc
+operator|->
+name|revision
+condition|)
+name|timer_caps
+operator||=
+name|TMR_EXTERNAL
+operator||
+name|TMR_MODE_MIDI
+expr_stmt|;
+if|if
+condition|(
+name|devc
+operator|->
+name|revision
+operator|&
+literal|0x02
+condition|)
+name|timer_caps
+operator||=
+name|TMR_MODE_CLS
+expr_stmt|;
+if|if
+condition|(
+name|devc
+operator|->
+name|revision
+operator|&
+literal|0x40
+condition|)
+name|max_timebase
+operator|=
+literal|10
+expr_stmt|;
+comment|/* Has the 216 and 240 ppqn modes */
+block|}
+name|timer_mode
+operator|=
+operator|(
+name|TMR_INTERNAL
+operator||
+name|TMR_MODE_MIDI
+operator|)
+operator|&
+name|timer_caps
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#

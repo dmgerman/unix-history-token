@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/gus2_midi.c  *  * The low level driver for the GUS Midi Interface.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/gus2_midi.c  *   * The low level driver for the GUS Midi Interface.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_include
@@ -9,33 +9,25 @@ directive|include
 file|<i386/isa/sound/sound_config.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIGURE_SOUNDCARD
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_GUS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_MIDI
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<i386/isa/sound/gus_hw.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_GUS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_MIDI
-argument_list|)
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -134,12 +126,20 @@ name|gus_dma
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|sound_os_info
+modifier|*
+name|gus_osp
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|GUS_MIDI_STATUS
 parameter_list|()
-value|INB(u_MidiStatus)
+value|inb( u_MidiStatus)
 end_define
 
 begin_function
@@ -183,23 +183,23 @@ condition|(
 name|midi_busy
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"GUS: Midi busy\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
-name|OUTB
+name|outb
 argument_list|(
-name|MIDI_RESET
-argument_list|,
 name|u_MidiControl
+argument_list|,
+name|MIDI_RESET
 argument_list|)
 expr_stmt|;
 name|gus_delay
@@ -249,14 +249,14 @@ operator||=
 name|MIDI_ENABLE_XMIT
 expr_stmt|;
 block|}
-name|OUTB
+name|outb
 argument_list|(
-name|gus_midi_control
-argument_list|,
 name|u_MidiControl
+argument_list|,
+name|gus_midi_control
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Enable 						 */
+comment|/* Enable */
 name|midi_busy
 operator|=
 literal|1
@@ -304,10 +304,10 @@ name|output_used
 operator|=
 literal|1
 expr_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -321,30 +321,30 @@ name|ok
 operator|=
 literal|1
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-name|midi_byte
-argument_list|,
 name|u_MidiData
+argument_list|,
+name|midi_byte
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*        * Enable Midi xmit interrupts (again)        */
+comment|/* 		 * Enable Midi xmit interrupts (again) 		 */
 name|gus_midi_control
 operator||=
 name|MIDI_ENABLE_XMIT
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-name|gus_midi_control
-argument_list|,
 name|u_MidiControl
+argument_list|,
+name|gus_midi_control
 argument_list|)
 expr_stmt|;
 block|}
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -364,12 +364,12 @@ name|int
 name|dev
 parameter_list|)
 block|{
-comment|/*    * Reset FIFO pointers, disable intrs    */
-name|OUTB
+comment|/* 	 * Reset FIFO pointers, disable intrs 	 */
+name|outb
 argument_list|(
-name|MIDI_RESET
-argument_list|,
 name|u_MidiControl
+argument_list|,
+name|MIDI_RESET
 argument_list|)
 expr_stmt|;
 name|midi_busy
@@ -396,11 +396,11 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
-comment|/*    * Drain the local queue first    */
-name|DISABLE_INTR
-argument_list|(
+comment|/* 	 * Drain the local queue first 	 */
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -422,12 +422,12 @@ name|qhead
 operator|++
 expr_stmt|;
 block|}
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/*    * Output the byte if the local queue is empty.    */
+comment|/* 	 * Output the byte if the local queue is empty. 	 */
 if|if
 condition|(
 operator|!
@@ -443,8 +443,8 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* 				 * OK 				 */
-comment|/*    * Put to the local queue    */
+comment|/* OK */
+comment|/* 	 * Put to the local queue 	 */
 if|if
 condition|(
 name|qlen
@@ -454,11 +454,11 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 				 * Local queue full 				 */
-name|DISABLE_INTR
-argument_list|(
+comment|/* Local queue full */
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|tmp_queue
 index|[
@@ -473,7 +473,7 @@ expr_stmt|;
 name|qtail
 operator|++
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -525,15 +525,15 @@ parameter_list|,
 name|unsigned
 name|cmd
 parameter_list|,
-name|unsigned
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -570,10 +570,10 @@ condition|)
 return|return
 literal|0
 return|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -595,7 +595,7 @@ name|qhead
 operator|++
 expr_stmt|;
 block|}
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -678,7 +678,7 @@ name|gus_midi_kick
 block|,
 name|NULL
 block|,
-comment|/* 				 * command 				 */
+comment|/* command */
 name|gus_midi_buffer_status
 block|,
 name|NULL
@@ -687,12 +687,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|long
+name|void
 name|gus_midi_init
-parameter_list|(
-name|long
-name|mem_start
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -701,20 +698,18 @@ operator|>=
 name|MAX_MIDI_DEV
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"Sound: Too many midi devices detected\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return;
 block|}
-name|OUTB
+name|outb
 argument_list|(
-name|MIDI_RESET
-argument_list|,
 name|u_MidiControl
+argument_list|,
+name|MIDI_RESET
 argument_list|)
 expr_stmt|;
 name|std_midi_synth
@@ -734,9 +729,7 @@ operator|=
 operator|&
 name|gus_midi_operations
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return;
 block|}
 end_function
 
@@ -758,10 +751,10 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|stat
 operator|=
@@ -777,7 +770,7 @@ condition|)
 block|{
 name|data
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|u_MidiData
 argument_list|)
@@ -827,39 +820,28 @@ operator|!
 name|qlen
 condition|)
 block|{
-comment|/* 	   * Disable Midi output interrupts, since no data in the buffer 	   */
+comment|/* 			 * Disable Midi output interrupts, since no data in 			 * the buffer 			 */
 name|gus_midi_control
 operator|&=
 operator|~
 name|MIDI_ENABLE_XMIT
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-name|gus_midi_control
-argument_list|,
 name|u_MidiControl
+argument_list|,
+name|gus_midi_control
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|if (stat& MIDI_FRAME_ERR)     printk ("GUS: Midi framing error\n");   if (stat& MIDI_OVERRUN&& input_opened)     printk ("GUS: Midi input overrun\n");
-endif|#
-directive|endif
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

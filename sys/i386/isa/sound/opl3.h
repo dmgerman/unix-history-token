@@ -564,7 +564,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|physical_voice_info
-name|physical_voices
+name|pv_map
 index|[
 literal|18
 index|]

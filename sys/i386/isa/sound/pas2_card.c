@@ -1,12 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|_PAS2_CARD_C_
-end_define
-
 begin_comment
-comment|/*  * sound/pas2_card.c  *  * Detection routine for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/pas2_card.c  *   * Detection routine for the Pro Audio Spectrum cards.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_include
@@ -20,15 +14,15 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CONFIGURE_SOUNDCARD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_PAS
+name|CONFIG_PAS
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|_PAS2_CARD_C_
+end_define
 
 begin_define
 define|#
@@ -39,55 +33,8 @@ end_define
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/pas_defs.h>
+file|<i386/isa/sound/pas_hw.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|config_pas_hw
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|address_info
-operator|*
-name|hw_config
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|detect_pas_hw
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|address_info
-operator|*
-name|hw_config
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|pas2_msg
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|foo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * The Address Translation code is used to convert I/O register addresses to  * be relative to the given base -register  */
@@ -118,6 +65,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|sound_os_info
+modifier|*
+name|pas_osp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|pas_model
 decl_stmt|;
@@ -144,23 +98,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|mix_write
-parameter_list|(
-name|unsigned
-name|char
-name|data
-parameter_list|,
-name|int
-name|ioaddr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/*  * pas_read() and pas_write() are equivalents of INB() and OUTB()  */
+comment|/*  * pas_read() and pas_write() are equivalents of inb and outb  */
 end_comment
 
 begin_comment
@@ -171,9 +110,22 @@ begin_comment
 comment|/*  * to support other than the default base address  */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|void
+name|mix_write
+parameter_list|(
+name|u_char
+name|data
+parameter_list|,
+name|int
+name|ioaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
-name|unsigned
-name|char
+name|u_char
 name|pas_read
 parameter_list|(
 name|int
@@ -181,7 +133,7 @@ name|ioaddr
 parameter_list|)
 block|{
 return|return
-name|INB
+name|inb
 argument_list|(
 name|ioaddr
 operator|^
@@ -195,28 +147,26 @@ begin_function
 name|void
 name|pas_write
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|,
 name|int
 name|ioaddr
 parameter_list|)
 block|{
-name|OUTB
+name|outb
 argument_list|(
-name|data
-argument_list|,
 name|ioaddr
 operator|^
 name|translat_code
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pas2_msg
 parameter_list|(
@@ -225,7 +175,7 @@ modifier|*
 name|foo
 parameter_list|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"    PAS2: %s.\n"
 argument_list|,
@@ -239,17 +189,13 @@ begin_comment
 comment|/******************* Begin of the Interrupt Handler ********************/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|pasintr
-argument_list|(
-name|INT_HANDLER_PARMS
-argument_list|(
+parameter_list|(
+name|int
 name|irq
-argument_list|,
-name|dummy
-argument_list|)
-argument_list|)
+parameter_list|)
 block|{
 name|int
 name|status
@@ -268,7 +214,7 @@ argument_list|,
 name|INTERRUPT_STATUS
 argument_list|)
 expr_stmt|;
-comment|/* 						   * Clear interrupt 						 */
+comment|/* Clear interrupt */
 if|if
 condition|(
 name|status
@@ -276,9 +222,9 @@ operator|&
 name|I_S_PCM_SAMPLE_BUFFER_IRQ
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
+ifdef|#
+directive|ifdef
+name|CONFIG_AUDIO
 name|pas_pcm_interrupt
 argument_list|(
 name|status
@@ -301,17 +247,12 @@ operator|&
 name|I_S_MIDI_IRQ
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|EXCLUDE_MIDI
 ifdef|#
 directive|ifdef
-name|EXCLUDE_PRO_MIDI
+name|CONFIG_MIDI
 name|pas_midi_interrupt
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|status
@@ -321,7 +262,7 @@ name|I_S_MIDI_IRQ
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|int
@@ -331,9 +272,6 @@ name|int
 name|mask
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -342,33 +280,6 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
-operator|!
-name|pas_intr_mask
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|err
-operator|=
-name|snd_set_irq_handler
-argument_list|(
-name|pas_irq
-argument_list|,
-name|pasintr
-argument_list|,
-literal|"PAS16"
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return
-name|err
-return|;
-block|}
 name|pas_intr_mask
 operator||=
 name|mask
@@ -414,18 +325,6 @@ argument_list|,
 name|INTERRUPT_MASK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pas_intr_mask
-condition|)
-block|{
-name|snd_release_irq
-argument_list|(
-name|pas_irq
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -441,7 +340,6 @@ comment|/******************* Begin of the Initialization Code ******************
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|config_pas_hw
 parameter_list|(
@@ -456,7 +354,7 @@ name|ok
 init|=
 literal|1
 decl_stmt|;
-name|unsigned
+name|u_int
 name|int_ptrs
 decl_stmt|;
 comment|/* scsi/sound interrupt pointers */
@@ -480,7 +378,7 @@ argument_list|,
 name|SAMPLE_COUNTER_CONTROL
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Local timer control * 						 * register 						 */
+comment|/* Local timer control * 							 * register */
 name|pas_write
 argument_list|(
 literal|0x36
@@ -488,7 +386,7 @@ argument_list|,
 name|SAMPLE_RATE_TIMER
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Sample rate timer (16 bit) 					 */
+comment|/* Sample rate timer (16 bit) */
 name|pas_write
 argument_list|(
 literal|0
@@ -503,7 +401,7 @@ argument_list|,
 name|SAMPLE_COUNTER_CONTROL
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Local timer control * 						 * register 						 */
+comment|/* Local timer control * 							 * register */
 name|pas_write
 argument_list|(
 literal|0x74
@@ -511,7 +409,7 @@ argument_list|,
 name|SAMPLE_BUFFER_COUNTER
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Sample count register (16 						 * * bit) 						 */
+comment|/* Sample count register (16 * 						 * bit) */
 name|pas_write
 argument_list|(
 literal|0
@@ -556,7 +454,7 @@ operator||
 name|S_M_SB_RESET
 operator||
 name|S_M_MIXER_RESET
-comment|/* 										 * | 										 * S_M_OPL3_DUAL_MONO 										 */
+comment|/* | S_M_OPL3_DUAL_MONO */
 argument_list|,
 name|SERIAL_MIXER
 argument_list|)
@@ -586,7 +484,7 @@ operator|>
 literal|15
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"PAS2: Invalid IRQ %d"
 argument_list|,
@@ -632,13 +530,35 @@ name|pas_irq
 index|]
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"PAS2: Invalid IRQ %d"
 argument_list|,
 name|pas_irq
 argument_list|)
 expr_stmt|;
+name|ok
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|snd_set_irq_handler
+argument_list|(
+name|pas_irq
+argument_list|,
+name|pasintr
+argument_list|,
+name|hw_config
+operator|->
+name|osp
+argument_list|)
+operator|<
+literal|0
+condition|)
 name|ok
 operator|=
 literal|0
@@ -660,7 +580,7 @@ operator|>
 literal|7
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"PAS2: Invalid DMA selection %d"
 argument_list|,
@@ -699,7 +619,7 @@ name|dma
 index|]
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"PAS2: Invalid DMA selection %d"
 argument_list|,
@@ -713,23 +633,41 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pas2_card.c: Can't allocate DMA channel\n"
+argument_list|)
+expr_stmt|;
+name|ok
+operator|=
+literal|0
+expr_stmt|;
 block|}
-comment|/*      * This fixes the timing problems of the PAS due to the Symphony chipset      * as per Media Vision.  Only define this if your PAS doesn't work correctly.    */
+block|}
+block|}
+comment|/* 	 * This fixes the timing problems of the PAS due to the Symphony 	 * chipset as per Media Vision.  Only define this if your PAS doesn't 	 * work correctly. 	 */
 ifdef|#
 directive|ifdef
 name|SYMPHONY_PAS
-name|OUTB
+name|outb
 argument_list|(
-literal|0x05
-argument_list|,
 literal|0xa8
+argument_list|,
+literal|0x05
 argument_list|)
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-literal|0x60
-argument_list|,
 literal|0xa9
+argument_list|,
+literal|0x60
 argument_list|)
 expr_stmt|;
 endif|#
@@ -752,7 +690,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/*    * pas_write(S_C_1_PCS_ENABLE, SYSTEM_CONFIGURATION_1);    */
+comment|/* 	 * pas_write(S_C_1_PCS_ENABLE, SYSTEM_CONFIGURATION_1); 	 */
 name|pas_write
 argument_list|(
 name|S_C_1_PCS_ENABLE
@@ -773,7 +711,7 @@ argument_list|,
 name|SYSTEM_CONFIGURATION_3
 argument_list|)
 expr_stmt|;
-comment|/* 						 * ??? 						 */
+comment|/* ??? */
 name|pas_write
 argument_list|(
 name|F_F_MIXER_UNMUTE
@@ -783,28 +721,10 @@ argument_list|,
 name|FILTER_FREQUENCY
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Sets mute 								 * off and * 								 * selects 								 * filter 								 * rate * of 								 * 17.897 kHz 								 */
-if|if
-condition|(
-name|pas_model
-operator|==
-name|PAS_16
-operator|||
-name|pas_model
-operator|==
-name|PAS_16D
-condition|)
+comment|/* Sets mute off and * 								 * selects filter rate * 								 * of 17.897 kHz */
 name|pas_write
 argument_list|(
 literal|8
-argument_list|,
-name|PRESCALE_DIVIDER
-argument_list|)
-expr_stmt|;
-else|else
-name|pas_write
-argument_list|(
-literal|0
 argument_list|,
 name|PRESCALE_DIVIDER
 argument_list|)
@@ -827,16 +747,14 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_SB_EMULATION
+name|CONFIG_SB_EMULATION
 argument_list|)
-operator|||
-operator|!
+operator|&&
 name|defined
 argument_list|(
-name|EXCLUDE_SB
+name|CONFIG_SB
 argument_list|)
 block|{
 name|struct
@@ -856,13 +774,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|irq_dma
 decl_stmt|;
-comment|/* 	 * Turn on Sound Blaster compatibility 	 */
-comment|/* 	 * bit 1 = SB emulation 	 */
-comment|/* 	 * bit 0 = MPU401 emulation (CDPC only :-( ) 	 */
+comment|/* 			 * Turn on Sound Blaster compatibility 			 */
+comment|/* 			 * bit 1 = SB emulation 			 */
+comment|/* 			 * bit 0 = MPU401 emulation (CDPC only :-( ) 			 */
 name|pas_write
 argument_list|(
 literal|0x02
@@ -870,7 +787,7 @@ argument_list|,
 name|COMPATIBILITY_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * "Emulation address" 	 */
+comment|/* 			 * "Emulation address" 			 */
 name|pas_write
 argument_list|(
 operator|(
@@ -896,7 +813,7 @@ operator|->
 name|dma
 index|]
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|"\n\nPAS16 Warning: Invalid SB DMA %d\n\n"
 argument_list|,
@@ -915,7 +832,7 @@ operator|->
 name|irq
 index|]
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|"\n\nPAS16 Warning: Invalid SB IRQ %d\n\n"
 argument_list|,
@@ -949,6 +866,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|#
+directive|else
+name|pas_write
+argument_list|(
+literal|0x00
+argument_list|,
+name|COMPATIBILITY_ENABLE
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -968,7 +894,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|detect_pas_hw
 parameter_list|(
@@ -978,33 +903,32 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|board_id
 decl_stmt|,
 name|foo
 decl_stmt|;
-comment|/*    * WARNING: Setting an option like W:1 or so that disables warm boot reset    * of the card will screw up this detect code something fierce. Adding code    * to handle this means possibly interfering with other cards on the bus if    * you have something on base port 0x388. SO be forewarned.    */
-name|OUTB
+comment|/* 	 * WARNING: Setting an option like W:1 or so that disables warm boot 	 * reset of the card will screw up this detect code something fierce. 	 * Adding code to handle this means possibly interfering with other 	 * cards on the bus if you have something on base port 0x388. SO be 	 * forewarned. 	 */
+name|outb
 argument_list|(
-literal|0xBC
-argument_list|,
 name|MASTER_DECODE
+argument_list|,
+literal|0xBC
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Talk to first board 				 */
-name|OUTB
+comment|/* Talk to first board */
+name|outb
 argument_list|(
+name|MASTER_DECODE
+argument_list|,
 name|hw_config
 operator|->
 name|io_base
 operator|>>
 literal|2
-argument_list|,
-name|MASTER_DECODE
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Set base address 							 */
+comment|/* Set base address */
 name|translat_code
 operator|=
 name|PAS_DEFAULT_BASE
@@ -1020,7 +944,7 @@ argument_list|,
 name|WAIT_STATE
 argument_list|)
 expr_stmt|;
-comment|/* 				 * One wait-state 				 */
+comment|/* One wait-state */
 name|board_id
 operator|=
 name|pas_read
@@ -1037,7 +961,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*    * We probably have a PAS-series board, now check for a PAS2-series board    * by trying to change the board revision bits. PAS2-series hardware won't    * let you do this - the bits are read-only.    */
+comment|/* 	 * We probably have a PAS-series board, now check for a PAS2-series 	 * board by trying to change the board revision bits. PAS2-series 	 * hardware won't let you do this - the bits are read-only. 	 */
 name|foo
 operator|=
 name|board_id
@@ -1053,7 +977,7 @@ argument_list|)
 expr_stmt|;
 name|foo
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|INTERRUPT_MASK
 argument_list|)
@@ -1071,7 +995,7 @@ name|board_id
 operator|!=
 name|foo
 condition|)
-comment|/* 				 * Not a PAS2 				 */
+comment|/* Not a PAS2 */
 return|return
 literal|0
 return|;
@@ -1089,12 +1013,9 @@ block|}
 end_function
 
 begin_function
-name|long
+name|void
 name|attach_pas_card
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
@@ -1107,6 +1028,12 @@ name|hw_config
 operator|->
 name|irq
 expr_stmt|;
+name|pas_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 if|if
 condition|(
 name|detect_pas_hw
@@ -1117,20 +1044,27 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|pas_model
 operator|=
 name|pas_read
 argument_list|(
 name|CHIP_REV
 argument_list|)
+operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|printk
+name|char
+name|temp
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|sprintf
 argument_list|(
-literal|"pas0:<%s rev %d>"
+name|temp
+argument_list|,
+literal|"%s rev %d"
 argument_list|,
 name|pas_model_names
 index|[
@@ -1146,28 +1080,13 @@ name|BOARD_REV_ID
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printk
+name|conf_printf
 argument_list|(
-literal|"<%s rev %d>"
+name|temp
 argument_list|,
-name|pas_model_names
-index|[
-operator|(
-name|int
-operator|)
-name|pas_model
-index|]
-argument_list|,
-name|pas_read
-argument_list|(
-name|BOARD_REV_ID
-argument_list|)
+name|hw_config
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -1177,15 +1096,11 @@ name|hw_config
 argument_list|)
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
-name|mem_start
-operator|=
+ifdef|#
+directive|ifdef
+name|CONFIG_AUDIO
 name|pas_pcm_init
 argument_list|(
-name|mem_start
-argument_list|,
 name|hw_config
 argument_list|)
 expr_stmt|;
@@ -1193,52 +1108,27 @@ endif|#
 directive|endif
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_SB_EMULATION
+name|CONFIG_SB_EMULATION
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_SB
+name|CONFIG_SB
 argument_list|)
 name|sb_dsp_disable_midi
 argument_list|()
 expr_stmt|;
-comment|/* 					 * The SB emulation don't support * 					 * midi 					 */
+comment|/* The SB emulation don't 						 * support * midi */
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|EXCLUDE_YM3812
-name|enable_opl3_mode
-argument_list|(
-literal|0x388
-argument_list|,
-literal|0x38a
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|EXCLUDE_MIDI
 ifdef|#
 directive|ifdef
-name|EXCLUDE_PRO_MIDI
-name|mem_start
-operator|=
+name|CONFIG_MIDI
 name|pas_midi_init
-argument_list|(
-name|mem_start
-argument_list|)
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|pas_init_mixer
@@ -1246,9 +1136,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-return|return
-name|mem_start
-return|;
 block|}
 end_function
 
@@ -1262,6 +1149,12 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
+name|pas_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 return|return
 name|detect_pas_hw
 argument_list|(

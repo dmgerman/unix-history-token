@@ -355,7 +355,7 @@ name|fprintf
 argument_list|(
 name|outf
 argument_list|,
-literal|"%s[] = {\n"
+literal|"static unsigned char %s[] = {\n"
 argument_list|,
 name|varline
 argument_list|)

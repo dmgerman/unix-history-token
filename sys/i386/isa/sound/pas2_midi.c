@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/pas2_midi.c  *  * The low level driver for the PAS Midi Interface.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/pas2_midi.c  *   * The low level driver for the PAS Midi Interface.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_include
@@ -9,38 +9,25 @@ directive|include
 file|<i386/isa/sound/sound_config.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIGURE_SOUNDCARD
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_PAS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_MIDI
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/pas_defs.h>
+file|<i386/isa/sound/pas_hw.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_PAS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_MIDI
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|EXCLUDE_PRO_MIDI
-argument_list|)
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -74,8 +61,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|tmp_queue
 index|[
 literal|256
@@ -94,8 +80,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|volatile
-name|unsigned
-name|char
+name|u_char
 name|qhead
 decl_stmt|,
 name|qtail
@@ -113,8 +98,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 function_decl|;
@@ -140,8 +124,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 parameter_list|,
@@ -159,12 +142,10 @@ block|{
 name|int
 name|err
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|ctrl
 decl_stmt|;
 if|if
@@ -172,19 +153,19 @@ condition|(
 name|midi_busy
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"PAS2: Midi busy\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
-comment|/*    * Reset input and output FIFO pointers    */
+comment|/* 	 * Reset input and output FIFO pointers 	 */
 name|pas_write
 argument_list|(
 name|M_C_RESET_INPUT_FIFO
@@ -194,10 +175,10 @@ argument_list|,
 name|MIDI_CONTROL
 argument_list|)
 expr_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -215,7 +196,7 @@ condition|)
 return|return
 name|err
 return|;
-comment|/*    * Enable input available and output FIFO empty interrupts    */
+comment|/* 	 * Enable input available and output FIFO empty interrupts 	 */
 name|ctrl
 operator|=
 literal|0
@@ -243,7 +224,7 @@ name|ctrl
 operator||=
 name|M_C_ENA_INPUT_IRQ
 expr_stmt|;
-comment|/* 					   * Enable input 					 */
+comment|/* Enable input */
 name|input_opened
 operator|=
 literal|1
@@ -264,7 +245,7 @@ name|ctrl
 operator||=
 name|M_C_ENA_OUTPUT_IRQ
 operator||
-comment|/* 					 * Enable output 					 */
+comment|/* Enable output */
 name|M_C_ENA_OUTPUT_HALF_IRQ
 expr_stmt|;
 block|}
@@ -275,7 +256,7 @@ argument_list|,
 name|MIDI_CONTROL
 argument_list|)
 expr_stmt|;
-comment|/*    * Acknowledge any pending interrupts    */
+comment|/* 	 * Acknowledge any pending interrupts 	 */
 name|pas_write
 argument_list|(
 literal|0xff
@@ -287,7 +268,7 @@ name|ofifo_bytes
 operator|=
 literal|0
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -319,7 +300,7 @@ name|int
 name|dev
 parameter_list|)
 block|{
-comment|/*    * Reset FIFO pointers, disable intrs    */
+comment|/* 	 * Reset FIFO pointers, disable intrs 	 */
 name|pas_write
 argument_list|(
 name|M_C_RESET_INPUT_FIFO
@@ -346,8 +327,7 @@ specifier|static
 name|int
 name|dump_to_midi
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 name|midi_byte
 parameter_list|)
 block|{
@@ -389,12 +369,12 @@ operator|>
 literal|13
 operator|)
 condition|)
-comment|/* 									   * Fifo 									   * full 									 */
 block|{
+comment|/* Fifo full */
 return|return
 literal|0
 return|;
-comment|/* 				 * Upper layer will call again 				 */
+comment|/* Upper layer will call again */
 block|}
 name|ofifo_bytes
 operator|++
@@ -420,20 +400,18 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|midi_byte
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-comment|/*    * Drain the local queue first    */
-name|DISABLE_INTR
-argument_list|(
+comment|/* 	 * Drain the local queue first 	 */
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -455,12 +433,12 @@ name|qhead
 operator|++
 expr_stmt|;
 block|}
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/*    * Output the byte if the local queue is empty.    */
+comment|/* 	 * Output the byte if the local queue is empty. 	 */
 if|if
 condition|(
 operator|!
@@ -476,8 +454,8 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* 				 * OK 				 */
-comment|/*    * Put to the local queue    */
+comment|/* OK */
+comment|/* 	 * Put to the local queue 	 */
 if|if
 condition|(
 name|qlen
@@ -487,11 +465,11 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 				 * Local queue full 				 */
-name|DISABLE_INTR
-argument_list|(
+comment|/* Local queue full */
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|tmp_queue
 index|[
@@ -506,7 +484,7 @@ expr_stmt|;
 name|qtail
 operator|++
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -555,18 +533,18 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -597,7 +575,6 @@ name|dev
 parameter_list|)
 block|{
 return|return
-operator|!
 name|qlen
 return|;
 block|}
@@ -663,7 +640,7 @@ name|pas_midi_kick
 block|,
 name|NULL
 block|,
-comment|/* 				 * command 				 */
+comment|/* command */
 name|pas_buffer_status
 block|,
 name|NULL
@@ -672,12 +649,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|long
+name|void
 name|pas_midi_init
-parameter_list|(
-name|long
-name|mem_start
-parameter_list|)
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -686,14 +660,12 @@ operator|>=
 name|MAX_MIDI_DEV
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"Sound: Too many midi devices detected\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return;
 block|}
 name|std_midi_synth
 operator|.
@@ -712,9 +684,7 @@ operator|=
 operator|&
 name|pas_midi_operations
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return;
 block|}
 end_function
 
@@ -725,8 +695,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|stat
 decl_stmt|;
 name|int
@@ -734,8 +703,7 @@ name|i
 decl_stmt|,
 name|incount
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 name|stat
@@ -751,8 +719,8 @@ name|stat
 operator|&
 name|M_S_INPUT_AVAIL
 condition|)
-comment|/* 				 * Input byte available 				 */
 block|{
+comment|/* Input byte available */
 name|incount
 operator|=
 name|pas_read
@@ -762,7 +730,7 @@ argument_list|)
 operator|&
 literal|0x0f
 expr_stmt|;
-comment|/* 							 * Input FIFO count 							 */
+comment|/* Input FIFO count */
 if|if
 condition|(
 operator|!
@@ -807,7 +775,7 @@ argument_list|(
 name|MIDI_DATA
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Flush 				 */
+comment|/* Flush */
 block|}
 if|if
 condition|(
@@ -842,10 +810,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -867,18 +835,12 @@ name|qhead
 operator|++
 expr_stmt|;
 block|}
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (stat& M_S_FRAMING_ERROR)     printk ("MIDI framing error\n");
-endif|#
-directive|endif
 if|if
 condition|(
 name|stat
@@ -886,7 +848,7 @@ operator|&
 name|M_S_OUTPUT_OVERRUN
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"MIDI output overrun %x,%x,%d \n"
 argument_list|,
@@ -912,14 +874,9 @@ argument_list|,
 name|MIDI_STATUS
 argument_list|)
 expr_stmt|;
-comment|/* 					   * Acknowledge interrupts 					 */
+comment|/* Acknowledge interrupts */
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

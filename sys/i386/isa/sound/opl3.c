@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/opl3.c  *  * A low level driver for Yamaha YM3812 and OPL-3 -chips  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/opl3.c  *   * A low level driver for Yamaha YM3812 and OPL-3 -chips  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_comment
@@ -22,13 +22,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CONFIGURE_SOUNDCARD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_YM3812
+name|CONFIG_YM3812
 argument_list|)
 end_if
 
@@ -36,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/sound/opl3.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_define
@@ -52,141 +52,11 @@ name|OFFS_4OP
 value|11
 end_define
 
-begin_comment
-comment|/* 				   * * * Definitions for the operators OP3 and 				   * * OP4 * * begin here   */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|opl3_enabled
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|opl4_enabled
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|left_address
-init|=
-literal|0x28d2
-decl_stmt|,
-name|right_address
-init|=
-literal|0x28d2
-decl_stmt|,
-name|both_address
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|left_address
-init|=
-literal|0x388
-decl_stmt|,
-name|right_address
-init|=
-literal|0x388
-decl_stmt|,
-name|both_address
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nr_voices
-init|=
-literal|9
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|logical_voices
-index|[
-name|MAX_VOICE
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|1
-block|,
-literal|2
-block|,
-literal|3
-block|,
-literal|4
-block|,
-literal|5
-block|,
-literal|6
-block|,
-literal|7
-block|,
-literal|8
-block|,
-literal|9
-block|,
-literal|10
-block|,
-literal|11
-block|,
-literal|12
-block|,
-literal|13
-block|,
-literal|14
-block|,
-literal|15
-block|,
-literal|16
-block|,
-literal|17
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|voice_info
 block|{
-name|unsigned
-name|char
+name|u_char
 name|keyon_byte
 decl_stmt|;
 name|long
@@ -195,13 +65,14 @@ decl_stmt|;
 name|long
 name|bender_range
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|orig_freq
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|current_freq
+decl_stmt|;
+name|int
+name|volume
 decl_stmt|;
 name|int
 name|mode
@@ -210,127 +81,99 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|voice_info
-name|voices
+begin_typedef
+typedef|typedef
+struct|struct
+name|opl_devinfo
+block|{
+name|int
+name|left_io
+decl_stmt|,
+name|right_io
+decl_stmt|;
+name|int
+name|nr_voice
+decl_stmt|;
+name|int
+name|lv_map
 index|[
 name|MAX_VOICE
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
+name|struct
+name|voice_info
+name|voc
+index|[
+name|MAX_VOICE
+index|]
+decl_stmt|;
 name|struct
 name|voice_alloc_info
 modifier|*
-name|voice_alloc
+name|v_alloc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|channel_info
 modifier|*
 name|chn_info
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|sbi_instrument
-modifier|*
-name|instrmap
+name|i_map
+index|[
+name|SBFM_MAXINSTR
+index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|sbi_instrument
 modifier|*
-name|active_instrument
+name|act_i
 index|[
 name|MAX_VOICE
 index|]
-init|=
-block|{
-name|NULL
-block|}
 decl_stmt|;
-end_decl_stmt
+name|struct
+name|synth_info
+name|fm_info
+decl_stmt|;
+name|int
+name|busy
+decl_stmt|;
+name|int
+name|model
+decl_stmt|;
+name|u_char
+name|cmask
+decl_stmt|;
+name|int
+name|is_opl4
+decl_stmt|;
+name|sound_os_info
+modifier|*
+name|osp
+decl_stmt|;
+block|}
+name|opl_devinfo
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|synth_info
-name|fm_info
+name|opl_devinfo
+modifier|*
+name|devc
 init|=
-block|{
-literal|"OPL-2"
-block|,
-literal|0
-block|,
-name|SYNTH_TYPE_FM
-block|,
-name|FM_TYPE_ADLIB
-block|,
-literal|0
-block|,
-literal|9
-block|,
-literal|0
-block|,
-name|SBFM_MAXINSTR
-block|,
-literal|0
-block|}
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
-name|already_initialized
-init|=
-literal|0
+name|detected_model
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|opl3_ok
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|opl3_busy
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fm_model
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*   				 * *  * * 0=no fm, 1=mono, 2=SB Pro 1, 3=SB 				 * Pro 2 * *    */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -375,12 +218,10 @@ parameter_list|(
 name|int
 name|io_addr
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|addr
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|val
 parameter_list|)
 function_decl|;
@@ -406,16 +247,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-name|connection_mask
-init|=
-literal|0x00
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|enable_opl3_mode
@@ -430,39 +261,7 @@ name|int
 name|both
 parameter_list|)
 block|{
-if|if
-condition|(
-name|opl3_enabled
-condition|)
-return|return;
-name|opl3_enabled
-operator|=
-literal|1
-expr_stmt|;
-name|left_address
-operator|=
-name|left
-expr_stmt|;
-name|right_address
-operator|=
-name|right
-expr_stmt|;
-name|both_address
-operator|=
-name|both
-expr_stmt|;
-name|fm_info
-operator|.
-name|capabilities
-operator|=
-name|SYNTH_CAP_OPL3
-expr_stmt|;
-name|fm_info
-operator|.
-name|synth_subtype
-operator|=
-name|FM_TYPE_OPL3
-expr_stmt|;
+comment|/* NOP */
 block|}
 end_function
 
@@ -479,7 +278,7 @@ name|i
 decl_stmt|;
 specifier|static
 name|int
-name|voices_4op
+name|v4op
 index|[
 name|MAX_VOICE
 index|]
@@ -510,14 +309,18 @@ block|,
 literal|17
 block|}
 decl_stmt|;
-name|connection_mask
+name|devc
+operator|->
+name|cmask
 operator|=
 literal|0x3f
 expr_stmt|;
-comment|/* Connect all possible 4 OP voices */
+comment|/* Connect all possible 4 OP voice operators */
 name|opl3_command
 argument_list|(
-name|right_address
+name|devc
+operator|->
+name|right_io
 argument_list|,
 name|CONNECTION_SELECT_REGISTER
 argument_list|,
@@ -537,7 +340,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
@@ -559,7 +362,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
@@ -581,7 +384,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
@@ -603,7 +406,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
@@ -625,21 +428,27 @@ condition|;
 name|i
 operator|++
 control|)
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
 operator|=
-name|voices_4op
+name|v4op
 index|[
 name|i
 index|]
 expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|max_voice
 operator|=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|=
 literal|12
 expr_stmt|;
@@ -654,12 +463,10 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
-name|int
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
@@ -676,22 +483,28 @@ name|struct
 name|sbi_instrument
 name|ins
 decl_stmt|;
-name|IOCTL_FROM_USER
+name|bcopy
 argument_list|(
+operator|&
+operator|(
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|arg
+operator|)
+index|[
+literal|0
+index|]
+operator|)
+argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 name|ins
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|arg
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -714,7 +527,7 @@ operator|>=
 name|SBFM_MAXINSTR
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"FM Error: Invalid instrument number %d\n"
 argument_list|,
@@ -724,10 +537,10 @@ name|channel
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 name|pmgr_inform
@@ -763,35 +576,51 @@ break|break;
 case|case
 name|SNDCTL_SYNTH_INFO
 case|:
+name|devc
+operator|->
 name|fm_info
 operator|.
 name|nr_voices
 operator|=
 operator|(
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|==
 literal|12
 operator|)
 condition|?
 literal|6
 else|:
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 expr_stmt|;
-name|IOCTL_TO_USER
+name|bcopy
 argument_list|(
+operator|&
+name|devc
+operator|->
+name|fm_info
+argument_list|,
+operator|&
+operator|(
+operator|(
 operator|(
 name|char
 operator|*
 operator|)
 name|arg
-argument_list|,
+operator|)
+index|[
 literal|0
-argument_list|,
-operator|&
-name|fm_info
+index|]
+operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|devc
+operator|->
 name|fm_info
 argument_list|)
 argument_list|)
@@ -812,7 +641,11 @@ name|SNDCTL_FM_4OP_ENABLE
 case|:
 if|if
 condition|(
-name|opl3_enabled
+name|devc
+operator|->
+name|model
+operator|==
+literal|2
 condition|)
 name|enter_4op_mode
 argument_list|()
@@ -823,10 +656,10 @@ return|;
 break|break;
 default|default:
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -838,11 +671,14 @@ name|opl3_detect
 parameter_list|(
 name|int
 name|ioaddr
+parameter_list|,
+name|sound_os_info
+modifier|*
+name|osp
 parameter_list|)
 block|{
-comment|/*    * This function returns 1 if the FM chicp is present at the given I/O port    * The detection algorithm plays with the timer built in the FM chip and    * looks for a change in the status register.    *    * Note! The timers of the FM chip are not connected to AdLib (and compatible)    * boards.    *    * Note2! The chip is initialized if detected.    */
-name|unsigned
-name|char
+comment|/*      * This function returns 1 if the FM chip is present at the given      * I/O port The detection algorithm plays with the timer built in the      * FM chip and looks for a change in the status register.      *       * Note! The timers of the FM chip are not connected to AdLib (and      * compatible) boards.      *       * Note2! The chip is initialized if detected.      */
+name|u_char
 name|stat1
 decl_stmt|,
 name|stat2
@@ -854,21 +690,64 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|already_initialized
+name|devc
+operator|!=
+name|NULL
 condition|)
-block|{
 return|return
 literal|0
 return|;
-comment|/* 				 * Do avoid duplicate initializations 				 */
-block|}
+name|devc
+operator|=
+operator|(
+expr|struct
+name|opl_devinfo
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|devc
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|opl3_enabled
+operator|!
+name|devc
 condition|)
-name|ioaddr
+name|panic
+argument_list|(
+literal|"SOUND: Cannot allocate memory\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|devc
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"OPL3: Can't allocate memory for device control structure\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|devc
+operator|->
+name|osp
 operator|=
-name|left_address
+name|osp
 expr_stmt|;
 comment|/* Reset timers 1 and 2 */
 name|opl3_command
@@ -896,7 +775,7 @@ name|signature
 operator|=
 name|stat1
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|ioaddr
 argument_list|)
@@ -916,7 +795,7 @@ block|{
 return|return
 literal|0
 return|;
-comment|/* 				 * Should be 0x00 				 */
+comment|/* Should be 0x00 */
 block|}
 name|opl3_command
 argument_list|(
@@ -939,33 +818,22 @@ operator||
 name|TIMER1_START
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Unmask and start timer 1 						 */
-comment|/*    * Now we have to delay at least 80 usec    */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|50
-condition|;
-name|i
-operator|++
-control|)
-name|tenmicrosec
-argument_list|()
+comment|/* Unmask and start timer 1 */
+name|DELAY
+argument_list|(
+literal|150
+argument_list|)
 expr_stmt|;
+comment|/* Now we have to delay at least 80 usec */
 name|stat2
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|ioaddr
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Read status after timers have expired 				 */
-comment|/*    * Stop the timers    */
+comment|/* Read status after timers have expired */
+comment|/*      * Stop the timers      */
 comment|/* Reset timers 1 and 2 */
 name|opl3_command
 argument_list|(
@@ -1002,20 +870,20 @@ block|{
 return|return
 literal|0
 return|;
-comment|/* 				 * There is no YM3812 				 */
+comment|/* There is no YM3812 */
 block|}
-comment|/*    * There is a FM chicp in this address. Detect the type (OPL2 to OPL4)    */
+comment|/*      * There is a FM chicp in this address. Detect the type (OPL2 to      * OPL4)      */
 if|if
 condition|(
 name|signature
 operator|==
 literal|0x06
 condition|)
-comment|/* OPL2 */
 block|{
-name|opl3_enabled
+comment|/* OPL2 */
+name|detected_model
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 block|}
 elseif|else
@@ -1025,38 +893,21 @@ name|signature
 operator|==
 literal|0x00
 condition|)
-comment|/* OPL3 or OPL4 */
 block|{
-name|unsigned
-name|char
+comment|/* OPL3 or OPL4 */
+name|u_char
 name|tmp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|opl3_enabled
-condition|)
-comment|/* Was not already enabled */
-block|{
-name|left_address
+name|detected_model
 operator|=
-name|ioaddr
+literal|3
 expr_stmt|;
-name|right_address
-operator|=
+comment|/* 	 * Detect availability of OPL4 (_experimental_). Works 	 * propably only after a cold boot. In addition the OPL4 port 	 * of the chip may not be connected to the PC bus at all. 	 */
+name|opl3_command
+argument_list|(
 name|ioaddr
 operator|+
 literal|2
-expr_stmt|;
-name|opl3_enabled
-operator|=
-literal|1
-expr_stmt|;
-block|}
-comment|/*        * Detect availability of OPL4 (_experimental_). Works propably        * only after a cold boot. In addition the OPL4 port        * of the chip may not be connected to the PC bus at all.        */
-name|opl3_command
-argument_list|(
-name|right_address
 argument_list|,
 name|OPL3_MODE_REGISTER
 argument_list|,
@@ -1065,7 +916,9 @@ argument_list|)
 expr_stmt|;
 name|opl3_command
 argument_list|(
-name|right_address
+name|ioaddr
+operator|+
+literal|2
 argument_list|,
 name|OPL3_MODE_REGISTER
 argument_list|,
@@ -1079,7 +932,7 @@ condition|(
 operator|(
 name|tmp
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|ioaddr
 argument_list|)
@@ -1087,16 +940,108 @@ operator|)
 operator|==
 literal|0x02
 condition|)
-comment|/* Have a OPL4 */
 block|{
-name|opl4_enabled
+comment|/* Have a OPL4 */
+name|detected_model
 operator|=
-literal|1
+literal|4
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+literal|0
+condition|)
+block|{
+comment|/* OPL4 port is free */
+comment|/* XXX check here lr970711 */
+name|int
+name|tmp
+decl_stmt|;
+name|outb
+argument_list|(
+name|ioaddr
+operator|-
+literal|8
+argument_list|,
+literal|0x02
+argument_list|)
+expr_stmt|;
+comment|/* Select OPL4 ID register */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|inb
+argument_list|(
+name|ioaddr
+operator|-
+literal|7
+argument_list|)
+expr_stmt|;
+comment|/* Read it */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+literal|0x20
+condition|)
+block|{
+comment|/* OPL4 should return 0x20 here */
+name|detected_model
+operator|=
+literal|4
+expr_stmt|;
+name|outb
+argument_list|(
+name|ioaddr
+operator|-
+literal|8
+argument_list|,
+literal|0xF8
+argument_list|)
+expr_stmt|;
+comment|/* Select OPL4 FM mixer control */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|ioaddr
+operator|-
+literal|7
+argument_list|,
+literal|0x1B
+argument_list|)
+expr_stmt|;
+comment|/* Write value */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|detected_model
+operator|=
+literal|3
 expr_stmt|;
 block|}
 name|opl3_command
 argument_list|(
-name|right_address
+name|ioaddr
+operator|+
+literal|2
 argument_list|,
 name|OPL3_MODE_REGISTER
 argument_list|,
@@ -1128,7 +1073,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Note off 						 */
+comment|/* Note off */
 name|opl3_command
 argument_list|(
 name|ioaddr
@@ -1147,7 +1092,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Melodic mode. 							 */
+comment|/* Melodic mode. */
 return|return
 literal|1
 return|;
@@ -1185,12 +1130,16 @@ literal|0
 operator|||
 name|voice
 operator|>=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 return|return
 literal|0
 return|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|map
 index|[
@@ -1202,9 +1151,11 @@ expr_stmt|;
 name|map
 operator|=
 operator|&
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|voice
 index|]
@@ -1212,7 +1163,7 @@ index|]
 expr_stmt|;
 name|DEB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
 literal|"Kill note %d\n"
 argument_list|,
@@ -1243,7 +1194,9 @@ name|map
 operator|->
 name|voice_num
 argument_list|,
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -1254,7 +1207,9 @@ operator|~
 literal|0x20
 argument_list|)
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -1263,7 +1218,9 @@ name|keyon_byte
 operator|=
 literal|0
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -1272,7 +1229,20 @@ name|bender
 operator|=
 literal|0
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
+index|[
+name|voice
+index|]
+operator|.
+name|volume
+operator|=
+literal|64
+expr_stmt|;
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -1281,8 +1251,10 @@ name|bender_range
 operator|=
 literal|200
 expr_stmt|;
-comment|/* 					 * 200 cents = 2 semitones 					 */
-name|voices
+comment|/* 200 cents = 2 semitones */
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -1291,7 +1263,9 @@ name|orig_freq
 operator|=
 literal|0
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -1300,7 +1274,9 @@ name|current_freq
 operator|=
 literal|0
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -1393,11 +1369,14 @@ name|key
 operator|!=
 name|OPL3_PATCH
 operator|||
-operator|!
-name|opl3_enabled
+name|devc
+operator|->
+name|model
+operator|!=
+literal|2
 operator|)
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|"FM warning: Invalid patch format field (key) 0x%x\n"
 argument_list|,
@@ -1406,25 +1385,27 @@ operator|->
 name|key
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|instr
+argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 operator|(
-name|instrmap
+name|devc
+operator|->
+name|i_map
 index|[
 name|instr_no
 index|]
 operator|)
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|instr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1462,7 +1443,9 @@ literal|0
 operator|||
 name|voice
 operator|>=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 return|return
 literal|0
@@ -1480,13 +1463,17 @@ condition|)
 return|return
 literal|0
 return|;
-name|active_instrument
+name|devc
+operator|->
+name|act_i
 index|[
 name|voice
 index|]
 operator|=
 operator|&
-name|instrmap
+name|devc
+operator|->
+name|i_map
 index|[
 name|instr_no
 index|]
@@ -1502,7 +1489,6 @@ comment|/*  * The next table looks magical, but it certainly is not. Its values 
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|fm_volume_table
 index|[
@@ -1534,7 +1520,6 @@ block|,
 operator|-
 literal|26
 block|,
-comment|/* 						 * 0 -   7 						 */
 operator|-
 literal|24
 block|,
@@ -1559,7 +1544,6 @@ block|,
 operator|-
 literal|17
 block|,
-comment|/* 						 * 8 -  15 						 */
 operator|-
 literal|16
 block|,
@@ -1584,7 +1568,6 @@ block|,
 operator|-
 literal|12
 block|,
-comment|/* 						 * 16 -  23 						 */
 operator|-
 literal|11
 block|,
@@ -1609,7 +1592,6 @@ block|,
 operator|-
 literal|8
 block|,
-comment|/* 					 * 24 -  31 					 */
 operator|-
 literal|8
 block|,
@@ -1634,7 +1616,6 @@ block|,
 operator|-
 literal|6
 block|,
-comment|/* 					   * 32 -  39 					 */
 operator|-
 literal|5
 block|,
@@ -1659,7 +1640,6 @@ block|,
 operator|-
 literal|4
 block|,
-comment|/* 					   * 40 -  47 					 */
 operator|-
 literal|3
 block|,
@@ -1684,7 +1664,6 @@ block|,
 operator|-
 literal|2
 block|,
-comment|/* 					   * 48 -  55 					 */
 operator|-
 literal|2
 block|,
@@ -1706,7 +1685,6 @@ literal|0
 block|,
 literal|0
 block|,
-comment|/* 				 * 56 -  63 				 */
 literal|0
 block|,
 literal|0
@@ -1723,7 +1701,6 @@ literal|1
 block|,
 literal|1
 block|,
-comment|/* 				 * 64 -  71 				 */
 literal|1
 block|,
 literal|2
@@ -1740,7 +1717,6 @@ literal|2
 block|,
 literal|2
 block|,
-comment|/* 				 * 72 -  79 				 */
 literal|3
 block|,
 literal|3
@@ -1757,7 +1733,6 @@ literal|3
 block|,
 literal|4
 block|,
-comment|/* 				 * 80 -  87 				 */
 literal|4
 block|,
 literal|4
@@ -1774,7 +1749,6 @@ literal|4
 block|,
 literal|5
 block|,
-comment|/* 				 * 88 -  95 				 */
 literal|5
 block|,
 literal|5
@@ -1791,7 +1765,6 @@ literal|5
 block|,
 literal|5
 block|,
-comment|/* 				 * 96 - 103 				 */
 literal|6
 block|,
 literal|6
@@ -1808,7 +1781,6 @@ literal|6
 block|,
 literal|6
 block|,
-comment|/* 				 * 104 - 111 				 */
 literal|6
 block|,
 literal|7
@@ -1825,7 +1797,6 @@ literal|7
 block|,
 literal|7
 block|,
-comment|/* 				 * 112 - 119 				 */
 literal|7
 block|,
 literal|7
@@ -1845,22 +1816,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*   				 * *  * * 120 - 127   */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|calc_vol
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|regbyte
 parameter_list|,
 name|int
 name|volume
+parameter_list|,
+name|int
+name|main_vol
 parameter_list|)
 block|{
 name|int
@@ -1876,6 +1845,26 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
+name|main_vol
+operator|>
+literal|127
+condition|)
+name|main_vol
+operator|=
+literal|127
+expr_stmt|;
+name|volume
+operator|=
+operator|(
+name|volume
+operator|*
+name|main_vol
+operator|)
+operator|/
+literal|127
+expr_stmt|;
+if|if
+condition|(
 name|level
 condition|)
 name|level
@@ -1885,25 +1874,14 @@ index|[
 name|volume
 index|]
 expr_stmt|;
-if|if
-condition|(
+name|RANGE
+argument_list|(
 name|level
-operator|>
-literal|0x3f
-condition|)
-name|level
-operator|=
-literal|0x3f
-expr_stmt|;
-if|if
-condition|(
-name|level
-operator|<
+argument_list|,
 literal|0
-condition|)
-name|level
-operator|=
-literal|0
+argument_list|,
+literal|0x3f
+argument_list|)
 expr_stmt|;
 operator|*
 name|regbyte
@@ -1935,10 +1913,12 @@ name|voice
 parameter_list|,
 name|int
 name|volume
+parameter_list|,
+name|int
+name|main_vol
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|vol1
 decl_stmt|,
 name|vol2
@@ -1965,15 +1945,19 @@ literal|0
 operator|||
 name|voice
 operator|>=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 return|return;
 name|map
 operator|=
 operator|&
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|voice
 index|]
@@ -1981,7 +1965,9 @@ index|]
 expr_stmt|;
 name|instr
 operator|=
-name|active_instrument
+name|devc
+operator|->
+name|act_i
 index|[
 name|voice
 index|]
@@ -1994,7 +1980,9 @@ condition|)
 name|instr
 operator|=
 operator|&
-name|instrmap
+name|devc
+operator|->
+name|i_map
 index|[
 literal|0
 index|]
@@ -2010,7 +1998,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -2022,7 +2012,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -2032,7 +2024,6 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* 				 * 2 OP voice 				 */
 name|vol1
 operator|=
 name|instr
@@ -2065,36 +2056,27 @@ literal|0x01
 operator|)
 condition|)
 block|{
-comment|/* 				 * Additive synthesis 				 */
 name|calc_vol
 argument_list|(
 operator|&
 name|vol1
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
+block|}
 name|calc_vol
 argument_list|(
 operator|&
 name|vol2
 argument_list|,
 name|volume
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 				 * FM synthesis 				 */
-name|calc_vol
-argument_list|(
-operator|&
-name|vol2
 argument_list|,
-name|volume
+name|main_vol
 argument_list|)
 expr_stmt|;
-block|}
 name|opl3_command
 argument_list|(
 name|map
@@ -2113,7 +2095,6 @@ argument_list|,
 name|vol1
 argument_list|)
 expr_stmt|;
-comment|/* 									   * Modulator 									   * volume 									 */
 name|opl3_command
 argument_list|(
 name|map
@@ -2132,11 +2113,10 @@ argument_list|,
 name|vol2
 argument_list|)
 expr_stmt|;
-comment|/* 									   * Carrier 									   * volume 									 */
 block|}
 else|else
 block|{
-comment|/* 				 * 4 OP voice 				 */
+comment|/* 4 OP voice */
 name|int
 name|connection
 decl_stmt|;
@@ -2180,7 +2160,7 @@ operator|+
 literal|3
 index|]
 expr_stmt|;
-comment|/*        * The connection method for 4 OP voices is defined by the rightmost        * bits at the offsets 10 and 10+OFFS_4OP        */
+comment|/* 	 * The connection method for 4 OP devc->voc is defined by the 	 * rightmost bits at the offsets 10 and 10+OFFS_4OP 	 */
 name|connection
 operator|=
 operator|(
@@ -2225,9 +2205,10 @@ operator|&
 name|vol4
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Just the OP 4 is carrier 					 */
 break|break;
 case|case
 literal|1
@@ -2238,6 +2219,8 @@ operator|&
 name|vol2
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
 name|calc_vol
@@ -2246,6 +2229,8 @@ operator|&
 name|vol4
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2258,6 +2243,8 @@ operator|&
 name|vol1
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
 name|calc_vol
@@ -2266,6 +2253,8 @@ operator|&
 name|vol4
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2278,6 +2267,8 @@ operator|&
 name|vol1
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
 name|calc_vol
@@ -2286,6 +2277,8 @@ operator|&
 name|vol3
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
 name|calc_vol
@@ -2294,11 +2287,12 @@ operator|&
 name|vol4
 argument_list|,
 name|volume
+argument_list|,
+name|main_vol
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 				 * Why ?? 				 */
 empty_stmt|;
 block|}
 name|opl3_command
@@ -2395,8 +2389,7 @@ name|int
 name|volume
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|data
 decl_stmt|,
 name|fpc
@@ -2428,7 +2421,9 @@ literal|0
 operator|||
 name|voice
 operator|>=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 return|return
 literal|0
@@ -2436,9 +2431,11 @@ return|;
 name|map
 operator|=
 operator|&
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|voice
 index|]
@@ -2461,12 +2458,21 @@ name|note
 operator|==
 literal|255
 condition|)
-comment|/* 				 * Just change the volume 				 */
 block|{
+comment|/* Just change the volume */
 name|set_voice_volume
 argument_list|(
 name|voice
 argument_list|,
+name|volume
+argument_list|,
+name|devc
+operator|->
+name|voc
+index|[
+name|voice
+index|]
+operator|.
 name|volume
 argument_list|)
 expr_stmt|;
@@ -2474,7 +2480,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*    * Kill previous note before playing    */
+comment|/*      * Kill previous note before playing      */
 name|opl3_command
 argument_list|(
 name|map
@@ -2493,7 +2499,7 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Carrier 								 * volume to 								 * min 								 */
+comment|/* Carrier volume to min */
 name|opl3_command
 argument_list|(
 name|map
@@ -2512,7 +2518,7 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Modulator 								 * volume to 								 */
+comment|/* Modulator volume to */
 if|if
 condition|(
 name|map
@@ -2574,10 +2580,12 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* 									 * Note 									 * off 									 */
+comment|/* Note off */
 name|instr
 operator|=
-name|active_instrument
+name|devc
+operator|->
+name|act_i
 index|[
 name|voice
 index|]
@@ -2590,7 +2598,9 @@ condition|)
 name|instr
 operator|=
 operator|&
-name|instrmap
+name|devc
+operator|->
+name|i_map
 index|[
 literal|0
 index|]
@@ -2604,7 +2614,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"OPL3: Initializing voice %d with undefined instrument\n"
 argument_list|,
@@ -2632,7 +2642,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 				 * Cannot play 				 */
+comment|/* Cannot play */
 name|voice_mode
 operator|=
 name|map
@@ -2656,7 +2666,9 @@ name|map
 operator|->
 name|ioaddr
 operator|==
-name|left_address
+name|devc
+operator|->
+name|left_io
 operator|)
 condition|?
 literal|0
@@ -2677,13 +2689,15 @@ name|key
 operator|!=
 name|OPL3_PATCH
 condition|)
-comment|/* 					 * Just 2 OP patch 					 */
 block|{
+comment|/* Just 2 OP patch */
 name|voice_mode
 operator|=
 literal|2
 expr_stmt|;
-name|connection_mask
+name|devc
+operator|->
+name|cmask
 operator|&=
 operator|~
 operator|(
@@ -2694,8 +2708,9 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|connection_mask
+name|devc
+operator|->
+name|cmask
 operator||=
 operator|(
 literal|1
@@ -2703,18 +2718,21 @@ operator|<<
 name|voice_shift
 operator|)
 expr_stmt|;
-block|}
 name|opl3_command
 argument_list|(
-name|right_address
+name|devc
+operator|->
+name|right_io
 argument_list|,
 name|CONNECTION_SELECT_REGISTER
 argument_list|,
-name|connection_mask
+name|devc
+operator|->
+name|cmask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Set Sound Characteristics    */
+comment|/*      * Set Sound Characteristics      */
 name|opl3_command
 argument_list|(
 name|map
@@ -2761,7 +2779,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*    * Set Attack/Decay    */
+comment|/*      * Set Attack/Decay      */
 name|opl3_command
 argument_list|(
 name|map
@@ -2808,7 +2826,7 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*    * Set Sustain/Release    */
+comment|/*      * Set Sustain/Release      */
 name|opl3_command
 argument_list|(
 name|map
@@ -2855,7 +2873,7 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*    * Set Wave Select    */
+comment|/*      * Set Wave Select      */
 name|opl3_command
 argument_list|(
 name|map
@@ -2902,7 +2920,7 @@ literal|9
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*    * Set Feedback/Connection    */
+comment|/*      * Set Feedback/Connection      */
 name|fpc
 operator|=
 name|instr
@@ -2925,7 +2943,7 @@ name|fpc
 operator||=
 literal|0x30
 expr_stmt|;
-comment|/* 				 * Ensure that at least one chn is enabled 				 */
+comment|/* Ensure that at least one chn is enabled */
 name|opl3_command
 argument_list|(
 name|map
@@ -2941,7 +2959,7 @@ argument_list|,
 name|fpc
 argument_list|)
 expr_stmt|;
-comment|/*    * If the voice is a 4 OP one, initialize the operators 3 and 4 also    */
+comment|/*      * If the voice is a 4 OP one, initialize the operators 3 and 4 also      */
 if|if
 condition|(
 name|voice_mode
@@ -2949,7 +2967,7 @@ operator|==
 literal|4
 condition|)
 block|{
-comment|/*        * Set Sound Characteristics        */
+comment|/* 	 * Set Sound Characteristics 	 */
 name|opl3_command
 argument_list|(
 name|map
@@ -3000,7 +3018,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*        * Set Attack/Decay        */
+comment|/* 	 * Set Attack/Decay 	 */
 name|opl3_command
 argument_list|(
 name|map
@@ -3051,7 +3069,7 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*        * Set Sustain/Release        */
+comment|/* 	 * Set Sustain/Release 	 */
 name|opl3_command
 argument_list|(
 name|map
@@ -3102,7 +3120,7 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*        * Set Wave Select        */
+comment|/* 	 * Set Wave Select 	 */
 name|opl3_command
 argument_list|(
 name|map
@@ -3153,7 +3171,7 @@ literal|9
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*        * Set Feedback/Connection        */
+comment|/* 	 * Set Feedback/Connection 	 */
 name|fpc
 operator|=
 name|instr
@@ -3178,7 +3196,7 @@ name|fpc
 operator||=
 literal|0x30
 expr_stmt|;
-comment|/* 				 * Ensure that at least one chn is enabled 				 */
+comment|/* Ensure that at least one chn is enabled */
 name|opl3_command
 argument_list|(
 name|map
@@ -3197,7 +3215,9 @@ name|fpc
 argument_list|)
 expr_stmt|;
 block|}
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -3211,11 +3231,22 @@ argument_list|(
 name|voice
 argument_list|,
 name|volume
+argument_list|,
+name|devc
+operator|->
+name|voc
+index|[
+name|voice
+index|]
+operator|.
+name|volume
 argument_list|)
 expr_stmt|;
 name|freq
 operator|=
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -3229,26 +3260,32 @@ argument_list|)
 operator|/
 literal|1000
 expr_stmt|;
-comment|/*    * Since the pitch bender may have been set before playing the note, we    * have to calculate the bending now.    */
+comment|/*      * Since the pitch bender may have been set before playing the note,      * we have to calculate the bending now.      */
 name|freq
 operator|=
 name|compute_finetune
 argument_list|(
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
 operator|.
 name|orig_freq
 argument_list|,
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
 operator|.
 name|bender
 argument_list|,
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -3256,7 +3293,9 @@ operator|.
 name|bender_range
 argument_list|)
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -3276,14 +3315,14 @@ operator|&
 name|fnum
 argument_list|)
 expr_stmt|;
-comment|/*    * Play note    */
+comment|/*      * Play note      */
 name|data
 operator|=
 name|fnum
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* 				 * Least significant bits of fnumber 				 */
+comment|/* Least significant bits of fnumber */
 name|opl3_command
 argument_list|(
 name|map
@@ -3323,7 +3362,9 @@ operator|&
 literal|0x3
 operator|)
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -3398,8 +3439,8 @@ name|f
 decl_stmt|,
 name|octave
 decl_stmt|;
-comment|/*    * Converts the note frequency to block and fnum values for the FM chip    */
-comment|/*    * First try to compute the block -value (octave) where the note belongs    */
+comment|/*      * Converts the note frequency to block and fnum values for the FM      * chip      */
+comment|/*      * First try to compute the block -value (octave) where the note      * belongs      */
 name|f
 operator|=
 name|freq
@@ -3509,42 +3550,44 @@ parameter_list|(
 name|int
 name|io_addr
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|addr
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|val
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-comment|/*    * The original 2-OP synth requires a quite long delay after writing to a    * register. The OPL-3 survives with just two INBs    */
-name|OUTB
+comment|/*      * The original 2-OP synth requires a quite long delay after writing      * to a register. The OPL-3 survives with just two INBs      */
+name|outb
 argument_list|(
+name|io_addr
+argument_list|,
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 name|addr
 operator|&
 literal|0xff
 argument_list|)
-argument_list|,
-name|io_addr
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Select register 							 * 							 */
 if|if
 condition|(
 operator|!
-name|opl3_enabled
+name|devc
+operator|->
+name|model
+operator|!=
+literal|2
 condition|)
-name|tenmicrosec
-argument_list|()
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
 else|else
 for|for
@@ -3560,69 +3603,40 @@ condition|;
 name|i
 operator|++
 control|)
-name|INB
+name|inb
 argument_list|(
 name|io_addr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|OUTB
+name|outb
 argument_list|(
-call|(
-name|unsigned
-name|char
-call|)
-argument_list|(
-name|val
-operator|&
-literal|0xff
-argument_list|)
-argument_list|,
-name|io_addr
-operator|+
-literal|0x100
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|OUTB
-argument_list|(
-call|(
-name|unsigned
-name|char
-call|)
-argument_list|(
-name|val
-operator|&
-literal|0xff
-argument_list|)
-argument_list|,
 name|io_addr
 operator|+
 literal|1
+argument_list|,
+call|(
+name|u_char
+call|)
+argument_list|(
+name|val
+operator|&
+literal|0xff
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Write to register 							 * 							 */
-endif|#
-directive|endif
 if|if
 condition|(
-operator|!
-name|opl3_enabled
+name|devc
+operator|->
+name|model
+operator|!=
+literal|2
 condition|)
-block|{
-name|tenmicrosec
-argument_list|()
+name|DELAY
+argument_list|(
+literal|30
+argument_list|)
 expr_stmt|;
-name|tenmicrosec
-argument_list|()
-expr_stmt|;
-name|tenmicrosec
-argument_list|()
-expr_stmt|;
-block|}
 else|else
 for|for
 control|(
@@ -3637,7 +3651,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|INB
+name|inb
 argument_list|(
 name|io_addr
 argument_list|)
@@ -3665,7 +3679,31 @@ literal|0
 init|;
 name|i
 operator|<
-name|nr_voices
+literal|18
+condition|;
+name|i
+operator|++
+control|)
+name|devc
+operator|->
+name|lv_map
+index|[
+name|i
+index|]
+operator|=
+name|i
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|devc
+operator|->
+name|nr_voice
 condition|;
 name|i
 operator|++
@@ -3673,9 +3711,11 @@ control|)
 block|{
 name|opl3_command
 argument_list|(
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3685,9 +3725,11 @@ name|ioaddr
 argument_list|,
 name|KSL_LEVEL
 operator|+
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3703,9 +3745,11 @@ argument_list|)
 expr_stmt|;
 name|opl3_command
 argument_list|(
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3715,9 +3759,11 @@ name|ioaddr
 argument_list|,
 name|KSL_LEVEL
 operator|+
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3733,9 +3779,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3748,9 +3796,11 @@ condition|)
 block|{
 name|opl3_command
 argument_list|(
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3760,9 +3810,11 @@ name|ioaddr
 argument_list|,
 name|KSL_LEVEL
 operator|+
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3778,9 +3830,11 @@ argument_list|)
 expr_stmt|;
 name|opl3_command
 argument_list|(
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3790,9 +3844,11 @@ name|ioaddr
 argument_list|,
 name|KSL_LEVEL
 operator|+
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|i
 index|]
@@ -3821,14 +3877,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|opl3_enabled
+name|devc
+operator|->
+name|model
+operator|==
+literal|2
 condition|)
 block|{
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|max_voice
 operator|=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|=
 literal|18
 expr_stmt|;
@@ -3845,27 +3909,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|logical_voices
-index|[
-name|i
-index|]
-operator|=
-name|i
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|18
-condition|;
-name|i
-operator|++
-control|)
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
@@ -3895,42 +3939,47 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|opl3_ok
+name|devc
+operator|->
+name|busy
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
-name|ENXIO
-argument_list|)
-return|;
-if|if
-condition|(
-name|opl3_busy
-condition|)
-return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
-name|opl3_busy
+name|devc
+operator|->
+name|busy
 operator|=
 literal|1
 expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|max_voice
 operator|=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|=
-name|opl3_enabled
+operator|(
+name|devc
+operator|->
+name|model
+operator|==
+literal|2
+operator|)
 condition|?
 literal|18
 else|:
 literal|9
 expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|timestamp
 operator|=
@@ -3950,7 +3999,9 @@ name|i
 operator|++
 control|)
 block|{
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|map
 index|[
@@ -3959,7 +4010,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|alloc_times
 index|[
@@ -3969,22 +4022,32 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|connection_mask
+name|devc
+operator|->
+name|cmask
 operator|=
 literal|0x00
 expr_stmt|;
-comment|/* 				 * Just 2 OP voices 				 */
+comment|/* Just 2 OP mode */
 if|if
 condition|(
-name|opl3_enabled
+name|devc
+operator|->
+name|model
+operator|==
+literal|2
 condition|)
 name|opl3_command
 argument_list|(
-name|right_address
+name|devc
+operator|->
+name|right_io
 argument_list|,
 name|CONNECTION_SELECT_REGISTER
 argument_list|,
-name|connection_mask
+name|devc
+operator|->
+name|cmask
 argument_list|)
 expr_stmt|;
 return|return
@@ -4002,28 +4065,44 @@ name|int
 name|dev
 parameter_list|)
 block|{
-name|opl3_busy
+name|devc
+operator|->
+name|busy
 operator|=
 literal|0
 expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|max_voice
 operator|=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|=
-name|opl3_enabled
+operator|(
+name|devc
+operator|->
+name|model
+operator|==
+literal|2
+operator|)
 condition|?
 literal|18
 else|:
 literal|9
 expr_stmt|;
+name|devc
+operator|->
 name|fm_info
 operator|.
 name|nr_drums
 operator|=
 literal|0
 expr_stmt|;
+name|devc
+operator|->
 name|fm_info
 operator|.
 name|perc_mode
@@ -4046,8 +4125,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|event
 parameter_list|)
@@ -4093,19 +4171,21 @@ name|ins
 argument_list|)
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"FM Error: Patch record too short\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
-name|COPY_FROM_USER
+if|if
+condition|(
+name|uiomove
 argument_list|(
 operator|&
 operator|(
@@ -4120,22 +4200,24 @@ index|[
 name|offs
 index|]
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|addr
-argument_list|,
-name|offs
-argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ins
 argument_list|)
 operator|-
 name|offs
+argument_list|,
+name|addr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sb: Bad copyin()!\n"
 argument_list|)
 expr_stmt|;
+block|}
+empty_stmt|;
 if|if
 condition|(
 name|ins
@@ -4151,7 +4233,7 @@ operator|>=
 name|SBFM_MAXINSTR
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"FM Error: Invalid instrument number %d\n"
 argument_list|,
@@ -4161,10 +4243,10 @@ name|channel
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 name|ins
@@ -4266,15 +4348,19 @@ literal|0
 operator|||
 name|voice
 operator|>=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 return|return;
 name|map
 operator|=
 operator|&
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|voice
 index|]
@@ -4282,7 +4368,7 @@ index|]
 expr_stmt|;
 name|DEB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
 literal|"Aftertouch %d\n"
 argument_list|,
@@ -4299,10 +4385,12 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/*    * Adjust the amount of vibrato depending the pressure    */
+comment|/*      * Adjust the amount of vibrato depending the pressure      */
 name|instr
 operator|=
-name|active_instrument
+name|devc
+operator|->
+name|act_i
 index|[
 name|voice
 index|]
@@ -4315,14 +4403,18 @@ condition|)
 name|instr
 operator|=
 operator|&
-name|instrmap
+name|devc
+operator|->
+name|i_map
 index|[
 literal|0
 index|]
 expr_stmt|;
 if|if
 condition|(
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -4425,7 +4517,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*        * Not implemented yet        */
+comment|/* 	 * Not implemented yet 	 */
 block|}
 else|else
 block|{
@@ -4447,7 +4539,7 @@ operator|&
 literal|0x01
 operator|)
 condition|)
-comment|/* 						 * Additive synthesis 						 */
+comment|/* Additive synthesis */
 name|SET_VIBRATO
 argument_list|(
 literal|2
@@ -4478,8 +4570,7 @@ name|int
 name|value
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|data
 decl_stmt|;
 name|int
@@ -4497,9 +4588,11 @@ decl_stmt|;
 name|map
 operator|=
 operator|&
-name|physical_voices
+name|pv_map
 index|[
-name|logical_voices
+name|devc
+operator|->
+name|lv_map
 index|[
 name|voice
 index|]
@@ -4514,7 +4607,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -4533,7 +4628,9 @@ if|if
 condition|(
 operator|!
 operator|(
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -4544,26 +4641,32 @@ literal|0x20
 operator|)
 condition|)
 return|return;
-comment|/* 				 * Not keyed on 				 */
+comment|/* Not keyed on */
 name|freq
 operator|=
 name|compute_finetune
 argument_list|(
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
 operator|.
 name|orig_freq
 argument_list|,
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
 operator|.
 name|bender
 argument_list|,
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -4571,7 +4674,9 @@ operator|.
 name|bender_range
 argument_list|)
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -4597,7 +4702,7 @@ name|fnum
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* 				 * Least significant bits of fnumber 				 */
+comment|/* Least significant bits of fnumber */
 name|opl3_command
 argument_list|(
 name|map
@@ -4637,8 +4742,10 @@ operator|&
 literal|0x3
 operator|)
 expr_stmt|;
-comment|/* 								 * * 								 * KEYON|OCTAVE|MS 								 * 								 * * bits * * 								 * of * f-num 								 * 								 */
-name|voices
+comment|/* KEYON|OCTAVE|MS  bits of f-num */
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -4691,7 +4798,9 @@ literal|0
 operator|||
 name|voice
 operator|>=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 return|return;
 switch|switch
@@ -4715,7 +4824,9 @@ break|break;
 case|case
 name|CTRL_PITCH_BENDER_RANGE
 case|:
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -4723,6 +4834,23 @@ operator|.
 name|bender_range
 operator|=
 name|value
+expr_stmt|;
+break|break;
+case|case
+name|CTL_MAIN_VOLUME
+case|:
+name|devc
+operator|->
+name|voc
+index|[
+name|voice
+index|]
+operator|.
+name|volume
+operator|=
+name|value
+operator|/
+literal|128
 expr_stmt|;
 break|break;
 block|}
@@ -4744,10 +4872,10 @@ name|rec
 parameter_list|)
 block|{
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -4775,7 +4903,9 @@ literal|0
 operator|||
 name|voice
 operator|>=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 return|return;
 name|bend_pitch
@@ -4821,7 +4951,7 @@ name|best
 decl_stmt|,
 name|first
 decl_stmt|,
-name|avail_voices
+name|avail
 decl_stmt|,
 name|best_time
 init|=
@@ -4855,6 +4985,8 @@ expr_stmt|;
 else|else
 name|instr_no
 operator|=
+name|devc
+operator|->
 name|chn_info
 index|[
 name|chn
@@ -4865,7 +4997,9 @@ expr_stmt|;
 name|instr
 operator|=
 operator|&
-name|instrmap
+name|devc
+operator|->
+name|i_map
 index|[
 name|instr_no
 index|]
@@ -4879,7 +5013,9 @@ operator|<
 literal|0
 operator|||
 comment|/* Instrument not loaded */
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|!=
 literal|12
 condition|)
@@ -4891,7 +5027,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|==
 literal|12
 condition|)
@@ -4922,7 +5060,7 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
-name|avail_voices
+name|avail
 operator|=
 literal|6
 expr_stmt|;
@@ -4931,11 +5069,13 @@ else|else
 block|{
 if|if
 condition|(
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|==
 literal|12
 condition|)
-comment|/* 4 OP mode. Use the '2 OP only' voices first */
+comment|/* 4 OP mode. Use the '2 OP 					 * only' operators first */
 name|first
 operator|=
 name|p
@@ -4949,12 +5089,14 @@ name|p
 operator|=
 literal|0
 expr_stmt|;
-name|avail_voices
+name|avail
 operator|=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 expr_stmt|;
 block|}
-comment|/*      *    Now try to find a free voice    */
+comment|/*      * Now try to find a free voice      */
 name|best
 operator|=
 name|first
@@ -4967,7 +5109,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|avail_voices
+name|avail
 condition|;
 name|i
 operator|++
@@ -5000,8 +5142,8 @@ index|]
 operator|<
 name|best_time
 condition|)
-comment|/* Find oldest playing note */
 block|{
+comment|/* Find oldest playing note */
 name|best_time
 operator|=
 name|alloc
@@ -5024,10 +5166,10 @@ operator|+
 literal|1
 operator|)
 operator|%
-name|avail_voices
+name|avail
 expr_stmt|;
 block|}
-comment|/*      *    Insert some kind of priority mechanism here.    */
+comment|/*      * Insert some kind of priority mechanism here.      */
 if|if
 condition|(
 name|best
@@ -5042,16 +5184,20 @@ if|if
 condition|(
 name|best
 operator|>
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 condition|)
 name|best
 operator|-=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 expr_stmt|;
 return|return
 name|best
 return|;
-comment|/* All voices in use. Select the first one. */
+comment|/* All devc->voc in use. Select the first 				 * one. */
 block|}
 end_function
 
@@ -5097,7 +5243,9 @@ operator|->
 name|pgm_num
 argument_list|)
 expr_stmt|;
-name|voices
+name|devc
+operator|->
+name|voc
 index|[
 name|voice
 index|]
@@ -5107,6 +5255,22 @@ operator|=
 name|info
 operator|->
 name|bender_value
+expr_stmt|;
+name|devc
+operator|->
+name|voc
+index|[
+name|voice
+index|]
+operator|.
+name|volume
+operator|=
+name|info
+operator|->
+name|controllers
+index|[
+name|CTL_MAIN_VOLUME
+index|]
 expr_stmt|;
 block|}
 end_function
@@ -5118,8 +5282,7 @@ name|synth_operations
 name|opl3_operations
 init|=
 block|{
-operator|&
-name|fm_info
+name|NULL
 block|,
 literal|0
 block|,
@@ -5165,48 +5328,206 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|long
+name|void
 name|opl3_init
 parameter_list|(
-name|long
-name|mem_start
+name|int
+name|ioaddr
+parameter_list|,
+name|sound_os_info
+modifier|*
+name|osp
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-name|PERMANENT_MALLOC
-argument_list|(
-expr|struct
-name|sbi_instrument
-operator|*
-argument_list|,
-name|instrmap
-argument_list|,
-name|SBFM_MAXINSTR
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|instrmap
-argument_list|)
-argument_list|,
-name|mem_start
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|num_synths
 operator|>=
 name|MAX_SYNTH_DEV
 condition|)
-name|printk
+block|{
+name|printf
 argument_list|(
 literal|"OPL3 Error: Too many synthesizers\n"
 argument_list|)
 expr_stmt|;
+return|return ;
+block|}
+if|if
+condition|(
+name|devc
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"OPL3: Device control structure not initialized.\n"
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|devc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|devc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|devc
+operator|->
+name|osp
+operator|=
+name|osp
+expr_stmt|;
+name|devc
+operator|->
+name|nr_voice
+operator|=
+literal|9
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|name
+argument_list|,
+literal|"OPL2-"
+argument_list|)
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|device
+operator|=
+literal|0
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|synth_type
+operator|=
+name|SYNTH_TYPE_FM
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|synth_subtype
+operator|=
+name|FM_TYPE_ADLIB
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|perc_mode
+operator|=
+literal|0
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|nr_voices
+operator|=
+literal|9
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|nr_drums
+operator|=
+literal|0
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|instr_bank_size
+operator|=
+name|SBFM_MAXINSTR
+expr_stmt|;
+name|devc
+operator|->
+name|fm_info
+operator|.
+name|capabilities
+operator|=
+literal|0
+expr_stmt|;
+name|devc
+operator|->
+name|left_io
+operator|=
+name|ioaddr
+expr_stmt|;
+name|devc
+operator|->
+name|right_io
+operator|=
+name|ioaddr
+operator|+
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|detected_model
+operator|<=
+literal|2
+condition|)
+name|devc
+operator|->
+name|model
+operator|=
+literal|1
+expr_stmt|;
 else|else
 block|{
+name|devc
+operator|->
+name|model
+operator|=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|detected_model
+operator|==
+literal|4
+condition|)
+name|devc
+operator|->
+name|is_opl4
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|opl3_operations
+operator|.
+name|info
+operator|=
+operator|&
+name|devc
+operator|->
+name|fm_info
+expr_stmt|;
 name|synth_devs
 index|[
 name|num_synths
@@ -5216,13 +5537,17 @@ operator|=
 operator|&
 name|opl3_operations
 expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|=
 operator|&
 name|opl3_operations
 operator|.
 name|alloc
 expr_stmt|;
+name|devc
+operator|->
 name|chn_info
 operator|=
 operator|&
@@ -5233,74 +5558,74 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-block|}
-name|fm_model
-operator|=
-literal|0
-expr_stmt|;
-name|opl3_ok
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
-name|opl3_enabled
+name|devc
+operator|->
+name|model
+operator|==
+literal|2
 condition|)
 block|{
 if|if
 condition|(
-name|opl4_enabled
+name|devc
+operator|->
+name|is_opl4
 condition|)
-if|#
-directive|if
-name|defined
+name|conf_printf2
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|printk
-argument_list|(
-literal|"opl0:<Yamaha OPL4/OPL3 FM>"
-argument_list|)
-expr_stmt|;
-else|else
-name|printk
-argument_list|(
-literal|"opl0:<Yamaha OPL-3 FM>"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printk
-argument_list|(
-literal|"<Yamaha OPL4/OPL3 FM>"
+literal|"Yamaha OPL4/OPL3 FM"
+argument_list|,
+name|ioaddr
+argument_list|,
+literal|0
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|printk
+name|conf_printf2
 argument_list|(
-literal|"<Yamaha OPL-3 FM>"
+literal|"Yamaha OPL3 FM"
+argument_list|,
+name|ioaddr
+argument_list|,
+literal|0
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|fm_model
-operator|=
-literal|2
-expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|max_voice
 operator|=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|=
 literal|18
 expr_stmt|;
+name|devc
+operator|->
 name|fm_info
 operator|.
 name|nr_drums
 operator|=
 literal|0
 expr_stmt|;
+name|devc
+operator|->
 name|fm_info
 operator|.
 name|capabilities
@@ -5309,6 +5634,8 @@ name|SYNTH_CAP_OPL3
 expr_stmt|;
 name|strcpy
 argument_list|(
+name|devc
+operator|->
 name|fm_info
 operator|.
 name|name
@@ -5331,7 +5658,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
@@ -5340,80 +5667,83 @@ name|ioaddr
 operator|==
 name|USE_LEFT
 condition|)
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
 operator|.
 name|ioaddr
 operator|=
-name|left_address
+name|devc
+operator|->
+name|left_io
 expr_stmt|;
 else|else
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
 operator|.
 name|ioaddr
 operator|=
-name|right_address
+name|devc
+operator|->
+name|right_io
 expr_stmt|;
 name|opl3_command
 argument_list|(
-name|right_address
+name|devc
+operator|->
+name|right_io
 argument_list|,
 name|OPL3_MODE_REGISTER
 argument_list|,
 name|OPL3_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* 									 * Enable 									 * OPL-3 									 * mode 									 */
 name|opl3_command
 argument_list|(
-name|right_address
+name|devc
+operator|->
+name|right_io
 argument_list|,
 name|CONNECTION_SELECT_REGISTER
 argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* 									 * Select 									 * all 									 * 2-OP 									 * * 									 * voices 									 */
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
+name|conf_printf2
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|printk
-argument_list|(
-literal|"opl0:<Yamaha 2-OP FM>"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printk
-argument_list|(
-literal|"<Yamaha 2-OP FM>"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|fm_model
-operator|=
+literal|"Yamaha OPL2 FM"
+argument_list|,
+name|ioaddr
+argument_list|,
+literal|0
+argument_list|,
+operator|-
 literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
-name|voice_alloc
+name|devc
+operator|->
+name|v_alloc
 operator|->
 name|max_voice
 operator|=
-name|nr_voices
+name|devc
+operator|->
+name|nr_voice
 operator|=
 literal|9
 expr_stmt|;
+name|devc
+operator|->
 name|fm_info
 operator|.
 name|nr_drums
@@ -5433,21 +5763,19 @@ condition|;
 name|i
 operator|++
 control|)
-name|physical_voices
+name|pv_map
 index|[
 name|i
 index|]
 operator|.
 name|ioaddr
 operator|=
-name|left_address
+name|devc
+operator|->
+name|left_io
 expr_stmt|;
 block|}
 empty_stmt|;
-name|already_initialized
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5461,7 +5789,9 @@ condition|;
 name|i
 operator|++
 control|)
-name|instrmap
+name|devc
+operator|->
+name|i_map
 index|[
 name|i
 index|]
@@ -5471,9 +5801,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return ;
 block|}
 end_function
 

@@ -218,23 +218,6 @@ directive|ifdef
 name|AWE_OBSOLETE_VOXWARE
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SEQUENCER_C
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -2001,6 +1984,82 @@ begin_comment
 comment|/* nothing */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PERMANENT_MALLOC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PERMANENT_MALLOC
+parameter_list|(
+name|typecast
+parameter_list|,
+name|mem_ptr
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|{mem_ptr = (typecast)malloc(size, M_DEVBUF, M_NOWAIT); \         if (!mem_ptr)panic("SOUND: Cannot allocate memory\n");}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|printk
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|printk
+value|printf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RET_ERROR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RET_ERROR
+parameter_list|(
+name|err
+parameter_list|)
+value|-(err)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -2024,8 +2083,6 @@ parameter_list|,
 name|var
 parameter_list|,
 name|size
-parameter_list|,
-name|memptr
 parameter_list|)
 define|\
 value|var = (type)(sound_mem_blocks[sound_nblocks++] = vmalloc(size))
@@ -2464,19 +2521,24 @@ begin_comment
 comment|/*================================================================  * attach / unload interface  *================================================================*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|AWE_OBSOLETE_VOXWARE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_decl_stmt
-name|long
+name|void
 name|attach_awe_obsolete
 argument_list|(
-name|long
-name|mem_start
-argument_list|,
 expr|struct
 name|address_info
 operator|*
@@ -2505,9 +2567,7 @@ argument_list|(
 literal|"AWE32: not detected\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return ;
 block|}
 comment|/* check AWE32 ports are available */
 if|if
@@ -2521,9 +2581,7 @@ argument_list|(
 literal|"AWE32: I/O area already used.\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return ;
 block|}
 comment|/* allocate sample tables */
 name|PERMANENT_MALLOC
@@ -2539,8 +2597,6 @@ sizeof|sizeof
 argument_list|(
 name|awe_sample_info
 argument_list|)
-argument_list|,
-name|mem_start
 argument_list|)
 expr_stmt|;
 name|PERMANENT_MALLOC
@@ -2556,8 +2612,6 @@ sizeof|sizeof
 argument_list|(
 name|awe_voice_list
 argument_list|)
-argument_list|,
-name|mem_start
 argument_list|)
 expr_stmt|;
 if|if
@@ -2576,9 +2630,7 @@ argument_list|(
 literal|"AWE32: can't allocate sample tables\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return ;
 block|}
 if|if
 condition|(
@@ -2669,9 +2721,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AWE_OBSOLETE_VOXWARE
-return|return
-name|mem_start
-return|;
+return|return ;
 else|#
 directive|else
 return|return
@@ -2681,28 +2731,6 @@ endif|#
 directive|endif
 block|}
 end_decl_stmt
-
-begin_function
-name|void
-name|unload_awe
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|awe_present
-condition|)
-block|{
-name|awe_reset_samples
-argument_list|()
-expr_stmt|;
-name|awe_release_region
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_ifdef
 ifdef|#

@@ -10,8 +10,7 @@ name|unsigned
 name|int
 name|cmd
 parameter_list|,
-name|unsigned
-name|int
+name|ioctl_arg
 name|arg
 parameter_list|)
 function_decl|;
@@ -243,6 +242,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|midi_synth_send_sysex
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|bytes
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -327,6 +344,8 @@ name|NULL
 block|,
 comment|/* alloc_voice */
 name|midi_synth_setup_voice
+block|,
+name|midi_synth_send_sysex
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/midi_synth.c  *  * High level midi sequencer manager for dumb MIDI interfaces.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/midi_synth.c  *   * High level midi sequencer manager for dumb MIDI interfaces.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_define
@@ -28,13 +28,11 @@ name|defined
 argument_list|(
 name|CONFIGURE_SOUNDCARD
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_MIDI
-argument_list|)
 end_if
+
+begin_comment
+comment|/*&& defined(CONFIG_MIDI) */
+end_comment
 
 begin_define
 define|#
@@ -42,15 +40,28 @@ directive|define
 name|_MIDI_SYNTH_C_
 end_define
 
-begin_expr_stmt
-name|DEFINE_WAIT_QUEUE
-argument_list|(
+begin_decl_stmt
+specifier|static
+name|int
+modifier|*
 name|sysex_sleeper
-argument_list|,
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|struct
+name|snd_wait
 name|sysex_sleep_flag
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -70,6 +81,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|sysex_state
+index|[
+name|MAX_MIDI_DEV
+index|]
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|prev_out_status
@@ -79,6 +104,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_SEQUENCER
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -86,9 +117,27 @@ name|STORE
 parameter_list|(
 name|cmd
 parameter_list|)
-define|\
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STORE
+parameter_list|(
+name|cmd
+parameter_list|)
 value|{ \   int len; \   unsigned char obuf[8]; \   cmd; \   seq_input_event(obuf, len); \ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -364,16 +413,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printk
-argument_list|(
-literal|"MPU: Unknown midi channel message %02x\n"
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
+comment|/* 	 * printf ("MPU: Unknown midi channel message %02x\n", 	 * msg[0]); 	 */
+empty_stmt|;
 block|}
 block|}
 end_function
@@ -435,7 +476,7 @@ name|data
 operator|&
 literal|0x80
 condition|)
-comment|/* 				 * Status byte 				 */
+comment|/* Status byte */
 name|prev_out_status
 index|[
 name|midi_dev
@@ -451,12 +492,12 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Store for running status 						 */
+comment|/* Store for running 							 * status */
 return|return;
-comment|/* 				 * Mission complete 				 */
+comment|/* Mission complete */
 block|}
-comment|/*    * Sorry! No space on buffers.    */
-name|printk
+comment|/*      * Sorry! No space on buffers.      */
+name|printf
 argument_list|(
 literal|"Midi send timed out\n"
 argument_list|)
@@ -517,7 +558,7 @@ name|void
 name|midi_synth_input
 parameter_list|(
 name|int
-name|dev
+name|orig_dev
 parameter_list|,
 name|unsigned
 name|char
@@ -525,7 +566,7 @@ name|data
 parameter_list|)
 block|{
 name|int
-name|orig_dev
+name|dev
 decl_stmt|;
 name|struct
 name|midi_input_info
@@ -538,7 +579,7 @@ name|char
 name|len_tab
 index|[]
 init|=
-comment|/* # of data bytes following a status 					 */
+comment|/* # of data bytes following a status */
 block|{
 literal|2
 block|,
@@ -567,13 +608,13 @@ block|}
 decl_stmt|;
 if|if
 condition|(
-name|dev
+name|orig_dev
 operator|<
 literal|0
 operator|||
-name|dev
+name|orig_dev
 operator|>
-name|num_synths
+name|num_midis
 condition|)
 return|return;
 if|if
@@ -584,11 +625,11 @@ literal|0xfe
 condition|)
 comment|/* Ignore active sensing */
 return|return;
-name|orig_dev
+name|dev
 operator|=
 name|midi2synth
 index|[
-name|dev
+name|orig_dev
 index|]
 expr_stmt|;
 name|inc
@@ -617,8 +658,8 @@ name|data
 operator|&
 literal|0x80
 condition|)
-comment|/* MIDI status byte */
 block|{
+comment|/* MIDI status byte */
 if|if
 condition|(
 operator|(
@@ -629,8 +670,8 @@ operator|)
 operator|==
 literal|0xf0
 condition|)
-comment|/* Common message */
 block|{
+comment|/* Common message */
 switch|switch
 condition|(
 name|data
@@ -812,8 +853,8 @@ name|m_prev_status
 operator|&
 literal|0x80
 condition|)
-comment|/* Ignore if no previous status (yet) */
 block|{
+comment|/* Ignore if no previous 		 * status (yet) */
 comment|/* Data byte (use running status) */
 name|inc
 operator|->
@@ -929,8 +970,8 @@ name|data
 operator|==
 literal|0xf7
 condition|)
-comment|/* Sysex end */
 block|{
+comment|/* Sysex end */
 name|inc
 operator|->
 name|m_state
@@ -953,7 +994,7 @@ block|}
 break|break;
 comment|/* MST_SYSEX */
 default|default:
-name|printk
+name|printf
 argument_list|(
 literal|"MIDI%d: Unexpected state %d (%02x)\n"
 argument_list|,
@@ -982,13 +1023,85 @@ end_function
 begin_function
 specifier|static
 name|void
+name|leave_sysex
+parameter_list|(
+name|int
+name|dev
+parameter_list|)
+block|{
+name|int
+name|orig_dev
+init|=
+name|synth_devs
+index|[
+name|dev
+index|]
+operator|->
+name|midi_dev
+decl_stmt|;
+name|int
+name|timeout
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sysex_state
+index|[
+name|dev
+index|]
+condition|)
+return|return;
+name|sysex_state
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|midi_devs
+index|[
+name|orig_dev
+index|]
+operator|->
+name|putc
+argument_list|(
+name|orig_dev
+argument_list|,
+literal|0xf7
+argument_list|)
+operator|&&
+name|timeout
+operator|<
+literal|1000
+condition|)
+name|timeout
+operator|++
+expr_stmt|;
+name|sysex_state
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|midi_synth_output
 parameter_list|(
 name|int
 name|dev
 parameter_list|)
 block|{
-comment|/*    * Currently NOP    */
+comment|/*      * Currently NOP      */
 block|}
 end_function
 
@@ -1003,12 +1116,11 @@ name|unsigned
 name|int
 name|cmd
 parameter_list|,
-name|unsigned
-name|int
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
-comment|/*    * int orig_dev = synth_devs[dev]->midi_dev;    */
+comment|/*      * int orig_dev = synth_devs[dev]->midi_dev;      */
 switch|switch
 condition|(
 name|cmd
@@ -1017,22 +1129,28 @@ block|{
 case|case
 name|SNDCTL_SYNTH_INFO
 case|:
-name|IOCTL_TO_USER
+name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|arg
-argument_list|,
-literal|0
-argument_list|,
 name|synth_devs
 index|[
 name|dev
 index|]
 operator|->
 name|info
+argument_list|,
+operator|&
+operator|(
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|arg
+operator|)
+index|[
+literal|0
+index|]
+operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1054,10 +1172,10 @@ return|;
 break|break;
 default|default:
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -1121,25 +1239,19 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
+name|RANGE
+argument_list|(
 name|velocity
-operator|<
+argument_list|,
 literal|0
-condition|)
-name|velocity
-operator|=
-literal|0
+argument_list|,
+literal|127
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|velocity
-operator|>
-literal|127
-condition|)
-name|velocity
-operator|=
-literal|127
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|msg
 operator|=
@@ -1182,7 +1294,7 @@ literal|0x80
 operator|)
 condition|)
 block|{
-comment|/* 				 * Use running status 				 */
+comment|/* Use running status */
 if|if
 condition|(
 operator|!
@@ -1209,7 +1321,7 @@ name|msg
 operator|==
 literal|0x90
 condition|)
-comment|/* 				 * Running status = Note on 				 */
+comment|/* Running status = Note on */
 name|midi_outc
 argument_list|(
 name|orig_dev
@@ -1217,7 +1329,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 					   * Note on with velocity 0 == note 					   * off 					 */
+comment|/* Note on with velocity 0 == note off */
 else|else
 name|midi_outc
 argument_list|(
@@ -1268,7 +1380,7 @@ literal|0x0f
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Note on 								 */
+comment|/* Note on */
 name|midi_outc
 argument_list|(
 name|orig_dev
@@ -1283,7 +1395,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Zero G 					 */
+comment|/* Zero G */
 block|}
 else|else
 block|{
@@ -1319,7 +1431,7 @@ literal|0x0f
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Note off 								 */
+comment|/* Note off */
 name|midi_outc
 argument_list|(
 name|orig_dev
@@ -1392,6 +1504,11 @@ condition|)
 return|return
 literal|0
 return|;
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1424,7 +1541,7 @@ literal|0x0f
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Program change 							 */
+comment|/* Program change */
 name|midi_outc
 argument_list|(
 name|orig_dev
@@ -1496,25 +1613,19 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
+name|RANGE
+argument_list|(
 name|velocity
-operator|<
+argument_list|,
 literal|0
-condition|)
-name|velocity
-operator|=
-literal|0
+argument_list|,
+literal|127
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|velocity
-operator|>
-literal|127
-condition|)
-name|velocity
-operator|=
-literal|127
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|msg
 operator|=
@@ -1545,7 +1656,7 @@ operator|==
 literal|0x90
 condition|)
 block|{
-comment|/* 				 * Use running status 				 */
+comment|/* Use running status */
 if|if
 condition|(
 operator|!
@@ -1608,7 +1719,7 @@ literal|0x0f
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Note on 							 */
+comment|/* Note on */
 name|midi_outc
 argument_list|(
 name|orig_dev
@@ -1637,7 +1748,13 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|)
-block|{ }
+block|{
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1684,10 +1801,10 @@ operator|>
 name|num_midis
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|ENXIO
-argument_list|)
+operator|)
 return|;
 name|midi2synth
 index|[
@@ -1695,6 +1812,13 @@ name|orig_dev
 index|]
 operator|=
 name|dev
+expr_stmt|;
+name|sysex_state
+index|[
+name|dev
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|prev_out_status
 index|[
@@ -1740,10 +1864,10 @@ index|]
 operator|->
 name|in_info
 expr_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|inc
 operator|->
@@ -1775,10 +1899,22 @@ name|m_prev_status
 operator|=
 literal|0x00
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
+expr_stmt|;
+name|sysex_sleep_flag
+operator|.
+name|aborting
+operator|=
+literal|0
+expr_stmt|;
+name|sysex_sleep_flag
+operator|.
+name|mode
+operator|=
+name|WK_NONE
 expr_stmt|;
 return|return
 literal|1
@@ -1804,7 +1940,12 @@ index|]
 operator|->
 name|midi_dev
 decl_stmt|;
-comment|/*      * Shut up the synths by sending just single active sensing message.    */
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/*      * Shut up the synths by sending just single active sensing message.      */
 name|midi_devs
 index|[
 name|orig_dev
@@ -1923,6 +2064,11 @@ operator|)
 operator|&
 name|sysex
 decl_stmt|;
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1943,7 +2089,7 @@ operator|!=
 name|SYSEX_PATCH
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"MIDI Error: Invalid patch format (key) 0x%x\n"
 argument_list|,
@@ -1951,10 +2097,10 @@ name|format
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 if|if
@@ -1964,24 +2110,26 @@ operator|<
 name|hdr_size
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"MIDI Error: Patch header too short\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 name|count
 operator|-=
 name|hdr_size
 expr_stmt|;
-comment|/*    * Copy the header from user space but ignore the first bytes which have    * been transferred already.    */
-name|COPY_FROM_USER
+comment|/*      * Copy the header from user space but ignore the first bytes which      * have been transferred already.      */
+if|if
+condition|(
+name|uiomove
 argument_list|(
 operator|&
 operator|(
@@ -1996,15 +2144,21 @@ index|[
 name|offs
 index|]
 argument_list|,
-name|addr
-argument_list|,
-name|offs
-argument_list|,
 name|hdr_size
 operator|-
 name|offs
+argument_list|,
+name|addr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sb: Bad copyin()!\n"
 argument_list|)
 expr_stmt|;
+block|}
+empty_stmt|;
 if|if
 condition|(
 name|count
@@ -2014,7 +2168,7 @@ operator|.
 name|len
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"MIDI Warning: Sysex record too short (%d<%d)\n"
 argument_list|,
@@ -2045,12 +2199,17 @@ name|src_offs
 operator|=
 literal|0
 expr_stmt|;
-name|RESET_WAIT_QUEUE
-argument_list|(
-name|sysex_sleeper
-argument_list|,
 name|sysex_sleep_flag
-argument_list|)
+operator|.
+name|aborting
+operator|=
+literal|0
+expr_stmt|;
+name|sysex_sleep_flag
+operator|.
+name|mode
+operator|=
+name|WK_NONE
 expr_stmt|;
 for|for
 control|(
@@ -2063,12 +2222,11 @@ operator|<
 name|left
 operator|&&
 operator|!
-name|PROCESS_ABORTING
-argument_list|(
-name|sysex_sleeper
-argument_list|,
+operator|(
 name|sysex_sleep_flag
-argument_list|)
+operator|.
+name|aborting
+operator|)
 condition|;
 name|i
 operator|++
@@ -2078,15 +2236,20 @@ name|unsigned
 name|char
 name|data
 decl_stmt|;
-name|GET_BYTE_FROM_USER
+name|uiomove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+operator|(
 name|data
+operator|)
+argument_list|,
+literal|1
 argument_list|,
 name|addr
-argument_list|,
-name|hdr_size
-operator|+
-name|i
 argument_list|)
 expr_stmt|;
 name|eox_seen
@@ -2128,16 +2291,16 @@ operator|!=
 literal|0xf0
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"Error: Sysex start missing\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -2165,22 +2328,32 @@ argument_list|)
 argument_list|)
 operator|&&
 operator|!
-name|PROCESS_ABORTING
-argument_list|(
-name|sysex_sleeper
-argument_list|,
+operator|(
 name|sysex_sleep_flag
-argument_list|)
+operator|.
+name|aborting
+operator|)
 condition|)
+block|{
+name|int
+name|chn
+decl_stmt|;
+name|sysex_sleeper
+operator|=
+operator|&
+name|chn
+expr_stmt|;
 name|DO_SLEEP
 argument_list|(
-name|sysex_sleeper
+name|chn
 argument_list|,
 name|sysex_sleep_flag
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* Wait for timeout */
 if|if
 condition|(
@@ -2284,6 +2457,11 @@ operator|>
 literal|15
 condition|)
 return|return;
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|msg
 operator|=
 name|prev_out_status
@@ -2312,8 +2490,8 @@ name|chn
 operator|!=
 name|channel
 condition|)
-comment|/* 					 * Test for running status 					 */
 block|{
+comment|/* Test for running status */
 if|if
 condition|(
 operator|!
@@ -2344,7 +2522,7 @@ literal|0x0f
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Channel pressure 							 */
+comment|/* Channel pressure */
 block|}
 elseif|else
 if|if
@@ -2423,6 +2601,11 @@ operator|>
 literal|15
 condition|)
 return|return;
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|msg
 operator|=
 name|prev_out_status
@@ -2528,10 +2711,10 @@ name|rec
 parameter_list|)
 block|{
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2587,6 +2770,11 @@ operator|>
 literal|16383
 condition|)
 return|return;
+name|leave_sysex
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|msg
 operator|=
 name|prev_out_status
@@ -2615,8 +2803,8 @@ name|prev_chn
 operator|!=
 name|channel
 condition|)
-comment|/* 						 * Test for running status 						 */
 block|{
+comment|/* Test for running status */
 if|if
 condition|(
 operator|!
@@ -2701,6 +2889,229 @@ name|int
 name|channel
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
+name|int
+name|midi_synth_send_sysex
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|bytes
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+name|int
+name|orig_dev
+init|=
+name|synth_devs
+index|[
+name|dev
+index|]
+operator|->
+name|midi_dev
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+switch|switch
+condition|(
+name|bytes
+index|[
+name|i
+index|]
+condition|)
+block|{
+case|case
+literal|0xf0
+case|:
+comment|/* Start sysex */
+if|if
+condition|(
+operator|!
+name|prefix_cmd
+argument_list|(
+name|orig_dev
+argument_list|,
+literal|0xf0
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+name|sysex_state
+index|[
+name|dev
+index|]
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|0xf7
+case|:
+comment|/* End sysex */
+if|if
+condition|(
+operator|!
+name|sysex_state
+index|[
+name|dev
+index|]
+condition|)
+comment|/* Orphan sysex end */
+return|return
+literal|0
+return|;
+name|sysex_state
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+if|if
+condition|(
+operator|!
+name|sysex_state
+index|[
+name|dev
+index|]
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|bytes
+index|[
+name|i
+index|]
+operator|&
+literal|0x80
+condition|)
+block|{
+comment|/* Error. Another message before sysex end */
+name|bytes
+index|[
+name|i
+index|]
+operator|=
+literal|0xf7
+expr_stmt|;
+comment|/* Sysex end */
+name|sysex_state
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|midi_devs
+index|[
+name|orig_dev
+index|]
+operator|->
+name|putc
+argument_list|(
+name|orig_dev
+argument_list|,
+name|bytes
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+block|{
+comment|/* 	     * Hardware leve buffer is full. Abort the sysex message. 	     */
+name|int
+name|timeout
+init|=
+literal|0
+decl_stmt|;
+name|bytes
+index|[
+name|i
+index|]
+operator|=
+literal|0xf7
+expr_stmt|;
+name|sysex_state
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|!
+name|midi_devs
+index|[
+name|orig_dev
+index|]
+operator|->
+name|putc
+argument_list|(
+name|orig_dev
+argument_list|,
+name|bytes
+index|[
+name|i
+index|]
+argument_list|)
+operator|&&
+name|timeout
+operator|<
+literal|1000
+condition|)
+name|timeout
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|sysex_state
+index|[
+name|dev
+index|]
+condition|)
+return|return
+literal|0
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_endif
