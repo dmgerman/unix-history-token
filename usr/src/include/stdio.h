@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.26 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -97,7 +97,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This is fairly grotesque, but pure ANSI code must not inspect the  * innards of an fpos_t anyway.  The library internally uses off_t,  * which we assume is exactly as big as eight chars.  */
+comment|/*  * This is fairly grotesque, but pure ANSI code must not inspect the  * innards of an fpos_t anyway.  The library internally uses off_t,  * which we assume is exactly as big as eight chars.  (When we switch  * to gcc 2.4 we will use __attribute__ here.)  *  * WARNING: the alignment constraints on an off_t and the struct below  * differ on (e.g.) the SPARC.  Hence, the placement of an fpos_t object  * in a structure will change if fpos_t's are not aligned on 8-byte  * boundaries.  THIS IS A CROCK, but for now there is no way around it.  */
 end_comment
 
 begin_if
@@ -184,7 +184,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * stdio state variables.  *  * The following always hold:  *  *	if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),  *		_lbfsize is -_bf._size, else _lbfsize is 0  *	if _flags&__SRD, _w is 0  *	if _flags&__SWR, _r is 0  *  * This ensures that the getc and putc macros (or inline functions) never  * try to write or read from a file that is in `read' or `write' mode.  * (Moreover, they can, and do, automatically switch from read mode to  * write mode, and back, on "r+" and "w+" files.)  *  * _lbfsize is used only to make the inline line-buffered output stream  * code as compact as possible.  *  * _ub, _up, and _ur are used when ungetc() pushes back more characters  * than fit in the current _bf, or when ungetc() pushes back a character  * that does not match the previous one in _bf.  When this happens,  * _ub._base becomes non-nil (i.e., a stream has ungetc() data iff  * _ub._base!=NULL) and _up and _ur save the current values of _p and _r.  */
+comment|/*  * stdio state variables.  *  * The following always hold:  *  *	if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),  *		_lbfsize is -_bf._size, else _lbfsize is 0  *	if _flags&__SRD, _w is 0  *	if _flags&__SWR, _r is 0  *  * This ensures that the getc and putc macros (or inline functions) never  * try to write or read from a file that is in `read' or `write' mode.  * (Moreover, they can, and do, automatically switch from read mode to  * write mode, and back, on "r+" and "w+" files.)  *  * _lbfsize is used only to make the inline line-buffered output stream  * code as compact as possible.  *  * _ub, _up, and _ur are used when ungetc() pushes back more characters  * than fit in the current _bf, or when ungetc() pushes back a character  * that does not match the previous one in _bf.  When this happens,  * _ub._base becomes non-nil (i.e., a stream has ungetc() data iff  * _ub._base!=NULL) and _up and _ur save the current values of _p and _r.  *  * NB: see WARNING above before changing the layout of this structure!  */
 end_comment
 
 begin_typedef
@@ -336,10 +336,10 @@ name|int
 name|_blksize
 decl_stmt|;
 comment|/* stat.st_blksize (may be != _bf._size) */
-name|int
+name|fpos_t
 name|_offset
 decl_stmt|;
-comment|/* current lseek offset */
+comment|/* current lseek offset (see WARNING) */
 block|}
 name|FILE
 typedef|;
