@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id:$"
+literal|"$Id: btxld.c,v 1.1.1.1 1998/09/12 06:49:48 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,6 +441,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|Eflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Client entry option */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|quiet
 decl_stmt|;
 end_decl_stmt
@@ -753,6 +764,10 @@ name|optaddr
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+name|Eflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1243,6 +1258,18 @@ operator|.
 name|btx_pgctl
 operator|-=
 name|cwr
+expr_stmt|;
+name|btx
+operator|.
+name|btx_entry
+operator|=
+name|Eflag
+condition|?
+name|centry
+else|:
+name|ihdr
+operator|.
+name|entry
 expr_stmt|;
 if|if
 condition|(
