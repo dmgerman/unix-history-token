@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.39 1999/03/15 01:22:01 wpaul Exp $"
+literal|"$Id: ifconfig.c,v 1.40 1999/06/06 09:17:30 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3688,6 +3688,10 @@ name|allfamilies
 decl_stmt|,
 name|s
 decl_stmt|;
+name|struct
+name|ifstat
+name|ifs
+decl_stmt|;
 if|if
 condition|(
 name|afp
@@ -3865,6 +3869,43 @@ expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|ifs
+operator|.
+name|ifs_name
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+name|ifs
+operator|.
+name|ifs_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGIFSTATUS
+argument_list|,
+operator|&
+name|ifs
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|ifs
+operator|.
+name|ascii
 argument_list|)
 expr_stmt|;
 while|while
