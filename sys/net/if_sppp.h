@@ -135,6 +135,19 @@ directive|define
 name|IPV6CP_MYIFID_SEEN
 value|0x10
 comment|/* have seen his ifid already */
+define|#
+directive|define
+name|IPCP_VJ
+value|0x20
+comment|/* can use VJ compression */
+name|int
+name|max_state
+decl_stmt|;
+comment|/* VJ: Max-Slot-Id */
+name|int
+name|compress_cid
+decl_stmt|;
+comment|/* VJ: Comp-Slot-Id */
 block|}
 struct|;
 end_struct
@@ -143,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|AUTHNAMELEN
-value|32
+value|64
 end_define
 
 begin_define
@@ -246,6 +259,117 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|PP_MTU
+value|1500
+end_define
+
+begin_comment
+comment|/* default/minimal MRU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PP_MAX_MRU
+value|2048
+end_define
+
+begin_comment
+comment|/* maximal MRU we want to negotiate */
+end_comment
+
+begin_comment
+comment|/*  * This is a cut down struct sppp (see below) that can easily be  * exported to/ imported from userland without the need to include  * dozens of kernel-internal header files.  It is used by the  * SPPPIO[GS]DEFS ioctl commands below.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sppp_parms
+block|{
+name|enum
+name|ppp_phase
+name|pp_phase
+decl_stmt|;
+comment|/* phase we're currently in */
+name|int
+name|enable_vj
+decl_stmt|;
+comment|/* VJ header compression enabled */
+name|int
+name|enable_ipv6
+decl_stmt|;
+comment|/* 					 * Enable IPv6 negotiations -- only 					 * needed since each IPv4 i/f auto- 					 * matically gets an IPv6 address 					 * assigned, so we can't use this as 					 * a decision. 					 */
+name|struct
+name|slcp
+name|lcp
+decl_stmt|;
+comment|/* LCP params */
+name|struct
+name|sipcp
+name|ipcp
+decl_stmt|;
+comment|/* IPCP params */
+name|struct
+name|sipcp
+name|ipv6cp
+decl_stmt|;
+comment|/* IPv6CP params */
+name|struct
+name|sauth
+name|myauth
+decl_stmt|;
+comment|/* auth params, i'm peer */
+name|struct
+name|sauth
+name|hisauth
+decl_stmt|;
+comment|/* auth params, i'm authenticator */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Definitions to pass struct sppp_parms data down into the kernel  * using the SIOC[SG]IFGENERIC ioctl interface.  *  * In order to use this, create a struct spppreq, fill in the cmd  * field with SPPPIOGDEFS, and put the address of this structure into  * the ifr_data portion of a struct ifreq.  Pass this struct to a  * SIOCGIFGENERIC ioctl.  Then replace the cmd field by SPPPIOSDEFS,  * modify the defs field as desired, and pass the struct ifreq now  * to a SIOCSIFGENERIC ioctl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPPPIOGDEFS
+value|((caddr_t)(('S'<< 24) + (1<< 16) +\ 	sizeof(struct sppp_parms)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPPPIOSDEFS
+value|((caddr_t)(('S'<< 24) + (2<< 16) +\ 	sizeof(struct sppp_parms)))
+end_define
+
+begin_struct
+struct|struct
+name|spppreq
+block|{
+name|int
+name|cmd
+decl_stmt|;
+name|struct
+name|sppp_parms
+name|defs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|sppp
@@ -335,6 +459,28 @@ name|IDX_COUNT
 index|]
 decl_stmt|;
 comment|/* negotiation failure counter */
+name|int
+name|confflags
+decl_stmt|;
+comment|/* administrative configuration flags */
+define|#
+directive|define
+name|CONF_ENABLE_VJ
+value|0x01
+comment|/* VJ header compression enabled */
+define|#
+directive|define
+name|CONF_ENABLE_IPV6
+value|0x02
+comment|/* IPv6 administratively enabled */
+name|time_t
+name|pp_last_recv
+decl_stmt|;
+comment|/* time last packet has been received */
+name|time_t
+name|pp_last_sent
+decl_stmt|;
+comment|/* time last packet has been sent */
 name|struct
 name|callout_handle
 name|ch
@@ -373,6 +519,12 @@ name|sauth
 name|hisauth
 decl_stmt|;
 comment|/* auth params, i'm authenticator */
+name|struct
+name|slcompress
+modifier|*
+name|pp_comp
+decl_stmt|;
+comment|/* for VJ compression */
 comment|/* 	 * These functions are filled in by sppp_attach(), and are 	 * expected to be used by the lower layer (hardware) drivers 	 * in order to communicate the (un)availability of the 	 * communication link.  Lower layer drivers that are always 	 * ready to communicate (like hardware HDLC) can shortcut 	 * pp_up from pp_tls, and pp_down from pp_tlf. 	 */
 name|void
 function_decl|(
@@ -463,6 +615,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* bits for pp_flags */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -499,67 +655,6 @@ end_define
 begin_comment
 comment|/* remote requested authentication */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PP_MTU
-value|1500
-end_define
-
-begin_comment
-comment|/* default/minimal MRU */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PP_MAX_MRU
-value|2048
-end_define
-
-begin_comment
-comment|/* maximal MRU we want to negotiate */
-end_comment
-
-begin_comment
-comment|/*  * Definitions to pass struct sppp data down into the kernel using the  * SIOC[SG]IFGENERIC ioctl interface.  *  * In order to use this, create a struct spppreq, fill in the cmd  * field with SPPPIOGDEFS, and put the address of this structure into  * the ifr_data portion of a struct ifreq.  Pass this struct to a  * SIOCGIFGENERIC ioctl.  Then replace the cmd field by SPPPIOCDEFS,  * modify the defs field as desired, and pass the struct ifreq now  * to a SIOCSIFGENERIC ioctl.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPPPIOGDEFS
-value|((caddr_t)(('S'<< 24) + (1<< 16) + sizeof(struct sppp)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPPPIOSDEFS
-value|((caddr_t)(('S'<< 24) + (2<< 16) + sizeof(struct sppp)))
-end_define
-
-begin_struct
-struct|struct
-name|spppreq
-block|{
-name|int
-name|cmd
-decl_stmt|;
-name|struct
-name|sppp
-name|defs
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_function_decl
 name|void
