@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	3.17 %G%"
+literal|"@(#)startup.c	3.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,26 @@ argument_list|(
 literal|"m_grp"
 argument_list|,
 name|WWM_GRP
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|var_setnum
+argument_list|(
+literal|"m_dim"
+argument_list|,
+name|WWM_DIM
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|var_setnum
+argument_list|(
+literal|"m_usr"
+argument_list|,
+name|WWM_USR
 argument_list|)
 expr_stmt|;
 operator|(

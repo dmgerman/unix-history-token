@@ -37,7 +37,7 @@ file|"tt.h"
 end_include
 
 begin_comment
-comment|/* kC|h29|heath-29|z29|zenith-29:\ 	:am:bc=\ED:bt=\E-:cr=^M:do=^J:nl=^J:bl=^G:\ 	:al=\EL:le=^H:bs:cd=\EJ:ce=\EK:cl=\EE:cm=\EY%+ %+ :co#80:dc=\EN:\ 	:dl=1*\EM:do=\EB:ei=\EO:ho=\EH:im=\E@:li#24:mi:nd=\EC:as=\EF:ae=\EG:\ 	:ms:ta=^I:pt:sr=\EI:se=\Eq:so=\Ep:up=\EA:vs=\Ex4:ve=\Ey4:\ 	:kb=^H:ku=\EA:kd=\EB:kl=\ED:kr=\EC:kh=\EH:kn#1:k0=\E~:l0=HOME:\ 	:k1=\ES:k2=\ET:k3=\EU:k4=\EV:k5=\EW:k6=\EP:k7=\EQ:k8=\ER:k9=\E01:\ 	:es:hs:ts=\Ej\Ex5\Ex1\EY8%+ \Eo:fs=\Ek\Ey5:ds=\Ey1:us=\Es8:ue=\Es0: */
+comment|/*  * H29 Driver  *  * WWM_USR mode is alternate character set.  * kC|h29|heath-29|z29|zenith-29:\ 	:am:bc=\ED:bt=\E-:cr=^M:do=^J:nl=^J:bl=^G:\ 	:al=\EL:le=^H:bs:cd=\EJ:ce=\EK:cl=\EE:cm=\EY%+ %+ :co#80:dc=\EN:\ 	:dl=1*\EM:do=\EB:ei=\EO:ho=\EH:im=\E@:li#24:mi:nd=\EC:as=\EF:ae=\EG:\ 	:ms:ta=^I:pt:sr=\EI:se=\Eq:so=\Ep:up=\EA:vs=\Ex4:ve=\Ey4:\ 	:kb=^H:ku=\EA:kd=\EB:kl=\ED:kr=\EC:kh=\EH:kn#1:k0=\E~:l0=HOME:\ 	:k1=\ES:k2=\ET:k3=\EU:k4=\EV:k5=\EW:k6=\EP:k7=\EQ:k8=\ER:k9=\E01:\ 	:es:hs:ts=\Ej\Ex5\Ex1\EY8%+ \Eo:fs=\Ek\Ey5:ds=\Ey1:us=\Es8:ue=\Es0:  *  */
 end_comment
 
 begin_define
@@ -82,8 +82,8 @@ operator|&
 name|WWM_REV
 condition|)
 name|modes
-operator||=
-literal|1
+operator|+=
+literal|0x01
 expr_stmt|;
 if|if
 condition|(
@@ -92,8 +92,18 @@ operator|&
 name|WWM_BLK
 condition|)
 name|modes
-operator||=
-literal|2
+operator|+=
+literal|0x02
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|&
+name|WWM_DIM
+condition|)
+name|modes
+operator|+=
+literal|0x04
 expr_stmt|;
 if|if
 condition|(
@@ -102,8 +112,18 @@ operator|&
 name|WWM_UL
 condition|)
 name|modes
-operator||=
-literal|8
+operator|+=
+literal|0x08
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|&
+name|WWM_USR
+condition|)
+name|modes
+operator|+=
+literal|0x10
 expr_stmt|;
 name|esc
 argument_list|()
@@ -199,14 +219,14 @@ expr_stmt|;
 name|tt
 operator|.
 name|tt_availmodes
-operator|=
+operator||=
 name|WWM_BLK
 operator||
 name|WWM_UL
 operator||
-name|WWM_REV
+name|WWM_DIM
 operator||
-name|WWM_GRP
+name|WWM_USR
 expr_stmt|;
 return|return
 literal|0

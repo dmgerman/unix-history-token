@@ -436,12 +436,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WWM_GLS
+name|WWM_DIM
 value|0x10
 end_define
 
 begin_comment
-comment|/* window only, glass, i.e. transparent */
+comment|/* half intensity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWM_USR
+value|0x20
+end_define
+
+begin_comment
+comment|/* user specified mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWM_GLS
+value|0x40
+end_define
+
+begin_comment
+comment|/* window only, glass, i.e., transparent */
 end_comment
 
 begin_comment
@@ -1276,28 +1298,49 @@ begin_define
 define|#
 directive|define
 name|WWT_TERMCAP
-value|"WW|window|window package:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%+ %+ :\ 	:da:db:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:"
+value|"WW|window|window program:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%+ %+ :\ 	:da:db:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:me=\\Er^?:"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WWT_REV
-value|"se=\\Eq:so=\\Ep:"
+value|"se=\\ErA:so=\\EsA:mr=\\EsA:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_BLK
+value|"BE=\\ErB:BS=\\EsB:mb=\\EsB:"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WWT_UL
-value|"ue=\\Es:us=\\Er:"
+value|"ue=\\ErD:us=\\EsD:"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WWT_GRP
-value|"ae=\\EG:as=\\EF:"
+value|"ae=\\ErH:as=\\EsH:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_DIM
+value|"HE=\\ErP:HS=\\EsP:mh=\\EsP:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_USR
+value|"XE=\\Er`:XS=\\Es`:"
 end_define
 
 begin_comment
