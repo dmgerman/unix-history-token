@@ -273,12 +273,11 @@ define|#
 directive|define
 name|TUN_READY
 value|(TUN_OPEN | TUN_INITED)
-name|struct
-name|proc
-modifier|*
-name|tun_proc
+comment|/* 	 * XXXRW: tun_pid is used to exclusively lock /dev/tun.  Is this 	 * actually needed?  Can we just return EBUSY if already open? 	 * Problem is that this involved inherent races when a tun device 	 * is handed off from one process to another, as opposed to just 	 * being slightly stale informationally. 	 */
+name|pid_t
+name|tun_pid
 decl_stmt|;
-comment|/* Owning process */
+comment|/* owning pid */
 name|struct
 name|ifnet
 name|tun_if
@@ -1258,17 +1257,19 @@ if|if
 condition|(
 name|tp
 operator|->
-name|tun_proc
+name|tun_pid
 operator|!=
-name|NULL
+literal|0
 operator|&&
 name|tp
 operator|->
-name|tun_proc
+name|tun_pid
 operator|!=
 name|td
 operator|->
 name|td_proc
+operator|->
+name|p_pid
 condition|)
 return|return
 operator|(
@@ -1277,11 +1278,13 @@ operator|)
 return|;
 name|tp
 operator|->
-name|tun_proc
+name|tun_pid
 operator|=
 name|td
 operator|->
 name|td_proc
+operator|->
+name|p_pid
 expr_stmt|;
 name|tp
 operator|->
@@ -1370,9 +1373,9 @@ name|TUN_OPEN
 expr_stmt|;
 name|tp
 operator|->
-name|tun_proc
+name|tun_pid
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 comment|/* 	 * junk all pending output 	 */
 name|IF_DRAIN
@@ -1770,7 +1773,7 @@ if|if
 condition|(
 name|tp
 operator|->
-name|tun_proc
+name|tun_pid
 condition|)
 name|sprintf
 argument_list|(
@@ -1789,9 +1792,7 @@ literal|"\tOpened by PID %d\n"
 argument_list|,
 name|tp
 operator|->
-name|tun_proc
-operator|->
-name|p_pid
+name|tun_pid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2685,11 +2686,13 @@ name|TUNSIFPID
 case|:
 name|tp
 operator|->
-name|tun_proc
+name|tun_pid
 operator|=
 name|curthread
 operator|->
 name|td_proc
+operator|->
+name|p_pid
 expr_stmt|;
 break|break;
 case|case
