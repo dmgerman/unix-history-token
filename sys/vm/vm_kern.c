@@ -990,7 +990,7 @@ name|pflags
 operator||=
 name|VM_ALLOC_ZERO
 expr_stmt|;
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1047,7 +1047,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1064,7 +1064,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1118,7 +1118,7 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1186,7 +1186,7 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1259,7 +1259,7 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|kmem_object
 argument_list|)
@@ -1278,7 +1278,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|kmem_object
 argument_list|)
