@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.66 2003/08/21 17:26:44 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.67 2003/08/21 17:39:56 imp Exp   */
 end_comment
 
 begin_comment
@@ -587,12 +587,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_LINKSYS2
+name|PCMCIA_VENDOR_BROMAX
 value|0x0274
 end_define
 
 begin_comment
-comment|/* The Linksys Group */
+comment|/* Bromax communications, Inc */
 end_comment
 
 begin_define
@@ -1541,6 +1541,73 @@ define|#
 directive|define
 name|PCMCIA_STR_BREEZECOM_BREEZENET
 value|"BreezeCOM BreezeNET"
+end_define
+
+begin_comment
+comment|/* Bromax Communications, Inc (Linksys OEM) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BROMAX_IWN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BROMAX_IWN
+value|0x1612
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BROMAX_IWN
+value|"Instant Wireless Network PC Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BROMAX_IWN3
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BROMAX_IWN3
+value|0x1613
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BROMAX_IWN3
+value|"Instant Wireless Network PC Card, Versin 3"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BROMAX_WCF11
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BROMAX_WCF11
+value|0x3301
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BROMAX_WCF11
+value|"Instant Wireless Network CF Card"
 end_define
 
 begin_comment
@@ -2800,69 +2867,6 @@ define|#
 directive|define
 name|PCMCIA_STR_LINKSYS_COMBO_ECARD
 value|"Linksys Combo EthernetCard"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_LINKSYS2_IWN
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_LINKSYS2_IWN
-value|0x1612
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_LINKSYS2_IWN
-value|"Instant Wireless Network PC Card"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_LINKSYS2_IWN3
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_LINKSYS2_IWN3
-value|0x1613
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_LINKSYS2_IWN3
-value|"Instant Wireless Network PC Card, Versin 3"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_LINKSYS2_WCF11
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_LINKSYS2_WCF11
-value|0x3301
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_LINKSYS2_WCF11
-value|"Instant Wireless Network CF Card"
 end_define
 
 begin_comment
