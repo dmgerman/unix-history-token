@@ -709,6 +709,26 @@ argument_list|(
 literal|"Failed to allocate stack for scheduler"
 argument_list|)
 expr_stmt|;
+comment|/* Allocate memory for the idle stack: */
+elseif|else
+if|if
+condition|(
+operator|(
+name|_idle_thr_stack
+operator|=
+name|malloc
+argument_list|(
+name|sched_stack_size
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|PANIC
+argument_list|(
+literal|"Failed to allocate stack for scheduler"
+argument_list|)
+expr_stmt|;
 else|else
 block|{
 comment|/* Zero the global kernel thread structure: */
@@ -921,6 +941,59 @@ name|void
 operator|*
 operator|)
 name|_thread_kern_scheduler
+expr_stmt|;
+comment|/* Initialize the idle context. */
+name|bzero
+argument_list|(
+operator|&
+name|_idle_thr_mailbox
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|kse_thr_mailbox
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|getcontext
+argument_list|(
+operator|&
+name|_idle_thr_mailbox
+operator|.
+name|tm_context
+argument_list|)
+expr_stmt|;
+name|_idle_thr_mailbox
+operator|.
+name|tm_context
+operator|.
+name|uc_stack
+operator|.
+name|ss_sp
+operator|=
+name|_idle_thr_stack
+expr_stmt|;
+name|_idle_thr_mailbox
+operator|.
+name|tm_context
+operator|.
+name|uc_stack
+operator|.
+name|ss_size
+operator|=
+name|sched_stack_size
+expr_stmt|;
+name|makecontext
+argument_list|(
+operator|&
+name|_idle_thr_mailbox
+operator|.
+name|tm_context
+argument_list|,
+name|_thread_kern_idle
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Write a magic value to the thread structure 		 * to help identify valid ones: 		 */
 name|_thread_initial

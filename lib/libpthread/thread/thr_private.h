@@ -2036,6 +2036,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Delcare the idle context.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|kse_thr_mailbox
+name|_idle_thr_mailbox
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|void
+modifier|*
+name|_idle_thr_stack
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|NULL
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Used for _PTHREADS_INVARIANTS checking. */
 end_comment
 
@@ -2630,6 +2657,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|_thread_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_kern_idle
 parameter_list|(
 name|void
 parameter_list|)
