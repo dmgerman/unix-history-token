@@ -116,6 +116,56 @@ operator|=
 operator|*
 name|argvp
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|rindex
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'h'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"hd"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* "Canonical" format, implies -C. */
+name|add
+argument_list|(
+literal|"\"%08.8_Ax\n\""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"\"%08.8_ax  \" 8/1 \"%02x \" \"  \""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|" 8/1 \"%02x \" "
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"\"  |\" 16/1 \"%_p\" \"|\\n\""
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
@@ -176,12 +226,17 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%08.8_ax \" 16/1 \"%02x \" "
+literal|"\"%08.8_ax  \" 8/1 \"%02x \" \"  \""
 argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\" |\" 16/1 \"%_p\" \"|\\n\""
+literal|" 8/1 \"%02x \" "
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"\"  |\" 16/1 \"%_p\" \"|\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
@@ -381,7 +436,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"hexdump: [-bcdovx] [-e fmt] [-f fmt_file] [-n length] [-s skip] [file ...]\n"
+literal|"hexdump: [-bcCdovx] [-e fmt] [-f fmt_file] [-n length] [-s skip] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
