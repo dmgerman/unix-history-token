@@ -5889,6 +5889,17 @@ if|if
 condition|(
 name|id
 operator|==
+literal|0x2500630e
+condition|)
+name|s
+operator|=
+literal|"CS4235"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
 literal|0x3500630e
 operator|||
 name|id
@@ -6330,6 +6341,17 @@ operator|=
 name|MD_CS4237
 expr_stmt|;
 break|break;
+case|case
+literal|0x2500630e
+case|:
+comment|/* AOpen AW37 */
+name|tmp_d
+operator|.
+name|bd_id
+operator|=
+name|MD_CS4237
+expr_stmt|;
+break|break ;
 case|case
 literal|0x3500630e
 case|:
