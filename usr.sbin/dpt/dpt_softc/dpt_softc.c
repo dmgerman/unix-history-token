@@ -8,7 +8,7 @@ comment|/* dpt_softc.c:  Dunp a DPT control structure */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_softc.c,v 1.7 1998/01/22 21:37:40 ShimonR Exp $"
+empty|#ident "$Id: dpt_softc.c,v 1.1 1998/01/26 06:20:46 julian Exp $"
 end_empty
 
 begin_include
@@ -392,7 +392,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s ERROR:  Failed to send IOCTL %x - %s\n"
+literal|"%s ERROR:  Failed to send IOCTL %lx - %s\n"
 argument_list|,
 name|argv
 index|[

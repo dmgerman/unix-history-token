@@ -8,7 +8,7 @@ comment|/* dpt_sig.c:  Dunp a DPT Signature */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_sig.c,v 1.6 1998/01/22 22:06:30 ShimonR Exp ShimonR $"
+empty|#ident "$Id: dpt_sig.c,v 1.1 1998/01/26 06:20:45 julian Exp $"
 end_empty
 
 begin_include
@@ -596,7 +596,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s ERROR:  Failed to open \"%s\" - %s\n"
+literal|"%s ERROR:  Failed to open \"%s\" "
+literal|"- %s\n"
 argument_list|,
 name|argv
 index|[
@@ -699,7 +700,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s ERROR:  Failed to send IOCTL %x - %s\n"
+literal|"%s ERROR:  Failed to send IOCTL "
+literal|"%lx - %s\n"
 argument_list|,
 name|argv
 index|[
