@@ -631,7 +631,7 @@ specifier|static
 name|struct
 name|proc
 modifier|*
-name|pagezero
+name|pagezero_proc
 decl_stmt|;
 end_decl_stmt
 
@@ -647,7 +647,7 @@ block|,
 name|vm_pagezero
 block|,
 operator|&
-name|pagezero
+name|pagezero_proc
 block|}
 decl_stmt|;
 end_decl_stmt
