@@ -2661,12 +2661,18 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Since our peripheral may be invalidated by an error 		 * above or an external event, we must release our CCB 		 * before releasing the probe lock on the peripheral. 		 * The peripheral will only go away once the last lock 		 * is removed, and we need it around for the CCB release 		 * operation. 		 */
+name|xpt_release_ccb
+argument_list|(
+name|done_ccb
+argument_list|)
+expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 case|case
 name|CH_CCB_WAITING
@@ -2685,6 +2691,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+default|default:
+break|break;
 block|}
 name|xpt_release_ccb
 argument_list|(
@@ -4342,7 +4350,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"ch: warning: could not map element source "
-literal|"address %ud to a valid element type"
+literal|"address %ud to a valid element type\n"
 argument_list|,
 name|eaddr
 argument_list|)
