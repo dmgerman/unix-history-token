@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	4.4	82/11/15	*/
+comment|/*	main.c	4.5	82/12/25	*/
 end_comment
 
 begin_comment
@@ -821,7 +821,6 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-block|}
 name|sin
 operator|.
 name|sin_port
@@ -836,6 +835,7 @@ operator|.
 name|sin_port
 argument_list|)
 expr_stmt|;
+block|}
 name|connected
 operator|=
 literal|1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftpd.c	4.6	82/11/15	*/
+comment|/*	tftpd.c	4.7	82/12/25	*/
 end_comment
 
 begin_comment
@@ -181,15 +181,9 @@ name|sin
 operator|.
 name|sin_port
 operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
 name|sp
 operator|->
 name|s_port
-argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
