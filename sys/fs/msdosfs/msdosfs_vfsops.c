@@ -1674,6 +1674,23 @@ operator|->
 name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_BytesPerSec
+operator|<
+name|DEV_BSIZE
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|error_exit
+goto|;
+block|}
 name|pmp
 operator|->
 name|pm_ResSectors
@@ -2044,7 +2061,7 @@ name|pm_flags
 operator||=
 name|MSDOSFS_FATMIRROR
 expr_stmt|;
-comment|/* 	 * Check a few values (could do some more): 	 * - logical sector size: power of 2,>= block size 	 * - sectors per cluster: power of 2,>= 1 	 * - number of sectors:>= 1,<= size of partition 	 */
+comment|/* 	 * Check a few values (could do some more): 	 * - logical sector size: power of 2,>= block size 	 * - sectors per cluster: power of 2,>= 1 	 * - number of sectors:>= 1,<= size of partition 	 * - number of FAT sectors:>= 1 	 */
 if|if
 condition|(
 operator|(
@@ -2089,6 +2106,14 @@ operator|(
 name|pmp
 operator|->
 name|pm_HugeSectors
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|pmp
+operator|->
+name|pm_FATsecs
 operator|==
 literal|0
 operator|)
