@@ -2230,18 +2230,19 @@ argument_list|(
 name|root_bus
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX Shouldn't ignore the error like this, but should 		 * instead fix the newbus code.  Until that happens, 		 * I'm doing this to get suspend working again. 		 */
 if|if
 condition|(
 name|error
 condition|)
-name|printf
+block|{
+name|DEVICE_RESUME
 argument_list|(
-literal|"DEVICE_SUSPEND error %d, ignored\n"
-argument_list|,
-name|error
+name|root_bus
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|apm_execute_hook
 argument_list|(
 name|hook
@@ -2259,10 +2260,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|apm_processevent
 argument_list|()
 expr_stmt|;
+block|}
 else|else
+block|{
 comment|/* Failure, 'resume' the system again */
 name|apm_execute_hook
 argument_list|(
@@ -2272,6 +2276,13 @@ name|APM_HOOK_RESUME
 index|]
 argument_list|)
 expr_stmt|;
+name|DEVICE_RESUME
+argument_list|(
+name|root_bus
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 end_function
@@ -2638,17 +2649,17 @@ operator|->
 name|initialized
 condition|)
 block|{
-name|DEVICE_RESUME
-argument_list|(
-name|root_bus
-argument_list|)
-expr_stmt|;
 name|apm_execute_hook
 argument_list|(
 name|hook
 index|[
 name|APM_HOOK_RESUME
 index|]
+argument_list|)
+expr_stmt|;
+name|DEVICE_RESUME
+argument_list|(
+name|root_bus
 argument_list|)
 expr_stmt|;
 block|}
