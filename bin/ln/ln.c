@@ -135,6 +135,16 @@ begin_comment
 comment|/* Symbolic, not hard, link. */
 end_comment
 
+begin_decl_stmt
+name|int
+name|vflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Verbose output. */
+end_comment
+
 begin_comment
 comment|/* System link call. */
 end_comment
@@ -161,6 +171,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|char
+name|linkch
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -224,8 +240,88 @@ name|exitval
 decl_stmt|;
 name|char
 modifier|*
+name|p
+decl_stmt|,
+modifier|*
 name|sourcedir
 decl_stmt|;
+comment|/* 	 * Test for the special case where the utility is called as 	 * "link", for which the functionality provided is greatly 	 * simplified. 	 */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|rindex
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+operator|++
+name|p
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"link"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|argc
+operator|==
+literal|3
+condition|)
+block|{
+name|linkf
+operator|=
+name|link
+expr_stmt|;
+name|exit
+argument_list|(
+name|linkit
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
@@ -237,7 +333,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fs"
+literal|"fsv"
 argument_list|)
 operator|)
 operator|!=
@@ -266,6 +362,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+name|vflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -288,6 +392,14 @@ condition|?
 name|symlink
 else|:
 name|link
+expr_stmt|;
+name|linkch
+operator|=
+name|sflag
+condition|?
+literal|'-'
+else|:
+literal|'='
 expr_stmt|;
 switch|switch
 condition|(
@@ -657,6 +769,24 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|vflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s %c> %s\n"
+argument_list|,
+name|source
+argument_list|,
+name|linkch
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -677,11 +807,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ln [-fs] file1 file2"
+literal|"usage: ln [-fsv] file1 file2"
 argument_list|,
-literal|"       ln [-fs] file ... directory"
+literal|"       ln [-fsv] file ... directory"
+argument_list|,
+literal|"       link file1 file2"
 argument_list|)
 expr_stmt|;
 name|exit
