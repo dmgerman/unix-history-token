@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.4 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * malloc.c (Caltech) 2/21/82  * Chris Kingsley, kingsley@cit-20.  *  * This is a very fast storage allocator.  It allocates blocks of a small   * number of different sizes, and keeps free lists of each size.  Blocks that  * don't exactly fit are passed up to the next larger size.  In this   * implementation, the available sizes are 2^n-4 (or 2^n-12) bytes long.  * This is designed for use in a program that uses vast quantities of memory,  * but bombs when it runs out.   */
+comment|/*  * malloc.c (Caltech) 2/21/82  * Chris Kingsley, kingsley@cit-20.  *  * This is a very fast storage allocator.  It allocates blocks of a small   * number of different sizes, and keeps free lists of each size.  Blocks that  * don't exactly fit are passed up to the next larger size.  In this   * implementation, the available sizes are 2^n-4 (or 2^n-10) bytes long.  * This is designed for use in a virtual memory environment.  */
 end_comment
 
 begin_include
@@ -43,7 +43,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * The overhead on a block is at least 4 bytes.  When free, this space  * contains a pointer to the next free block, and the bottom two bits must  * be zero.  When in use, the first byte is set to MAGIC, and the second  * byte is the size index.  The remaining bytes are for alignment.  * If range checking is enabled and the size of the block fits  * in two bytes, then the top two bytes hold the size of the requested block  * plus the range checking words, and the header word MINUS ONE.  */
+comment|/*  * The overhead on a block is at least 4 bytes.  When free, this space  * contains a pointer to the next free block, and the bottom two bits must  * be zero.  When in use, the first byte is set to MAGIC, and the second  * byte is the size index.  The remaining bytes are for alignment.  * If range checking is enabled then a second word holds the size of the  * requested block, less 1, rounded up to a multiple of sizeof(RMAGIC).  * The order of elements is critical: ov_magic must overlay the low order  * bits of ov_next, and ov_magic can not be a valid ov_next bit pattern.  */
 end_comment
 
 begin_union
@@ -58,35 +58,25 @@ decl_stmt|;
 comment|/* when free */
 struct|struct
 block|{
-ifndef|#
-directive|ifndef
+name|u_char
+name|ovu_magic
+decl_stmt|;
+comment|/* magic number */
+name|u_char
+name|ovu_index
+decl_stmt|;
+comment|/* bucket # */
+ifdef|#
+directive|ifdef
 name|RCHECK
-name|u_char
-name|ovu_magic
-decl_stmt|;
-comment|/* magic number */
-name|u_char
-name|ovu_index
-decl_stmt|;
-comment|/* bucket # */
-else|#
-directive|else
-name|u_int
-name|ovu_size
-decl_stmt|;
-comment|/* actual block size */
-name|u_char
-name|ovu_magic
-decl_stmt|;
-comment|/* magic number */
-name|u_char
-name|ovu_index
-decl_stmt|;
-comment|/* bucket # */
 name|u_short
 name|ovu_rmagic
 decl_stmt|;
 comment|/* range magic number */
+name|u_int
+name|ovu_size
+decl_stmt|;
+comment|/* actual block size */
 endif|#
 directive|endif
 block|}
@@ -764,6 +754,18 @@ operator|+
 literal|3
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|ASSERT
+argument_list|(
+name|sz
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|sz
@@ -771,6 +773,8 @@ operator|<=
 literal|0
 condition|)
 return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sz
@@ -1021,6 +1025,7 @@ index|[
 name|size
 index|]
 expr_stmt|;
+comment|/* also clobbers ov_magic */
 name|nextf
 index|[
 name|size
