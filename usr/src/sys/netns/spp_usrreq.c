@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1225,11 +1225,21 @@ name|si_cc
 operator|&
 name|SP_SP
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|dtom
+argument_list|(
+name|si
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * If this packet number has a sequence number less 	 * than that of the first packet not yet seen coming 	 * from them, this must be a duplicate, so drop. 	 */
 if|if
 condition|(
