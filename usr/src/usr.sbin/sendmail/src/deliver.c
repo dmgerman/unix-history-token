@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.19 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7747,7 +7747,12 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"554 cannot open"
+literal|"554 cannot open: %s"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -7823,7 +7828,12 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"451 I/O error"
+literal|"451 I/O error: %s"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|setstat
@@ -7904,11 +7914,20 @@ argument_list|)
 operator|)
 return|;
 else|else
+block|{
+name|syserr
+argument_list|(
+literal|"child died on signal %d"
+argument_list|,
+name|st
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
+block|}
 comment|/*NOTREACHED*/
 block|}
 block|}
