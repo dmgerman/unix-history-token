@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vfsops.c	6.6	84/07/08	*/
+comment|/*	ffs_vfsops.c	6.7	84/07/18	*/
 end_comment
 
 begin_include
@@ -283,6 +283,8 @@ argument_list|(
 name|fs
 operator|->
 name|fs_fsmnt
+operator|+
+name|len
 argument_list|,
 sizeof|sizeof
 argument_list|(
