@@ -4,7 +4,7 @@ comment|/* commands.c: vinum interface program, main commands */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.36 2000/12/20 05:05:39 grog Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.14 2000/11/14 20:01:23 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -83,18 +83,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/vinum/vinumhdr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/vinum/request.h>
 end_include
 
 begin_include
@@ -528,7 +516,7 @@ argument_list|(
 name|dfd
 argument_list|)
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't read config file"
 argument_list|)
@@ -661,11 +649,15 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_devices
 argument_list|()
 expr_stmt|;
@@ -872,7 +864,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -898,11 +890,15 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_devices
 argument_list|()
 expr_stmt|;
@@ -1377,7 +1373,7 @@ literal|"Can't reset configuration: objects are in use\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't find vinum config"
 argument_list|)
@@ -1385,6 +1381,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_devices
 argument_list|()
 expr_stmt|;
@@ -2593,7 +2593,7 @@ literal|0
 condition|)
 block|{
 comment|/* find out what devices we have */
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get device list"
 argument_list|)
@@ -2689,9 +2689,8 @@ name|sprintf
 argument_list|(
 name|enamelist
 argument_list|,
-literal|"%s%s%d"
-argument_list|,
 name|_PATH_DEV
+literal|"%s%d"
 argument_list|,
 name|stat
 operator|->
@@ -3459,7 +3458,7 @@ operator|<
 literal|0
 operator|)
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't unload "
 name|VINUMMOD
@@ -3499,7 +3498,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't reopen Vinum superdevice"
 argument_list|)
@@ -3950,7 +3949,7 @@ name|recurse
 condition|)
 block|{
 name|struct
-name|volume
+name|_volume
 name|vol
 decl_stmt|;
 name|int
@@ -4080,11 +4079,11 @@ name|recurse
 condition|)
 block|{
 name|struct
-name|plex
+name|_plex
 name|plex
 decl_stmt|;
 name|struct
-name|sd
+name|_sd
 name|sd
 decl_stmt|;
 name|int
@@ -4366,7 +4365,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -4640,7 +4639,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -4997,10 +4996,10 @@ struct_decl|struct
 name|sd
 struct_decl|;
 struct_decl|struct
-name|plex
+name|_plex
 struct_decl|;
 struct_decl|struct
-name|volume
+name|_volume
 struct_decl|;
 comment|/* we've overwritten msg with the 	 * ioctl reply, start again */
 name|msg
@@ -5290,7 +5289,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -6060,7 +6059,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -6179,7 +6178,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Cannot get vinum config\n"
 argument_list|)
@@ -6687,70 +6686,80 @@ index|[]
 init|=
 block|{
 literal|"COMMANDS\n"
-literal|"create [-f description-file]\n"
-literal|"          Create a volume as described in description-file\n"
 literal|"attach plex volume [rename]\n"
 literal|"attach subdisk plex [offset] [rename]\n"
-literal|"          Attach a plex to a volume, or a subdisk to a plex.\n"
-literal|"debug\n"
-literal|"          Cause the volume manager to enter the kernel debugger.\n"
+literal|"        Attach a plex to a volume, or a subdisk to a plex.\n"
+literal|"checkparity plex [-f] [-v]\n"
+literal|"        Check the parity blocks of a RAID-4 or RAID-5 plex.\n"
+literal|"concat [-f] [-n name] [-v] drives\n"
+literal|"        Create a concatenated volume from the specified drives.\n"
+literal|"create [-f] description-file\n"
+literal|"        Create a volume as described in description-file.\n"
+literal|"debug   Cause the volume manager to enter the kernel debugger.\n"
 literal|"debug flags\n"
-literal|"          Set debugging flags.\n"
-literal|"detach [plex | subdisk]\n"
-literal|"          Detach a plex or subdisk from the volume or plex to which it is\n"
-literal|"          attached.\n"
-literal|"info [-v]\n"
-literal|"          List information about volume manager state.\n"
-literal|"init [-v] [-w] plex\n"
-literal|"          Initialize a plex by writing zeroes to all its subdisks.\n"
+literal|"        Set debugging flags.\n"
+literal|"detach [-f] [plex | subdisk]\n"
+literal|"        Detach a plex or subdisk from the volume or plex to which it is\n"
+literal|"        attached.\n"
+literal|"dumpconfig [drive ...]\n"
+literal|"        List the configuration information stored on the specified\n"
+literal|"        drives, or all drives in the system if no drive names are speci-\n"
+literal|"        fied.\n"
+literal|"info [-v] [-V]\n"
+literal|"        List information about volume manager state.\n"
+literal|"init [-S size] [-w] plex | subdisk\n"
+literal|"        Initialize the contents of a subdisk or all the subdisks of a\n"
+literal|"        plex to all zeros.\n"
 literal|"label volume\n"
-literal|"          Create a volume label\n"
-literal|"list [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
-literal|"          List information about specified objects\n"
-literal|"l [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
-literal|"          List information about specified objects (alternative to\n"
-literal|"          list command)\n"
+literal|"        Create a volume label.\n"
+literal|"l | list [-r] [-s] [-v] [-V] [volume | plex | subdisk]\n"
+literal|"        List information about specified objects.\n"
 literal|"ld [-r] [-s] [-v] [-V] [volume]\n"
-literal|"          List information about drives\n"
+literal|"        List information about drives.\n"
 literal|"ls [-r] [-s] [-v] [-V] [subdisk]\n"
-literal|"          List information about subdisks\n"
+literal|"        List information about subdisks.\n"
 literal|"lp [-r] [-s] [-v] [-V] [plex]\n"
-literal|"          List information about plexes\n"
+literal|"        List information about plexes.\n"
 literal|"lv [-r] [-s] [-v] [-V] [volume]\n"
-literal|"          List information about volumes\n"
-literal|"printconfig [file]\n"
-literal|"          Write a copy of the current configuration to file.\n"
+literal|"        List information about volumes.\n"
 literal|"makedev\n"
-literal|"          Remake the device nodes in "
-name|_PATH_DEV
-literal|"vinum.\n"
-literal|"move drive [subdisk | plex | drive]\n"
-literal|"          Move the subdisks of the specified object(s) to drive.\n"
-literal|"quit\n"
-literal|"          Exit the vinum program when running in interactive mode.  Nor-\n"
-literal|"          mally this would be done by entering the EOF character.\n"
-literal|"read disk [disk...]\n"
-literal|"          Read the vinum configuration from the specified disks.\n"
+literal|"        Remake the device nodes in /dev/vinum.\n"
+literal|"mirror [-f] [-n name] [-s] [-v] drives\n"
+literal|"        Create a mirrored volume from the specified drives.\n"
+literal|"move | mv -f drive object ...\n"
+literal|"        Move the object(s) to the specified drive.\n"
+literal|"printconfig [file]\n"
+literal|"        Write a copy of the current configuration to file.\n"
+literal|"quit    Exit the vinum program when running in interactive mode.  Nor-\n"
+literal|"        mally this would be done by entering the EOF character.\n"
+literal|"read disk ...\n"
+literal|"        Read the vinum configuration from the specified disks.\n"
 literal|"rename [-r] [drive | subdisk | plex | volume] newname\n"
-literal|"          Change the name of the specified object.\n"
+literal|"        Change the name of the specified object.\n"
+literal|"rebuildparity plex [-f] [-v] [-V]\n"
+literal|"        Rebuild the parity blocks of a RAID-4 or RAID-5 plex.\n"
 literal|"resetconfig\n"
-literal|"          Reset the complete vinum configuration.\n"
+literal|"        Reset the complete vinum configuration.\n"
 literal|"resetstats [-r] [volume | plex | subdisk]\n"
-literal|"          Reset statistisc counters for the specified objects, or for all\n"
-literal|"          objects if none are specified.\n"
+literal|"        Reset statistisc counters for the specified objects, or for all\n"
+literal|"        objects if none are specified.\n"
 literal|"rm [-f] [-r] volume | plex | subdisk\n"
-literal|"          Remove an object\n"
+literal|"        Remove an object.\n"
 literal|"saveconfig\n"
-literal|"          Save vinum configuration to disk.\n"
+literal|"        Save vinum configuration to disk after configuration failures.\n"
 literal|"setdaemon [value]\n"
-literal|"          Set daemon configuration.\n"
-literal|"start\n"
-literal|"          Read configuration from all vinum drives.\n"
-literal|"start [volume | plex | subdisk]\n"
-literal|"          Allow the system to access the objects\n"
+literal|"        Set daemon configuration.\n"
+literal|"setstate state [volume | plex | subdisk | drive]\n"
+literal|"        Set state without influencing other objects, for diagnostic pur-\n"
+literal|"        poses only.\n"
+literal|"start   Read configuration from all vinum drives.\n"
+literal|"start [-i interval] [-S size] [-w] volume | plex | subdisk\n"
+literal|"        Allow the system to access the objects.\n"
 literal|"stop [-f] [volume | plex | subdisk]\n"
-literal|"          Terminate access to the objects, or stop vinum if no parameters\n"
-literal|"          are specified.\n"
+literal|"        Terminate access to the objects, or stop vinum if no parameters\n"
+literal|"        are specified.\n"
+literal|"stripe [-f] [-n name] [-v] drives\n"
+literal|"        Create a striped volume from the specified drives.\n"
 block|}
 decl_stmt|;
 name|puts
@@ -6886,67 +6895,6 @@ name|checkupdates
 argument_list|()
 expr_stmt|;
 comment|/* make sure we're updating */
-block|}
-end_function
-
-begin_function
-name|int
-name|checkupdates
-parameter_list|()
-block|{
-name|int
-name|options
-decl_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|superdev
-argument_list|,
-name|VINUM_GETDAEMON
-argument_list|,
-operator|&
-name|options
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't get daemon options: %s (%d)\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|&
-name|daemon_noupdate
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"*** Warning: configuration updates are disabled. ***\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-else|else
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -7106,7 +7054,7 @@ end_comment
 
 begin_function
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|create_drive
 parameter_list|(
@@ -7359,7 +7307,7 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|drive
 decl_stmt|;
@@ -7791,7 +7739,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -7880,7 +7828,7 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|drive
 decl_stmt|;
@@ -8246,7 +8194,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"plex name %s.p0 org striped 256k"
+literal|"plex name %s.p0 org striped 279k"
 argument_list|,
 name|objectname
 argument_list|)
@@ -8257,7 +8205,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|"  plex name %s.p0 org striped 256k\n"
+literal|"  plex name %s.p0 org striped 279k\n"
 argument_list|,
 name|objectname
 argument_list|)
@@ -8509,7 +8457,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -8598,7 +8546,7 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|drive
 decl_stmt|;
@@ -8964,7 +8912,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"plex name %s.p0 org raid4 256k"
+literal|"plex name %s.p0 org raid4 279k"
 argument_list|,
 name|objectname
 argument_list|)
@@ -8975,7 +8923,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|"  plex name %s.p0 org raid4 256k\n"
+literal|"  plex name %s.p0 org raid4 279k\n"
 argument_list|,
 name|objectname
 argument_list|)
@@ -9227,7 +9175,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -9316,7 +9264,7 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|drive
 decl_stmt|;
@@ -9682,7 +9630,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"plex name %s.p0 org raid5 256k"
+literal|"plex name %s.p0 org raid5 279k"
 argument_list|,
 name|objectname
 argument_list|)
@@ -9693,7 +9641,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|"  plex name %s.p0 org raid5 256k\n"
+literal|"  plex name %s.p0 org raid5 279k\n"
 argument_list|,
 name|objectname
 argument_list|)
@@ -9945,7 +9893,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -10038,7 +9986,7 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 name|struct
-name|drive
+name|_drive
 modifier|*
 name|drive
 decl_stmt|;
@@ -10493,7 +10441,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"plex name %s.p%d org striped 256k"
+literal|"plex name %s.p%d org striped 279k"
 argument_list|,
 name|objectname
 argument_list|,
@@ -10506,7 +10454,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|"  plex name %s.p%d org striped 256k\n"
+literal|"  plex name %s.p%d org striped 279k\n"
 argument_list|,
 name|objectname
 argument_list|,
@@ -10819,7 +10767,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vinum_perror
+name|perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -10923,11 +10871,11 @@ name|objecttype
 name|type
 decl_stmt|;
 name|struct
-name|plex
+name|_plex
 name|plex
 decl_stmt|;
 name|struct
-name|volume
+name|_volume
 name|vol
 decl_stmt|;
 name|int
@@ -11664,7 +11612,7 @@ name|int
 name|object
 decl_stmt|;
 name|struct
-name|plex
+name|_plex
 name|plex
 decl_stmt|;
 name|struct
