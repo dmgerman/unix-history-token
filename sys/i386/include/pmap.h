@@ -385,7 +385,7 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES)
+value|(KVA_PAGES - 1)
 end_define
 
 begin_comment
@@ -443,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|KPTDI
-value|(NPDEPTD-NKPDE)
+value|((NPDEPTD-1)-NKPDE)
 end_define
 
 begin_comment
