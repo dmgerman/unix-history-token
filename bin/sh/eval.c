@@ -1857,6 +1857,9 @@ case|:
 case|case
 name|NAPPEND
 case|:
+case|case
+name|NCLOBBER
+case|:
 name|expandarg
 argument_list|(
 name|redir
