@@ -478,7 +478,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ata_dmastart
 parameter_list|(
 name|struct
@@ -495,7 +495,12 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|)
-block|{ }
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
 end_function
 
 begin_function
