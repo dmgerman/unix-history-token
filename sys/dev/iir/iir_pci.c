@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus_memio.h>
 end_include
 
@@ -1158,11 +1164,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot access DPMEM at 0x%llx (shadowed?)\n"
+literal|"cannot access DPMEM at 0x%jx (shadowed?)\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|gdt
 operator|->

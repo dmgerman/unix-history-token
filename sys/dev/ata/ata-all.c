@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -6564,7 +6570,7 @@ argument_list|(
 name|atadev
 argument_list|,
 literal|"ata_command: addr=%04lx, cmd=%02x, "
-literal|"lba=%lld, count=%d, feature=%d, flags=%02x\n"
+literal|"lba=%jd, count=%d, feature=%d, flags=%02x\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -6578,8 +6584,7 @@ argument_list|,
 name|command
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|lba
 argument_list|,

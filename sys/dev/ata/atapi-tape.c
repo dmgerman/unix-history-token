@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -1804,12 +1810,10 @@ name|stp
 operator|->
 name|device
 argument_list|,
-literal|"%llu total bytes transferred\n"
+literal|"%ju total bytes transferred\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ast_total
 argument_list|)

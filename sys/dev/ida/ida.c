@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -2312,11 +2318,10 @@ name|ida
 operator|->
 name|dev
 argument_list|,
-literal|"ignoring completion %llx\n"
+literal|"ignoring completion %jx\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|completed
 argument_list|)
