@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
