@@ -3447,13 +3447,11 @@ operator|||
 operator|(
 name|so3
 operator|=
-name|sonewconn3
+name|sonewconn
 argument_list|(
 name|so2
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|==
