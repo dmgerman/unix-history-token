@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.13 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.14 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.13 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.14 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,6 +382,24 @@ name|bool
 name|getcanonname
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"getmxrr(%s, droplocalhost=%d)\n"
+argument_list|,
+name|host
+argument_list|,
+name|droplocalhost
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fallbackMX
@@ -885,6 +903,24 @@ name|s_class
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"found localhost (%s) in MX list, pref=%d\n"
+argument_list|,
+name|bp
+argument_list|,
+name|pref
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
