@@ -157,13 +157,6 @@ init|=
 block|{
 name|DEVMETHOD
 argument_list|(
-name|device_identify
-argument_list|,
-name|ofwd_identify
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|device_probe
 argument_list|,
 name|ofwd_probe
@@ -531,6 +524,7 @@ name|type
 operator|==
 name|NULL
 operator|||
+operator|(
 name|strcmp
 argument_list|(
 name|type
@@ -539,6 +533,16 @@ literal|"disk"
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|type
+argument_list|,
+literal|"block"
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -750,21 +754,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ofwd_identify
-parameter_list|(
-name|driver_t
-modifier|*
-name|driver
-parameter_list|,
-name|device_t
-name|parent
-parameter_list|)
-block|{ }
 end_function
 
 end_unit
