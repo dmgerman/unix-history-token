@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ8.c 1.2 %G%"
+literal|"@(#)READ8.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|curfile
+operator|->
+name|funit
+operator|&=
+operator|~
+name|EOLN
+expr_stmt|;
 name|curfile
 operator|->
 name|funit
