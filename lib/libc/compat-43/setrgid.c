@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: setrgid.c,v 1.2 1994/04/04 19:33:57 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,12 +54,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|MESSAGE
-value|"warning: this program uses setrgid(), which doesn't do anything\r\n(but used to)\r\n"
-end_define
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_function
 name|int
@@ -83,18 +82,9 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-name|write
+name|warnx
 argument_list|(
-literal|2
-argument_list|,
-name|MESSAGE
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|MESSAGE
-argument_list|)
-operator|-
-literal|1
+literal|"this program uses setrgid(), which doesn't do anything\r\n(but used to)\r"
 argument_list|)
 expr_stmt|;
 return|return

@@ -49,6 +49,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_function
 name|char
 modifier|*
@@ -74,34 +80,15 @@ specifier|static
 name|int
 name|warned
 decl_stmt|;
-specifier|static
-name|char
-name|w
-index|[]
-init|=
-literal|"warning: this program uses gets(), which is unsafe.\r\n"
-decl_stmt|;
 if|if
 condition|(
 operator|!
 name|warned
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|write
+name|warnx
 argument_list|(
-name|STDERR_FILENO
-argument_list|,
-name|w
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|w
-argument_list|)
-operator|-
-literal|1
+literal|"this program uses gets(), which is unsafe.\r"
 argument_list|)
 expr_stmt|;
 name|warned
