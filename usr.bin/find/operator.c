@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -127,7 +127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	paren_squish.  In comments below, an expression is either a  *	simple node or a N_EXPR node containing a list of simple nodes.  */
+comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	paren_squish.  In comments below, an expression is either a  *	simple node or a f_expr node containing a list of simple nodes.  */
 end_comment
 
 begin_function
@@ -166,10 +166,6 @@ modifier|*
 name|subplan
 decl_stmt|;
 comment|/* pointer to head of ( ) expression */
-name|int
-name|f_expr
-parameter_list|()
-function_decl|;
 comment|/* first pull the top node from the plan */
 if|if
 condition|(
@@ -194,9 +190,9 @@ if|if
 condition|(
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_OPENPAREN
+name|f_openparen
 condition|)
 for|for
 control|(
@@ -229,14 +225,14 @@ argument_list|,
 literal|"(: missing closing ')'"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we find a closing ')' we store the collected 			 * subplan in our '(' node and convert the node to 			 * a N_EXPR.  The ')' we found is ignored.  Otherwise, 			 * we just continue to add whatever we get to our 			 * subplan. 			 */
+comment|/* 			 * If we find a closing ')' we store the collected 			 * subplan in our '(' node and convert the node to 			 * a f_expr.  The ')' we found is ignored.  Otherwise, 			 * we just continue to add whatever we get to our 			 * subplan. 			 */
 if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_CLOSEPAREN
+name|f_closeparen
 condition|)
 block|{
 if|if
@@ -263,13 +259,7 @@ name|subplan
 expr_stmt|;
 name|node
 operator|->
-name|type
-operator|=
-name|N_EXPR
-expr_stmt|;
-name|node
-operator|->
-name|eval
+name|execute
 operator|=
 name|f_expr
 expr_stmt|;
@@ -358,7 +348,7 @@ name|tail
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * the basic idea is to have yankexpr do all our work and just 	 * collect it's results together. 	 */
+comment|/* 	 * the basic idea is to have yankexpr do all our work and just 	 * collect its results together. 	 */
 while|while
 condition|(
 operator|(
@@ -379,9 +369,9 @@ if|if
 condition|(
 name|expr
 operator|->
-name|type
+name|execute
 operator|==
-name|N_CLOSEPAREN
+name|f_closeparen
 condition|)
 name|errx
 argument_list|(
@@ -459,7 +449,7 @@ name|PLAN
 modifier|*
 name|node
 decl_stmt|;
-comment|/* temporary node used in N_NOT processing */
+comment|/* temporary node used in f_not processing */
 specifier|register
 name|PLAN
 modifier|*
@@ -475,13 +465,10 @@ name|tail
 operator|=
 name|result
 operator|=
-name|next
-operator|=
 name|NULL
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|next
 operator|=
 name|yanknode
@@ -489,9 +476,6 @@ argument_list|(
 operator|&
 name|plan
 argument_list|)
-operator|)
-operator|!=
-name|NULL
 condition|)
 block|{
 comment|/* 		 * if we encounter a ( expression ) then look for nots in 		 * the expr subplan. 		 */
@@ -499,9 +483,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_EXPR
+name|f_expr
 condition|)
 name|next
 operator|->
@@ -525,9 +509,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_NOT
+name|f_not
 condition|)
 block|{
 name|int
@@ -551,9 +535,9 @@ name|NULL
 operator|&&
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_NOT
+name|f_not
 condition|)
 block|{
 operator|++
@@ -585,9 +569,9 @@ if|if
 condition|(
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_OR
+name|f_or
 condition|)
 name|errx
 argument_list|(
@@ -601,9 +585,9 @@ if|if
 condition|(
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_EXPR
+name|f_expr
 condition|)
 name|node
 operator|->
@@ -748,9 +732,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_EXPR
+name|f_expr
 condition|)
 name|next
 operator|->
@@ -774,9 +758,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_NOT
+name|f_not
 condition|)
 name|next
 operator|->
@@ -800,9 +784,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_OR
+name|f_or
 condition|)
 block|{
 if|if
