@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.2 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1364,6 +1364,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|tobuf
@@ -1371,6 +1374,9 @@ argument_list|,
 literal|","
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|tobuf
@@ -3805,6 +3811,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'>'
@@ -3981,6 +3990,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|umask
 argument_list|(
 name|OldUmask
