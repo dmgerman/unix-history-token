@@ -1,617 +1,71 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)btree.h	8.1 (Berkeley) 6/4/93  */
 end_comment
 
-begin_comment
-comment|/*  *  @(#)btree.h	5.2 (Berkeley) 2/22/91  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<mpool.h>
+end_include
 
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|BTREE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* should really be (void *) */
-end_comment
+begin_define
+define|#
+directive|define
+name|DEFMINKEYPAGE
+value|(2)
+end_define
 
 begin_comment
-comment|/* #define	DEBUG */
+comment|/* Minimum keys per page */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RET_ERROR
-value|-1
+name|MINCACHE
+value|(5)
 end_define
 
-begin_define
-define|#
-directive|define
-name|RET_SUCCESS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RET_SPECIAL
-value|1
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TRUE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* ndef TRUE */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ndef NULL */
-end_comment
-
-begin_comment
-comment|/* these are defined in lrucache.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|lruinit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|lruget
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|lrugetnew
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|lrusync
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|lruwrite
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|lrurelease
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|lrufree
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* these are defined here */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|BTREE
-name|bt_open
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bt_close
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bt_delete
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bt_get
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bt_put
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bt_seq
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bt_sync
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  *  Private types.  What you choose for these depends on how big you  *  want to let files get, and how big you want to let pages get.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|index_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* so # bytes on a page fits in a long */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|pgno_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* so # of pages in a btree fits in a long */
-end_comment
-
-begin_comment
-comment|/*  *  When we do searches, we push the parent page numbers onto a stack  *  as we descend the tree.  This is so that for insertions, we can  *  find our way back up to do internal page insertions and splits.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|BTSTACK
-block|{
-name|pgno_t
-name|bts_pgno
-decl_stmt|;
-name|struct
-name|BTSTACK
-modifier|*
-name|bts_next
-decl_stmt|;
-block|}
-name|BTSTACK
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  Every btree page has a header that looks like this.  Flags are given  *  in the #define's for the F_ flags (see below).  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|BTHEADER
-block|{
-name|pgno_t
-name|h_pgno
-decl_stmt|;
-comment|/* page number of this page */
-name|pgno_t
-name|h_prevpg
-decl_stmt|;
-comment|/* left sibling */
-name|pgno_t
-name|h_nextpg
-decl_stmt|;
-comment|/* right sibling */
-define|#
-directive|define
-name|F_LEAF
-value|0x01
-comment|/* leaf page, contains user data */
-define|#
-directive|define
-name|F_CONT
-value|0x02
-comment|/* continuation page (large items) */
-define|#
-directive|define
-name|F_DIRTY
-value|0x04
-comment|/* need to write to disk */
-define|#
-directive|define
-name|F_PRESERVE
-value|0x08
-comment|/* never delete this chain of pages */
-name|u_long
-name|h_flags
-decl_stmt|;
-comment|/* page state */
-name|index_t
-name|h_lower
-decl_stmt|;
-comment|/* lower bound of free space on page */
-name|index_t
-name|h_upper
-decl_stmt|;
-comment|/* upper bound of free space on page */
-name|index_t
-name|h_linp
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* VARIABLE LENGTH DATA AT END OF STRUCT */
-block|}
-name|BTHEADER
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  HTBUCKETs are hash table buckets for looking up pages of in-memory  *  btrees by page number.  We use this indirection, rather than direct  *  pointers, so that the code for manipulating in-memory trees is the  *  same as that for manipulating on-disk trees.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|HTBUCKET
-block|{
-name|pgno_t
-name|ht_pgno
-decl_stmt|;
-name|BTHEADER
-modifier|*
-name|ht_page
-decl_stmt|;
-name|struct
-name|HTBUCKET
-modifier|*
-name|ht_next
-decl_stmt|;
-block|}
-name|HTBUCKET
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|HTBUCKET
-modifier|*
-modifier|*
-name|HTABLE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* minimum size we'll let a page be */
+comment|/* Minimum cached pages */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MINPSIZE
-value|512
+value|(512)
 end_define
 
 begin_comment
-comment|/* default cache size, in bytes */
+comment|/* Minimum page size */
+end_comment
+
+begin_comment
+comment|/*  * Page 0 of a btree file contains a copy of the meta-data.  This page is also  * used as an out-of-band page, i.e. page pointers that point to nowhere point  * to page 0.  Page 1 is the root of the btree.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DEFCACHE
-value|(20 * 1024)
-end_define
-
-begin_comment
-comment|/* hash table size for in-memory trees */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HTSIZE
-value|128
-end_define
-
-begin_comment
-comment|/* generate a hash key from a page number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASHKEY
-parameter_list|(
-name|pgno
-parameter_list|)
-value|((pgno - 1) % HTSIZE)
-end_define
-
-begin_comment
-comment|/*  *  Disk btrees have a file descriptor, and may also have an lru buffer  *  cache, if the user asked for one.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|BTDISK
-block|{
-name|int
-name|d_fd
-decl_stmt|;
-name|char
-modifier|*
-name|d_cache
-decl_stmt|;
-block|}
-name|BTDISK
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  Cursors keep track of the current location in a sequential scan of  *  the database.  Since btrees impose a total ordering on keys, we can  *  walk forward or backward through the database from any point.  Cursors  *  survive updates to the tree, and can be used to delete a particular  *  record.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|CURSOR
-block|{
-name|pgno_t
-name|c_pgno
-decl_stmt|;
-comment|/* pgno of current item in scan */
-name|index_t
-name|c_index
-decl_stmt|;
-comment|/* index of current item in scan */
-name|char
-modifier|*
-name|c_key
-decl_stmt|;
-comment|/* current key, used for updates */
-define|#
-directive|define
-name|CRSR_BEFORE
-value|0x01
-name|u_char
-name|c_flags
-decl_stmt|;
-comment|/* to handle updates properly */
-block|}
-name|CURSOR
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  The private btree data structure.  The user passes a pointer to one of  *  these when we are to manipulate a tree, but the BTREE type is opaque  *  to him.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|BTREEDATA_P
-block|{
-name|char
-modifier|*
-name|bt_fname
-decl_stmt|;
-comment|/* NULL for in-memory trees */
-union|union
-block|{
-name|BTDISK
-name|bt_d
-decl_stmt|;
-comment|/* for on-disk btrees */
-name|HTABLE
-name|bt_ht
-decl_stmt|;
-comment|/* hash table for mem trees */
-block|}
-name|bt_s
-union|;
-name|size_t
-name|bt_psize
-decl_stmt|;
-comment|/* page size for btree pages */
-name|int
-function_decl|(
-modifier|*
-name|bt_compare
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* key comparison function */
-name|pgno_t
-name|bt_npages
-decl_stmt|;
-comment|/* number of pages in tree */
-name|BTHEADER
-modifier|*
-name|bt_curpage
-decl_stmt|;
-comment|/* current page contents */
-name|pgno_t
-name|bt_free
-decl_stmt|;
-comment|/* free pg list for big data */
-name|CURSOR
-name|bt_cursor
-decl_stmt|;
-comment|/* cursor for scans */
-name|BTSTACK
-modifier|*
-name|bt_stack
-decl_stmt|;
-comment|/* parent stack for inserts */
-name|u_long
-name|bt_lorder
-decl_stmt|;
-comment|/* byte order (endian.h) */
-define|#
-directive|define
-name|BTF_METAOK
-value|0x01
-comment|/* meta-data written to start of file */
-define|#
-directive|define
-name|BTF_SEQINIT
-value|0x02
-comment|/* we have called bt_seq */
-define|#
-directive|define
-name|BTF_ISWRITE
-value|0x04
-comment|/* tree was opened for write */
-define|#
-directive|define
-name|BTF_NODUPS
-value|0x08
-comment|/* tree created for unique keys */
-name|u_long
-name|bt_flags
-decl_stmt|;
-comment|/* btree state */
-block|}
-name|BTREEDATA_P
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|BTREEDATA_P
-modifier|*
-name|BTREE_P
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  The first thing in a btree file is a BTMETA structure.  The rest of  *  the first page is empty, so that all disk operations are page-aligned.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|BTMETA
-block|{
-name|u_long
-name|m_magic
-decl_stmt|;
-name|u_long
-name|m_version
-decl_stmt|;
-name|size_t
-name|m_psize
-decl_stmt|;
-name|pgno_t
-name|m_free
-decl_stmt|;
-name|u_long
-name|m_flags
-decl_stmt|;
-name|u_long
-name|m_lorder
-decl_stmt|;
-block|}
-name|BTMETA
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|P_NONE
+name|P_INVALID
 value|0
 end_define
 
 begin_comment
-comment|/* invalid page number in tree */
+comment|/* Invalid tree page number. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_META
+value|0
+end_define
+
+begin_comment
+comment|/* Tree metadata page number. */
 end_comment
 
 begin_define
@@ -622,56 +76,98 @@ value|1
 end_define
 
 begin_comment
-comment|/* page number of root pg in btree */
+comment|/* Tree root page number. */
+end_comment
+
+begin_comment
+comment|/*  * There are five page layouts in the btree: btree internal pages (BINTERNAL),  * btree leaf pages (BLEAF), recno internal pages (RINTERNAL), recno leaf pages  * (RLEAF) and overflow pages.  All five page types have a page header (PAGE).  * This implementation requires that longs within structures are NOT padded.  * (ANSI C permits random padding.)  If your compiler pads randomly you'll have  * to do some work to get this package to run.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|PAGE
+block|{
+name|pgno_t
+name|pgno
+decl_stmt|;
+comment|/* this page's page number */
+name|pgno_t
+name|prevpg
+decl_stmt|;
+comment|/* left sibling */
+name|pgno_t
+name|nextpg
+decl_stmt|;
+comment|/* right sibling */
+define|#
+directive|define
+name|P_BINTERNAL
+value|0x01
+comment|/* btree internal page */
+define|#
+directive|define
+name|P_BLEAF
+value|0x02
+comment|/* leaf page */
+define|#
+directive|define
+name|P_OVERFLOW
+value|0x04
+comment|/* overflow page */
+define|#
+directive|define
+name|P_RINTERNAL
+value|0x08
+comment|/* recno internal page */
+define|#
+directive|define
+name|P_RLEAF
+value|0x10
+comment|/* leaf page */
+define|#
+directive|define
+name|P_TYPE
+value|0x1f
+comment|/* type mask */
+define|#
+directive|define
+name|P_PRESERVE
+value|0x20
+comment|/* never delete this chain of pages */
+name|u_long
+name|flags
+decl_stmt|;
+name|indx_t
+name|lower
+decl_stmt|;
+comment|/* lower bound of free space on page */
+name|indx_t
+name|upper
+decl_stmt|;
+comment|/* upper bound of free space on page */
+name|indx_t
+name|linp
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* long-aligned VARIABLE LENGTH DATA */
+block|}
+name|PAGE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* First and next index. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NORELEASE
-value|0
+name|BTDATAOFF
+value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) + \ 			    sizeof(u_long) + sizeof(indx_t) + sizeof(indx_t))
 end_define
-
-begin_comment
-comment|/* don't release a page during write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RELEASE
-value|1
-end_define
-
-begin_comment
-comment|/* release a page during write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INSERT
-value|0
-end_define
-
-begin_comment
-comment|/* doing an insert operation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DELETE
-value|1
-end_define
-
-begin_comment
-comment|/* doing a delete operation */
-end_comment
-
-begin_comment
-comment|/* get the next free index on a btree page */
-end_comment
 
 begin_define
 define|#
@@ -680,340 +176,800 @@ name|NEXTINDEX
 parameter_list|(
 name|p
 parameter_list|)
-value|((((int)(p)->h_lower) - ((int)((((char *)(&(p)->h_linp[0]))) - ((char *) (p)))))/(sizeof(index_t)))
+value|(((p)->lower - BTDATAOFF) / sizeof(indx_t))
 end_define
 
 begin_comment
-comment|/* is a BTITEM actually on the btree page? */
+comment|/*  * For pages other than overflow pages, there is an array of offsets into the  * rest of the page immediately following the page header.  Each offset is to  * an item which is unique to the type of page.  The h_lower offset is just  * past the last filled-in index.  The h_upper offset is the first item on the  * page.  Offsets are from the beginning of the page.  *  * If an item is too big to store on a single page, a flag is set and the item  * is a { page, size } pair such that the page is the first page of an overflow  * chain with size bytes of item.  Overflow pages are simply bytes without any  * external structure.  *  * The size and page number fields in the items are long aligned so they can be  * manipulated without copying.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VALIDITEM
+name|LALIGN
 parameter_list|(
-name|t
-parameter_list|,
-name|i
+name|n
 parameter_list|)
-value|((i)->bti_index< NEXTINDEX((t)->bt_curpage))
+value|(((n) + sizeof(u_long) - 1)& ~(sizeof(u_long) - 1))
 end_define
-
-begin_comment
-comment|/* guarantee longword alignment so structure refs work */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|LONGALIGN
-parameter_list|(
-name|p
-parameter_list|)
-value|(((long)(p) + 3)& ~ 0x03)
+name|NOVFLSIZE
+value|(sizeof(pgno_t) + sizeof(size_t))
 end_define
 
 begin_comment
-comment|/* get a particular datum (or idatum) off a page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GETDATUM
-parameter_list|(
-name|h
-parameter_list|,
-name|i
-parameter_list|)
-value|(((char *) h) + h->h_linp[i])
-end_define
-
-begin_comment
-comment|/* is a {key,datum} too big to put on a single page? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TOOBIG
-parameter_list|(
-name|t
-parameter_list|,
-name|sz
-parameter_list|)
-value|(sz>= t->bt_psize / 5)
-end_define
-
-begin_comment
-comment|/* is this a disk tree or a memory tree? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISDISK
-parameter_list|(
-name|t
-parameter_list|)
-value|(t->bt_fname != (char *) NULL)
-end_define
-
-begin_comment
-comment|/* does the disk tree use a cache? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISCACHE
-parameter_list|(
-name|t
-parameter_list|)
-value|(t->bt_s.bt_d.d_cache != (char *) NULL)
-end_define
-
-begin_comment
-comment|/*  *  DATUMs are for user data -- one appears on leaf pages for every  *  tree entry.  The d_bytes[] array contains the key first, then the data.  *  *  If either the key or the datum is too big to store on a single page,  *  a bit is set in the flags entry, and the d_bytes[] array contains a  *  pgno pointing to the page at which the data is actually stored.  *  *  Note on alignment:  every DATUM is guaranteed to be longword aligned  *  on the disk page.  In order to force longword alignment of user key  *  and data values, we must guarantee that the d_bytes[] array starts  *  on a longword boundary.  This is the reason that d_flags is a u_long,  *  rather than a u_char (it really only needs to be two bits big).  This  *  is necessary because we call the user's comparison function with a  *  pointer to the start of the d_bytes array.  We don't need to force  *  longword alignment of the data following the key, since that is copied  *  to a longword-aligned buffer before being returned to the user.  */
+comment|/*  * For the btree internal pages, the item is a key.  BINTERNALs are {key, pgno}  * pairs, such that the key compares less than or equal to all of the records  * on that page.  For a tree without duplicate keys, an internal page with two  * consecutive keys, a and b, will have all records greater than or equal to a  * and less than b stored on the page associated with a.  Duplicate keys are  * somewhat special and can cause duplicate internal and leaf page records and  * some minor modifications of the above rule.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|DATUM
+name|BINTERNAL
 block|{
 name|size_t
-name|d_ksize
+name|ksize
+decl_stmt|;
+comment|/* key size */
+name|pgno_t
+name|pgno
+decl_stmt|;
+comment|/* page number stored on */
+define|#
+directive|define
+name|P_BIGDATA
+value|0x01
+comment|/* overflow data */
+define|#
+directive|define
+name|P_BIGKEY
+value|0x02
+comment|/* overflow key */
+name|u_char
+name|flags
+decl_stmt|;
+name|char
+name|bytes
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* data */
+block|}
+name|BINTERNAL
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Get the page's BINTERNAL structure at index indx. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETBINTERNAL
+parameter_list|(
+name|pg
+parameter_list|,
+name|indx
+parameter_list|)
+define|\
+value|((BINTERNAL *)((char *)(pg) + (pg)->linp[indx]))
+end_define
+
+begin_comment
+comment|/* Get the number of bytes in the entry. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBINTERNAL
+parameter_list|(
+name|len
+parameter_list|)
+define|\
+value|LALIGN(sizeof(size_t) + sizeof(pgno_t) + sizeof(u_char) + (len))
+end_define
+
+begin_comment
+comment|/* Copy a BINTERNAL entry to the page. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WR_BINTERNAL
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|,
+name|pgno
+parameter_list|,
+name|flags
+parameter_list|)
+value|{ \ 	*(size_t *)p = size; \ 	p += sizeof(size_t); \ 	*(pgno_t *)p = pgno; \ 	p += sizeof(pgno_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ }
+end_define
+
+begin_comment
+comment|/*  * For the recno internal pages, the item is a page number with the number of  * keys found on that page and below.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|RINTERNAL
+block|{
+name|recno_t
+name|nrecs
+decl_stmt|;
+comment|/* number of records */
+name|pgno_t
+name|pgno
+decl_stmt|;
+comment|/* page number stored below */
+block|}
+name|RINTERNAL
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Get the page's RINTERNAL structure at index indx. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETRINTERNAL
+parameter_list|(
+name|pg
+parameter_list|,
+name|indx
+parameter_list|)
+define|\
+value|((RINTERNAL *)((char *)(pg) + (pg)->linp[indx]))
+end_define
+
+begin_comment
+comment|/* Get the number of bytes in the entry. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NRINTERNAL
+define|\
+value|LALIGN(sizeof(recno_t) + sizeof(pgno_t))
+end_define
+
+begin_comment
+comment|/* Copy a RINTERAL entry to the page. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WR_RINTERNAL
+parameter_list|(
+name|p
+parameter_list|,
+name|nrecs
+parameter_list|,
+name|pgno
+parameter_list|)
+value|{ \ 	*(recno_t *)p = nrecs; \ 	p += sizeof(recno_t); \ 	*(pgno_t *)p = pgno; \ }
+end_define
+
+begin_comment
+comment|/* For the btree leaf pages, the item is a key and data pair. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|BLEAF
+block|{
+name|size_t
+name|ksize
 decl_stmt|;
 comment|/* size of key */
 name|size_t
-name|d_dsize
+name|dsize
 decl_stmt|;
 comment|/* size of data */
-define|#
-directive|define
-name|D_BIGDATA
-value|0x01
-comment|/* indirect datum ptr flag */
-define|#
-directive|define
-name|D_BIGKEY
-value|0x02
-comment|/* indirect key ptr flag */
-name|u_long
-name|d_flags
+name|u_char
+name|flags
 decl_stmt|;
-comment|/* flags (indirect bit) */
+comment|/* P_BIGDATA, P_BIGKEY */
 name|char
-name|d_bytes
+name|bytes
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* VARIABLE LENGTH DATA AT END OF STRUCT */
+comment|/* data */
 block|}
-name|DATUM
+name|BLEAF
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* BTITEMs are used to return (page, index, datum) tuples from searches */
+comment|/* Get the page's BLEAF structure at index indx. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETBLEAF
+parameter_list|(
+name|pg
+parameter_list|,
+name|indx
+parameter_list|)
+define|\
+value|((BLEAF *)((char *)(pg) + (pg)->linp[indx]))
+end_define
+
+begin_comment
+comment|/* Get the number of bytes in the entry. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBLEAF
+parameter_list|(
+name|p
+parameter_list|)
+value|NBLEAFDBT((p)->ksize, (p)->dsize)
+end_define
+
+begin_comment
+comment|/* Get the number of bytes in the user's key/data pair. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBLEAFDBT
+parameter_list|(
+name|ksize
+parameter_list|,
+name|dsize
+parameter_list|)
+define|\
+value|LALIGN(sizeof(size_t) + sizeof(size_t) + sizeof(u_char) + \ 	    (ksize) + (dsize))
+end_define
+
+begin_comment
+comment|/* Copy a BLEAF entry to the page. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WR_BLEAF
+parameter_list|(
+name|p
+parameter_list|,
+name|key
+parameter_list|,
+name|data
+parameter_list|,
+name|flags
+parameter_list|)
+value|{ \ 	*(size_t *)p = key->size; \ 	p += sizeof(size_t); \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	memmove(p, key->data, key->size); \ 	p += key->size; \ 	memmove(p, data->data, data->size); \ }
+end_define
+
+begin_comment
+comment|/* For the recno leaf pages, the item is a data entry. */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|BTITEM
-block|{
-name|pgno_t
-name|bti_pgno
-decl_stmt|;
-name|index_t
-name|bti_index
-decl_stmt|;
-name|DATUM
-modifier|*
-name|bti_datum
-decl_stmt|;
-block|}
-name|BTITEM
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  IDATUMs are for data stored on internal pages.  This is the (key, pgno)  *  pair, such that key 'key' is the first entry on page 'pgno'.  If our  *  internal page contains keys (a) and (b) next to each other, then all  *  items>= to (a) and< (b) go on the same page as (a).  There are some  *  gotchas with duplicate keys, however.  See the split code for details.  *  *  If a key is too big to fit on a single page, then the i_bytes[] array  *  contains a pgno pointing to the start of a chain that actually stores  *  the bytes.  Since items on internal pages are never deleted from the  *  tree, these indirect chains are marked as special, so that they won't  *  be deleted if the corresponding leaf item is deleted.  *  *  As for DATUMs, IDATUMs have a u_long flag entry (rather than u_char)  *  in order to guarantee that user keys are longword aligned on the disk  *  page.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|IDATUM
+name|RLEAF
 block|{
 name|size_t
-name|i_size
+name|dsize
 decl_stmt|;
-name|pgno_t
-name|i_pgno
+comment|/* size of data */
+name|u_char
+name|flags
 decl_stmt|;
-name|u_long
-name|i_flags
-decl_stmt|;
-comment|/* see DATUM.d_flags, above */
+comment|/* P_BIGDATA */
 name|char
-name|i_bytes
+name|bytes
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* VARIABLE LENGTH DATA AT END OF STRUCT */
 block|}
-name|IDATUM
+name|RLEAF
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* all private interfaces have a leading _ in their names */
+comment|/* Get the page's RLEAF structure at index indx. */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|BTITEM
-modifier|*
-name|_bt_search
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|GETRLEAF
+parameter_list|(
+name|pg
+parameter_list|,
+name|indx
+parameter_list|)
+define|\
+value|((RLEAF *)((char *)(pg) + (pg)->linp[indx]))
+end_define
 
-begin_function_decl
-specifier|extern
-name|BTITEM
-modifier|*
-name|_bt_searchr
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Get the number of bytes in the entry. */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|BTHEADER
-modifier|*
-name|_bt_allocpg
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|NRLEAF
+parameter_list|(
+name|p
+parameter_list|)
+value|NRLEAFDBT((p)->dsize)
+end_define
 
-begin_function_decl
-specifier|extern
-name|index_t
-name|_bt_binsrch
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Get the number of bytes from the user's data. */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_isonpage
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|NRLEAFDBT
+parameter_list|(
+name|dsize
+parameter_list|)
+define|\
+value|LALIGN(sizeof(size_t) + sizeof(u_char) + (dsize))
+end_define
 
-begin_function_decl
-specifier|extern
-name|BTITEM
-modifier|*
-name|_bt_first
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Copy a RLEAF entry to the page. */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_release
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|WR_RLEAF
+parameter_list|(
+name|p
+parameter_list|,
+name|data
+parameter_list|,
+name|flags
+parameter_list|)
+value|{ \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	memmove(p, data->data, data->size); \ }
+end_define
 
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_wrtmeta
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*  * A record in the tree is either a pointer to a page and an index in the page  * or a page number and an index.  These structures are used as a cursor, stack  * entry and search returns as well as to pass records to other routines.  *  * One comment about searches.  Internal page searches must find the largest  * record less than key in the tree so that descents work.  Leaf page searches  * must find the smallest record greater than key so that the returned index  * is the record's correct position for insertion.  *  * One comment about cursors.  The cursor key is never removed from the tree,  * even if deleted.  This is because it is quite difficult to decide where the  * cursor should be when other keys have been inserted/deleted in the tree;  * duplicate keys make it impossible.  This scheme does require extra work  * though, to make sure that we don't perform an operation on a deleted key.  */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_delindir
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_pgout
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_pgin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_fixscan
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_indirect
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_crsrdel
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|_bt_push
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
+begin_typedef
+typedef|typedef
+struct|struct
+name|EPGNO
+block|{
 name|pgno_t
-name|_bt_pop
-parameter_list|()
-function_decl|;
-end_function_decl
+name|pgno
+decl_stmt|;
+comment|/* the page number */
+name|indx_t
+name|index
+decl_stmt|;
+comment|/* the index on the page */
+block|}
+name|EPGNO
+typedef|;
+end_typedef
 
-begin_function_decl
-specifier|extern
+begin_typedef
+typedef|typedef
+struct|struct
+name|EPG
+block|{
+name|PAGE
+modifier|*
+name|page
+decl_stmt|;
+comment|/* the (pinned) page */
+name|indx_t
+name|index
+decl_stmt|;
+comment|/* the index on the page */
+block|}
+name|EPG
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * The metadata of the tree.  The m_nrecs field is used only by the RECNO code.  * This is because the btree doesn't really need it and it requires that every  * put or delete call modify the metadata.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|BTMETA
+block|{
+name|u_long
+name|m_magic
+decl_stmt|;
+comment|/* magic number */
+name|u_long
+name|m_version
+decl_stmt|;
+comment|/* version */
+name|u_long
+name|m_psize
+decl_stmt|;
+comment|/* page size */
+name|u_long
+name|m_free
+decl_stmt|;
+comment|/* page number of first free page */
+name|u_long
+name|m_nrecs
+decl_stmt|;
+comment|/* R: number of records */
+define|#
+directive|define
+name|SAVEMETA
+value|(B_NODUPS | R_RECNO)
+name|u_long
+name|m_flags
+decl_stmt|;
+comment|/* bt_flags& SAVEMETA */
+name|u_long
+name|m_unused
+decl_stmt|;
+comment|/* unused */
+block|}
+name|BTMETA
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* The in-memory btree/recno data structure. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|BTREE
+block|{
+name|MPOOL
+modifier|*
+name|bt_mp
+decl_stmt|;
+comment|/* memory pool cookie */
+name|DB
+modifier|*
+name|bt_dbp
+decl_stmt|;
+comment|/* pointer to enclosing DB */
+name|EPGNO
+name|bt_bcursor
+decl_stmt|;
+comment|/* B: btree cursor */
+name|recno_t
+name|bt_rcursor
+decl_stmt|;
+comment|/* R: recno cursor (1-based) */
+define|#
+directive|define
+name|BT_POP
+parameter_list|(
+name|t
+parameter_list|)
+value|(t->bt_sp ? t->bt_stack + --t->bt_sp : NULL)
+define|#
+directive|define
+name|BT_CLR
+parameter_list|(
+name|t
+parameter_list|)
+value|(t->bt_sp = 0)
+name|EPGNO
+modifier|*
+name|bt_stack
+decl_stmt|;
+comment|/* stack of parent pages */
+name|u_int
+name|bt_sp
+decl_stmt|;
+comment|/* current stack pointer */
+name|u_int
+name|bt_maxstack
+decl_stmt|;
+comment|/* largest stack */
+name|char
+modifier|*
+name|bt_kbuf
+decl_stmt|;
+comment|/* key buffer */
+name|size_t
+name|bt_kbufsz
+decl_stmt|;
+comment|/* key buffer size */
+name|char
+modifier|*
+name|bt_dbuf
+decl_stmt|;
+comment|/* data buffer */
+name|size_t
+name|bt_dbufsz
+decl_stmt|;
+comment|/* data buffer size */
 name|int
-name|strcmp
-parameter_list|()
-function_decl|;
-end_function_decl
+name|bt_fd
+decl_stmt|;
+comment|/* tree file descriptor */
+name|pgno_t
+name|bt_free
+decl_stmt|;
+comment|/* next free page */
+name|u_long
+name|bt_psize
+decl_stmt|;
+comment|/* page size */
+name|indx_t
+name|bt_ovflsize
+decl_stmt|;
+comment|/* cut-off for key/data overflow */
+name|int
+name|bt_lorder
+decl_stmt|;
+comment|/* byte order */
+comment|/* sorted order */
+enum|enum
+block|{
+name|NOT
+block|,
+name|BACK
+block|,
+name|FORWARD
+block|, }
+name|bt_order
+enum|;
+name|EPGNO
+name|bt_last
+decl_stmt|;
+comment|/* last insert */
+comment|/* B: key comparison function */
+name|int
+argument_list|(
+argument|*bt_cmp
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|DBT
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* B: prefix comparison function */
+name|int
+argument_list|(
+argument|*bt_pfx
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|DBT
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* R: recno input function */
+name|int
+argument_list|(
+argument|*bt_irec
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|BTREE
+operator|*
+operator|,
+name|recno_t
+operator|)
+argument_list|)
+expr_stmt|;
+name|FILE
+modifier|*
+name|bt_rfp
+decl_stmt|;
+comment|/* R: record FILE pointer */
+name|int
+name|bt_rfd
+decl_stmt|;
+comment|/* R: record file descriptor */
+name|caddr_t
+name|bt_cmap
+decl_stmt|;
+comment|/* R: current point in mapped space */
+name|caddr_t
+name|bt_smap
+decl_stmt|;
+comment|/* R: start of mapped space */
+name|caddr_t
+name|bt_emap
+decl_stmt|;
+comment|/* R: end of mapped space */
+name|size_t
+name|bt_msize
+decl_stmt|;
+comment|/* R: size of mapped region. */
+name|recno_t
+name|bt_nrecs
+decl_stmt|;
+comment|/* R: number of records */
+name|size_t
+name|bt_reclen
+decl_stmt|;
+comment|/* R: fixed record length */
+name|u_char
+name|bt_bval
+decl_stmt|;
+comment|/* R: delimiting byte/pad character */
+comment|/*  * NB:  * B_NODUPS and R_RECNO are stored on disk, and may not be changed.  */
+define|#
+directive|define
+name|B_DELCRSR
+value|0x00001
+comment|/* cursor has been deleted */
+define|#
+directive|define
+name|B_INMEM
+value|0x00002
+comment|/* in-memory tree */
+define|#
+directive|define
+name|B_METADIRTY
+value|0x00004
+comment|/* need to write metadata */
+define|#
+directive|define
+name|B_MODIFIED
+value|0x00008
+comment|/* tree modified */
+define|#
+directive|define
+name|B_NEEDSWAP
+value|0x00010
+comment|/* if byte order requires swapping */
+define|#
+directive|define
+name|B_NODUPS
+value|0x00020
+comment|/* no duplicate keys permitted */
+define|#
+directive|define
+name|B_RDONLY
+value|0x00040
+comment|/* read-only tree */
+define|#
+directive|define
+name|B_SEQINIT
+value|0x00100
+comment|/* sequential scan initialized */
+define|#
+directive|define
+name|R_CLOSEFP
+value|0x00200
+comment|/* opened a file pointer */
+define|#
+directive|define
+name|R_EOF
+value|0x00400
+comment|/* end of input file reached. */
+define|#
+directive|define
+name|R_FIXLEN
+value|0x00800
+comment|/* fixed length records */
+define|#
+directive|define
+name|R_MEMMAPPED
+value|0x01000
+comment|/* memory mapped file. */
+define|#
+directive|define
+name|R_RECNO
+value|0x00080
+comment|/* record oriented tree */
+define|#
+directive|define
+name|R_INMEM
+value|0x02000
+comment|/* in-memory file */
+define|#
+directive|define
+name|R_MODIFIED
+value|0x04000
+comment|/* modified file */
+define|#
+directive|define
+name|R_RDONLY
+value|0x08000
+comment|/* read-only file */
+name|u_long
+name|bt_flags
+decl_stmt|;
+comment|/* btree state */
+block|}
+name|BTREE
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|((t)->bt_flags |= (f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLR
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|((t)->bt_flags&= ~(f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISSET
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|((t)->bt_flags& (f))
+end_define
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 end_unit
 

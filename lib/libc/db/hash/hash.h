@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hash.h	5.4 (Berkeley) 3/12/91  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hash.h	8.1 (Berkeley) 6/4/93  */
 end_comment
 
 begin_comment
@@ -97,7 +97,7 @@ name|IS_BUCKET
 parameter_list|(
 name|X
 parameter_list|)
-value|(X& BUF_BUCKET)
+value|((X)& BUF_BUCKET)
 end_define
 
 begin_typedef
@@ -152,6 +152,14 @@ name|sshift
 decl_stmt|;
 comment|/* Segment shift */
 name|int
+name|ovfl_point
+decl_stmt|;
+comment|/* Where overflow pages are being allocated */
+name|int
+name|last_freed
+decl_stmt|;
+comment|/* Last overflow page freed */
+name|int
 name|max_bucket
 decl_stmt|;
 comment|/* ID of Maximum bucket in use */
@@ -183,7 +191,7 @@ define|#
 directive|define
 name|NCACHED
 value|32
-comment|/* number of bit maps and spare points*/
+comment|/* number of bit maps and spare points */
 name|int
 name|spares
 index|[
@@ -267,11 +275,11 @@ comment|/* Error Number -- for DBM compatability */
 name|int
 name|new_file
 decl_stmt|;
-comment|/* Indicates whether fd is backing store or no */
+comment|/* Indicates if fd is backing store or no */
 name|int
 name|save_file
 decl_stmt|;
-comment|/* Indicates whether we need to flush file at exit */
+comment|/* Indicates whether we need to flush file at 				 * exit */
 name|u_long
 modifier|*
 name|mapp
@@ -346,14 +354,14 @@ begin_define
 define|#
 directive|define
 name|DEF_BUCKET_SIZE
-value|256
+value|4096
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEF_BUCKET_SHIFT
-value|8
+value|12
 end_define
 
 begin_comment
@@ -389,7 +397,14 @@ begin_define
 define|#
 directive|define
 name|DEF_FFACTOR
-value|5
+value|65536
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN_FFACTOR
+value|4
 end_define
 
 begin_define
@@ -411,13 +426,6 @@ define|#
 directive|define
 name|NUMKEY
 value|1038583
-end_define
-
-begin_define
-define|#
-directive|define
-name|VERSION_NO
-value|3
 end_define
 
 begin_define
@@ -445,7 +453,7 @@ begin_define
 define|#
 directive|define
 name|ALL_SET
-value|((unsigned)0xFFFFFFFF)
+value|((u_int)0xFFFFFFFF)
 end_define
 
 begin_define
@@ -462,7 +470,7 @@ name|PTROF
 parameter_list|(
 name|X
 parameter_list|)
-value|((BUFHEAD *)((unsigned)(X)&~0x3))
+value|((BUFHEAD *)((u_int)(X)&~0x3))
 end_define
 
 begin_define
@@ -472,7 +480,7 @@ name|ISMOD
 parameter_list|(
 name|X
 parameter_list|)
-value|((unsigned)(X)&0x1)
+value|((u_int)(X)&0x1)
 end_define
 
 begin_define
@@ -482,7 +490,7 @@ name|DOMOD
 parameter_list|(
 name|X
 parameter_list|)
-value|(X = (char *)( (unsigned)X | 0x1))
+value|((X) = (char *)((u_int)(X)|0x1))
 end_define
 
 begin_define
@@ -492,7 +500,7 @@ name|ISDISK
 parameter_list|(
 name|X
 parameter_list|)
-value|((unsigned)(X)&0x2)
+value|((u_int)(X)&0x2)
 end_define
 
 begin_define
@@ -502,7 +510,7 @@ name|DODISK
 parameter_list|(
 name|X
 parameter_list|)
-value|(X = (char *)( (unsigned)X | 0x2))
+value|((X) = (char *)((u_int)(X)|0x2))
 end_define
 
 begin_define
@@ -525,7 +533,7 @@ name|A
 parameter_list|,
 name|N
 parameter_list|)
-value|((A)[N/BITS_PER_MAP]&= ~(1<<(N%BITS_PER_MAP)))
+value|((A)[(N)/BITS_PER_MAP]&= ~(1<<((N)%BITS_PER_MAP)))
 end_define
 
 begin_define
@@ -537,7 +545,7 @@ name|A
 parameter_list|,
 name|N
 parameter_list|)
-value|((A)[N/BITS_PER_MAP] |= (1<<(N%BITS_PER_MAP)))
+value|((A)[(N)/BITS_PER_MAP] |= (1<<((N)%BITS_PER_MAP)))
 end_define
 
 begin_define
@@ -549,7 +557,7 @@ name|A
 parameter_list|,
 name|N
 parameter_list|)
-value|((A)[N/BITS_PER_MAP]& (1<<(N%BITS_PER_MAP)))
+value|((A)[(N)/BITS_PER_MAP]& (1<<((N)%BITS_PER_MAP)))
 end_define
 
 begin_comment
@@ -557,7 +565,7 @@ comment|/* Overflow management */
 end_comment
 
 begin_comment
-comment|/* 	Overflow page numbers are allocated per split point. 	At each doubling of the table, we can allocate extra 	pages.  So, an overflow page number has the top 5 bits 	indicate which split point and the lower 11 bits indicate 	which page at that split point is indicated (pages within 	split points are numberered starting with 1).   */
+comment|/*  * Overflow page numbers are allocated per split point.  At each doubling of  * the table, we can allocate extra pages.  So, an overflow page number has  * the top 5 bits indicate which split point and the lower 11 bits indicate  * which page at that split point is indicated (pages within split points are  * numberered starting with 1).  */
 end_comment
 
 begin_define
@@ -581,7 +589,7 @@ name|SPLITNUM
 parameter_list|(
 name|N
 parameter_list|)
-value|(((unsigned)N)>> SPLITSHIFT)
+value|(((u_int)(N))>> SPLITSHIFT)
 end_define
 
 begin_define
@@ -591,7 +599,7 @@ name|OPAGENUM
 parameter_list|(
 name|N
 parameter_list|)
-value|(N& SPLITMASK)
+value|((N)& SPLITMASK)
 end_define
 
 begin_define
@@ -603,7 +611,7 @@ name|S
 parameter_list|,
 name|O
 parameter_list|)
-value|((unsigned)((unsigned)S<< SPLITSHIFT) + O)
+value|((u_int)((u_int)(S)<< SPLITSHIFT) + (O))
 end_define
 
 begin_define
@@ -614,7 +622,7 @@ parameter_list|(
 name|B
 parameter_list|)
 define|\
-value|B + hashp->HDRPAGES + (B ? hashp->SPARES[__log2(B+1)-1] : 0)
+value|(B) + hashp->HDRPAGES + ((B) ? hashp->SPARES[__log2((B)+1)-1] : 0)
 end_define
 
 begin_define
@@ -625,11 +633,11 @@ parameter_list|(
 name|B
 parameter_list|)
 define|\
-value|BUCKET_TO_PAGE ( (1<< SPLITNUM(B)) -1 ) + OPAGENUM(B);
+value|BUCKET_TO_PAGE ( (1<< SPLITNUM((B))) -1 ) + OPAGENUM((B));
 end_define
 
 begin_comment
-comment|/*     page.h contains a detailed description of the page format.      Normally, keys and data are accessed from offset tables in the     top of each page which point to the beginning of the key and     data.  There are four flag values which may be stored in these     offset tables which indicate the following:  	OVFLPAGE	Rather than a key data pair, this pair contains 			the address of an overflow page.  The format of 			the pair is: 			    OVERFLOW_PAGE_NUMBER OVFLPAGE  	PARTIAL_KEY	This must be the first key/data pair on a page  			and implies that page contains only a partial key.   			That is, the key is too big to fit on a single page  			so it starts on this page and continues on the next. 			The format of the page is: 			    KEY_OFF PARTIAL_KEY OVFL_PAGENO OVFLPAGE 			     			    KEY_OFF -- offset of the beginning of the key 			    PARTIAL_KEY -- 1 			    OVFL_PAGENO - page number of the next overflow page 			    OVFLPAGE -- 0 	FULL_KEY	This must be the first key/data pair on the page.  It 			is used in two cases.    			Case 1: 			    There is a complete key on the page but no data 			    (because it wouldn't fit).  The next page contains 			    the data.  			    Page format it: 			    KEY_OFF FULL_KEY OVFL_PAGENO OVFL_PAGE  			    KEY_OFF -- offset of the beginning of the key 			    FULL_KEY -- 2 			    OVFL_PAGENO - page number of the next overflow page 			    OVFLPAGE -- 0  			Case 2: 			    This page contains no key, but part of a large  			    data field, which is continued on the next page.  			    Page format it: 			    DATA_OFF FULL_KEY OVFL_PAGENO OVFL_PAGE  			    KEY_OFF -- offset of the beginning of the data on 					this page 			    FULL_KEY -- 2 			    OVFL_PAGENO - page number of the next overflow page 			    OVFLPAGE -- 0  	FULL_KEY_DATA	This must be the first key/data pair on the page. 			There are two cases:  			Case 1: 			    This page contains a key and the beginning of the 			    data field, but the data field is continued on the 			    next page.  			    Page format is: 			    KEY_OFF FULL_KEY_DATA OVFL_PAGENO DATA_OFF  			    KEY_OFF -- offset of the beginning of the key 			    FULL_KEY_DATA -- 3 			    OVFL_PAGENO - page number of the next overflow page 			    DATA_OFF -- offset of the beginning of the data   			Case 2: 			    This page contains the last page of a big data pair. 			    There is no key, only the  tail end of the data  			    on this page.  			    Page format is: 			    DATA_OFF FULL_KEY_DATA<OVFL_PAGENO><OVFLPAGE>  			    DATA_OFF -- offset of the beginning of the data on 					this page 			    FULL_KEY_DATA -- 3 			    OVFL_PAGENO - page number of the next overflow page 			    OVFLPAGE -- 0  			    OVFL_PAGENO and OVFLPAGE are optional (they are 			    not present if there is no next page). */
+comment|/*  * page.h contains a detailed description of the page format.  *  * Normally, keys and data are accessed from offset tables in the top of  * each page which point to the beginning of the key and data.  There are  * four flag values which may be stored in these offset tables which indicate  * the following:  *  *  * OVFLPAGE	Rather than a key data pair, this pair contains  *		the address of an overflow page.  The format of  *		the pair is:  *		    OVERFLOW_PAGE_NUMBER OVFLPAGE  *  * PARTIAL_KEY	This must be the first key/data pair on a page  *		and implies that page contains only a partial key.  *		That is, the key is too big to fit on a single page  *		so it starts on this page and continues on the next.  *		The format of the page is:  *		    KEY_OFF PARTIAL_KEY OVFL_PAGENO OVFLPAGE  *		  *		    KEY_OFF -- offset of the beginning of the key  *		    PARTIAL_KEY -- 1  *		    OVFL_PAGENO - page number of the next overflow page  *		    OVFLPAGE -- 0  *  * FULL_KEY	This must be the first key/data pair on the page.  It  *		is used in two cases.  *  *		Case 1:  *		    There is a complete key on the page but no data  *		    (because it wouldn't fit).  The next page contains  *		    the data.  *  *		    Page format it:  *		    KEY_OFF FULL_KEY OVFL_PAGENO OVFL_PAGE  *  *		    KEY_OFF -- offset of the beginning of the key  *		    FULL_KEY -- 2  *		    OVFL_PAGENO - page number of the next overflow page  *		    OVFLPAGE -- 0  *  *		Case 2:  *		    This page contains no key, but part of a large  *		    data field, which is continued on the next page.  *  *		    Page format it:  *		    DATA_OFF FULL_KEY OVFL_PAGENO OVFL_PAGE  *  *		    KEY_OFF -- offset of the beginning of the data on  *				this page  *		    FULL_KEY -- 2  *		    OVFL_PAGENO - page number of the next overflow page  *		    OVFLPAGE -- 0  *  * FULL_KEY_DATA   *		This must be the first key/data pair on the page.  *		There are two cases:  *  *		Case 1:  *		    This page contains a key and the beginning of the  *		    data field, but the data field is continued on the  *		    next page.  *  *		    Page format is:  *		    KEY_OFF FULL_KEY_DATA OVFL_PAGENO DATA_OFF  *  *		    KEY_OFF -- offset of the beginning of the key  *		    FULL_KEY_DATA -- 3  *		    OVFL_PAGENO - page number of the next overflow page  *		    DATA_OFF -- offset of the beginning of the data  *  *		Case 2:  *		    This page contains the last page of a big data pair.  *		    There is no key, only the  tail end of the data  *		    on this page.  *  *		    Page format is:  *		    DATA_OFF FULL_KEY_DATA<OVFL_PAGENO><OVFLPAGE>  *  *		    DATA_OFF -- offset of the beginning of the data on  *				this page  *		    FULL_KEY_DATA -- 3  *		    OVFL_PAGENO - page number of the next overflow page  *		    OVFLPAGE -- 0  *  *		    OVFL_PAGENO and OVFLPAGE are optional (they are  *		    not present if there is no next page).  */
 end_comment
 
 begin_define
@@ -711,6 +719,20 @@ define|#
 directive|define
 name|LORDER
 value|hdr.lorder
+end_define
+
+begin_define
+define|#
+directive|define
+name|OVFL_POINT
+value|hdr.ovfl_point
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAST_FREED
+value|hdr.last_freed
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.7 (Berkeley) 6/17/91"
+literal|"@(#)ndbm.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*     This package provides a dbm compatible interface to the new hashing     package described in db(3) */
+comment|/*  * This package provides a dbm compatible interface to the new hashing  * package described in db(3).  */
 end_comment
 
 begin_include
@@ -56,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -72,7 +72,7 @@ file|"hash.h"
 end_include
 
 begin_comment
-comment|/*     return 	*DBM on success 		NULL on failure */
+comment|/*  * Returns:  * 	*DBM on success  *	 NULL on failure  */
 end_comment
 
 begin_function
@@ -94,8 +94,7 @@ name|file
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|;
-name|int
+decl_stmt|,
 name|mode
 decl_stmt|;
 block|{
@@ -112,13 +111,13 @@ name|info
 operator|.
 name|bsize
 operator|=
-literal|1024
+literal|4096
 expr_stmt|;
 name|info
 operator|.
 name|ffactor
 operator|=
-literal|5
+literal|40
 expr_stmt|;
 name|info
 operator|.
@@ -166,7 +165,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|hash_open
+operator|(
+name|DBM
+operator|*
+operator|)
+name|__hash_open
 argument_list|(
 name|path
 argument_list|,
@@ -210,7 +213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Returns 	DATUM on success 		NULL on failure */
+comment|/*  * Returns:  *	DATUM on success  *	NULL on failure  */
 end_comment
 
 begin_function
@@ -230,11 +233,11 @@ name|datum
 name|key
 decl_stmt|;
 block|{
-name|int
-name|status
-decl_stmt|;
 name|datum
 name|retval
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 name|status
 operator|=
@@ -290,7 +293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Returns 	DATUM on success 		NULL on failure */
+comment|/*  * Returns:  *	DATUM on success  *	NULL on failure  */
 end_comment
 
 begin_function
@@ -309,10 +312,9 @@ name|int
 name|status
 decl_stmt|;
 name|datum
-name|retkey
-decl_stmt|;
-name|datum
 name|retdata
+decl_stmt|,
+name|retkey
 decl_stmt|;
 name|status
 operator|=
@@ -345,14 +347,12 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 name|retkey
 operator|.
 name|dptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|retkey
@@ -362,7 +362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     Returns 	DATUM on success 		NULL on failure */
+comment|/*  * Returns:  *	DATUM on success  *	NULL on failure  */
 end_comment
 
 begin_function
@@ -381,10 +381,9 @@ name|int
 name|status
 decl_stmt|;
 name|datum
-name|retkey
-decl_stmt|;
-name|datum
 name|retdata
+decl_stmt|,
+name|retkey
 decl_stmt|;
 name|status
 operator|=
@@ -417,14 +416,12 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 name|retkey
 operator|.
 name|dptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|retkey
@@ -434,7 +431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     0 on success<0 failure */
+comment|/*  * Returns:  *	 0 on success  *<0 failure  */
 end_comment
 
 begin_function
@@ -481,27 +478,23 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 else|else
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*     0 on success<0 failure     1 if DBM_INSERT and entry exists */
+comment|/*  * Returns:  *	 0 on success  *<0 failure  *	 1 if DBM_INSERT and entry exists  */
 end_comment
 
 begin_function
@@ -523,8 +516,7 @@ name|db
 decl_stmt|;
 name|datum
 name|key
-decl_stmt|;
-name|datum
+decl_stmt|,
 name|content
 decl_stmt|;
 name|int
@@ -641,6 +633,36 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|extern
+name|int
+name|dbm_dirfno
+parameter_list|(
+name|db
+parameter_list|)
+name|DBM
+modifier|*
+name|db
+decl_stmt|;
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+name|HTAB
+operator|*
+operator|)
+name|db
+operator|->
+name|internal
+operator|)
+operator|->
+name|fp
 operator|)
 return|;
 block|}
