@@ -326,10 +326,15 @@ return|return
 name|NULL
 return|;
 comment|/* Be sure name_size is at least `1' so there's room for      the final NUL byte.  */
+if|if
+condition|(
 name|name_size
-operator|+=
-operator|!
+operator|<=
+literal|0
+condition|)
 name|name_size
+operator|=
+literal|1
 expr_stmt|;
 name|name_space
 operator|=
