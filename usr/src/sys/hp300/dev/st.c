@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.8 90/10/14$  *  *      @(#)st.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.8 90/10/14$  *  *      @(#)st.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -114,6 +114,12 @@ include|#
 directive|include
 file|"stvar.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|ADD_DELAY
+end_define
 
 begin_function_decl
 specifier|extern
@@ -913,10 +919,15 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
+name|ADD_DELAY
+specifier|static
+name|int
+name|havest
+init|=
 literal|0
-block|static int havest = 0;
+decl_stmt|;
 endif|#
 directive|endif
 struct|struct
@@ -1709,11 +1720,26 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
+ifdef|#
+directive|ifdef
+name|ADD_DELAY
 comment|/* XXX if we have a tape, we must up the delays in the HA driver */
-block|if (!havest) { 		havest = 1; 		scsi_delay(20000); 	}
+if|if
+condition|(
+operator|!
+name|havest
+condition|)
+block|{
+name|havest
+operator|=
+literal|1
+expr_stmt|;
+name|scsi_delay
+argument_list|(
+literal|20000
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
