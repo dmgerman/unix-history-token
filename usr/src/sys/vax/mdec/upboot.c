@@ -4,14 +4,17 @@ comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/* "@(#)upboot.c	6.3 (Berkeley) %G%" */
-end_comment
-
-begin_comment
-comment|/*  * UP 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  * Always reads from drive 0.  */
+comment|/* "@(#)upboot.c	6.4 (Berkeley) %G%" */
 end_comment
 
 begin_expr_stmt
+operator|.
+name|set
+name|MAJOR
+operator|,
+literal|2
+comment|/* major("/dev/up0a") */
+comment|/*  * UP 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  * Always reads from drive 0.  */
 operator|.
 name|set
 name|BOOTSIZE
@@ -29,12 +32,6 @@ name|UPBPSECT
 operator|,
 literal|512
 comment|/* bytes per sector */
-operator|.
-name|set
-name|SID
-operator|,
-literal|62
-comment|/* system ID register */
 comment|/* UBA registers */
 operator|.
 name|set
@@ -54,89 +51,53 @@ name|UBA_MAP
 operator|,
 literal|0x800
 comment|/* UBA offset to map reg's */
-operator|.
-name|set
-name|UBAinit
-operator|,
-literal|1
-comment|/* UBA init bit in UBA control reg */
-operator|.
-name|set
-name|pUBIC
-operator|,
-literal|16
-comment|/* Unibus init complete */
 comment|/* UP registers and bits */
-operator|.
-name|set
-name|UP
-operator|,
-literal|0176700
-operator|-
-literal|0160000
-comment|/* address of UP controller */
 operator|.
 name|set
 name|UP_cs1
 operator|,
-name|UP
-operator|+
 literal|0
 comment|/* control and status */
 operator|.
 name|set
 name|UP_wc
 operator|,
-name|UP
-operator|+
 literal|2
 comment|/* word count */
 operator|.
 name|set
 name|UP_ba
 operator|,
-name|UP
-operator|+
 literal|4
 comment|/* bus address */
 operator|.
 name|set
 name|UP_da
 operator|,
-name|UP
-operator|+
 literal|6
 comment|/* disk address */
 operator|.
 name|set
 name|UP_cs2
 operator|,
-name|UP
-operator|+
 literal|010
 comment|/* cs2 register */
 operator|.
 name|set
 name|UP_of
 operator|,
-name|UP
-operator|+
 literal|032
 comment|/* offset register */
 operator|.
 name|set
 name|UP_dc
 operator|,
-name|UP
-operator|+
 literal|034
 comment|/* desired cylinder */
 operator|.
 name|set
 name|UP_hr
 operator|,
-name|UP
-operator|+
 literal|036
 comment|/* holding register */
 operator|.
@@ -193,6 +154,8 @@ operator|,
 literal|010000
 name|init
 operator|:
+comment|/* r9   UBA address */
+comment|/* r8	UP addr */
 operator|.
 name|word
 literal|0
@@ -243,101 +206,132 @@ name|nop
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* get cpu type and find the first uba */
-end_comment
-
 begin_decl_stmt
-name|mfpr
-name|$SID
+name|movl
+name|$MAJOR
 decl_stmt|,
-name|r0
+name|r10
+comment|/* major("/dev/xx0a") */
 name|extzv
+name|$18
+decl_stmt|,
+name|$1
+decl_stmt|,
+name|r1
+decl_stmt|,
+name|r9
+comment|/* get UBA number from R1 */
+name|xorb2
+name|$0x01
+decl_stmt|,
+name|r9
+comment|/* complement bit */
+name|insv
+name|r9
+decl_stmt|,
 name|$24
 decl_stmt|,
 name|$8
 decl_stmt|,
-name|r0
+name|r10
+comment|/* set UBA number */
+name|insv
+name|r3
 decl_stmt|,
-name|r0
-comment|/* get cpu type */
-name|ashl
-name|$2
+name|$16
 decl_stmt|,
-name|r0
-decl_stmt|,
-name|r1
-name|movab
-name|physUBA
-decl_stmt|,
-name|r2
-comment|/* get physUBA[cpu] */
-name|addl2
-name|r1
-decl_stmt|,
-name|r2
-name|movl
-argument_list|(
-name|r2
-argument_list|)
-decl_stmt|,
-name|r9
-name|movab
-name|physUMEM
-decl_stmt|,
-name|r2
-comment|/* get physUMEM[cpu] */
-name|addl2
-name|r1
-decl_stmt|,
-name|r2
-name|movl
-argument_list|(
-name|r2
-argument_list|)
+name|$8
 decl_stmt|,
 name|r10
-comment|/* if 780, init uba */
-name|cmpl
-name|r0
+comment|/* drive number */
+name|extzv
+name|$12
 decl_stmt|,
-name|$1
-name|bneq
-decl|2f
+name|$4
+decl_stmt|,
+name|r5
+decl_stmt|,
+name|r4
+comment|/* get partition from r5 */
+name|bicw2
+name|$0xf000
+decl_stmt|,
+name|r5
+comment|/* remove from r5 */
+name|insv
+name|r4
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* set partition */
 name|movl
-name|$UBAinit
+name|r5
 decl_stmt|,
-name|UBA_CR
-argument_list|(
-name|r9
-argument_list|)
-decl|1
-range|:
-name|bbc
-name|$pUBIC
-decl_stmt|,
-name|UBA_CNFGR
-argument_list|(
-name|r9
-argument_list|)
-decl_stmt|,1b 2
-range|:
+name|r11
+comment|/* boot flags */
 name|movl
-name|$5000000
+name|physUBA
+index|[
+name|r9
+index|]
 decl_stmt|,
-name|r0
-decl|1
-range|:
-name|sobgtr
-name|r0
-decl_stmt|,1b
-comment|/* init up, set vv in drive 0; if any errors, give up */
-name|movw
+name|r9
+comment|/* UNIBUS adaptor address */
+name|movl
+name|r2
+decl_stmt|,
+name|r8
+comment|/* boot device CSR */
+name|movl
+name|r3
+decl_stmt|,
+name|r7
+comment|/* unit number */
+name|movl
+name|$RELOC
+decl_stmt|,
+name|sp
+name|moval
+name|init
+decl_stmt|,
+name|r4
+name|movc3
+name|$end
+decl_stmt|,
+argument_list|(
+name|r4
+argument_list|)
+decl_stmt|,
+argument_list|(
+name|sp
+argument_list|)
+name|movl
+name|r9
+decl_stmt|,
+name|r1
+comment|/* UNIBUS I/O page address */
+name|movl
+name|r8
+decl_stmt|,
+name|r2
+comment|/* boot device CSR */
+name|movl
+name|r7
+decl_stmt|,
+name|r3
+comment|/* unit number */
+comment|/* init up, set vv in drive; if any errors, give up */
+name|bisw3
+name|r7
+decl_stmt|,
 name|$UPCS2_CLR
 decl_stmt|,
 name|UP_cs2
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$UP_DCLR
@@ -346,7 +340,7 @@ name|UP_GO
 decl_stmt|,
 name|UP_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$UP_PRESET
@@ -355,21 +349,21 @@ name|UP_GO
 decl_stmt|,
 name|UP_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$UP_FMT22
 decl_stmt|,
 name|UP_of
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl|1
 range|:
 name|movw
 name|UP_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -426,14 +420,14 @@ name|$0
 decl_stmt|,
 name|UP_dc
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$1
 decl_stmt|,
 name|UP_da
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$
@@ -443,7 +437,7 @@ decl|/2
 decl_stmt|,
 name|UP_wc
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|clrl
 name|r0
@@ -470,7 +464,7 @@ decl_stmt|,1b
 name|clrw
 name|UP_ba
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$UP_RCOM
@@ -479,14 +473,14 @@ name|UP_GO
 decl_stmt|,
 name|UP_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|uprdy
 range|:
 name|movw
 name|UP_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -517,11 +511,6 @@ name|r3
 decl_stmt|,
 name|clrcor
 comment|/* run loaded program */
-name|movl
-name|$2
-decl_stmt|,
-name|r10
-comment|/* major("/dev/up0a") */
 name|calls
 name|$0
 decl_stmt|,
@@ -533,36 +522,12 @@ name|physUBA
 range|:
 operator|.
 name|long
-literal|0
-operator|.
-name|long
-literal|0x20006000
-comment|/* 11/780 */
-operator|.
-name|long
 literal|0xf30000
-comment|/* 11/750 */
+comment|/* uba0 */
 operator|.
 name|long
-literal|0xf26000
-comment|/* 11/730 */
-name|physUMEM
-operator|:
-operator|.
-name|long
-literal|0
-operator|.
-name|long
-literal|0x2013e000
-comment|/* 11/780 */
-operator|.
-name|long
-literal|0xffe000
-comment|/* 11/750 */
-operator|.
-name|long
-literal|0xffe000
-comment|/* 11/730 */
+literal|0xf32000
+comment|/* uba1 */
 name|end
 operator|:
 end_decl_stmt

@@ -4,14 +4,17 @@ comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/* "@(#)rlboot.c	6.3 (Berkeley) %G%" */
-end_comment
-
-begin_comment
-comment|/*  * RL02 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  * Always reads from drive 0.  * 	UNTESTED  */
+comment|/* "@(#)rlboot.c	6.4 (Berkeley) %G%" */
 end_comment
 
 begin_expr_stmt
+operator|.
+name|set
+name|MAJOR
+operator|,
+literal|14
+comment|/* major("/dev/rl0a") */
+comment|/*  * RL02 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  */
 operator|.
 name|set
 name|BOOTSIZE
@@ -23,12 +26,6 @@ name|set
 name|RELOC
 operator|,
 literal|0x50000
-operator|.
-name|set
-name|SID
-operator|,
-literal|62
-comment|/* system ID register */
 comment|/* UBA registers */
 operator|.
 name|set
@@ -48,18 +45,6 @@ name|UBA_MAP
 operator|,
 literal|0x800
 comment|/* UBA offset to map reg's */
-operator|.
-name|set
-name|UBAinit
-operator|,
-literal|1
-comment|/* UBA init bit in UBA control reg */
-operator|.
-name|set
-name|pUBIC
-operator|,
-literal|16
-comment|/* Unibus init complete */
 comment|/* RL11 registers and bits */
 operator|.
 name|set
@@ -109,10 +94,10 @@ literal|6
 comment|/* word count */
 operator|.
 name|set
-name|HL_GO
+name|HL_RDY
 operator|,
-literal|0
-comment|/* go bit */
+literal|0200
+comment|/* READY  */
 operator|.
 name|set
 name|HL_RCOM
@@ -152,7 +137,7 @@ comment|/* position of error bit */
 name|init
 operator|:
 comment|/* r9   UBA address */
-comment|/* r10  umem addr */
+comment|/* r8	RL addr */
 operator|.
 name|word
 literal|0
@@ -203,101 +188,113 @@ name|nop
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* get cpu type and find the first uba */
-end_comment
-
 begin_decl_stmt
-name|mfpr
-name|$SID
+name|movl
+name|$MAJOR
 decl_stmt|,
-name|r0
+name|r10
+comment|/* major("/dev/xx0a") */
 name|extzv
+name|$18
+decl_stmt|,
+name|$1
+decl_stmt|,
+name|r1
+decl_stmt|,
+name|r9
+comment|/* get UBA number from R1 */
+name|xorb2
+name|$0x01
+decl_stmt|,
+name|r9
+comment|/* complement bit */
+name|insv
+name|r9
+decl_stmt|,
 name|$24
 decl_stmt|,
 name|$8
 decl_stmt|,
-name|r0
+name|r10
+comment|/* set UBA number */
+name|insv
+name|r3
 decl_stmt|,
-name|r0
-comment|/* get cpu type */
-name|ashl
-name|$2
+name|$16
 decl_stmt|,
-name|r0
-decl_stmt|,
-name|r1
-name|movab
-name|physUBA
-decl_stmt|,
-name|r2
-comment|/* get physUBA[cpu] */
-name|addl2
-name|r1
-decl_stmt|,
-name|r2
-name|movl
-argument_list|(
-name|r2
-argument_list|)
-decl_stmt|,
-name|r9
-name|movab
-name|physUMEM
-decl_stmt|,
-name|r2
-comment|/* get physUMEM[cpu] */
-name|addl2
-name|r1
-decl_stmt|,
-name|r2
-name|movl
-argument_list|(
-name|r2
-argument_list|)
+name|$8
 decl_stmt|,
 name|r10
-comment|/* if 780, init uba */
-name|cmpl
-name|r0
+comment|/* drive number */
+name|extzv
+name|$12
 decl_stmt|,
-name|$1
-name|bneq
-decl|2f
+name|$4
+decl_stmt|,
+name|r5
+decl_stmt|,
+name|r4
+comment|/* get partition from r5 */
+name|bicw2
+name|$0xf000
+decl_stmt|,
+name|r5
+comment|/* remove from r5 */
+name|insv
+name|r4
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* set partition */
 name|movl
-name|$UBAinit
+name|r5
 decl_stmt|,
-name|UBA_CR
-argument_list|(
+name|r11
+comment|/* boot flags */
+name|movl
+name|physUBA
+index|[
 name|r9
-argument_list|)
-decl|1
-range|:
-name|bbc
-name|$pUBIC
+index|]
 decl_stmt|,
-name|UBA_CNFGR
-argument_list|(
 name|r9
-argument_list|)
-decl_stmt|,1b 2
-range|:
-comment|/* init rl11, and drive 0, don't check for any errors now */
+comment|/* UNIBUS adaptor address */
+name|movl
+name|r2
+decl_stmt|,
+name|r8
+comment|/* boot device CSR */
+name|movl
+name|r3
+decl_stmt|,
+name|r7
+comment|/* unit number */
+name|ashl
+name|$8
+decl_stmt|,
+name|r7
+decl_stmt|,
+name|r7
+comment|/* shifted for HL_cs */
+comment|/* init rl11, and drive, don't check for any errors now */
 name|movw
 name|$HL_RESET
 decl_stmt|,
 name|HL_da
 argument_list|(
-name|r10
+name|r8
 argument_list|)
-name|movw
+name|bisw3
+name|r7
+decl_stmt|,
 name|$HL_GSTAT
-decl|+
-name|HL_GO
 decl_stmt|,
 name|HL_cs
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 comment|/* relocate to high core */
 name|start
@@ -348,24 +345,24 @@ name|$1
 decl_stmt|,
 name|HL_da
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 comment|/* seek to cylinder 0 */
-name|movw
+name|bisw3
+name|r7
+decl_stmt|,
 name|$HL_SEEK
-decl|+
-name|HL_GO
 decl_stmt|,
 name|HL_cs
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl|1
 range|:
 name|movw
 name|HL_cs
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -386,7 +383,7 @@ name|$2
 decl_stmt|,
 name|HL_da
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 comment|/* read program */
 name|movw
@@ -397,7 +394,7 @@ decl|/2
 decl_stmt|,
 name|HL_wc
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|clrl
 name|r0
@@ -424,23 +421,23 @@ decl_stmt|,1b
 name|clrw
 name|HL_ba
 argument_list|(
-name|r10
+name|r8
 argument_list|)
-name|movw
+name|bisw3
+name|r7
+decl_stmt|,
 name|$HL_RCOM
-decl|+
-name|HL_GO
 decl_stmt|,
 name|HL_cs
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl|1
 range|:
 name|movw
 name|HL_cs
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -449,13 +446,11 @@ name|$HL_pRDY
 decl_stmt|,
 name|r0
 decl_stmt|,1b
-name|bbs
+name|bbc
 name|$HL_pERR
 decl_stmt|,
 name|r0
 decl_stmt|,
-name|hlerr
-name|brw
 name|done
 name|hlerr
 range|:
@@ -482,11 +477,6 @@ name|r3
 decl_stmt|,
 name|clrcor
 comment|/* run loaded program */
-name|movl
-name|$14
-decl_stmt|,
-name|r10
-comment|/* major("/dev/hl0a") */
 name|calls
 name|$0
 decl_stmt|,
@@ -498,36 +488,12 @@ name|physUBA
 range|:
 operator|.
 name|long
-literal|0
-operator|.
-name|long
-literal|0x20006000
-comment|/* 11/780 */
-operator|.
-name|long
 literal|0xf30000
-comment|/* 11/750 */
+comment|/* uba0 */
 operator|.
 name|long
-literal|0xf26000
-comment|/* 11/730 */
-name|physUMEM
-operator|:
-operator|.
-name|long
-literal|0
-operator|.
-name|long
-literal|0x2013e000
-comment|/* 11/780 */
-operator|.
-name|long
-literal|0xffe000
-comment|/* 11/750 */
-operator|.
-name|long
-literal|0xffe000
-comment|/* 11/730 */
+literal|0xf32000
+comment|/* uba1 */
 name|end
 operator|:
 end_decl_stmt

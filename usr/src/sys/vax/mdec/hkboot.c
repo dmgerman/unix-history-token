@@ -4,14 +4,17 @@ comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/* @(#)hkboot.c	6.3 (Berkeley) %G% */
-end_comment
-
-begin_comment
-comment|/*  * RK07 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  * Always reads from drive 0.  */
+comment|/* @(#)hkboot.c	6.4 (Berkeley) %G% */
 end_comment
 
 begin_expr_stmt
+operator|.
+name|set
+name|MAJOR
+operator|,
+literal|3
+comment|/* major("/dev/hk0a") */
+comment|/*  * RK07 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  */
 operator|.
 name|set
 name|RELOC
@@ -23,12 +26,6 @@ name|BOOTSIZE
 operator|,
 literal|15
 comment|/* size of boot in sectors */
-operator|.
-name|set
-name|SID
-operator|,
-literal|62
-comment|/* system ID register */
 comment|/* UBA registers */
 operator|.
 name|set
@@ -48,65 +45,41 @@ name|UBA_MAP
 operator|,
 literal|0x800
 comment|/* UBA offset to map reg's */
-operator|.
-name|set
-name|UBAinit
-operator|,
-literal|1
-comment|/* UBA init bit in UBA control reg */
-operator|.
-name|set
-name|pUBIC
-operator|,
-literal|16
-comment|/* Unibus init complete */
 comment|/* RK611 registers and bits */
-operator|.
-name|set
-name|HK
-operator|,
-literal|0177440
-operator|-
-literal|0160000
-comment|/* address of RK611 */
 operator|.
 name|set
 name|HK_cs1
 operator|,
-name|HK
-operator|+
 literal|0
 comment|/* control and status */
 operator|.
 name|set
 name|HK_wc
 operator|,
-name|HK
-operator|+
 literal|2
 comment|/* word count */
 operator|.
 name|set
 name|HK_ba
 operator|,
-name|HK
-operator|+
 literal|4
 comment|/* bus address */
 operator|.
 name|set
 name|HK_da
 operator|,
-name|HK
-operator|+
 literal|6
 comment|/* disk address */
 operator|.
 name|set
+name|HK_cs2
+operator|,
+literal|8
+comment|/* control and status */
+operator|.
+name|set
 name|HK_dc
 operator|,
-name|HK
-operator|+
 literal|020
 comment|/* desired cylinder */
 operator|.
@@ -154,7 +127,7 @@ comment|/* position of error bit */
 name|init
 operator|:
 comment|/* r9	UBA address */
-comment|/* r10	umem addr */
+comment|/* r8	HK addr */
 operator|.
 name|word
 literal|0
@@ -205,101 +178,113 @@ name|nop
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* get cpu type and find the first uba */
-end_comment
-
 begin_decl_stmt
-name|mfpr
-name|$SID
+name|movl
+name|$MAJOR
 decl_stmt|,
-name|r0
+name|r10
+comment|/* major("/dev/xx0a") */
 name|extzv
+name|$18
+decl_stmt|,
+name|$1
+decl_stmt|,
+name|r1
+decl_stmt|,
+name|r9
+comment|/* get UBA number from R1 */
+name|xorb2
+name|$0x01
+decl_stmt|,
+name|r9
+comment|/* complement bit */
+name|insv
+name|r9
+decl_stmt|,
 name|$24
 decl_stmt|,
 name|$8
 decl_stmt|,
-name|r0
+name|r10
+comment|/* set UBA number */
+name|insv
+name|r3
 decl_stmt|,
-name|r0
-comment|/* get cpu type */
-name|ashl
-name|$2
+name|$16
 decl_stmt|,
-name|r0
-decl_stmt|,
-name|r1
-name|movab
-name|physUBA
-decl_stmt|,
-name|r2
-comment|/* get physUBA[cpu] */
-name|addl2
-name|r1
-decl_stmt|,
-name|r2
-name|movl
-argument_list|(
-name|r2
-argument_list|)
-decl_stmt|,
-name|r9
-name|movab
-name|physUMEM
-decl_stmt|,
-name|r2
-comment|/* get physUMEM[cpu] */
-name|addl2
-name|r1
-decl_stmt|,
-name|r2
-name|movl
-argument_list|(
-name|r2
-argument_list|)
+name|$8
 decl_stmt|,
 name|r10
-comment|/* if 780, init uba */
-name|cmpl
-name|r0
+comment|/* drive number */
+name|extzv
+name|$12
 decl_stmt|,
-name|$1
-name|bneq
-decl|2f
+name|$4
+decl_stmt|,
+name|r5
+decl_stmt|,
+name|r4
+comment|/* get partition from r5 */
+name|bicw2
+name|$0xf000
+decl_stmt|,
+name|r5
+comment|/* remove from r5 */
+name|insv
+name|r4
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* set partition */
 name|movl
-name|$UBAinit
+name|r5
 decl_stmt|,
-name|UBA_CR
-argument_list|(
+name|r11
+comment|/* boot flags */
+name|movl
+name|physUBA
+index|[
 name|r9
-argument_list|)
-decl|1
-range|:
-name|bbc
-name|$pUBIC
+index|]
 decl_stmt|,
-name|UBA_CNFGR
-argument_list|(
 name|r9
+comment|/* UNIBUS adaptor address */
+name|movl
+name|r2
+decl_stmt|,
+name|r8
+comment|/* boot device CSR */
+name|movl
+name|r3
+decl_stmt|,
+name|r7
+comment|/* unit number */
+comment|/* select unit, init rk611, set vv in drive; if any errors, give up */
+name|movw
+name|r7
+decl_stmt|,
+name|HK_cs2
+argument_list|(
+name|r8
 argument_list|)
-decl_stmt|,1b 2
-range|:
-comment|/* init rk611, set vv in drive 0; if any errors, give up */
 name|movw
 name|$HK_SEL7
-operator|+
+decl|+
 name|HK_GO
 decl_stmt|,
 name|HK_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl|1
 range|:
 name|movw
 name|HK_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -322,14 +307,14 @@ name|HK_GO
 decl_stmt|,
 name|HK_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl|1
 range|:
 name|movw
 name|HK_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -396,14 +381,14 @@ name|$0
 decl_stmt|,
 name|HK_dc
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$1
 decl_stmt|,
 name|HK_da
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|movw
 name|$
@@ -413,52 +398,37 @@ decl|/2
 decl_stmt|,
 name|HK_wc
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|clrl
 name|r0
 decl|1
 range|:
-name|bisl3
-name|$0x80000000
-decl_stmt|,
-name|r0
-decl_stmt|,
-name|UBA_MAP
-argument_list|(
-name|r9
-argument_list|)
-name|addl2
-name|$4
-decl_stmt|,
-name|r9
-name|aobleq
-name|$BOOTSIZE
-decl_stmt|,
-name|r0
-decl_stmt|,1b
+empty|#	bisl3	$0x80000000,r0,UBA_MAP(r9)
+empty|#	addl2	$4,r9
+empty|#	aobleq	$BOOTSIZE,r0,1b
 name|clrw
 name|HK_ba
 argument_list|(
-name|r10
+argument|r8
 argument_list|)
 name|movw
 name|$HK_SEL7
-decl|+
+operator|+
 name|HK_RCOM
-decl|+
+operator|+
 name|HK_GO
 decl_stmt|,
 name|HK_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 name|hkrdy
 range|:
 name|movw
 name|HK_cs1
 argument_list|(
-name|r10
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -501,11 +471,6 @@ name|r3
 decl_stmt|,
 name|clrcor
 comment|/* start loaded program */
-name|movl
-name|$3
-decl_stmt|,
-name|r10
-comment|/* major("/dev/hk0a") */
 name|calls
 name|$0
 decl_stmt|,
@@ -517,36 +482,12 @@ name|physUBA
 range|:
 operator|.
 name|long
-literal|0
-operator|.
-name|long
-literal|0x20006000
-comment|/* 11/780 */
-operator|.
-name|long
 literal|0xf30000
-comment|/* 11/750 */
+comment|/* uba0 */
 operator|.
 name|long
-literal|0xf26000
-comment|/* 11/730 */
-name|physUMEM
-operator|:
-operator|.
-name|long
-literal|0
-operator|.
-name|long
-literal|0x2013e000
-comment|/* 11/780 */
-operator|.
-name|long
-literal|0xffe000
-comment|/* 11/750 */
-operator|.
-name|long
-literal|0xffe000
-comment|/* 11/730 */
+literal|0xf32000
+comment|/* uba1 */
 name|end
 operator|:
 end_decl_stmt
