@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccsid[] = "@(#)h00vars.h 1.7 %G%"; */
+comment|/* sccsid[] = "@(#)h00vars.h 1.8 %G%"; */
 end_comment
 
 begin_include
@@ -406,6 +406,7 @@ name|short
 name|funit
 decl_stmt|;
 comment|/* file status flags */
+name|unsigned
 name|short
 name|fblk
 decl_stmt|;
@@ -468,6 +469,7 @@ name|short
 name|funit
 decl_stmt|;
 comment|/* file status flags */
+name|unsigned
 name|short
 name|fblk
 decl_stmt|;
