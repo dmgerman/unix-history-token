@@ -10507,7 +10507,16 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
-operator||
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IS_MPSAFE
+condition|)
+name|ifp
+operator|->
+name|if_flags
+operator||=
 name|IFF_NEEDSGIANT
 expr_stmt|;
 name|ifp
