@@ -4585,9 +4585,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|irq
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|irq
 operator|>=
 name|PCI_MAX_IRQ
+operator|)
 condition|)
 block|{
 name|printf
