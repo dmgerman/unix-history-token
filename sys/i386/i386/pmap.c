@@ -3127,11 +3127,8 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|curthread
-operator|->
-name|td_pinned
-operator|>
-literal|0
+name|sched_ispinned
+argument_list|()
 argument_list|,
 operator|(
 literal|"curthread not pinned"
@@ -6425,11 +6422,8 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|curthread
-operator|->
-name|td_pinned
-operator|>
-literal|0
+name|sched_ispinned
+argument_list|()
 argument_list|,
 operator|(
 literal|"curthread not pinned"
