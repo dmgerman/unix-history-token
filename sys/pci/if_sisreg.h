@@ -1806,7 +1806,7 @@ begin_define
 define|#
 directive|define
 name|SIS_REV_630ET
-value|0x0083
+value|0x0084
 end_define
 
 begin_define
