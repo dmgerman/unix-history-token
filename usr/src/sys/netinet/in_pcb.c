@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -426,6 +426,11 @@ condition|(
 name|lport
 condition|)
 block|{
+name|struct
+name|inpcb
+modifier|*
+name|t
+decl_stmt|;
 name|u_short
 name|aport
 init|=
@@ -502,8 +507,8 @@ name|wild
 operator|=
 name|INPLOOKUP_WILDCARD
 expr_stmt|;
-if|if
-condition|(
+name|t
+operator|=
 name|in_pcblookup
 argument_list|(
 name|head
@@ -520,6 +525,27 @@ name|lport
 argument_list|,
 name|wild
 argument_list|)
+block|)
+if|if
+condition|(
+name|t
+operator|&&
+operator|!
+operator|(
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|t
+operator|->
+name|inp_socket
+operator|->
+name|so_options
+operator|)
+operator|&
+name|SO_REUSEPORT
+operator|)
 condition|)
 return|return
 operator|(
@@ -527,6 +553,9 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
+end_block
+
+begin_expr_stmt
 name|inp
 operator|->
 name|inp_laddr
@@ -535,8 +564,14 @@ name|sin
 operator|->
 name|sin_addr
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|noname
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 name|lport
@@ -596,31 +631,37 @@ literal|0
 argument_list|)
 condition|)
 do|;
+end_if
+
+begin_expr_stmt
 name|inp
 operator|->
 name|inp_lport
 operator|=
 name|lport
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Connect from a socket to a specified address.  * Both address and port must be specified in argument sin.  * If don't have a local address for this socket yet,  * then pick one.  */
 end_comment
 
 begin_expr_stmt
-name|in_pcbconnect
-argument_list|(
+unit|in_pcbconnect
+operator|(
 name|inp
-argument_list|,
+operator|,
 name|nam
-argument_list|)
+operator|)
 specifier|register
 expr|struct
 name|inpcb
@@ -2303,9 +2344,6 @@ continue|continue;
 block|}
 else|else
 block|{
-ifndef|#
-directive|ifndef
-name|MULTICAST
 if|if
 condition|(
 name|laddr
@@ -2314,8 +2352,6 @@ name|s_addr
 operator|!=
 name|INADDR_ANY
 condition|)
-endif|#
-directive|endif
 name|wildcard
 operator|++
 expr_stmt|;
