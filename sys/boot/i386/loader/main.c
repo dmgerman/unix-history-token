@@ -413,6 +413,10 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+comment|/* detect ACPI for future reference */
+name|biosacpi_detect
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"

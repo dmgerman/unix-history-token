@@ -42,7 +42,56 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 comment|/* XXX use PnP to locate stuff here */
+comment|/* autoload ACPI support */
+comment|/* XXX should be in 4th keyed off acpi_load */
+if|if
+condition|(
+operator|(
+name|getenv
+argument_list|(
+literal|"acpi_load"
+argument_list|)
+operator|&&
+operator|!
+name|getenv
+argument_list|(
+literal|"hint.acpi.0.disable"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|mod_load
+argument_list|(
+literal|"acpi"
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"ACPI autoload failed - %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
