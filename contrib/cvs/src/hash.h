@@ -22,7 +22,7 @@ begin_enum
 enum|enum
 name|ntype
 block|{
-name|UNKNOWN
+name|NT_UNKNOWN
 block|,
 name|HEADER
 block|,
@@ -49,6 +49,8 @@ block|,
 name|VARIABLE
 block|,
 name|RCSFIELD
+block|,
+name|RCSCMPFLD
 block|}
 enum|;
 end_enum

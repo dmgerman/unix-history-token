@@ -2037,6 +2037,11 @@ block|}
 name|out
 label|:
 empty_stmt|;
+name|free
+argument_list|(
+name|them
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

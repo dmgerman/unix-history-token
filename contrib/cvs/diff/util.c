@@ -1488,7 +1488,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-name|unsigned
 name|char
 name|buf
 index|[
