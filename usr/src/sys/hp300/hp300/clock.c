@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.19 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * HPs use the MC6840 PTM with the following arrangement:  *	Timers 1 and 3 are externally driver from a 25Mhz source.  *	Output from timer 3 is tied to the input of timer 2.  * The latter makes it possible to use timers 3 and 2 together to get  * a 32-bit countdown timer.  */
 end_comment
 
 begin_include
@@ -126,6 +130,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* current, from above choices */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|statprev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* previous value in stat timer */
 end_comment
 
 begin_decl_stmt
@@ -436,6 +451,10 @@ name|timer3min
 operator|=
 name|statmin
 expr_stmt|;
+name|statprev
+operator|=
+name|statint
+expr_stmt|;
 comment|/* finally, load hardware */
 name|clk
 operator|->
@@ -449,46 +468,15 @@ name|clk_cr1
 operator|=
 name|CLK_RESET
 expr_stmt|;
-name|clk
-operator|->
-name|clk_msb1
-operator|=
-name|intvl
-operator|>>
-literal|8
-expr_stmt|;
-name|clk
-operator|->
-name|clk_lsb1
-operator|=
-name|intvl
-expr_stmt|;
-name|clk
-operator|->
-name|clk_msb2
-operator|=
-literal|0
-expr_stmt|;
-name|clk
-operator|->
-name|clk_lsb2
-operator|=
-literal|0
-expr_stmt|;
-name|clk
-operator|->
-name|clk_msb3
-operator|=
-name|statint
-operator|>>
-literal|8
-expr_stmt|;
-name|clk
-operator|->
-name|clk_lsb3
-operator|=
-name|statint
-expr_stmt|;
+asm|asm
+specifier|volatile
+asm|(" movpw %0,%1@(5)" : : "d" (intvl), "a" (clk));
+asm|asm
+specifier|volatile
+asm|(" movpw %0,%1@(9)" : : "d" (0), "a" (clk));
+asm|asm
+specifier|volatile
+asm|(" movpw %0,%1@(13)" : : "d" (statint), "a" (clk));
 name|clk
 operator|->
 name|clk_cr2
@@ -623,17 +611,24 @@ name|timer3min
 operator|+
 name|r
 expr_stmt|;
-name|clk
-operator|->
-name|clk_msb3
-operator|=
+comment|/* 	 * The timer was automatically reloaded with the previous latch 	 * value at the time of the interrupt.  Compensate now for the 	 * amount of time that has run off since then (minimum of 2-12 	 * timer ticks depending on CPU type) plus one tick roundoff. 	 * This should keep us closer to the mean. 	 */
+asm|asm
+specifier|volatile
+asm|(" clrl %0; movpw %1@(13),%0" : "=d" (r) : "a" (clk));
 name|newint
-operator|>>
-literal|8
+operator|-=
+operator|(
+name|statprev
+operator|-
+name|r
+operator|+
+literal|1
+operator|)
 expr_stmt|;
-name|clk
-operator|->
-name|clk_lsb3
+asm|asm
+specifier|volatile
+asm|(" movpw %0,%1@(13)" : : "d" (newint), "a" (clk));
+name|statprev
 operator|=
 name|newint
 expr_stmt|;
@@ -677,15 +672,7 @@ name|s
 decl_stmt|,
 name|u
 decl_stmt|,
-name|h
-decl_stmt|,
-name|l
-decl_stmt|,
-name|sr
-decl_stmt|,
-name|l2
-decl_stmt|,
-name|h2
+name|t
 decl_stmt|,
 name|u2
 decl_stmt|,
@@ -719,36 +706,9 @@ name|time
 operator|.
 name|tv_usec
 expr_stmt|;
-name|h
-operator|=
-name|clk
-operator|->
-name|clk_msb1
-expr_stmt|;
-name|l
-operator|=
-name|clk
-operator|->
-name|clk_lsb1
-expr_stmt|;
-name|sr
-operator|=
-name|clk
-operator|->
-name|clk_sr
-expr_stmt|;
-name|l2
-operator|=
-name|clk
-operator|->
-name|clk_lsb1
-expr_stmt|;
-name|h2
-operator|=
-name|clk
-operator|->
-name|clk_msb1
-expr_stmt|;
+asm|asm
+specifier|volatile
+asm|(" clrl %0; movpw %1@(5),%0" 			      : "=d" (t) : "a" (clk));
 name|u2
 operator|=
 name|time
@@ -764,14 +724,6 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|l
-operator|!=
-name|l2
-operator|||
-name|h
-operator|!=
-name|h2
-operator|||
 name|u
 operator|!=
 name|u2
@@ -781,31 +733,12 @@ operator|!=
 name|s2
 condition|)
 do|;
-comment|/* 	 * Pending interrupt means that the counter wrapped and we did not 	 * take the interrupt yet (can only happen if clock interrupts are 	 * blocked).  If so, add one tick.  Then in any case, add remaining 	 * count.  This should leave u< 2 seconds, since we can add at most 	 * two clock intervals (assuming hz> 2!). 	 */
-if|if
-condition|(
-name|sr
-operator|&
-name|CLK_INT1
-condition|)
-name|u
-operator|+=
-name|tick
-expr_stmt|;
 name|u
 operator|+=
 operator|(
 name|clkint
 operator|-
-operator|(
-operator|(
-name|h
-operator|<<
-literal|8
-operator|)
-operator||
-name|l
-operator|)
+name|t
 operator|)
 operator|*
 name|CLK_RESOLUTION
