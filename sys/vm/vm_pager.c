@@ -1001,12 +1001,6 @@ name|b_error
 operator|=
 literal|0
 expr_stmt|;
-name|bp
-operator|->
-name|b_magic
-operator|=
-name|B_MAGIC_BIO
-expr_stmt|;
 name|BUF_LOCK
 argument_list|(
 name|bp

@@ -3690,12 +3690,6 @@ name|b_flags
 operator||=
 name|save
 expr_stmt|;
-name|bp
-operator|->
-name|b_magic
-operator|=
-name|B_MAGIC_NFS
-expr_stmt|;
 block|}
 block|}
 else|else

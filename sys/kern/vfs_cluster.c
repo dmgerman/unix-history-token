@@ -3426,14 +3426,6 @@ literal|0
 expr_stmt|;
 name|bp
 operator|->
-name|b_magic
-operator|=
-name|tbp
-operator|->
-name|b_magic
-expr_stmt|;
-name|bp
-operator|->
 name|b_bufobj
 operator|=
 name|tbp

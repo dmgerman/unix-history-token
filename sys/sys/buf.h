@@ -216,17 +216,6 @@ decl_stmt|;
 name|long
 name|b_resid
 decl_stmt|;
-name|unsigned
-name|b_magic
-decl_stmt|;
-define|#
-directive|define
-name|B_MAGIC_BIO
-value|0x10b10b10
-define|#
-directive|define
-name|B_MAGIC_NFS
-value|0x67238234
 name|void
 function_decl|(
 modifier|*
