@@ -826,6 +826,10 @@ name|time_t
 name|now
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|oldl
+decl_stmt|;
 name|tp
 operator|=
 name|localtime
@@ -894,6 +898,15 @@ name|iov_base
 operator|=
 name|dayname
 expr_stmt|;
+name|oldl
+operator|=
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -932,7 +945,7 @@ name|setlocale
 argument_list|(
 name|LC_TIME
 argument_list|,
-literal|""
+name|oldl
 argument_list|)
 expr_stmt|;
 name|setnnames
