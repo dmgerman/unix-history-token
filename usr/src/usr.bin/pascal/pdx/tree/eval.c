@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.4 %G%"
+literal|"@(#)eval.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,9 +188,13 @@ condition|)
 block|{
 name|r1
 operator|=
-name|pop
+name|popsmall
 argument_list|(
-name|long
+name|p
+operator|->
+name|right
+operator|->
+name|nodetype
 argument_list|)
 expr_stmt|;
 block|}
@@ -236,9 +240,13 @@ condition|)
 block|{
 name|r0
 operator|=
-name|pop
+name|popsmall
 argument_list|(
-name|long
+name|p
+operator|->
+name|left
+operator|->
+name|nodetype
 argument_list|)
 expr_stmt|;
 block|}
@@ -560,7 +568,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Get the value of the expression addressed by the top of the stack. 	 * Push the result back on the stack.  Never push less than a long. 	 */
+comment|/* 	 * Get the value of the expression addressed by the top of the stack. 	 * Push the result back on the stack. 	 */
 case|case
 name|O_RVAL
 case|:
