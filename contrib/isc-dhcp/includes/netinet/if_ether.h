@@ -153,5 +153,12 @@ name|ETHERMIN
 value|(60-14)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ETHER_HEADER_SIZE
+value|(ETHER_ADDR_LEN * 2 + sizeof (u_int16_t))
+end_define
+
 end_unit
 

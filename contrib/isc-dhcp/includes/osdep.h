@@ -348,11 +348,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|hpux
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -789,10 +797,24 @@ argument_list|(
 name|USE_DLPI_RECEIVE
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
-name|USE_LPF_RECEIVE
+name|USE_LPF_SEND
 argument_list|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|USE_SOCKET_SEND
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SO_BINDTODEVICE
+argument_list|)
+operator|)
 end_if
 
 begin_define
