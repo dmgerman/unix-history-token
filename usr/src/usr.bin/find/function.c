@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.19 (Berkeley) %G%"
+literal|"@(#)function.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,8 +344,8 @@ name|now
 operator|-
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_atime
 operator|+
 name|SECSPERDAY
@@ -456,8 +456,8 @@ name|now
 operator|-
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_ctime
 operator|+
 name|SECSPERDAY
@@ -1275,8 +1275,8 @@ name|curdev
 operator|!=
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_dev
 condition|)
 block|{
@@ -1284,8 +1284,8 @@ name|curdev
 operator|=
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_dev
 expr_stmt|;
 comment|/* 		 * Statfs follows symlinks; find wants the link's file system, 		 * not where it points. 		 */
@@ -1767,8 +1767,8 @@ return|return
 operator|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_gid
 operator|==
 name|plan
@@ -1915,8 +1915,8 @@ name|COMPARE
 argument_list|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_ino
 argument_list|,
 name|plan
@@ -2017,8 +2017,8 @@ name|COMPARE
 argument_list|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_nlink
 argument_list|,
 name|plan
@@ -2132,10 +2132,9 @@ name|entry
 operator|->
 name|fts_accpath
 argument_list|,
-operator|&
 name|entry
 operator|->
-name|fts_statb
+name|fts_statp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2214,8 +2213,8 @@ name|now
 operator|-
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mtime
 operator|+
 name|SECSPERDAY
@@ -2410,8 +2409,8 @@ return|return
 operator|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mtime
 operator|>
 name|plan
@@ -2538,8 +2537,8 @@ name|group_from_gid
 argument_list|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_gid
 argument_list|,
 literal|1
@@ -2621,8 +2620,8 @@ name|user_from_uid
 argument_list|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_uid
 argument_list|,
 literal|1
@@ -2783,8 +2782,8 @@ name|mode
 operator|=
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 operator|&
 operator|(
@@ -3150,8 +3149,8 @@ condition|?
 operator|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_size
 operator|+
 name|FIND_SIZE
@@ -3163,8 +3162,8 @@ name|FIND_SIZE
 else|:
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_size
 expr_stmt|;
 name|COMPARE
@@ -3280,8 +3279,8 @@ operator|(
 operator|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 operator|&
 name|S_IFMT
@@ -3450,8 +3449,8 @@ return|return
 operator|(
 name|entry
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_uid
 operator|==
 name|plan
