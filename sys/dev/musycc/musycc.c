@@ -956,8 +956,6 @@ name|musycc_connect
 block|,
 name|musycc_rcvdata
 block|,
-name|musycc_rcvdata
-block|,
 name|musycc_disconnect
 block|,
 name|NULL
@@ -3459,15 +3457,15 @@ name|m_data
 argument_list|)
 expr_stmt|;
 comment|/* Pass the received mbuf upwards. */
-name|ng_queue_data
+name|NG_SEND_DATA_ONLY
 argument_list|(
+name|error
+argument_list|,
 name|sch
 operator|->
 name|hook
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5600,6 +5598,12 @@ parameter_list|,
 name|meta_p
 modifier|*
 name|ret_meta
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+modifier|*
+name|resp
 parameter_list|)
 block|{
 name|struct
@@ -6893,6 +6897,14 @@ literal|"con3"
 argument_list|,
 name|hz
 argument_list|)
+expr_stmt|;
+name|hook
+operator|->
+name|peer
+operator|->
+name|flags
+operator||=
+name|HK_QUEUE
 expr_stmt|;
 return|return
 operator|(
