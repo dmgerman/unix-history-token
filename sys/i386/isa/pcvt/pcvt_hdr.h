@@ -33,6 +33,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"opt_pcvt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
