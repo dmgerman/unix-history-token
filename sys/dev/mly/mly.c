@@ -7484,7 +7484,7 @@ name|MLY_STATE_INTERRUPTS_ON
 condition|)
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|sc

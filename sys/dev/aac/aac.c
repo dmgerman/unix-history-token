@@ -3041,7 +3041,7 @@ condition|)
 comment|/* handle completion processing */
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|sc

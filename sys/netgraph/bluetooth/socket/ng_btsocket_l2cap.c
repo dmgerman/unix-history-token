@@ -1170,7 +1170,7 @@ return|return
 operator|(
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|ng_btsocket_l2cap_rt_task
@@ -1317,7 +1317,7 @@ name|error
 operator|=
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|ng_btsocket_l2cap_queue_task
@@ -1440,7 +1440,7 @@ name|error
 operator|=
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|ng_btsocket_l2cap_queue_task

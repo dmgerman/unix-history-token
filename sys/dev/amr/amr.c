@@ -6132,7 +6132,7 @@ name|AMR_STATE_INTEN
 condition|)
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|sc

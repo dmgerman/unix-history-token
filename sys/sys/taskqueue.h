@@ -257,6 +257,14 @@ end_comment
 begin_expr_stmt
 name|TASKQUEUE_DECLARE
 argument_list|(
+name|swi_giant
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TASKQUEUE_DECLARE
+argument_list|(
 name|swi
 argument_list|)
 expr_stmt|;

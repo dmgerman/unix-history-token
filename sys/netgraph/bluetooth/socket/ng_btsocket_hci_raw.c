@@ -948,7 +948,7 @@ name|error
 operator|=
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|ng_btsocket_hci_raw_task
@@ -1172,7 +1172,7 @@ name|error
 operator|=
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_swi_giant
 argument_list|,
 operator|&
 name|ng_btsocket_hci_raw_task
