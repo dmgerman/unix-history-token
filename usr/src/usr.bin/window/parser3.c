@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser3.c	3.3 %G%"
+literal|"@(#)parser3.c	3.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,7 +238,7 @@ name|V_STR
 case|:
 name|p_error
 argument_list|(
-literal|"Numeric value required for ?."
+literal|"?: Numeric left operand required."
 argument_list|)
 expr_stmt|;
 name|str_free
@@ -447,7 +447,7 @@ name|V_STR
 case|:
 name|p_error
 argument_list|(
-literal|"Numeric value required for ||."
+literal|"||: Numeric operands required."
 argument_list|)
 expr_stmt|;
 name|str_free
@@ -603,7 +603,7 @@ name|V_STR
 case|:
 name|p_error
 argument_list|(
-literal|"Numeric value required for&&."
+literal|"&&: Numeric operands required."
 argument_list|)
 expr_stmt|;
 name|str_free

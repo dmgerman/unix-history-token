@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser1.c	3.15 %G%"
+literal|"@(#)parser1.c	3.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,7 +284,7 @@ name|V_STR
 case|:
 name|p_error
 argument_list|(
-literal|"Numeric value required for if."
+literal|"if: Numeric value required."
 argument_list|)
 expr_stmt|;
 name|str_free
