@@ -112,12 +112,10 @@ name|CAN_AFFECT
 parameter_list|(
 name|p
 parameter_list|,
-name|pc
-parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|((pc)->pc_ucred->cr_uid == 0 || \ 	    (pc)->p_ruid == (q)->p_cred->p_ruid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_cred->p_ruid || \ 	    (pc)->p_ruid == (q)->p_ucred->cr_uid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_ucred->cr_uid)
+value|(!suser_xxx(NULL, p, PRISON_ROOT) || \ 	    (p)->p_cred->pc_ruid == (q)->p_cred->p_ruid || \ 	    (p)->p_ucred->cr_uid == (q)->p_cred->p_ruid || \ 	    (p)->p_cred->pc_ruid == (q)->p_ucred->cr_uid || \ 	    (p)->p_ucred->cr_uid == (q)->p_ucred->cr_uid)
 end_define
 
 begin_else
@@ -132,11 +130,9 @@ name|CAN_AFFECT
 parameter_list|(
 name|p
 parameter_list|,
-name|pc
-parameter_list|,
 name|q
 parameter_list|)
-value|((pc)->pc_ucred->cr_uid == 0)
+value|(!suser_xxx(NULL, p, PRISON_ROOT))
 end_define
 
 begin_endif
@@ -215,10 +211,6 @@ condition|(
 name|CAN_AFFECT
 argument_list|(
 name|p
-argument_list|,
-name|p
-operator|->
-name|p_cred
 argument_list|,
 name|other_proc
 argument_list|)
