@@ -2190,7 +2190,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PREEMPTION
-comment|/* 	 * The new thread should not preempt the current thread if any of the 	 * following conditions are true: 	 * 	 *  - The current thread has a higher (numerically lower) or 	 *    equivalent priority.  Note that this prevents curthread from 	 *    trying to preempt to itself. 	 *  - It is too early in the boot for context switches (cold is set). 	 *  - The current thread has an inhibitor set or is in the process of 	 *    exiting.  In this case, the current thread is about to switch 	 *    out anyways, so there's no point in preempting.  If we did, 	 *    the current thread would not be properly resumed as well, so 	 *    just avoid that whole landmine. 	 *  - If the new thread's priority is not a realtime priority and 	 *    the current thread's priority is not an idle priority and 	 *    FULL_PREEMPTION is disabled. 	 * 	 * If all of these conditions are false, but the current thread is in 	 * a nested critical section, then we have to defer the preemption 	 * until we exit the critical section.  Otherwise, switch immediately 	 * to the new thread. 	 */
+comment|/* 	 * The new thread should not preempt the current thread if any of the 	 * following conditions are true: 	 * 	 *  - The kernel is in the throes of crashing (panicstr). 	 *  - The current thread has a higher (numerically lower) or 	 *    equivalent priority.  Note that this prevents curthread from 	 *    trying to preempt to itself. 	 *  - It is too early in the boot for context switches (cold is set). 	 *  - The current thread has an inhibitor set or is in the process of 	 *    exiting.  In this case, the current thread is about to switch 	 *    out anyways, so there's no point in preempting.  If we did, 	 *    the current thread would not be properly resumed as well, so 	 *    just avoid that whole landmine. 	 *  - If the new thread's priority is not a realtime priority and 	 *    the current thread's priority is not an idle priority and 	 *    FULL_PREEMPTION is disabled. 	 * 	 * If all of these conditions are false, but the current thread is in 	 * a nested critical section, then we have to defer the preemption 	 * until we exit the critical section.  Otherwise, switch immediately 	 * to the new thread. 	 */
 name|ctd
 operator|=
 name|curthread
@@ -2247,6 +2247,10 @@ name|td_priority
 expr_stmt|;
 if|if
 condition|(
+name|panicstr
+operator|!=
+name|NULL
+operator|||
 name|pri
 operator|>=
 name|cpri
