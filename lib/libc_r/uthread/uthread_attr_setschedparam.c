@@ -35,6 +35,7 @@ name|pthread_attr_t
 modifier|*
 name|attr
 parameter_list|,
+specifier|const
 name|struct
 name|sched_param
 modifier|*

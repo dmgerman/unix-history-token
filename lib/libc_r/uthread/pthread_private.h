@@ -2142,12 +2142,24 @@ comment|/*  * Array of signal actions for this process.  */
 end_comment
 
 begin_decl_stmt
+name|SCLASS
 name|struct
 name|sigaction
 name|_thread_sigact
 index|[
 name|NSIG
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Pending signals for this process.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|sigset_t
+name|_process_sigpending
 decl_stmt|;
 end_decl_stmt
 
@@ -2482,17 +2494,6 @@ name|void
 name|_dispatch_signals
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_thread_signal
-parameter_list|(
-name|pthread_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2887,7 +2888,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|pthread_t
 name|_thread_sig_handle
 parameter_list|(
 name|int
@@ -2904,6 +2905,32 @@ name|void
 name|_thread_sig_init
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_sig_send
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_sig_deliver
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|,
+name|int
+name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
