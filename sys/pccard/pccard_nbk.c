@@ -361,7 +361,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"PC Card bus (classic)"
+literal|"PC Card 16-bit bus (classic)"
 argument_list|)
 expr_stmt|;
 return|return
