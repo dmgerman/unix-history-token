@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_io.c	1.2 (Berkeley) %G%"
+literal|"@(#)ar_io.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -311,6 +311,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* size of physical block on TAPE */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|wr_trail
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* trailer was rewritten in append */
 end_comment
 
 begin_decl_stmt
@@ -1010,6 +1023,23 @@ name|outf
 decl_stmt|;
 if|if
 condition|(
+name|arfd
+operator|<
+literal|0
+condition|)
+block|{
+name|did_io
+operator|=
+name|io_ok
+operator|=
+name|flcnt
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|act
 operator|==
 name|LIST
@@ -1029,12 +1059,6 @@ condition|(
 name|vflag
 operator|&&
 operator|(
-name|arfd
-operator|>=
-literal|0
-operator|)
-operator|&&
-operator|(
 name|artyp
 operator|==
 name|ISTAPE
@@ -1045,7 +1069,6 @@ if|if
 condition|(
 name|vfpart
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1056,11 +1079,6 @@ argument_list|,
 name|outf
 argument_list|)
 expr_stmt|;
-name|vfpart
-operator|=
-literal|0
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1093,12 +1111,6 @@ condition|(
 name|vflag
 operator|&&
 operator|(
-name|arfd
-operator|>=
-literal|0
-operator|)
-operator|&&
-operator|(
 name|artyp
 operator|==
 name|ISTAPE
@@ -1114,6 +1126,10 @@ literal|"done.\n"
 argument_list|,
 name|outf
 argument_list|)
+expr_stmt|;
+name|vfpart
+operator|=
+literal|0
 expr_stmt|;
 operator|(
 name|void
@@ -1239,7 +1255,7 @@ literal|1
 argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(outf); 	flcnt =
 literal|0
 argument|; }
-comment|/*  * ar_set_wr()  *	special device dependent handling to switch from archive read to  *	archive write on a single volume (an append). VERY device dependent.  *	Note: for tapes, head is already positioned at the place we want to  *	start writing.  * Return:  *	0 if all ready to write, -1 otherwise  */
+comment|/*  * ar_set_wr()  *	Set up device right before switching from read to write in an append.  *	device dependent code (if required) to do this should be added here.  *	For all archive devices we are already positioned at the place we want  *	to start writing when this routine is called.  * Return:  *	0 if all ready to write, -1 otherwise  */
 if|#
 directive|if
 name|__STDC__
@@ -1250,6 +1266,10 @@ argument|int ar_set_wr()
 endif|#
 directive|endif
 argument|{ 	off_t cpos;
+comment|/* 	 * we must make sure the trailer is rewritten on append, ar_next() 	 * will stop us if the archive containing the trailer was not written 	 */
+argument|wr_trail =
+literal|0
+argument|;
 comment|/*  	 * Add any device dependent code as required here 	 */
 argument|if (artyp != ISREG) 		return(
 literal|0
@@ -1261,9 +1281,13 @@ argument|, SEEK_CUR))<
 literal|0
 argument|) || 	    (ftruncate(arfd, cpos)<
 literal|0
-argument|)) 		return(-
+argument|)) { 		syswarn(
 literal|1
-argument|); 	return(
+argument|, errno,
+literal|"Unable to truncate archive file"
+argument|); 		return(-
+literal|1
+argument|); 	} 	return(
 literal|0
 argument|); }
 comment|/*  * ar_app_ok()  *	check if the last volume in the archive allows appends. We cannot check  *	this until we are ready to write since there is no spec that says all   *	volumes in a single archive have to be of the same type...  * Return:  *	0 if we can append, -1 otherwise.  */
@@ -1352,7 +1376,9 @@ argument|{ 	register int res; 	off_t cpos;
 comment|/* 	 * do not allow pax to create a "bad" archive. Once a write fails on 	 * an archive volume prevent further writes to it. 	 */
 argument|if (lstrval<=
 literal|0
-argument|) 		return(lstrval);  	if ((res = write(arfd, buf, bsz)) == bsz) { 		io_ok =
+argument|) 		return(lstrval);  	if ((res = write(arfd, buf, bsz)) == bsz) { 		wr_trail =
+literal|1
+argument|; 		io_ok =
 literal|1
 argument|; 		return(bsz); 	}
 comment|/* 	 * write broke, see what we can do with it. We try to send any partial 	 * writes that may violate pax spec to the next archive volume. 	 */
@@ -1398,11 +1424,23 @@ argument|break; 	}
 comment|/* 	 * Better tell the user the bad news... 	 * if this is a block aligned archive format, we may have a bad archive 	 * if the format wants the header to start at a BLKMULT boundry. While 	 * we can deal with the mis-aligned data, it violates spec and other 	 * archive readers will likely fail. if the format is not block 	 * aligned, the user may be lucky (and the archive is ok). 	 */
 argument|if (res>=
 literal|0
-argument|) 		io_ok =
-literal|1
-argument|; 	if (res ==
+argument|) { 		if (res>
 literal|0
-argument|) 		warn(
+argument|) 			wr_trail =
+literal|1
+argument|; 		io_ok =
+literal|1
+argument|; 	}
+comment|/* 	 * If we were trying to rewrite the trailer and it didn't work, we 	 * must quit right away. 	 */
+argument|if (!wr_trail&& (res<=
+literal|0
+argument|)) { 		warn(
+literal|1
+argument|,
+literal|"Unable to append, trailer re-write failed. Quitting."
+argument|); 		return(res); 	} 		 	if (res ==
+literal|0
+argument|)  		warn(
 literal|0
 argument|,
 literal|"End of archive volume %d reached"
@@ -1549,32 +1587,50 @@ directive|else
 argument|int ar_rev(sksz) 	off_t sksz;
 endif|#
 directive|endif
-argument|{ 	off_t cpos;         struct mtop mb;  	if (sksz<=
-literal|0
-argument|) 		return(
-literal|0
-argument|);
-comment|/* 	 * make sure we do not have a flawed archive 	 */
+argument|{ 	off_t cpos;         struct mtop mb;
+comment|/* 	 * make sure we do not have try to reverse on a flawed archive 	 */
 argument|if (lstrval<
 literal|0
-argument|) 		return(lstrval);  	switch(artyp) { 	case ISPIPE:
+argument|) 		return(lstrval);  	switch(artyp) { 	case ISPIPE: 		if (sksz<=
+literal|0
+argument|)  			break;
 comment|/* 		 * cannot go backwards on these critters 		 */
-argument|break; 	case ISREG: 	case ISBLK: 	case ISCHR: 	default:
-comment|/* 		 * For things other than files, backwards movement has a very 		 * high probability of failure as we really do not know the 		 * true attributes of the device we are talking to (the device 		 * may not even have the ability to lseek() in any direction). 		 * first we figure out where we are in the archive 		 */
+argument|warn(
+literal|1
+argument|,
+literal|"Reverse positioning on pipes is not supported."
+argument|); 		lstrval = -
+literal|1
+argument|; 		return(-
+literal|1
+argument|); 	case ISREG: 	case ISBLK: 	case ISCHR: 	default: 		if (sksz<=
+literal|0
+argument|) 			break;
+comment|/* 		 * For things other than files, backwards movement has a very 		 * high probability of failure as we really do not know the 		 * true attributes of the device we are talking to (the device 		 * may not even have the ability to lseek() in any direction). 		 * First we figure out where we are in the archive. 		 */
 argument|if ((cpos = lseek(arfd, (off_t)
 literal|0L
 argument|, SEEK_CUR))<
 literal|0
-argument|) 			break;
-comment|/* 		 * we may try to go backwards past the start when the archive 		 * is only a single record. If this hapens and we are on a 		 * multi volume archive, we need to go to the end of the 		 * previous volume and continue our movement backwards from 		 * there. (This is really hard to do and is NOT IMPLEMENTED) 		 */
+argument|) { 			syswarn(
+literal|1
+argument|, errno,
+literal|"Unable to obtain current archive byte offset"
+argument|); 			lstrval = -
+literal|1
+argument|; 			return(-
+literal|1
+argument|); 		}
+comment|/* 		 * we may try to go backwards past the start when the archive 		 * is only a single record. If this hapens and we are on a 		 * multi volume archive, we need to go to the end of the 		 * previous volume and continue our movement backwards from 		 * there. 		 */
 argument|if ((cpos -= sksz)< (off_t)
 literal|0L
 argument|) { 			if (arvol>
 literal|1
-argument|) { 				warn(
+argument|) {
+comment|/* 				 * this should never happen 				 */
+argument|warn(
 literal|1
 argument|,
-literal|"End of archive is on previous volume."
+literal|"Reverse position on previous volume."
 argument|); 				lstrval = -
 literal|1
 argument|; 				return(-
@@ -1583,44 +1639,56 @@ argument|); 			} 			cpos = (off_t)
 literal|0L
 argument|; 		} 		if (lseek(arfd, cpos, SEEK_SET)<
 literal|0
-argument|) 			break; 		lstrval =
+argument|) { 			syswarn(
 literal|1
-argument|; 		return(
-literal|0
-argument|); 	case ISTAPE:
-comment|/* 	 	 * Calculate and move the proper number of PHYSICAL tape 		 * records. If the sksz is not an even multiple of the physical 		 * tape size, we cannot do the move (this should never happen). 		 * (We also cannot handler trailers spread over two vols). 	 	 */
-argument|if (get_phys()<
-literal|0
-argument|) { 			warn(
-literal|1
-argument|,
-literal|"Cannot determine archive tape blocksize."
-argument|); 			break; 		}  		if (sksz % phyblk) { 			warn(
-literal|1
-argument|,
-literal|"Tape drive cannot backspace %d bytes (%d phys)"
-argument|, 			    sksz, phyblk); 			lstrval = -
+argument|, errno,
+literal|"Unable to seek archive backwards"
+argument|); 			lstrval = -
 literal|1
 argument|; 			return(-
 literal|1
-argument|); 		}  		mb.mt_op = MTBSR; 		mb.mt_count = sksz/phyblk; 		if (ioctl(arfd, MTIOCTOP,&mb)<
+argument|); 		} 		break; 	case ISTAPE:
+comment|/* 	 	 * Calculate and move the proper number of PHYSICAL tape 		 * blocks. If the sksz is not an even multiple of the physical 		 * tape size, we cannot do the move (this should never happen). 		 * (We also cannot handler trailers spread over two vols). 		 * get_phys() also makes sure we are in front of the filemark. 	 	 */
+argument|if (get_phys()<
+literal|0
+argument|) { 			lstrval = -
+literal|1
+argument|; 			return(-
+literal|1
+argument|); 		}
+comment|/* 		 * make sure future tape reads only go by physical tape block 		 * size (set rdblksz to the real size). 		 */
+argument|rdblksz = phyblk;
+comment|/* 		 * if no movement is required, just return (we must be after 		 * get_phys() so the physical blocksize is properly set) 		 */
+argument|if (sksz<=
 literal|0
 argument|) 			break;
-comment|/* 		 * reset rdblksz to be the device physical blocksize. 		 */
-argument|rdblksz = phyblk; 		lstrval =
+comment|/* 		 * ok we have to move. Make sure the tape drive can do it. 		 */
+argument|if (sksz % phyblk) { 			warn(
 literal|1
-argument|; 		return(
+argument|,
+literal|"Tape drive unable to backspace requested amount"
+argument|); 			lstrval = -
+literal|1
+argument|; 			return(-
+literal|1
+argument|); 		}
+comment|/* 		 * move backwards the requested number of bytes 		 */
+argument|mb.mt_op = MTBSR; 		mb.mt_count = sksz/phyblk; 		if (ioctl(arfd, MTIOCTOP,&mb)<
 literal|0
-argument|); 	} 	syswarn(
+argument|) { 			syswarn(
 literal|1
-argument|, errno,
-literal|"Reverse positioning operation on archive failed"
-argument|); 	lstrval = -
+argument|,errno,
+literal|"Unable to backspace tape %d blocks."
+argument|, 			    mb.mt_count); 			lstrval = -
 literal|1
-argument|; 	return(-
+argument|; 			return(-
 literal|1
+argument|); 		} 		break; 	} 	lstrval =
+literal|1
+argument|; 	return(
+literal|0
 argument|); }
-comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. Should only be  *	when at EOF. Tape drives are so inconsistant, while finding true record  *	size should be a trival thing to figure out, it really is difficult and  *	very likely to fail.  * Return:  *	0 if ok, -1 otherwise  */
+comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with   *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	0 if ok, -1 otherwise  */
 if|#
 directive|if
 name|__STDC__
@@ -1630,57 +1698,107 @@ directive|else
 argument|static int get_phys()
 endif|#
 directive|endif
-argument|{ 	register int res; 	struct mtop mb; 	char scbuf1[MAXBLK]; 	char scbuf2[MAXBLK];
-comment|/* 	 * We backspace one record and read foward. The read should tell us the 	 * true physical size.  We can only use this technique when we are at 	 * tape EOF (so the MTBSR will leave just a SINGLE PHYSICAL record 	 * between the head and the end of the tape file; the max we can then 	 * read should be just ONE physical record). Since we may be called 	 * more than once, only the first phyblk detection will be used.  	 */
-argument|if (phyblk>
+argument|{ 	register int padsz =
+literal|0
+argument|; 	register int res; 	struct mtop mb; 	char scbuf[MAXBLK];
+comment|/* 	 * move to the file mark, and then back up one record and read it. 	 * this should tell us the physical record size the tape is using. 	 */
+argument|if (lstrval ==
+literal|1
+argument|) {
+comment|/* 		 * we know we are at file mark when we get back a 0 from 		 * read() 		 */
+argument|while ((res = read(arfd, scbuf, sizeof(scbuf)))>
+literal|0
+argument|) 			padsz += res; 		if (res<
+literal|0
+argument|) { 			syswarn(
+literal|1
+argument|, errno,
+literal|"Unable to locate tape filemark."
+argument|); 			return(-
+literal|1
+argument|); 		} 	}
+comment|/* 	 * move backwards over the file mark so we are at the end of the 	 * last record. 	 */
+argument|mb.mt_op = MTBSF; 	mb.mt_count =
+literal|1
+argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
+literal|0
+argument|) { 		syswarn(
+literal|1
+argument|, errno,
+literal|"Unable to backspace over tape filemark."
+argument|); 		return(-
+literal|1
+argument|); 	}
+comment|/* 	 * move backwards so we are in front of the last record and read it to 	 * get physical tape blocksize. 	 */
+argument|mb.mt_op = MTBSR; 	mb.mt_count =
+literal|1
+argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
+literal|0
+argument|) { 		syswarn(
+literal|1
+argument|, errno,
+literal|"Unable to backspace over last tape block."
+argument|); 		return(-
+literal|1
+argument|); 	} 	if ((phyblk = read(arfd, scbuf, sizeof(scbuf)))<=
+literal|0
+argument|) { 		syswarn(
+literal|1
+argument|, errno,
+literal|"Cannot determine archive tape blocksize."
+argument|); 		return(-
+literal|1
+argument|); 	}
+comment|/* 	 * read foward to the file mark, then back up in front of the filemark 	 * (this is a bit paranoid, but should be safe to do). 	 */
+argument|while ((res = read(arfd, scbuf, sizeof(scbuf)))>
+literal|0
+argument|) 		; 	if (res<
+literal|0
+argument|) { 		syswarn(
+literal|1
+argument|, errno,
+literal|"Unable to locate tape filemark."
+argument|); 		return(-
+literal|1
+argument|); 	} 	mb.mt_op = MTBSF; 	mb.mt_count =
+literal|1
+argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
+literal|0
+argument|) { 		syswarn(
+literal|1
+argument|, errno,
+literal|"Unable to backspace over tape filemark."
+argument|); 		return(-
+literal|1
+argument|); 	}
+comment|/* 	 * set lstrval so we know that the filemark has not been seen 	 */
+argument|lstrval =
+literal|1
+argument|;
+comment|/* 	 * return if there was no padding 	 */
+argument|if (padsz ==
 literal|0
 argument|) 		return(
 literal|0
-argument|);  	mb.mt_op = MTBSR; 	mb.mt_count =
+argument|);
+comment|/* 	 * make sure we can move backwards over the padding. (this should 	 * never fail). 	 */
+argument|if (padsz % phyblk) { 		warn(
 literal|1
-argument|; 	if ((ioctl(arfd, MTIOCTOP,&mb)<
-literal|0
-argument|) || 	    ((phyblk = read(arfd, scbuf1, sizeof(scbuf1)))<=
-literal|0
-argument|)) { 		return(-
+argument|,
+literal|"Tape drive unable to backspace requested amount"
+argument|); 		return(-
 literal|1
 argument|); 	}
-comment|/* 	 * We must be careful, we may not have been called with the tape head 	 * at the end of the tape.  We expect if we read again we will get the 	 * true blocksize. (We expect the true size on the second read because 	 * by pax spec the trailer is always in the last record, and we are 	 * only called after the trailer was seen. If this is not true, the 	 * archive is flawed and we will return a failure indication). After 	 * the second read we must adjust the head position so it is at the 	 * same place it was when we are called. We also check for consistancy, 	 * if we cannot repeat we return a failure. 	 */
-argument|if ((ioctl(arfd, MTIOCTOP,&mb)<
+comment|/* 	 * move backwards over the padding so the head is where it was when 	 * we were first called (if required). 	 */
+argument|mb.mt_op = MTBSR; 	mb.mt_count = padsz/phyblk; 	if (ioctl(arfd, MTIOCTOP,&mb)<
 literal|0
-argument|) || 	    ((res = read(arfd, scbuf2, sizeof(scbuf2)))<=
-literal|0
-argument|)) 		return(-
+argument|) { 		syswarn(
 literal|1
-argument|);
-comment|/* 	 * If we get a bigger size on the second read or the first read is not 	 * a multiple of the second read, we better not chance an append. 	 */
-argument|if ((res> phyblk) || (phyblk % res)) 		return(-
+argument|,errno,
+literal|"Unable to backspace tape over %d pad blocks"
+argument|, 		    mb.mt_count); 		return(-
 literal|1
-argument|);
-comment|/* 	 * if both reads are the same size and the data is consistant we can 	 * go on with the append 	 */
-argument|if (res == phyblk) { 		if (bcmp(scbuf1, scbuf2, phyblk) !=
-literal|0
-argument|) 			return(-
-literal|1
-argument|); 		return(
-literal|0
-argument|); 	}
-comment|/* 	 * We got two different block sizes. We were not at the tape EOF. 	 * So we try one more time, if the result is not consistant we abort. 	 */
-argument|if ((ioctl(arfd, MTIOCTOP,&mb)<
-literal|0
-argument|) || 	    (read(arfd, scbuf1, sizeof(scbuf1)) != res) || 	    (bcmp(scbuf1, scbuf2, res) !=
-literal|0
-argument|)) 		return(-
-literal|1
-argument|);
-comment|/* 	 * Ok, we assume the physical block size is in res. We need to adjust 	 * head position backwards based on the what we got on the first read. 	 * (must leave the head at the same place it was when we were called). 	 */
-argument|mb.mt_count = (phyblk - res)/res; 	phyblk = res; 	if ((mb.mt_count ==
-literal|0
-argument|) || (ioctl(arfd, MTIOCTOP,&mb)<
-literal|0
-argument|)) 		return(-
-literal|1
-argument|); 	return(
+argument|); 	} 	return(
 literal|0
 argument|); }
 comment|/*  * ar_next()  *	prompts the user for the next volume in this archive. For some devices  *	we may allow the media to be changed. Otherwise a new archive is  *	prompted for. By pax spec, if there is no controlling tty or an eof is  *	read on tty input, we must quit pax.  * Return:  *	0 when ready to continue, -1 when all done  */
@@ -1711,7 +1829,7 @@ argument|) 		syswarn(
 literal|0
 argument|, errno,
 literal|"Unable to restore signal mask"
-argument|);  	if (done) 		return(-
+argument|);  	if (done || !wr_trail) 		return(-
 literal|1
 argument|);  	tty_prnt(
 literal|"\nATTENTION! Pax archive volume change required.\n"
