@@ -2983,8 +2983,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 block|}
 name|sc
 operator|->
