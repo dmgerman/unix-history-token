@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.13	%G%	*/
+comment|/*	dz.c	4.14	%G%	*/
 end_comment
 
 begin_include
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"../h/buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/vm.h"
 end_include
 
 begin_include
@@ -437,6 +443,15 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|dzsoftCAR
+index|[
+name|NDZ11
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The dz doesn't interrupt on carrier transitions, so  * we have to use a timer to watch it.  */
 end_comment
@@ -607,10 +622,6 @@ argument_list|(
 name|ui
 argument_list|,
 name|reg
-argument_list|,
-name|slaveno
-argument_list|,
-name|uban
 argument_list|)
 specifier|register
 expr|struct
@@ -711,6 +722,17 @@ name|tp
 operator|++
 expr_stmt|;
 block|}
+name|dzsoftCAR
+index|[
+name|ui
+operator|->
+name|ui_unit
+index|]
+operator|=
+name|ui
+operator|->
+name|ui_flags
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2600,39 +2622,26 @@ operator|&
 literal|07
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BERT
 if|if
 condition|(
+operator|(
+name|dzsoftCAR
+index|[
+name|i
+index|]
+operator|&
+name|bit
+operator|)
+operator|||
+operator|(
 name|dzaddr
 operator|->
 name|dzmsr
 operator|&
 name|bit
-operator|||
-name|i
-operator|==
-literal|6
-operator|||
-name|i
-operator|==
-literal|7
+operator|)
 condition|)
 block|{
-else|#
-directive|else
-if|if
-condition|(
-name|dzaddr
-operator|->
-name|dzmsr
-operator|&
-name|bit
-condition|)
-block|{
-endif|#
-directive|endif
 comment|/* carrier present */
 if|if
 condition|(
@@ -2759,8 +2768,14 @@ name|HZ
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_macro
 name|dztimer
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|int
 name|dz
@@ -2784,14 +2799,26 @@ name|dz
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Reset state of driver if UBA reset was necessary.  * Reset parameters and restart transmission on open lines.  */
+end_comment
+
+begin_macro
 name|dzreset
 argument_list|(
 argument|uban
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|uban
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int

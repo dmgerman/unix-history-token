@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.18	81/02/18	*/
+comment|/*	dh.c	4.19	81/02/19	*/
 end_comment
 
 begin_include
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"../h/buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/vm.h"
 end_include
 
 begin_include
@@ -167,7 +173,7 @@ literal|0
 block|,
 name|dhstd
 block|,
-literal|"dh11"
+literal|"dh"
 block|,
 name|dhinfo
 block|}
@@ -225,7 +231,7 @@ literal|0
 block|,
 name|dmstd
 block|,
-literal|"dm11"
+literal|"dm"
 block|,
 name|dminfo
 block|}
@@ -778,6 +784,15 @@ comment|/* software copy of last bar */
 end_comment
 
 begin_decl_stmt
+name|short
+name|dhsoftCAR
+index|[
+name|NDH11
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|tty
 name|dh11
@@ -917,6 +932,36 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+name|dhaddr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator|=
+name|DH_RIE
+operator||
+name|DH_MM
+operator||
+name|DH_RI
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|dhaddr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|dhaddr
 operator|->
 name|un
@@ -996,45 +1041,6 @@ operator|-=
 literal|4
 expr_stmt|;
 comment|/* transmit -> receive */
-ifdef|#
-directive|ifdef
-name|notdef
-name|dhaddr
-operator|->
-name|un
-operator|.
-name|dhcsr
-operator|=
-name|DH_RIE
-operator||
-name|DH_MM
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-name|dhaddr
-operator|->
-name|un
-operator|.
-name|dhcsrl
-operator||=
-name|DH_RI
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-name|dhaddr
-operator|->
-name|un
-operator|.
-name|dhcsr
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -1055,8 +1061,6 @@ argument_list|(
 argument|ui
 argument_list|,
 argument|reg
-argument_list|,
-argument|slaveno
 argument_list|)
 end_macro
 
@@ -1076,7 +1080,17 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* no tables to set up */
+name|dhsoftCAR
+index|[
+name|ui
+operator|->
+name|ui_unit
+index|]
+operator|=
+name|ui
+operator|->
+name|ui_flags
+expr_stmt|;
 block|}
 end_block
 
@@ -3605,6 +3619,10 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+name|unit
+operator|&=
+literal|0xf
+expr_stmt|;
 if|if
 condition|(
 name|dm
@@ -3627,6 +3645,19 @@ operator|->
 name|ui_alive
 operator|==
 literal|0
+operator|||
+operator|(
+name|dhsoftCAR
+index|[
+name|dm
+index|]
+operator|&
+operator|(
+literal|1
+operator|<<
+name|unit
+operator|)
+operator|)
 condition|)
 block|{
 name|tp
@@ -3672,8 +3703,6 @@ operator|->
 name|dmcsr
 operator|=
 name|unit
-operator|&
-literal|0xf
 expr_stmt|;
 name|addr
 operator|->
