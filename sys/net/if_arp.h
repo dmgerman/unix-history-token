@@ -39,6 +39,11 @@ value|6
 comment|/* token-ring hardware format */
 define|#
 directive|define
+name|ARPHRD_ARCNET
+value|7
+comment|/* arcnet hardware format */
+define|#
+directive|define
 name|ARPHRD_FRELAY
 value|15
 comment|/* frame relay hardware format */
@@ -117,6 +122,69 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ar_sha
+parameter_list|(
+name|ap
+parameter_list|)
+value|(((caddr_t)((ap)+1)) +   0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ar_spa
+parameter_list|(
+name|ap
+parameter_list|)
+value|(((caddr_t)((ap)+1)) +   (ap)->ar_hln)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ar_tha
+parameter_list|(
+name|ap
+parameter_list|)
+value|(((caddr_t)((ap)+1)) +   (ap)->ar_hln + (ap)->ar_pln)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ar_tpa
+parameter_list|(
+name|ap
+parameter_list|)
+value|(((caddr_t)((ap)+1)) + 2*(ap)->ar_hln + (ap)->ar_pln)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arphdr_len2
+parameter_list|(
+name|ar_hln
+parameter_list|,
+name|ar_pln
+parameter_list|)
+define|\
+value|(sizeof(struct arphdr) + 2*(ar_hln) + 2*(ar_pln))
+end_define
+
+begin_define
+define|#
+directive|define
+name|arphdr_len
+parameter_list|(
+name|ap
+parameter_list|)
+value|(arphdr_len2((ap)->ar_hln, (ap)->ar_pln))
+end_define
 
 begin_comment
 comment|/*  * ARP ioctl request  */

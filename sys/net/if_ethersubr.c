@@ -967,7 +967,7 @@ condition|(
 operator|!
 name|arpresolve
 argument_list|(
-name|ac
+name|ifp
 argument_list|,
 name|rt
 argument_list|,
@@ -3224,6 +3224,12 @@ name|if_baudrate
 operator|=
 literal|10000000
 expr_stmt|;
+name|ifp
+operator|->
+name|if_broadcastaddr
+operator|=
+name|etherbroadcastaddr
+expr_stmt|;
 name|ifa
 operator|=
 name|ifaddr_byindex
@@ -3514,10 +3520,7 @@ expr_stmt|;
 comment|/* before arpwhohas */
 name|arp_ifinit
 argument_list|(
-name|IFP2AC
-argument_list|(
 name|ifp
-argument_list|)
 argument_list|,
 name|ifa
 argument_list|)

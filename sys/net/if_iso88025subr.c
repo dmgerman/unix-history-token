@@ -303,6 +303,12 @@ name|if_mtu
 operator|=
 name|ISO88025_DEFAULT_MTU
 expr_stmt|;
+name|ifp
+operator|->
+name|if_broadcastaddr
+operator|=
+name|etherbroadcastaddr
+expr_stmt|;
 name|ifa
 operator|=
 name|ifaddr_byindex
@@ -501,11 +507,6 @@ expr_stmt|;
 comment|/* before arpwhohas */
 name|arp_ifinit
 argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
 name|ifp
 argument_list|,
 name|ifa
@@ -1165,7 +1166,7 @@ condition|(
 operator|!
 name|arpresolve
 argument_list|(
-name|ac
+name|ifp
 argument_list|,
 name|rt
 argument_list|,
