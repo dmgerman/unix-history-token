@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: spppcontrol.c,v 1.2 1998/01/05 07:23:02 charnier Exp $"
+literal|"$Id: spppcontrol.c,v 1.3 1998/01/07 07:55:26 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
