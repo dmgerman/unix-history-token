@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mtpr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -109,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<netccitt/pk_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mtpr.h>
 end_include
 
 begin_ifdef
@@ -1957,20 +1957,10 @@ init|=
 name|splimp
 argument_list|()
 decl_stmt|;
-for|for
-control|(
-name|pkcb
-operator|=
-name|pkcbhead
-init|;
-name|pkcb
-condition|;
-name|pkcb
-operator|=
-name|pkcb
-operator|->
-name|pk_next
-control|)
+name|FOR_ALL_PKCBS
+argument_list|(
+argument|pkcb
+argument_list|)
 if|if
 condition|(
 name|pkcb
