@@ -1685,7 +1685,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _AHA_H_ */
+comment|/* _AHAREG_H_ */
 end_comment
 
 end_unit
