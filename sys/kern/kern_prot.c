@@ -4409,15 +4409,9 @@ name|NULL
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|ESRCH
