@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * This works like "remote" but, you use it like this:  *     target kcore /dev/mem  * or  *     target kcore /var/crash/host/core.0  *  * This way makes it easy to short-circut the whole bfd monster,  * and direct the inferior stuff to our libkvm implementation.  */
+comment|/*  * This works like "remote" but, you use it like this:  *     target kcore /dev/mem  * or  *     target kcore /var/crash/host/core.0  *  * This way makes it easy to short-circut the whole bfd monster,  * and direct the inferior stuff to our libkvm implementation.  *  */
 end_comment
 
 begin_include
@@ -153,90 +153,75 @@ directive|include
 file|"gdbcore.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|kcore_files_info
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|target_ops
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|kcore_close
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|get_kcore_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|xfer_mem
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|target_ops
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|xfer_umem
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -292,7 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Read the "thing" at kernel address 'addr' into the space pointed to  * by point.  The length of the "thing" is determined by the type of p.  * Result is non-zero if transfer fails.  */
+comment|/* Read the "thing" at kernel address 'addr' into the space pointed to    by point.  The length of the "thing" is determined by the type of p.    Result is non-zero if transfer fails.  */
 end_comment
 
 begin_define
@@ -305,14 +290,16 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(target_read_memory((CORE_ADDR)(addr), (char *)(p), sizeof(*(p))))
+value|(target_read_memory ((CORE_ADDR) (addr), (char *) (p), sizeof (*(p))))
 end_define
 
 begin_function
 specifier|static
 name|CORE_ADDR
 name|ksym_kernbase
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|CORE_ADDR
@@ -374,7 +361,7 @@ begin_define
 define|#
 directive|define
 name|KERNOFF
-value|(ksym_kernbase())
+value|(ksym_kernbase ())
 end_define
 
 begin_define
@@ -391,13 +378,11 @@ begin_function
 name|CORE_ADDR
 name|ksym_lookup
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
@@ -438,14 +423,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Provide the address of an initial PCB to use.  * If this is a crash dump, try for "dumppcb".  * If no "dumppcb" or it's /dev/mem, use proc0.  * Return the core address of the PCB we found.  */
+comment|/* Provide the address of an initial PCB to use.    If this is a crash dump, try for "dumppcb".    If no "dumppcb" or it's /dev/mem, use proc0.    Return the core address of the PCB we found.  */
 end_comment
 
 begin_function
 specifier|static
 name|CORE_ADDR
 name|initial_pcb
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
@@ -459,7 +446,7 @@ name|void
 modifier|*
 name|val
 decl_stmt|;
-comment|/* Make sure things are open... */
+comment|/* Make sure things are open...  */
 if|if
 condition|(
 operator|!
@@ -473,7 +460,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* If this is NOT /dev/mem try for dumppcb. */
+comment|/* If this is NOT /dev/mem try for dumppcb.  */
 if|if
 condition|(
 name|strncmp
@@ -521,7 +508,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*    * OK, just use thread0's pcb.  Note that curproc might    * not exist, and if it does, it will point to gdb.    * Therefore, just use proc0 and let the user set    * some other context if they care about it.    */
+comment|/* OK, just use thread0's pcb.  Note that curproc might      not exist, and if it does, it will point to gdb.      Therefore, just use proc0 and let the user set      some other context if they care about it.  */
 name|addr
 operator|=
 name|ksym_lookup
@@ -554,7 +541,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Read the PCB address in thread structure. */
+comment|/* Read the PCB address in thread structure.  */
 name|addr
 operator|+=
 name|offsetof
@@ -589,11 +576,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+comment|/* thread0 is wholly in the kernel and cur_proc is only used for      reading user mem, so no point in setting this up.  */
 name|cur_proc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* thread0 is wholly in the kernel and cur_proc is 		 * only used for reading user mem, so no point  		 * in setting this up */
 return|return
 operator|(
 operator|(
@@ -606,7 +593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the current context to that of the PCB struct  * at the system address passed.  */
+comment|/* Set the current context to that of the PCB struct at the system address    passed.  */
 end_comment
 
 begin_function
@@ -614,11 +601,9 @@ specifier|static
 name|int
 name|set_context
 parameter_list|(
-name|addr
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|procaddr
@@ -642,14 +627,14 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* Fetch all registers from core file */
+comment|/* Fetch all registers from core file.  */
 name|target_fetch_registers
 argument_list|(
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Now, set up the frame cache, and print the top of stack */
+comment|/* Now, set up the frame cache, and print the top of stack.  */
 name|flush_cached_frames
 argument_list|()
 expr_stmt|;
@@ -694,17 +679,15 @@ specifier|static
 name|void
 name|kcore_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
 name|inferior_ptid
 operator|=
 name|null_ptid
 expr_stmt|;
-comment|/* Avoid confusion from thread stuff */
+comment|/* Avoid confusion from thread stuff.  */
 if|if
 condition|(
 name|core_kd
@@ -741,18 +724,14 @@ specifier|static
 name|void
 name|kcore_open
 parameter_list|(
-name|filename
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
 comment|/* the core file */
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|kvm_t
 modifier|*
@@ -788,7 +767,7 @@ argument_list|(
 name|from_tty
 argument_list|)
 expr_stmt|;
-comment|/* The exec file is required for symbols. */
+comment|/* The exec file is required for symbols.  */
 if|if
 condition|(
 name|exec_bfd
@@ -917,7 +896,7 @@ argument_list|(
 name|old_chain
 argument_list|)
 expr_stmt|;
-comment|/* Don't free filename any more */
+comment|/* Don't free filename any more.  */
 name|core_file
 operator|=
 name|filename
@@ -937,12 +916,12 @@ operator|&
 name|kcore_ops
 argument_list|)
 expr_stmt|;
-comment|/* Note unpush_target (above) calls kcore_close. */
+comment|/* Note unpush_target (above) calls kcore_close.  */
 name|core_kd
 operator|=
 name|kd
 expr_stmt|;
-comment|/* print out the panic string if there is one */
+comment|/* Print out the panic string if there is one.  */
 if|if
 condition|(
 name|kvread
@@ -1052,7 +1031,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Print all the panic messages if possible. */
+comment|/* Print all the panic messages if possible.  */
 if|if
 condition|(
 name|symfile_objfile
@@ -1105,14 +1084,15 @@ condition|)
 block|{
 name|warning
 argument_list|(
-literal|"you won't be able to access this core file until you terminate\n\ your %s; do ``info files''"
+literal|"you won't be able to access this core file until you terminate\n"
+literal|"your %s; do ``info files''"
 argument_list|,
 name|target_longname
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Now, set up process context, and print the top of stack */
+comment|/* Now, set up process context, and print the top of stack.  */
 operator|(
 name|void
 operator|)
@@ -1139,17 +1119,13 @@ specifier|static
 name|void
 name|kcore_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1214,21 +1190,13 @@ end_endif
 begin_macro
 name|fetch_kcore_registers
 argument_list|(
-argument|pcbp
+argument|struct pcb *pcbp
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|struct
-name|pcb
-modifier|*
-name|pcbp
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-comment|/* First clear out any garbage. */
+comment|/* First clear out any garbage.  */
 name|memset
 argument_list|(
 name|registers
@@ -1319,13 +1287,11 @@ begin_function
 name|CORE_ADDR
 name|fbsd_kern_frame_saved_pc
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
@@ -1489,7 +1455,9 @@ begin_function
 specifier|static
 name|CORE_ADDR
 name|ksym_maxuseraddr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|CORE_ADDR
@@ -1548,7 +1516,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Symbol names of kernel entry points.  Use special frames.  */
+comment|/* Symbol names of kernel entry points.  Use special frames.  */
 end_comment
 
 begin_define
@@ -1587,7 +1555,7 @@ value|"Xint0x80_syscall"
 end_define
 
 begin_comment
-comment|/*  * The following is FreeBSD-specific hackery to decode special frames  * and elide the assembly-language stub.  This could be made faster by  * defining a frame_type field in the machine-dependent frame information,  * but we don't think that's too important right now.  */
+comment|/* The following is FreeBSD-specific hackery to decode special frames    and elide the assembly-language stub.  This could be made faster by    defining a frame_type field in the machine-dependent frame information,    but we don't think that's too important right now.  */
 end_comment
 
 begin_enum
@@ -1609,13 +1577,11 @@ begin_function
 name|CORE_ADDR
 name|fbsd_kern_frame_saved_pc
 parameter_list|(
-name|fr
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
@@ -1767,7 +1733,7 @@ return|;
 define|#
 directive|define
 name|oEIP
-value|offsetof(struct trapframe, tf_eip)
+value|offsetof (struct trapframe, tf_eip)
 case|case
 name|tf_trap
 case|:
@@ -1849,7 +1815,7 @@ decl_stmt|;
 name|int
 name|noreg
 decl_stmt|;
-comment|/*    * get the register values out of the sys pcb and    * store them where `read_register' will find them.    */
+comment|/* Get the register values out of the sys pcb and store them where      `read_register' will find them.  */
 comment|/*    * XXX many registers aren't available.    * XXX for the non-core case, the registers are stale - they are for    *     the last context switch to the debugger.    * XXX gcc's register numbers aren't all #defined in tm-i386.h.    */
 name|noreg
 operator|=
@@ -2005,7 +1971,7 @@ operator|->
 name|pcb_gs
 argument_list|)
 expr_stmt|;
-comment|/* XXX 80387 registers? */
+comment|/* XXX 80387 registers?  */
 block|}
 end_function
 
@@ -2016,6 +1982,52 @@ end_endif
 
 begin_comment
 comment|/* __i386__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_comment
+comment|/* #include "sparc/tm-sp64.h" */
+end_comment
+
+begin_macro
+name|fetch_kcore_registers
+argument_list|(
+argument|struct pcb *pcbp
+argument_list|)
+end_macro
+
+begin_block
+block|{ }
+end_block
+
+begin_function
+name|CORE_ADDR
+name|fbsd_kern_frame_saved_pc
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+name|fi
+parameter_list|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __sparc64__ */
 end_comment
 
 begin_comment
@@ -2035,14 +2047,12 @@ specifier|static
 name|void
 name|get_kcore_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/*    * XXX - Only read the pcb when set_context() is called.    * When looking at a live kernel this may be a problem,    * but the user can do another "proc" or "pcb" command to    * grab a new copy of the pcb...    */
-comment|/*    * Zero out register set then fill in the ones we know about.    */
+comment|/* XXX - Only read the pcb when set_context() is called.      When looking at a live kernel this may be a problem,      but the user can do another "proc" or "pcb" command to      grab a new copy of the pcb...  */
+comment|/* Zero out register set then fill in the ones we know about.  */
 name|fetch_kcore_registers
 argument_list|(
 operator|&
@@ -2079,7 +2089,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If mourn is being called in all the right places, this could be say    `gdb internal error' (since generic_mourn calls breakpoint_init_inferior).  */
+comment|/* If mourn is being called in all the right places, this could be say    `gdb internal error' (since generic_mourn calls breakpoint_init_inferior). */
 end_comment
 
 begin_function
@@ -2087,17 +2097,13 @@ specifier|static
 name|int
 name|ignore
 parameter_list|(
-name|addr
-parameter_list|,
-name|contents
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -2110,34 +2116,24 @@ specifier|static
 name|int
 name|xfer_kmem
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -2239,28 +2235,20 @@ specifier|static
 name|int
 name|xfer_umem
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
 comment|/* ignored */
+parameter_list|)
 block|{
 name|int
 name|n
@@ -2328,12 +2316,10 @@ specifier|static
 name|void
 name|set_proc_cmd
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|addr
@@ -2416,13 +2402,11 @@ condition|(
 operator|!
 name|cnt
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"invalid pid"
 argument_list|)
 expr_stmt|;
-block|}
 name|addr
 operator|=
 operator|(
@@ -2439,7 +2423,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* update cur_proc */
+comment|/* Update cur_proc.  */
 name|pid_addr
 operator|=
 name|addr
@@ -2486,15 +2470,13 @@ condition|(
 operator|!
 name|cnt
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"invalid pid"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* Find the first thread in the process  XXXKSE */
+comment|/* Find the first thread in the process.  XXXKSE  */
 name|addr
 operator|+=
 name|offsetof
@@ -2572,7 +2554,9 @@ end_function
 begin_function
 name|void
 name|_initialize_kcorelow
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|kcore_ops
 operator|.
