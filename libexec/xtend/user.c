@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1995 Eugene W. Stark  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Eugene W. Stark.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY EUGENE W. STARK (THE AUTHOR) ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1992, 1993, 1995 Eugene W. Stark  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Eugene W. Stark.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY EUGENE W. STARK (THE AUTHOR) ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: user.c,v 1.5 1997/02/22 14:22:42 peter Exp $  */
 end_comment
 
 begin_include
@@ -62,6 +62,10 @@ block|{
 name|char
 name|h
 decl_stmt|;
+name|char
+modifier|*
+name|m
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -113,6 +117,39 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|m
+operator|=
+name|cmd
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|m
+operator|!=
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|isupper
+argument_list|(
+operator|*
+name|m
+argument_list|)
+condition|)
+operator|*
+name|m
+operator|=
+name|tolower
+argument_list|(
+operator|*
+name|m
+argument_list|)
+expr_stmt|;
+name|m
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sscanf
@@ -132,11 +169,11 @@ literal|2
 operator|&&
 name|h
 operator|>=
-literal|'A'
+literal|'a'
 operator|&&
 name|h
 operator|<=
-literal|'P'
+literal|'p'
 operator|&&
 name|i
 operator|>=
@@ -149,7 +186,7 @@ condition|)
 block|{
 name|h
 operator|-=
-literal|'A'
+literal|'a'
 expr_stmt|;
 name|i
 operator|--
@@ -191,11 +228,11 @@ literal|3
 operator|&&
 name|h
 operator|>=
-literal|'A'
+literal|'a'
 operator|&&
 name|h
 operator|<=
-literal|'P'
+literal|'p'
 operator|&&
 operator|(
 name|i
@@ -213,7 +250,7 @@ condition|)
 block|{
 name|h
 operator|-=
-literal|'A'
+literal|'a'
 expr_stmt|;
 name|pkt
 index|[
@@ -443,11 +480,11 @@ literal|2
 operator|&&
 name|h
 operator|>=
-literal|'A'
+literal|'a'
 operator|&&
 name|h
 operator|<=
-literal|'P'
+literal|'p'
 operator|&&
 name|i
 operator|>=
@@ -460,7 +497,7 @@ condition|)
 block|{
 name|h
 operator|-=
-literal|'A'
+literal|'a'
 expr_stmt|;
 name|i
 operator|--
@@ -718,7 +755,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|s
 argument_list|,
