@@ -841,6 +841,17 @@ argument_list|,
 name|pci_route_table
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|pci_print_route_table
+argument_list|(
+name|pci_route_table
+argument_list|,
+name|pci_route_count
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
