@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)what.c	4.1 (Berkeley) %G%"
+literal|"@(#)what.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,11 @@ operator|>
 literal|0
 condition|)
 do|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
