@@ -450,13 +450,15 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
 name|ifr_name
 argument_list|,
 name|iface
+argument_list|,
+name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
 name|ifr
