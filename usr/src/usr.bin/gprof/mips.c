@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley. Modified by Ralph Campbell for mips.  *  * %sccs.include.redist.c%  *  * From: sparc.c 5.1 (Berkeley) 7/7/92  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley. Modified by Ralph Campbell for mips.  *  * %sccs.include.redist.c%  *  * From: sparc.c 5.1 (Berkeley) 7/7/92  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mips.c	5.1 (Berkeley) %G%"
+literal|"@(#)mips.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
