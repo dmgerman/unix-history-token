@@ -1339,8 +1339,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_EECMD_READ
+name|RL_EECMD_READ_6BIT
 value|0x180
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_EECMD_READ_8BIT
+value|0x600
 end_define
 
 begin_define
@@ -1875,6 +1882,9 @@ decl_stmt|;
 comment|/* interface number */
 name|u_int8_t
 name|rl_type
+decl_stmt|;
+name|int
+name|rl_eecmd_read
 decl_stmt|;
 name|u_int8_t
 name|rl_stats_no_timeout
