@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	6.3 (Berkeley) %G%"
+literal|"@(#)telnet.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -933,6 +933,10 @@ name|crmod
 decl_stmt|,
 name|netdata
 decl_stmt|,
+comment|/* Print out network data flow */
+name|crlf
+decl_stmt|,
+comment|/* Should '\r' be mapped to<CR><LF> (or<CR><NUL>)? */
 name|noasynch
 init|=
 literal|0
@@ -10708,6 +10712,12 @@ break|break;
 case|case
 literal|'\r'
 case|:
+if|if
+condition|(
+operator|!
+name|crlf
+condition|)
+block|{
 name|NET2ADD
 argument_list|(
 literal|'\r'
@@ -10715,6 +10725,17 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|NET2ADD
+argument_list|(
+literal|'\r'
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 name|flushline
 operator|=
 literal|1
@@ -10786,6 +10807,11 @@ name|globalmode
 argument_list|)
 operator|||
 name|flushline
+operator|||
+name|myopts
+index|[
+name|TELOPT_BINARY
+index|]
 operator|)
 operator|&&
 name|FD_ISSET
@@ -12151,6 +12177,37 @@ end_return
 begin_function
 unit|}   static
 name|int
+name|togcrlf
+parameter_list|()
+block|{
+if|if
+condition|(
+name|crlf
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Will send carriage returns as telnet<CR><LF>.\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Will send carriage returns as telnet<CR><NUL>.\n"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|togbinary
 parameter_list|()
 block|{
@@ -12401,7 +12458,22 @@ literal|1
 block|,
 literal|0
 block|,
-literal|"send and receive network data in binary mode"
+literal|0
+block|}
+block|,
+block|{
+literal|"crlf"
+block|,
+literal|"toggle sending carriage returns as telnet<CR><LF>"
+block|,
+name|togcrlf
+block|,
+literal|1
+block|,
+operator|&
+name|crlf
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -12805,6 +12877,13 @@ operator|->
 name|variable
 expr_stmt|;
 comment|/* invert it */
+if|if
+condition|(
+name|c
+operator|->
+name|actionexplanation
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s %s.\n"
@@ -12823,6 +12902,7 @@ operator|->
 name|actionexplanation
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
