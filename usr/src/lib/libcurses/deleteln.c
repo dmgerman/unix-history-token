@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.9 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,20 @@ operator|->
 name|lines
 index|[
 name|y
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISPASTEOL
+expr_stmt|;
+name|win
+operator|->
+name|lines
+index|[
+name|y
+operator|+
+literal|1
 index|]
 operator|->
 name|flags
