@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.9 1995/06/27 11:06:19 dfr Exp $"
+literal|"$Id: mountd.c,v 1.10 1995/11/17 23:22:34 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4405,7 +4405,7 @@ argument|, cp); 			return (
 literal|1
 argument|); 		} 	}
 comment|/*          * Sanity check: make sure we don't already have an entry          * for this host in the grouplist.          */
-argument|checkgrp = tgrp;         while (checkgrp) {                 if (checkgrp->gr_ptr.gt_hostent != NULL&&                     !strcmp(checkgrp->gr_ptr.gt_hostent->h_name, hp->h_name)) {                         grp->gr_type = GT_IGNORE; 			return(
+argument|checkgrp = tgrp;         while (checkgrp) { 		if (checkgrp->gr_type == GT_HOST&&                     checkgrp->gr_ptr.gt_hostent != NULL&&                     !strcmp(checkgrp->gr_ptr.gt_hostent->h_name, hp->h_name)) {                         grp->gr_type = GT_IGNORE; 			return(
 literal|0
 argument|); 		}                 checkgrp = checkgrp->gr_next;         }  	grp->gr_type = GT_HOST; 	nhp = grp->gr_ptr.gt_hostent = (struct hostent *) 		malloc(sizeof(struct hostent)); 	if (nhp == (struct hostent *)NULL) 		out_of_mem(); 	bcopy((caddr_t)hp, (caddr_t)nhp, 		sizeof(struct hostent)); 	i = strlen(hp->h_name)+
 literal|1
