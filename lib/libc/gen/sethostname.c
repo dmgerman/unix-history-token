@@ -56,7 +56,7 @@ name|__STDC__
 end_if
 
 begin_function
-name|long
+name|int
 name|sethostname
 parameter_list|(
 specifier|const
@@ -69,7 +69,7 @@ name|namelen
 parameter_list|)
 else|#
 directive|else
-function|long sethostname
+function|int sethostname
 parameter_list|(
 name|name
 parameter_list|,

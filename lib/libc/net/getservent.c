@@ -906,7 +906,6 @@ condition|(
 operator|!
 name|_getservbyname_yp
 argument_list|(
-operator|&
 name|line
 argument_list|)
 condition|)
@@ -927,7 +926,6 @@ condition|(
 operator|!
 name|_getservbyport_yp
 argument_list|(
-operator|&
 name|line
 argument_list|)
 condition|)
@@ -941,7 +939,6 @@ condition|(
 operator|!
 name|_getservent_yp
 argument_list|(
-operator|&
 name|line
 argument_list|)
 condition|)

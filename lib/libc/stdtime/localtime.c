@@ -5488,7 +5488,9 @@ name|_THREAD_SAFE
 end_ifdef
 
 begin_function
-name|int
+name|struct
+name|tm
+modifier|*
 name|localtime_r
 parameter_list|(
 name|timep
@@ -5533,7 +5535,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|p_tm
 operator|)
 return|;
 block|}
@@ -5603,7 +5605,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pthread_keycreate
+name|pthread_key_create
 argument_list|(
 operator|&
 name|localtime_key
@@ -5635,18 +5637,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|p_tm
+operator|=
 name|pthread_getspecific
 argument_list|(
 name|localtime_key
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|p_tm
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -5985,7 +5983,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pthread_keycreate
+name|pthread_key_create
 argument_list|(
 operator|&
 name|gmtime_key
@@ -6017,18 +6015,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|p_tm
+operator|=
 name|pthread_getspecific
 argument_list|(
 name|gmtime_key
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|p_tm
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -6126,7 +6120,9 @@ name|_THREAD_SAFE
 end_ifdef
 
 begin_function
-name|int
+name|struct
+name|tm
+modifier|*
 name|gmtime_r
 parameter_list|(
 specifier|const
@@ -6151,7 +6147,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|tm
 operator|)
 return|;
 block|}
