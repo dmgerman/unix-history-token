@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpwent.c	4.3 (Berkeley) %G% */
+comment|/* @(#)getpwent.c	4.4 (Berkeley) 84/06/19 */
 end_comment
 
 begin_include
@@ -196,6 +196,11 @@ operator|*
 name|p
 operator|!=
 literal|':'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\n'
 condition|)
 operator|++
 name|p
