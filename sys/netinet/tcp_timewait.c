@@ -986,41 +986,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
-name|tcp_sackhole_limit
-init|=
-literal|10
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Arbitrarily set */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet_tcp_sack
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|sackhole_limit
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|tcp_sackhole_limit
-argument_list|,
-literal|0
-argument_list|,
-literal|"Limit on the total SACK scoreboard elements"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|uma_zone_t
 name|sack_hole_zone
 decl_stmt|;

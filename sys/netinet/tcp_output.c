@@ -808,15 +808,9 @@ name|tp
 operator|->
 name|sack_enable
 operator|&&
-name|SEQ_LT
+name|IN_FASTRECOVERY
 argument_list|(
 name|tp
-operator|->
-name|snd_una
-argument_list|,
-name|tp
-operator|->
-name|snd_recover
 argument_list|)
 operator|&&
 operator|(
