@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.69	82/10/10	*/
+comment|/*	if_en.c	4.70	82/10/17	*/
 end_comment
 
 begin_include
@@ -1649,8 +1649,6 @@ name|m
 decl_stmt|;
 name|int
 name|len
-decl_stmt|,
-name|plen
 decl_stmt|;
 name|short
 name|resid
