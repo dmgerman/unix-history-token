@@ -1302,7 +1302,8 @@ name|char
 modifier|*
 modifier|*
 parameter_list|,
-name|int
+name|char
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
